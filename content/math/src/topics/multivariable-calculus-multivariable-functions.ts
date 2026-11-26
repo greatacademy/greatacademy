@@ -8,14 +8,19 @@ import { multivariableDrawings3 } from "../explanation-drawings-multivariable-3.
 import {
   choiceProblem,
   equationProblem,
+  explainedChoice,
   expressionProblem,
   lowestTerms,
   numberProblem,
   pointProblem,
+  say,
   steps,
   vectorLatex,
-  yesNo,
+  verdictChoice,
+  why,
+  withMistakes,
 } from "../problems.ts";
+import { walked } from "./calculus-i-differentiation.ts";
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -23,6 +28,19 @@ import {
 
 type Vec2 = readonly [number, number];
 type Vec3 = readonly [number, number, number];
+
+/** asQ turns a number into a rational number so that values can be compared. */
+const asQ = (c: number | Q): Q => (typeof c === "number" ? Q.of(c) : c);
+
+/** distinct drops the mistakes whose value is the answer or repeats an earlier one. */
+function distinct<M extends { readonly value: number | Q }>(answer: number | Q, mistakes: readonly M[]): M[] {
+  return mistakes.filter((m, i, all) => !asQ(m.value).eq(asQ(answer)) && all.findIndex((x) => asQ(x.value).eq(asQ(m.value))) === i);
+}
+
+/** spoken drops the mistaken responses that equal the answer or repeat an earlier one. */
+function spoken(answer: string, mistakes: readonly { readonly response: string; readonly why: Text }[]) {
+  return mistakes.filter((m, i, all) => m.response !== answer && all.findIndex((x) => x.response === m.response) === i);
+}
 
 const v2L = (v: readonly (number | Q)[]): string => `(${v.map((c) => (c instanceof Q ? c.toLatex() : String(c))).join(", ")})`;
 const v3L = (v: readonly (number | Q)[]): string => vectorLatex(v);
@@ -58,6 +76,10 @@ export const interiorAndBoundaryPoints: TopicDef = {
     "A point is an interior point of a set S if an open disk centered at the point lies entirely in S; it is a boundary point if every open disk contains points in S and outside S.",
     "若以某点为圆心的某个开圆盘完全包含在集合 S 内，则该点为 S 的内点；若以该点为圆心的每个开圆盘都既包含 S 内的点又包含 S 外的点，则该点为 S 的边界点。",
   ),
+  intro: t(
+    "Take the half-plane $S = \\{(x, y) : x > 1\\}$. The point $(3, 5)$ is $2$ units to the right of the line $x = 1$, so the open disk of radius $2$ around it lies in $S$: it is an interior point. The point $(1, 4)$ lies on the line, and every disk around it contains points with $x > 1$ and points with $x < 1$: it is a boundary point, although it does not belong to $S$.\n\nCheck: the point $(-2, 0)$ is $3$ units to the left of the line, so the disk of radius $3$ around it misses $S$ completely, which makes it an exterior point. Each point of the plane is exactly one of the three kinds.\n\nIn this lesson we classify a point as an interior, boundary or exterior point of a set by comparing it with the inequality that defines the set.",
+    "取半平面 $S = \\{(x, y) : x > 1\\}$。点 $(3, 5)$ 在直线 $x = 1$ 右方 $2$ 个单位处，所以以它为圆心、半径为 $2$ 的开圆盘落在 $S$ 内：它是内点。点 $(1, 4)$ 在这条直线上，它周围的每个圆盘都既含 $x > 1$ 的点，又含 $x < 1$ 的点：它是边界点，尽管它不属于 $S$。\n\n检验：点 $(-2, 0)$ 在直线左方 $3$ 个单位处，所以以它为圆心、半径为 $3$ 的圆盘与 $S$ 完全不相交，它是外点。平面上每个点恰好属于三类中的一类。\n\n本课我们把点与定义集合的不等式比较，判断它是集合的内点、边界点还是外点。",
+  ),
   prerequisites: ["describing-sets-using-set-builder-notation"],
   encompasses: [],
   xp: 10,
@@ -66,58 +88,79 @@ export const interiorAndBoundaryPoints: TopicDef = {
       id: "classifying-points-relative-to-regions",
       title: t("Classifying points relative to regions", "判断点相对于区域的位置"),
       explanation: t(
-        "For a set $S \\subset \\mathbb{R}^2$:\n\n- **Interior point**: There exists an $\\varepsilon > 0$ such that the open disk $B_\\varepsilon(\\mathbf{x}) \\subset S$.\n- **Boundary point**: For every $\\varepsilon > 0$, the disk $B_\\varepsilon(\\mathbf{x})$ contains both points in $S$ and points not in $S$.\n- **Exterior point**: An interior point of the complement $\\mathbb{R}^2 \\setminus S$.",
-        "对于集合 $S \\subset \\mathbb{R}^2$：\n\n- **内点**：存在 $\\varepsilon > 0$ 使得开圆盘 $B_\\varepsilon(\\mathbf{x}) \\subset S$。\n- **边界点**：对任意 $\\varepsilon > 0$，开圆盘 $B_\\varepsilon(\\mathbf{x})$ 既包含 $S$ 中的点，也包含不属于 $S$ 的点。\n- **外点**：补集 $\\mathbb{R}^2 \\setminus S$ 的内点。",
+        "For a set $S \\subset \\mathbb{R}^2$:\n\n- **Interior point**: There exists an $\\varepsilon > 0$ such that the open disk $B_\\varepsilon(\\mathbf{x}) \\subset S$.\n- **Boundary point**: For every $\\varepsilon > 0$, the disk $B_\\varepsilon(\\mathbf{x})$ contains both points in $S$ and points not in $S$.\n- **Exterior point**: An interior point of the complement $\\mathbb{R}^2 \\setminus S$.\n\nFor the disk $S = \\{(x, y) : (x - 1)^2 + y^2 < 4\\}$, the point $(2, 1)$ gives $(2 - 1)^2 + 1^2 = 2 < 4$, so it is closer to the center $(1, 0)$ than the radius $2$ and is an interior point. The point $(3, 0)$ gives exactly $4$: it is on the circle, a boundary point.\n\n> **Watch out.** A boundary point need not belong to the set: the circle bounds $S$ even though the strict inequality leaves it out. Compare the squared distance with the squared radius, not with the radius.",
+        "对于集合 $S \\subset \\mathbb{R}^2$：\n\n- **内点**：存在 $\\varepsilon > 0$ 使得开圆盘 $B_\\varepsilon(\\mathbf{x}) \\subset S$。\n- **边界点**：对任意 $\\varepsilon > 0$，开圆盘 $B_\\varepsilon(\\mathbf{x})$ 既包含 $S$ 中的点，也包含不属于 $S$ 的点。\n- **外点**：补集 $\\mathbb{R}^2 \\setminus S$ 的内点。\n\n对圆盘 $S = \\{(x, y) : (x - 1)^2 + y^2 < 4\\}$，点 $(2, 1)$ 给出 $(2 - 1)^2 + 1^2 = 2 < 4$，所以它到圆心 $(1, 0)$ 的距离小于半径 $2$，是内点。点 $(3, 0)$ 恰好给出 $4$：它在圆上，是边界点。\n\n> **注意。** 边界点不一定属于集合：严格不等式把圆排除在 $S$ 之外，但圆仍是 $S$ 的边界。要把距离的平方与半径的平方比较，而不是与半径比较。",
       ),
       generate(rng: Rng): Problem {
         const [a, b, c] = rng.pick(pythagoreanTriples);
-        // Scale so point (a, b) has distance c from origin
         const kind = rng.int(0, 2);
-        // Region: S = { (x, y) : x^2 + y^2 < c^2 }
         const rSq = c * c;
-        let pt: Vec2;
-        let right: Text;
-        let wrong: readonly Text[];
-        let reason: Text;
-
-        if (kind === 0) {
-          // Interior: distance < c
-          pt = [rng.int(-a + 1, a - 1), rng.int(-b + 1, b - 1)];
-          right = t("Interior point", "内点");
-          wrong = [t("Boundary point", "边界点"), t("Exterior point", "外点")];
-          reason = t(
-            `The distance squared is $(${pt[0]})^2 + (${pt[1]})^2 = ${pt[0] * pt[0] + pt[1] * pt[1]} < ${rSq}$, so an open disk around $(${pt[0]}, ${pt[1]})$ lies entirely inside $S$.`,
-            `距离平方为 $(${pt[0]})^2 + (${pt[1]})^2 = ${pt[0] * pt[0] + pt[1] * pt[1]} < ${rSq}$，因此以 $(${pt[0]}, ${pt[1]})$ 为圆心的某个开圆盘完全位于 $S$ 内部。`,
-          );
-        } else if (kind === 1) {
-          // Boundary: distance = c
-          pt = [a, b];
-          right = t("Boundary point", "边界点");
-          wrong = [t("Interior point", "内点"), t("Exterior point", "外点")];
-          reason = t(
-            `The point satisfies $(${a})^2 + (${b})^2 = ${rSq}$, so every disk around it contains points inside and outside $S$.`,
-            `该点满足 $(${a})^2 + (${b})^2 = ${rSq}$，因此以它为圆心的任意开圆盘都既包含 $S$ 内部的点也包含外部的点。`,
-          );
-        } else {
-          // Exterior: distance > c
-          pt = [a + rng.int(1, 3), b + rng.int(1, 3)];
-          right = t("Exterior point", "外点");
-          wrong = [t("Interior point", "内点"), t("Boundary point", "边界点")];
-          reason = t(
-            `The distance squared exceeds $${rSq}$, so the point lies strictly outside $S$.`,
-            `距离平方超过 $${rSq}$，因此该点严格位于 $S$ 的外部。`,
-          );
-        }
-
-        const prompt = t(
-          `Consider the region $S = \\left\\{(x, y) \\in \\mathbb{R}^2 : x^2 + y^2 < ${rSq}\\right\\}$. Classify the point $(${pt[0]}, ${pt[1]})$.`,
-          `考虑区域 $S = \\left\\{(x, y) \\in \\mathbb{R}^2 : x^2 + y^2 < ${rSq}\\right\\}$。判断点 $(${pt[0]}, ${pt[1]})$ 的类别。`,
-        );
-        const solution = t(
-          `The point $(${pt[0]}, ${pt[1]})$ is ${/^[aeio]/i.test(right.en) ? "an" : "a"} ${right.en.toLowerCase()}. ${reason.en}`,
-          `点 $(${pt[0]}, ${pt[1]})$ 是${right["zh-CN"]}，因为${reason["zh-CN"]}`,
-        );
-        return pickChoice(rng, prompt, right, wrong, solution);
+        const pt: Vec2 =
+          kind === 0 ? [rng.int(-a + 1, a - 1), rng.int(-b + 1, b - 1)] : kind === 1 ? [a, b] : [a + rng.int(1, 3), b + rng.int(1, 3)];
+        const d2 = pt[0] * pt[0] + pt[1] * pt[1];
+        const at = `(${pt[0]}, ${pt[1]})`;
+        const rel = kind === 0 ? "<" : kind === 1 ? "=" : ">";
+        const names = [t("Interior point", "内点"), t("Boundary point", "边界点"), t("Exterior point", "外点")] as const;
+        const reasons: readonly (readonly [string, string])[][] = [
+          [
+            ["", ""],
+            [`$${d2} \\ne ${rSq}$, so the point is not on the circle`, `$${d2} \\ne ${rSq}$，所以该点不在圆上`],
+            [`$${d2} < ${rSq}$, so the point is inside the circle, in $S$`, `$${d2} < ${rSq}$，所以该点在圆内，属于 $S$`],
+          ],
+          [
+            ["The point is on the circle, so every disk around it reaches outside $S$", "该点在圆上，所以它周围的每个圆盘都伸到 $S$ 之外"],
+            ["", ""],
+            [
+              "The point is on the circle, so every disk around it contains points of $S$",
+              "该点在圆上，所以它周围的每个圆盘都含有 $S$ 的点",
+            ],
+          ],
+          [
+            [`$${d2} > ${rSq}$, so the point is outside the circle`, `$${d2} > ${rSq}$，所以该点在圆外`],
+            [
+              `$${d2} \\ne ${rSq}$, so the point is not on the circle: a small disk around it misses $S$`,
+              `$${d2} \\ne ${rSq}$，所以该点不在圆上：它周围的小圆盘与 $S$ 不相交`,
+            ],
+            ["", ""],
+          ],
+        ];
+        const verdict = [
+          t("so a small disk around the point stays inside the circle: an interior point", "所以该点周围的小圆盘仍在圆内：内点"),
+          t(
+            "so the point is on the circle, and every disk around it meets both $S$ and its outside: a boundary point",
+            "所以该点在圆上，它周围的每个圆盘都既与 $S$ 相交又与 $S$ 外部相交：边界点",
+          ),
+          t("so a small disk around the point stays outside the circle: an exterior point", "所以该点周围的小圆盘仍在圆外：外点"),
+        ][kind] as Text;
+        const radius =
+          kind === 1 ? `equals the radius $${c}$` : kind === 0 ? `is less than the radius $${c}$` : `is more than the radius $${c}$`;
+        const radiusZh = kind === 1 ? `等于半径 $${c}$` : kind === 0 ? `小于半径 $${c}$` : `大于半径 $${c}$`;
+        return explainedChoice(rng, {
+          prompt: t(
+            `Consider the region $S = \\left\\{(x, y) \\in \\mathbb{R}^2 : x^2 + y^2 < ${rSq}\\right\\}$. Classify the point $${at}$.`,
+            `考虑区域 $S = \\left\\{(x, y) \\in \\mathbb{R}^2 : x^2 + y^2 < ${rSq}\\right\\}$。判断点 $${at}$ 的类别。`,
+          ),
+          correct: names[kind] as Text,
+          wrong: [0, 1, 2]
+            .filter((i) => i !== kind)
+            .map((i) => {
+              const [en, zh] = reasons[kind]?.[i] ?? ["", ""];
+              return { option: names[i] as Text, why: t(`${en}.`, `${zh}。`) };
+            }),
+          solution: walked(
+            [
+              [
+                ["Compute the squared distance", "计算距离的平方"],
+                t(`$(${pt[0]})^2 + (${pt[1]})^2 = ${d2}$.`, `$(${pt[0]})^2 + (${pt[1]})^2 = ${d2}$。`),
+              ],
+              [
+                ["Compare with the squared radius", "与半径的平方比较"],
+                t(`$${d2} ${rel} ${rSq}$, ${verdict.en}.`, `$${d2} ${rel} ${rSq}$，${verdict["zh-CN"]}。`),
+              ],
+            ],
+            t(`The distance from the origin is $\\sqrt{${d2}}$, which ${radius}.`, `该点到原点的距离为 $\\sqrt{${d2}}$，${radiusZh}。`),
+          ),
+        });
       },
     },
     {
@@ -125,30 +168,78 @@ export const interiorAndBoundaryPoints: TopicDef = {
       figure: multivariableDrawings1["interior-and-boundary-points#classifying-points-relative-to-a-region-above-a-parabola"],
       title: t("Classifying points relative to a region above a parabola", "判断点相对于抛物线上方区域的位置"),
       explanation: t(
-        "For $S = \\{(x, y) : y > x^2 + c\\}$, compare $y$ with $x^2 + c$ at the point. If $y > x^2 + c$, a small disk around the point still satisfies the strict inequality, so it is an interior point. If $y = x^2 + c$ the point lies on the parabola: every disk around it reaches both above and below, so it is a boundary point, even though it does not belong to $S$. If $y < x^2 + c$ the point is exterior.",
-        "对 $S = \\{(x, y) : y > x^2 + c\\}$，在该点比较 $y$ 与 $x^2 + c$。若 $y > x^2 + c$，该点周围的小圆盘仍满足严格不等式，所以它是内点。若 $y = x^2 + c$，该点在抛物线上：它周围的每个圆盘都同时伸到上方和下方，所以它是边界点，尽管它不属于 $S$。若 $y < x^2 + c$，该点是外点。",
+        "For $S = \\{(x, y) : y > x^2 + c\\}$, compare $y$ with $x^2 + c$ at the point. If $y > x^2 + c$, a small disk around the point still satisfies the strict inequality, so it is an interior point. If $y = x^2 + c$ the point lies on the parabola: every disk around it reaches both above and below, so it is a boundary point, even though it does not belong to $S$. If $y < x^2 + c$ the point is exterior.\n\nFor $S = \\{(x, y) : y > 2x^2 + 1\\}$, the point $(1, 3)$ gives $2 \\cdot 1 + 1 = 3 = y$, so it lies on the parabola and is a boundary point, while $(1, 5)$ lies above it and is an interior point.\n\n> **Watch out.** Square $x$ before adding $c$: at $x = -2$ the parabola is at height $4 + c$, not $-4 + c$. A point on the parabola is a boundary point, not an exterior one, even though the strict inequality leaves it out of $S$.",
+        "对 $S = \\{(x, y) : y > x^2 + c\\}$，在该点比较 $y$ 与 $x^2 + c$。若 $y > x^2 + c$，该点周围的小圆盘仍满足严格不等式，所以它是内点。若 $y = x^2 + c$，该点在抛物线上：它周围的每个圆盘都同时伸到上方和下方，所以它是边界点，尽管它不属于 $S$。若 $y < x^2 + c$，该点是外点。\n\n对 $S = \\{(x, y) : y > 2x^2 + 1\\}$，点 $(1, 3)$ 给出 $2 \\cdot 1 + 1 = 3 = y$，所以它在抛物线上，是边界点；而 $(1, 5)$ 在抛物线上方，是内点。\n\n> **注意。** 先把 $x$ 平方再加 $c$：$x = -2$ 时抛物线的高度是 $4 + c$，不是 $-4 + c$。抛物线上的点是边界点而不是外点，尽管严格不等式把它排除在 $S$ 之外。",
       ),
       generate(rng: Rng): Problem {
         const c = rng.int(-4, 4);
         const x = rng.int(-3, 3);
         const kind = rng.int(0, 2);
-        const y = x * x + c + (kind === 0 ? rng.int(1, 4) : kind === 1 ? 0 : -rng.int(1, 4));
-        const names = [t("Interior point", "内点"), t("Boundary point", "边界点"), t("Exterior point", "外点")];
-        const right = names[kind] ?? names[0]!;
+        const gap = kind === 0 ? rng.int(1, 4) : kind === 1 ? 0 : -rng.int(1, 4);
+        const v = x * x + c;
+        const y = v + gap;
+        const curve = poly([1, "x^2"], [c, ""]);
+        const sum = c === 0 ? `${x * x}` : `${x * x} ${c < 0 ? "-" : "+"} ${Math.abs(c)} = ${v}`;
+        const names = [t("Interior point", "内点"), t("Boundary point", "边界点"), t("Exterior point", "外点")] as const;
         const rel = kind === 0 ? ">" : kind === 1 ? "=" : "<";
-        return pickChoice(
-          rng,
-          t(
-            `Classify the point $(${x}, ${y})$ relative to $S = \\{(x, y) : y > ${poly([1, "x^2"], [c, ""])}\\}$.`,
-            `判断点 $(${x}, ${y})$ 相对于 $S = \\{(x, y) : y > ${poly([1, "x^2"], [c, ""])}\\}$ 的位置。`,
+        const reasons: readonly (readonly [string, string])[][] = [
+          [
+            ["", ""],
+            [`$y = ${y}$ is not equal to $${v}$, so the point is not on the parabola`, `$y = ${y}$ 不等于 $${v}$，所以该点不在抛物线上`],
+            [`$${y} > ${v}$, so the point is above the parabola, in $S$`, `$${y} > ${v}$，所以该点在抛物线上方，属于 $S$`],
+          ],
+          [
+            ["The point is on the parabola, and the points just below it are outside $S$", "该点在抛物线上，它正下方附近的点在 $S$ 之外"],
+            ["", ""],
+            ["The point is on the parabola, and the points just above it are in $S$", "该点在抛物线上，它正上方附近的点属于 $S$"],
+          ],
+          [
+            [`$${y} < ${v}$, so the point is below the parabola, outside $S$`, `$${y} < ${v}$，所以该点在抛物线下方，在 $S$ 之外`],
+            [
+              `$y = ${y}$ is not equal to $${v}$, so the point is not on the parabola: a small disk around it stays below`,
+              `$y = ${y}$ 不等于 $${v}$，所以该点不在抛物线上：它周围的小圆盘都在抛物线下方`,
+            ],
+            ["", ""],
+          ],
+        ];
+        const verdict = [
+          t("The point is above the parabola, so it is an interior point.", "该点在抛物线上方，所以是内点。"),
+          t("The point is on the parabola, so it is a boundary point.", "该点在抛物线上，所以是边界点。"),
+          t("The point is below the parabola, so it is an exterior point.", "该点在抛物线下方，所以是外点。"),
+        ][kind] as Text;
+        const check =
+          kind === 1
+            ? t(
+                `$(${x}, ${y + 1})$, just above, satisfies $${y + 1} > ${v}$ and $(${x}, ${y - 1})$, just below, does not, and the same happens however close to the point we look.`,
+                `正上方的 $(${x}, ${y + 1})$ 满足 $${y + 1} > ${v}$，正下方的 $(${x}, ${y - 1})$ 不满足；无论离该点多近，情况都一样。`,
+              )
+            : t(
+                `The vertical gap $y - (${curve}) = ${gap}$ is ${kind === 0 ? "positive" : "negative"}, so the point is ${Math.abs(gap)} ${Math.abs(gap) === 1 ? "unit" : "units"} ${kind === 0 ? "above" : "below"} the parabola.`,
+                `竖直方向的差 $y - (${curve}) = ${gap}$ 为${kind === 0 ? "正" : "负"}，所以该点在抛物线${kind === 0 ? "上方" : "下方"} ${Math.abs(gap)} 个单位处。`,
+              );
+        return explainedChoice(rng, {
+          prompt: t(
+            `Classify the point $(${x}, ${y})$ relative to $S = \\{(x, y) : y > ${curve}\\}$.`,
+            `判断点 $(${x}, ${y})$ 相对于 $S = \\{(x, y) : y > ${curve}\\}$ 的位置。`,
           ),
-          right,
-          names.filter((_, i) => i !== kind),
-          t(
-            `At $x = ${x}$, $${poly([1, "x^2"], [c, ""])} = ${x * x + c}$ and $y = ${y} ${rel} ${x * x + c}$, so the point is ${/^[aeiou]/i.test(right.en) ? "an" : "a"} ${right.en.toLowerCase()}.`,
-            `在 $x = ${x}$ 处 $${poly([1, "x^2"], [c, ""])} = ${x * x + c}$，而 $y = ${y} ${rel} ${x * x + c}$，所以该点是${right["zh-CN"]}。`,
+          correct: names[kind] as Text,
+          wrong: [0, 1, 2]
+            .filter((i) => i !== kind)
+            .map((i) => {
+              const [en, zh] = reasons[kind]?.[i] ?? ["", ""];
+              return { option: names[i] as Text, why: t(`${en}.`, `${zh}。`) };
+            }),
+          solution: walked(
+            [
+              [
+                ["Find the height of the parabola", "求抛物线的高度"],
+                t(`At $x = ${x}$, $${curve} = ${sum}$.`, `在 $x = ${x}$ 处，$${curve} = ${sum}$。`),
+              ],
+              [["Compare with y", "与 y 比较"], t(`$y = ${y} ${rel} ${v}$. ${verdict.en}`, `$y = ${y} ${rel} ${v}$。${verdict["zh-CN"]}`)],
+            ],
+            check,
           ),
-        );
+        });
       },
     },
   ],
@@ -162,6 +253,10 @@ export const interiorsAndBoundariesOfSets: TopicDef = {
     "The interior of S is the set of all interior points; the boundary ∂S is the set of all boundary points.",
     "集合 S 的内部是其所有内点的集合；边界 ∂S 是其所有边界点的集合。",
   ),
+  intro: t(
+    "Take the square $S = \\{(x, y) : 0 \\le x < 2,\\ 0 \\le y < 2\\}$, which includes its left and bottom edges but not the other two. Its interior is the open square $0 < x < 2$, $0 < y < 2$, and its boundary $\\partial S$ is the whole outline of the square, all four edges, of length $8$.\n\nCheck: $(1, 0)$ belongs to $S$ and lies on the boundary; $(2, 1)$ does not belong to $S$ and lies on the boundary all the same; $(1, 1)$ has the disk of radius $1$ around it inside $S$, so it is in the interior.\n\nIn this lesson we find the interior and the boundary of a set from the inequalities that define it.",
+    "取正方形 $S = \\{(x, y) : 0 \\le x < 2,\\ 0 \\le y < 2\\}$，它包含左边和下边，不包含另外两条边。它的内部是开正方形 $0 < x < 2$、$0 < y < 2$，边界 $\\partial S$ 是正方形的整个轮廓，即全部四条边，长度为 $8$。\n\n检验：$(1, 0)$ 属于 $S$ 且在边界上；$(2, 1)$ 不属于 $S$，但同样在边界上；$(1, 1)$ 周围半径为 $1$ 的圆盘在 $S$ 内，所以它在内部。\n\n本课我们由定义集合的不等式求集合的内部和边界。",
+  ),
   prerequisites: ["interior-and-boundary-points"],
   encompasses: [{ topic: "interior-and-boundary-points", weight: 0.3 }],
   xp: 10,
@@ -170,39 +265,61 @@ export const interiorsAndBoundariesOfSets: TopicDef = {
       id: "finding-the-boundary-curve-of-a-set",
       title: t("Finding the boundary curve of a set", "求集合的边界曲线"),
       explanation: t(
-        "For a region defined by an inequality such as $g(x, y) \\le c$ or $g(x, y) < c$, the boundary $\\partial S$ is given by replacing the inequality with an equality: $g(x, y) = c$.",
-        "对于由不等式如 $g(x, y) \\le c$ 或 $g(x, y) < c$ 定义的区域，其边界 $\\partial S$ 由将不等号替换为等号得到：$g(x, y) = c$。",
+        "For a region defined by an inequality such as $g(x, y) \\le c$ or $g(x, y) < c$, the boundary $\\partial S$ is given by replacing the inequality with an equality: $g(x, y) = c$.\n\nFor $S = \\{(x, y) : y \\ge x^2 - 4\\}$ the boundary is the parabola $y = x^2 - 4$, and the same parabola bounds $\\{(x, y) : y > x^2 - 4\\}$.\n\n> **Watch out.** Clearing denominators multiplies every term: $\\frac{x^2}{p} = 1$ times $pq$ gives $qx^2 = pq$, so each square ends up with the other denominator. The boundary does not depend on whether the inequality is strict.",
+        "对于由不等式如 $g(x, y) \\le c$ 或 $g(x, y) < c$ 定义的区域，其边界 $\\partial S$ 由将不等号替换为等号得到：$g(x, y) = c$。\n\n对 $S = \\{(x, y) : y \\ge x^2 - 4\\}$，边界是抛物线 $y = x^2 - 4$；同一条抛物线也是 $\\{(x, y) : y > x^2 - 4\\}$ 的边界。\n\n> **注意。** 去分母时每一项都要乘：$\\frac{x^2}{p} = 1$ 乘以 $pq$ 得 $qx^2 = pq$，所以每个平方项最后带的是另一个分母。边界与不等式是否严格无关。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(2, 8);
         const b = rng.int(2, 8);
         const k = a * a * b * b;
         const answer = `${poly([b * b, "x^2"], [a * a, "y^2"])} = ${k}`;
-
-        const prompt = t(
-          `Find the equation of the boundary curve $\\partial S$ for the elliptical region $S = \\left\\{(x, y) \\in \\mathbb{R}^2 : \\frac{x^2}{${a * a}} + \\frac{y^2}{${b * b}} \\le 1\\right\\}$. Clear denominators so that the equation has the form $A x^2 + B y^2 = C$.`,
-          `求椭圆区域 $S = \\left\\{(x, y) \\in \\mathbb{R}^2 : \\frac{x^2}{${a * a}} + \\frac{y^2}{${b * b}} \\le 1\\right\\}$ 的边界曲线 $\\partial S$ 的方程。去分母使方程形式为 $A x^2 + B y^2 = C$。`,
-        );
-        const solution = t(
-          steps(
-            `The boundary curve $\\partial S$ is obtained by setting the defining inequality to an equality: $\\frac{x^2}{${a * a}} + \\frac{y^2}{${b * b}} = 1$.`,
-            `Multiply through by the common denominator $${k}$ to obtain $${answer}$.`,
-          ),
-          steps(
-            `边界曲线 $\\partial S$ 通过将不等式取等号得到：$\\frac{x^2}{${a * a}} + \\frac{y^2}{${b * b}} = 1$。`,
-            `两边同乘公分母 $${k}$，得到 $${answer}$。`,
-          ),
-        );
-        return equationProblem({
-          prompt,
-          solution,
-          answer,
-          wrong: [
+        const mistakes = spoken(answer, [
+          say(
             `${poly([a * a, "x^2"], [b * b, "y^2"])} = ${k}`,
+            `Multiplying $\\frac{x^2}{${a * a}}$ by $${k}$ gives $${b * b}x^2$: each square takes the other denominator.`,
+            `$\\frac{x^2}{${a * a}}$ 乘以 $${k}$ 得 $${b * b}x^2$：每个平方项带的是另一个分母。`,
+          ),
+          say(
+            `x^2 + y^2 = ${k}`,
+            `Multiplying by $${k}$ also multiplies the fractions on the left, so the squares keep coefficients $${b * b}$ and $${a * a}$.`,
+            `乘以 $${k}$ 时左边的分数也要乘，所以平方项的系数是 $${b * b}$ 和 $${a * a}$。`,
+          ),
+          say(
             `${poly([b * b, "x^2"], [-a * a, "y^2"])} = ${k}`,
-            `${poly([1, "x^2"], [1, "y^2"])} = ${k}`,
-          ],
-        });
+            "Both fractions are added in the ellipse, so both terms stay positive.",
+            "椭圆中两个分数相加，所以两项都保持为正。",
+          ),
+        ]);
+        return withMistakes(
+          equationProblem({
+            prompt: t(
+              `Find the equation of the boundary curve $\\partial S$ for the elliptical region $S = \\left\\{(x, y) \\in \\mathbb{R}^2 : \\frac{x^2}{${a * a}} + \\frac{y^2}{${b * b}} \\le 1\\right\\}$. Clear denominators so that the equation has the form $A x^2 + B y^2 = C$.`,
+              `求椭圆区域 $S = \\left\\{(x, y) \\in \\mathbb{R}^2 : \\frac{x^2}{${a * a}} + \\frac{y^2}{${b * b}} \\le 1\\right\\}$ 的边界曲线 $\\partial S$ 的方程。去分母使方程形式为 $A x^2 + B y^2 = C$。`,
+            ),
+            answer,
+            wrong: mistakes.map((m) => m.response),
+            solution: walked(
+              [
+                [
+                  ["Replace the inequality by an equation", "把不等式换成等式"],
+                  t(`$\\frac{x^2}{${a * a}} + \\frac{y^2}{${b * b}} = 1$.`, `$\\frac{x^2}{${a * a}} + \\frac{y^2}{${b * b}} = 1$。`),
+                ],
+                [
+                  ["Clear the denominators", "去分母"],
+                  t(
+                    `Multiply every term by $${a * a} \\cdot ${b * b} = ${k}$: $${answer}$.`,
+                    `每一项乘以 $${a * a} \\cdot ${b * b} = ${k}$：$${answer}$。`,
+                  ),
+                ],
+              ],
+              t(
+                `The point $(${a}, 0)$ is on the ellipse, and $${b * b} \\cdot ${a * a} = ${k}$; so is $(0, ${b})$, and $${a * a} \\cdot ${b * b} = ${k}$.`,
+                `点 $(${a}, 0)$ 在椭圆上，且 $${b * b} \\cdot ${a * a} = ${k}$；点 $(0, ${b})$ 也在椭圆上，且 $${a * a} \\cdot ${b * b} = ${k}$。`,
+              ),
+            ),
+          }),
+          mistakes,
+        );
       },
     },
     {
@@ -210,8 +327,8 @@ export const interiorsAndBoundariesOfSets: TopicDef = {
       figure: multivariableDrawings1["interiors-and-boundaries-of-sets#the-length-of-the-boundary-of-a-rectangle"],
       title: t("The length of the boundary of a rectangle", "矩形边界的长度"),
       explanation: t(
-        "The boundary of a set does not depend on which edges are included: $\\{|x| \\le a, |y| < b\\}$ and $\\{|x| < a, |y| < b\\}$ both have the whole rectangle outline as boundary. Removing a single point from the inside adds that point to the boundary, since every disk around it meets both $S$ and the missing point, but a point has no length. So the boundary length is the perimeter $4a + 4b$ in each case.",
-        "集合的边界与包含哪些边无关：$\\{|x| \\le a, |y| < b\\}$ 与 $\\{|x| < a, |y| < b\\}$ 的边界都是整个矩形轮廓。从内部去掉一个点会使该点成为边界点，因为它周围的每个圆盘都同时与 $S$ 和这个缺失的点相交，但一个点没有长度。所以每种情形下边界长度都是周长 $4a + 4b$。",
+        "The boundary of a set does not depend on which edges are included: $\\{|x| \\le a, |y| < b\\}$ and $\\{|x| < a, |y| < b\\}$ both have the whole rectangle outline as boundary. Removing a single point from the inside adds that point to the boundary, since every disk around it meets both $S$ and the missing point, but a point has no length. So the boundary length is the perimeter $4a + 4b$ in each case.\n\nFor $\\{(x, y) : 0 \\le x < 3,\\ 0 < y \\le 1\\}$ the boundary is the outline of a $3$ by $1$ rectangle, of length $2 \\cdot 3 + 2 \\cdot 1 = 8$.\n\n> **Watch out.** $|x| \\le a$ is the interval from $-a$ to $a$, of length $2a$, not $a$. Edges left out of the set still belong to its boundary, so count all four.",
+        "集合的边界与包含哪些边无关：$\\{|x| \\le a, |y| < b\\}$ 与 $\\{|x| < a, |y| < b\\}$ 的边界都是整个矩形轮廓。从内部去掉一个点会使该点成为边界点，因为它周围的每个圆盘都同时与 $S$ 和这个缺失的点相交，但一个点没有长度。所以每种情形下边界长度都是周长 $4a + 4b$。\n\n对 $\\{(x, y) : 0 \\le x < 3,\\ 0 < y \\le 1\\}$，边界是 $3 \\times 1$ 矩形的轮廓，长度为 $2 \\cdot 3 + 2 \\cdot 1 = 8$。\n\n> **注意。** $|x| \\le a$ 是从 $-a$ 到 $a$ 的区间，长度为 $2a$，不是 $a$。不属于集合的边仍属于它的边界，所以四条边都要算。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(1, 9);
@@ -220,13 +337,50 @@ export const interiorsAndBoundariesOfSets: TopicDef = {
         const ry = rng.pick(["\\le", "<"]);
         const hole = rng.int(0, 1) === 1;
         const set = `\\{(x, y) : |x| ${rx} ${a},\\ |y| ${ry} ${b}\\}${hole ? " \\setminus \\{(0, 0)\\}" : ""}`;
+        const answer = 4 * a + 4 * b;
+        const included = (rx === "\\le" ? 4 * b : 0) + (ry === "\\le" ? 4 * a : 0);
         return numberProblem({
           prompt: t(`Find the total length of the boundary of $S = ${set}$.`, `求 $S = ${set}$ 的边界的总长度。`),
-          answer: 4 * a + 4 * b,
-          wrong: [2 * a + 2 * b, a * b * 4, 4 * a + 4 * b + 1],
-          solution: t(
-            `The boundary is the outline of the rectangle $[-${a}, ${a}] \\times [-${b}, ${b}]$${hole ? " together with the point $(0, 0)$, which adds no length" : ""}. Its length is $4 \\cdot ${a} + 4 \\cdot ${b} = ${4 * a + 4 * b}$.`,
-            `边界是矩形 $[-${a}, ${a}] \\times [-${b}, ${b}]$ 的轮廓${hole ? "，再加上点 $(0, 0)$，后者不增加长度" : ""}。其长度为 $4 \\cdot ${a} + 4 \\cdot ${b} = ${4 * a + 4 * b}$。`,
+          answer,
+          mistakes: distinct(answer, [
+            why(
+              2 * a + 2 * b,
+              `$|x| ${rx} ${a}$ runs from $-${a}$ to $${a}$, so the sides are $${2 * a}$ and $${2 * b}$ long, not $${a}$ and $${b}$.`,
+              `$|x| ${rx} ${a}$ 从 $-${a}$ 到 $${a}$，所以边长是 $${2 * a}$ 和 $${2 * b}$，不是 $${a}$ 和 $${b}$。`,
+            ),
+            why(
+              4 * a * b,
+              `That is the area of the rectangle; the boundary is its outline, measured by length.`,
+              `这是矩形的面积；边界是它的轮廓，要量长度。`,
+            ),
+            ...(included > 0
+              ? [
+                  why(
+                    included,
+                    "The edges left out of the set are boundary points too: every disk around them meets the set.",
+                    "不属于集合的边也是边界点：它们周围的每个圆盘都与集合相交。",
+                  ),
+                ]
+              : []),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Find the outline", "找出轮廓"],
+                t(
+                  `The boundary is the outline of the rectangle $[-${a}, ${a}] \\times [-${b}, ${b}]$, whether or not each edge belongs to $S$${hole ? ", together with the point $(0, 0)$, which adds no length" : ""}.`,
+                  `无论每条边是否属于 $S$，边界都是矩形 $[-${a}, ${a}] \\times [-${b}, ${b}]$ 的轮廓${hole ? "，再加上点 $(0, 0)$，后者不增加长度" : ""}。`,
+                ),
+              ],
+              [
+                ["Add the sides", "把各边相加"],
+                t(
+                  `The sides are $${2 * a}$, $${2 * b}$, $${2 * a}$ and $${2 * b}$, so the length is $${answer}$.`,
+                  `各边长为 $${2 * a}$、$${2 * b}$、$${2 * a}$ 和 $${2 * b}$，所以长度为 $${answer}$。`,
+                ),
+              ],
+            ],
+            t(`$4 \\cdot ${a} + 4 \\cdot ${b} = ${answer}$.`, `$4 \\cdot ${a} + 4 \\cdot ${b} = ${answer}$。`),
           ),
         });
       },
@@ -242,6 +396,10 @@ export const openAndClosedSets: TopicDef = {
     "A set is open if it contains none of its boundary points, closed if it contains all of its boundary points, and neither if it contains only some.",
     "若一个集合不包含其任何边界点，则为开集；若包含其全部边界点，则为闭集；若仅包含部分边界点，则既非开集亦非闭集。",
   ),
+  intro: t(
+    "Take the strip $S = \\{(x, y) : 1 < x \\le 3\\}$. Its boundary is the two lines $x = 1$ and $x = 3$. The line $x = 3$ belongs to $S$ and the line $x = 1$ does not, so $S$ contains some of its boundary points but not all: it is neither open nor closed.\n\nCheck: $(3, 0)$ is a boundary point in $S$, so no disk around it lies in $S$ and $S$ is not open; $(1, 0)$ is a boundary point missing from $S$, so $S$ is not closed.\n\nIn this lesson we decide whether a set is open, closed, both or neither by finding its boundary and seeing how much of it the set contains.",
+    "取带状区域 $S = \\{(x, y) : 1 < x \\le 3\\}$。它的边界是两条直线 $x = 1$ 和 $x = 3$。直线 $x = 3$ 属于 $S$，直线 $x = 1$ 不属于 $S$，所以 $S$ 含有部分而非全部边界点：它既不开也不闭。\n\n检验：$(3, 0)$ 是属于 $S$ 的边界点，它周围没有圆盘落在 $S$ 内，所以 $S$ 不是开集；$(1, 0)$ 是 $S$ 缺少的边界点，所以 $S$ 不是闭集。\n\n本课我们先求集合的边界，再看集合含有多少边界点，以此判断集合是开集、闭集、既开又闭还是既不开也不闭。",
+  ),
   prerequisites: ["interiors-and-boundaries-of-sets"],
   encompasses: [{ topic: "interiors-and-boundaries-of-sets", weight: 0.3 }],
   xp: 10,
@@ -250,90 +408,235 @@ export const openAndClosedSets: TopicDef = {
       id: "classifying-open-closed-neither",
       title: t("Classifying sets as open, closed, or neither", "将集合分类为开集、闭集或既非开亦非闭"),
       explanation: t(
-        "A set $S \\subset \\mathbb{R}^2$ is:\n\n- **Open**: $S = \\operatorname{int}(S)$, meaning $S$ contains none of its boundary points (strict inequalities like $<$ or $>$).\n- **Closed**: $S$ contains all of its boundary points $\\partial S \\subset S$ (non-strict inequalities like $\\le$ or $\\ge$).\n- **Neither open nor closed**: $S$ contains some but not all of its boundary points.",
-        "集合 $S \\subset \\mathbb{R}^2$：\n\n- **开集**：$S = \\operatorname{int}(S)$，即 $S$ 不包含任何边界点（严格不等式如 $<$ 或 $>$）。\n- **闭集**：$S$ 包含其全部边界点 $\\partial S \\subset S$（非严格不等式如 $\\le$ 或 $\\ge$）。\n- **既非开亦非闭**：$S$ 包含部分但非全部边界点。",
+        "A set $S \\subset \\mathbb{R}^2$ is:\n\n- **Open**: $S = \\operatorname{int}(S)$, meaning $S$ contains none of its boundary points (strict inequalities like $<$ or $>$).\n- **Closed**: $S$ contains all of its boundary points $\\partial S \\subset S$ (non-strict inequalities like $\\le$ or $\\ge$).\n- **Neither open nor closed**: $S$ contains some but not all of its boundary points.\n\nThe half disk $\\{(x, y) : x^2 + y^2 \\le 4,\\ x > 0\\}$ contains its curved edge but not its straight edge on the $y$-axis, so it is neither.\n\n> **Watch out.** Open and closed are not opposites: a set that is not open need not be closed. Look at every piece of the boundary before deciding.",
+        "集合 $S \\subset \\mathbb{R}^2$：\n\n- **开集**：$S = \\operatorname{int}(S)$，即 $S$ 不包含任何边界点（严格不等式如 $<$ 或 $>$）。\n- **闭集**：$S$ 包含其全部边界点 $\\partial S \\subset S$（非严格不等式如 $\\le$ 或 $\\ge$）。\n- **既非开亦非闭**：$S$ 包含部分但非全部边界点。\n\n半圆盘 $\\{(x, y) : x^2 + y^2 \\le 4,\\ x > 0\\}$ 包含它的弧形边，但不包含 $y$ 轴上的直边，所以既不开也不闭。\n\n> **注意。** 开与闭不是对立的：不是开集的集合未必是闭集。要看过边界的每一部分再下结论。",
       ),
       generate(rng: Rng): Problem {
         const r1 = rng.int(1, 5);
         const r2 = rng.int(6, 12);
         const kind = rng.int(0, 2);
-
-        let desc: Text;
-        let right: Text;
-        let wrong: readonly Text[];
-        let reason: Text;
-
-        if (kind === 0) {
-          desc = t(`\\{(x, y) : ${r1 * r1} < x^2 + y^2 < ${r2 * r2}\\}`, `\\{(x, y) : ${r1 * r1} < x^2 + y^2 < ${r2 * r2}\\}`);
-          right = t("Open set", "开集");
-          wrong = [t("Closed set", "闭集"), t("Neither open nor closed", "既非开集亦非闭集")];
-          reason = t("Both boundary circles are excluded by strict inequalities.", "两个边界圆均被严格不等式排除在外。");
-        } else if (kind === 1) {
-          desc = t(`\\{(x, y) : ${r1 * r1} \\le x^2 + y^2 \\le ${r2 * r2}\\}`, `\\{(x, y) : ${r1 * r1} \\le x^2 + y^2 \\le ${r2 * r2}\\}`);
-          right = t("Closed set", "闭集");
-          wrong = [t("Open set", "开集"), t("Neither open nor closed", "既非开集亦非闭集")];
-          reason = t("Both boundary circles are included by non-strict inequalities.", "两个边界圆均通过非严格不等式包含在集合中。");
-        } else {
-          desc = t(`\\{(x, y) : ${r1 * r1} < x^2 + y^2 \\le ${r2 * r2}\\}`, `\\{(x, y) : ${r1 * r1} < x^2 + y^2 \\le ${r2 * r2}\\}`);
-          right = t("Neither open nor closed", "既非开集亦非闭集");
-          wrong = [t("Open set", "开集"), t("Closed set", "闭集")];
-          reason = t("It contains the outer boundary circle but not the inner boundary circle.", "它包含外边界圆但不包含内边界圆。");
-        }
-
-        const prompt = t(
-          `Classify the set $S = ${desc.en}$ as an open set, closed set, or neither.`,
-          `将集合 $S = ${desc["zh-CN"]}$ 分类为开集、闭集或既非开亦非闭。`,
-        );
-        const solution = t(
-          `The set is ${/^neither/i.test(right.en) ? "" : /^[aeio]/i.test(right.en) ? "an " : "a "}${right.en.toLowerCase()}. ${reason.en}`,
-          `该集合为${right["zh-CN"]}，因为${reason["zh-CN"]}`,
-        );
-        return pickChoice(rng, prompt, right, wrong, solution);
+        const [inner, outer] = kind === 0 ? ["<", "<"] : kind === 1 ? ["\\le", "\\le"] : ["<", "\\le"];
+        const set = `\\{(x, y) : ${r1 * r1} ${inner} x^2 + y^2 ${outer} ${r2 * r2}\\}`;
+        const names = [t("Open set", "开集"), t("Closed set", "闭集"), t("Neither open nor closed", "既非开集亦非闭集")] as const;
+        const innerIn = kind === 1;
+        const outerIn = kind !== 0;
+        const reasons: readonly (readonly [string, string])[][] = [
+          [
+            ["", ""],
+            ["Neither boundary circle belongs to the set: both inequalities are strict", "两个边界圆都不属于该集合：两个不等式都是严格的"],
+            ["It contains none of its boundary points, which is what open means", "它不含任何边界点，这正是开集的含义"],
+          ],
+          [
+            ["Both boundary circles belong to the set, so it contains boundary points", "两个边界圆都属于该集合，所以它含有边界点"],
+            ["", ""],
+            ["It contains all of its boundary points, which is what closed means", "它含有全部边界点，这正是闭集的含义"],
+          ],
+          [
+            [`The outer circle $x^2 + y^2 = ${r2 * r2}$ belongs to the set`, `外圆 $x^2 + y^2 = ${r2 * r2}$ 属于该集合`],
+            [
+              `The inner circle $x^2 + y^2 = ${r1 * r1}$ is a boundary circle missing from the set`,
+              `内圆 $x^2 + y^2 = ${r1 * r1}$ 是该集合缺少的边界圆`,
+            ],
+            ["", ""],
+          ],
+        ];
+        const has = (yes: boolean) => (yes ? t("belongs to the set", "属于该集合") : t("does not belong to the set", "不属于该集合"));
+        const conclusion = [
+          t("It contains none of its boundary points, so it is open.", "它不含任何边界点，所以是开集。"),
+          t("It contains all of its boundary points, so it is closed.", "它含有全部边界点，所以是闭集。"),
+          t("It contains some of its boundary points but not all, so it is neither.", "它含有部分而非全部边界点，所以既不开也不闭。"),
+        ][kind] as Text;
+        return explainedChoice(rng, {
+          prompt: t(
+            `Classify the set $S = ${set}$ as an open set, closed set, or neither.`,
+            `将集合 $S = ${set}$ 分类为开集、闭集或既非开亦非闭。`,
+          ),
+          correct: names[kind] as Text,
+          wrong: [0, 1, 2]
+            .filter((i) => i !== kind)
+            .map((i) => {
+              const [en, zh] = reasons[kind]?.[i] ?? ["", ""];
+              return { option: names[i] as Text, why: t(`${en}.`, `${zh}。`) };
+            }),
+          solution: walked(
+            [
+              [
+                ["Find the boundary", "求边界"],
+                t(
+                  `The boundary is the two circles $x^2 + y^2 = ${r1 * r1}$ and $x^2 + y^2 = ${r2 * r2}$.`,
+                  `边界是两个圆 $x^2 + y^2 = ${r1 * r1}$ 和 $x^2 + y^2 = ${r2 * r2}$。`,
+                ),
+              ],
+              [
+                ["See which circles belong to the set", "看哪些圆属于该集合"],
+                t(
+                  `The inner circle ${has(innerIn).en} and the outer circle ${has(outerIn).en}. ${conclusion.en}`,
+                  `内圆${has(innerIn)["zh-CN"]}，外圆${has(outerIn)["zh-CN"]}。${conclusion["zh-CN"]}`,
+                ),
+              ],
+            ],
+            t(
+              `Test one point of each circle: $(${r1}, 0)$ gives $${r1 * r1} ${inner} ${r1 * r1}$, which is ${innerIn ? "true" : "false"}, and $(${r2}, 0)$ gives $${r2 * r2} ${outer} ${r2 * r2}$, which is ${outerIn ? "true" : "false"}.`,
+              `每个圆上各取一点检验：$(${r1}, 0)$ 给出 $${r1 * r1} ${inner} ${r1 * r1}$，${innerIn ? "成立" : "不成立"}；$(${r2}, 0)$ 给出 $${r2 * r2} ${outer} ${r2 * r2}$，${outerIn ? "成立" : "不成立"}。`,
+            ),
+          ),
+        });
       },
     },
     {
       id: "classifying-half-planes-and-other-sets",
       title: t("Classifying half-planes and other sets", "判断半平面等集合的开闭性"),
       explanation: t(
-        "A set is open when it contains none of its boundary points and closed when it contains all of them. Strict inequalities between continuous functions give open sets, and non-strict ones give closed sets. Mixing the two usually gives a set that is neither. A single point is closed, and the whole plane $\\mathbb{R}^2$ has no boundary at all, so it is both open and closed.",
-        "集合不含任何边界点时是开集，含有全部边界点时是闭集。连续函数之间的严格不等式给出开集，非严格不等式给出闭集。两者混合通常得到既不开也不闭的集合。单点集是闭集，而整个平面 $\\mathbb{R}^2$ 根本没有边界点，所以它既开又闭。",
+        "A set is open when it contains none of its boundary points and closed when it contains all of them. Strict inequalities between continuous functions give open sets, and non-strict ones give closed sets. Mixing the two usually gives a set that is neither. A single point is closed, and the whole plane $\\mathbb{R}^2$ has no boundary at all, so it is both open and closed.\n\nThe quadrant $\\{(x, y) : x \\ge 0,\\ y > 0\\}$ contains the part of its boundary on the $y$-axis above the origin but none of the part on the $x$-axis, so it is neither.\n\n> **Watch out.** Only the whole plane and the empty set are both open and closed; any other set has a boundary point, which it either contains or misses. A set of one point is closed, not open: no disk around the point fits inside it.",
+        "集合不含任何边界点时是开集，含有全部边界点时是闭集。连续函数之间的严格不等式给出开集，非严格不等式给出闭集。两者混合通常得到既不开也不闭的集合。单点集是闭集，而整个平面 $\\mathbb{R}^2$ 根本没有边界点，所以它既开又闭。\n\n象限 $\\{(x, y) : x \\ge 0,\\ y > 0\\}$ 含有它在 $y$ 轴正半轴上的边界，却不含 $x$ 轴上的边界，所以既不开也不闭。\n\n> **注意。** 只有整个平面和空集既开又闭；其他集合都有边界点，要么含有它，要么缺少它。单点集是闭集而不是开集：该点周围没有圆盘能放进集合里。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(-5, 5);
         const b = rng.int(-5, 5);
-        const forms: readonly [string, number][] = [
-          [`\\{(x, y) : x + y < ${a}\\}`, 0],
-          [`\\{(x, y) : x > ${a},\\ y > ${b}\\}`, 0],
-          [`\\{(x, y) : y \\ge x^2 ${a < 0 ? "-" : "+"} ${Math.abs(a)}\\}`, 1],
-          [`\\{(${a}, ${b})\\}`, 1],
-          [`\\{(x, y) : x \\ge ${a},\\ y \\le ${b}\\}`, 1],
-          [`\\{(x, y) : x > ${a},\\ y \\le ${b}\\}`, 3],
-          [`\\{(x, y) : ${a} \\le x < ${a + 3}\\}`, 3],
-          ["\\mathbb{R}^2", 2],
+        const parabola = poly([1, "x^2"], [a, ""]);
+        type Form = readonly [set: string, kind: number, boundary: Text, check: Text];
+        const forms: readonly Form[] = [
+          [
+            `\\{(x, y) : x + y < ${a}\\}`,
+            0,
+            t(
+              `The boundary is the line $x + y = ${a}$, and none of it belongs to the set.`,
+              `边界是直线 $x + y = ${a}$，它的点都不属于该集合。`,
+            ),
+            t(`$(${a}, 0)$ is on the line, and $${a} + 0 < ${a}$ is false.`, `$(${a}, 0)$ 在这条直线上，而 $${a} + 0 < ${a}$ 不成立。`),
+          ],
+          [
+            `\\{(x, y) : x > ${a},\\ y > ${b}\\}`,
+            0,
+            t(
+              `The boundary is the two rays $x = ${a}$, $y \\ge ${b}$ and $y = ${b}$, $x \\ge ${a}$, and none of them belongs to the set.`,
+              `边界是两条射线 $x = ${a}$（$y \\ge ${b}$）与 $y = ${b}$（$x \\ge ${a}$），它们的点都不属于该集合。`,
+            ),
+            t(`The corner $(${a}, ${b})$ fails both strict inequalities.`, `角点 $(${a}, ${b})$ 两个严格不等式都不满足。`),
+          ],
+          [
+            `\\{(x, y) : y \\ge ${parabola}\\}`,
+            1,
+            t(
+              `The boundary is the parabola $y = ${parabola}$, and all of it belongs to the set.`,
+              `边界是抛物线 $y = ${parabola}$，它的点全都属于该集合。`,
+            ),
+            t(`$(0, ${a})$ is on the parabola, and $${a} \\ge ${a}$ is true.`, `$(0, ${a})$ 在抛物线上，而 $${a} \\ge ${a}$ 成立。`),
+          ],
+          [
+            `\\{(${a}, ${b})\\}`,
+            1,
+            t(
+              `Every disk around $(${a}, ${b})$ contains the point and points outside the set, so the boundary is the point itself, which belongs to the set.`,
+              `$(${a}, ${b})$ 周围的每个圆盘都含有该点以及集合外的点，所以边界就是该点本身，它属于该集合。`,
+            ),
+            t(
+              `No disk around $(${a}, ${b})$ fits inside a set of one point, so the set is not open.`,
+              `$(${a}, ${b})$ 周围没有圆盘能放进单点集，所以该集合不是开集。`,
+            ),
+          ],
+          [
+            `\\{(x, y) : x \\ge ${a},\\ y \\le ${b}\\}`,
+            1,
+            t(
+              `The boundary is the two rays $x = ${a}$, $y \\le ${b}$ and $y = ${b}$, $x \\ge ${a}$, and all of them belong to the set.`,
+              `边界是两条射线 $x = ${a}$（$y \\le ${b}$）与 $y = ${b}$（$x \\ge ${a}$），它们的点全都属于该集合。`,
+            ),
+            t(`The corner $(${a}, ${b})$ satisfies both inequalities.`, `角点 $(${a}, ${b})$ 两个不等式都满足。`),
+          ],
+          [
+            `\\{(x, y) : x > ${a},\\ y \\le ${b}\\}`,
+            3,
+            t(
+              `The boundary is the ray $x = ${a}$, $y \\le ${b}$, which is missing from the set, and the ray $y = ${b}$, $x \\ge ${a}$, whose points with $x > ${a}$ belong to it.`,
+              `边界是射线 $x = ${a}$（$y \\le ${b}$）与射线 $y = ${b}$（$x \\ge ${a}$）；前者不属于该集合，后者中 $x > ${a}$ 的点属于该集合。`,
+            ),
+            t(
+              `$(${a + 1}, ${b})$ is a boundary point in the set, and $(${a}, ${b - 1})$ is a boundary point outside it.`,
+              `$(${a + 1}, ${b})$ 是属于该集合的边界点，$(${a}, ${b - 1})$ 是不属于它的边界点。`,
+            ),
+          ],
+          [
+            `\\{(x, y) : ${a} \\le x < ${a + 3}\\}`,
+            3,
+            t(
+              `The boundary is the two lines $x = ${a}$ and $x = ${a + 3}$; the first belongs to the set and the second does not.`,
+              `边界是两条直线 $x = ${a}$ 和 $x = ${a + 3}$；前者属于该集合，后者不属于。`,
+            ),
+            t(
+              `$(${a}, 0)$ is in the set and $(${a + 3}, 0)$ is not, and both are boundary points.`,
+              `$(${a}, 0)$ 在集合中而 $(${a + 3}, 0)$ 不在，两者都是边界点。`,
+            ),
+          ],
+          [
+            "\\mathbb{R}^2",
+            2,
+            t(
+              "Every disk lies in the plane, so every point is an interior point and there are no boundary points at all.",
+              "每个圆盘都在平面内，所以每个点都是内点，根本没有边界点。",
+            ),
+            t(
+              "The plane is open since every point is interior, and its complement, the empty set, is open too, so the plane is also closed.",
+              "平面的每个点都是内点，所以它是开集；它的补集空集也是开集，所以平面也是闭集。",
+            ),
+          ],
         ];
-        const [set, kind] = rng.pick(forms);
-        const names = [t("Open", "开集"), t("Closed", "闭集"), t("Both open and closed", "既开又闭"), t("Neither", "既不开也不闭")];
-        const right = names[kind] ?? names[0]!;
-        return pickChoice(
-          rng,
-          t(`Classify the set $${set}$.`, `判断集合 $${set}$ 的开闭性。`),
-          right,
-          names.filter((_, i) => i !== kind),
-          t(
+        const [set, kind, boundary, check] = rng.pick(forms);
+        const names = [
+          t("Open", "开集"),
+          t("Closed", "闭集"),
+          t("Both open and closed", "既开又闭"),
+          t("Neither", "既不开也不闭"),
+        ] as const;
+        const reasons: readonly (readonly [string, string])[][] = [
+          [
+            ["", ""],
+            ["Its boundary points are missing from it, since the inequalities are strict", "它缺少边界点，因为不等式是严格的"],
+            ["Only the plane and the empty set are both, and this set has boundary points", "只有平面和空集既开又闭，而这个集合有边界点"],
+            ["It contains none of its boundary points, so it is open", "它不含任何边界点，所以是开集"],
+          ],
+          [
+            ["It contains boundary points, so it is not open", "它含有边界点，所以不是开集"],
+            ["", ""],
+            ["It contains its boundary points, so it is not open", "它含有边界点，所以不是开集"],
+            ["It contains all of its boundary points, so it is closed", "它含有全部边界点，所以是闭集"],
+          ],
+          [
+            ["It is open, and it is also closed: it has no boundary points to miss", "它是开集，同时也是闭集：它没有可缺少的边界点"],
+            ["It is closed, and it is also open: every point is an interior point", "它是闭集，同时也是开集：每个点都是内点"],
+            ["", ""],
+            ["With no boundary points, it contains all of them and misses none", "没有边界点，所以它含有全部边界点，也不缺少任何边界点"],
+          ],
+          [
+            ["It contains some of its boundary points, so it is not open", "它含有部分边界点，所以不是开集"],
+            ["Some of its boundary points are missing from it, so it is not closed", "它缺少部分边界点，所以不是闭集"],
+            ["Only the plane and the empty set are both, and this set has boundary points", "只有平面和空集既开又闭，而这个集合有边界点"],
+            ["", ""],
+          ],
+        ];
+        const conclusion = [
+          t("It contains none of its boundary points: open.", "它不含任何边界点：开集。"),
+          t("It contains all of its boundary points: closed.", "它含有全部边界点：闭集。"),
+          t("It has no boundary points, so it is both open and closed.", "它没有边界点，所以既开又闭。"),
+          t("It contains some of its boundary points but not all: neither.", "它含有部分而非全部边界点：既不开也不闭。"),
+        ][kind] as Text;
+        return explainedChoice(rng, {
+          prompt: t(`Classify the set $${set}$.`, `判断集合 $${set}$ 的开闭性。`),
+          correct: names[kind] as Text,
+          wrong: [0, 1, 2, 3]
+            .filter((i) => i !== kind)
+            .map((i) => {
+              const [en, zh] = reasons[kind]?.[i] ?? ["", ""];
+              return { option: names[i] as Text, why: t(`${en}.`, `${zh}。`) };
+            }),
+          solution: walked(
             [
-              "It is defined by strict inequalities, so it contains none of its boundary points: open.",
-              "It contains all of its boundary points: closed.",
-              "The plane has no boundary points, so it is both open and closed.",
-              "It contains some of its boundary points but not all: neither.",
-            ][kind] ?? "",
-            [
-              "它由严格不等式定义，不含任何边界点：开集。",
-              "它包含全部边界点：闭集。",
-              "平面没有边界点，所以既开又闭。",
-              "它包含部分边界点而非全部：既不开也不闭。",
-            ][kind] ?? "",
+              [["Find the boundary", "求边界"], boundary],
+              [["Decide", "下结论"], conclusion],
+            ],
+            check,
           ),
-        );
+        });
       },
     },
   ],
@@ -347,6 +650,10 @@ export const theDomainOfAMultivariableFunction: TopicDef = {
     "The domain of a multivariable function is the set of all input points for which the formula is mathematically defined.",
     "多元函数的定义域是使解析式具有数学意义的所有输入点的集合。",
   ),
+  intro: t(
+    "For $f(x, y) = \\sqrt{x - y} + \\ln y$, the square root needs $x - y \\ge 0$ and the logarithm needs $y > 0$. The domain is the set where both hold, $\\{(x, y) : 0 < y \\le x\\}$, the region of the first quadrant on or below the line $y = x$, without the $x$-axis.\n\nCheck: at $(3, 1)$ both pieces are defined, $f(3, 1) = \\sqrt{2} + \\ln 1 = \\sqrt{2}$, while $(1, 3)$ asks for $\\sqrt{-2}$ and $(2, 0)$ asks for $\\ln 0$.\n\nIn this lesson we find the domain of a function of two variables by collecting the condition each piece of its formula imposes.",
+    "对 $f(x, y) = \\sqrt{x - y} + \\ln y$，平方根要求 $x - y \\ge 0$，对数要求 $y > 0$。定义域是两者同时成立的集合 $\\{(x, y) : 0 < y \\le x\\}$，即第一象限中直线 $y = x$ 上及其下方、不含 $x$ 轴的区域。\n\n检验：在 $(3, 1)$ 处两部分都有定义，$f(3, 1) = \\sqrt{2} + \\ln 1 = \\sqrt{2}$；而 $(1, 3)$ 需要 $\\sqrt{-2}$，$(2, 0)$ 需要 $\\ln 0$。\n\n本课我们汇集解析式中每一部分给出的条件，求二元函数的定义域。",
+  ),
   prerequisites: ["open-and-closed-sets"],
   encompasses: [],
   xp: 10,
@@ -355,36 +662,59 @@ export const theDomainOfAMultivariableFunction: TopicDef = {
       id: "determining-the-domain-of-a-multivariable-function",
       title: t("Determining the domain of a multivariable function", "求多元函数的定义域"),
       explanation: t(
-        "To find the domain of a multivariable function, identify algebraic restrictions:\n\n- Radicands of even roots must be non-negative: $\\sqrt{g(x, y)} \\implies g(x, y) \\ge 0$.\n- Arguments of logarithms must be strictly positive: $\\ln(g(x, y)) \\implies g(x, y) > 0$.\n- Denominators must be non-zero.",
-        "求多元函数的定义域需考虑代数限制条件：\n\n- 偶次根式被开方数必须非负：$\\sqrt{g(x, y)} \\implies g(x, y) \\ge 0$。\n- 对数真数必须严格为正：$\\ln(g(x, y)) \\implies g(x, y) > 0$。\n- 分母不得为零。",
+        "To find the domain of a multivariable function, identify algebraic restrictions:\n\n- Radicands of even roots must be non-negative: $\\sqrt{g(x, y)} \\implies g(x, y) \\ge 0$.\n- Arguments of logarithms must be strictly positive: $\\ln(g(x, y)) \\implies g(x, y) > 0$.\n- Denominators must be non-zero.\n\nFor $f(x, y) = \\sqrt{y - x^2}$ the domain is $y \\ge x^2$, the region on and above the parabola $y = x^2$, and its boundary is that parabola.\n\n> **Watch out.** A logarithm needs a strictly positive argument while a square root allows $0$. In $x^2 + y^2 < 49$ the number $49$ is already the square of the radius $7$.",
+        "求多元函数的定义域需考虑代数限制条件：\n\n- 偶次根式被开方数必须非负：$\\sqrt{g(x, y)} \\implies g(x, y) \\ge 0$。\n- 对数真数必须严格为正：$\\ln(g(x, y)) \\implies g(x, y) > 0$。\n- 分母不得为零。\n\n对 $f(x, y) = \\sqrt{y - x^2}$，定义域为 $y \\ge x^2$，即抛物线 $y = x^2$ 上及其上方的区域，其边界就是这条抛物线。\n\n> **注意。** 对数要求真数严格为正，而平方根允许 $0$。在 $x^2 + y^2 < 49$ 中，$49$ 已经是半径 $7$ 的平方。",
       ),
       generate(rng: Rng): Problem {
         const R = rng.int(2, 35);
         const rSq = R * R;
         const answer = `x^2 + y^2 = ${rSq}`;
-
-        const prompt = t(
-          `Find the equation of the boundary of the domain of the function $f(x, y) = \\ln(${rSq} - x^2 - y^2)$. Express the boundary as an equation in $x$ and $y$.`,
-          `求函数 $f(x, y) = \\ln(${rSq} - x^2 - y^2)$ 的定义域边界的方程。结果以含 $x$ 和 $y$ 的方程表示。`,
-        );
-        const solution = t(
-          steps(
-            `The natural logarithm requires its argument to be strictly positive: $${rSq} - x^2 - y^2 > 0 \\iff x^2 + y^2 < ${rSq}$.`,
-            `The domain is the open disk of radius $${R}$ centered at the origin.`,
-            `The boundary curve of this open disk is the circle $${answer}$.`,
+        const mistakes = spoken(answer, [
+          say(
+            `x^2 + y^2 = ${R}`,
+            `The right side of $x^2 + y^2 = r^2$ is the squared radius, and $${rSq}$ is already that square.`,
+            `$x^2 + y^2 = r^2$ 的右边是半径的平方，而 $${rSq}$ 已经是这个平方。`,
           ),
-          steps(
-            `自然对数要求其真数严格为正：$${rSq} - x^2 - y^2 > 0 \\iff x^2 + y^2 < ${rSq}$。`,
-            `定义域是以原点为圆心、半径为 $${R}$ 的开圆盘。`,
-            `该开圆盘的边界曲线为圆 $${answer}$。`,
+          say(
+            `x^2 - y^2 = ${rSq}`,
+            `Moving $-x^2 - y^2$ to the other side makes both squares positive: $x^2 + y^2 < ${rSq}$.`,
+            `把 $-x^2 - y^2$ 移到另一边，两个平方项都变为正：$x^2 + y^2 < ${rSq}$。`,
           ),
+          say(`x + y = ${R}`, "The variables stay squared: the boundary is a circle, not a line.", "变量仍是平方：边界是圆，不是直线。"),
+        ]);
+        return withMistakes(
+          equationProblem({
+            prompt: t(
+              `Find the equation of the boundary of the domain of the function $f(x, y) = \\ln(${rSq} - x^2 - y^2)$. Express the boundary as an equation in $x$ and $y$.`,
+              `求函数 $f(x, y) = \\ln(${rSq} - x^2 - y^2)$ 的定义域边界的方程。结果以含 $x$ 和 $y$ 的方程表示。`,
+            ),
+            answer,
+            wrong: mistakes.map((m) => m.response),
+            solution: walked(
+              [
+                [
+                  ["Write the condition", "写出条件"],
+                  t(
+                    `The logarithm needs a positive argument: $${rSq} - x^2 - y^2 > 0$, that is, $x^2 + y^2 < ${rSq}$.`,
+                    `对数要求真数为正：$${rSq} - x^2 - y^2 > 0$，即 $x^2 + y^2 < ${rSq}$。`,
+                  ),
+                ],
+                [
+                  ["Take its edge", "取其边缘"],
+                  t(
+                    `The domain is the open disk of radius $${R}$ about the origin, and its boundary is the circle $${answer}$.`,
+                    `定义域是以原点为圆心、半径为 $${R}$ 的开圆盘，其边界是圆 $${answer}$。`,
+                  ),
+                ],
+              ],
+              t(
+                `At $(${R}, 0)$ the argument is $${rSq} - ${rSq} = 0$, where $\\ln$ is not defined, while at $(0, 0)$ it is $${rSq} > 0$: the circle separates the points where $f$ is defined from those where it is not.`,
+                `在 $(${R}, 0)$ 处真数为 $${rSq} - ${rSq} = 0$，$\\ln$ 无定义；而在 $(0, 0)$ 处真数为 $${rSq} > 0$：这个圆把 $f$ 有定义的点与无定义的点分开。`,
+              ),
+            ),
+          }),
+          mistakes,
         );
-        return equationProblem({
-          prompt,
-          solution,
-          answer,
-          wrong: [`x^2 + y^2 = ${R}`, `x^2 - y^2 = ${rSq}`, `x + y = ${R}`],
-        });
       },
     },
     {
@@ -392,8 +722,8 @@ export const theDomainOfAMultivariableFunction: TopicDef = {
       figure: multivariableDrawings1["the-domain-of-a-multivariable-function#the-area-of-a-domain"],
       title: t("The area of a domain", "定义域的面积"),
       explanation: t(
-        "To find the domain of a function built from roots and logarithms, collect the conditions from every piece: each square root needs a non-negative argument and each logarithm a positive one. The domain is the set where all of them hold at once. For example $\\sqrt{x} + \\sqrt{y} + \\sqrt{c - x - y}$ needs $x \\ge 0$, $y \\ge 0$ and $x + y \\le c$, a triangle of area $\\frac{c^2}{2}$.",
-        "要求由根式和对数构成的函数的定义域，需要汇集每一部分的条件：每个平方根要求被开方式非负，每个对数要求真数为正。定义域就是这些条件同时成立的集合。例如 $\\sqrt{x} + \\sqrt{y} + \\sqrt{c - x - y}$ 要求 $x \\ge 0$、$y \\ge 0$ 且 $x + y \\le c$，这是面积为 $\\frac{c^2}{2}$ 的三角形。",
+        "To find the domain of a function built from roots and logarithms, collect the conditions from every piece: each square root needs a non-negative argument and each logarithm a positive one. The domain is the set where all of them hold at once. For example $\\sqrt{x} + \\sqrt{y} + \\sqrt{c - x - y}$ needs $x \\ge 0$, $y \\ge 0$ and $x + y \\le c$, a triangle of area $\\frac{c^2}{2}$.\n\nFor $\\sqrt{x} + \\sqrt{4 - x} + \\sqrt{y} + \\sqrt{1 - y}$ the conditions are $0 \\le x \\le 4$ and $0 \\le y \\le 1$, a rectangle of area $4$.\n\n> **Watch out.** $\\sqrt{a^2 - x^2}$ needs $-a \\le x \\le a$, an interval of length $2a$, not $a$. Whether an edge belongs to the domain does not change its area.",
+        "要求由根式和对数构成的函数的定义域，需要汇集每一部分的条件：每个平方根要求被开方式非负，每个对数要求真数为正。定义域就是这些条件同时成立的集合。例如 $\\sqrt{x} + \\sqrt{y} + \\sqrt{c - x - y}$ 要求 $x \\ge 0$、$y \\ge 0$ 且 $x + y \\le c$，这是面积为 $\\frac{c^2}{2}$ 的三角形。\n\n对 $\\sqrt{x} + \\sqrt{4 - x} + \\sqrt{y} + \\sqrt{1 - y}$，条件是 $0 \\le x \\le 4$ 且 $0 \\le y \\le 1$，这是面积为 $4$ 的矩形。\n\n> **注意。** $\\sqrt{a^2 - x^2}$ 要求 $-a \\le x \\le a$，这个区间长 $2a$，不是 $a$。边是否属于定义域不影响面积。",
       ),
       generate(rng: Rng): Problem {
         const tri = rng.int(0, 1) === 0;
@@ -401,17 +731,83 @@ export const theDomainOfAMultivariableFunction: TopicDef = {
         const b = rng.int(1, 9);
         const ans = tri ? Q.of(a * a, 2) : Q.of(4 * a * b);
         const f = tri ? `\\sqrt{x} + \\sqrt{y} + \\sqrt{${a} - x - y}` : `\\sqrt{${a * a} - x^2} + \\ln(${b * b} - y^2)`;
+        const mistakes = tri
+          ? [
+              why(
+                Q.of(a * a),
+                `The triangle has legs $${a}$ and $${a}$, and a triangle is half of its rectangle: $\\frac{${a * a}}{2}$.`,
+                `三角形两条直角边都是 $${a}$，三角形是对应矩形的一半：$\\frac{${a * a}}{2}$。`,
+              ),
+              why(
+                Q.of(a, 2),
+                `The legs are $${a}$ long, so the area is $\\frac{${a} \\cdot ${a}}{2}$: square the leg.`,
+                `直角边长为 $${a}$，所以面积是 $\\frac{${a} \\cdot ${a}}{2}$：要把直角边平方。`,
+              ),
+            ]
+          : [
+              why(
+                Q.of(a * b),
+                `$|x| \\le ${a}$ is an interval of length $${2 * a}$ and $|y| < ${b}$ one of length $${2 * b}$.`,
+                `$|x| \\le ${a}$ 是长为 $${2 * a}$ 的区间，$|y| < ${b}$ 是长为 $${2 * b}$ 的区间。`,
+              ),
+              why(
+                Q.of(2 * a * b),
+                `Both widths double: the sides are $${2 * a}$ and $${2 * b}$.`,
+                `两个宽度都要加倍：边长是 $${2 * a}$ 和 $${2 * b}$。`,
+              ),
+              why(
+                Q.of(4 * a * a * b * b),
+                `The half widths are $${a}$ and $${b}$, the square roots of $${a * a}$ and $${b * b}$.`,
+                `半宽是 $${a}$ 和 $${b}$，即 $${a * a}$ 与 $${b * b}$ 的平方根。`,
+              ),
+            ];
         return numberProblem({
           prompt: t(`Find the area of the domain of $f(x, y) = ${f}$.`, `求 $f(x, y) = ${f}$ 的定义域的面积。`),
           answer: ans,
-          wrong: tri ? [Q.of(a * a), Q.of(a, 2), Q.of(a * a, 4)] : [Q.of(a * b), Q.of(4 * a * a * b * b), Q.of(2 * a * b)],
-          solution: t(
+          mistakes: distinct(ans, mistakes),
+          solution: walked(
             tri
-              ? `The domain is the triangle $x \\ge 0$, $y \\ge 0$, $x + y \\le ${a}$, of area $\\frac{${a}^2}{2} = ${ans.toLatex()}$.`
-              : `The domain is $|x| \\le ${a}$ and $|y| < ${b}$, a rectangle of area $${2 * a} \\cdot ${2 * b} = ${ans.toLatex()}$.`,
+              ? [
+                  [
+                    ["Collect the conditions", "汇集条件"],
+                    t(
+                      `$x \\ge 0$, $y \\ge 0$ and $${a} - x - y \\ge 0$, that is, $x + y \\le ${a}$.`,
+                      `$x \\ge 0$，$y \\ge 0$，且 $${a} - x - y \\ge 0$，即 $x + y \\le ${a}$。`,
+                    ),
+                  ],
+                  [
+                    ["Find the area", "求面积"],
+                    t(
+                      `This is the triangle with vertices $(0, 0)$, $(${a}, 0)$ and $(0, ${a})$, of area $\\frac{${a} \\cdot ${a}}{2} = ${ans.toLatex()}$.`,
+                      `这是顶点为 $(0, 0)$、$(${a}, 0)$、$(0, ${a})$ 的三角形，面积为 $\\frac{${a} \\cdot ${a}}{2} = ${ans.toLatex()}$。`,
+                    ),
+                  ],
+                ]
+              : [
+                  [
+                    ["Collect the conditions", "汇集条件"],
+                    t(
+                      `$${a * a} - x^2 \\ge 0$ gives $|x| \\le ${a}$, and $${b * b} - y^2 > 0$ gives $|y| < ${b}$.`,
+                      `$${a * a} - x^2 \\ge 0$ 给出 $|x| \\le ${a}$，$${b * b} - y^2 > 0$ 给出 $|y| < ${b}$。`,
+                    ),
+                  ],
+                  [
+                    ["Find the area", "求面积"],
+                    t(
+                      `This is a rectangle of sides $${2 * a}$ and $${2 * b}$, of area $${ans.toLatex()}$.`,
+                      `这是边长为 $${2 * a}$ 和 $${2 * b}$ 的矩形，面积为 $${ans.toLatex()}$。`,
+                    ),
+                  ],
+                ],
             tri
-              ? `定义域是三角形 $x \\ge 0$，$y \\ge 0$，$x + y \\le ${a}$，面积为 $\\frac{${a}^2}{2} = ${ans.toLatex()}$。`
-              : `定义域为 $|x| \\le ${a}$ 且 $|y| < ${b}$，是面积为 $${2 * a} \\cdot ${2 * b} = ${ans.toLatex()}$ 的矩形。`,
+              ? t(
+                  `Over each $x$ from $0$ to $${a}$ the domain has height $${a} - x$, and $\\int_0^{${a}} (${a} - x)\\,dx = ${a * a} - \\frac{${a * a}}{2} = ${ans.toLatex()}$.`,
+                  `对 $0$ 到 $${a}$ 之间的每个 $x$，定义域的高度为 $${a} - x$，而 $\\int_0^{${a}} (${a} - x)\\,dx = ${a * a} - \\frac{${a * a}}{2} = ${ans.toLatex()}$。`,
+                )
+              : t(
+                  `The quarter with $x \\ge 0$ and $y \\ge 0$ is $${a}$ by $${b}$, of area $${a * b}$, and four such quarters make $${ans.toLatex()}$.`,
+                  `$x \\ge 0$、$y \\ge 0$ 的四分之一部分是 $${a} \\times ${b}$，面积为 $${a * b}$，四个这样的部分合起来是 $${ans.toLatex()}$。`,
+                ),
           ),
         });
       },
@@ -427,6 +823,10 @@ export const levelCurves: TopicDef = {
     "The level curves of a function f(x, y) are the curves in the xy-plane with equation f(x, y) = c for constants c in the range.",
     "函数 f(x, y) 的等值线是 xy 平面内满足方程 f(x, y) = c 的曲线，其中 c 为函数值域内的常数。",
   ),
+  intro: t(
+    "For $f(x, y) = x^2 - y$, the level curve through $(2, 1)$ has level $c = f(2, 1) = 4 - 1 = 3$, so it is $x^2 - y = 3$, the parabola $y = x^2 - 3$. Every point of that parabola is sent by $f$ to the same value $3$.\n\nCheck: $(0, -3)$ lies on the parabola, and $f(0, -3) = 0 - (-3) = 3$.\n\nIn this lesson we find the level curve of a function through a point, by evaluating the function there and setting it equal to that value.",
+    "对 $f(x, y) = x^2 - y$，过 $(2, 1)$ 的等值线的水平值为 $c = f(2, 1) = 4 - 1 = 3$，所以它是 $x^2 - y = 3$，即抛物线 $y = x^2 - 3$。$f$ 把这条抛物线上的每个点都映到同一个值 $3$。\n\n检验：$(0, -3)$ 在这条抛物线上，且 $f(0, -3) = 0 - (-3) = 3$。\n\n本课我们在一点处计算函数值，再令函数等于这个值，求出过该点的等值线。",
+  ),
   prerequisites: ["the-domain-of-a-multivariable-function"],
   encompasses: [],
   xp: 10,
@@ -435,8 +835,8 @@ export const levelCurves: TopicDef = {
       id: "finding-equations-of-level-curves",
       title: t("Finding equations of level curves", "求等值线方程"),
       explanation: t(
-        "A **level curve** (or contour line) of $z = f(x, y)$ represents all input points $(x, y)$ where the function takes a constant value $c$. Its equation in the $xy$-plane is simply:\n\n$$f(x, y) = c.$$ The level curve through a point $(x_0, y_0)$ has $c = f(x_0, y_0)$.",
-        "$z = f(x, y)$ 的**等值线**（或等高线）表示函数值取常数 $c$ 的所有输入点 $(x, y)$ 的集合。其在 $xy$ 平面中的方程为：\n\n$$f(x, y) = c$$ 过点 $(x_0, y_0)$ 的等值线有 $c = f(x_0, y_0)$。",
+        "A **level curve** (or contour line) of $z = f(x, y)$ represents all input points $(x, y)$ where the function takes a constant value $c$. Its equation in the $xy$-plane is simply:\n\n$$f(x, y) = c.$$ The level curve through a point $(x_0, y_0)$ has $c = f(x_0, y_0)$.\n\nFor $f(x, y) = xy$ the level curve through $(2, 3)$ is $xy = 6$, a hyperbola.\n\n> **Watch out.** The level is the value of $f$ at the point, coefficients included, not the sum of the squared coordinates. The left side stays $f(x, y)$ itself.",
+        "$z = f(x, y)$ 的**等值线**（或等高线）表示函数值取常数 $c$ 的所有输入点 $(x, y)$ 的集合。其在 $xy$ 平面中的方程为：\n\n$$f(x, y) = c$$ 过点 $(x_0, y_0)$ 的等值线有 $c = f(x_0, y_0)$。\n\n对 $f(x, y) = xy$，过 $(2, 3)$ 的等值线是 $xy = 6$，一条双曲线。\n\n> **注意。** 水平值是 $f$ 在该点的值，系数也要算进去，不是坐标平方之和。方程左边仍是 $f(x, y)$ 本身。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(1, 6);
@@ -446,37 +846,58 @@ export const levelCurves: TopicDef = {
         const c = a * p * p + b * q * q;
         const lhs = poly([a, "x^2"], [b, "y^2"]);
         const answer = `${lhs} = ${c}`;
-
-        const prompt = t(
-          `Find the equation of the level curve of $f(x, y) = ${lhs}$ that passes through the point $(${p}, ${q})$.`,
-          `求函数 $f(x, y) = ${lhs}$ 经过点 $(${p}, ${q})$ 的等值线方程。`,
-        );
-        const solution = t(
-          steps(
-            `The value of $f$ at the point is $c = ${a} \\cdot ${p * p} + ${b} \\cdot ${q * q} = ${c}$.`,
-            `Set $f$ equal to this constant: $$${answer}.$$`,
-          ),
-          steps(`$f$ 在该点的值为 $c = ${a} \\cdot ${p * p} + ${b} \\cdot ${q * q} = ${c}$。`, `令 $f$ 等于这个常数：$$${answer}$$`),
-        );
-        return equationProblem({
-          prompt,
-          solution,
-          answer,
-          wrong: [
-            `${lhs} = ${c + 1}`,
+        const mistakes = spoken(answer, [
+          say(
             `${lhs} = ${p * p + q * q}`,
-            `${poly([a, "x^2"], [-b, "y^2"])} = ${c}`,
+            `The level is $f(${p}, ${q})$, so the coefficients count: $${a} \\cdot ${p * p} + ${b} \\cdot ${q * q} = ${c}$.`,
+            `水平值是 $f(${p}, ${q})$，所以系数要算进去：$${a} \\cdot ${p * p} + ${b} \\cdot ${q * q} = ${c}$。`,
+          ),
+          say(
             `${lhs} = ${a * p + b * q}`,
-          ].filter((w) => w !== answer),
-        });
+            "The coordinates are squared before they are multiplied by the coefficients.",
+            "坐标要先平方，再乘以系数。",
+          ),
+          say(
+            `${poly([a, "x^2"], [-b, "y^2"])} = ${c}`,
+            `The left side is $f$ itself, $${lhs}$, with both terms positive.`,
+            `左边就是 $f$ 本身，即 $${lhs}$，两项都为正。`,
+          ),
+        ]);
+        return withMistakes(
+          equationProblem({
+            prompt: t(
+              `Find the equation of the level curve of $f(x, y) = ${lhs}$ that passes through the point $(${p}, ${q})$.`,
+              `求函数 $f(x, y) = ${lhs}$ 经过点 $(${p}, ${q})$ 的等值线方程。`,
+            ),
+            answer,
+            wrong: mistakes.map((m) => m.response),
+            solution: walked(
+              [
+                [
+                  ["Evaluate f at the point", "在该点计算 f"],
+                  t(
+                    `$c = ${a} \\cdot ${p * p} + ${b} \\cdot ${q * q} = ${c}$.`,
+                    `$c = ${a} \\cdot ${p * p} + ${b} \\cdot ${q * q} = ${c}$。`,
+                  ),
+                ],
+                [["Set f equal to it", "令 f 等于它"], t(`$${answer}$.`, `$${answer}$。`)],
+              ],
+              t(
+                `$(${-p}, ${q})$ is on the same curve, since $${a} \\cdot (${-p})^2 + ${b} \\cdot ${q * q} = ${c}$ as well: the curve is symmetric about the $y$-axis, as an ellipse centered at the origin should be.`,
+                `$(${-p}, ${q})$ 也在这条曲线上，因为同样有 $${a} \\cdot (${-p})^2 + ${b} \\cdot ${q * q} = ${c}$：曲线关于 $y$ 轴对称，正如以原点为中心的椭圆应有的那样。`,
+              ),
+            ),
+          }),
+          mistakes,
+        );
       },
     },
     {
       id: "the-level-curve-through-a-point",
       title: t("The level curve through a point", "过某点的等值线"),
       explanation: t(
-        "The level curve of $f$ through a point $(p, q)$ is $f(x, y) = c$ with $c = f(p, q)$. For $f(x, y) = ax^2 + by^2$ with $a, b > 0$ it is the ellipse $ax^2 + by^2 = c$. Setting $y = 0$ shows where it crosses the $x$-axis, so its semi-axis along $x$ satisfies\n\n$$s_x^2 = \\frac{c}{a}.$$",
-        "$f$ 过点 $(p, q)$ 的等值线是 $f(x, y) = c$，其中 $c = f(p, q)$。对 $a, b > 0$ 的 $f(x, y) = ax^2 + by^2$，它是椭圆 $ax^2 + by^2 = c$。令 $y = 0$ 可知它与 $x$ 轴的交点，所以沿 $x$ 方向的半轴满足\n\n$$s_x^2 = \\frac{c}{a}.$$",
+        "The level curve of $f$ through a point $(p, q)$ is $f(x, y) = c$ with $c = f(p, q)$. For $f(x, y) = ax^2 + by^2$ with $a, b > 0$ it is the ellipse $ax^2 + by^2 = c$. Setting $y = 0$ shows where it crosses the $x$-axis, so its semi-axis along $x$ satisfies\n\n$$s_x^2 = \\frac{c}{a}.$$\n\nFor $f(x, y) = 9x^2 + y^2$ through $(1, 3)$, $c = 9 + 9 = 18$ and $s_x^2 = \\frac{18}{9} = 2$.\n\n> **Watch out.** Divide by the coefficient of $x^2$, not of $y^2$, for the semi-axis along $x$. The level $c$ is $f$ at the point, not the point's squared distance from the origin.",
+        "$f$ 过点 $(p, q)$ 的等值线是 $f(x, y) = c$，其中 $c = f(p, q)$。对 $a, b > 0$ 的 $f(x, y) = ax^2 + by^2$，它是椭圆 $ax^2 + by^2 = c$。令 $y = 0$ 可知它与 $x$ 轴的交点，所以沿 $x$ 方向的半轴满足\n\n$$s_x^2 = \\frac{c}{a}.$$\n\n对 $f(x, y) = 9x^2 + y^2$ 过 $(1, 3)$ 的等值线，$c = 9 + 9 = 18$，$s_x^2 = \\frac{18}{9} = 2$。\n\n> **注意。** 求沿 $x$ 方向的半轴要除以 $x^2$ 的系数，而不是 $y^2$ 的系数。水平值 $c$ 是 $f$ 在该点的值，不是该点到原点距离的平方。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(1, 6);
@@ -485,16 +906,48 @@ export const levelCurves: TopicDef = {
         const q = rng.int(-4, 4) || 1;
         const c = a * p * p + b * q * q;
         const ans = Q.of(c, a);
+        const f = poly([a, "x^2"], [b, "y^2"]);
         return numberProblem({
           prompt: t(
-            `The level curve of $f(x, y) = ${poly([a, "x^2"], [b, "y^2"])}$ through $(${p}, ${q})$ is an ellipse. Find the square of its semi-axis along the $x$-axis.`,
-            `$f(x, y) = ${poly([a, "x^2"], [b, "y^2"])}$ 过点 $(${p}, ${q})$ 的等值线是一个椭圆。求它沿 $x$ 轴的半轴长的平方。`,
+            `The level curve of $f(x, y) = ${f}$ through $(${p}, ${q})$ is an ellipse. Find the square of its semi-axis along the $x$-axis.`,
+            `$f(x, y) = ${f}$ 过点 $(${p}, ${q})$ 的等值线是一个椭圆。求它沿 $x$ 轴的半轴长的平方。`,
           ),
           answer: ans,
-          wrong: [Q.of(c), Q.of(c, b), Q.of(p * p)],
-          solution: t(
-            `$c = f(${p}, ${q}) = ${c}$, so the curve is $${poly([a, "x^2"], [b, "y^2"])} = ${c}$ and $s_x^2 = \\frac{${c}}{${a}}${lowestTerms(c, a)}$.`,
-            `$c = f(${p}, ${q}) = ${c}$，所以曲线为 $${poly([a, "x^2"], [b, "y^2"])} = ${c}$，$s_x^2 = \\frac{${c}}{${a}}${lowestTerms(c, a)}$。`,
+          mistakes: distinct(ans, [
+            why(
+              Q.of(c),
+              `Setting $y = 0$ leaves $${a === 1 ? "" : a}x^2 = ${c}$, so divide by $${a}$.`,
+              `令 $y = 0$ 得 $${a === 1 ? "" : a}x^2 = ${c}$，所以要除以 $${a}$。`,
+            ),
+            why(
+              Q.of(c, b),
+              `Dividing by $${b}$ gives the square of the semi-axis along $y$, from $x = 0$.`,
+              `除以 $${b}$ 得到的是沿 $y$ 方向的半轴平方，那是令 $x = 0$ 的结果。`,
+            ),
+            why(
+              Q.of(p * p + q * q, a),
+              `The level is $f(${p}, ${q}) = ${c}$, with the coefficients, not $${p * p} + ${q * q}$.`,
+              `水平值是 $f(${p}, ${q}) = ${c}$，要带系数，而不是 $${p * p} + ${q * q}$。`,
+            ),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Find the level", "求水平值"],
+                t(`$c = f(${p}, ${q}) = ${c}$, so the curve is $${f} = ${c}$.`, `$c = f(${p}, ${q}) = ${c}$，所以曲线为 $${f} = ${c}$。`),
+              ],
+              [
+                ["Set y = 0", "令 y = 0"],
+                t(
+                  `$${a === 1 ? "" : a}x^2 = ${c}$, so $s_x^2 = \\frac{${c}}{${a}}${lowestTerms(c, a)}$.`,
+                  `$${a === 1 ? "" : a}x^2 = ${c}$，所以 $s_x^2 = \\frac{${c}}{${a}}${lowestTerms(c, a)}$。`,
+                ),
+              ],
+            ],
+            t(
+              `The point $(s_x, 0)$ lies on the curve: $${a} \\cdot ${ans.toLatex()} + ${b} \\cdot 0 = ${c}$.`,
+              `点 $(s_x, 0)$ 在曲线上：$${a} \\cdot ${ans.toLatex()} + ${b} \\cdot 0 = ${c}$。`,
+            ),
           ),
         });
       },
@@ -510,6 +963,10 @@ export const levelSurfaces: TopicDef = {
     "The level surfaces of a function F(x, y, z) are the surfaces in three-dimensional space with equation F(x, y, z) = c.",
     "函数 F(x, y, z) 的等值面是三维空间中满足方程 F(x, y, z) = c 的曲面。",
   ),
+  intro: t(
+    "For $F(x, y, z) = x + y^2 + z$, the level surface through $(1, 2, -3)$ has level $c = 1 + 4 - 3 = 2$, so it is $x + y^2 + z = 2$. Every point of that surface is sent by $F$ to the value $2$.\n\nCheck: $(2, 0, 0)$ lies on the surface, since $2 + 0 + 0 = 2$, and so does $(0, 1, 1)$, since $0 + 1 + 1 = 2$.\n\nIn this lesson we find the level surface of a function of three variables through a point and recognize its shape from its level.",
+    "对 $F(x, y, z) = x + y^2 + z$，过 $(1, 2, -3)$ 的等值面的水平值为 $c = 1 + 4 - 3 = 2$，所以它是 $x + y^2 + z = 2$。$F$ 把这个曲面上的每个点都映到值 $2$。\n\n检验：$(2, 0, 0)$ 在该曲面上，因为 $2 + 0 + 0 = 2$；$(0, 1, 1)$ 也在，因为 $0 + 1 + 1 = 2$。\n\n本课我们求三元函数过一点的等值面，并由水平值判断它的形状。",
+  ),
   prerequisites: ["level-curves"],
   encompasses: [{ topic: "level-curves", weight: 0.3 }],
   xp: 10,
@@ -518,8 +975,8 @@ export const levelSurfaces: TopicDef = {
       id: "finding-equations-of-level-surfaces",
       title: t("Finding equations of level surfaces", "求等值面方程"),
       explanation: t(
-        "A level surface is the three dimensional version of a contour line: all the points where the function takes one fixed value. A **level surface** of a three-variable function $w = F(x, y, z)$ consists of all points in $\\mathbb{R}^3$ where $F(x, y, z) = c$ for a constant $c$. The level surface through a given point has $c$ equal to the value of $F$ there.",
-        "等值面是等高线的三维版本：函数取同一个固定值的所有点。三元函数 $w = F(x, y, z)$ 的**等值面**由使 $F(x, y, z) = c$（$c$ 为常数）的所有三维空间点构成。过某一点的等值面，其 $c$ 等于 $F$ 在该点的值。",
+        "A level surface is the three dimensional version of a contour line: all the points where the function takes one fixed value. A **level surface** of a three-variable function $w = F(x, y, z)$ consists of all points in $\\mathbb{R}^3$ where $F(x, y, z) = c$ for a constant $c$. The level surface through a given point has $c$ equal to the value of $F$ there.\n\nFor $F(x, y, z) = xyz$ the level surface through $(1, 2, 3)$ is $xyz = 6$.\n\n> **Watch out.** The level is $F$ at the point with its coefficients, not the sum of the squared coordinates. Keep every sign of $F$ on the left side.",
+        "等值面是等高线的三维版本：函数取同一个固定值的所有点。三元函数 $w = F(x, y, z)$ 的**等值面**由使 $F(x, y, z) = c$（$c$ 为常数）的所有三维空间点构成。过某一点的等值面，其 $c$ 等于 $F$ 在该点的值。\n\n对 $F(x, y, z) = xyz$，过 $(1, 2, 3)$ 的等值面是 $xyz = 6$。\n\n> **注意。** 水平值是带系数的 $F$ 在该点的值，不是坐标平方之和。左边要保留 $F$ 的每个符号。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(1, 5);
@@ -529,31 +986,50 @@ export const levelSurfaces: TopicDef = {
         const k = a * p * p + b * q * q + cCoeff * r * r;
         const lhs = poly([a, "x^2"], [b, "y^2"], [cCoeff, "z^2"]);
         const answer = `${lhs} = ${k}`;
-
-        const prompt = t(
-          `Find the equation of the level surface of $F(x, y, z) = ${lhs}$ that passes through the point $(${p}, ${q}, ${r})$.`,
-          `求函数 $F(x, y, z) = ${lhs}$ 经过点 $(${p}, ${q}, ${r})$ 的等值面方程。`,
-        );
-        const solution = t(
-          steps(
-            `The value of $F$ at the point is $c = ${a} \\cdot ${p * p} + ${b} \\cdot ${q * q} + ${cCoeff} \\cdot ${r * r} = ${k}$.`,
-            `Set $F$ equal to this constant: $$${answer}.$$`,
-          ),
-          steps(
-            `$F$ 在该点的值为 $c = ${a} \\cdot ${p * p} + ${b} \\cdot ${q * q} + ${cCoeff} \\cdot ${r * r} = ${k}$。`,
-            `令 $F$ 等于这个常数：$$${answer}$$`,
-          ),
-        );
-        return equationProblem({
-          prompt,
-          solution,
-          answer,
-          wrong: [
-            `${lhs} = ${k + 1}`,
+        const mistakes = spoken(answer, [
+          say(
             `${lhs} = ${p * p + q * q + r * r}`,
+            `The level is $F(${p}, ${q}, ${r})$, so the coefficients count: $${a} \\cdot ${p * p} + ${b} \\cdot ${q * q} + ${cCoeff} \\cdot ${r * r} = ${k}$.`,
+            `水平值是 $F(${p}, ${q}, ${r})$，所以系数要算进去：$${a} \\cdot ${p * p} + ${b} \\cdot ${q * q} + ${cCoeff} \\cdot ${r * r} = ${k}$。`,
+          ),
+          say(
+            `${lhs} = ${a * p + b * q + cCoeff * r}`,
+            "The coordinates are squared before they are multiplied by the coefficients.",
+            "坐标要先平方，再乘以系数。",
+          ),
+          say(
             `${poly([a, "x^2"], [b, "y^2"], [-cCoeff, "z^2"])} = ${k}`,
-          ].filter((w) => w !== answer),
-        });
+            `The left side is $F$ itself, $${lhs}$, with every term positive.`,
+            `左边就是 $F$ 本身，即 $${lhs}$，每一项都为正。`,
+          ),
+        ]);
+        return withMistakes(
+          equationProblem({
+            prompt: t(
+              `Find the equation of the level surface of $F(x, y, z) = ${lhs}$ that passes through the point $(${p}, ${q}, ${r})$.`,
+              `求函数 $F(x, y, z) = ${lhs}$ 经过点 $(${p}, ${q}, ${r})$ 的等值面方程。`,
+            ),
+            answer,
+            wrong: mistakes.map((m) => m.response),
+            solution: walked(
+              [
+                [
+                  ["Evaluate F at the point", "在该点计算 F"],
+                  t(
+                    `$c = ${a} \\cdot ${p * p} + ${b} \\cdot ${q * q} + ${cCoeff} \\cdot ${r * r} = ${k}$.`,
+                    `$c = ${a} \\cdot ${p * p} + ${b} \\cdot ${q * q} + ${cCoeff} \\cdot ${r * r} = ${k}$。`,
+                  ),
+                ],
+                [["Set F equal to it", "令 F 等于它"], t(`$${answer}$.`, `$${answer}$。`)],
+              ],
+              t(
+                `$(${p}, ${q}, ${-r})$ lies on the same surface, since changing the sign of $z$ leaves $z^2$ as it is; the surface is an ellipsoid centered at the origin.`,
+                `$(${p}, ${q}, ${-r})$ 也在这个曲面上，因为改变 $z$ 的符号不改变 $z^2$；该曲面是以原点为中心的椭球面。`,
+              ),
+            ),
+          }),
+          mistakes,
+        );
       },
     },
     {
@@ -561,8 +1037,8 @@ export const levelSurfaces: TopicDef = {
       figure: multivariableDrawings2["level-surfaces#the-shape-of-the-level-surface-through-a-point"],
       title: t("The shape of the level surface through a point", "过某点的等值面的形状"),
       explanation: t(
-        "The level surfaces of $F(x, y, z) = x^2 + y^2 - z^2$ change shape with the level $c$. For $c > 0$, $x^2 + y^2 - z^2 = c$ is a hyperboloid of one sheet; for $c < 0$ it is a hyperboloid of two sheets; for $c = 0$ it is a double cone. To find the surface through a point, first compute $c = F$ at that point.",
-        "$F(x, y, z) = x^2 + y^2 - z^2$ 的等值面随水平值 $c$ 改变形状。$c > 0$ 时，$x^2 + y^2 - z^2 = c$ 是单叶双曲面；$c < 0$ 时是双叶双曲面；$c = 0$ 时是双圆锥面。要找过某点的等值面，先计算该点处的 $c = F$。",
+        "The level surfaces of $F(x, y, z) = x^2 + y^2 - z^2$ change shape with the level $c$. For $c > 0$, $x^2 + y^2 - z^2 = c$ is a hyperboloid of one sheet; for $c < 0$ it is a hyperboloid of two sheets; for $c = 0$ it is a double cone. To find the surface through a point, first compute $c = F$ at that point.\n\nThrough $(6, 0, 1)$ the level is $36 - 1 = 35 > 0$, so the surface is a hyperboloid of one sheet.\n\n> **Watch out.** A negative level gives two sheets: then $z^2 = x^2 + y^2 - c$ is at least $-c > 0$, which leaves a gap around the plane $z = 0$. The cone is the level $0$ alone.",
+        "$F(x, y, z) = x^2 + y^2 - z^2$ 的等值面随水平值 $c$ 改变形状。$c > 0$ 时，$x^2 + y^2 - z^2 = c$ 是单叶双曲面；$c < 0$ 时是双叶双曲面；$c = 0$ 时是双圆锥面。要找过某点的等值面，先计算该点处的 $c = F$。\n\n过 $(6, 0, 1)$ 的水平值为 $36 - 1 = 35 > 0$，所以该曲面是单叶双曲面。\n\n> **注意。** 负的水平值给出双叶：这时 $z^2 = x^2 + y^2 - c$ 至少为 $-c > 0$，在平面 $z = 0$ 附近留下空隙。圆锥面只对应水平值 $0$。",
       ),
       generate(rng: Rng): Problem {
         const [x, y, z] = [rng.int(-4, 4), rng.int(-4, 4), rng.int(-5, 5)];
@@ -572,25 +1048,76 @@ export const levelSurfaces: TopicDef = {
           t("Hyperboloid of one sheet", "单叶双曲面"),
           t("Hyperboloid of two sheets", "双叶双曲面"),
           t("Double cone", "双圆锥面"),
+        ] as const;
+        const reasons: readonly (readonly [string, string])[][] = [
+          [
+            ["", ""],
+            [`Two sheets need a negative level, and $c = ${c}$ is positive`, `双叶需要负的水平值，而 $c = ${c}$ 为正`],
+            [`The cone is the level $0$, and $c = ${c}$`, `圆锥面对应水平值 $0$，而 $c = ${c}$`],
+          ],
+          [
+            [`One sheet needs a positive level, and $c = ${c}$ is negative`, `单叶需要正的水平值，而 $c = ${c}$ 为负`],
+            ["", ""],
+            [`The cone is the level $0$, and $c = ${c}$`, `圆锥面对应水平值 $0$，而 $c = ${c}$`],
+          ],
+          [
+            ["One sheet needs a positive level, and here $c = 0$", "单叶需要正的水平值，而这里 $c = 0$"],
+            ["Two sheets need a negative level, and here $c = 0$", "双叶需要负的水平值，而这里 $c = 0$"],
+            ["", ""],
+          ],
         ];
-        const right = names[kind] ?? names[0]!;
-        return pickChoice(
-          rng,
+        const check = [
           t(
+            `The plane $z = 0$ meets $x^2 + y^2 - z^2 = ${c}$ in the circle $x^2 + y^2 = ${c}$, and every plane $z = h$ meets it in a circle of radius $\\sqrt{${c} + h^2}$, so the surface is one connected piece.`,
+            `平面 $z = 0$ 与 $x^2 + y^2 - z^2 = ${c}$ 交于圆 $x^2 + y^2 = ${c}$，每个平面 $z = h$ 都与它交于半径为 $\\sqrt{${c} + h^2}$ 的圆，所以曲面是连成一片的。`,
+          ),
+          t(
+            `On the surface $z^2 = x^2 + y^2 + ${-c} \\ge ${-c}$, so no point has $|z| < \\sqrt{${-c}}$: the surface splits into a piece above and a piece below.`,
+            `在曲面上 $z^2 = x^2 + y^2 + ${-c} \\ge ${-c}$，所以没有点满足 $|z| < \\sqrt{${-c}}$：曲面分成上下两片。`,
+          ),
+          t(
+            "The origin satisfies $0 = 0$, and the surface is $z = \\pm\\sqrt{x^2 + y^2}$, two cones meeting at the origin.",
+            "原点满足 $0 = 0$，曲面是 $z = \\pm\\sqrt{x^2 + y^2}$，即在原点相接的两个圆锥。",
+          ),
+        ][kind] as Text;
+        const sign = kind === 0 ? "positive" : kind === 1 ? "negative" : "zero";
+        const signZh = kind === 0 ? "为正" : kind === 1 ? "为负" : "为零";
+        return explainedChoice(rng, {
+          prompt: t(
             `Identify the level surface of $F(x, y, z) = x^2 + y^2 - z^2$ that passes through $(${x}, ${y}, ${z})$.`,
             `判断 $F(x, y, z) = x^2 + y^2 - z^2$ 过点 $(${x}, ${y}, ${z})$ 的等值面。`,
           ),
-          right,
-          names.filter((_, i) => i !== kind),
-          t(
-            `$c = ${x * x} + ${y * y} - ${z * z} = ${c}$, so the surface $x^2 + y^2 - z^2 = ${c}$ is a ${right.en.toLowerCase()}.`,
-            `$c = ${x * x} + ${y * y} - ${z * z} = ${c}$，所以曲面 $x^2 + y^2 - z^2 = ${c}$ 是${right["zh-CN"]}。`,
+          correct: names[kind] as Text,
+          wrong: [0, 1, 2]
+            .filter((i) => i !== kind)
+            .map((i) => {
+              const [en, zh] = reasons[kind]?.[i] ?? ["", ""];
+              return { option: names[i] as Text, why: t(`${en}.`, `${zh}。`) };
+            }),
+          solution: walked(
+            [
+              [
+                ["Find the level", "求水平值"],
+                t(`$c = ${x * x} + ${y * y} - ${z * z} = ${c}$.`, `$c = ${x * x} + ${y * y} - ${z * z} = ${c}$。`),
+              ],
+              [
+                ["Read the shape from its sign", "由其符号判断形状"],
+                t(
+                  `The level is ${sign}, so $x^2 + y^2 - z^2 = ${c}$ is ${kind === 2 ? "a double cone" : `a ${(names[kind] as Text).en.toLowerCase()}`}.`,
+                  `水平值${signZh}，所以 $x^2 + y^2 - z^2 = ${c}$ 是${(names[kind] as Text)["zh-CN"]}。`,
+                ),
+              ],
+            ],
+            check,
           ),
-        );
+        });
       },
     },
   ],
 };
+
+/** kTimes writes k times a monomial, leaving a coefficient of 1 or −1 implicit. */
+const kTimes = (k: number, v: string): string => (k === 1 ? v : k === -1 ? `-${v}` : `${k}${v}`);
 
 /** limitsAndContinuityOfMultivariableFunctions examines limits along paths. */
 export const limitsAndContinuityOfMultivariableFunctions: TopicDef = {
@@ -600,6 +1127,10 @@ export const limitsAndContinuityOfMultivariableFunctions: TopicDef = {
     "A multivariable limit exists only if the function approaches the same value along every possible path approaching the point.",
     "多元函数的极限存在，当且仅当函数沿所有可能趋近该点的路径都趋于同一个值。",
   ),
+  intro: t(
+    "Take $f(x, y) = \\frac{x^2 - y^2}{x^2 + y^2}$. Along the $x$-axis, $y = 0$, it equals $\\frac{x^2}{x^2} = 1$; along the $y$-axis, $x = 0$, it equals $\\frac{-y^2}{y^2} = -1$. Two paths into the origin give two different values, so $\\lim_{(x, y) \\to (0, 0)} f(x, y)$ does not exist.\n\nCheck: along the line $y = x$ the function is $\\frac{0}{2x^2} = 0$, a third value, so the paths really do disagree.\n\nIn this lesson we compute limits along lines and curves into a point, and use them to show that a limit does not exist.",
+    "取 $f(x, y) = \\frac{x^2 - y^2}{x^2 + y^2}$。沿 $x$ 轴，$y = 0$，它等于 $\\frac{x^2}{x^2} = 1$；沿 $y$ 轴，$x = 0$，它等于 $\\frac{-y^2}{y^2} = -1$。两条趋于原点的路径给出两个不同的值，所以 $\\lim_{(x, y) \\to (0, 0)} f(x, y)$ 不存在。\n\n检验：沿直线 $y = x$，函数为 $\\frac{0}{2x^2} = 0$，又是一个不同的值，所以各路径确实不一致。\n\n本课我们沿直线和曲线求趋于一点的极限，并用它们说明极限不存在。",
+  ),
   prerequisites: ["level-surfaces", "the-finite-limit-of-a-function"],
   encompasses: [],
   xp: 10,
@@ -608,42 +1139,64 @@ export const limitsAndContinuityOfMultivariableFunctions: TopicDef = {
       id: "evaluating-limits-along-linear-paths",
       title: t("Evaluating limits along linear paths", "沿直线路径求极限"),
       explanation: t(
-        "To test whether $\\lim_{(x, y) \\to (0, 0)} f(x, y)$ exists, approach $(0, 0)$ along lines $y = mx$. If the resulting limit depends on the slope $m$, the two-variable limit does not exist.",
-        "为了检验 $\\lim_{(x, y) \\to (0, 0)} f(x, y)$ 是否存在，可沿直线 $y = mx$ 趋近 $(0, 0)$。若所得极限依赖于斜率 $m$，则该二元极限不存在。",
+        "To test whether $\\lim_{(x, y) \\to (0, 0)} f(x, y)$ exists, approach $(0, 0)$ along lines $y = mx$. If the resulting limit depends on the slope $m$, the two-variable limit does not exist.\n\nFor $f(x, y) = \\frac{xy}{x^2 + y^2}$ along $y = -x$, $f(x, -x) = \\frac{-x^2}{2x^2} = -\\frac{1}{2}$, while along $y = 0$ it is $0$.\n\n> **Watch out.** Replace $y$ by $mx$ everywhere: $y^2$ becomes $m^2x^2$, not $mx^2$. One line giving a value does not show the limit exists; only two paths that disagree settle the question.",
+        "为了检验 $\\lim_{(x, y) \\to (0, 0)} f(x, y)$ 是否存在，可沿直线 $y = mx$ 趋近 $(0, 0)$。若所得极限依赖于斜率 $m$，则该二元极限不存在。\n\n对 $f(x, y) = \\frac{xy}{x^2 + y^2}$，沿 $y = -x$ 有 $f(x, -x) = \\frac{-x^2}{2x^2} = -\\frac{1}{2}$，而沿 $y = 0$ 为 $0$。\n\n> **注意。** 每处的 $y$ 都要换成 $mx$：$y^2$ 变成 $m^2x^2$，而不是 $mx^2$。一条直线给出一个值并不说明极限存在；只有两条路径的值不同才能下结论。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.nonZero(-6, 6);
         const b = rng.int(1, 5);
         const c = rng.int(1, 5);
         const m = rng.int(1, 4);
-
-        // f(x, y) = (a * x * y) / (b * x^2 + c * y^2)
-        // Along y = mx: (a * m * x^2) / (b * x^2 + c * m^2 * x^2) = (a * m) / (b + c * m^2)
         const num = a * m;
         const den = b + c * m * m;
         const ans = Q.of(num, den);
-
-        const prompt = t(
-          `Find the limit of $f(x, y) = \\frac{${poly([a, "xy"])}}{${poly([b, "x^2"], [c, "y^2"])}}$ as $(x, y) \\to (0, 0)$ along the line $y = ${m === 1 ? "x" : `${m}x`}$.`,
-          `求函数 $f(x, y) = \\frac{${poly([a, "xy"])}}{${poly([b, "x^2"], [c, "y^2"])}}$ 沿直线 $y = ${m === 1 ? "x" : `${m}x`}$ 当 $(x, y) \\to (0, 0)$ 时的极限值。`,
-        );
-        const solution = t(
-          steps(
-            `Substitute $y = ${m === 1 ? "x" : `${m}x`}$ into $f(x, y)$:\n\n` +
-              `$$f(x, ${m === 1 ? "x" : `${m}x`}) = \\frac{${poly([a, "x"])}(${m === 1 ? "x" : `${m}x`})}{${poly([b, "x^2"])} + ${c}(${m === 1 ? "x" : `${m}x`})^2} = \\frac{${num}x^2}{${b}x^2 + ${c * m * m}x^2} = \\frac{${num}}{${den}} = ${ans.toLatex()}.$$`,
-            `As $x \\to 0$, the value is identically $${ans.toLatex()}$.`,
-          ),
-          steps(
-            `将 $y = ${m === 1 ? "x" : `${m}x`}$ 代入 $f(x, y)$：\n\n` +
-              `$$f(x, ${m === 1 ? "x" : `${m}x`}) = \\frac{${poly([a, "x"])}(${m === 1 ? "x" : `${m}x`})}{${poly([b, "x^2"])} + ${c}(${m === 1 ? "x" : `${m}x`})^2} = \\frac{${num}x^2}{${b}x^2 + ${c * m * m}x^2} = \\frac{${num}}{${den}} = ${ans.toLatex()}$$`,
-            `当 $x \\to 0$ 时，该极限恒为 $${ans.toLatex()}$。`,
-          ),
-        );
+        const line = kTimes(m, "x");
+        const f = `\\frac{${poly([a, "xy"])}}{${poly([b, "x^2"], [c, "y^2"])}}`;
         return numberProblem({
-          prompt,
-          solution,
+          prompt: t(
+            `Find the limit of $f(x, y) = ${f}$ as $(x, y) \\to (0, 0)$ along the line $y = ${line}$.`,
+            `求函数 $f(x, y) = ${f}$ 沿直线 $y = ${line}$ 当 $(x, y) \\to (0, 0)$ 时的极限值。`,
+          ),
           answer: ans,
-          wrong: [Q.zero, Q.of(1), Q.of(a, b + c)],
+          mistakes: distinct(ans, [
+            why(
+              Q.zero,
+              "Putting in $(0, 0)$ gives $\\frac{0}{0}$, which is not $0$; substitute the line first and cancel $x^2$.",
+              "代入 $(0, 0)$ 得到 $\\frac{0}{0}$，它不是 $0$；要先代入直线，再约去 $x^2$。",
+            ),
+            why(
+              Q.of(a * m, b + c * m),
+              `On the line $y^2 = ${m * m}x^2$, so $${c}y^2$ becomes $${c * m * m}x^2$: square the slope.`,
+              `在直线上 $y^2 = ${m * m}x^2$，所以 $${c}y^2$ 变成 $${c * m * m}x^2$：斜率要平方。`,
+            ),
+            why(
+              Q.of(a, b + c),
+              `That is the value along $y = x$; along $y = ${line}$ the slope $${m}$ appears in both the numerator and the denominator.`,
+              `这是沿 $y = x$ 的值；沿 $y = ${line}$，斜率 $${m}$ 同时出现在分子和分母中。`,
+            ),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Substitute the line", "代入直线"],
+                t(
+                  `$f(x, ${line}) = \\frac{${num}x^2}{${b}x^2 + ${c * m * m}x^2}$.`,
+                  `$f(x, ${line}) = \\frac{${num}x^2}{${b}x^2 + ${c * m * m}x^2}$。`,
+                ),
+              ],
+              [
+                ["Cancel x²", "约去 x²"],
+                t(
+                  `For $x \\ne 0$ this is $\\frac{${num}}{${den}} = ${ans.toLatex()}$, which does not depend on $x$, so the limit is $${ans.toLatex()}$.`,
+                  `当 $x \\ne 0$ 时它等于 $\\frac{${num}}{${den}} = ${ans.toLatex()}$，与 $x$ 无关，所以极限为 $${ans.toLatex()}$。`,
+                ),
+              ],
+            ],
+            t(
+              `At the point $(1, ${m})$ of the line, $f(1, ${m}) = \\frac{${a} \\cdot ${m}}{${b} + ${c} \\cdot ${m * m}} = ${ans.toLatex()}$, the same value, since $f$ is constant along the line.`,
+              `在直线上的点 $(1, ${m})$ 处，$f(1, ${m}) = \\frac{${a} \\cdot ${m}}{${b} + ${c} \\cdot ${m * m}} = ${ans.toLatex()}$，值相同，因为 $f$ 沿这条直线是常数。`,
+            ),
+          ),
         });
       },
     },
@@ -652,23 +1205,59 @@ export const limitsAndContinuityOfMultivariableFunctions: TopicDef = {
       figure: multivariableDrawings2["limits-and-continuity-of-multivariable-functions#limits-along-parabolic-paths"],
       title: t("Limits along parabolic paths", "沿抛物线路径的极限"),
       explanation: t(
-        "Some functions have the same limit along every straight line through the origin and still have no limit. For $f(x, y) = \\frac{x^2y}{x^4 + y^2}$, every line $y = mx$ gives $0$, but along the parabola $y = kx^2$,\n\n$$f(x, kx^2) = \\frac{kx^4}{x^4 + k^2x^4} = \\frac{k}{1 + k^2}.$$\n\nDifferent parabolas give different values, so the limit at the origin does not exist.",
-        "有些函数沿过原点的每条直线极限都相同，但极限仍不存在。对 $f(x, y) = \\frac{x^2y}{x^4 + y^2}$，每条直线 $y = mx$ 都给出 $0$，但沿抛物线 $y = kx^2$，\n\n$$f(x, kx^2) = \\frac{kx^4}{x^4 + k^2x^4} = \\frac{k}{1 + k^2}.$$\n\n不同的抛物线给出不同的值，所以原点处的极限不存在。",
+        "Some functions have the same limit along every straight line through the origin and still have no limit. For $f(x, y) = \\frac{x^2y}{x^4 + y^2}$, every line $y = mx$ gives $0$, but along the parabola $y = kx^2$,\n\n$$f(x, kx^2) = \\frac{kx^4}{x^4 + k^2x^4} = \\frac{k}{1 + k^2}.$$\n\nDifferent parabolas give different values, so the limit at the origin does not exist.\n\n> **Watch out.** Along $y = kx^2$, $y^2 = k^2x^4$, and the numerator $x^2y$ becomes $kx^4$, so $k$ appears in both. Agreement along every line is not enough for the limit to exist.",
+        "有些函数沿过原点的每条直线极限都相同，但极限仍不存在。对 $f(x, y) = \\frac{x^2y}{x^4 + y^2}$，每条直线 $y = mx$ 都给出 $0$，但沿抛物线 $y = kx^2$，\n\n$$f(x, kx^2) = \\frac{kx^4}{x^4 + k^2x^4} = \\frac{k}{1 + k^2}.$$\n\n不同的抛物线给出不同的值，所以原点处的极限不存在。\n\n> **注意。** 沿 $y = kx^2$，$y^2 = k^2x^4$，分子 $x^2y$ 变成 $kx^4$，所以分子分母中都有 $k$。沿每条直线的值一致，并不足以说明极限存在。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(1, 5);
         const k = rng.pick([-5, -4, -3, -2, -1, 1, 2, 3, 4, 5, 6]);
         const ans = Q.of(a * k, 1 + k * k);
+        const path = kTimes(k, "x^2");
+        const f = `\\frac{${a === 1 ? "" : a}x^2y}{x^4 + y^2}`;
         return numberProblem({
           prompt: t(
-            `Find the limit of $f(x, y) = \\frac{${a === 1 ? "" : a}x^2y}{x^4 + y^2}$ as $(x, y) \\to (0, 0)$ along the parabola $y = ${k === 1 ? "" : k === -1 ? "-" : k}x^2$.`,
-            `求 $f(x, y) = \\frac{${a === 1 ? "" : a}x^2y}{x^4 + y^2}$ 沿抛物线 $y = ${k === 1 ? "" : k === -1 ? "-" : k}x^2$ 当 $(x, y) \\to (0, 0)$ 时的极限。`,
+            `Find the limit of $f(x, y) = ${f}$ as $(x, y) \\to (0, 0)$ along the parabola $y = ${path}$.`,
+            `求 $f(x, y) = ${f}$ 沿抛物线 $y = ${path}$ 当 $(x, y) \\to (0, 0)$ 时的极限。`,
           ),
           answer: ans,
-          wrong: [Q.zero, Q.of(a, 1 + k * k), Q.of(a, k)],
-          solution: t(
-            `Substituting $y = ${k}x^2$: $\\frac{${a * k}x^4}{x^4 + ${k * k}x^4} = ${ans.toLatex()}$.`,
-            `代入 $y = ${k}x^2$：$\\frac{${a * k}x^4}{x^4 + ${k * k}x^4} = ${ans.toLatex()}$。`,
+          mistakes: distinct(ans, [
+            why(
+              Q.zero,
+              "That is the limit along straight lines; along the parabola the powers of $x$ cancel and leave a constant that is not $0$.",
+              "这是沿直线的极限；沿抛物线，$x$ 的幂约去后留下一个不为 $0$ 的常数。",
+            ),
+            why(
+              Q.of(a, 1 + k * k),
+              `The numerator $${a === 1 ? "" : a}x^2y$ becomes $${a * k}x^4$ on the parabola, so $${k}$ multiplies it too.`,
+              `在抛物线上分子 $${a === 1 ? "" : a}x^2y$ 变成 $${a * k}x^4$，所以分子也要乘 $${k}$。`,
+            ),
+            why(
+              Q.of(a, k),
+              `The denominator is $x^4 + ${k * k}x^4$; dropping the $x^4$ leaves only $${k * k}x^4$.`,
+              `分母是 $x^4 + ${k * k}x^4$；漏掉 $x^4$ 就只剩 $${k * k}x^4$。`,
+            ),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Substitute the parabola", "代入抛物线"],
+                t(
+                  `With $y = ${path}$, $y^2 = ${k * k}x^4$ and $f = \\frac{${a * k}x^4}{x^4 + ${k * k}x^4}$.`,
+                  `取 $y = ${path}$，$y^2 = ${k * k}x^4$，$f = \\frac{${a * k}x^4}{x^4 + ${k * k}x^4}$。`,
+                ),
+              ],
+              [
+                ["Cancel x⁴", "约去 x⁴"],
+                t(
+                  `For $x \\ne 0$ this is $\\frac{${a * k}}{${1 + k * k}} = ${ans.toLatex()}$, so the limit along the parabola is $${ans.toLatex()}$.`,
+                  `当 $x \\ne 0$ 时它等于 $\\frac{${a * k}}{${1 + k * k}} = ${ans.toLatex()}$，所以沿抛物线的极限是 $${ans.toLatex()}$。`,
+                ),
+              ],
+            ],
+            t(
+              `The point $(1, ${k})$ lies on the parabola, and $f(1, ${k}) = \\frac{${a} \\cdot ${paren(k)}}{1 + ${k * k}} = ${ans.toLatex()}$: $f$ is constant along the whole parabola.`,
+              `点 $(1, ${k})$ 在抛物线上，且 $f(1, ${k}) = \\frac{${a} \\cdot ${paren(k)}}{1 + ${k * k}} = ${ans.toLatex()}$：$f$ 在整条抛物线上是常数。`,
+            ),
           ),
         });
       },
@@ -688,6 +1277,10 @@ export const ellipsoids: TopicDef = {
     "An ellipsoid is a quadric surface with standard equation x²/a² + y²/b² + z²/c² = 1.",
     "椭球面是二次曲面，其标准方程为 x²/a² + y²/b² + z²/c² = 1。",
   ),
+  intro: t(
+    "The ellipsoid $\\frac{x^2}{4} + \\frac{y^2}{9} + z^2 = 1$ crosses the $x$-axis where $\\frac{x^2}{4} = 1$, at $x = \\pm 2$, the $y$-axis at $y = \\pm 3$ and the $z$-axis at $z = \\pm 1$. Its semi-axes are $2$, $3$ and $1$, and the surface is a sphere stretched by those factors along the three axes.\n\nCheck: $(2, 0, 0)$ gives $\\frac{4}{4} + 0 + 0 = 1$, and $(0, 3, 0)$ gives $\\frac{9}{9} = 1$.\n\nIn this lesson we read the intercepts and semi-axes of an ellipsoid from its equation and use them to find its volume.",
+    "椭球面 $\\frac{x^2}{4} + \\frac{y^2}{9} + z^2 = 1$ 与 $x$ 轴交于 $\\frac{x^2}{4} = 1$ 处，即 $x = \\pm 2$；与 $y$ 轴交于 $y = \\pm 3$；与 $z$ 轴交于 $z = \\pm 1$。它的半轴为 $2$、$3$、$1$，这个曲面就是把球面沿三个坐标轴分别按这些倍数伸缩得到的。\n\n检验：$(2, 0, 0)$ 给出 $\\frac{4}{4} + 0 + 0 = 1$，$(0, 3, 0)$ 给出 $\\frac{9}{9} = 1$。\n\n本课我们由方程读出椭球面的截距和半轴，并用它们求体积。",
+  ),
   prerequisites: ["level-surfaces"],
   encompasses: [],
   xp: 10,
@@ -696,31 +1289,43 @@ export const ellipsoids: TopicDef = {
       id: "intercepts-and-semi-axes-of-ellipsoids",
       title: t("Intercepts and semi-axes of ellipsoids", "椭球面的截距与半轴长"),
       explanation: t(
-        "Setting two of the coordinates to zero shows where the ellipsoid crosses each axis, and those crossing distances are the semi axes. For the ellipsoid $\\frac{x^2}{a^2} + \\frac{y^2}{b^2} + \\frac{z^2}{c^2} = 1$, the semi-axes lengths are $a, b, c$. The positive $x$-intercept occurs at $(a, 0, 0)$.",
-        "令其中两个坐标为零，就能看出椭球面与各坐标轴的交点，这些交点到原点的距离就是半轴长。对于椭球面 $\\frac{x^2}{a^2} + \\frac{y^2}{b^2} + \\frac{z^2}{c^2} = 1$，其半轴长分别为 $a, b, c$。正 $x$ 截距点位于 $(a, 0, 0)$。",
+        "Setting two of the coordinates to zero shows where the ellipsoid crosses each axis, and those crossing distances are the semi axes. For the ellipsoid $\\frac{x^2}{a^2} + \\frac{y^2}{b^2} + \\frac{z^2}{c^2} = 1$, the semi-axes lengths are $a, b, c$. The positive $x$-intercept occurs at $(a, 0, 0)$.\n\nFor $4x^2 + y^2 + z^2 = 16$, setting $y = z = 0$ gives $4x^2 = 16$, so the positive $x$-intercept is $2$.\n\n> **Watch out.** The intercept is the square root of the denominator: $\\frac{x^2}{25}$ gives $5$, not $25$. Use the denominator under $x^2$ for the $x$-intercept.",
+        "令其中两个坐标为零，就能看出椭球面与各坐标轴的交点，这些交点到原点的距离就是半轴长。对于椭球面 $\\frac{x^2}{a^2} + \\frac{y^2}{b^2} + \\frac{z^2}{c^2} = 1$，其半轴长分别为 $a, b, c$。正 $x$ 截距点位于 $(a, 0, 0)$。\n\n对 $4x^2 + y^2 + z^2 = 16$，令 $y = z = 0$ 得 $4x^2 = 16$，所以正 $x$ 截距是 $2$。\n\n> **注意。** 截距是分母的平方根：$\\frac{x^2}{25}$ 给出 $5$，不是 $25$。求 $x$ 截距要用 $x^2$ 下面的分母。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(2, 9);
         const b = rng.int(2, 9);
         const c = rng.int(2, 9);
-        const ans = a;
-
-        const prompt = t(
-          `Find the positive $x$-intercept of the ellipsoid $\\frac{x^2}{${a * a}} + \\frac{y^2}{${b * b}} + \\frac{z^2}{${c * c}} = 1$.`,
-          `求椭球面 $\\frac{x^2}{${a * a}} + \\frac{y^2}{${b * b}} + \\frac{z^2}{${c * c}} = 1$ 的正 $x$ 截距。`,
-        );
-        const solution = t(
-          steps(
-            `Set $y = 0$ and $z = 0$ in the equation: $\\frac{x^2}{${a * a}} = 1 \\implies x^2 = ${a * a}$.`,
-            `The positive $x$-intercept is $x = ${ans}$.`,
-          ),
-          steps(`在方程中令 $y = 0$ 且 $z = 0$：$\\frac{x^2}{${a * a}} = 1 \\implies x^2 = ${a * a}$。`, `正 $x$ 截距为 $x = ${ans}$。`),
-        );
+        const eq = `\\frac{x^2}{${a * a}} + \\frac{y^2}{${b * b}} + \\frac{z^2}{${c * c}} = 1`;
         return numberProblem({
-          prompt,
-          solution,
-          answer: ans,
-          wrong: [a * a, b, c],
+          prompt: t(`Find the positive $x$-intercept of the ellipsoid $${eq}$.`, `求椭球面 $${eq}$ 的正 $x$ 截距。`),
+          answer: a,
+          mistakes: distinct(a, [
+            why(a * a, `$x^2 = ${a * a}$, so take the square root: $x = ${a}$.`, `$x^2 = ${a * a}$，所以要开平方：$x = ${a}$。`),
+            why(
+              b,
+              `$${b}$ comes from the denominator under $y^2$: it is the $y$-intercept.`,
+              `$${b}$ 来自 $y^2$ 下面的分母：它是 $y$ 截距。`,
+            ),
+            why(
+              c,
+              `$${c}$ comes from the denominator under $z^2$: it is the $z$-intercept.`,
+              `$${c}$ 来自 $z^2$ 下面的分母：它是 $z$ 截距。`,
+            ),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Set y = 0 and z = 0", "令 y = 0，z = 0"],
+                t(`$\\frac{x^2}{${a * a}} = 1$, so $x^2 = ${a * a}$.`, `$\\frac{x^2}{${a * a}} = 1$，所以 $x^2 = ${a * a}$。`),
+              ],
+              [["Take the positive root", "取正根"], t(`$x = ${a}$.`, `$x = ${a}$。`)],
+            ],
+            t(
+              `$(${a}, 0, 0)$ gives $\\frac{${a * a}}{${a * a}} + 0 + 0 = 1$.`,
+              `$(${a}, 0, 0)$ 给出 $\\frac{${a * a}}{${a * a}} + 0 + 0 = 1$。`,
+            ),
+          ),
         });
       },
     },
@@ -729,8 +1334,8 @@ export const ellipsoids: TopicDef = {
       figure: multivariableDrawings2["ellipsoids#the-volume-of-an-ellipsoid"],
       title: t("The volume of an ellipsoid", "椭球的体积"),
       explanation: t(
-        "The ellipsoid $\\frac{x^2}{a^2} + \\frac{y^2}{b^2} + \\frac{z^2}{c^2} = 1$ is a unit sphere stretched by $a$, $b$ and $c$ along the three axes. Stretching multiplies volume by $abc$, so the enclosed volume is\n\n$$V = \\frac{4}{3}\\pi abc.$$\n\nRead the semi-axes as the square roots of the denominators, not the denominators themselves.",
-        "椭球 $\\frac{x^2}{a^2} + \\frac{y^2}{b^2} + \\frac{z^2}{c^2} = 1$ 是单位球沿三个坐标轴分别伸缩 $a$、$b$、$c$ 倍得到的。伸缩使体积乘以 $abc$，所以所围体积为\n\n$$V = \\frac{4}{3}\\pi abc.$$\n\n半轴长是分母的平方根，而不是分母本身。",
+        "The ellipsoid $\\frac{x^2}{a^2} + \\frac{y^2}{b^2} + \\frac{z^2}{c^2} = 1$ is a unit sphere stretched by $a$, $b$ and $c$ along the three axes. Stretching multiplies volume by $abc$, so the enclosed volume is\n\n$$V = \\frac{4}{3}\\pi abc.$$\n\nFor $\\frac{x^2}{4} + \\frac{y^2}{9} + z^2 = 1$ the semi-axes are $2$, $3$ and $1$, so $V = \\frac{4}{3}\\pi \\cdot 6 = 8\\pi$.\n\n> **Watch out.** Read the semi-axes as the square roots of the denominators, not the denominators themselves. The factor is $\\frac{4}{3}$, as for a sphere.",
+        "椭球 $\\frac{x^2}{a^2} + \\frac{y^2}{b^2} + \\frac{z^2}{c^2} = 1$ 是单位球沿三个坐标轴分别伸缩 $a$、$b$、$c$ 倍得到的。伸缩使体积乘以 $abc$，所以所围体积为\n\n$$V = \\frac{4}{3}\\pi abc.$$\n\n对 $\\frac{x^2}{4} + \\frac{y^2}{9} + z^2 = 1$，半轴为 $2$、$3$、$1$，所以 $V = \\frac{4}{3}\\pi \\cdot 6 = 8\\pi$。\n\n> **注意。** 半轴长是分母的平方根，而不是分母本身。系数是 $\\frac{4}{3}$，与球相同。",
       ),
       generate(rng: Rng): Problem {
         const [a, b, c] = [rng.int(2, 7), rng.int(2, 7), rng.int(2, 7)];
@@ -741,10 +1346,44 @@ export const ellipsoids: TopicDef = {
             `$\\frac{x^2}{${a * a}} + \\frac{y^2}{${b * b}} + \\frac{z^2}{${c * c}} = 1$ 所围体积为 $k\\pi$。求 $k$。`,
           ),
           answer: ans,
-          wrong: [Q.of(4 * a * a * b * b * c * c, 3), Q.of(a * b * c), Q.of(4 * a * b * c)],
-          solution: t(
-            `The semi-axes are $${a}$, $${b}$, $${c}$, so $V = \\frac{4}{3}\\pi \\cdot ${a * b * c}$ and $k = ${ans.toLatex()}$.`,
-            `半轴长为 $${a}$、$${b}$、$${c}$，所以 $V = \\frac{4}{3}\\pi \\cdot ${a * b * c}$，$k = ${ans.toLatex()}$。`,
+          mistakes: distinct(ans, [
+            why(
+              Q.of(4 * a * a * b * b * c * c, 3),
+              `The semi-axes are the square roots of the denominators, $${a}$, $${b}$ and $${c}$.`,
+              `半轴是分母的平方根，即 $${a}$、$${b}$、$${c}$。`,
+            ),
+            why(
+              Q.of(a * b * c),
+              "The volume keeps the factor $\\frac{4}{3}$ of a sphere's volume.",
+              "体积要保留球体积中的系数 $\\frac{4}{3}$。",
+            ),
+            why(
+              Q.of(4 * a * b * c),
+              "The factor is $\\frac{4}{3}$, not $4$; $4\\pi r^2$ is the area of a sphere.",
+              "系数是 $\\frac{4}{3}$，不是 $4$；$4\\pi r^2$ 是球的表面积。",
+            ),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Read the semi-axes", "读出半轴"],
+                t(
+                  `$\\sqrt{${a * a}} = ${a}$, $\\sqrt{${b * b}} = ${b}$, $\\sqrt{${c * c}} = ${c}$.`,
+                  `$\\sqrt{${a * a}} = ${a}$，$\\sqrt{${b * b}} = ${b}$，$\\sqrt{${c * c}} = ${c}$。`,
+                ),
+              ],
+              [
+                ["Apply the volume formula", "代入体积公式"],
+                t(
+                  `$V = \\frac{4}{3}\\pi \\cdot ${a} \\cdot ${b} \\cdot ${c} = ${ans.toLatex()}\\pi$, so $k = ${ans.toLatex()}$.`,
+                  `$V = \\frac{4}{3}\\pi \\cdot ${a} \\cdot ${b} \\cdot ${c} = ${ans.toLatex()}\\pi$，所以 $k = ${ans.toLatex()}$。`,
+                ),
+              ],
+            ],
+            t(
+              `The ellipsoid is the unit ball, of volume $\\frac{4}{3}\\pi$, stretched by $${a}$, $${b}$ and $${c}$, which multiplies the volume by $${a * b * c}$: $\\frac{4}{3} \\cdot ${a * b * c} = ${ans.toLatex()}$.`,
+              `椭球是体积为 $\\frac{4}{3}\\pi$ 的单位球沿三轴伸缩 $${a}$、$${b}$、$${c}$ 倍得到的，体积乘以 $${a * b * c}$：$\\frac{4}{3} \\cdot ${a * b * c} = ${ans.toLatex()}$。`,
+            ),
           ),
         });
       },
@@ -760,6 +1399,10 @@ export const hyperboloids: TopicDef = {
     "A hyperboloid of one sheet has one minus sign in its standard equation, while a hyperboloid of two sheets has two minus signs.",
     "单叶双曲面的标准方程中含有一个负号，而双叶双曲面的标准方程中含有两个负号。",
   ),
+  intro: t(
+    "The surface $x^2 + y^2 - \\frac{z^2}{4} = 1$ has one minus sign. The plane $z = h$ cuts it in the circle $x^2 + y^2 = 1 + \\frac{h^2}{4}$, which exists for every $h$, so the surface is one connected piece: a hyperboloid of one sheet. The surface $-x^2 - y^2 + \\frac{z^2}{4} = 1$ has two minus signs, and needs $\\frac{z^2}{4} \\ge 1$, so it has no points with $|z| < 2$: a hyperboloid of two sheets.\n\nCheck: $(1, 0, 0)$ lies on the first surface, since $1 + 0 - 0 = 1$, and not on the second, since $-1 \\ne 1$; $(0, 0, 2)$ lies on the second.\n\nIn this lesson we tell the two kinds of hyperboloid apart by their signs and find the ellipses in which horizontal planes cut them.",
+    "曲面 $x^2 + y^2 - \\frac{z^2}{4} = 1$ 有一个负号。平面 $z = h$ 截它得圆 $x^2 + y^2 = 1 + \\frac{h^2}{4}$，对每个 $h$ 都存在，所以曲面连成一片：单叶双曲面。曲面 $-x^2 - y^2 + \\frac{z^2}{4} = 1$ 有两个负号，要求 $\\frac{z^2}{4} \\ge 1$，所以没有满足 $|z| < 2$ 的点：双叶双曲面。\n\n检验：$(1, 0, 0)$ 在第一个曲面上，因为 $1 + 0 - 0 = 1$；它不在第二个曲面上，因为 $-1 \\ne 1$；$(0, 0, 2)$ 在第二个曲面上。\n\n本课我们由符号区分两种双曲面，并求水平面截它们所得的椭圆。",
+  ),
   prerequisites: ["ellipsoids"],
   encompasses: [],
   xp: 10,
@@ -768,8 +1411,8 @@ export const hyperboloids: TopicDef = {
       id: "counting-sheets-of-hyperboloids",
       title: t("Counting sheets of hyperboloids", "判断双曲面的叶数"),
       explanation: t(
-        "Standard equations for hyperboloids:\n\n- **One sheet**: $\\frac{x^2}{a^2} + \\frac{y^2}{b^2} - \\frac{z^2}{c^2} = 1$ (one minus sign, connected surface).\n- **Two sheets**: $-\\frac{x^2}{a^2} - \\frac{y^2}{b^2} + \\frac{z^2}{c^2} = 1$ (two minus signs, two disconnected pieces).",
-        "双曲面的标准方程：\n\n- **单叶双曲面**：$\\frac{x^2}{a^2} + \\frac{y^2}{b^2} - \\frac{z^2}{c^2} = 1$（一个负号，连通曲面）。\n- **双叶双曲面**：$-\\frac{x^2}{a^2} - \\frac{y^2}{b^2} + \\frac{z^2}{c^2} = 1$（两个负号，两个不相连的分支）。",
+        "Standard equations for hyperboloids:\n\n- **One sheet**: $\\frac{x^2}{a^2} + \\frac{y^2}{b^2} - \\frac{z^2}{c^2} = 1$ (one minus sign, connected surface).\n- **Two sheets**: $-\\frac{x^2}{a^2} - \\frac{y^2}{b^2} + \\frac{z^2}{c^2} = 1$ (two minus signs, two disconnected pieces).\n\nThe surface $\\frac{x^2}{4} - y^2 - z^2 = 1$ has two minus signs, so it has two sheets; they open along the $x$-axis, the axis of the positive term, with no points where $|x| < 2$.\n\n> **Watch out.** Count the minus signs with the equation written as $= 1$, not $= -1$. The number of sheets equals the number of minus signs.",
+        "双曲面的标准方程：\n\n- **单叶双曲面**：$\\frac{x^2}{a^2} + \\frac{y^2}{b^2} - \\frac{z^2}{c^2} = 1$（一个负号，连通曲面）。\n- **双叶双曲面**：$-\\frac{x^2}{a^2} - \\frac{y^2}{b^2} + \\frac{z^2}{c^2} = 1$（两个负号，两个不相连的分支）。\n\n曲面 $\\frac{x^2}{4} - y^2 - z^2 = 1$ 有两个负号，所以有两叶；它们沿正项所在的 $x$ 轴张开，没有满足 $|x| < 2$ 的点。\n\n> **注意。** 数负号时方程要写成 $= 1$，而不是 $= -1$。叶数等于负号的个数。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(2, 6);
@@ -777,23 +1420,59 @@ export const hyperboloids: TopicDef = {
         const c = rng.int(2, 6);
         const twoSheets = rng.bool();
         const ans = twoSheets ? 2 : 1;
-
         const eq = twoSheets
           ? `-\\frac{x^2}{${a * a}} - \\frac{y^2}{${b * b}} + \\frac{z^2}{${c * c}} = 1`
           : `\\frac{x^2}{${a * a}} + \\frac{y^2}{${b * b}} - \\frac{z^2}{${c * c}} = 1`;
-
-        const prompt = t(`Determine the number of sheets (1 or 2) of the hyperboloid $${eq}$.`, `判断双曲面 $${eq}$ 的叶数（1 或 2）。`);
-        const solution = t(
-          twoSheets
-            ? `The equation has two negative quadratic terms, representing a hyperboloid of 2 sheets.`
-            : `The equation has one negative quadratic term, representing a hyperboloid of 1 sheet.`,
-          twoSheets ? `方程包含两个负二次项，表示双叶双曲面（2 叶）。` : `方程包含一个负二次项，表示单叶双曲面（1 叶）。`,
-        );
         return numberProblem({
-          prompt,
-          solution,
+          prompt: t(`Determine the number of sheets (1 or 2) of the hyperboloid $${eq}$.`, `判断双曲面 $${eq}$ 的叶数（1 或 2）。`),
           answer: ans,
-          wrong: [ans === 1 ? 2 : 1, 0, 3],
+          mistakes: distinct(ans, [
+            twoSheets
+              ? why(
+                  1,
+                  `With two minus signs the equation needs $\\frac{z^2}{${c * c}} \\ge 1$, so there is a gap around $z = 0$ and two pieces.`,
+                  `有两个负号时方程要求 $\\frac{z^2}{${c * c}} \\ge 1$，所以 $z = 0$ 附近有空隙，分成两片。`,
+                )
+              : why(
+                  2,
+                  "With one minus sign every horizontal plane cuts the surface in an ellipse, so it is one piece.",
+                  "只有一个负号时每个水平面都截曲面得一椭圆，所以它是一整片。",
+                ),
+            why(
+              0,
+              twoSheets
+                ? `The surface is not empty: $(0, 0, ${c})$ satisfies the equation.`
+                : `The surface is not empty: $(${a}, 0, 0)$ satisfies the equation.`,
+              twoSheets ? `该曲面不是空的：$(0, 0, ${c})$ 满足方程。` : `该曲面不是空的：$(${a}, 0, 0)$ 满足方程。`,
+            ),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Count the minus signs", "数负号"],
+                t(
+                  `With the equation equal to $1$, ${twoSheets ? "two squares have" : "one square has"} a minus sign.`,
+                  `方程右边为 $1$ 时，有${twoSheets ? "两个" : "一个"}平方项带负号。`,
+                ),
+              ],
+              [
+                ["Read the number of sheets", "读出叶数"],
+                t(
+                  twoSheets ? "Two minus signs: a hyperboloid of $2$ sheets." : "One minus sign: a hyperboloid of $1$ sheet.",
+                  twoSheets ? "两个负号：双叶双曲面，$2$ 叶。" : "一个负号：单叶双曲面，$1$ 叶。",
+                ),
+              ],
+            ],
+            twoSheets
+              ? t(
+                  `At $z = 0$ the equation reads $-\\frac{x^2}{${a * a}} - \\frac{y^2}{${b * b}} = 1$, which no point satisfies, so the surface misses the plane $z = 0$ and has a piece on each side.`,
+                  `在 $z = 0$ 处方程为 $-\\frac{x^2}{${a * a}} - \\frac{y^2}{${b * b}} = 1$，没有点满足，所以曲面与平面 $z = 0$ 不相交，两侧各有一片。`,
+                )
+              : t(
+                  `Every plane $z = h$ cuts the surface in the ellipse $\\frac{x^2}{${a * a}} + \\frac{y^2}{${b * b}} = 1 + \\frac{h^2}{${c * c}}$, so the surface is one connected piece.`,
+                  `每个平面 $z = h$ 都截曲面得椭圆 $\\frac{x^2}{${a * a}} + \\frac{y^2}{${b * b}} = 1 + \\frac{h^2}{${c * c}}$，所以曲面连成一片。`,
+                ),
+          ),
         });
       },
     },
@@ -801,8 +1480,8 @@ export const hyperboloids: TopicDef = {
       id: "horizontal-traces-of-a-hyperboloid-of-one-sheet",
       title: t("Horizontal traces of a hyperboloid of one sheet", "单叶双曲面的水平截线"),
       explanation: t(
-        "Cutting $\\frac{x^2}{a^2} + \\frac{y^2}{b^2} - \\frac{z^2}{c^2} = 1$ with the plane $z = h$ gives\n\n$$\\frac{x^2}{a^2} + \\frac{y^2}{b^2} = 1 + \\frac{h^2}{c^2},$$\n\nan ellipse for every $h$. The traces are smallest at $h = 0$ and grow as $|h|$ grows, which is why a hyperboloid of one sheet looks like a cooling tower. The semi-axis along $x$ satisfies $s_x^2 = a^2\\left(1 + \\frac{h^2}{c^2}\\right)$.",
-        "用平面 $z = h$ 截 $\\frac{x^2}{a^2} + \\frac{y^2}{b^2} - \\frac{z^2}{c^2} = 1$ 得\n\n$$\\frac{x^2}{a^2} + \\frac{y^2}{b^2} = 1 + \\frac{h^2}{c^2},$$\n\n对每个 $h$ 都是椭圆。截线在 $h = 0$ 时最小，随 $|h|$ 增大而增大，所以单叶双曲面看起来像冷却塔。沿 $x$ 方向的半轴满足 $s_x^2 = a^2\\left(1 + \\frac{h^2}{c^2}\\right)$。",
+        "Cutting $\\frac{x^2}{a^2} + \\frac{y^2}{b^2} - \\frac{z^2}{c^2} = 1$ with the plane $z = h$ gives\n\n$$\\frac{x^2}{a^2} + \\frac{y^2}{b^2} = 1 + \\frac{h^2}{c^2},$$\n\nan ellipse for every $h$. The traces are smallest at $h = 0$ and grow as $|h|$ grows, which is why a hyperboloid of one sheet looks like a cooling tower. The semi-axis along $x$ satisfies $s_x^2 = a^2\\left(1 + \\frac{h^2}{c^2}\\right)$.\n\nFor $\\frac{x^2}{4} + \\frac{y^2}{9} - z^2 = 1$ at $z = 2$, $s_x^2 = 4(1 + 4) = 20$.\n\n> **Watch out.** Moving $-\\frac{h^2}{c^2}$ to the right side makes it $+\\frac{h^2}{c^2}$, so the traces grow with $|h|$. Keep the $1$: at $h = 0$ the semi-axis is $a$, not $0$.",
+        "用平面 $z = h$ 截 $\\frac{x^2}{a^2} + \\frac{y^2}{b^2} - \\frac{z^2}{c^2} = 1$ 得\n\n$$\\frac{x^2}{a^2} + \\frac{y^2}{b^2} = 1 + \\frac{h^2}{c^2},$$\n\n对每个 $h$ 都是椭圆。截线在 $h = 0$ 时最小，随 $|h|$ 增大而增大，所以单叶双曲面看起来像冷却塔。沿 $x$ 方向的半轴满足 $s_x^2 = a^2\\left(1 + \\frac{h^2}{c^2}\\right)$。\n\n对 $\\frac{x^2}{4} + \\frac{y^2}{9} - z^2 = 1$ 在 $z = 2$ 处，$s_x^2 = 4(1 + 4) = 20$。\n\n> **注意。** 把 $-\\frac{h^2}{c^2}$ 移到右边变成 $+\\frac{h^2}{c^2}$，所以截线随 $|h|$ 增大。要保留 $1$：$h = 0$ 时半轴是 $a$，不是 $0$。",
       ),
       generate(rng: Rng): Problem {
         const [a, b, c] = [rng.int(2, 6), rng.int(2, 6), rng.int(2, 5)];
@@ -814,10 +1493,44 @@ export const hyperboloids: TopicDef = {
             `平面 $z = ${h}$ 截 $\\frac{x^2}{${a * a}} + \\frac{y^2}{${b * b}} - \\frac{z^2}{${c * c}} = 1$ 得一椭圆。求它沿 $x$ 方向的半轴长的平方。`,
           ),
           answer: ans,
-          wrong: [Q.of(a * a * (c * c - h * h), c * c), Q.of(a * a), Q.of(a * a * h * h, c * c)],
-          solution: t(
-            `At $z = ${h}$: $\\frac{x^2}{${a * a}} + \\frac{y^2}{${b * b}} = 1 + \\frac{${h * h}}{${c * c}}$, so $s_x^2 = ${a * a}\\left(1 + \\frac{${h * h}}{${c * c}}\\right) = ${ans.toLatex()}$.`,
-            `在 $z = ${h}$ 处：$\\frac{x^2}{${a * a}} + \\frac{y^2}{${b * b}} = 1 + \\frac{${h * h}}{${c * c}}$，所以 $s_x^2 = ${a * a}\\left(1 + \\frac{${h * h}}{${c * c}}\\right) = ${ans.toLatex()}$。`,
+          mistakes: distinct(ans, [
+            why(
+              Q.of(a * a * (c * c - h * h), c * c),
+              `Moving $-\\frac{z^2}{${c * c}}$ to the right side makes it $+\\frac{${h * h}}{${c * c}}$.`,
+              `把 $-\\frac{z^2}{${c * c}}$ 移到右边变成 $+\\frac{${h * h}}{${c * c}}$。`,
+            ),
+            why(
+              Q.of(a * a),
+              `That is the trace at $z = 0$; at $z = ${h}$ the right side is $1 + \\frac{${h * h}}{${c * c}}$.`,
+              `这是 $z = 0$ 处的截线；在 $z = ${h}$ 处右边是 $1 + \\frac{${h * h}}{${c * c}}$。`,
+            ),
+            why(
+              Q.of(a * a * h * h, c * c),
+              "The right side keeps the $1$ of the equation as well as the term from $z$.",
+              "右边除了来自 $z$ 的项，还要保留方程中的 $1$。",
+            ),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Substitute the height", "代入高度"],
+                t(
+                  `At $z = ${h}$: $\\frac{x^2}{${a * a}} + \\frac{y^2}{${b * b}} = 1 + \\frac{${h * h}}{${c * c}} = \\frac{${c * c + h * h}}{${c * c}}$.`,
+                  `在 $z = ${h}$ 处：$\\frac{x^2}{${a * a}} + \\frac{y^2}{${b * b}} = 1 + \\frac{${h * h}}{${c * c}} = \\frac{${c * c + h * h}}{${c * c}}$。`,
+                ),
+              ],
+              [
+                ["Set y = 0", "令 y = 0"],
+                t(
+                  `$s_x^2 = ${a * a} \\cdot \\frac{${c * c + h * h}}{${c * c}} = ${ans.toLatex()}$.`,
+                  `$s_x^2 = ${a * a} \\cdot \\frac{${c * c + h * h}}{${c * c}} = ${ans.toLatex()}$。`,
+                ),
+              ],
+            ],
+            t(
+              `The point $(s_x, 0, ${h})$ lies on the surface: $\\frac{${ans.toLatex()}}{${a * a}} - \\frac{${h * h}}{${c * c}} = \\frac{${c * c + h * h}}{${c * c}} - \\frac{${h * h}}{${c * c}} = 1$.`,
+              `点 $(s_x, 0, ${h})$ 在曲面上：$\\frac{${ans.toLatex()}}{${a * a}} - \\frac{${h * h}}{${c * c}} = \\frac{${c * c + h * h}}{${c * c}} - \\frac{${h * h}}{${c * c}} = 1$。`,
+            ),
           ),
         });
       },
@@ -833,6 +1546,10 @@ export const paraboloids: TopicDef = {
     "An elliptic paraboloid has equation z/c = x²/a² + y²/b², while a hyperbolic paraboloid (saddle) has equation z/c = x²/a² - y²/b².",
     "椭圆抛物面的方程为 z/c = x²/a² + y²/b²，而双曲抛物面（马鞍面）的方程为 z/c = x²/a² - y²/b²。",
   ),
+  intro: t(
+    "On $z = x^2 + 4y^2$ the plane $z = 4$ cuts out $x^2 + 4y^2 = 4$, the ellipse $\\frac{x^2}{4} + y^2 = 1$, and the plane $y = 0$ cuts out the parabola $z = x^2$: the surface is a bowl, an elliptic paraboloid. On $z = x^2 - y^2$ the trace in $y = 0$ is $z = x^2$, opening up, and the trace in $x = 0$ is $z = -y^2$, opening down: a saddle, a hyperbolic paraboloid.\n\nCheck: $(2, 0, 4)$ lies on the bowl, since $4 + 0 = 4$, and so does $(0, 1, 4)$, since $0 + 4 = 4$.\n\nIn this lesson we tell elliptic and hyperbolic paraboloids apart and measure their horizontal traces.",
+    "在 $z = x^2 + 4y^2$ 上，平面 $z = 4$ 截出 $x^2 + 4y^2 = 4$，即椭圆 $\\frac{x^2}{4} + y^2 = 1$；平面 $y = 0$ 截出抛物线 $z = x^2$：曲面是碗形，即椭圆抛物面。在 $z = x^2 - y^2$ 上，$y = 0$ 中的截线是开口向上的 $z = x^2$，$x = 0$ 中的截线是开口向下的 $z = -y^2$：马鞍形，即双曲抛物面。\n\n检验：$(2, 0, 4)$ 在碗形曲面上，因为 $4 + 0 = 4$；$(0, 1, 4)$ 也在，因为 $0 + 4 = 4$。\n\n本课我们区分椭圆抛物面与双曲抛物面，并度量它们的水平截线。",
+  ),
   prerequisites: ["hyperboloids"],
   encompasses: [],
   xp: 10,
@@ -842,51 +1559,121 @@ export const paraboloids: TopicDef = {
       figure: multivariableDrawings2["paraboloids#classifying-paraboloids"],
       title: t("Classifying paraboloids", "分类抛物面"),
       explanation: t(
-        "Paraboloids feature one linear variable (usually $z$) and two quadratic variables:\n\n- **Elliptic paraboloid**: $z = \\frac{x^2}{a^2} + \\frac{y^2}{b^2}$ (bowl-shaped, traces are ellipses and parabolas).\n- **Hyperbolic paraboloid**: $z = \\frac{x^2}{a^2} - \\frac{y^2}{b^2}$ (saddle-shaped, traces are hyperbolas and parabolas).",
-        "抛物面的特征是包含一个一次变量（通常为 $z$）和两个二次变量：\n\n- **椭圆抛物面**：$z = \\frac{x^2}{a^2} + \\frac{y^2}{b^2}$（碗状，截痕为椭圆与抛物线）。\n- **双曲抛物面**：$z = \\frac{x^2}{a^2} - \\frac{y^2}{b^2}$（马鞍状，截痕为双曲线与抛物线）。",
+        "Paraboloids feature one linear variable (usually $z$) and two quadratic variables:\n\n- **Elliptic paraboloid**: $z = \\frac{x^2}{a^2} + \\frac{y^2}{b^2}$ (bowl-shaped, traces are ellipses and parabolas).\n- **Hyperbolic paraboloid**: $z = \\frac{x^2}{a^2} - \\frac{y^2}{b^2}$ (saddle-shaped, traces are hyperbolas and parabolas).\n\nIn $y = x^2 - z^2$ the variable $y$ appears to the first power and the squares have opposite signs, so the surface is a hyperbolic paraboloid along the $y$-axis.\n\n> **Watch out.** A paraboloid has exactly one variable to the first power; if every variable is squared, the surface is an ellipsoid, a hyperboloid or a cone instead. Compare the signs of the two squares on the same side of the equation.",
+        "抛物面的特征是包含一个一次变量（通常为 $z$）和两个二次变量：\n\n- **椭圆抛物面**：$z = \\frac{x^2}{a^2} + \\frac{y^2}{b^2}$（碗状，截痕为椭圆与抛物线）。\n- **双曲抛物面**：$z = \\frac{x^2}{a^2} - \\frac{y^2}{b^2}$（马鞍状，截痕为双曲线与抛物线）。\n\n在 $y = x^2 - z^2$ 中，变量 $y$ 以一次方出现，两个平方项异号，所以该曲面是沿 $y$ 轴的双曲抛物面。\n\n> **注意。** 抛物面恰有一个变量以一次方出现；若每个变量都是平方，曲面就是椭球面、双曲面或锥面。要在方程同一边比较两个平方项的符号。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(2, 6);
         const b = rng.int(2, 6);
         const isElliptic = rng.bool();
-
         const eq = isElliptic ? `z = \\frac{x^2}{${a * a}} + \\frac{y^2}{${b * b}}` : `z = \\frac{x^2}{${a * a}} - \\frac{y^2}{${b * b}}`;
-
         const right = isElliptic ? t("Elliptic paraboloid", "椭圆抛物面") : t("Hyperbolic paraboloid", "双曲抛物面");
+        const linear = t("$z$ appears only to the first power, while this surface has $z^2$", "$z$ 只以一次方出现，而这种曲面含 $z^2$");
         const wrong = isElliptic
-          ? [t("Hyperbolic paraboloid", "双曲抛物面"), t("Ellipsoid", "椭球面"), t("Elliptic cone", "椭圆锥面")]
-          : [t("Elliptic paraboloid", "椭圆抛物面"), t("Hyperboloid of one sheet", "单叶双曲面"), t("Elliptic cone", "椭圆锥面")];
-
-        const prompt = t(`Classify the quadric surface defined by the equation $${eq}$.`, `对由方程 $${eq}$ 定义的二次曲面进行分类。`);
-        const solution = t(
-          `The equation has one linear variable and two squared variables with ${isElliptic ? "the same sign" : "opposite signs"}, so it is ${/^[aeiou]/i.test(right.en) ? "an" : "a"} ${right.en.toLowerCase()}.`,
-          `该方程包含一个一次变量与两个${isElliptic ? "同号" : "异号"}的平方项，因此它是${right["zh-CN"]}。`,
-        );
-        return pickChoice(rng, prompt, right, wrong, solution);
+          ? [
+              {
+                option: t("Hyperbolic paraboloid", "双曲抛物面"),
+                why: t("The two squares have the same sign, not opposite signs.", "两个平方项同号，不是异号。"),
+              },
+              { option: t("Ellipsoid", "椭球面"), why: t(`${linear.en}.`, `${linear["zh-CN"]}。`) },
+              { option: t("Elliptic cone", "椭圆锥面"), why: t(`${linear.en}.`, `${linear["zh-CN"]}。`) },
+            ]
+          : [
+              {
+                option: t("Elliptic paraboloid", "椭圆抛物面"),
+                why: t("The two squares have opposite signs, not the same sign.", "两个平方项异号，不是同号。"),
+              },
+              { option: t("Hyperboloid of one sheet", "单叶双曲面"), why: t(`${linear.en}.`, `${linear["zh-CN"]}。`) },
+              { option: t("Elliptic cone", "椭圆锥面"), why: t(`${linear.en}.`, `${linear["zh-CN"]}。`) },
+            ];
+        return explainedChoice(rng, {
+          prompt: t(`Classify the quadric surface defined by the equation $${eq}$.`, `对由方程 $${eq}$ 定义的二次曲面进行分类。`),
+          correct: right,
+          wrong,
+          solution: walked(
+            [
+              [
+                ["Find the linear variable", "找出一次变量"],
+                t("$z$ appears to the first power, so the surface is a paraboloid.", "$z$ 以一次方出现，所以曲面是抛物面。"),
+              ],
+              [
+                ["Compare the signs of the squares", "比较平方项的符号"],
+                t(
+                  `$x^2$ and $y^2$ have ${isElliptic ? "the same sign" : "opposite signs"}, so it is ${isElliptic ? "an elliptic" : "a hyperbolic"} paraboloid.`,
+                  `$x^2$ 与 $y^2$ ${isElliptic ? "同号" : "异号"}，所以它是${right["zh-CN"]}。`,
+                ),
+              ],
+            ],
+            isElliptic
+              ? t(
+                  `Both squares are at least $0$, so $z \\ge 0$ everywhere and the plane $z = 1$ cuts out the ellipse $\\frac{x^2}{${a * a}} + \\frac{y^2}{${b * b}} = 1$: a bowl opening upward.`,
+                  `两个平方项都不小于 $0$，所以处处 $z \\ge 0$，平面 $z = 1$ 截出椭圆 $\\frac{x^2}{${a * a}} + \\frac{y^2}{${b * b}} = 1$：开口向上的碗。`,
+                )
+              : t(
+                  `Along the $x$-axis $z = \\frac{x^2}{${a * a}}$ rises and along the $y$-axis $z = -\\frac{y^2}{${b * b}}$ falls: a saddle at the origin.`,
+                  `沿 $x$ 轴 $z = \\frac{x^2}{${a * a}}$ 上升，沿 $y$ 轴 $z = -\\frac{y^2}{${b * b}}$ 下降：原点处是马鞍形。`,
+                ),
+          ),
+        });
       },
     },
     {
       id: "the-area-of-a-trace-of-an-elliptic-paraboloid",
       title: t("The area of a trace of an elliptic paraboloid", "椭圆抛物面截线所围面积"),
       explanation: t(
-        "The plane $z = h$ with $h > 0$ cuts the elliptic paraboloid $z = \\frac{x^2}{a^2} + \\frac{y^2}{b^2}$ in the ellipse\n\n$$\\frac{x^2}{a^2 h} + \\frac{y^2}{b^2 h} = 1,$$\n\nwhose semi-axes are $a\\sqrt{h}$ and $b\\sqrt{h}$. An ellipse with semi-axes $p$ and $q$ encloses area $\\pi pq$, so this trace encloses $\\pi abh$. The area grows linearly with the height, not with its square.",
-        "平面 $z = h$（$h > 0$）截椭圆抛物面 $z = \\frac{x^2}{a^2} + \\frac{y^2}{b^2}$ 得椭圆\n\n$$\\frac{x^2}{a^2 h} + \\frac{y^2}{b^2 h} = 1,$$\n\n其半轴为 $a\\sqrt{h}$ 和 $b\\sqrt{h}$。半轴为 $p$、$q$ 的椭圆所围面积为 $\\pi pq$，所以这条截线所围面积为 $\\pi abh$。面积随高度线性增长，而不是随高度的平方增长。",
+        "The plane $z = h$ with $h > 0$ cuts the elliptic paraboloid $z = \\frac{x^2}{a^2} + \\frac{y^2}{b^2}$ in the ellipse\n\n$$\\frac{x^2}{a^2 h} + \\frac{y^2}{b^2 h} = 1,$$\n\nwhose semi-axes are $a\\sqrt{h}$ and $b\\sqrt{h}$. An ellipse with semi-axes $p$ and $q$ encloses area $\\pi pq$, so this trace encloses $\\pi abh$. The area grows linearly with the height, not with its square.\n\nFor $z = x^2 + \\frac{y^2}{4}$ at $z = 9$ the semi-axes are $3$ and $6$, so the area is $18\\pi$.\n\n> **Watch out.** The semi-axes are $a\\sqrt{h}$ and $b\\sqrt{h}$, not $ah$ and $bh$, so the area is $\\pi abh$, not $\\pi abh^2$. Use $a$ and $b$, the square roots of the denominators.",
+        "平面 $z = h$（$h > 0$）截椭圆抛物面 $z = \\frac{x^2}{a^2} + \\frac{y^2}{b^2}$ 得椭圆\n\n$$\\frac{x^2}{a^2 h} + \\frac{y^2}{b^2 h} = 1,$$\n\n其半轴为 $a\\sqrt{h}$ 和 $b\\sqrt{h}$。半轴为 $p$、$q$ 的椭圆所围面积为 $\\pi pq$，所以这条截线所围面积为 $\\pi abh$。面积随高度线性增长，而不是随高度的平方增长。\n\n对 $z = x^2 + \\frac{y^2}{4}$ 在 $z = 9$ 处，半轴为 $3$ 和 $6$，所以面积为 $18\\pi$。\n\n> **注意。** 半轴是 $a\\sqrt{h}$ 和 $b\\sqrt{h}$，不是 $ah$ 和 $bh$，所以面积是 $\\pi abh$，不是 $\\pi abh^2$。要用分母的平方根 $a$ 和 $b$。",
       ),
       generate(rng: Rng): Problem {
         const [a, b] = [rng.int(2, 6), rng.int(2, 6)];
         const h = rng.int(2, 9);
         const rt = Math.sqrt(h);
         const axis = (m: number): string => (Number.isInteger(rt) ? String(m * rt) : `${m}\\sqrt{${h}}`);
+        const ans = a * b * h;
         return numberProblem({
           prompt: t(
             `The plane $z = ${h}$ cuts $z = \\frac{x^2}{${a * a}} + \\frac{y^2}{${b * b}}$ in an ellipse enclosing area $k\\pi$. Find $k$.`,
             `平面 $z = ${h}$ 截 $z = \\frac{x^2}{${a * a}} + \\frac{y^2}{${b * b}}$ 得一椭圆，其所围面积为 $k\\pi$。求 $k$。`,
           ),
-          answer: a * b * h,
-          wrong: [a * b * h * h, a * a * b * b * h, a * b],
-          solution: t(
-            `The trace is $\\frac{x^2}{${a * a * h}} + \\frac{y^2}{${b * b * h}} = 1$ with semi-axes $${axis(a)}$ and $${axis(b)}$, so the area is $\\pi \\cdot ${a} \\cdot ${b} \\cdot ${h}$ and $k = ${a * b * h}$.`,
-            `截线为 $\\frac{x^2}{${a * a * h}} + \\frac{y^2}{${b * b * h}} = 1$，半轴为 $${axis(a)}$ 和 $${axis(b)}$，所以面积为 $\\pi \\cdot ${a} \\cdot ${b} \\cdot ${h}$，$k = ${a * b * h}$。`,
+          answer: ans,
+          mistakes: distinct(ans, [
+            why(
+              a * b * h * h,
+              `The semi-axes are $${axis(a)}$ and $${axis(b)}$, which grow with $\\sqrt{${h}}$, not with $${h}$.`,
+              `半轴是 $${axis(a)}$ 和 $${axis(b)}$，随 $\\sqrt{${h}}$ 增长，而不是随 $${h}$。`,
+            ),
+            why(
+              a * a * b * b * h,
+              `The semi-axes are the square roots of $${a * a * h}$ and $${b * b * h}$, so their product is $${a} \\cdot ${b} \\cdot ${h}$.`,
+              `半轴是 $${a * a * h}$ 与 $${b * b * h}$ 的平方根，所以乘积是 $${a} \\cdot ${b} \\cdot ${h}$。`,
+            ),
+            why(
+              a * b,
+              `That is the trace at $z = 1$; at $z = ${h}$ both semi-axes are multiplied by $\\sqrt{${h}}$.`,
+              `这是 $z = 1$ 处的截线；在 $z = ${h}$ 处两条半轴都要乘以 $\\sqrt{${h}}$。`,
+            ),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Write the trace", "写出截线"],
+                t(
+                  `$\\frac{x^2}{${a * a}} + \\frac{y^2}{${b * b}} = ${h}$, that is, $\\frac{x^2}{${a * a * h}} + \\frac{y^2}{${b * b * h}} = 1$, with semi-axes $${axis(a)}$ and $${axis(b)}$.`,
+                  `$\\frac{x^2}{${a * a}} + \\frac{y^2}{${b * b}} = ${h}$，即 $\\frac{x^2}{${a * a * h}} + \\frac{y^2}{${b * b * h}} = 1$，半轴为 $${axis(a)}$ 和 $${axis(b)}$。`,
+                ),
+              ],
+              [
+                ["Find the area", "求面积"],
+                t(
+                  `$\\pi \\cdot ${axis(a)} \\cdot ${axis(b)} = ${ans}\\pi$, so $k = ${ans}$.`,
+                  `$\\pi \\cdot ${axis(a)} \\cdot ${axis(b)} = ${ans}\\pi$，所以 $k = ${ans}$。`,
+                ),
+              ],
+            ],
+            t(
+              `The trace at $z = 1$ has semi-axes $${a}$ and $${b}$ and area $${a * b}\\pi$; raising the plane to $z = ${h}$ multiplies each semi-axis by $\\sqrt{${h}}$ and the area by $${h}$, giving $${ans}\\pi$.`,
+              `$z = 1$ 处的截线半轴为 $${a}$ 和 $${b}$，面积为 $${a * b}\\pi$；把平面升到 $z = ${h}$，每条半轴乘以 $\\sqrt{${h}}$，面积乘以 $${h}$，得 $${ans}\\pi$。`,
+            ),
           ),
         });
       },
@@ -902,6 +1689,10 @@ export const ellipticCones: TopicDef = {
     "An elliptic cone has standard equation z²/c² = x²/a² + y²/b², with horizontal traces being ellipses and vertical traces being intersecting lines.",
     "椭圆锥面的标准方程为 z²/c² = x²/a² + y²/b²，其水平截痕为椭圆，通过顶点的垂直截痕为相交直线。",
   ),
+  intro: t(
+    "On the cone $z^2 = x^2 + \\frac{y^2}{4}$ the plane $z = 2$ cuts out $x^2 + \\frac{y^2}{4} = 4$, that is, $\\frac{x^2}{4} + \\frac{y^2}{16} = 1$, an ellipse with semi-axes $2$ and $4$. The plane $x = 0$ cuts out $z^2 = \\frac{y^2}{4}$, the two lines $z = \\pm\\frac{y}{2}$ crossing at the vertex.\n\nCheck: $(2, 0, 2)$ lies on the cone, since $4 = 4 + 0$, and so does $(0, 4, 2)$, since $4 = 0 + \\frac{16}{4}$.\n\nIn this lesson we find the horizontal traces of an elliptic cone and decide which lines through its vertex lie on it.",
+    "在锥面 $z^2 = x^2 + \\frac{y^2}{4}$ 上，平面 $z = 2$ 截出 $x^2 + \\frac{y^2}{4} = 4$，即 $\\frac{x^2}{4} + \\frac{y^2}{16} = 1$，这是半轴为 $2$ 和 $4$ 的椭圆。平面 $x = 0$ 截出 $z^2 = \\frac{y^2}{4}$，即在顶点相交的两条直线 $z = \\pm\\frac{y}{2}$。\n\n检验：$(2, 0, 2)$ 在锥面上，因为 $4 = 4 + 0$；$(0, 4, 2)$ 也在，因为 $4 = 0 + \\frac{16}{4}$。\n\n本课我们求椭圆锥面的水平截线，并判断过顶点的哪些直线落在锥面上。",
+  ),
   prerequisites: ["paraboloids"],
   encompasses: [],
   xp: 10,
@@ -911,36 +1702,60 @@ export const ellipticCones: TopicDef = {
       figure: multivariableDrawings2["elliptic-cones#analyzing-traces-of-elliptic-cones"],
       title: t("Analyzing traces of elliptic cones", "分析椭圆锥面的截痕"),
       explanation: t(
-        "Slicing a surface with a plane shows its cross sections; for a cone, horizontal slices are ellipses that grow as the plane moves away from the vertex. For the cone $z^2 = \\frac{x^2}{a^2} + \\frac{y^2}{b^2}$, intersecting with horizontal planes $z = k$ yields the ellipse $\\frac{x^2}{(ak)^2} + \\frac{y^2}{(bk)^2} = 1$ with semi-axes $a|k|$ and $b|k|$.",
-        "用平面截曲面可以看到它的截面；对于锥面，水平截面是椭圆，平面离顶点越远，椭圆越大。对于椭圆锥面 $z^2 = \\frac{x^2}{a^2} + \\frac{y^2}{b^2}$，与水平面 $z = k$ 相交得到椭圆 $\\frac{x^2}{(ak)^2} + \\frac{y^2}{(bk)^2} = 1$，其半轴长分别为 $a|k|$ 和 $b|k|$。",
+        "Slicing a surface with a plane shows its cross sections; for a cone, horizontal slices are ellipses that grow as the plane moves away from the vertex. For the cone $z^2 = \\frac{x^2}{a^2} + \\frac{y^2}{b^2}$, intersecting with horizontal planes $z = k$ yields the ellipse $\\frac{x^2}{(ak)^2} + \\frac{y^2}{(bk)^2} = 1$ with semi-axes $a|k|$ and $b|k|$.\n\nFor $z^2 = 4x^2 + y^2$ at $z = 3$, $4x^2 + y^2 = 9$, so the semi-axis along $x$ is $\\frac{3}{2}$ and the one along $y$ is $3$.\n\n> **Watch out.** Divide by $k^2$ to reach the standard form, and then take square roots: the semi-axis is $a|k|$, not $a^2k^2$. It grows in proportion to the height, unlike the trace of a paraboloid.",
+        "用平面截曲面可以看到它的截面；对于锥面，水平截面是椭圆，平面离顶点越远，椭圆越大。对于椭圆锥面 $z^2 = \\frac{x^2}{a^2} + \\frac{y^2}{b^2}$，与水平面 $z = k$ 相交得到椭圆 $\\frac{x^2}{(ak)^2} + \\frac{y^2}{(bk)^2} = 1$，其半轴长分别为 $a|k|$ 和 $b|k|$。\n\n对 $z^2 = 4x^2 + y^2$ 在 $z = 3$ 处，$4x^2 + y^2 = 9$，所以沿 $x$ 方向的半轴是 $\\frac{3}{2}$，沿 $y$ 方向的是 $3$。\n\n> **注意。** 先除以 $k^2$ 化成标准形式，再开平方：半轴是 $a|k|$，不是 $a^2k^2$。它与高度成正比，这一点与抛物面的截线不同。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(2, 6);
         const b = rng.int(2, 6);
         const k = rng.int(2, 5);
         const ans = a * k;
-
-        const prompt = t(
-          `Find the length of the semi-axis in the $x$-direction of the elliptical trace of the cone $z^2 = \\frac{x^2}{${a * a}} + \\frac{y^2}{${b * b}}$ at the plane $z = ${k}$.`,
-          `求椭圆锥面 $z^2 = \\frac{x^2}{${a * a}} + \\frac{y^2}{${b * b}}$ 与平面 $z = ${k}$ 相交所得椭圆截痕在 $x$ 方向的半轴长。`,
-        );
-        const solution = t(
-          steps(
-            `Substitute $z = ${k}$ into the equation: $(${k})^2 = \\frac{x^2}{${a * a}} + \\frac{y^2}{${b * b}} \\implies ${k * k} = \\frac{x^2}{${a * a}} + \\frac{y^2}{${b * b}}$.`,
-            `Divide by $${k * k}$: $\\frac{x^2}{${a * a * k * k}} + \\frac{y^2}{${b * b * k * k}} = 1$.`,
-            `The semi-axis in the $x$-direction is $\\sqrt{${a * a * k * k}} = ${ans}$.`,
-          ),
-          steps(
-            `将 $z = ${k}$ 代入方程：$(${k})^2 = \\frac{x^2}{${a * a}} + \\frac{y^2}{${b * b}} \\implies ${k * k} = \\frac{x^2}{${a * a}} + \\frac{y^2}{${b * b}}$。`,
-            `两边同除以 $${k * k}$：$\\frac{x^2}{${a * a * k * k}} + \\frac{y^2}{${b * b * k * k}} = 1$。`,
-            `在 $x$ 方向的半轴长为 $\\sqrt{${a * a * k * k}} = ${ans}$。`,
-          ),
-        );
+        const cone = `z^2 = \\frac{x^2}{${a * a}} + \\frac{y^2}{${b * b}}`;
         return numberProblem({
-          prompt,
-          solution,
+          prompt: t(
+            `Find the length of the semi-axis in the $x$-direction of the elliptical trace of the cone $${cone}$ at the plane $z = ${k}$.`,
+            `求椭圆锥面 $${cone}$ 与平面 $z = ${k}$ 相交所得椭圆截痕在 $x$ 方向的半轴长。`,
+          ),
           answer: ans,
-          wrong: [a, k, ans * ans],
+          mistakes: distinct(ans, [
+            why(
+              a,
+              `$${a}$ is the semi-axis at $z = 1$; at $z = ${k}$ it is multiplied by $${k}$.`,
+              `$${a}$ 是 $z = 1$ 处的半轴；在 $z = ${k}$ 处要乘以 $${k}$。`,
+            ),
+            why(
+              k,
+              `The height alone is not the semi-axis: the denominator $${a * a}$ stretches the trace by $${a}$ along $x$.`,
+              `高度本身不是半轴：分母 $${a * a}$ 使截线沿 $x$ 方向伸长 $${a}$ 倍。`,
+            ),
+            why(
+              ans * ans,
+              `$${ans * ans}$ is the denominator of the standard form; the semi-axis is its square root.`,
+              `$${ans * ans}$ 是标准形式中的分母；半轴是它的平方根。`,
+            ),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Substitute the height", "代入高度"],
+                t(
+                  `$\\frac{x^2}{${a * a}} + \\frac{y^2}{${b * b}} = ${k * k}$.`,
+                  `$\\frac{x^2}{${a * a}} + \\frac{y^2}{${b * b}} = ${k * k}$。`,
+                ),
+              ],
+              [
+                ["Divide by the right side", "除以右边"],
+                t(
+                  `$\\frac{x^2}{${a * a * k * k}} + \\frac{y^2}{${b * b * k * k}} = 1$, so the semi-axis along $x$ is $\\sqrt{${a * a * k * k}} = ${ans}$.`,
+                  `$\\frac{x^2}{${a * a * k * k}} + \\frac{y^2}{${b * b * k * k}} = 1$，所以沿 $x$ 方向的半轴为 $\\sqrt{${a * a * k * k}} = ${ans}$。`,
+                ),
+              ],
+            ],
+            t(
+              `The point $(${ans}, 0, ${k})$ lies on the cone: $\\frac{${ans * ans}}{${a * a}} = ${k * k} = ${k}^2$.`,
+              `点 $(${ans}, 0, ${k})$ 在锥面上：$\\frac{${ans * ans}}{${a * a}} = ${k * k} = ${k}^2$。`,
+            ),
+          ),
         });
       },
     },
@@ -949,8 +1764,8 @@ export const ellipticCones: TopicDef = {
       figure: multivariableDrawings2["elliptic-cones#lines-on-an-elliptic-cone"],
       title: t("Lines on an elliptic cone", "椭圆锥面上的直线"),
       explanation: t(
-        "The elliptic cone $z^2 = \\frac{x^2}{a^2} + \\frac{y^2}{b^2}$ is made of lines through the origin. The line $(x, y, z) = s(p, q, r)$ lies on the cone exactly when its direction satisfies the equation, because every term scales by $s^2$:\n\n$$r^2 = \\frac{p^2}{a^2} + \\frac{q^2}{b^2}.$$\n\nIf the two sides differ, the line meets the cone only at the origin.",
-        "椭圆锥面 $z^2 = \\frac{x^2}{a^2} + \\frac{y^2}{b^2}$ 由过原点的直线组成。直线 $(x, y, z) = s(p, q, r)$ 恰好在其方向满足方程时落在锥面上，因为每一项都按 $s^2$ 缩放：\n\n$$r^2 = \\frac{p^2}{a^2} + \\frac{q^2}{b^2}.$$\n\n若两边不等，该直线只在原点与锥面相交。",
+        "The elliptic cone $z^2 = \\frac{x^2}{a^2} + \\frac{y^2}{b^2}$ is made of lines through the origin. The line $(x, y, z) = s(p, q, r)$ lies on the cone exactly when its direction satisfies the equation, because every term scales by $s^2$:\n\n$$r^2 = \\frac{p^2}{a^2} + \\frac{q^2}{b^2}.$$\n\nIf the two sides differ, the line meets the cone only at the origin.\n\nOn the circular cone $z^2 = x^2 + y^2$ the line $s(3, 4, 5)$ lies on the cone, since $25 = 9 + 16$, while $s(1, 1, 1)$ does not, since $1 \\ne 2$.\n\n> **Watch out.** Every line on the cone passes through the vertex, but not every line through the vertex lies on the cone; test the direction. A cone is curved and still contains straight lines.",
+        "椭圆锥面 $z^2 = \\frac{x^2}{a^2} + \\frac{y^2}{b^2}$ 由过原点的直线组成。直线 $(x, y, z) = s(p, q, r)$ 恰好在其方向满足方程时落在锥面上，因为每一项都按 $s^2$ 缩放：\n\n$$r^2 = \\frac{p^2}{a^2} + \\frac{q^2}{b^2}.$$\n\n若两边不等，该直线只在原点与锥面相交。\n\n在圆锥面 $z^2 = x^2 + y^2$ 上，直线 $s(3, 4, 5)$ 落在锥面上，因为 $25 = 9 + 16$；而 $s(1, 1, 1)$ 不在，因为 $1 \\ne 2$。\n\n> **注意。** 锥面上的每条直线都过顶点，但过顶点的直线未必在锥面上；要检验方向。锥面是弯曲的，却仍含有直线。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(2, 4);
@@ -965,16 +1780,37 @@ export const ellipticCones: TopicDef = {
         const rLatex = Number.isInteger(r) ? String(r) : `\\sqrt{${r2}}`;
         const rShown = on ? rLatex : Number.isInteger(r) ? String(r + 1) : `\\sqrt{${r2 + 1}}`;
         const rShown2 = on ? r2 : Number.isInteger(r) ? (r + 1) * (r + 1) : r2 + 1;
-        return choiceProblem({
+        const sum = `\\frac{${p * p}}{${a * a}} + \\frac{${q * q}}{${b * b}} = ${r2}`;
+        return verdictChoice(rng, {
           prompt: t(
             `Does the line $(x, y, z) = s(${p}, ${q}, ${rShown})$ lie on the cone $z^2 = \\frac{x^2}{${a * a}} + \\frac{y^2}{${b * b}}$?`,
             `直线 $(x, y, z) = s(${p}, ${q}, ${rShown})$ 是否在锥面 $z^2 = \\frac{x^2}{${a * a}} + \\frac{y^2}{${b * b}}$ 上？`,
           ),
-          options: yesNo,
-          correct: on ? 0 : 1,
-          solution: t(
-            `$\\frac{${p * p}}{${a * a}} + \\frac{${q * q}}{${b * b}} = ${u * u} + ${v * v} = ${r2}$ and $z^2 = ${rShown2}$. ${on ? "They agree, so the whole line lies on the cone." : "They differ, so the line meets the cone only at the origin."}`,
-            `$\\frac{${p * p}}{${a * a}} + \\frac{${q * q}}{${b * b}} = ${u * u} + ${v * v} = ${r2}$，而 $z^2 = ${rShown2}$。${on ? "两者相等，所以整条直线在锥面上。" : "两者不等，所以该直线只在原点与锥面相交。"}`,
+          holds: on,
+          yes: t(`$${sum}$ equals the square of the last component, $${rShown2}$`, `$${sum}$ 等于最后一个分量的平方 $${rShown2}$`),
+          no: t(`$${sum}$ differs from the square of the last component, $${rShown2}$`, `$${sum}$ 不等于最后一个分量的平方 $${rShown2}$`),
+          yesWrong: t("the line passes through the origin, the vertex of the cone", "这条直线过原点，即锥面的顶点"),
+          noWrong: t("a cone is curved, so no straight line can lie on it", "锥面是弯曲的，所以没有直线能落在上面"),
+          solution: walked(
+            [
+              [["Put the direction into the right side", "把方向代入右边"], t(`$${sum}$.`, `$${sum}$。`)],
+              [
+                ["Compare with the last component squared", "与最后一个分量的平方比较"],
+                t(
+                  `$(${rShown})^2 = ${rShown2}$. ${on ? "They agree, so every point of the line lies on the cone." : "They differ, so the line meets the cone only at the origin."}`,
+                  `$(${rShown})^2 = ${rShown2}$。${on ? "两者相等，所以直线上的每个点都在锥面上。" : "两者不等，所以该直线只在原点与锥面相交。"}`,
+                ),
+              ],
+            ],
+            on
+              ? t(
+                  `At $s = 2$ the point $(${2 * p}, ${2 * q}, 2${rShown})$ gives $4 \\cdot ${r2}$ on both sides: every term of the equation is multiplied by $s^2 = 4$.`,
+                  `取 $s = 2$，点 $(${2 * p}, ${2 * q}, 2${rShown})$ 使两边都等于 $4 \\cdot ${r2}$：方程的每一项都乘以 $s^2 = 4$。`,
+                )
+              : t(
+                  `At $s = 1$ the point $(${p}, ${q}, ${rShown})$ gives $z^2 = ${rShown2}$ but $\\frac{x^2}{${a * a}} + \\frac{y^2}{${b * b}} = ${r2}$, so it is off the cone.`,
+                  `取 $s = 1$，点 $(${p}, ${q}, ${rShown})$ 给出 $z^2 = ${rShown2}$，而 $\\frac{x^2}{${a * a}} + \\frac{y^2}{${b * b}} = ${r2}$，所以它不在锥面上。`,
+                ),
           ),
         });
       },
@@ -990,6 +1826,10 @@ export const cylinders: TopicDef = {
     "A cylinder is a surface generated by straight lines (rulings) parallel to a given line passing through a given plane curve.",
     "柱面是由平行于定直线且通过定平面曲线的一族平行直线（母线）生成的曲面。",
   ),
+  intro: t(
+    "In $\\mathbb{R}^3$ the equation $z = y^2$ does not mention $x$. Its trace in the $yz$-plane is the parabola $z = y^2$, and since $x$ is free, that parabola is copied along the whole $x$-axis: the surface is a parabolic cylinder whose rulings are parallel to the $x$-axis.\n\nCheck: $(5, 2, 4)$ and $(-7, 2, 4)$ both satisfy $4 = 2^2$; they lie on the same ruling, the line through $(0, 2, 4)$ parallel to the $x$-axis.\n\nIn this lesson we recognize cylinders from their equations, find the direction of their rulings and locate points on them.",
+    "在 $\\mathbb{R}^3$ 中，方程 $z = y^2$ 不含 $x$。它在 $yz$ 平面中的截线是抛物线 $z = y^2$，由于 $x$ 可取任意值，这条抛物线被复制到整个 $x$ 轴方向：该曲面是母线平行于 $x$ 轴的抛物柱面。\n\n检验：$(5, 2, 4)$ 和 $(-7, 2, 4)$ 都满足 $4 = 2^2$；它们在同一条母线上，即过 $(0, 2, 4)$ 且平行于 $x$ 轴的直线。\n\n本课我们由方程识别柱面，求出母线的方向，并找出柱面上的点。",
+  ),
   prerequisites: ["elliptic-cones"],
   encompasses: [],
   xp: 10,
@@ -999,40 +1839,62 @@ export const cylinders: TopicDef = {
       figure: multivariableDrawings2["cylinders#identifying-cylinders-and-their-rulings"],
       title: t("Identifying cylinders and their rulings", "识别柱面及其母线方向"),
       explanation: t(
-        "In $\\mathbb{R}^3$, an equation involving only two of the three variables represents a cylinder whose rulings are parallel to the axis of the missing variable. For example, $x^2 + y^2 = r^2$ has rulings parallel to the $z$-axis.",
-        "在 $\\mathbb{R}^3$ 中，仅包含三个坐标变量中两个变量的方程表示母线平行于缺失变量坐标轴的柱面。例如 $x^2 + y^2 = r^2$ 的母线平行于 $z$ 轴。",
+        "In $\\mathbb{R}^3$, an equation involving only two of the three variables represents a cylinder whose rulings are parallel to the axis of the missing variable. For example, $x^2 + y^2 = r^2$ has rulings parallel to the $z$-axis.\n\nThe equation $x^2 + 4z^2 = 4$ has no $y$, so it is an elliptic cylinder whose rulings are parallel to the $y$-axis.\n\n> **Watch out.** The rulings run along the axis of the variable that is missing, not of one that appears. In $\\mathbb{R}^3$ an equation such as $x^2 + y^2 = 9$ is a whole cylinder, not a single circle.",
+        "在 $\\mathbb{R}^3$ 中，仅包含三个坐标变量中两个变量的方程表示母线平行于缺失变量坐标轴的柱面。例如 $x^2 + y^2 = r^2$ 的母线平行于 $z$ 轴。\n\n方程 $x^2 + 4z^2 = 4$ 不含 $y$，所以它是母线平行于 $y$ 轴的椭圆柱面。\n\n> **注意。** 母线沿缺失变量的坐标轴方向，而不是沿出现在方程中的变量。在 $\\mathbb{R}^3$ 中，$x^2 + y^2 = 9$ 这样的方程是一整个柱面，而不是一个圆。",
       ),
       generate(rng: Rng): Problem {
         const r = rng.int(2, 25);
         const missing = rng.pick(["x", "y", "z"] as const);
-
-        let eq: string;
-        let right: Text;
-        let wrong: readonly Text[];
-
-        if (missing === "z") {
-          eq = `x^2 + y^2 = ${r * r}`;
-          right = t("$z$-axis", "$z$ 轴");
-          wrong = [t("$x$-axis", "$x$ 轴"), t("$y$-axis", "$y$ 轴"), t("The line $y = x$", "直线 $y = x$")];
-        } else if (missing === "y") {
-          eq = `x^2 + z^2 = ${r * r}`;
-          right = t("$y$-axis", "$y$ 轴");
-          wrong = [t("$x$-axis", "$x$ 轴"), t("$z$-axis", "$z$ 轴"), t("The line $z = x$", "直线 $z = x$")];
-        } else {
-          eq = `y^2 + z^2 = ${r * r}`;
-          right = t("$x$-axis", "$x$ 轴");
-          wrong = [t("$y$-axis", "$y$ 轴"), t("$z$-axis", "$z$ 轴"), t("The line $z = y$", "直线 $z = y$")];
-        }
-
-        const prompt = t(
-          `In $\\mathbb{R}^3$, the surface defined by $${eq}$ is a circular cylinder. The rulings of this cylinder are parallel to which coordinate axis?`,
-          `在 $\\mathbb{R}^3$ 中，由方程 $${eq}$ 定义的曲面为圆柱面。该柱面的母线平行于哪个坐标轴？`,
-        );
-        const solution = t(
-          `The equation lacks the variable $${missing}$, so the rulings are parallel to the ${right.en}.`,
-          `方程中缺失变量 $${missing}$，因此其母线平行于 ${right["zh-CN"]}。`,
-        );
-        return pickChoice(rng, prompt, right, wrong, solution);
+        const [u, v] = missing === "z" ? (["x", "y"] as const) : missing === "y" ? (["x", "z"] as const) : (["y", "z"] as const);
+        const eq = `${u}^2 + ${v}^2 = ${r * r}`;
+        const axis = (w: string) => t(`$${w}$-axis`, `$${w}$ 轴`);
+        const appears = (w: string) =>
+          t(
+            `The equation contains $${w}$, so moving parallel to the $${w}$-axis changes $${w}^2$ and leaves the surface.`,
+            `方程含有 $${w}$，所以沿 $${w}$ 轴方向移动会改变 $${w}^2$，从而离开曲面。`,
+          );
+        const point = (w: number): string =>
+          missing === "x" ? `(${w}, ${r}, 0)` : missing === "y" ? `(${r}, ${w}, 0)` : `(${r}, 0, ${w})`;
+        return explainedChoice(rng, {
+          prompt: t(
+            `In $\\mathbb{R}^3$, the surface defined by $${eq}$ is a circular cylinder. The rulings of this cylinder are parallel to which coordinate axis?`,
+            `在 $\\mathbb{R}^3$ 中，由方程 $${eq}$ 定义的曲面为圆柱面。该柱面的母线平行于哪个坐标轴？`,
+          ),
+          correct: axis(missing),
+          wrong: [
+            { option: axis(u), why: appears(u) },
+            { option: axis(v), why: appears(v) },
+            {
+              option: t(`The line $${v} = ${u}$`, `直线 $${v} = ${u}$`),
+              why: t(
+                `Along that line both $${u}$ and $${v}$ change; the rulings follow the missing variable $${missing}$.`,
+                `沿这条直线 $${u}$ 与 $${v}$ 都在变化；母线沿缺失的变量 $${missing}$ 的方向。`,
+              ),
+            },
+          ],
+          solution: walked(
+            [
+              [
+                ["Find the missing variable", "找出缺失的变量"],
+                t(
+                  `The equation involves only $${u}$ and $${v}$; $${missing}$ is missing.`,
+                  `方程只含 $${u}$ 和 $${v}$；缺少 $${missing}$。`,
+                ),
+              ],
+              [
+                ["Read the rulings", "读出母线方向"],
+                t(
+                  `$${missing}$ can take any value, so the circle $${eq}$ is copied along the $${missing}$-axis, and the rulings are parallel to it.`,
+                  `$${missing}$ 可取任意值，所以圆 $${eq}$ 沿 $${missing}$ 轴方向被复制，母线平行于 $${missing}$ 轴。`,
+                ),
+              ],
+            ],
+            t(
+              `$${point(0)}$ and $${point(7)}$ both satisfy the equation, and the segment joining them is parallel to the $${missing}$-axis.`,
+              `$${point(0)}$ 与 $${point(7)}$ 都满足方程，连接它们的线段平行于 $${missing}$ 轴。`,
+            ),
+          ),
+        });
       },
     },
     {
@@ -1040,8 +1902,8 @@ export const cylinders: TopicDef = {
       figure: multivariableDrawings2["cylinders#points-on-a-parabolic-cylinder"],
       title: t("Points on a parabolic cylinder", "抛物柱面上的点"),
       explanation: t(
-        "An equation in $\\mathbb{R}^3$ that does not mention $z$, such as $y = ax^2 + b$, describes a cylinder: the parabola in the $xy$-plane is copied to every height. So a point $(x, y, z)$ lies on it exactly when $y = ax^2 + b$, whatever $z$ is. Finding the missing coordinate of a point on the surface uses only $x$ and $y$.",
-        "$\\mathbb{R}^3$ 中不含 $z$ 的方程，例如 $y = ax^2 + b$，描述的是柱面：$xy$ 平面上的抛物线被复制到每个高度。所以点 $(x, y, z)$ 在该曲面上当且仅当 $y = ax^2 + b$，与 $z$ 无关。求曲面上一点所缺的坐标只需用到 $x$ 与 $y$。",
+        "An equation in $\\mathbb{R}^3$ that does not mention $z$, such as $y = ax^2 + b$, describes a cylinder: the parabola in the $xy$-plane is copied to every height. So a point $(x, y, z)$ lies on it exactly when $y = ax^2 + b$, whatever $z$ is. Finding the missing coordinate of a point on the surface uses only $x$ and $y$.\n\nOn $z = 3 - x^2$, which does not mention $y$, the point $(1, 5, z)$ has $z = 3 - 1 = 2$, whatever its $y$-coordinate.\n\n> **Watch out.** The missing variable plays no part: do not add it in or put it in place of $x$. Square $x$ before multiplying by $a$; a negative $x$ gives a positive $x^2$.",
+        "$\\mathbb{R}^3$ 中不含 $z$ 的方程，例如 $y = ax^2 + b$，描述的是柱面：$xy$ 平面上的抛物线被复制到每个高度。所以点 $(x, y, z)$ 在该曲面上当且仅当 $y = ax^2 + b$，与 $z$ 无关。求曲面上一点所缺的坐标只需用到 $x$ 与 $y$。\n\n在不含 $y$ 的 $z = 3 - x^2$ 上，点 $(1, 5, z)$ 有 $z = 3 - 1 = 2$，与它的 $y$ 坐标无关。\n\n> **注意。** 缺失的变量不起作用：不要把它加进去，也不要用它代替 $x$。先把 $x$ 平方再乘以 $a$；负的 $x$ 平方后为正。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.pick([-3, -2, -1, 1, 2, 3]);
@@ -1049,16 +1911,40 @@ export const cylinders: TopicDef = {
         const x = rng.int(-4, 4);
         const z = rng.int(-9, 9);
         const y = a * x * x + b;
+        const curve = poly([a, "x^2"], [b, ""]);
+        const ax2 = a === 1 || x === 0 ? `${a * x * x}` : a === -1 ? `-${x * x}` : `${a} \\cdot ${x * x}`;
+        const value = b === 0 ? ax2 : `${ax2} ${b < 0 ? "-" : "+"} ${Math.abs(b)}`;
         return numberProblem({
           prompt: t(
-            `The point $(${x}, y, ${z})$ lies on the surface $y = ${poly([a, "x^2"], [b, ""])}$ in $\\mathbb{R}^3$. Find $y$.`,
-            `点 $(${x}, y, ${z})$ 在 $\\mathbb{R}^3$ 中的曲面 $y = ${poly([a, "x^2"], [b, ""])}$ 上。求 $y$。`,
+            `The point $(${x}, y, ${z})$ lies on the surface $y = ${curve}$ in $\\mathbb{R}^3$. Find $y$.`,
+            `点 $(${x}, y, ${z})$ 在 $\\mathbb{R}^3$ 中的曲面 $y = ${curve}$ 上。求 $y$。`,
           ),
           answer: y,
-          wrong: [a * x * x + b + z, a * z * z + b, a * x + b],
-          solution: t(
-            `The surface is a cylinder parallel to the $z$-axis, so $z = ${z}$ plays no role: $y = ${a === 1 ? "" : `${a} \\cdot `}${x * x} ${b < 0 ? "-" : "+"} ${Math.abs(b)} = ${y}$.`,
-            `该曲面是平行于 $z$ 轴的柱面，所以 $z = ${z}$ 不起作用：$y = ${a === 1 ? "" : `${a} \\cdot `}${x * x} ${b < 0 ? "-" : "+"} ${Math.abs(b)} = ${y}$。`,
+          mistakes: distinct(y, [
+            why(y + z, `The equation does not mention $z$, so $z = ${z}$ is not added in.`, `方程不含 $z$，所以不要把 $z = ${z}$ 加进去。`),
+            why(
+              a * z * z + b,
+              `The square in the equation is of $x$, so use $x = ${x}$, not $z = ${z}$.`,
+              `方程中平方的是 $x$，所以要用 $x = ${x}$，而不是 $z = ${z}$。`,
+            ),
+            why(
+              a * x + b,
+              `The equation has $x^2$: square $${x}$ to get $${x * x}$ first.`,
+              `方程中是 $x^2$：要先把 $${x}$ 平方得 $${x * x}$。`,
+            ),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Notice the missing variable", "注意缺失的变量"],
+                t(`The equation does not mention $z$, so $z = ${z}$ plays no role.`, `方程不含 $z$，所以 $z = ${z}$ 不起作用。`),
+              ],
+              [["Substitute x", "代入 x"], t(`$y = ${value} = ${y}$.`, `$y = ${value} = ${y}$。`)],
+            ],
+            t(
+              `The point $(${x}, ${y}, 0)$ on the parabola in the $xy$-plane has the same $x$ and $y$, and the ruling through it, parallel to the $z$-axis, passes through $(${x}, ${y}, ${z})$.`,
+              `$xy$ 平面中抛物线上的点 $(${x}, ${y}, 0)$ 有相同的 $x$ 与 $y$，过它且平行于 $z$ 轴的母线经过 $(${x}, ${y}, ${z})$。`,
+            ),
           ),
         });
       },
@@ -1074,6 +1960,10 @@ export const intersectionsOfLinesAndPlanesWithSurfaces: TopicDef = {
     "Intersecting a quadric surface with a coordinate or parallel plane yields a two-dimensional conic section trace.",
     "用坐标平面或平行平面截二次曲面，得到的交线（截痕）为二维圆锥曲线。",
   ),
+  intro: t(
+    "The plane $z = 1$ cuts the sphere $x^2 + y^2 + z^2 = 9$ where $x^2 + y^2 + 1 = 9$, that is, in the circle $x^2 + y^2 = 8$ of radius $\\sqrt{8} = 2\\sqrt{2}$, centered at $(0, 0, 1)$.\n\nCheck: the point $(2\\sqrt{2}, 0, 1)$ is on that circle and on the sphere, since $8 + 0 + 1 = 9$.\n\nIn this lesson we intersect surfaces with planes and with lines by substituting the plane or the line into the equation of the surface.",
+    "平面 $z = 1$ 截球面 $x^2 + y^2 + z^2 = 9$ 于 $x^2 + y^2 + 1 = 9$ 处，即圆心为 $(0, 0, 1)$、半径为 $\\sqrt{8} = 2\\sqrt{2}$ 的圆 $x^2 + y^2 = 8$。\n\n检验：点 $(2\\sqrt{2}, 0, 1)$ 在这个圆上，也在球面上，因为 $8 + 0 + 1 = 9$。\n\n本课我们把平面或直线代入曲面方程，求曲面与平面、与直线的交。",
+  ),
   prerequisites: ["cylinders"],
   encompasses: [],
   xp: 10,
@@ -1083,8 +1973,8 @@ export const intersectionsOfLinesAndPlanesWithSurfaces: TopicDef = {
       figure: multivariableDrawings2["intersections-of-lines-and-planes-with-surfaces#calculating-radius-of-circular-traces"],
       title: t("Calculating the radius of circular traces", "计算圆形截痕的半径"),
       explanation: t(
-        "Substituting the height of the plane into the equation of the sphere leaves the equation of a circle, whose radius shrinks as the plane moves away from the center. Intersecting the sphere $x^2 + y^2 + z^2 = R^2$ with the plane $z = h$ (where $|h| < R$) produces the circle $x^2 + y^2 = R^2 - h^2$ with radius $r = \\sqrt{R^2 - h^2}$.",
-        "把平面的高度代入球面方程，就得到一个圆的方程，平面离球心越远，圆的半径越小。用平面 $z = h$（其中 $|h| < R$）截球面 $x^2 + y^2 + z^2 = R^2$，得到的交线为圆 $x^2 + y^2 = R^2 - h^2$，其半径为 $r = \\sqrt{R^2 - h^2}$。",
+        "Substituting the height of the plane into the equation of the sphere leaves the equation of a circle, whose radius shrinks as the plane moves away from the center. Intersecting the sphere $x^2 + y^2 + z^2 = R^2$ with the plane $z = h$ (where $|h| < R$) produces the circle $x^2 + y^2 = R^2 - h^2$ with radius $r = \\sqrt{R^2 - h^2}$.\n\nThe plane $y = 2$ cuts $x^2 + y^2 + z^2 = 9$ in $x^2 + z^2 = 5$, a circle of radius $\\sqrt{5}$.\n\n> **Watch out.** Subtract the squares, not the lengths: the radius is $\\sqrt{R^2 - h^2}$, not $R - h$. The circle is smaller than the sphere's radius unless the plane passes through the center.",
+        "把平面的高度代入球面方程，就得到一个圆的方程，平面离球心越远，圆的半径越小。用平面 $z = h$（其中 $|h| < R$）截球面 $x^2 + y^2 + z^2 = R^2$，得到的交线为圆 $x^2 + y^2 = R^2 - h^2$，其半径为 $r = \\sqrt{R^2 - h^2}$。\n\n平面 $y = 2$ 截 $x^2 + y^2 + z^2 = 9$ 得 $x^2 + z^2 = 5$，这是半径为 $\\sqrt{5}$ 的圆。\n\n> **注意。** 要减的是平方而不是长度：半径是 $\\sqrt{R^2 - h^2}$，不是 $R - h$。除非平面过球心，截得的圆半径都小于球的半径。",
       ),
       generate(rng: Rng): Problem {
         const [h0, r0, R0] = rng.pick(pythagoreanTriples);
@@ -1093,31 +1983,47 @@ export const intersectionsOfLinesAndPlanesWithSurfaces: TopicDef = {
         const r = r0 * k;
         const R = R0 * k;
         const axis = rng.pick(["x", "y", "z"] as const);
-        const ans = r;
-
         const otherVars = axis === "z" ? "x^2 + y^2" : axis === "y" ? "x^2 + z^2" : "y^2 + z^2";
-
-        const prompt = t(
-          `Find the radius of the circular cross section formed by the intersection of the sphere $x^2 + y^2 + z^2 = ${R * R}$ with the plane $${axis} = ${h}$.`,
-          `求球面 $x^2 + y^2 + z^2 = ${R * R}$ 与平面 $${axis} = ${h}$ 相交所得圆形截面的半径。`,
-        );
-        const solution = t(
-          steps(
-            `Substitute $${axis} = ${h}$ into the sphere equation: $${otherVars} + (${h})^2 = ${R * R} \\implies ${otherVars} + ${h * h} = ${R * R}$.`,
-            `Subtract $${h * h}$ from both sides: $${otherVars} = ${R * R - h * h} = ${r * r}$.`,
-            `The radius of the intersection circle is $r = \\sqrt{${r * r}} = ${ans}$.`,
-          ),
-          steps(
-            `将 $${axis} = ${h}$ 代入球面方程：$${otherVars} + (${h})^2 = ${R * R} \\implies ${otherVars} + ${h * h} = ${R * R}$。`,
-            `两边减去 $${h * h}$：$${otherVars} = ${R * R - h * h} = ${r * r}$。`,
-            `交线圆的半径为 $r = \\sqrt{${r * r}} = ${ans}$。`,
-          ),
-        );
+        const onCircle = axis === "z" ? `(${r}, 0, ${h})` : axis === "y" ? `(${r}, ${h}, 0)` : `(${h}, ${r}, 0)`;
         return numberProblem({
-          prompt,
-          solution,
-          answer: ans,
-          wrong: [R, h, R - h],
+          prompt: t(
+            `Find the radius of the circular cross section formed by the intersection of the sphere $x^2 + y^2 + z^2 = ${R * R}$ with the plane $${axis} = ${h}$.`,
+            `求球面 $x^2 + y^2 + z^2 = ${R * R}$ 与平面 $${axis} = ${h}$ 相交所得圆形截面的半径。`,
+          ),
+          answer: r,
+          mistakes: distinct(r, [
+            why(
+              R,
+              `$${R}$ is the radius of the sphere; a plane that misses the center cuts a smaller circle.`,
+              `$${R}$ 是球的半径；不过球心的平面截得的圆更小。`,
+            ),
+            why(
+              h,
+              `$${h}$ is the distance from the center to the plane, not the radius of the circle.`,
+              `$${h}$ 是球心到平面的距离，不是圆的半径。`,
+            ),
+            why(
+              R - h,
+              `Subtract the squares, not the lengths: $\\sqrt{${R * R} - ${h * h}}$.`,
+              `要减平方而不是长度：$\\sqrt{${R * R} - ${h * h}}$。`,
+            ),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Substitute the plane", "代入平面"],
+                t(
+                  `$${otherVars} + ${h * h} = ${R * R}$, so $${otherVars} = ${r * r}$.`,
+                  `$${otherVars} + ${h * h} = ${R * R}$，所以 $${otherVars} = ${r * r}$。`,
+                ),
+              ],
+              [["Take the square root", "开平方"], t(`$r = \\sqrt{${r * r}} = ${r}$.`, `$r = \\sqrt{${r * r}} = ${r}$。`)],
+            ],
+            t(
+              `The point $${onCircle}$ is on the circle and on the sphere: $${r * r} + ${h * h} = ${R * R}$.`,
+              `点 $${onCircle}$ 在圆上，也在球面上：$${r * r} + ${h * h} = ${R * R}$。`,
+            ),
+          ),
         });
       },
     },
@@ -1126,8 +2032,8 @@ export const intersectionsOfLinesAndPlanesWithSurfaces: TopicDef = {
       figure: multivariableDrawings2["intersections-of-lines-and-planes-with-surfaces#where-a-line-meets-a-sphere"],
       title: t("Where a line meets a sphere", "直线与球面的交点"),
       explanation: t(
-        "To intersect a line with a surface, substitute the line's parametric equations into the surface's equation and solve for the parameter. For the line $(t, q, r)$, parallel to the $x$-axis, and the sphere $x^2 + y^2 + z^2 = R^2$, this gives $t^2 = R^2 - q^2 - r^2$. Each real solution $t$ gives one intersection point.",
-        "要求直线与曲面的交点，把直线的参数方程代入曲面方程，解出参数。对平行于 $x$ 轴的直线 $(t, q, r)$ 与球面 $x^2 + y^2 + z^2 = R^2$，得到 $t^2 = R^2 - q^2 - r^2$。每个实数解 $t$ 对应一个交点。",
+        "To intersect a line with a surface, substitute the line's parametric equations into the surface's equation and solve for the parameter. For the line $(t, q, r)$, parallel to the $x$-axis, and the sphere $x^2 + y^2 + z^2 = R^2$, this gives $t^2 = R^2 - q^2 - r^2$. Each real solution $t$ gives one intersection point.\n\nThe line $(t, 2, 2)$ meets $x^2 + y^2 + z^2 = 9$ where $t^2 + 8 = 9$, so $t = \\pm 1$, at the points $(1, 2, 2)$ and $(-1, 2, 2)$.\n\n> **Watch out.** Square the fixed coordinates, signs and all: $y = -4$ contributes $16$. The equation $t^2 = c$ has two roots, $\\pm\\sqrt{c}$, so the larger one is positive.",
+        "要求直线与曲面的交点，把直线的参数方程代入曲面方程，解出参数。对平行于 $x$ 轴的直线 $(t, q, r)$ 与球面 $x^2 + y^2 + z^2 = R^2$，得到 $t^2 = R^2 - q^2 - r^2$。每个实数解 $t$ 对应一个交点。\n\n直线 $(t, 2, 2)$ 与 $x^2 + y^2 + z^2 = 9$ 交于 $t^2 + 8 = 9$ 处，所以 $t = \\pm 1$，交点为 $(1, 2, 2)$ 和 $(-1, 2, 2)$。\n\n> **注意。** 固定的坐标连同符号一起平方：$y = -4$ 贡献 $16$。方程 $t^2 = c$ 有两个根 $\\pm\\sqrt{c}$，较大的那个是正的。",
       ),
       generate(rng: Rng): Problem {
         const [p, q, r, R] = rng.pick([
@@ -1146,22 +2052,149 @@ export const intersectionsOfLinesAndPlanesWithSurfaces: TopicDef = {
         ] as const);
         const sy = rng.pick([-1, 1]);
         const sz = rng.pick([-1, 1]);
+        const [y, z] = [sy * q, sz * r];
         return numberProblem({
           prompt: t(
-            `The line $(x, y, z) = (t, ${sy * q}, ${sz * r})$ meets the sphere $x^2 + y^2 + z^2 = ${R * R}$ at two points. Find the larger of their $x$-coordinates.`,
-            `直线 $(x, y, z) = (t, ${sy * q}, ${sz * r})$ 与球面 $x^2 + y^2 + z^2 = ${R * R}$ 交于两点。求两交点 $x$ 坐标中较大的一个。`,
+            `The line $(x, y, z) = (t, ${y}, ${z})$ meets the sphere $x^2 + y^2 + z^2 = ${R * R}$ at two points. Find the larger of their $x$-coordinates.`,
+            `直线 $(x, y, z) = (t, ${y}, ${z})$ 与球面 $x^2 + y^2 + z^2 = ${R * R}$ 交于两点。求两交点 $x$ 坐标中较大的一个。`,
           ),
           answer: p,
-          wrong: [p * p, R - q - r, -p],
-          solution: t(
-            `Substituting: $t^2 + ${q * q} + ${r * r} = ${R * R}$, so $t^2 = ${p * p}$ and $t = \\pm ${p}$. The larger is $${p}$.`,
-            `代入得 $t^2 + ${q * q} + ${r * r} = ${R * R}$，所以 $t^2 = ${p * p}$，$t = \\pm ${p}$。较大者为 $${p}$。`,
+          mistakes: distinct(p, [
+            why(p * p, `$t^2 = ${p * p}$, so take the square root: $t = \\pm ${p}$.`, `$t^2 = ${p * p}$，所以要开平方：$t = \\pm ${p}$。`),
+            why(
+              R - q - r,
+              `Subtract the squares $${q * q}$ and $${r * r}$ from $${R * R}$, not the coordinates from the radius.`,
+              `要从 $${R * R}$ 中减去平方 $${q * q}$ 和 $${r * r}$，而不是从半径中减去坐标。`,
+            ),
+            why(-p, `The two roots are $\\pm ${p}$, and the larger is the positive one.`, `两个根是 $\\pm ${p}$，较大的是正的那个。`),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Substitute the line", "代入直线"],
+                t(
+                  `$t^2 + ${paren(y)}^2 + ${paren(z)}^2 = ${R * R}$, that is, $t^2 + ${q * q} + ${r * r} = ${R * R}$.`,
+                  `$t^2 + ${paren(y)}^2 + ${paren(z)}^2 = ${R * R}$，即 $t^2 + ${q * q} + ${r * r} = ${R * R}$。`,
+                ),
+              ],
+              [
+                ["Solve for t", "解出 t"],
+                t(
+                  `$t^2 = ${p * p}$, so $t = \\pm ${p}$, and the larger is $${p}$.`,
+                  `$t^2 = ${p * p}$，所以 $t = \\pm ${p}$，较大者为 $${p}$。`,
+                ),
+              ],
+            ],
+            t(
+              `The point $(${p}, ${y}, ${z})$ is on the sphere: $${p * p} + ${q * q} + ${r * r} = ${R * R}$.`,
+              `点 $(${p}, ${y}, ${z})$ 在球面上：$${p * p} + ${q * q} + ${r * r} = ${R * R}$。`,
+            ),
           ),
         });
       },
     },
   ],
 };
+
+/** quadricNames are the six quadric surfaces, in the order the classifying problems number them. */
+const quadricNames = [
+  t("Ellipsoid", "椭球面"),
+  t("Hyperboloid of one sheet", "单叶双曲面"),
+  t("Hyperboloid of two sheets", "双叶双曲面"),
+  t("Elliptic cone", "椭圆锥面"),
+  t("Elliptic paraboloid", "椭圆抛物面"),
+  t("Hyperbolic paraboloid", "双曲抛物面"),
+] as const;
+
+/** quadricSigns describes the signs of each quadric with every square moved to the left side. */
+const quadricSigns: readonly (readonly [string, string])[] = [
+  ["no minus sign, with the right side positive", "没有负号，且右边为正"],
+  ["one minus sign, with the right side positive", "一个负号，且右边为正"],
+  ["two minus signs, with the right side positive", "两个负号，且右边为正"],
+  ["one minus sign, with the right side $0$", "一个负号，且右边为 $0$"],
+  ["one variable to the first power and two squares of the same sign", "一个变量以一次方出现，两个平方项同号"],
+  ["one variable to the first power and two squares of opposite signs", "一个变量以一次方出现，两个平方项异号"],
+];
+
+/** quadricWhy says why a quadric of kind `option` does not fit an equation of kind `kind`. */
+function quadricWhy(kind: number, option: number, w: string): Text {
+  const name = quadricNames[option] as Text;
+  const [en, zh] = quadricSigns[option] ?? ["", ""];
+  const [enK, zhK] = quadricSigns[kind] ?? ["", ""];
+  if (option >= 4 && kind < 4)
+    return t(
+      "Every variable is squared, while a paraboloid has one variable to the first power.",
+      "每个变量都是平方，而抛物面有一个变量以一次方出现。",
+    );
+  if (option < 4 && kind >= 4)
+    return t(
+      `$${w}$ appears only to the first power, while ${name.en.toLowerCase().startsWith("e") ? "an" : "a"} ${name.en.toLowerCase()} has every variable squared.`,
+      `$${w}$ 只以一次方出现，而${name["zh-CN"]}的每个变量都是平方。`,
+    );
+  return t(
+    `${name.en.startsWith("E") ? "An" : "A"} ${name.en.toLowerCase()} has ${en}, but this equation, with every square on the left, has ${enK}.`,
+    `${name["zh-CN"]}有${zh}，而这个方程把平方项都移到左边后有${zhK}。`,
+  );
+}
+
+/** quadricCheck confirms the shape of a quadric of the given kind from a property of its points, in variables u, v and w. */
+function quadricCheck(kind: number, u: string, v: string, w: string): Text {
+  return [
+    t(
+      "Every term on the left is at least $0$ and they add up to a fixed number, so no coordinate can grow without limit: the surface is bounded, as an ellipsoid is.",
+      "左边每一项都不小于 $0$，而它们的和是一个固定的数，所以没有坐标能无限增大：曲面是有界的，椭球面正是如此。",
+    ),
+    t(
+      `Every plane $${w} = h$ cuts the surface in an ellipse, which grows with $|h|$, so the surface is one connected piece.`,
+      `每个平面 $${w} = h$ 都截曲面得一椭圆，随 $|h|$ 增大而增大，所以曲面连成一片。`,
+    ),
+    t(
+      `At $${w} = 0$ the left side is at most $0$, so it cannot equal the positive right side: the surface misses the plane $${w} = 0$ and has a piece on each side.`,
+      `在 $${w} = 0$ 处左边不大于 $0$，不可能等于右边的正数：曲面与平面 $${w} = 0$ 不相交，两侧各有一片。`,
+    ),
+    t(
+      `The origin satisfies the equation, and multiplying a point $(${u}, ${v}, ${w})$ of the surface by any $s$ multiplies every term by $s^2$, so the surface is made of lines through the origin.`,
+      `原点满足方程；把曲面上的点 $(${u}, ${v}, ${w})$ 乘以任意 $s$，每一项都乘以 $s^2$，所以曲面由过原点的直线组成。`,
+    ),
+    t(
+      `Both squares have positive coefficients, so $${w} \\ge 0$ at every point and $${w} = 1$ cuts out an ellipse: a bowl.`,
+      `两个平方项的系数都为正，所以每个点都有 $${w} \\ge 0$，且 $${w} = 1$ 截出一个椭圆：碗形。`,
+    ),
+    t(
+      `Along the $${u}$-axis $${w}$ rises and along the $${v}$-axis $${w}$ falls: a saddle at the origin.`,
+      `沿 $${u}$ 轴 $${w}$ 上升，沿 $${v}$ 轴 $${w}$ 下降：原点处是马鞍形。`,
+    ),
+  ][kind] as Text;
+}
+
+/** quadricChoice builds the classifying problem for an equation of the given kind, w being its odd variable. */
+function quadricChoice(rng: Rng, prompt: Text, kind: number, wrong: readonly number[], u: string, v: string, w: string): Problem {
+  const [en, zh] = quadricSigns[kind] ?? ["", ""];
+  const name = quadricNames[kind] as Text;
+  return explainedChoice(rng, {
+    prompt,
+    correct: name,
+    wrong: wrong.filter((i) => i !== kind).map((i) => ({ option: quadricNames[i] as Text, why: quadricWhy(kind, i, w) })),
+    solution: walked(
+      [
+        [
+          ["Look for a variable to the first power", "寻找一次方的变量"],
+          kind >= 4
+            ? t(`$${w}$ appears only to the first power, so the surface is a paraboloid.`, `$${w}$ 只以一次方出现，所以曲面是抛物面。`)
+            : t("Every variable is squared, so the surface is not a paraboloid.", "每个变量都是平方，所以曲面不是抛物面。"),
+        ],
+        [
+          ["Count the signs", "数符号"],
+          t(
+            `With every square on the left, the equation has ${en}: ${name.en.startsWith("E") ? "an" : "a"} ${name.en.toLowerCase()}.`,
+            `把平方项都移到左边后，方程有${zh}：${name["zh-CN"]}。`,
+          ),
+        ],
+      ],
+      quadricCheck(kind, u, v, w),
+    ),
+  });
+}
 
 /** identifyingQuadricSurfaces classifies general quadric surfaces from standard equations. */
 export const identifyingQuadricSurfaces: TopicDef = {
@@ -1170,6 +2203,10 @@ export const identifyingQuadricSurfaces: TopicDef = {
   summary: t(
     "Quadric surfaces are identified by examining the signs of quadratic terms and whether linear terms appear.",
     "通过分析二次项的符号以及是否包含一次项来识别二次曲面的类型。",
+  ),
+  intro: t(
+    "Take $4x^2 + y^2 = z^2$. Every variable is squared, and with all the squares on the left it reads $4x^2 + y^2 - z^2 = 0$: one minus sign and a right side of $0$. That is an elliptic cone with its axis along the $z$-axis.\n\nCheck: the origin lies on the surface, and so does $(1, 0, 2)$, since $4 + 0 - 4 = 0$; then so does every point $s(1, 0, 2)$, since each term scales by $s^2$, which is how a cone is made of lines through its vertex.\n\nIn this lesson we identify a quadric surface from its equation by looking for a variable to the first power and counting signs.",
+    "取 $4x^2 + y^2 = z^2$。每个变量都是平方，把平方项都移到左边得 $4x^2 + y^2 - z^2 = 0$：一个负号，右边为 $0$。这是轴沿 $z$ 轴的椭圆锥面。\n\n检验：原点在曲面上，$(1, 0, 2)$ 也在，因为 $4 + 0 - 4 = 0$；于是每个点 $s(1, 0, 2)$ 也在，因为每一项都按 $s^2$ 缩放，锥面正是这样由过顶点的直线组成的。\n\n本课我们通过寻找一次方的变量并数符号，由方程识别二次曲面。",
   ),
   prerequisites: ["intersections-of-lines-and-planes-with-surfaces"],
   encompasses: [],
@@ -1180,58 +2217,41 @@ export const identifyingQuadricSurfaces: TopicDef = {
       figure: multivariableDrawings2["identifying-quadric-surfaces#recognizing-quadric-surfaces-from-equations"],
       title: t("Recognizing quadric surfaces from equations", "根据方程识别二次曲面"),
       explanation: t(
-        "Standard forms of quadric surfaces:\n\n- Ellipsoid: $\\frac{x^2}{a^2} + \\frac{y^2}{b^2} + \\frac{z^2}{c^2} = 1$.\n- Hyperboloid of 1 sheet: $\\frac{x^2}{a^2} + \\frac{y^2}{b^2} - \\frac{z^2}{c^2} = 1$.\n- Hyperboloid of 2 sheets: $-\\frac{x^2}{a^2} - \\frac{y^2}{b^2} + \\frac{z^2}{c^2} = 1$.\n- Elliptic cone: $\\frac{z^2}{c^2} = \\frac{x^2}{a^2} + \\frac{y^2}{b^2}$.\n- Elliptic paraboloid: $z = \\frac{x^2}{a^2} + \\frac{y^2}{b^2}$.\n- Hyperbolic paraboloid: $z = \\frac{x^2}{a^2} - \\frac{y^2}{b^2}$.",
-        "二次曲面的标准形式：\n\n- 椭球面：$\\frac{x^2}{a^2} + \\frac{y^2}{b^2} + \\frac{z^2}{c^2} = 1$。\n- 单叶双曲面：$\\frac{x^2}{a^2} + \\frac{y^2}{b^2} - \\frac{z^2}{c^2} = 1$。\n- 双叶双曲面：$-\\frac{x^2}{a^2} - \\frac{y^2}{b^2} + \\frac{z^2}{c^2} = 1$。\n- 椭圆锥面：$\\frac{z^2}{c^2} = \\frac{x^2}{a^2} + \\frac{y^2}{b^2}$。\n- 椭圆抛物面：$z = \\frac{x^2}{a^2} + \\frac{y^2}{b^2}$。\n- 双曲抛物面：$z = \\frac{x^2}{a^2} - \\frac{y^2}{b^2}$。",
+        "Standard forms of quadric surfaces:\n\n- Ellipsoid: $\\frac{x^2}{a^2} + \\frac{y^2}{b^2} + \\frac{z^2}{c^2} = 1$.\n- Hyperboloid of 1 sheet: $\\frac{x^2}{a^2} + \\frac{y^2}{b^2} - \\frac{z^2}{c^2} = 1$.\n- Hyperboloid of 2 sheets: $-\\frac{x^2}{a^2} - \\frac{y^2}{b^2} + \\frac{z^2}{c^2} = 1$.\n- Elliptic cone: $\\frac{z^2}{c^2} = \\frac{x^2}{a^2} + \\frac{y^2}{b^2}$.\n- Elliptic paraboloid: $z = \\frac{x^2}{a^2} + \\frac{y^2}{b^2}$.\n- Hyperbolic paraboloid: $z = \\frac{x^2}{a^2} - \\frac{y^2}{b^2}$.\n\nThe equation $x^2 + \\frac{y^2}{4} - \\frac{z^2}{9} = 0$ has every variable squared, one minus sign and a right side of $0$, so it is an elliptic cone.\n\n> **Watch out.** Move every square to the same side before counting signs: the cone $\\frac{z^2}{c^2} = \\frac{x^2}{a^2} + \\frac{y^2}{b^2}$ then has one minus sign and a right side of $0$, which tells it apart from a hyperboloid.",
+        "二次曲面的标准形式：\n\n- 椭球面：$\\frac{x^2}{a^2} + \\frac{y^2}{b^2} + \\frac{z^2}{c^2} = 1$。\n- 单叶双曲面：$\\frac{x^2}{a^2} + \\frac{y^2}{b^2} - \\frac{z^2}{c^2} = 1$。\n- 双叶双曲面：$-\\frac{x^2}{a^2} - \\frac{y^2}{b^2} + \\frac{z^2}{c^2} = 1$。\n- 椭圆锥面：$\\frac{z^2}{c^2} = \\frac{x^2}{a^2} + \\frac{y^2}{b^2}$。\n- 椭圆抛物面：$z = \\frac{x^2}{a^2} + \\frac{y^2}{b^2}$。\n- 双曲抛物面：$z = \\frac{x^2}{a^2} - \\frac{y^2}{b^2}$。\n\n方程 $x^2 + \\frac{y^2}{4} - \\frac{z^2}{9} = 0$ 中每个变量都是平方，有一个负号，右边为 $0$，所以它是椭圆锥面。\n\n> **注意。** 数符号前要把所有平方项移到同一边：锥面 $\\frac{z^2}{c^2} = \\frac{x^2}{a^2} + \\frac{y^2}{b^2}$ 移项后有一个负号且右边为 $0$，由此与双曲面区分开。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(2, 5);
         const b = rng.int(2, 5);
         const c = rng.int(2, 5);
         const kind = rng.int(0, 5);
-
-        let eq: string;
-        let right: Text;
-        let wrong: readonly Text[];
-
-        switch (kind) {
-          case 0:
-            eq = `\\frac{x^2}{${a * a}} + \\frac{y^2}{${b * b}} + \\frac{z^2}{${c * c}} = 1`;
-            right = t("Ellipsoid", "椭球面");
-            wrong = [t("Hyperboloid of one sheet", "单叶双曲面"), t("Elliptic paraboloid", "椭圆抛物面"), t("Elliptic cone", "椭圆锥面")];
-            break;
-          case 1:
-            eq = `\\frac{x^2}{${a * a}} + \\frac{y^2}{${b * b}} - \\frac{z^2}{${c * c}} = 1`;
-            right = t("Hyperboloid of one sheet", "单叶双曲面");
-            wrong = [t("Hyperboloid of two sheets", "双叶双曲面"), t("Ellipsoid", "椭球面"), t("Hyperbolic paraboloid", "双曲抛物面")];
-            break;
-          case 2:
-            eq = `-\\frac{x^2}{${a * a}} - \\frac{y^2}{${b * b}} + \\frac{z^2}{${c * c}} = 1`;
-            right = t("Hyperboloid of two sheets", "双叶双曲面");
-            wrong = [t("Hyperboloid of one sheet", "单叶双曲面"), t("Elliptic paraboloid", "椭圆抛物面"), t("Ellipsoid", "椭球面")];
-            break;
-          case 3:
-            eq = `z = \\frac{x^2}{${a * a}} + \\frac{y^2}{${b * b}}`;
-            right = t("Elliptic paraboloid", "椭圆抛物面");
-            wrong = [t("Hyperbolic paraboloid", "双曲抛物面"), t("Ellipsoid", "椭球面"), t("Elliptic cone", "椭圆锥面")];
-            break;
-          case 4:
-            eq = `z = \\frac{x^2}{${a * a}} - \\frac{y^2}{${b * b}}`;
-            right = t("Hyperbolic paraboloid", "双曲抛物面");
-            wrong = [t("Elliptic paraboloid", "椭圆抛物面"), t("Hyperboloid of one sheet", "单叶双曲面"), t("Elliptic cone", "椭圆锥面")];
-            break;
-          default:
-            eq = `\\frac{z^2}{${c * c}} = \\frac{x^2}{${a * a}} + \\frac{y^2}{${b * b}}`;
-            right = t("Elliptic cone", "椭圆锥面");
-            wrong = [t("Ellipsoid", "椭球面"), t("Elliptic paraboloid", "椭圆抛物面"), t("Hyperboloid of one sheet", "单叶双曲面")];
-            break;
-        }
-
-        const prompt = t(`Identify the quadric surface defined by the equation $${eq}$.`, `识别由方程 $${eq}$ 定义的二次曲面。`);
-        const solution = t(
-          `The equation $${eq}$ represents ${/^[aeiou]/i.test(right.en) ? "an" : "a"} ${right.en.toLowerCase()}.`,
-          `方程 $${eq}$ 表示一个${right["zh-CN"]}。`,
+        const [X, Y, Z] = [`\\frac{x^2}{${a * a}}`, `\\frac{y^2}{${b * b}}`, `\\frac{z^2}{${c * c}}`];
+        const eq = [
+          `${X} + ${Y} + ${Z} = 1`,
+          `${X} + ${Y} - ${Z} = 1`,
+          `-${X} - ${Y} + ${Z} = 1`,
+          `${Z} = ${X} + ${Y}`,
+          `z = ${X} + ${Y}`,
+          `z = ${X} - ${Y}`,
+        ][kind];
+        const wrong =
+          [
+            [1, 4, 3],
+            [2, 0, 5],
+            [1, 4, 0],
+            [0, 4, 1],
+            [5, 0, 3],
+            [4, 1, 3],
+          ][kind] ?? [];
+        return quadricChoice(
+          rng,
+          t(`Identify the quadric surface defined by the equation $${eq}$.`, `识别由方程 $${eq}$ 定义的二次曲面。`),
+          kind,
+          wrong,
+          "x",
+          "y",
+          "z",
         );
-        return pickChoice(rng, prompt, right, wrong, solution);
       },
     },
     {
@@ -1239,8 +2259,8 @@ export const identifyingQuadricSurfaces: TopicDef = {
       figure: multivariableDrawings2["identifying-quadric-surfaces#identifying-quadric-surfaces-from-their-signs"],
       title: t("Identifying quadric surfaces from their signs", "根据符号识别二次曲面"),
       explanation: t(
-        "When every variable appears squared, count the signs after moving the constant to the right side with $d > 0$. Three positive squares give an ellipsoid, two positive and one negative a hyperboloid of one sheet, one positive and two negative a hyperboloid of two sheets, and two positive and one negative equal to $0$ an elliptic cone. When one variable appears only to the first power, the surface is a paraboloid: elliptic if the two squares have the same sign, hyperbolic if they have opposite signs.",
-        "当每个变量都以平方出现时，把常数移到右边并使 $d > 0$，然后数符号。三个正的平方项是椭球面，两正一负是单叶双曲面，一正两负是双叶双曲面，两正一负且等于 $0$ 是椭圆锥面。当某个变量只以一次方出现时，曲面是抛物面：两个平方项同号为椭圆抛物面，异号为双曲抛物面。",
+        "When every variable appears squared, count the signs after moving the constant to the right side with $d > 0$. Three positive squares give an ellipsoid, two positive and one negative a hyperboloid of one sheet, one positive and two negative a hyperboloid of two sheets, and two positive and one negative equal to $0$ an elliptic cone. When one variable appears only to the first power, the surface is a paraboloid: elliptic if the two squares have the same sign, hyperbolic if they have opposite signs.\n\nIn $-16x^2 + 4y^2 + z^2 = 9$ one square of three is negative and the right side is positive, so the surface is a hyperboloid of one sheet, around the $x$-axis.\n\n> **Watch out.** Make the constant positive before counting: $x^2 + y^2 - z^2 = -1$ is $-x^2 - y^2 + z^2 = 1$, a hyperboloid of two sheets. The size of the coefficients does not change the type, only their signs do.",
+        "当每个变量都以平方出现时，把常数移到右边并使 $d > 0$，然后数符号。三个正的平方项是椭球面，两正一负是单叶双曲面，一正两负是双叶双曲面，两正一负且等于 $0$ 是椭圆锥面。当某个变量只以一次方出现时，曲面是抛物面：两个平方项同号为椭圆抛物面，异号为双曲抛物面。\n\n在 $-16x^2 + 4y^2 + z^2 = 9$ 中，三个平方项有一个为负，右边为正，所以曲面是绕 $x$ 轴的单叶双曲面。\n\n> **注意。** 数符号前要使常数为正：$x^2 + y^2 - z^2 = -1$ 就是 $-x^2 - y^2 + z^2 = 1$，即双叶双曲面。系数的大小不改变类型，只有符号才会。",
       ),
       generate(rng: Rng): Problem {
         const [u, v, w] = rng.pick([
@@ -1259,41 +2279,11 @@ export const identifyingQuadricSurfaces: TopicDef = {
           `${w} = ${poly([a, `${u}^2`], [b, `${v}^2`])}`,
           `${w} = ${poly([a, `${u}^2`], [-b, `${v}^2`])}`,
         ][kind];
-        const names = [
-          t("Ellipsoid", "椭球面"),
-          t("Hyperboloid of one sheet", "单叶双曲面"),
-          t("Hyperboloid of two sheets", "双叶双曲面"),
-          t("Elliptic cone", "椭圆锥面"),
-          t("Elliptic paraboloid", "椭圆抛物面"),
-          t("Hyperbolic paraboloid", "双曲抛物面"),
-        ];
-        const right = names[kind] ?? names[0]!;
-        const why = [
-          ["all three squares are positive and the right side is positive", "三个平方项都为正且右边为正"],
-          ["two squares are positive, one is negative, and the right side is positive", "两个平方项为正、一个为负，且右边为正"],
-          ["one square is positive, two are negative, and the right side is positive", "一个平方项为正、两个为负，且右边为正"],
-          ["two squares are positive, one is negative, and the right side is $0$", "两个平方项为正、一个为负，且右边为 $0$"],
-          [`$${w}$ appears to the first power and the two squares have the same sign`, `$${w}$ 只以一次方出现，且两个平方项同号`],
-          [`$${w}$ appears to the first power and the two squares have opposite signs`, `$${w}$ 只以一次方出现，且两个平方项异号`],
-        ][kind] ?? ["", ""];
-        return pickChoice(
-          rng,
-          t(`Identify the surface $${eq}$.`, `识别曲面 $${eq}$。`),
-          right,
-          names.filter((_, i) => i !== kind),
-          t(
-            `Here ${why[0]}, so the surface is ${/^[aeiou]/i.test(right.en) ? "an" : "a"} ${right.en.toLowerCase()}.`,
-            `这里${why[1]}，所以曲面是${right["zh-CN"]}。`,
-          ),
-        );
+        return quadricChoice(rng, t(`Identify the surface $${eq}$.`, `识别曲面 $${eq}$。`), kind, [0, 1, 2, 3, 4, 5], u, v, w);
       },
     },
   ],
 };
-
-// ---------------------------------------------------------------------------
-// Export list for Unit 2 (first 14 topics so far)
-// ---------------------------------------------------------------------------
 
 // ---------------------------------------------------------------------------
 // 2.7 Partial Derivatives
@@ -1307,6 +2297,10 @@ export const introductionToPartialDerivatives: TopicDef = {
     "The partial derivative fx is obtained by differentiating f(x, y) with respect to x while treating y as a constant.",
     "偏导数 fx 是将 y 视为常数对 x 求导所得的导数。",
   ),
+  intro: t(
+    "For $f(x, y) = x^2y + 3y$, holding $y$ fixed and differentiating in $x$ gives $f_x = 2xy$, and holding $x$ fixed and differentiating in $y$ gives $f_y = x^2 + 3$. At $(2, 1)$, $f_x = 4$ and $f_y = 7$.\n\nCheck: with $y = 1$ fixed, $f(2.01, 1) - f(2, 1) = 4.0401 - 4 = 0.0401$, and $\\frac{0.0401}{0.01} = 4.01$, close to $f_x(2, 1) = 4$.\n\nIn this lesson we compute the partial derivatives of a function of two variables at a point by treating the other variable as a constant.",
+    "对 $f(x, y) = x^2y + 3y$，固定 $y$ 对 $x$ 求导得 $f_x = 2xy$，固定 $x$ 对 $y$ 求导得 $f_y = x^2 + 3$。在 $(2, 1)$ 处，$f_x = 4$，$f_y = 7$。\n\n检验：固定 $y = 1$，$f(2.01, 1) - f(2, 1) = 4.0401 - 4 = 0.0401$，而 $\\frac{0.0401}{0.01} = 4.01$，接近 $f_x(2, 1) = 4$。\n\n本课我们把另一个变量当作常数，求二元函数在一点处的偏导数。",
+  ),
   prerequisites: ["identifying-quadric-surfaces", "defining-the-derivative-using-derivative-notation"],
   encompasses: [],
   xp: 10,
@@ -1315,42 +2309,58 @@ export const introductionToPartialDerivatives: TopicDef = {
       id: "evaluating-first-partial-derivatives-at-a-point",
       title: t("Evaluating first partial derivatives at a point", "在某点处求一阶偏导数"),
       explanation: t(
-        "To find $\\frac{\\partial f}{\\partial x}$, treat $y$ as a constant and differentiate with respect to $x$ using ordinary single-variable rules:\n\n$$\\frac{\\partial f}{\\partial x}(x_0, y_0) = \\lim_{h \\to 0} \\frac{f(x_0 + h, y_0) - f(x_0, y_0)}{h}.$$",
-        "求 $\\frac{\\partial f}{\\partial x}$ 时，将 $y$ 视为常数，利用普通一元求导法则对 $x$ 求导：\n\n$$\\frac{\\partial f}{\\partial x}(x_0, y_0) = \\lim_{h \\to 0} \\frac{f(x_0 + h, y_0) - f(x_0, y_0)}{h}$$",
+        "To find $\\frac{\\partial f}{\\partial x}$, treat $y$ as a constant and differentiate with respect to $x$ using ordinary single-variable rules:\n\n$$\\frac{\\partial f}{\\partial x}(x_0, y_0) = \\lim_{h \\to 0} \\frac{f(x_0 + h, y_0) - f(x_0, y_0)}{h}.$$\n\nFor $f(x, y) = x^3y^2$, $f_x = 3x^2y^2$, so $f_x(1, 2) = 3 \\cdot 1 \\cdot 4 = 12$.\n\n> **Watch out.** With $y$ held constant, $xy^2$ is $y^2$ times $x$: its $x$-derivative is $y^2$, not $0$ and not $2xy$. Differentiating in $y$ instead gives $f_y$, a different number.",
+        "求 $\\frac{\\partial f}{\\partial x}$ 时，将 $y$ 视为常数，利用普通一元求导法则对 $x$ 求导：\n\n$$\\frac{\\partial f}{\\partial x}(x_0, y_0) = \\lim_{h \\to 0} \\frac{f(x_0 + h, y_0) - f(x_0, y_0)}{h}$$\n\n对 $f(x, y) = x^3y^2$，$f_x = 3x^2y^2$，所以 $f_x(1, 2) = 3 \\cdot 1 \\cdot 4 = 12$。\n\n> **注意。** 固定 $y$ 时，$xy^2$ 是 $y^2$ 乘以 $x$：它对 $x$ 的导数是 $y^2$，不是 $0$，也不是 $2xy$。改为对 $y$ 求导得到的是 $f_y$，另一个数。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.nonZero(-4, 4);
         const b = rng.nonZero(-4, 4);
         const x0 = rng.int(-2, 3);
         const y0 = rng.int(-2, 3);
-
-        // f(x, y) = a * x^2 * y + b * x * y^2
-        // f_x(x, y) = 2*a*x*y + b*y^2
         const ans = 2 * a * x0 * y0 + b * y0 * y0;
-
-        const prompt = t(
-          `Find the partial derivative $f_x(${x0}, ${y0})$ for the function $f(x, y) = ${poly([a, "x^2y"], [b, "xy^2"])}$ at the point $(${x0}, ${y0})$.`,
-          `求函数 $f(x, y) = ${poly([a, "x^2y"], [b, "xy^2"])}$ 在点 $(${x0}, ${y0})$ 处的偏导数 $f_x(${x0}, ${y0})$。`,
-        );
-        const solution = t(
-          steps(
-            `Treat $y$ as a constant and differentiate with respect to $x$:\n\n` +
-              `$$f_x(x, y) = \\frac{\\partial}{\\partial x}\\left(${poly([a, "x^2y"], [b, "xy^2"])}\\right) = ${poly([2 * a, "xy"], [b, "y^2"])}.$$`,
-            `Substitute $(x, y) = (${x0}, ${y0})$:\n\n` +
-              `$$f_x(${x0}, ${y0}) = 2(${a})(${x0})(${y0}) + (${b})(${y0})^2 = ${2 * a * x0 * y0} + ${paren(b * y0 * y0)} = ${ans}.$$`,
-          ),
-          steps(
-            `将 $y$ 视为常数对 $x$ 求导：\n\n` +
-              `$$f_x(x, y) = \\frac{\\partial}{\\partial x}\\left(${poly([a, "x^2y"], [b, "xy^2"])}\\right) = ${poly([2 * a, "xy"], [b, "y^2"])}$$`,
-            `代入点 $(x, y) = (${x0}, ${y0})$：\n\n` +
-              `$$f_x(${x0}, ${y0}) = 2(${a})(${x0})(${y0}) + (${b})(${y0})^2 = ${2 * a * x0 * y0} + ${paren(b * y0 * y0)} = ${ans}$$`,
-          ),
-        );
+        const f = poly([a, "x^2y"], [b, "xy^2"]);
         return numberProblem({
-          prompt,
-          solution,
+          prompt: t(
+            `Find the partial derivative $f_x(${x0}, ${y0})$ for the function $f(x, y) = ${f}$ at the point $(${x0}, ${y0})$.`,
+            `求函数 $f(x, y) = ${f}$ 在点 $(${x0}, ${y0})$ 处的偏导数 $f_x(${x0}, ${y0})$。`,
+          ),
           answer: ans,
-          wrong: [a * x0 * y0 + 2 * b * x0 * y0, -ans, ans + 1],
+          mistakes: distinct(ans, [
+            why(
+              a * x0 * x0 + 2 * b * x0 * y0,
+              "That is $f_y$: for $f_x$ hold $y$ constant and differentiate in $x$.",
+              "这是 $f_y$：求 $f_x$ 要固定 $y$，对 $x$ 求导。",
+            ),
+            why(
+              2 * a * x0 * y0,
+              `$${b === 1 ? "" : b === -1 ? "-" : b}xy^2$ is a constant times $x$, so its $x$-derivative is $${b === 1 ? "" : b === -1 ? "-" : b}y^2$, not $0$.`,
+              `$${b === 1 ? "" : b === -1 ? "-" : b}xy^2$ 是常数乘以 $x$，所以它对 $x$ 的导数是 $${b === 1 ? "" : b === -1 ? "-" : b}y^2$，不是 $0$。`,
+            ),
+            why(
+              a * x0 * y0 + b * y0 * y0,
+              "The power rule doubles $x^2$: its derivative is $2x$, not $x$.",
+              "幂法则使 $x^2$ 的导数为 $2x$，而不是 $x$。",
+            ),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Differentiate with y held constant", "固定 y 求导"],
+                t(`$f_x(x, y) = ${poly([2 * a, "xy"], [b, "y^2"])}$.`, `$f_x(x, y) = ${poly([2 * a, "xy"], [b, "y^2"])}$。`),
+              ],
+              [
+                ["Substitute the point", "代入该点"],
+                t(
+                  `$f_x(${x0}, ${y0}) = 2(${a})(${x0})(${y0}) + (${b})(${y0})^2 = ${ans}$.`,
+                  `$f_x(${x0}, ${y0}) = 2(${a})(${x0})(${y0}) + (${b})(${y0})^2 = ${ans}$。`,
+                ),
+              ],
+            ],
+            t(
+              `Fixing $y = ${y0}$ first leaves the one-variable function $g(x) = f(x, ${y0}) = ${poly([a * y0, "x^2"], [b * y0 * y0, "x"]) || "0"}$, and $g'(${x0}) = ${2 * a * y0} \\cdot ${paren(x0)} + ${paren(b * y0 * y0)} = ${ans}$.`,
+              `先固定 $y = ${y0}$，得一元函数 $g(x) = f(x, ${y0}) = ${poly([a * y0, "x^2"], [b * y0 * y0, "x"]) || "0"}$，而 $g'(${x0}) = ${2 * a * y0} \\cdot ${paren(x0)} + ${paren(b * y0 * y0)} = ${ans}$。`,
+            ),
+          ),
         });
       },
     },
@@ -1358,8 +2368,8 @@ export const introductionToPartialDerivatives: TopicDef = {
       id: "evaluating-a-partial-derivative-with-respect-to-y",
       title: t("Evaluating a partial derivative with respect to y", "计算关于 y 的偏导数的值"),
       explanation: t(
-        "To find $f_y$, treat $x$ as a constant and differentiate with respect to $y$ as in one-variable calculus. A term such as $ax^2y$ is a constant multiple of $y$, so its derivative is $ax^2$; a term without $y$ has derivative $0$. Then substitute the point.",
-        "求 $f_y$ 时，把 $x$ 当作常数，像一元微积分那样对 $y$ 求导。像 $ax^2y$ 这样的项是 $y$ 的常数倍，所以其导数为 $ax^2$；不含 $y$ 的项导数为 $0$。然后代入该点。",
+        "To find $f_y$, treat $x$ as a constant and differentiate with respect to $y$ as in one-variable calculus. A term such as $ax^2y$ is a constant multiple of $y$, so its derivative is $ax^2$; a term without $y$ has derivative $0$. Then substitute the point.\n\nFor $f(x, y) = xy^2 + 5x^2$, $f_y = 2xy$, so $f_y(3, 1) = 6$; the term $5x^2$ contributes nothing.\n\n> **Watch out.** A term with no $y$, such as $x^3$, has $y$-derivative $0$. The power rule still applies to $y$: $xy^3$ has $y$-derivative $3xy^2$.",
+        "求 $f_y$ 时，把 $x$ 当作常数，像一元微积分那样对 $y$ 求导。像 $ax^2y$ 这样的项是 $y$ 的常数倍，所以其导数为 $ax^2$；不含 $y$ 的项导数为 $0$。然后代入该点。\n\n对 $f(x, y) = xy^2 + 5x^2$，$f_y = 2xy$，所以 $f_y(3, 1) = 6$；$5x^2$ 这一项没有贡献。\n\n> **注意。** 不含 $y$ 的项，如 $x^3$，对 $y$ 的导数为 $0$。幂法则对 $y$ 照样适用：$xy^3$ 对 $y$ 的导数是 $3xy^2$。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(-4, 4) || 2;
@@ -1369,16 +2379,43 @@ export const introductionToPartialDerivatives: TopicDef = {
         const p = rng.int(-3, 3);
         const q = rng.int(-3, 3);
         const fy = a * p * p + 3 * b * p * q * q + c;
+        const f = poly([a, "x^2y"], [b, "xy^3"], [c, "y"], [e, "x^3"]);
+        const g = poly([b * p, "y^3"], [a * p * p + c, "y"], [e * p * p * p, ""]) || "0";
         return numberProblem({
-          prompt: t(
-            `Find $f_y(${p}, ${q})$ for $f(x, y) = ${poly([a, "x^2y"], [b, "xy^3"], [c, "y"], [e, "x^3"])}$.`,
-            `对 $f(x, y) = ${poly([a, "x^2y"], [b, "xy^3"], [c, "y"], [e, "x^3"])}$，求 $f_y(${p}, ${q})$。`,
-          ),
+          prompt: t(`Find $f_y(${p}, ${q})$ for $f(x, y) = ${f}$.`, `对 $f(x, y) = ${f}$，求 $f_y(${p}, ${q})$。`),
           answer: fy,
-          wrong: [fy + 3 * e * p * p, a * p * p + b * p * q * q + c, 2 * a * p * q + b * q * q * q],
-          solution: t(
-            `$f_y = ${poly([a, "x^2"], [3 * b, "xy^2"], [c, ""])}$, so $f_y(${p}, ${q}) = ${fy}$.`,
-            `$f_y = ${poly([a, "x^2"], [3 * b, "xy^2"], [c, ""])}$，所以 $f_y(${p}, ${q}) = ${fy}$。`,
+          mistakes: distinct(fy, [
+            why(
+              fy + 3 * e * p * p,
+              `$${e === 1 ? "" : e}x^3$ has no $y$, so its $y$-derivative is $0$.`,
+              `$${e === 1 ? "" : e}x^3$ 不含 $y$，所以它对 $y$ 的导数为 $0$。`,
+            ),
+            why(
+              a * p * p + b * p * q * q + c,
+              "The power rule brings down the exponent: $y^3$ has derivative $3y^2$.",
+              "幂法则要把指数乘下来：$y^3$ 的导数是 $3y^2$。",
+            ),
+            why(
+              2 * a * p * q + b * q * q * q + 3 * e * p * p,
+              "That is $f_x$: for $f_y$ hold $x$ constant and differentiate in $y$.",
+              "这是 $f_x$：求 $f_y$ 要固定 $x$，对 $y$ 求导。",
+            ),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Differentiate with x held constant", "固定 x 求导"],
+                t(
+                  `$f_y = ${poly([a, "x^2"], [3 * b, "xy^2"], [c, ""]) || "0"}$.`,
+                  `$f_y = ${poly([a, "x^2"], [3 * b, "xy^2"], [c, ""]) || "0"}$。`,
+                ),
+              ],
+              [["Substitute the point", "代入该点"], t(`$f_y(${p}, ${q}) = ${fy}$.`, `$f_y(${p}, ${q}) = ${fy}$。`)],
+            ],
+            t(
+              `Fixing $x = ${p}$ first leaves $g(y) = f(${p}, y) = ${g}$, whose derivative at $y = ${q}$ is $${3 * b * p} \\cdot ${paren(q * q)} + ${paren(a * p * p + c)} = ${fy}$.`,
+              `先固定 $x = ${p}$，得 $g(y) = f(${p}, y) = ${g}$，它在 $y = ${q}$ 处的导数为 $${3 * b * p} \\cdot ${paren(q * q)} + ${paren(a * p * p + c)} = ${fy}$。`,
+            ),
           ),
         });
       },

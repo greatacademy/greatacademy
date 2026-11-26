@@ -223,6 +223,7 @@ Stages 4 and 5 were reopened on 2026-11-25 and are written by whoever coordinate
 | `linear-algebra-matrices.ts` | 36 | done | coordinator, helper A | the determinant, elimination, elementary-matrix, inverse and LU topics, with third points in `deeper-linear-algebra.ts`, `deeper-linear-algebra-third.ts`, `deeper-discrete-mathematics.ts`, `deeper-figures-linear-algebra.ts` and `deeper-figures-linear-algebra-2.ts` |
 | `linear-algebra-vector-spaces.ts` | 15 | in progress | coordinator, helper A | vectors in n-space through change of coordinates, with third points in `deeper-linear-algebra.ts`, `deeper-linear-algebra-third.ts`, `deeper-figures-linear-algebra.ts`, `deeper-figures-linear-algebra-2.ts` and `figure-reading-more.ts` |
 | `multivariable-calculus-vector-functions.ts` | 27 | done | coordinator, helper B | vector functions, curvature and vector fields, with third points in `deeper-multivariable-calculus.ts`, `deeper-multivariable-calculus-third.ts`, `deeper-figures-multivariable-calculus.ts`, `deeper-figures-multivariable-calculus-2.ts` and `figure-reading.ts` |
+| `multivariable-calculus-multivariable-functions.ts` | 15 | in progress | coordinator, helper B | topics 1–15, from interior points to the first partial derivatives, with third points in `deeper-multivariable-calculus.ts`, `deeper-multivariable-calculus-third.ts`, `deeper-figures-multivariable-calculus.ts` and `figure-reading.ts` |
 
 ## Open Gaps
 

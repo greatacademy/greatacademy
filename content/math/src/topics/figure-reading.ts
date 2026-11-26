@@ -4,7 +4,7 @@
 import type { Figure, KnowledgePointDef, Problem, Rng, Text } from "@ga/content";
 import { t } from "@ga/content";
 import type { Compass, PlaneMark, PlaneView, Point } from "@ga/subject-math";
-import { plane, poly, Q } from "@ga/subject-math";
+import { paren, plane, poly, Q } from "@ga/subject-math";
 import { differentialEquationsDrawings1 } from "../explanation-drawings-differential-equations-1.ts";
 import { linearAlgebraDrawings1 } from "../explanation-drawings-linear-algebra-1.ts";
 import { linearAlgebraDrawings2 } from "../explanation-drawings-linear-algebra-2.ts";
@@ -13,7 +13,7 @@ import { multivariableDrawings4 } from "../explanation-drawings-multivariable-4.
 import { multivariableDrawings7 } from "../explanation-drawings-multivariable-7.ts";
 import { probabilityDrawings1 } from "../explanation-drawings-probability-and-statistics-1.ts";
 
-import { explainedChoice, numberProblem } from "../problems.ts";
+import { explainedChoice, numberProblem, why } from "../problems.ts";
 import { reasoned } from "../wrong-reasons.ts";
 import { walked } from "./calculus-i-differentiation.ts";
 import { pickChoice as choiceFrom } from "./grade-4-fractions.ts";
@@ -466,15 +466,15 @@ const matchingContours: KnowledgePointDef = {
   id: "matching-level-curves-to-a-function",
   title: t("Matching level curves to a function", "把等值线与函数对应"),
   explanation: t(
-    "The shape of the level curves often identifies the function. Set $f(x, y) = c$ and recognize the curve: $x^2 + 2y^2 = c$ is an ellipse, $y - 2x = c$ is a line, $y - x^2 = c$ is a parabola, and $xy = c$ is a hyperbola. Several values of $c$ give a family of curves that do not cross, since a point has only one value of $f$. The ellipses drawn here are level curves of $x^2 + 2y^2$.",
-    "等值线的形状常常能确定函数。令 $f(x, y) = c$ 并辨认曲线：$x^2 + 2y^2 = c$ 是椭圆，$y - 2x = c$ 是直线，$y - x^2 = c$ 是抛物线，$xy = c$ 是双曲线。不同的 $c$ 给出一族互不相交的曲线，因为一个点只有一个函数值。这里画出的椭圆是 $x^2 + 2y^2$ 的等值线。",
+    "The shape of the level curves often identifies the function. Set $f(x, y) = c$ and recognize the curve: $x^2 + 2y^2 = c$ is an ellipse, $y - 2x = c$ is a line, $y - x^2 = c$ is a parabola, and $xy = c$ is a hyperbola. Several values of $c$ give a family of curves that do not cross, since a point has only one value of $f$. The ellipses drawn here are level curves of $3x^2 + y^2$: the level $3$ passes through $(1, 0)$ and $(0, \\sqrt{3})$, so they are taller than they are wide.\n\n> **Watch out.** Hyperbolas come in two kinds: $xy = c$ fills opposite quadrants with the axes as asymptotes, while $x^2 - y^2 = c$ opens along an axis. Parallel lines mean a linear function, and copies of one parabola mean a square in only one variable.",
+    "等值线的形状常常能确定函数。令 $f(x, y) = c$ 并辨认曲线：$x^2 + 2y^2 = c$ 是椭圆，$y - 2x = c$ 是直线，$y - x^2 = c$ 是抛物线，$xy = c$ 是双曲线。不同的 $c$ 给出一族互不相交的曲线，因为一个点只有一个函数值。这里画出的椭圆是 $3x^2 + y^2$ 的等值线：等值 $3$ 经过 $(1, 0)$ 和 $(0, \\sqrt{3})$，所以椭圆高大于宽。\n\n> **注意。** 双曲线有两种：$xy = c$ 位于相对的象限，以坐标轴为渐近线；$x^2 - y^2 = c$ 沿坐标轴张开。平行直线说明是线性函数，同一条抛物线的若干副本说明只有一个变量带平方。",
   ),
   figure: drawn(
     square(4),
-    [1, 4, 9].map((level): PlaneMark => ({ kind: "contour", f: (x, y) => x * x + 2 * y * y, level, accent: true })),
+    [1, 4, 9].map((level): PlaneMark => ({ kind: "contour", f: (x, y) => 3 * x * x + y * y, level, accent: true })),
     t(
-      "Three nested ellipses around the origin, wider along the x-axis than along the y-axis.",
-      "以原点为中心的三个嵌套椭圆，沿 x 轴比沿 y 轴更宽。",
+      "Three nested ellipses around the origin, taller along the y-axis than wide along the x-axis.",
+      "以原点为中心的三个嵌套椭圆，沿 y 轴比沿 x 轴更长。",
     ),
   ),
   generate(rng: Rng): Problem {
@@ -483,7 +483,11 @@ const matchingContours: KnowledgePointDef = {
     const family = contourFamily(a, s);
     const chosen = rng.int(0, family.length - 1);
     const pick = family[chosen] as (typeof family)[number];
-    const others = rng.shuffle(contourFamily(rng.int(1, 5), rng.pick([1, -1])).filter((_, i) => i !== chosen));
+    const others = rng.shuffle(
+      contourFamily(rng.int(1, 5), rng.pick([1, -1]))
+        .map((o, i) => ({ ...o, i }))
+        .filter((o) => o.i !== chosen),
+    );
     const shapes: Text[] = [
       t("nested ellipses or circles around the origin", "以原点为中心的嵌套椭圆或圆"),
       t("parallel straight lines", "平行直线"),
@@ -492,17 +496,41 @@ const matchingContours: KnowledgePointDef = {
       t("hyperbolas opening along an axis", "沿坐标轴张开的双曲线"),
     ];
     const shape = shapes[chosen] as Text;
+    const grid = [-3, -2, -1, 0, 1, 2, 3].flatMap((x) => [-3, -2, -1, 0, 1, 2, 3].map((y) => [x, y] as const));
+    const spot = pick.levels.flatMap((c) => grid.filter(([x, y]) => pick.f(x, y) === c).map(([x, y]) => [x, y, c] as const))[0] ?? [
+      0,
+      0,
+      pick.f(0, 0),
+    ];
+    const [px, py, level] = spot;
     return withFigure(
-      pickChoice(
-        rng,
-        t(
+      explainedChoice(rng, {
+        prompt: t(
           "The drawing shows several level curves of a function $f(x, y)$. Which function could it be?",
           "图中是函数 $f(x, y)$ 的若干条等值线。它可能是哪个函数？",
         ),
-        math(`f(x, y) = ${pick.formula}`),
-        others.map((o) => math(`f(x, y) = ${o.formula}`)),
-        t(`The curves are ${shape.en}. ${pick.why.en}`, `这些曲线是${shape["zh-CN"]}。${pick.why["zh-CN"]}`),
-      ),
+        correct: math(`f(x, y) = ${pick.formula}`),
+        wrong: others.map((o) => ({
+          option: math(`f(x, y) = ${o.formula}`),
+          why: t(
+            `Its level curves are ${(shapes[o.i] as Text).en}, but the curves drawn are ${shape.en}.`,
+            `它的等值线是${(shapes[o.i] as Text)["zh-CN"]}，而图中的曲线是${shape["zh-CN"]}。`,
+          ),
+        })),
+        solution: walked(
+          [
+            [["Read the shape", "读形状"], t(`The curves drawn are ${shape.en}.`, `图中的曲线是${shape["zh-CN"]}。`)],
+            [
+              ["Match the formula", "对应公式"],
+              t(`For $f(x, y) = ${pick.formula}$: ${pick.why.en}`, `对 $f(x, y) = ${pick.formula}$：${pick.why["zh-CN"]}`),
+            ],
+          ],
+          t(
+            `The point $(${px}, ${py})$ gives $f = ${level}$, so it lies on the level curve $${pick.formula} = ${level}$, one of the curves drawn.`,
+            `点 $(${px}, ${py})$ 给出 $f = ${level}$，所以它在等值线 $${pick.formula} = ${level}$ 上，这是图中的一条曲线。`,
+          ),
+        ),
+      }),
       drawn(
         square(4),
         pick.levels.map((level): PlaneMark => ({ kind: "contour", f: pick.f, level, accent: true })),
@@ -517,8 +545,8 @@ const readingContours: KnowledgePointDef = {
   id: "reading-values-from-a-contour-plot",
   title: t("Reading values from a contour plot", "从等值线图读取函数值"),
   explanation: t(
-    "A contour plot labels each level curve with the value of $f$ on it, as a map labels height. A point on a curve has the value of that curve, wherever on the curve it sits, so the change in $f$ between two points is the difference of their labels and does not depend on the path between them.",
-    "等值线图在每条等值线上标出 $f$ 的值，就像地图上标出高度。曲线上的点无论位置如何，函数值都等于这条曲线的值，所以两点之间 $f$ 的变化量就是标注之差，与所走的路径无关。",
+    "A contour plot labels each level curve with the value of $f$ on it, as a map labels height. A point on a curve has the value of that curve, wherever on the curve it sits, so the change in $f$ between two points is the difference of their labels and does not depend on the path between them.\n\nOn a map whose contours are labelled $100, 150, 200$, a walker going from a point on the $200$ curve to a point on the $100$ curve changes height by $100 - 200 = -100$, whatever route she takes.\n\n> **Watch out.** Subtract the label at the start from the label at the end, and keep the sign of a negative label in parentheses. Count the labels, not the curves or their distances from the center.",
+    "等值线图在每条等值线上标出 $f$ 的值，就像地图上标出高度。曲线上的点无论位置如何，函数值都等于这条曲线的值，所以两点之间 $f$ 的变化量就是标注之差，与所走的路径无关。\n\n在等值线标为 $100, 150, 200$ 的地图上，从 $200$ 那条曲线上的一点走到 $100$ 那条曲线上的一点，高度变化为 $100 - 200 = -100$，与所走路线无关。\n\n> **注意。** 用终点的标注减去起点的标注，负的标注要加括号保留符号。要用的是标注的值，而不是曲线的条数或它们到中心的距离。",
   ),
   generate(rng: Rng): Problem {
     const c = rng.int(1, 4);
@@ -556,10 +584,40 @@ const readingContours: KnowledgePointDef = {
           "等值线图上标出了 $f$ 每条等值线的值。求 $f(Q) - f(P)$。",
         ),
         answer,
-        wrong: [-answer, value(rb) + value(ra), rb - ra],
-        solution: t(
-          `A point has the value of the curve through it: $P$ lies on the curve labelled $${value(ra)}$ and $Q$ on the curve labelled $${value(rb)}$. So $f(Q) - f(P) = ${value(rb)} - (${value(ra)}) = ${answer}$.`,
-          `点的函数值等于经过它的等值线的值：$P$ 在标为 $${value(ra)}$ 的曲线上，$Q$ 在标为 $${value(rb)}$ 的曲线上。所以 $f(Q) - f(P) = ${value(rb)} - (${value(ra)}) = ${answer}$。`,
+        mistakes: [
+          why(
+            -answer,
+            "That is $f(P) - f(Q)$; subtract the value at $P$ from the value at $Q$.",
+            "这是 $f(P) - f(Q)$；应当用 $Q$ 处的值减去 $P$ 处的值。",
+          ),
+          why(value(rb) + value(ra), "The labels were added; the change is their difference.", "这是把两个标注相加了；变化量是它们的差。"),
+          why(
+            rb - ra,
+            "That counts circles between the points; use the labels on the circles instead.",
+            "这是数两点之间隔了几个圆；应当用圆上标注的值。",
+          ),
+        ].filter((m, i, all) => m.value !== answer && all.findIndex((n) => n.value === m.value) === i),
+        solution: walked(
+          [
+            [
+              ["Read the labels", "读标注"],
+              t(
+                `$P$ lies on the curve labelled $${value(ra)}$ and $Q$ on the curve labelled $${value(rb)}$, so $f(P) = ${value(ra)}$ and $f(Q) = ${value(rb)}$.`,
+                `$P$ 在标为 $${value(ra)}$ 的曲线上，$Q$ 在标为 $${value(rb)}$ 的曲线上，所以 $f(P) = ${value(ra)}$，$f(Q) = ${value(rb)}$。`,
+              ),
+            ],
+            [
+              ["Subtract", "相减"],
+              t(
+                `$f(Q) - f(P) = ${value(rb)} - ${paren(value(ra))} = ${answer}$.`,
+                `$f(Q) - f(P) = ${value(rb)} - ${paren(value(ra))} = ${answer}$。`,
+              ),
+            ],
+          ],
+          t(
+            `Starting from $f(P) = ${value(ra)}$ and adding the change $${answer}$ gives $${value(rb)}$, the label of the curve through $Q$.`,
+            `从 $f(P) = ${value(ra)}$ 出发加上变化量 $${answer}$，得到 $${value(rb)}$，正是经过 $Q$ 的曲线的标注。`,
+          ),
         ),
       }),
       drawn(
@@ -623,16 +681,16 @@ const domainFromDrawing: KnowledgePointDef = {
   id: "a-domain-in-a-drawing",
   title: t("A domain in a drawing", "图中的定义域"),
   explanation: t(
-    "A domain is a region of the plane, so it can be drawn. A square root needs a nonnegative argument, a logarithm needs a positive one, and a denominator must not vanish. For $\\sqrt{9 - x^2 - y^2}$ the condition $x^2 + y^2 \\le 9$ is a disk, drawn here; for $\\ln(y - x)$ the condition $y > x$ is the open half-plane above a line.",
-    "定义域是平面上的一个区域，因此可以画出来。平方根要求被开方数非负，对数要求真数为正，分母不能为零。对 $\\sqrt{9 - x^2 - y^2}$，条件 $x^2 + y^2 \\le 9$ 是图中的圆盘；对 $\\ln(y - x)$，条件 $y > x$ 是直线上方的开半平面。",
+    "A domain is a region of the plane, so it can be drawn. A square root needs a nonnegative argument, a logarithm needs a positive one, and a denominator must not vanish. For $\\sqrt{25 - x^2 - y^2}$ the condition $x^2 + y^2 \\le 25$ is a disk, drawn here; for $\\ln(y - 3x)$ the condition $y > 3x$ is the open half-plane above a line.\n\n> **Watch out.** A square root keeps its boundary, drawn solid, because $\\sqrt{0}$ is allowed; a logarithm loses it, drawn dashed, because $\\ln 0$ is not. Test one shaded point to tell inside from outside and above from below.",
+    "定义域是平面上的一个区域，因此可以画出来。平方根要求被开方数非负，对数要求真数为正，分母不能为零。对 $\\sqrt{25 - x^2 - y^2}$，条件 $x^2 + y^2 \\le 25$ 是图中的圆盘；对 $\\ln(y - 3x)$，条件 $y > 3x$ 是直线上方的开半平面。\n\n> **注意。** 平方根保留边界，画成实线，因为 $\\sqrt{0}$ 有意义；对数不含边界，画成虚线，因为 $\\ln 0$ 没有意义。取一个阴影中的点检验，就能分清内外和上下。",
   ),
   figure: drawn(
-    square(4),
+    square(6),
     [
-      { kind: "region", halfPlanes: [], disk: { center: [0, 0], r: 3 } },
-      { kind: "circle", center: [0, 0], r: 3, accent: true },
+      { kind: "region", halfPlanes: [], disk: { center: [0, 0], r: 5 } },
+      { kind: "circle", center: [0, 0], r: 5, accent: true },
     ],
-    t("A shaded disk of radius 3 around the origin, with its boundary drawn solid.", "以原点为圆心、半径为 3 的阴影圆盘，边界画成实线。"),
+    t("A shaded disk of radius 5 around the origin, with its boundary drawn solid.", "以原点为圆心、半径为 5 的阴影圆盘，边界画成实线。"),
   ),
   generate(rng: Rng): Problem {
     const R = rng.int(2, 4);
@@ -711,18 +769,64 @@ const domainFromDrawing: KnowledgePointDef = {
         ),
       },
     ];
-    const kind = kinds[rng.int(0, 3)] as (typeof kinds)[number];
+    const k = rng.int(0, 3);
+    const kind = kinds[k] as (typeof kinds)[number];
+    const line = poly([m, "x"], [b, ""]);
+    const domains: Record<string, Text> = {
+      [inside]: t(`the disk $x^2 + y^2 \\le ${R * R}$`, `圆盘 $x^2 + y^2 \\le ${R * R}$`),
+      [outside]: t(`the region $x^2 + y^2 \\ge ${R * R}$ outside the circle`, `圆外的区域 $x^2 + y^2 \\ge ${R * R}$`),
+      [above]: t(`the open half-plane $y > ${line}$`, `开半平面 $y > ${line}$`),
+      [below]: t(`the open half-plane $y < ${line}$`, `开半平面 $y < ${line}$`),
+    };
+    const shaded = (domains[kind.right] as Text).en;
+    const shadedZh = (domains[kind.right] as Text)["zh-CN"];
+    const tests: Point[] = [
+      [0, 0],
+      [R + 1, 0],
+      [0, b + 3],
+      [0, b - 3],
+    ];
+    const [tx, ty] = tests[k] as Point;
+    const tested = [
+      t(
+        `At $(0, 0)$ the root is $\\sqrt{${R * R}} = ${R}$, and the origin is shaded.`,
+        `在 $(0, 0)$ 处根式为 $\\sqrt{${R * R}} = ${R}$，原点在阴影内。`,
+      ),
+      t(
+        `At $(${tx}, 0)$ the root is $\\sqrt{${tx * tx} - ${R * R}} = \\sqrt{${tx * tx - R * R}}$, and that point is shaded.`,
+        `在 $(${tx}, 0)$ 处根式为 $\\sqrt{${tx * tx} - ${R * R}} = \\sqrt{${tx * tx - R * R}}$，该点在阴影内。`,
+      ),
+      t(
+        `At $(0, ${ty})$ the argument is $${ty} - ${paren(b)} = 3 > 0$, and that point is shaded.`,
+        `在 $(0, ${ty})$ 处真数为 $${ty} - ${paren(b)} = 3 > 0$，该点在阴影内。`,
+      ),
+      t(
+        `At $(0, ${ty})$ the argument is $${paren(b)} - ${paren(ty)} = 3 > 0$, and that point is shaded.`,
+        `在 $(0, ${ty})$ 处真数为 $${paren(b)} - ${paren(ty)} = 3 > 0$，该点在阴影内。`,
+      ),
+    ][k] as Text;
     return withFigure(
-      pickChoice(
-        rng,
-        t(
+      explainedChoice(rng, {
+        prompt: t(
           "The shaded region is the domain of a function $f(x, y)$; a solid boundary belongs to it and a dashed one does not. Which function?",
           "阴影区域是函数 $f(x, y)$ 的定义域；实线边界属于定义域，虚线边界不属于。是哪个函数？",
         ),
-        math(`f(x, y) = ${kind.right}`),
-        kind.wrong.map((w) => math(`f(x, y) = ${w}`)),
-        kind.why,
-      ),
+        correct: math(`f(x, y) = ${kind.right}`),
+        wrong: kind.wrong.map((w) => ({
+          option: math(`f(x, y) = ${w}`),
+          why: t(
+            `Its domain is ${(domains[w] as Text).en}, but the shaded region is ${shaded}.`,
+            `它的定义域是${(domains[w] as Text)["zh-CN"]}，而阴影区域是${shadedZh}。`,
+          ),
+        })),
+        solution: walked(
+          [
+            [["Read the region", "读区域"], t(`The shaded region is ${shaded}.`, `阴影区域是${shadedZh}。`)],
+            [["Find the condition", "求条件"], kind.why],
+          ],
+          tested,
+        ),
+      }),
       drawn(square(5), kind.marks, kind.alt),
     );
   },
@@ -802,12 +906,12 @@ const recognizingQuadrics: KnowledgePointDef = {
   id: "recognizing-a-quadric-from-its-drawing",
   title: t("Recognizing a quadric from its drawing", "从图形辨认二次曲面"),
   explanation: t(
-    "Each quadric has a shape that its equation predicts. A closed oval is an ellipsoid; a bowl is an elliptic paraboloid, with one variable to the first power; a saddle is a hyperbolic paraboloid; two cones meeting at a point have no constant term; and a tube with a waist is a hyperboloid of one sheet. The bowl drawn here is $z = x^2 + y^2$.",
-    "每种二次曲面的形状都可以由方程预见。封闭的卵形是椭球面；碗形是椭圆抛物面，有一个变量是一次的；马鞍形是双曲抛物面；在一点相接的两个锥没有常数项；中间收窄的管状曲面是单叶双曲面。这里画出的碗形是 $z = x^2 + y^2$。",
+    "Each quadric has a shape that its equation predicts. A closed oval is an ellipsoid; a bowl is an elliptic paraboloid, with one variable to the first power; a saddle is a hyperbolic paraboloid; two cones meeting at a point have no constant term; and a tube with a waist is a hyperboloid of one sheet. The bowl drawn here is $z = 2x^2 + 2y^2$: its horizontal sections are circles, and it rises from its lowest point at the origin.\n\n> **Watch out.** Count the variables that appear to the first power before looking at signs: a bowl and a saddle each have one, while an ellipsoid, a cone and a hyperboloid have none. Then a saddle has opposite signs on its squares, and a cone has no constant term.",
+    "每种二次曲面的形状都可以由方程预见。封闭的卵形是椭球面；碗形是椭圆抛物面，有一个变量是一次的；马鞍形是双曲抛物面；在一点相接的两个锥没有常数项；中间收窄的管状曲面是单叶双曲面。这里画出的碗形是 $z = 2x^2 + 2y^2$：它的水平截面是圆，从原点处的最低点向上升起。\n\n> **注意。** 先数一数有几个变量是一次的，再看符号：碗形和马鞍形各有一个，椭球面、锥面和双曲面一个也没有。然后，马鞍形的平方项异号，锥面没有常数项。",
   ),
   figure: wireframe(
-    (u, v) => [u * Math.cos(v), u * Math.sin(v), u * u],
-    [0, 1.6],
+    (u, v) => [u * Math.cos(v), u * Math.sin(v), 2 * u * u],
+    [0, 1.2],
     [0, 2 * Math.PI],
     t("A bowl opening upward from the origin, drawn as a mesh, with the z-axis up.", "从原点向上张开的碗形曲面，画成网格，z 轴向上。"),
   ),
@@ -818,16 +922,30 @@ const recognizingQuadrics: KnowledgePointDef = {
     const chosen = rng.int(0, family.length - 1);
     const pick = family[chosen] as (typeof family)[number];
     return withFigure(
-      pickChoice(
-        rng,
-        t("Which equation has this surface as its graph?", "这个曲面是哪个方程的图形？"),
-        math(pick.equation),
-        rng.shuffle(family.filter((_, i) => i !== chosen)).map((o) => math(o.equation)),
-        t(
-          `The drawing is ${pick.look.en}, which is ${pick.name.en}. ${pick.why.en}`,
-          `图形是${pick.look["zh-CN"]}，这是${pick.name["zh-CN"]}。${pick.why["zh-CN"]}`,
+      explainedChoice(rng, {
+        prompt: t("Which equation has this surface as its graph?", "这个曲面是哪个方程的图形？"),
+        correct: math(pick.equation),
+        wrong: rng.shuffle(family.filter((_, i) => i !== chosen)).map((o) => ({
+          option: math(o.equation),
+          why: t(
+            `That equation gives ${o.name.en}, ${o.look.en}, but the drawing is ${pick.look.en}.`,
+            `这个方程给出${o.name["zh-CN"]}，即${o.look["zh-CN"]}，而图形是${pick.look["zh-CN"]}。`,
+          ),
+        })),
+        solution: walked(
+          [
+            [
+              ["Name the shape", "说出形状"],
+              t(`The drawing is ${pick.look.en}, which is ${pick.name.en}.`, `图形是${pick.look["zh-CN"]}，这是${pick.name["zh-CN"]}。`),
+            ],
+            [["Match the equation", "对应方程"], t(`$${pick.equation}$: ${pick.why.en}`, `$${pick.equation}$：${pick.why["zh-CN"]}`)],
+          ],
+          t(
+            `Each other equation has a different pattern of first powers, signs or constant, so only $${pick.equation}$ gives ${pick.name.en}.`,
+            `其他方程的一次项、符号或常数项的情况都不同，所以只有 $${pick.equation}$ 给出${pick.name["zh-CN"]}。`,
+          ),
         ),
-      ),
+      }),
       wireframe(
         pick.r,
         pick.u,

@@ -10,7 +10,7 @@ import { multivariableDrawings2 } from "../explanation-drawings-multivariable-2.
 import { multivariableDrawings3 } from "../explanation-drawings-multivariable-3.ts";
 import { multivariableDrawings4 } from "../explanation-drawings-multivariable-4.ts";
 
-import { numberProblem, why } from "../problems.ts";
+import { explainedChoice, numberProblem, why } from "../problems.ts";
 import { ask, choose, type Pair, point } from "../university-kit.ts";
 import { walked } from "./calculus-i-differentiation.ts";
 
@@ -708,8 +708,8 @@ const roomInside = point(
   "how-much-room-an-interior-point-has",
   ["How much room an interior point has", "内点周围有多少空间"],
   [
-    "A point is interior when a small disk around it stays inside the set. For an open disk centered at the origin, the largest such radius is the distance from the point to the boundary, which is the radius of the set minus the distance to the center.",
-    "如果点周围有一个小圆盘完全在集合内，这个点就是内点。对圆心在原点的开圆盘，这样的最大半径就是点到边界的距离，等于集合的半径减去点到圆心的距离。",
+    "A point is interior when a small disk around it stays inside the set. For an open disk centered at the origin, the largest such radius is the distance from the point to the boundary, which is the radius of the set minus the distance to the center.\n\nFor $(6, 8)$ in $\\{(x, y) : x^{2} + y^{2} < 144\\}$ the distance to the center is $10$ and the radius is $12$, so the largest disk has radius $2$.\n\n> **Watch out.** Subtract the distances, not their squares: $12 - 10$, not $144 - 100$. The answer is the room left to the boundary, not the radius of the set or the distance to the center.",
+    "如果点周围有一个小圆盘完全在集合内，这个点就是内点。对圆心在原点的开圆盘，这样的最大半径就是点到边界的距离，等于集合的半径减去点到圆心的距离。\n\n对 $\\{(x, y) : x^{2} + y^{2} < 144\\}$ 中的点 $(6, 8)$，它到圆心的距离是 $10$，半径是 $12$，所以最大的圆盘半径为 $2$。\n\n> **注意。** 要减的是距离，而不是距离的平方：$12 - 10$，不是 $144 - 100$。答案是离边界剩下的空间，不是集合的半径，也不是到圆心的距离。",
   ],
   (rng) => {
     const [a, b, c] = rng.pick(triples);
@@ -717,18 +717,48 @@ const roomInside = point(
     const s2 = rng.pick([-1, 1]);
     const extra = rng.int(1, 9);
     const R = c + extra;
-    return ask(
-      [
+    return numberProblem({
+      prompt: text([
         `Find the largest $\\delta$ such that the open disk of radius $\\delta$ around $(${s1 * a}, ${s2 * b})$ lies inside $\\{(x, y) : x^{2} + y^{2} < ${R * R}\\}$.`,
         `求最大的 $\\delta$，使以 $(${s1 * a}, ${s2 * b})$ 为圆心、半径为 $\\delta$ 的开圆盘位于 $\\{(x, y) : x^{2} + y^{2} < ${R * R}\\}$ 内。`,
-      ],
-      extra,
-      [R, c, R * R - c * c],
-      [
-        `The set has radius $${R}$, and the point is at distance $${c}$ from the origin. The nearest boundary point is along the same ray, so $\\delta = ${R} - ${c} = ${extra}$.`,
-        `集合的半径是 $${R}$，点到原点的距离是 $${c}$。最近的边界点在同一条射线上，所以 $\\delta = ${R} - ${c} = ${extra}$。`,
-      ],
-    );
+      ]),
+      answer: extra,
+      mistakes: apart(extra, [
+        why(
+          R,
+          `$${R}$ is the radius of the set; the point is $${c}$ away from the center, which uses up part of it.`,
+          `$${R}$ 是集合的半径；点离圆心 $${c}$，占去了其中一部分。`,
+        ),
+        why(c, `$${c}$ is the distance from the point to the center, not to the boundary.`, `$${c}$ 是点到圆心的距离，不是到边界的距离。`),
+        why(
+          R * R - c * c,
+          `Subtract the distances $${R}$ and $${c}$, not their squares.`,
+          `要减的是距离 $${R}$ 与 $${c}$，而不是它们的平方。`,
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Find the distance to the center", "求到圆心的距离"],
+            text([
+              `$\\sqrt{${a * a} + ${b * b}} = ${c}$, and the set has radius $\\sqrt{${R * R}} = ${R}$.`,
+              `$\\sqrt{${a * a} + ${b * b}} = ${c}$，集合的半径为 $\\sqrt{${R * R}} = ${R}$。`,
+            ]),
+          ],
+          [
+            ["Subtract", "相减"],
+            text([
+              `The nearest boundary point lies on the same ray from the origin, so $\\delta = ${R} - ${c} = ${extra}$.`,
+              `最近的边界点在从原点出发的同一条射线上，所以 $\\delta = ${R} - ${c} = ${extra}$。`,
+            ]),
+          ],
+        ],
+        text([
+          `A disk of radius $${extra}$ reaches out to distance $${c} + ${extra} = ${R}$ from the origin, exactly the boundary circle, and any larger disk would cross it.`,
+          `半径为 $${extra}$ 的圆盘最远伸到离原点 $${c} + ${extra} = ${R}$ 处，恰好到达边界圆，更大的圆盘就会越过它。`,
+        ]),
+      ),
+    });
   },
 );
 
@@ -737,25 +767,52 @@ const annulusBoundary = {
     "both-circles-belong-to-the-boundary",
     ["Both circles belong to the boundary", "两个圆都属于边界"],
     [
-      "The boundary of an annulus has two parts, an inner and an outer circle. Whether each circle belongs to the set does not change this: every point of each circle has points of the set and points outside the set arbitrarily close by.",
-      "圆环的边界有两部分，即内圆和外圆。各圆是否属于集合并不改变这一点：每个圆上的每一点附近都有集合内的点，也有集合外的点。",
+      "The boundary of an annulus has two parts, an inner and an outer circle. Whether each circle belongs to the set does not change this: every point of each circle has points of the set and points outside the set arbitrarily close by.\n\nFor $\\{(x, y) : 2 < x^{2} + y^{2} \\le 8\\}$ the circles have radii $\\sqrt{2}$ and $2\\sqrt{2}$, so the boundary has length $2\\sqrt{2}\\pi + 4\\sqrt{2}\\pi = 6\\sqrt{2}\\pi$.\n\n> **Watch out.** The inner circle is part of the boundary even when the strict inequality leaves it out of the set. A circle of radius $r$ has length $2\\pi r$, and the two lengths add.",
+      "圆环的边界有两部分，即内圆和外圆。各圆是否属于集合并不改变这一点：每个圆上的每一点附近都有集合内的点，也有集合外的点。\n\n对 $\\{(x, y) : 2 < x^{2} + y^{2} \\le 8\\}$，两个圆的半径为 $\\sqrt{2}$ 和 $2\\sqrt{2}$，所以边界长度为 $2\\sqrt{2}\\pi + 4\\sqrt{2}\\pi = 6\\sqrt{2}\\pi$。\n\n> **注意。** 即使严格不等式把内圆排除在集合之外，内圆仍是边界的一部分。半径为 $r$ 的圆长 $2\\pi r$，两段长度要相加。",
     ],
     (rng) => {
       const r1 = rng.int(1, 8);
       const r2 = r1 + rng.int(1, 8);
       const answer = 2 * (r1 + r2);
-      return ask(
-        [
+      return numberProblem({
+        prompt: text([
           `Find $\\frac{L}{\\pi}$, where $L$ is the total length of the boundary of $\\{(x, y) : ${r1 * r1} < x^{2} + y^{2} \\le ${r2 * r2}\\}$.`,
           `求 $\\frac{L}{\\pi}$，其中 $L$ 是 $\\{(x, y) : ${r1 * r1} < x^{2} + y^{2} \\le ${r2 * r2}\\}$ 的边界总长度。`,
-        ],
+        ]),
         answer,
-        [2 * r2, 2 * (r2 - r1), r1 + r2],
-        [
-          `The boundary consists of the circles of radius $${r1}$ and $${r2}$. Their lengths are $${2 * r1}\\pi$ and $${2 * r2}\\pi$, and the sum divided by $\\pi$ is $${answer}$.`,
-          `边界由半径为 $${r1}$ 和 $${r2}$ 的两个圆组成。长度分别是 $${2 * r1}\\pi$ 和 $${2 * r2}\\pi$，和除以 $\\pi$ 等于 $${answer}$。`,
-        ],
-      );
+        mistakes: apart(answer, [
+          why(
+            2 * r2,
+            `The inner circle $x^{2} + y^{2} = ${r1 * r1}$ is part of the boundary too, although it does not belong to the set.`,
+            `内圆 $x^{2} + y^{2} = ${r1 * r1}$ 虽然不属于集合，也是边界的一部分。`,
+          ),
+          why(
+            2 * (r2 - r1),
+            "The two circles are both boundary, so their lengths add rather than subtract.",
+            "两个圆都是边界，所以长度要相加而不是相减。",
+          ),
+          why(r1 + r2, "A circle of radius $r$ has length $2\\pi r$, not $\\pi r$.", "半径为 $r$ 的圆长 $2\\pi r$，不是 $\\pi r$。"),
+        ]),
+        solution: walked(
+          [
+            [
+              ["Find the boundary", "求边界"],
+              text([
+                `The boundary is the inner circle of radius $${r1}$ and the outer circle of radius $${r2}$, whichever of them belongs to the set.`,
+                `边界是半径为 $${r1}$ 的内圆和半径为 $${r2}$ 的外圆，无论它们是否属于集合。`,
+              ]),
+            ],
+            [
+              ["Add their lengths", "把长度相加"],
+              text([
+                `$L = ${2 * r1}\\pi + ${2 * r2}\\pi = ${answer}\\pi$, so $\\frac{L}{\\pi} = ${answer}$.`,
+                `$L = ${2 * r1}\\pi + ${2 * r2}\\pi = ${answer}\\pi$，所以 $\\frac{L}{\\pi} = ${answer}$。`,
+              ]),
+            ],
+          ],
+          text([`$2(${r1} + ${r2}) = ${answer}$.`, `$2(${r1} + ${r2}) = ${answer}$。`]),
+        ),
+      });
     },
   ),
   figure: multivariableDrawings1["interiors-and-boundaries-of-sets#both-circles-belong-to-the-boundary"],
@@ -765,8 +822,8 @@ const complementKind = point(
   "the-complement-of-an-open-or-closed-set",
   ["The complement of an open or closed set", "开集或闭集的补集"],
   [
-    "A set is closed exactly when its complement is open. So classifying a complement reverses the answer for open and closed sets. A set that is neither stays neither, since it contains some but not all of its boundary, and so does its complement.",
-    "集合是闭集，当且仅当它的补集是开集。所以对开集和闭集，补集的分类正好相反。两者都不是的集合，其补集也两者都不是，因为它含有部分而非全部边界，补集也是这样。",
+    "A set is closed exactly when its complement is open. So classifying a complement reverses the answer for open and closed sets. A set that is neither stays neither, since it contains some but not all of its boundary, and so does its complement.\n\nThe square $\\{(x, y) : |x| \\le 1, |y| \\le 1\\}$ contains its whole boundary, so it is closed, and the region outside it, $\\{(x, y) : |x| > 1 \\text{ or } |y| > 1\\}$, is open.\n\n> **Watch out.** Classify the complement, not the set itself. The set and its complement share the same boundary, and the plane and the empty set are the only sets that are both open and closed.",
+    "集合是闭集，当且仅当它的补集是开集。所以对开集和闭集，补集的分类正好相反。两者都不是的集合，其补集也两者都不是，因为它含有部分而非全部边界，补集也是这样。\n\n正方形 $\\{(x, y) : |x| \\le 1, |y| \\le 1\\}$ 含有全部边界，所以是闭集，它外面的区域 $\\{(x, y) : |x| > 1 \\text{ 或 } |y| > 1\\}$ 是开集。\n\n> **注意。** 要判断的是补集，而不是集合本身。集合与补集有相同的边界，而只有整个平面和空集既是开集又是闭集。",
   ],
   (rng) => {
     const k = rng.int(0, 2);
@@ -778,22 +835,67 @@ const complementKind = point(
     const neither: Pair = ["Neither open nor closed", "既不是开集也不是闭集"];
     const both: Pair = ["Both open and closed", "既是开集又是闭集"];
     const correct = [open, closed, neither][k] as Pair;
-    const whys: Pair[] = [
-      ["The set is closed, so its complement is open.", "这个集合是闭集，所以补集是开集。"],
-      ["The set is open, so its complement is closed.", "这个集合是开集，所以补集是闭集。"],
+    const boundaries: Pair[] = [
+      [`the circle $x^{2} + y^{2} = ${a * a}$`, `圆 $x^{2} + y^{2} = ${a * a}$`],
+      [`the line $y = ${poly([a, "x"], [-b, ""])}$`, `直线 $y = ${poly([a, "x"], [-b, ""])}$`],
+      [`the lines $x = ${a}$ and $x = ${b}$`, `直线 $x = ${a}$ 和 $x = ${b}$`],
+    ];
+    const boundary = boundaries[k] as Pair;
+    const kinds: Pair[] = [
+      ["contains its whole boundary, so it is closed", "含有全部边界，所以是闭集"],
+      ["contains none of its boundary, so it is open", "不含任何边界点，所以是开集"],
+      [`contains the line $x = ${a}$ but not $x = ${b}$, so it is neither`, `含有直线 $x = ${a}$ 而不含 $x = ${b}$，所以两者都不是`],
+    ];
+    const kind = kinds[k] as Pair;
+    const complements: Pair[] = [
       [
-        "The set contains one boundary line and misses the other, and so does its complement, so it is neither.",
-        "这个集合含有一条边界线而不含另一条，补集也是这样，所以两者都不是。",
+        `The complement $x^{2} + y^{2} > ${a * a}$ contains none of the circle, so it is open.`,
+        `补集 $x^{2} + y^{2} > ${a * a}$ 不含圆上的点，所以是开集。`,
+      ],
+      [
+        `The complement $y \\le ${poly([a, "x"], [-b, ""])}$ contains the whole line, so it is closed.`,
+        `补集 $y \\le ${poly([a, "x"], [-b, ""])}$ 含有整条直线，所以是闭集。`,
+      ],
+      [
+        `The complement $x < ${a}$ or $x \\ge ${b}$ contains $x = ${b}$ but not $x = ${a}$, so it is neither.`,
+        `补集 $x < ${a}$ 或 $x \\ge ${b}$ 含有 $x = ${b}$ 而不含 $x = ${a}$，所以两者都不是。`,
       ],
     ];
-    const why = whys[k] as Pair;
-    return choose(
-      rng,
-      [`Classify the complement of $\\{(x, y) : ${set}\\}$.`, `判断 $\\{(x, y) : ${set}\\}$ 的补集属于哪一类。`],
-      correct,
-      [open, closed, neither, both].filter((o) => o !== correct),
-      why,
-    );
+    const complement = complements[k] as Pair;
+    const whyFor = (o: Pair): Pair => {
+      if (o === both)
+        return [
+          "Only the whole plane and the empty set are both open and closed, and this complement is neither of them.",
+          "只有整个平面和空集既是开集又是闭集，而这个补集两者都不是。",
+        ];
+      if (k === 2)
+        return [
+          "The complement misses part of its boundary and contains the rest, just as the set does, so it cannot be open or closed.",
+          "补集与原集合一样，含有一部分边界而缺少另一部分，所以既不是开集也不是闭集。",
+        ];
+      if (o === [closed, open][k])
+        return ["That classifies the set itself; the complement has the opposite kind.", "这是原集合本身的类别；补集的类别正好相反。"];
+      return [
+        "The set and its complement share one boundary, and the complement contains either all of it or none of it.",
+        "集合与补集有相同的边界，而补集要么含有全部边界，要么一点也不含。",
+      ];
+    };
+    return explainedChoice(rng, {
+      prompt: text([`Classify the complement of $\\{(x, y) : ${set}\\}$.`, `判断 $\\{(x, y) : ${set}\\}$ 的补集属于哪一类。`]),
+      correct: text(correct),
+      wrong: [open, closed, neither, both].filter((o) => o !== correct).map((o) => ({ option: text(o), why: text(whyFor(o)) })),
+      solution: walked(
+        [
+          [["Find the boundary", "求边界"], text([`The boundary of the set is ${boundary[0]}.`, `这个集合的边界是${boundary[1]}。`])],
+          [["Classify the set", "判断原集合"], text([`The set ${kind[0]}.`, `这个集合${kind[1]}。`])],
+          [["Classify the complement", "判断补集"], text(complement)],
+        ],
+        text([
+          "A set is closed exactly when its complement is open, and the answer agrees with that.",
+          "集合是闭集当且仅当补集是开集，答案与此相符。",
+        ]),
+      ),
+    });
   },
 );
 
@@ -801,8 +903,8 @@ const levelToAxis = point(
   "where-a-level-surface-meets-an-axis",
   ["Where a level surface meets an axis", "等值面与坐标轴的交点"],
   [
-    "The level surface through a point is found by evaluating $F$ there, since that value is the constant of the surface. Then any other point of the surface must give the same value, which is how to find where it crosses an axis.",
-    "过一点的等值面，只要在该点计算 $F$ 就能确定，因为这个值就是曲面的常数。曲面上的其他点必须给出相同的值，由此可求它与坐标轴的交点。",
+    "The level surface through a point is found by evaluating $F$ there, since that value is the constant of the surface. Then any other point of the surface must give the same value, which is how to find where it crosses an axis.\n\nFor $F(x, y, z) = x^{2} + 4y^{2} + 3z$ through $(6, 0, 1)$ the constant is $36 + 0 + 3 = 39$. On the $z$-axis $x = y = 0$, so $3z = 39$ and the surface crosses at $z = 13$.\n\n> **Watch out.** The constant is the value of $F$ at the given point, and on the $z$-axis only the $z$ term remains, so divide by its coefficient. The $z$-coordinate of the given point is not the answer, because its $x$ and $y$ terms count too.",
+    "过一点的等值面，只要在该点计算 $F$ 就能确定，因为这个值就是曲面的常数。曲面上的其他点必须给出相同的值，由此可求它与坐标轴的交点。\n\n对 $F(x, y, z) = x^{2} + 4y^{2} + 3z$，过 $(6, 0, 1)$ 的常数是 $36 + 0 + 3 = 39$。在 $z$ 轴上 $x = y = 0$，所以 $3z = 39$，曲面在 $z = 13$ 处穿过。\n\n> **注意。** 常数是 $F$ 在已知点的值；在 $z$ 轴上只剩 $z$ 项，所以要除以它的系数。已知点的 $z$ 坐标不是答案，因为它的 $x$ 项和 $y$ 项也计入常数。",
   ],
   (rng) => {
     const p = nz(rng, 5);
@@ -813,18 +915,52 @@ const levelToAxis = point(
     const c = nz(rng, 6);
     const V = p * a * a + q * b * b + r * c;
     const answer = Q.of(V, r);
-    return ask(
-      [
-        `The level surface of $F(x, y, z) = ${poly([p, "x^{2}"], [q, "y^{2}"], [r, "z"])}$ through $(${a}, ${b}, ${c})$ meets the $z$-axis at $z = k$. Find $k$.`,
-        `$F(x, y, z) = ${poly([p, "x^{2}"], [q, "y^{2}"], [r, "z"])}$ 过 $(${a}, ${b}, ${c})$ 的等值面与 $z$ 轴交于 $z = k$。求 $k$。`,
-      ],
+    const F = poly([p, "x^{2}"], [q, "y^{2}"], [r, "z"]);
+    const sum = `${p * a * a} + ${paren(q * b * b)} + ${paren(r * c)}`;
+    return numberProblem({
+      prompt: text([
+        `The level surface of $F(x, y, z) = ${F}$ through $(${a}, ${b}, ${c})$ meets the $z$-axis at $z = k$. Find $k$.`,
+        `$F(x, y, z) = ${F}$ 过 $(${a}, ${b}, ${c})$ 的等值面与 $z$ 轴交于 $z = k$。求 $k$。`,
+      ]),
       answer,
-      [V, c, answer.neg()],
-      [
-        `At the point $F = ${V}$. On the $z$-axis $x = y = 0$, so $${poly([r, "k"])} = ${V}$ and $k = ${answer.toLatex()}$.`,
-        `在该点 $F = ${V}$。在 $z$ 轴上 $x = y = 0$，所以 $${poly([r, "k"])} = ${V}$，$k = ${answer.toLatex()}$。`,
-      ],
-    );
+      mistakes: apart(answer, [
+        why(
+          V,
+          `$${V}$ is the value of $F$; on the axis $${poly([r, "k"])} = ${V}$, so divide by $${r}$.`,
+          `$${V}$ 是 $F$ 的值；在轴上 $${poly([r, "k"])} = ${V}$，所以还要除以 $${r}$。`,
+        ),
+        why(
+          c,
+          "That is the $z$-coordinate of the given point, which is not on the axis; its $x$ and $y$ terms count too.",
+          "这是已知点的 $z$ 坐标，该点不在轴上；它的 $x$ 项和 $y$ 项也要计入。",
+        ),
+        why(
+          answer.neg(),
+          `The sign is off: solve $${poly([r, "k"])} = ${V}$ without moving terms across.`,
+          `符号错了：直接解 $${poly([r, "k"])} = ${V}$，不需要移项。`,
+        ),
+      ]),
+      solution: walked(
+        [
+          [["Find the constant", "求常数"], text([`$F(${a}, ${b}, ${c}) = ${sum} = ${V}$.`, `$F(${a}, ${b}, ${c}) = ${sum} = ${V}$。`])],
+          [
+            ["Set $x = y = 0$", "令 $x = y = 0$"],
+            text([
+              r === 1
+                ? `On the $z$-axis $F = k$, so $k = ${V}$.`
+                : `On the $z$-axis $F = ${poly([r, "k"])}$, so $${poly([r, "k"])} = ${V}$ and $k = ${answer.toLatex()}$.`,
+              r === 1
+                ? `在 $z$ 轴上 $F = k$，所以 $k = ${V}$。`
+                : `在 $z$ 轴上 $F = ${poly([r, "k"])}$，所以 $${poly([r, "k"])} = ${V}$，$k = ${answer.toLatex()}$。`,
+            ]),
+          ],
+        ],
+        text([
+          `$F(0, 0, ${answer.toLatex()}) = ${r} \\cdot ${paren(answer)} = ${V}$, the same constant as at $(${a}, ${b}, ${c})$.`,
+          `$F(0, 0, ${answer.toLatex()}) = ${r} \\cdot ${paren(answer)} = ${V}$，与在 $(${a}, ${b}, ${c})$ 处的常数相同。`,
+        ]),
+      ),
+    });
   },
 );
 
@@ -833,8 +969,8 @@ const cylinderSlice = {
     "an-oblique-slice-of-a-cylinder",
     ["An oblique slice of a cylinder", "圆柱的斜截面"],
     [
-      "A plane that cuts a circular cylinder at an angle gives an ellipse, not a circle. One semi-axis stays equal to the radius, while the other is longer by the factor $\\sqrt{1 + m^{2}}$, where $m$ is the slope of the plane.",
-      "斜着切割圆柱的平面得到的是椭圆，不是圆。一个半轴仍等于半径，另一个半轴长出因子 $\\sqrt{1 + m^{2}}$，其中 $m$ 是平面的斜率。",
+      "A plane that cuts a circular cylinder at an angle gives an ellipse, not a circle. One semi-axis stays equal to the radius, while the other is longer by the factor $\\sqrt{1 + m^{2}}$, where $m$ is the slope of the plane.\n\nThe plane $z = x$ cuts $x^{2} + y^{2} = 9$: the semi-axis along $y$ is $3$, and the farthest point along $x$ is $(3, 0, 3)$, so the semi-major axis is $\\sqrt{9 + 9} = 3\\sqrt{2}$.\n\n> **Watch out.** The radius is only the semi-minor axis. The semi-major axis is the distance from the center to the farthest point, so combine $x$ and $z$ by Pythagoras; do not add them, and do not take the height $z$ alone.",
+      "斜着切割圆柱的平面得到的是椭圆，不是圆。一个半轴仍等于半径，另一个半轴长出因子 $\\sqrt{1 + m^{2}}$，其中 $m$ 是平面的斜率。\n\n平面 $z = x$ 截圆柱 $x^{2} + y^{2} = 9$：沿 $y$ 方向的半轴是 $3$，沿 $x$ 方向的最远点是 $(3, 0, 3)$，半长轴为 $\\sqrt{9 + 9} = 3\\sqrt{2}$。\n\n> **注意。** 半径只是半短轴。半长轴是最远点到中心的距离，要用勾股定理合成 $x$ 和 $z$，不能把两者直接相加，也不能只取高度 $z$。",
     ],
     (rng) => {
       const [p, q, h] = rng.pick(triples);
@@ -842,18 +978,44 @@ const cylinderSlice = {
       const R = q * k;
       const m = Q.of(p, q);
       const answer = h * k;
-      return ask(
-        [
+      return numberProblem({
+        prompt: text([
           `The plane $z = ${m.toLatex()}x$ cuts the cylinder $x^{2} + y^{2} = ${R * R}$ in an ellipse. Find the length of its semi-major axis.`,
           `平面 $z = ${m.toLatex()}x$ 截圆柱 $x^{2} + y^{2} = ${R * R}$ 得到一个椭圆。求它的半长轴长度。`,
-        ],
+        ]),
         answer,
-        [R, p * k, (p + q) * k],
-        [
-          `The point of the cut farthest from the center has $x = ${R}$ and $z = ${p * k}$. Its distance from the center is $\\sqrt{${R * R} + ${(p * k) ** 2}} = ${answer}$.`,
-          `截线上离中心最远的点满足 $x = ${R}$，$z = ${p * k}$。它到中心的距离是 $\\sqrt{${R * R} + ${(p * k) ** 2}} = ${answer}$。`,
-        ],
-      );
+        mistakes: apart(answer, [
+          why(R, `$${R}$ is the radius, which is the semi-minor axis along $y$.`, `$${R}$ 是半径，也就是沿 $y$ 方向的半短轴。`),
+          why(
+            p * k,
+            `$${p * k}$ is only the height $z$ of the farthest point, not its distance from the center.`,
+            `$${p * k}$ 只是最远点的高度 $z$，不是它到中心的距离。`,
+          ),
+          why((p + q) * k, "Combine $x$ and $z$ by Pythagoras instead of adding them.", "要用勾股定理合成 $x$ 和 $z$，而不是把它们相加。"),
+        ]),
+        solution: walked(
+          [
+            [
+              ["Find the farthest point", "求最远点"],
+              text([
+                `Along $y = 0$ the cut reaches $x = ${R}$, where $z = ${m.toLatex()} \\cdot ${R} = ${p * k}$.`,
+                `沿 $y = 0$，截线到达 $x = ${R}$，此处 $z = ${m.toLatex()} \\cdot ${R} = ${p * k}$。`,
+              ]),
+            ],
+            [
+              ["Measure its distance", "求距离"],
+              text([
+                `The center is the origin, so the semi-major axis is $\\sqrt{${R * R} + ${(p * k) ** 2}} = ${answer}$.`,
+                `中心是原点，所以半长轴为 $\\sqrt{${R * R} + ${(p * k) ** 2}} = ${answer}$。`,
+              ]),
+            ],
+          ],
+          text([
+            `By the stretch factor, $${R}\\sqrt{1 + \\left(${m.toLatex()}\\right)^{2}} = ${R} \\cdot \\frac{${h}}{${q}} = ${answer}$.`,
+            `按伸长因子，$${R}\\sqrt{1 + \\left(${m.toLatex()}\\right)^{2}} = ${R} \\cdot \\frac{${h}}{${q}} = ${answer}$。`,
+          ]),
+        ),
+      });
     },
   ),
   figure: multivariableDrawings2["cylinders#an-oblique-slice-of-a-cylinder"],
@@ -864,8 +1026,8 @@ const planeMeetsParaboloid = {
     "a-plane-meets-a-paraboloid-over-a-circle",
     ["A plane meets a paraboloid over a circle", "平面与抛物面的交线投影是圆"],
     [
-      "Eliminating $z$ between a plane and the paraboloid $z = x^{2} + y^{2}$ leaves an equation in $x$ and $y$. Completing the square shows that the intersection lies over a circle in the $xy$-plane, whose center and radius come from the coefficients of the plane.",
-      "在平面和抛物面 $z = x^{2} + y^{2}$ 之间消去 $z$，得到关于 $x$ 和 $y$ 的方程。配方后可知，交线在 $xy$ 平面上的投影是一个圆，其圆心和半径由平面的系数决定。",
+      "Eliminating $z$ between a plane and the paraboloid $z = x^{2} + y^{2}$ leaves an equation in $x$ and $y$. Completing the square shows that the intersection lies over a circle in the $xy$-plane, whose center and radius come from the coefficients of the plane.\n\nFor the plane $z = 4x + 5$: $x^{2} - 4x + y^{2} = 5$, so $(x - 2)^{2} + y^{2} = 9$, a circle of radius $3$ centered at $(2, 0)$.\n\n> **Watch out.** Completing the square adds the same squares to both sides, so they join the constant on the right. Square half of each coefficient, not the coefficient's half alone.",
+      "在平面和抛物面 $z = x^{2} + y^{2}$ 之间消去 $z$，得到关于 $x$ 和 $y$ 的方程。配方后可知，交线在 $xy$ 平面上的投影是一个圆，其圆心和半径由平面的系数决定。\n\n对平面 $z = 4x + 5$：$x^{2} - 4x + y^{2} = 5$，所以 $(x - 2)^{2} + y^{2} = 9$，是以 $(2, 0)$ 为圆心、半径为 $3$ 的圆。\n\n> **注意。** 配方时两边加上相同的平方，它们要并入右边的常数。要加的是一次项系数一半的平方，而不只是那一半。",
     ],
     (rng) => {
       const a = nz(rng, 6);
@@ -873,18 +1035,49 @@ const planeMeetsParaboloid = {
       const c = rng.int(1, 20);
       const answer = a * a + b * b + c;
       const plane = poly([2 * a, "x"], [2 * b, "y"], [c, ""]);
-      return ask(
-        [
+      const lhs = `(${poly([1, "x"], [-a, ""])})^{2} + (${poly([1, "y"], [-b, ""])})^{2}`;
+      return numberProblem({
+        prompt: text([
           `The plane $z = ${plane}$ meets $z = x^{2} + y^{2}$ in a curve whose projection to the $xy$-plane is a circle of radius $r$. Find $r^{2}$.`,
           `平面 $z = ${plane}$ 与 $z = x^{2} + y^{2}$ 相交，交线在 $xy$ 平面上的投影是半径为 $r$ 的圆。求 $r^{2}$。`,
-        ],
+        ]),
         answer,
-        [c, a * a + b * b - c, a + b + c],
-        [
-          `Equating gives $x^{2} + y^{2} = ${plane}$, which becomes $(${poly([1, "x"], [-a, ""])})^{2} + (${poly([1, "y"], [-b, ""])})^{2} = ${c} + ${a * a} + ${b * b}$. So $r^{2} = ${answer}$.`,
-          `令二者相等，得 $x^{2} + y^{2} = ${plane}$，即 $(${poly([1, "x"], [-a, ""])})^{2} + (${poly([1, "y"], [-b, ""])})^{2} = ${c} + ${a * a} + ${b * b}$。所以 $r^{2} = ${answer}$。`,
-        ],
-      );
+        mistakes: apart(answer, [
+          why(
+            c,
+            `Completing the square adds $${a * a}$ and $${b * b}$ to the right side as well.`,
+            `配方时右边也要加上 $${a * a}$ 和 $${b * b}$。`,
+          ),
+          why(a * a + b * b - c, `The constant $${c}$ stays on the right with a plus sign.`, `常数 $${c}$ 留在右边，符号为正。`),
+          why(
+            a + b + c,
+            `Add the squares $${a * a}$ and $${b * b}$ of the half coefficients, not the halves themselves.`,
+            `要加的是一半系数的平方 $${a * a}$ 和 $${b * b}$，而不是一半系数本身。`,
+          ),
+        ]),
+        solution: walked(
+          [
+            [
+              ["Eliminate $z$", "消去 $z$"],
+              text([
+                `$x^{2} + y^{2} = ${plane}$, so $${poly([1, "x^{2}"], [-2 * a, "x"], [1, "y^{2}"], [-2 * b, "y"])} = ${c}$.`,
+                `$x^{2} + y^{2} = ${plane}$，所以 $${poly([1, "x^{2}"], [-2 * a, "x"], [1, "y^{2}"], [-2 * b, "y"])} = ${c}$。`,
+              ]),
+            ],
+            [
+              ["Complete the squares", "配方"],
+              text([
+                `Adding $${a * a}$ and $${b * b}$ to both sides gives $${lhs} = ${c} + ${a * a} + ${b * b} = ${answer}$, so $r^{2} = ${answer}$.`,
+                `两边加上 $${a * a}$ 和 $${b * b}$，得 $${lhs} = ${c} + ${a * a} + ${b * b} = ${answer}$，所以 $r^{2} = ${answer}$。`,
+              ]),
+            ],
+          ],
+          text([
+            `The plane minus the paraboloid is $${answer} - (x ${a > 0 ? "-" : "+"} ${Math.abs(a)})^{2} - (y ${b > 0 ? "-" : "+"} ${Math.abs(b)})^{2}$. At the center $(${a}, ${b})$ it is $${2 * a * a + 2 * b * b + c} - ${a * a + b * b} = ${answer}$, which agrees.`,
+            `平面减去抛物面等于 $${answer} - (x ${a > 0 ? "-" : "+"} ${Math.abs(a)})^{2} - (y ${b > 0 ? "-" : "+"} ${Math.abs(b)})^{2}$。在圆心 $(${a}, ${b})$ 处它等于 $${2 * a * a + 2 * b * b + c} - ${a * a + b * b} = ${answer}$，相符。`,
+          ]),
+        ),
+      });
     },
   ),
   figure: multivariableDrawings2["intersections-of-lines-and-planes-with-surfaces#a-plane-meets-a-paraboloid-over-a-circle"],
@@ -894,8 +1087,8 @@ const coefficientFromPartial = point(
   "a-coefficient-from-a-partial-derivative",
   ["A coefficient from a partial derivative", "由偏导数求系数"],
   [
-    "A partial derivative can be used in reverse to find an unknown coefficient. When differentiating with respect to $x$, every term without $x$ disappears, so those terms give no information, and $y$ stays as a constant multiplier in the rest.",
-    "偏导数可以反过来求未知系数。对 $x$ 求导时，所有不含 $x$ 的项都消失，所以这些项不提供信息，而其余项中的 $y$ 保留为常数因子。",
+    "A partial derivative can be used in reverse to find an unknown coefficient. When differentiating with respect to $x$, every term without $x$ disappears, so those terms give no information, and $y$ stays as a constant multiplier in the rest.\n\nIf $f(x, y) = cx^{3}y + 7y$ has $f_{x}(1, 2) = 12$, then $f_{x} = 3cx^{2}y$, which is $6c$ at the point, so $c = 2$.\n\n> **Watch out.** Divide the given value by everything that multiplies $c$ at the point, including the factor $y$ and the power that comes down. The terms without $x$ play no part.",
+    "偏导数可以反过来求未知系数。对 $x$ 求导时，所有不含 $x$ 的项都消失，所以这些项不提供信息，而其余项中的 $y$ 保留为常数因子。\n\n若 $f(x, y) = cx^{3}y + 7y$ 满足 $f_{x}(1, 2) = 12$，则 $f_{x} = 3cx^{2}y$，在该点等于 $6c$，所以 $c = 2$。\n\n> **注意。** 要用已知值除以该点处乘在 $c$ 上的全部因子，包括因子 $y$ 和求导降下来的指数。不含 $x$ 的项不起作用。",
   ],
   (rng) => {
     const c = nz(rng, 6);
@@ -905,15 +1098,46 @@ const coefficientFromPartial = point(
     const y0 = nz(rng, 3);
     const v = 2 * c * x0 * y0;
     const f = poly([1, "cx^{2}y"], [e, "y^{3}"], [g, "y"]);
-    return ask(
-      [`$f(x, y) = ${f}$ has $f_{x}(${x0}, ${y0}) = ${v}$. Find $c$.`, `$f(x, y) = ${f}$ 满足 $f_{x}(${x0}, ${y0}) = ${v}$。求 $c$。`],
-      c,
-      [-c, v, Q.of(v, 2)],
-      [
-        `$f_{x} = 2cxy$, as the other terms have no $x$. At the point this is $${2 * x0 * y0}c = ${v}$, so $c = ${c}$.`,
-        `$f_{x} = 2cxy$，因为其他项不含 $x$。在该点，$${2 * x0 * y0}c = ${v}$，所以 $c = ${c}$。`,
-      ],
-    );
+    const m = 2 * x0 * y0;
+    return numberProblem({
+      prompt: text([
+        `$f(x, y) = ${f}$ has $f_{x}(${x0}, ${y0}) = ${v}$. Find $c$.`,
+        `$f(x, y) = ${f}$ 满足 $f_{x}(${x0}, ${y0}) = ${v}$。求 $c$。`,
+      ]),
+      answer: c,
+      mistakes: apart(c, [
+        why(-c, `The sign is off: $${m}c = ${v}$ gives $c = ${c}$.`, `符号错了：由 $${m}c = ${v}$ 得 $c = ${c}$。`),
+        why(
+          v,
+          `$${v}$ is the value of $f_{x}$; divide it by $${paren(m)}$, the factor multiplying $c$.`,
+          `$${v}$ 是 $f_{x}$ 的值；还要除以乘在 $c$ 上的因子 $${paren(m)}$。`,
+        ),
+        why(
+          Q.of(v, 2),
+          `Dividing by $2$ alone leaves out the factors $x = ${x0}$ and $y = ${y0}$.`,
+          `只除以 $2$ 漏掉了因子 $x = ${x0}$ 和 $y = ${y0}$。`,
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Differentiate in $x$", "对 $x$ 求导"],
+            text(["$f_{x} = 2cxy$, since the terms $y^{3}$ and $y$ have no $x$.", "$f_{x} = 2cxy$，因为 $y^{3}$ 项和 $y$ 项不含 $x$。"]),
+          ],
+          [
+            ["Evaluate and solve", "代入求解"],
+            text([
+              `At $(${x0}, ${y0})$: $2c \\cdot ${paren(x0)} \\cdot ${paren(y0)} = ${m}c = ${v}$, so $c = ${c}$.`,
+              `在 $(${x0}, ${y0})$ 处：$2c \\cdot ${paren(x0)} \\cdot ${paren(y0)} = ${m}c = ${v}$，所以 $c = ${c}$。`,
+            ]),
+          ],
+        ],
+        text([
+          `$2 \\cdot ${paren(c)} \\cdot ${paren(x0)} \\cdot ${paren(y0)} = ${v}$.`,
+          `$2 \\cdot ${paren(c)} \\cdot ${paren(x0)} \\cdot ${paren(y0)} = ${v}$。`,
+        ]),
+      ),
+    });
   },
 );
 

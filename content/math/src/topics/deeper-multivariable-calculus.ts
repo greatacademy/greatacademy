@@ -12,7 +12,7 @@ import { multivariableDrawings5 } from "../explanation-drawings-multivariable-5.
 import { multivariableDrawings7 } from "../explanation-drawings-multivariable-7.ts";
 import { multivariableDrawings8 } from "../explanation-drawings-multivariable-8.ts";
 
-import { numberProblem, pointProblem, say, vectorLatex, why, withMistakes } from "../problems.ts";
+import { explainedChoice, numberProblem, pointProblem, say, vectorLatex, why, withMistakes } from "../problems.ts";
 import { walked } from "./calculus-i-differentiation.ts";
 import { pickChoice } from "./grade-4-fractions.ts";
 
@@ -332,24 +332,71 @@ const limitByPolar: KnowledgePointDef = {
   id: "showing-a-limit-exists-with-polar-coordinates",
   title: t("Showing a limit exists with polar coordinates", "用极坐标说明极限存在"),
   explanation: t(
-    "Paths can only show that a limit fails to exist. To show that one exists, write $x = r\\cos\\theta$ and $y = r\\sin\\theta$: if the expression is $r$ to a positive power times something bounded, then it tends to zero from every direction at once. If $r$ cancels completely, the value depends on the direction $\\theta$.",
-    "沿路径只能说明极限不存在。要说明极限存在，令 $x = r\\cos\\theta$，$y = r\\sin\\theta$：如果式子是 $r$ 的正数次幂乘有界量，它就从所有方向一起趋于零。如果 $r$ 完全约掉，值就取决于方向 $\\theta$。",
+    "Paths can only show that a limit fails to exist. To show that one exists, write $x = r\\cos\\theta$ and $y = r\\sin\\theta$: if the expression is $r$ to a positive power times something bounded, then it tends to zero from every direction at once. If $r$ cancels completely, the value depends on the direction $\\theta$.\n\nFor $\\frac{x^2y^2}{x^2 + y^2}$ the substitution gives $\\frac{r^4\\cos^2\\theta\\sin^2\\theta}{r^2} = r^2\\cos^2\\theta\\sin^2\\theta$, which is at most $r^2$ in size, so the limit is $0$.\n\n> **Watch out.** Getting $0$ along a few lines proves nothing, since another path may give another value. Count the powers of $r$: a numerator of the same degree as the denominator leaves only $\\theta$, and then the limit fails.",
+    "沿路径只能说明极限不存在。要说明极限存在，令 $x = r\\cos\\theta$，$y = r\\sin\\theta$：如果式子是 $r$ 的正数次幂乘有界量，它就从所有方向一起趋于零。如果 $r$ 完全约掉，值就取决于方向 $\\theta$。\n\n对 $\\frac{x^2y^2}{x^2 + y^2}$，代入得 $\\frac{r^4\\cos^2\\theta\\sin^2\\theta}{r^2} = r^2\\cos^2\\theta\\sin^2\\theta$，其绝对值不超过 $r^2$，所以极限是 $0$。\n\n> **注意。** 沿几条直线得到 $0$ 什么也证明不了，因为别的路径可能给出别的值。要数 $r$ 的次数：分子与分母次数相同时只剩下 $\\theta$，极限就不存在。",
   ),
   generate(rng) {
     const a = rng.int(1, 6);
     const c = coefficient(a);
     const fraction = (top: string, bottom = "x^2 + y^2") => `\\frac{${c}${top}}{${bottom}}`;
     const top = rng.pick(["x^3", "y^3", "x^2y", "xy^2"]);
-    return pickChoice(
-      rng,
-      t("Which of these functions has a limit as $(x, y) \\to (0, 0)$?", "下列函数中，哪一个当 $(x, y) \\to (0, 0)$ 时有极限？"),
-      both(fraction(top)),
-      [both(fraction("xy")), both(fraction(rng.pick(["x^2", "y^2"]))), both(`\\frac{${c}(x^2 - y^2)}{x^2 + y^2}`)],
-      t(
-        `In polar coordinates the numerator of $${fraction(top)}$ has $r^3$ and the denominator has $r^2$, so the function is $r$ times something bounded and tends to $0$. In the others $r$ cancels, and the value still depends on $\\theta$.`,
-        `用极坐标表示，$${fraction(top)}$ 的分子含 $r^3$，分母含 $r^2$，所以函数等于 $r$ 乘有界量，趋于 $0$。其余几个的 $r$ 都约掉了，值仍取决于 $\\theta$。`,
+    const square = rng.pick(["x^2", "y^2"]);
+    const trig: Record<string, string> = {
+      "x^3": "\\cos^3\\theta",
+      "y^3": "\\sin^3\\theta",
+      "x^2y": "\\cos^2\\theta\\sin\\theta",
+      "xy^2": "\\cos\\theta\\sin^2\\theta",
+    };
+    const onDiagonal = Q.of(a, 2).toLatex();
+    return explainedChoice(rng, {
+      prompt: t("Which of these functions has a limit as $(x, y) \\to (0, 0)$?", "下列函数中，哪一个当 $(x, y) \\to (0, 0)$ 时有极限？"),
+      correct: both(fraction(top)),
+      wrong: [
+        {
+          option: both(fraction("xy")),
+          why: t(
+            `In polar form it is $${c}\\cos\\theta\\sin\\theta$: $0$ along the $x$-axis but $${onDiagonal}$ along $y = x$.`,
+            `用极坐标表示它是 $${c}\\cos\\theta\\sin\\theta$：沿 $x$ 轴为 $0$，沿 $y = x$ 却为 $${onDiagonal}$。`,
+          ),
+        },
+        {
+          option: both(fraction(square)),
+          why: t(
+            `In polar form it is $${c}${square === "x^2" ? "\\cos^2\\theta" : "\\sin^2\\theta"}$: $${a}$ along one axis and $0$ along the other.`,
+            `用极坐标表示它是 $${c}${square === "x^2" ? "\\cos^2\\theta" : "\\sin^2\\theta"}$：沿一条轴为 $${a}$，沿另一条轴为 $0$。`,
+          ),
+        },
+        {
+          option: both(`\\frac{${c}(x^2 - y^2)}{x^2 + y^2}`),
+          why: t(
+            `In polar form it is $${c}\\cos 2\\theta$: $${a}$ along the $x$-axis and $-${a}$ along the $y$-axis.`,
+            `用极坐标表示它是 $${c}\\cos 2\\theta$：沿 $x$ 轴为 $${a}$，沿 $y$ 轴为 $-${a}$。`,
+          ),
+        },
+      ],
+      solution: walked(
+        [
+          [
+            ["Substitute polar coordinates", "代入极坐标"],
+            t(
+              `$${fraction(top)} = \\frac{${c}r^3${trig[top]}}{r^2} = ${c}r${trig[top]}$.`,
+              `$${fraction(top)} = \\frac{${c}r^3${trig[top]}}{r^2} = ${c}r${trig[top]}$。`,
+            ),
+          ],
+          [
+            ["Bound it", "估计上界"],
+            t(
+              `The trigonometric factor is at most $1$ in size, so the value is at most $${a}r$ in size, which tends to $0$ from every direction. In the other three, $r$ cancels and $\\theta$ remains.`,
+              `三角函数因子的绝对值不超过 $1$，所以函数值的绝对值不超过 $${a}r$，从各个方向都趋于 $0$。其余三个函数的 $r$ 约掉后只剩下 $\\theta$。`,
+            ),
+          ],
+        ],
+        t(
+          `Along $y = x$ the function is $\\frac{${c}x^3}{2x^2} = ${a === 2 ? "" : onDiagonal}x$, which tends to $0$, in line with the limit $0$.`,
+          `沿 $y = x$，函数为 $\\frac{${c}x^3}{2x^2} = ${a === 2 ? "" : onDiagonal}x$，趋于 $0$，与极限 $0$ 相符。`,
+        ),
       ),
-    );
+    });
   },
 };
 
@@ -1322,8 +1369,8 @@ const paraboloidCap: KnowledgePointDef = {
   figure: multivariableDrawings2["paraboloids#the-volume-of-a-paraboloid-cap"],
   title: t("The volume of a paraboloid cap", "抛物面帽的体积"),
   explanation: t(
-    "A horizontal slice of the solid inside $z = a(x^2 + y^2)$ is a disk whose area grows linearly with height: at height $z$ it is $\\frac{\\pi z}{a}$. Integrating these areas gives a volume exactly half of the cylinder with the same base and height. Slicing is simpler here than integrating under the surface.",
-    "$z = a(x^2 + y^2)$ 内部立体的水平截面是圆盘，面积随高度线性增长：高度 $z$ 处的面积是 $\\frac{\\pi z}{a}$。对这些面积积分，得到的体积恰好是同底同高圆柱的一半。这里用切片比在曲面下积分更简单。",
+    "A horizontal slice of the solid inside $z = a(x^2 + y^2)$ is a disk whose area grows linearly with height: at height $z$ it is $\\frac{\\pi z}{a}$. Integrating these areas gives a volume exactly half of the cylinder with the same base and height. Slicing is simpler here than integrating under the surface.\n\nFor $z = \\frac{1}{2}(x^2 + y^2)$ below $z = 4$, the slice at height $z$ has radius squared $2z$ and area $2\\pi z$, so the volume is $\\int_0^4 2\\pi z\\,dz = 16\\pi$, half of the cylinder's $32\\pi$.\n\n> **Watch out.** The area grows like $z$, so integrating gives $\\frac{h^2}{2}$, not $h$ or $\\frac{h^3}{3}$. One half belongs to the paraboloid; one third is the rule for a cone.",
+    "$z = a(x^2 + y^2)$ 内部立体的水平截面是圆盘，面积随高度线性增长：高度 $z$ 处的面积是 $\\frac{\\pi z}{a}$。对这些面积积分，得到的体积恰好是同底同高圆柱的一半。这里用切片比在曲面下积分更简单。\n\n对 $z = \\frac{1}{2}(x^2 + y^2)$ 与 $z = 4$ 之间的立体，高度 $z$ 处截面半径的平方为 $2z$，面积为 $2\\pi z$，所以体积为 $\\int_0^4 2\\pi z\\,dz = 16\\pi$，是圆柱体积 $32\\pi$ 的一半。\n\n> **注意。** 面积随 $z$ 线性增长，所以积分得 $\\frac{h^2}{2}$，不是 $h$，也不是 $\\frac{h^3}{3}$。一半属于抛物面；三分之一是锥体的规律。",
   ),
   generate(rng) {
     const a = rng.int(1, 6);
@@ -1335,10 +1382,44 @@ const paraboloidCap: KnowledgePointDef = {
         `立体在 $z = ${poly([a, "(x^2 + y^2)"])}$ 上方、平面 $z = ${h}$ 下方。它的体积是 $c\\pi$。求 $c$。`,
       ),
       answer,
-      wrong: [Q.of(h * h, a), Q.of(h * h, 3 * a), Q.of(h, 2 * a)],
-      solution: t(
-        `At height $z$ the slice has area $\\frac{\\pi z}{${a}}$. Integrating from 0 to ${h} gives $\\frac{${h * h}\\pi}{${2 * a}}$, so $c = ${answer.toLatex()}$.`,
-        `高度 $z$ 处的截面面积是 $\\frac{\\pi z}{${a}}$。从 0 到 ${h} 积分得 $\\frac{${h * h}\\pi}{${2 * a}}$，所以 $c = ${answer.toLatex()}$。`,
+      mistakes: apart(answer, [
+        why(
+          Q.of(h * h, a),
+          "That is the whole cylinder with the same base and height; the paraboloid fills half of it.",
+          "这是同底同高的整个圆柱；抛物面内的立体只占它的一半。",
+        ),
+        why(
+          Q.of(h * h, 3 * a),
+          "One third is the rule for a cone; here the slice area grows like $z$, which gives one half.",
+          "三分之一是锥体的规律；这里截面面积随 $z$ 线性增长，得到的是一半。",
+        ),
+        why(
+          Q.of(h, 2 * a),
+          `Integrating $z$ gives $\\frac{z^2}{2}$, so the height enters squared: $${h}^2$, not $${h}$.`,
+          `对 $z$ 积分得 $\\frac{z^2}{2}$，所以高度要平方：是 $${h}^2$，不是 $${h}$。`,
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Slice horizontally", "水平切片"],
+            t(
+              `At height $z$, $x^2 + y^2 = ${a === 1 ? "z" : `\\frac{z}{${a}}`}$, so the slice is a disk of area $${a === 1 ? "\\pi z" : `\\frac{\\pi z}{${a}}`}$.`,
+              `在高度 $z$ 处，$x^2 + y^2 = ${a === 1 ? "z" : `\\frac{z}{${a}}`}$，所以截面是面积为 $${a === 1 ? "\\pi z" : `\\frac{\\pi z}{${a}}`}$ 的圆盘。`,
+            ),
+          ],
+          [
+            ["Integrate the areas", "对面积积分"],
+            t(
+              `$\\int_0^{${h}} ${a === 1 ? "\\pi z" : `\\frac{\\pi z}{${a}}`}\\,dz = \\frac{${h * h}\\pi}{${2 * a}}$, so $c = ${answer.toLatex()}$.`,
+              `$\\int_0^{${h}} ${a === 1 ? "\\pi z" : `\\frac{\\pi z}{${a}}`}\\,dz = \\frac{${h * h}\\pi}{${2 * a}}$，所以 $c = ${answer.toLatex()}$。`,
+            ),
+          ],
+        ],
+        t(
+          `The cylinder with the top disk as base has volume $\\pi \\cdot ${Q.of(h, a).toLatex()} \\cdot ${h} = ${Q.of(h * h, a).toLatex()}\\pi$, and half of it is $${answer.toLatex()}\\pi$.`,
+          `以顶面圆盘为底的圆柱体积为 $\\pi \\cdot ${Q.of(h, a).toLatex()} \\cdot ${h} = ${Q.of(h * h, a).toLatex()}\\pi$，它的一半是 $${answer.toLatex()}\\pi$。`,
+        ),
       ),
     });
   },
@@ -1349,8 +1430,8 @@ const ellipticConeVolume: KnowledgePointDef = {
   figure: multivariableDrawings2["elliptic-cones#the-volume-of-an-elliptic-cone"],
   title: t("The volume of an elliptic cone", "椭圆锥的体积"),
   explanation: t(
-    "A horizontal slice of the cone $\\frac{x^2}{a^2} + \\frac{y^2}{b^2} = z^2$ at height $z$ is an ellipse with semi-axes $az$ and $bz$, and so with area $\\pi abz^2$. Integrating from the tip gives one third of the base area times the height, which is the same rule that holds for a circular cone.",
-    "锥面 $\\frac{x^2}{a^2} + \\frac{y^2}{b^2} = z^2$ 在高度 $z$ 处的水平截面是半轴为 $az$ 和 $bz$ 的椭圆，面积是 $\\pi abz^2$。从锥顶积分，得到底面积乘以高的三分之一，这与圆锥的规律相同。",
+    "A horizontal slice of the cone $\\frac{x^2}{a^2} + \\frac{y^2}{b^2} = z^2$ at height $z$ is an ellipse with semi-axes $az$ and $bz$, and so with area $\\pi abz^2$. Integrating from the tip gives one third of the base area times the height, which is the same rule that holds for a circular cone.\n\nFor $x^2 + \\frac{y^2}{4} = z^2$ between $z = 0$ and $z = 10$, the top ellipse has semi-axes $10$ and $20$ and area $200\\pi$, so the volume is $\\frac{1}{3} \\cdot 200\\pi \\cdot 10 = \\frac{2000\\pi}{3}$.\n\n> **Watch out.** The semi-axes at the top are $ah$ and $bh$, not $a$ and $b$, so the top area already carries $h^2$. Then multiply by the height once more and take one third.",
+    "锥面 $\\frac{x^2}{a^2} + \\frac{y^2}{b^2} = z^2$ 在高度 $z$ 处的水平截面是半轴为 $az$ 和 $bz$ 的椭圆，面积是 $\\pi abz^2$。从锥顶积分，得到底面积乘以高的三分之一，这与圆锥的规律相同。\n\n对 $z = 0$ 与 $z = 10$ 之间的 $x^2 + \\frac{y^2}{4} = z^2$，顶面椭圆的半轴为 $10$ 和 $20$，面积为 $200\\pi$，所以体积为 $\\frac{1}{3} \\cdot 200\\pi \\cdot 10 = \\frac{2000\\pi}{3}$。\n\n> **注意。** 顶面的半轴是 $ah$ 和 $bh$，不是 $a$ 和 $b$，所以顶面积已经含有 $h^2$。然后还要再乘一次高，并取三分之一。",
   ),
   generate(rng) {
     const a = rng.int(1, 6);
@@ -1365,10 +1446,44 @@ const ellipticConeVolume: KnowledgePointDef = {
         `立体由锥面 $${overSquare("x", a)} + ${overSquare("y", b)} = z^2$ 和平面 $z = 0$、$z = ${h}$ 围成。它的体积是 $c\\pi$。求 $c$。`,
       ),
       answer,
-      wrong: [Q.of(whole), Q.of(a * b * h * h, 3), Q.of(whole, 2)],
-      solution: t(
-        `The top is an ellipse with semi-axes ${a * h} and ${b * h}, so its area is $${a * b * h * h}\\pi$. One third of this times the height ${h} gives $c = ${answer.toLatex()}$.`,
-        `顶面是半轴为 ${a * h} 和 ${b * h} 的椭圆，面积是 $${a * b * h * h}\\pi$。它的三分之一乘以高 ${h}，得 $c = ${answer.toLatex()}$。`,
+      mistakes: apart(answer, [
+        why(
+          Q.of(whole),
+          "That is the elliptic cylinder on the same top; the cone fills one third of it.",
+          "这是以同一顶面为底的椭圆柱；锥体只占它的三分之一。",
+        ),
+        why(
+          Q.of(a * b * h * h, 3),
+          `One third of the top area still has to be multiplied by the height $${h}$.`,
+          `顶面积的三分之一还要乘以高 $${h}$。`,
+        ),
+        why(
+          Q.of(whole, 2),
+          "One half is the rule for a paraboloid; for a cone the slice area grows like $z^2$, which gives one third.",
+          "一半是抛物面的规律；锥体的截面面积随 $z^2$ 增长，得到的是三分之一。",
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Find the top", "求顶面"],
+            t(
+              `At $z = ${h}$ the slice is an ellipse with semi-axes $${a} \\cdot ${h} = ${a * h}$ and $${b} \\cdot ${h} = ${b * h}$, of area $${a * b * h * h}\\pi$.`,
+              `在 $z = ${h}$ 处，截面是半轴为 $${a} \\cdot ${h} = ${a * h}$ 和 $${b} \\cdot ${h} = ${b * h}$ 的椭圆，面积为 $${a * b * h * h}\\pi$。`,
+            ),
+          ],
+          [
+            ["Take one third", "取三分之一"],
+            t(
+              `$V = \\frac{1}{3} \\cdot ${a * b * h * h}\\pi \\cdot ${h} = ${answer.toLatex()}\\pi$, so $c = ${answer.toLatex()}$.`,
+              `$V = \\frac{1}{3} \\cdot ${a * b * h * h}\\pi \\cdot ${h} = ${answer.toLatex()}\\pi$，所以 $c = ${answer.toLatex()}$。`,
+            ),
+          ],
+        ],
+        t(
+          `Integrating the slices directly: $\\int_0^{${h}} ${a * b}\\pi z^2\\,dz = \\frac{${a * b}\\pi \\cdot ${h ** 3}}{3} = ${answer.toLatex()}\\pi$.`,
+          `直接对截面积分：$\\int_0^{${h}} ${a * b}\\pi z^2\\,dz = \\frac{${a * b}\\pi \\cdot ${h ** 3}}{3} = ${answer.toLatex()}\\pi$。`,
+        ),
       ),
     });
   },
@@ -2157,8 +2272,8 @@ const gapBetweenSheets: KnowledgePointDef = {
   id: "the-gap-between-the-sheets-of-a-hyperboloid",
   title: t("The gap between the sheets of a hyperboloid", "双叶双曲面两叶之间的距离"),
   explanation: t(
-    "Rearranging $\\frac{z^2}{c^2} - \\frac{x^2}{a^2} - \\frac{y^2}{b^2} = 1$ gives $\\frac{z^2}{c^2} = 1 + \\frac{x^2}{a^2} + \\frac{y^2}{b^2}$, and the right side is at least 1. So $|z| \\ge c$ on the whole surface, and no point lies between the planes $z = -c$ and $z = c$. The two sheets come closest at their vertices on the $z$-axis, where the values of $a$ and $b$ play no part.",
-    "把 $\\frac{z^2}{c^2} - \\frac{x^2}{a^2} - \\frac{y^2}{b^2} = 1$ 整理成 $\\frac{z^2}{c^2} = 1 + \\frac{x^2}{a^2} + \\frac{y^2}{b^2}$，右边至少是 1。所以整个曲面上 $|z| \\ge c$，平面 $z = -c$ 和 $z = c$ 之间没有点。两叶在 $z$ 轴上的顶点处最接近，这时 $a$、$b$ 的值不起作用。",
+    "Rearranging $\\frac{z^2}{c^2} - \\frac{x^2}{a^2} - \\frac{y^2}{b^2} = 1$ gives $\\frac{z^2}{c^2} = 1 + \\frac{x^2}{a^2} + \\frac{y^2}{b^2}$, and the right side is at least 1. So $|z| \\ge c$ on the whole surface, and no point lies between the planes $z = -c$ and $z = c$. The two sheets come closest at their vertices on the $z$-axis, where the values of $a$ and $b$ play no part.\n\nFor $z^2 - \\frac{x^2}{4} - \\frac{y^2}{9} = 1$ we have $c = 1$, so the vertices are $(0, 0, \\pm 1)$ and the sheets are $2$ apart.\n\n> **Watch out.** The denominator under $z^2$ is $c^2$, so take its square root before doubling. The gap spans both vertices, $z = -c$ and $z = c$, so it is $2c$, not $c$.",
+    "把 $\\frac{z^2}{c^2} - \\frac{x^2}{a^2} - \\frac{y^2}{b^2} = 1$ 整理成 $\\frac{z^2}{c^2} = 1 + \\frac{x^2}{a^2} + \\frac{y^2}{b^2}$，右边至少是 1。所以整个曲面上 $|z| \\ge c$，平面 $z = -c$ 和 $z = c$ 之间没有点。两叶在 $z$ 轴上的顶点处最接近，这时 $a$、$b$ 的值不起作用。\n\n对 $z^2 - \\frac{x^2}{4} - \\frac{y^2}{9} = 1$，$c = 1$，所以顶点是 $(0, 0, \\pm 1)$，两叶相距 $2$。\n\n> **注意。** $z^2$ 下的分母是 $c^2$，要先开平方再加倍。间隙跨过两个顶点 $z = -c$ 和 $z = c$，所以是 $2c$，不是 $c$。",
   ),
   generate(rng) {
     const a = rng.int(2, 9);
@@ -2172,10 +2287,50 @@ const gapBetweenSheets: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong: [c, c * c, 2 * c * c, 2 * a, 2 * b, 2 * c + 1],
-      solution: t(
-        `The vertices are at $z = \\pm ${c}$, and every other point has larger $|z|$. Their distance is $${answer}$.`,
-        `顶点在 $z = \\pm ${c}$，其他点的 $|z|$ 都更大。它们的距离是 $${answer}$。`,
+      mistakes: apart(answer, [
+        why(
+          c,
+          `$${c}$ is the distance from one vertex to the origin; the other sheet is as far on the other side.`,
+          `$${c}$ 是一个顶点到原点的距离；另一叶在另一侧同样远。`,
+        ),
+        why(
+          c * c,
+          `$${c * c}$ is $c^2$, the denominator under $z^2$; the vertices are at $z = \\pm ${c}$.`,
+          `$${c * c}$ 是 $z^2$ 下的分母 $c^2$；顶点在 $z = \\pm ${c}$。`,
+        ),
+        why(2 * c * c, `Take the square root of $${c * c}$ before doubling.`, `要先对 $${c * c}$ 开平方，再加倍。`),
+        why(
+          2 * a,
+          "The values under $x^2$ and $y^2$ play no part: the sheets come closest on the $z$-axis.",
+          "$x^2$ 和 $y^2$ 下的数不起作用：两叶在 $z$ 轴上最接近。",
+        ),
+        why(
+          2 * b,
+          "The values under $x^2$ and $y^2$ play no part: the sheets come closest on the $z$-axis.",
+          "$x^2$ 和 $y^2$ 下的数不起作用：两叶在 $z$ 轴上最接近。",
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Bound $z$", "估计 $z$"],
+            t(
+              `$\\frac{z^2}{${c * c}} = 1 + \\frac{x^2}{${a * a}} + \\frac{y^2}{${b * b}} \\ge 1$, so $|z| \\ge ${c}$ everywhere on the surface.`,
+              `$\\frac{z^2}{${c * c}} = 1 + \\frac{x^2}{${a * a}} + \\frac{y^2}{${b * b}} \\ge 1$，所以曲面上处处 $|z| \\ge ${c}$。`,
+            ),
+          ],
+          [
+            ["Measure between the vertices", "量顶点间距离"],
+            t(
+              `Equality holds only at the vertices $(0, 0, \\pm ${c})$, so the shortest distance is $${c} - (-${c}) = ${answer}$.`,
+              `只有在顶点 $(0, 0, \\pm ${c})$ 处取等号，所以最短距离为 $${c} - (-${c}) = ${answer}$。`,
+            ),
+          ],
+        ],
+        t(
+          `$(0, 0, ${c})$ gives $\\frac{${c * c}}{${c * c}} - 0 - 0 = 1$, so the vertex lies on the surface.`,
+          `$(0, 0, ${c})$ 给出 $\\frac{${c * c}}{${c * c}} - 0 - 0 = 1$，所以顶点在曲面上。`,
+        ),
       ),
     });
   },
@@ -2185,8 +2340,8 @@ const ellipsoidSliceArea: KnowledgePointDef = {
   id: "the-area-of-a-slice-of-an-ellipsoid",
   title: t("The area of a slice of an ellipsoid", "椭球截面的面积"),
   explanation: t(
-    "The plane $z = k$ cuts an ellipsoid in an ellipse. Moving $\\frac{k^2}{c^2}$ to the right side leaves $\\frac{x^2}{a^2} + \\frac{y^2}{b^2} = 1 - \\frac{k^2}{c^2}$, and both semi-axes shrink by the same factor $\\sqrt{1 - \\frac{k^2}{c^2}}$. An ellipse with semi-axes $A$ and $B$ has area $\\pi AB$, so the two square roots multiply away and the area of the slice is rational in $k$.",
-    "平面 $z = k$ 把椭球截成一个椭圆。把 $\\frac{k^2}{c^2}$ 移到右边，得 $\\frac{x^2}{a^2} + \\frac{y^2}{b^2} = 1 - \\frac{k^2}{c^2}$，两个半轴都缩小相同的因子 $\\sqrt{1 - \\frac{k^2}{c^2}}$。半轴为 $A$、$B$ 的椭圆面积是 $\\pi AB$，所以两个平方根相乘后消失，截面面积是 $k$ 的有理式。",
+    "The plane $z = k$ cuts an ellipsoid in an ellipse. Moving $\\frac{k^2}{c^2}$ to the right side leaves $\\frac{x^2}{a^2} + \\frac{y^2}{b^2} = 1 - \\frac{k^2}{c^2}$, and both semi-axes shrink by the same factor $\\sqrt{1 - \\frac{k^2}{c^2}}$. An ellipse with semi-axes $A$ and $B$ has area $\\pi AB$, so the two square roots multiply away and the area of the slice is rational in $k$.\n\nFor $x^2 + \\frac{y^2}{4} + \\frac{z^2}{25} = 1$ and $z = 3$, the factor is $1 - \\frac{9}{25} = \\frac{16}{25}$, the semi-axes are $\\frac{4}{5}$ and $\\frac{8}{5}$, and the area is $\\frac{32}{25}\\pi$.\n\n> **Watch out.** The factor is $1 - \\frac{k^2}{c^2}$, with squares, and it multiplies the area once, because each semi-axis carries its square root. The middle slice $z = 0$ has the largest area, $\\pi ab$.",
+    "平面 $z = k$ 把椭球截成一个椭圆。把 $\\frac{k^2}{c^2}$ 移到右边，得 $\\frac{x^2}{a^2} + \\frac{y^2}{b^2} = 1 - \\frac{k^2}{c^2}$，两个半轴都缩小相同的因子 $\\sqrt{1 - \\frac{k^2}{c^2}}$。半轴为 $A$、$B$ 的椭圆面积是 $\\pi AB$，所以两个平方根相乘后消失，截面面积是 $k$ 的有理式。\n\n对 $x^2 + \\frac{y^2}{4} + \\frac{z^2}{25} = 1$ 和 $z = 3$，因子为 $1 - \\frac{9}{25} = \\frac{16}{25}$，半轴为 $\\frac{4}{5}$ 和 $\\frac{8}{5}$，面积为 $\\frac{32}{25}\\pi$。\n\n> **注意。** 因子是带平方的 $1 - \\frac{k^2}{c^2}$，并且只乘面积一次，因为每个半轴各带它的平方根。中间的截面 $z = 0$ 面积最大，为 $\\pi ab$。",
   ),
   generate(rng) {
     const a = rng.int(2, 8);
@@ -2194,16 +2349,56 @@ const ellipsoidSliceArea: KnowledgePointDef = {
     const c = rng.int(3, 9);
     const k = rng.int(1, c - 1);
     const answer = Q.of(a * b * (c * c - k * k), c * c);
+    const factor = Q.of(c * c - k * k, c * c);
     return numberProblem({
       prompt: t(
         `The plane $z = ${k}$ cuts $\\frac{x^2}{${a * a}} + \\frac{y^2}{${b * b}} + \\frac{z^2}{${c * c}} = 1$ in an ellipse of area $A\\pi$. Find $A$.`,
         `平面 $z = ${k}$ 把 $\\frac{x^2}{${a * a}} + \\frac{y^2}{${b * b}} + \\frac{z^2}{${c * c}} = 1$ 截成面积为 $A\\pi$ 的椭圆。求 $A$。`,
       ),
       answer,
-      wrong: [Q.of(a * b), Q.of(a * b * (c - k), c), Q.of(a * b * k * k, c * c), Q.of(a * b * (c * c - k * k))],
-      solution: t(
-        `Each squared semi-axis is multiplied by $1 - \\frac{${k * k}}{${c * c}}$, so the product of the semi-axes is $${a} \\cdot ${b}$ times that factor. This gives $A = ${answer.toLatex()}$.`,
-        `每个半轴的平方都乘以 $1 - \\frac{${k * k}}{${c * c}}$，所以两个半轴之积是 $${a} \\cdot ${b}$ 乘以这个因子。于是 $A = ${answer.toLatex()}$。`,
+      mistakes: apart(answer, [
+        why(
+          Q.of(a * b),
+          `$${a * b}$ is the area of the middle slice $z = 0$; the slice at $z = ${k}$ is smaller.`,
+          `$${a * b}$ 是中间截面 $z = 0$ 的面积；$z = ${k}$ 处的截面更小。`,
+        ),
+        why(
+          Q.of(a * b * (c - k), c),
+          `The factor is $1 - \\frac{k^2}{c^2}$, with squares, not $1 - \\frac{k}{c}$.`,
+          `因子是带平方的 $1 - \\frac{k^2}{c^2}$，不是 $1 - \\frac{k}{c}$。`,
+        ),
+        why(
+          Q.of(a * b * k * k, c * c),
+          `The right side is $1 - \\frac{${k * k}}{${c * c}}$ after moving the $z$ term, not $\\frac{${k * k}}{${c * c}}$.`,
+          `移项后右边是 $1 - \\frac{${k * k}}{${c * c}}$，不是 $\\frac{${k * k}}{${c * c}}$。`,
+        ),
+        why(
+          Q.of(a * b * (c * c - k * k)),
+          `Divide by $${c * c}$: the factor is $\\frac{${c * c - k * k}}{${c * c}}$.`,
+          `要除以 $${c * c}$：因子是 $\\frac{${c * c - k * k}}{${c * c}}$。`,
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Move the $z$ term", "移项"],
+            t(
+              `At $z = ${k}$: $\\frac{x^2}{${a * a}} + \\frac{y^2}{${b * b}} = 1 - \\frac{${k * k}}{${c * c}} = ${factor.toLatex()}$.`,
+              `在 $z = ${k}$ 处：$\\frac{x^2}{${a * a}} + \\frac{y^2}{${b * b}} = 1 - \\frac{${k * k}}{${c * c}} = ${factor.toLatex()}$。`,
+            ),
+          ],
+          [
+            ["Multiply the semi-axes", "半轴相乘"],
+            t(
+              `The semi-axes are $${a}\\sqrt{${factor.toLatex()}}$ and $${b}\\sqrt{${factor.toLatex()}}$, so the area is $\\pi \\cdot ${a * b} \\cdot ${factor.toLatex()}$ and $A = ${answer.toLatex()}$.`,
+              `半轴为 $${a}\\sqrt{${factor.toLatex()}}$ 和 $${b}\\sqrt{${factor.toLatex()}}$，所以面积为 $\\pi \\cdot ${a * b} \\cdot ${factor.toLatex()}$，$A = ${answer.toLatex()}$。`,
+            ),
+          ],
+        ],
+        t(
+          `The point at the end of the first semi-axis has $\\frac{x^2}{${a * a}} = ${factor.toLatex()}$, and $${factor.toLatex()} + \\frac{${k * k}}{${c * c}} = 1$, so it lies on the ellipsoid.`,
+          `第一个半轴端点满足 $\\frac{x^2}{${a * a}} = ${factor.toLatex()}$，而 $${factor.toLatex()} + \\frac{${k * k}}{${c * c}} = 1$，所以它在椭球上。`,
+        ),
       ),
     });
   },

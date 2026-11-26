@@ -129,27 +129,51 @@ const formulaFromLevelCurves = {
     "the-function-from-its-level-curves",
     ["The function from its level curves", "由等值线认函数"],
     [
-      "Level curves show the shape of a function without any height. Circles about the origin belong to a sum of squares with equal coefficients, unequal coefficients stretch them into ellipses, parallel lines belong to a linear function, translated parabolas to $y$ minus a quadratic, and hyperbolas to a product of the variables.",
-      "等值线不用高度也能表现函数的形状。以原点为圆心的圆对应系数相等的平方和，系数不等时拉伸成椭圆，平行直线对应线性函数，平移的抛物线对应 $y$ 减二次式，双曲线对应变量之积。",
+      "Level curves show the shape of a function without any height. Circles about the origin belong to a sum of squares with equal coefficients, unequal coefficients stretch them into ellipses, parallel lines belong to a linear function, translated parabolas to $y$ minus a quadratic, and hyperbolas to a product of the variables.\n\nFor $f(x, y) = x^{2} - y^{2}$ the level $0$ is the pair of lines $y = \\pm x$, and the other levels are hyperbolas that open left and right or up and down, with those lines as asymptotes.\n\n> **Watch out.** Read the direction as well as the shape. For $x^{2} + 4y^{2} = c$ the variable with the larger coefficient must stay smaller, so the ellipses are longer along the $x$-axis, not the $y$-axis.",
+      "等值线不用高度也能表现函数的形状。以原点为圆心的圆对应系数相等的平方和，系数不等时拉伸成椭圆，平行直线对应线性函数，平移的抛物线对应 $y$ 减二次式，双曲线对应变量之积。\n\n对 $f(x, y) = x^{2} - y^{2}$，等值 $0$ 是一对直线 $y = \\pm x$，其他等值线是向左右或上下张开的双曲线，以这两条直线为渐近线。\n\n> **注意。** 既要看形状，也要看方向。对 $x^{2} + 4y^{2} = c$，系数较大的变量必须取较小的值，所以椭圆沿 $x$ 轴更长，而不是沿 $y$ 轴。",
     ],
     (rng) => {
       const right = rng.pick(curveFamilies);
       const others = rng.shuffle(curveFamilies.filter((f) => f.kind !== right.kind));
       const kinds = new Set<string>();
-      const wrong = others.filter((f) => !kinds.has(f.kind) && Boolean(kinds.add(f.kind))).map((f) => same(f.tex));
-      return choose(
-        rng,
-        [
+      const wrong = others
+        .filter((f) => !kinds.has(f.kind) && Boolean(kinds.add(f.kind)))
+        .map((f) => ({
+          option: t(`$${f.tex}$`, `$${f.tex}$`),
+          why: t(
+            `The level curves of $${f.tex}$ are ${f.clue[0]}, but the drawing shows ${right.clue[0]}.`,
+            `$${f.tex}$ 的等值线是${f.clue[1]}，而图中是${right.clue[1]}。`,
+          ),
+        }));
+      const grid = [-2, -1, 0, 1, 2, 3].flatMap((x) => [-2, -1, 0, 1, 2, 3].map((y) => [x, y] as const));
+      const onCurve = [...right.levels]
+        .reverse()
+        .flatMap((c) => grid.filter(([x, y]) => right.f(x, y) === c && (x !== 0 || y !== 0)).map(([x, y]) => [x, y, c] as const));
+      const [px, py, level] = onCurve[0] ?? [1, 1, right.f(1, 1)];
+      return explainedChoice(rng, {
+        prompt: t(
           "The curves drawn are level curves of a function $f(x, y)$. Which function is it?",
           "图中的曲线是函数 $f(x, y)$ 的等值线。这个函数是哪一个？",
-        ],
-        same(right.tex),
+        ),
+        correct: t(`$${right.tex}$`, `$${right.tex}$`),
         wrong,
-        [
-          `The level curves are ${right.clue[0]}, which matches $f(x, y) = ${right.tex}$.`,
-          `等值线是${right.clue[1]}，与 $f(x, y) = ${right.tex}$ 相符。`,
-        ],
-        fig(
+        solution: walked(
+          [
+            [["Read the shape", "读形状"], t(`The level curves drawn are ${right.clue[0]}.`, `图中的等值线是${right.clue[1]}。`)],
+            [
+              ["Match the formula", "对应公式"],
+              t(
+                `Setting $${right.tex} = c$ gives exactly such curves, and none of the other formulas does.`,
+                `令 $${right.tex} = c$ 恰好得到这样的曲线，其他公式都不是。`,
+              ),
+            ],
+          ],
+          t(
+            `The point $(${px}, ${py})$ gives $f = ${level}$, so it lies on the level curve $${right.tex} = ${level}$, one of those drawn.`,
+            `点 $(${px}, ${py})$ 给出 $f = ${level}$，所以它在等值线 $${right.tex} = ${level}$ 上，这是图中的一条。`,
+          ),
+        ),
+        figure: fig(
           square(4),
           right.levels.map((level): PlaneMark => ({ kind: "contour", f: right.f, level, accent: true })),
           [
@@ -157,7 +181,7 @@ const formulaFromLevelCurves = {
             `平面上的等值线：${observed(right.clue)[1].replaceAll("$", "")}。`,
           ],
         ),
-      );
+      });
     },
   ),
   figure: multivariableDrawings2["level-curves#the-function-from-its-level-curves"],
@@ -962,8 +986,8 @@ const openOrClosed = point(
   "open-or-closed-from-a-drawing",
   ["Open or closed from a drawing", "由图判断开集或闭集"],
   [
-    "In a drawing, a dashed boundary is left out of the set and a solid boundary belongs to it. A set is open when it contains none of its boundary and closed when it contains all of its boundary. A set that contains only part of its boundary is neither open nor closed, which is a common case.",
-    "在图中，虚线边界不属于集合，实线边界属于集合。集合不含任何边界点时是开集，含全部边界点时是闭集。只含部分边界的集合既不开也不闭，这是常见情形。",
+    "In a drawing, a dashed boundary is left out of the set and a solid boundary belongs to it. A set is open when it contains none of its boundary and closed when it contains all of its boundary. A set that contains only part of its boundary is neither open nor closed, which is a common case.\n\nA shaded half-disk with a dashed arc and a solid diameter contains the diameter but not the arc, so it is neither open nor closed.\n\n> **Watch out.** Look at every piece of the boundary before deciding: one solid edge stops a set from being open, and one dashed edge stops it from being closed. A shaded bounded region is never both open and closed.",
+    "在图中，虚线边界不属于集合，实线边界属于集合。集合不含任何边界点时是开集，含全部边界点时是闭集。只含部分边界的集合既不开也不闭，这是常见情形。\n\n一个阴影半圆盘，弧是虚线、直径是实线，它含直径而不含弧，所以既不开也不闭。\n\n> **注意。** 下结论前要看边界的每一段：一条实线边就使集合不是开集，一条虚线边就使它不是闭集。有界的阴影区域绝不会既开又闭。",
   ],
   (rng) => {
     const useDisk = rng.bool(0.3);
@@ -1022,36 +1046,88 @@ const openOrClosed = point(
           },
           ...edges.map(([a, b], i): PlaneMark => ({ kind: "segment", a, b, accent: true, dashed: !flags[i] })),
         ];
-    return choose(
-      rng,
-      [
+    const options: Pair[] = [
+      ["closed but not open", "闭但不开"],
+      ["open but not closed", "开但不闭"],
+      ["neither open nor closed", "既不开也不闭"],
+      ["both open and closed", "既开又闭"],
+    ];
+    const solid = flags.filter(Boolean).length;
+    const read: Pair = useDisk
+      ? closed
+        ? ["The circle around the disk is solid, so the whole boundary belongs to the set.", "圆盘周围的圆是实线，所以整个边界属于集合。"]
+        : [
+            "The circle around the disk is dashed, so none of the boundary belongs to the set.",
+            "圆盘周围的圆是虚线，所以边界都不属于集合。",
+          ]
+      : [
+          `Of the four edges of the rectangle, ${solid} ${solid === 1 ? "is" : "are"} solid and ${4 - solid} ${4 - solid === 1 ? "is" : "are"} dashed.`,
+          `矩形的四条边中，有 ${solid} 条实线、${4 - solid} 条虚线。`,
+        ];
+    const verdict: Pair = closed
+      ? [
+          "The set contains all its boundary points, so it is closed. It is not open, because a disk around a boundary point leaves the set.",
+          "集合含全部边界点，所以是闭集。它不是开集，因为边界点周围的圆盘会伸出集合。",
+        ]
+      : open
+        ? [
+            "The set contains none of its boundary points, so it is open. It is not closed, because it misses its boundary.",
+            "集合不含任何边界点，所以是开集。它不是闭集，因为缺少边界。",
+          ]
+        : [
+            "The set contains some boundary points and misses others, so it is neither open nor closed.",
+            "集合含一些边界点而缺少另一些，所以既不开也不闭。",
+          ];
+    const whyFor = (o: Pair): Pair => {
+      if (o === options[3])
+        return [
+          "Only the whole plane and the empty set are both open and closed; a shaded bounded region is neither of them.",
+          "只有整个平面和空集既开又闭；有界的阴影区域两者都不是。",
+        ];
+      if (o === options[0])
+        return [
+          "Part of the boundary is dashed, so the set misses those boundary points, and a closed set must contain them all.",
+          "边界有一部分是虚线，集合缺少这些边界点，而闭集必须含全部边界点。",
+        ];
+      if (o === options[1])
+        return [
+          "Part of the boundary is solid; a point there belongs to the set, yet every disk around it leaves the set.",
+          "边界有一部分是实线；那里的点属于集合，但它周围的每个圆盘都会伸出集合。",
+        ];
+      return closed
+        ? ["The boundary is solid all the way round, so nothing of it is missing.", "边界一圈都是实线，没有缺少任何部分。"]
+        : ["The boundary is dashed all the way round, so none of it is included.", "边界一圈都是虚线，没有包含任何部分。"];
+    };
+    return explainedChoice(rng, {
+      prompt: t(
         "The set is shaded, with dashed boundary left out and solid boundary included. Which description fits it?",
         "集合用阴影表示，虚线边界不包含，实线边界包含。哪个描述符合它？",
-      ],
-      right,
-      [
-        ["closed but not open", "闭但不开"],
-        ["open but not closed", "开但不闭"],
-        ["neither open nor closed", "既不开也不闭"],
-        ["both open and closed", "既开又闭"],
-      ],
-      [
-        closed
-          ? "The whole boundary is solid, so the set contains all its boundary points and is closed. It is not open, because boundary points have no disk inside the set."
-          : open
-            ? "The whole boundary is dashed, so the set contains no boundary points and is open. It is not closed, because it misses its boundary."
-            : "Part of the boundary is solid and part is dashed, so the set contains some boundary points and misses others. That makes it neither open nor closed.",
-        closed
-          ? "整个边界都是实线，所以集合含全部边界点，是闭集。它不是开集，因为边界点没有落在集合内的小圆盘。"
-          : open
-            ? "整个边界都是虚线，所以集合不含边界点，是开集。它不是闭集，因为缺少边界。"
-            : "边界一部分是实线，一部分是虚线，所以集合含一些边界点而缺少另一些。因此它既不开也不闭。",
-      ],
-      fig(square(6), marks, [
+      ),
+      correct: t(...right),
+      wrong: options.filter((o) => o[0] !== right[0]).map((o) => ({ option: t(...o), why: t(...whyFor(o)) })),
+      solution: walked(
+        [
+          [["Read the boundary", "读边界"], t(...read)],
+          [["Classify the set", "判断集合"], t(...verdict)],
+        ],
+        t(
+          closed
+            ? "The complement contains none of the boundary, so it is open, as the complement of a closed set must be."
+            : open
+              ? "The complement contains the whole boundary, so it is closed, as the complement of an open set must be."
+              : "The complement also contains part of the boundary and misses the rest, so it is neither as well, as it must be.",
+          closed
+            ? "补集不含任何边界点，所以是开集，闭集的补集正应如此。"
+            : open
+              ? "补集含全部边界，所以是闭集，开集的补集正应如此。"
+              : "补集同样含一部分边界而缺少其余部分，所以也既不开也不闭，正应如此。",
+        ),
+      ),
+      figure: fig(square(6), marks, [
         `A shaded ${useDisk ? "disk" : "rectangle"} with ${closed ? "solid" : open ? "dashed" : "partly solid, partly dashed"} boundary.`,
         `阴影${useDisk ? "圆盘" : "矩形"}，边界${closed ? "是实线" : open ? "是虚线" : "部分实线、部分虚线"}。`,
       ]),
-    );
+    });
   },
 );
 
