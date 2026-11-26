@@ -2462,6 +2462,10 @@ export const repeatedIntegralsInThreeDimensions: TopicDef = {
     "A triple iterated integral evaluates three successive single integrals from the innermost variable outward.",
     "三次积分通过从最内层变量逐次向外层计算三个连续的定积分来求值。",
   ),
+  intro: t(
+    "Evaluate $\\int_0^2 \\int_0^1 \\int_0^3 (2x + z)\\,dz\\,dy\\,dx$ from the inside out. The $z$ integral is $6x + \\frac{9}{2}$, which does not depend on $y$, so the $y$ integral over $[0, 1]$ leaves it unchanged. The $x$ integral is then $\\int_0^2 \\left(6x + \\frac{9}{2}\\right) dx = 12 + 9 = 21$.\n\nCheck: integrate in $x$ first instead. $\\int_0^2 (2x + z)\\,dx = 4 + 2z$, then $y$ multiplies by $1$, and $\\int_0^3 (4 + 2z)\\,dz = 12 + 9 = 21$.\n\nIn this lesson we evaluate triple iterated integrals one variable at a time, from the innermost outward.",
+    "由内向外计算 $\\int_0^2 \\int_0^1 \\int_0^3 (2x + z)\\,dz\\,dy\\,dx$。对 $z$ 积分得 $6x + \\frac{9}{2}$，它与 $y$ 无关，所以在 $[0, 1]$ 上对 $y$ 积分后不变。再对 $x$ 积分，$\\int_0^2 \\left(6x + \\frac{9}{2}\\right) dx = 12 + 9 = 21$。\n\n检验：改为先对 $x$ 积分。$\\int_0^2 (2x + z)\\,dx = 4 + 2z$，对 $y$ 积分乘以 $1$，而 $\\int_0^3 (4 + 2z)\\,dz = 12 + 9 = 21$。\n\n本课我们由最内层向外，一次一个变量地计算三次积分。",
+  ),
   prerequisites: ["double-integrals-over-rectangular-domains"],
   encompasses: [{ topic: "double-integrals-over-rectangular-domains", weight: 0.3 }],
   xp: 10,
@@ -2470,38 +2474,63 @@ export const repeatedIntegralsInThreeDimensions: TopicDef = {
       id: "evaluating-iterated-triple-integrals",
       title: t("Evaluating iterated triple integrals", "计算三次积分"),
       explanation: t(
-        "A triple integral is evaluated from the inside out, one variable at a time, treating the variables not yet integrated as constants. Evaluate $\\int_0^a \\int_0^b \\int_0^c (x + y + z)\\,dz\\,dy\\,dx$ successively from $z$, to $y$, to $x$:\n\n$$\\int_0^a \\int_0^b \\int_0^c (x + y + z)\\,dz\\,dy\\,dx = abc\\frac{a + b + c}{2}.$$",
-        "三重积分由内向外逐个变量计算，把还没有积分的变量当作常数。按 $z$、$y$、$x$ 的顺序依次计算三次积分 $\\int_0^a \\int_0^b \\int_0^c (x + y + z)\\,dz\\,dy\\,dx$：\n\n$$\\int_0^a \\int_0^b \\int_0^c (x + y + z)\\,dz\\,dy\\,dx = abc\\frac{a + b + c}{2}$$",
+        "A triple integral is evaluated from the inside out, one variable at a time, treating the variables not yet integrated as constants. Evaluate $\\int_0^a \\int_0^b \\int_0^c (x + y + z)\\,dz\\,dy\\,dx$ successively from $z$, to $y$, to $x$:\n\n$$\\int_0^a \\int_0^b \\int_0^c (x + y + z)\\,dz\\,dy\\,dx = abc\\frac{a + b + c}{2}.$$\n\nFor $a = 6$ and $b = c = 1$ this is $6 \\cdot \\frac{8}{2} = 24$.\n\n> **Watch out.** A variable that is not being integrated is a constant and gets multiplied by the length of the interval. Each variable that is integrated brings a factor $\\frac{1}{2}$ from its antiderivative.",
+        "三重积分由内向外逐个变量计算，把还没有积分的变量当作常数。按 $z$、$y$、$x$ 的顺序依次计算三次积分 $\\int_0^a \\int_0^b \\int_0^c (x + y + z)\\,dz\\,dy\\,dx$：\n\n$$\\int_0^a \\int_0^b \\int_0^c (x + y + z)\\,dz\\,dy\\,dx = abc\\frac{a + b + c}{2}$$\n\n当 $a = 6$，$b = c = 1$ 时，结果为 $6 \\cdot \\frac{8}{2} = 24$。\n\n> **注意。** 不在积分的变量是常数，要乘以区间的长度。被积分的变量由原函数带来因子 $\\frac{1}{2}$。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(1, 5);
         const b = rng.int(1, 5);
         const c = rng.int(1, 5);
-
         const num = a * b * c * (a + b + c);
         const ans = Q.of(num, 2);
-
-        const prompt = t(
-          `Evaluate the iterated triple integral $\\int_0^{${a}} \\int_0^{${b}} \\int_0^{${c}} (x + y + z)\\,dz\\,dy\\,dx$.`,
-          `计算三次积分 $\\int_0^{${a}} \\int_0^{${b}} \\int_0^{${c}} (x + y + z)\\,dz\\,dy\\,dx$ 的值。`,
-        );
-        const solution = t(
-          steps(
-            `Integrate with respect to $z$:\n\n$$\\int_0^{${c}} (x + y + z)\\,dz = \\left[(x + y)z + \\frac{z^2}{2}\\right]_0^{${c}} = ${c}(x + y) + \\frac{${c * c}}{2}.$$`,
-            `Integrate with respect to $y$ from $0$ to $${b}$:\n\n$$\\int_0^{${b}} \\left(${poly([c, "x"])} + ${poly([c, "y"])} + \\frac{${c * c}}{2}\\right)dy = ${poly([b * c, "x"])} + ${c} \\cdot \\frac{${b * b}}{2} + \\frac{${b * c * c}}{2} = ${poly([b * c, "x"])} + \\frac{${b * c}(${b + c})}{2}.$$`,
-            `Integrate with respect to $x$ from $0$ to $${a}$:\n\n$$\\int_0^{${a}} \\left(${poly([b * c, "x"])} + \\frac{${b * c}(${b + c})}{2}\\right)dx = ${b * c} \\cdot \\frac{${a * a}}{2} + ${a} \\cdot \\frac{${b * c}(${b + c})}{2} = \\frac{${num}}{2} = ${ans.toLatex()}.$$ `,
-          ),
-          steps(
-            `先对 $z$ 积分：\n\n$$\\int_0^{${c}} (x + y + z)\\,dz = \\left[(x + y)z + \\frac{z^2}{2}\\right]_0^{${c}} = ${c}(x + y) + \\frac{${c * c}}{2}$$`,
-            `再对 $y$ 从 $0$ 积到 $${b}$：\n\n$$\\int_0^{${b}} \\left(${poly([c, "x"])} + ${poly([c, "y"])} + \\frac{${c * c}}{2}\\right)dy = ${poly([b * c, "x"])} + ${c} \\cdot \\frac{${b * b}}{2} + \\frac{${b * c * c}}{2} = ${poly([b * c, "x"])} + \\frac{${b * c}(${b + c})}{2}$$`,
-            `最后对 $x$ 从 $0$ 积到 $${a}$：\n\n$$\\int_0^{${a}} \\left(${poly([b * c, "x"])} + \\frac{${b * c}(${b + c})}{2}\\right)dx = ${b * c} \\cdot \\frac{${a * a}}{2} + ${a} \\cdot \\frac{${b * c}(${b + c})}{2} = \\frac{${num}}{2} = ${ans.toLatex()}$$ `,
-          ),
-        );
         return numberProblem({
-          prompt,
-          solution,
+          prompt: t(
+            `Evaluate the iterated triple integral $\\int_0^{${a}} \\int_0^{${b}} \\int_0^{${c}} (x + y + z)\\,dz\\,dy\\,dx$.`,
+            `计算三次积分 $\\int_0^{${a}} \\int_0^{${b}} \\int_0^{${c}} (x + y + z)\\,dz\\,dy\\,dx$ 的值。`,
+          ),
           answer: ans,
-          wrong: [Q.of(num), ans.mul(Q.of(2)), ans.div(Q.of(2))],
+          mistakes: distinct(ans, [
+            why(Q.of(num), "The factors $\\frac{1}{2}$ from the antiderivatives are missing.", "漏了原函数带来的因子 $\\frac{1}{2}$。"),
+            why(
+              Q.of(a * a + b * b + c * c, 2),
+              "That integrates each variable over its own interval only; the other two lengths still multiply each term.",
+              "那是每个变量只在自己的区间上积分；每一项还要乘以另外两个区间的长度。",
+            ),
+            why(
+              a * b * c,
+              `That is the volume $${a * b * c}$ of the box, the integral of $1$; the integrand is $x + y + z$.`,
+              `那是长方体的体积 $${a * b * c}$，即 $1$ 的积分；被积函数是 $x + y + z$。`,
+            ),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Integrate in z", "对 z 积分"],
+                t(
+                  `$\\int_0^{${c}} (x + y + z)\\,dz = ${c}(x + y) + \\frac{${c * c}}{2}$.`,
+                  `$\\int_0^{${c}} (x + y + z)\\,dz = ${c}(x + y) + \\frac{${c * c}}{2}$。`,
+                ),
+              ],
+              [
+                ["Integrate in y", "对 y 积分"],
+                t(
+                  `$\\int_0^{${b}} \\left(${poly([c, "x"], [c, "y"])} + \\frac{${c * c}}{2}\\right)dy = ${poly([b * c, "x"])} + \\frac{${b * c}(${b + c})}{2}$.`,
+                  `$\\int_0^{${b}} \\left(${poly([c, "x"], [c, "y"])} + \\frac{${c * c}}{2}\\right)dy = ${poly([b * c, "x"])} + \\frac{${b * c}(${b + c})}{2}$。`,
+                ),
+              ],
+              [
+                ["Integrate in x", "对 x 积分"],
+                t(
+                  `$\\int_0^{${a}} \\left(${poly([b * c, "x"])} + \\frac{${b * c}(${b + c})}{2}\\right)dx = \\frac{${b * c * a * a}}{2} + \\frac{${a * b * c * (b + c)}}{2} = ${ans.toLatex()}$.`,
+                  `$\\int_0^{${a}} \\left(${poly([b * c, "x"])} + \\frac{${b * c}(${b + c})}{2}\\right)dx = \\frac{${b * c * a * a}}{2} + \\frac{${a * b * c * (b + c)}}{2} = ${ans.toLatex()}$。`,
+                ),
+              ],
+            ],
+            t(
+              `The average of $x + y + z$ over the box is $\\frac{${a}}{2} + \\frac{${b}}{2} + \\frac{${c}}{2} = ${Q.of(a + b + c, 2).toLatex()}$, and times the volume $${a * b * c}$ that is $${ans.toLatex()}$.`,
+              `$x + y + z$ 在长方体上的平均值为 $\\frac{${a}}{2} + \\frac{${b}}{2} + \\frac{${c}}{2} = ${Q.of(a + b + c, 2).toLatex()}$，乘以体积 $${a * b * c}$ 得 $${ans.toLatex()}$。`,
+            ),
+          ),
         });
       },
     },
@@ -2509,23 +2538,56 @@ export const repeatedIntegralsInThreeDimensions: TopicDef = {
       id: "a-repeated-integral-with-nested-variable-limits",
       title: t("A repeated integral with nested limits", "积分限嵌套的累次积分"),
       explanation: t(
-        "In a repeated triple integral the limits may depend on the outer variables. Work from the inside out: integrate in $z$ first, then $y$, then $x$. For\n\n$$\\int_0^a \\int_0^x \\int_0^y c\\,dz\\,dy\\,dx = c\\int_0^a \\int_0^x y\\,dy\\,dx = c\\int_0^a \\frac{x^2}{2}\\,dx = \\frac{ca^3}{6},$$\n\neach step leaves a function of the remaining variables only.",
-        "在累次三重积分中，积分限可以依赖外层变量。由内向外计算：先对 $z$，再对 $y$，最后对 $x$。对\n\n$$\\int_0^a \\int_0^x \\int_0^y c\\,dz\\,dy\\,dx = c\\int_0^a \\int_0^x y\\,dy\\,dx = c\\int_0^a \\frac{x^2}{2}\\,dx = \\frac{ca^3}{6},$$\n\n每一步都只剩下其余变量的函数。",
+        "In a repeated triple integral the limits may depend on the outer variables. Work from the inside out: integrate in $z$ first, then $y$, then $x$. For\n\n$$\\int_0^a \\int_0^x \\int_0^y c\\,dz\\,dy\\,dx = c\\int_0^a \\int_0^x y\\,dy\\,dx = c\\int_0^a \\frac{x^2}{2}\\,dx = \\frac{ca^3}{6},$$\n\neach step leaves a function of the remaining variables only. With $c = 12$ and $a = 1$ the integral is $2$.\n\n> **Watch out.** The inner limit $y$ and the middle limit $x$ are variables, not the outer number $a$. Replacing them by $a$ integrates over a larger solid.",
+        "在累次三重积分中，积分限可以依赖外层变量。由内向外计算：先对 $z$，再对 $y$，最后对 $x$。对\n\n$$\\int_0^a \\int_0^x \\int_0^y c\\,dz\\,dy\\,dx = c\\int_0^a \\int_0^x y\\,dy\\,dx = c\\int_0^a \\frac{x^2}{2}\\,dx = \\frac{ca^3}{6},$$\n\n每一步都只剩下其余变量的函数。当 $c = 12$，$a = 1$ 时积分为 $2$。\n\n> **注意。** 内层上限 $y$ 和中层上限 $x$ 是变量，不是外层的数 $a$。把它们换成 $a$ 就是在更大的立体上积分。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(1, 6);
         const c = rng.int(1, 6);
         const ans = Q.of(c * a ** 3, 6);
+        const cc = coef(c);
         return numberProblem({
           prompt: t(
             `Evaluate $\\int_0^{${a}} \\int_0^x \\int_0^y ${c}\\,dz\\,dy\\,dx$.`,
             `计算 $\\int_0^{${a}} \\int_0^x \\int_0^y ${c}\\,dz\\,dy\\,dx$。`,
           ),
           answer: ans,
-          wrong: [Q.of(c * a ** 3), Q.of(c * a ** 3, 2), Q.of(c * a ** 3, 3), Q.of(c * a ** 2, 2)],
-          solution: t(
-            `Inner: $\\int_0^y ${c}\\,dz = ${c === 1 ? "" : c}y$. Middle: $\\int_0^x ${c === 1 ? "" : c}y\\,dy = \\frac{${c === 1 ? "" : c}x^2}{2}$. Outer: $\\int_0^{${a}} \\frac{${c === 1 ? "" : c}x^2}{2}\\,dx = \\frac{${c} \\cdot ${a ** 3}}{6} = ${ans.toLatex()}$.`,
-            `内层：$\\int_0^y ${c}\\,dz = ${c === 1 ? "" : c}y$。中层：$\\int_0^x ${c === 1 ? "" : c}y\\,dy = \\frac{${c === 1 ? "" : c}x^2}{2}$。外层：$\\int_0^{${a}} \\frac{${c === 1 ? "" : c}x^2}{2}\\,dx = \\frac{${c} \\cdot ${a ** 3}}{6} = ${ans.toLatex()}$。`,
+          mistakes: distinct(ans, [
+            why(
+              Q.of(c * a ** 3),
+              `That integrates over the whole cube $[0, ${a}]^3$; the limits $y$ and $x$ cut it down.`,
+              `那是在整个立方体 $[0, ${a}]^3$ 上积分；积分限 $y$ 和 $x$ 把它截小了。`,
+            ),
+            why(
+              Q.of(c * a ** 3, 2),
+              `That lets $z$ run up to $${a}$; the inner limit is $y$.`,
+              `那是让 $z$ 一直到 $${a}$；内层上限是 $y$。`,
+            ),
+            why(
+              Q.of(c * a ** 2, 2),
+              "The outer integral is missing; $\\frac{x^2}{2}$ still has to be integrated over $x$.",
+              "漏了外层积分；$\\frac{x^2}{2}$ 还要对 $x$ 积分。",
+            ),
+          ]),
+          solution: walked(
+            [
+              [["Integrate in z", "对 z 积分"], t(`$\\int_0^y ${c}\\,dz = ${cc}y$.`, `$\\int_0^y ${c}\\,dz = ${cc}y$。`)],
+              [
+                ["Integrate in y", "对 y 积分"],
+                t(`$\\int_0^x ${cc}y\\,dy = \\frac{${cc}x^2}{2}$.`, `$\\int_0^x ${cc}y\\,dy = \\frac{${cc}x^2}{2}$。`),
+              ],
+              [
+                ["Integrate in x", "对 x 积分"],
+                t(
+                  `$\\int_0^{${a}} \\frac{${cc}x^2}{2}\\,dx = \\frac{${c} \\cdot ${a ** 3}}{6} = ${ans.toLatex()}$.`,
+                  `$\\int_0^{${a}} \\frac{${cc}x^2}{2}\\,dx = \\frac{${c} \\cdot ${a ** 3}}{6} = ${ans.toLatex()}$。`,
+                ),
+              ],
+            ],
+            t(
+              `The solid $0 \\le z \\le y \\le x \\le ${a}$ is one of the $6$ equal pieces of the cube $[0, ${a}]^3$ cut out by ordering the coordinates, so the integral is $\\frac{${c} \\cdot ${a ** 3}}{6} = ${ans.toLatex()}$.`,
+              `立体 $0 \\le z \\le y \\le x \\le ${a}$ 是按坐标大小顺序把立方体 $[0, ${a}]^3$ 分成的 $6$ 个相等部分之一，所以积分为 $\\frac{${c} \\cdot ${a ** 3}}{6} = ${ans.toLatex()}$。`,
+            ),
           ),
         });
       },
@@ -2541,6 +2603,10 @@ export const tripleIntegralsOverRectangularDomains: TopicDef = {
     "Over a rectangular box [a, b] × [c, d] × [p, q], Fubini's theorem allows integrating in any of the six possible variable permutations.",
     "在长方体区域 [a, b] × [c, d] × [p, q] 上，富比尼定理允许按六种变量排列顺序中的任意一种进行积分。",
   ),
+  intro: t(
+    "Integrate $x + 2z$ over the box $B = [0, 2] \\times [0, 1] \\times [0, 3]$. By linearity, $\\iiint_B x\\,dV = \\frac{4}{2} \\cdot 1 \\cdot 3 = 6$ and $\\iiint_B 2z\\,dV = 2 \\cdot 2 \\cdot 1 \\cdot \\frac{9}{2} = 18$, so the integral is $24$.\n\nCheck: on a box the average of $x$ is $1$ and the average of $z$ is $\\frac{3}{2}$, so the average of $x + 2z$ is $4$, and $4$ times the volume $6$ is $24$.\n\nIn this lesson we integrate over boxes, where Fubini's theorem lets us choose any order and products split into single integrals.",
+    "在长方体 $B = [0, 2] \\times [0, 1] \\times [0, 3]$ 上积分 $x + 2z$。由线性性，$\\iiint_B x\\,dV = \\frac{4}{2} \\cdot 1 \\cdot 3 = 6$，$\\iiint_B 2z\\,dV = 2 \\cdot 2 \\cdot 1 \\cdot \\frac{9}{2} = 18$，所以积分为 $24$。\n\n检验：在长方体上 $x$ 的平均值为 $1$，$z$ 的平均值为 $\\frac{3}{2}$，所以 $x + 2z$ 的平均值为 $4$，乘以体积 $6$ 得 $24$。\n\n本课我们在长方体上积分：富比尼定理允许任选次序，乘积可以拆成单重积分。",
+  ),
   prerequisites: ["repeated-integrals-in-three-dimensions"],
   encompasses: [{ topic: "repeated-integrals-in-three-dimensions", weight: 0.3 }],
   xp: 10,
@@ -2549,38 +2615,60 @@ export const tripleIntegralsOverRectangularDomains: TopicDef = {
       id: "product-property-of-separable-triple-integrals",
       title: t("Product property of separable triple integrals", "可分离三重积分的乘积性质"),
       explanation: t(
-        "For a product of single-variable functions $f(x)g(y)h(z)$ over a box $[0, a] \\times [0, b] \\times [0, c]$, the triple integral factors into single integrals:\n\n$$\\iiint_B xyz\\,dV = \\left(\\int_0^a x\\,dx\\right)\\left(\\int_0^b y\\,dy\\right)\\left(\\int_0^c z\\,dz\\right) = \\frac{(abc)^2}{8}.$$",
-        "在长方体 $[0, a] \\times [0, b] \\times [0, c]$ 上，单变量乘积函数 $f(x)g(y)h(z)$ 的三重积分可因式分解为三个单积分的乘积：\n\n$$\\iiint_B xyz\\,dV = \\left(\\int_0^a x\\,dx\\right)\\left(\\int_0^b y\\,dy\\right)\\left(\\int_0^c z\\,dz\\right) = \\frac{(abc)^2}{8}$$",
+        "For a product of single-variable functions $f(x)g(y)h(z)$ over a box $[0, a] \\times [0, b] \\times [0, c]$, the triple integral factors into single integrals:\n\n$$\\iiint_B xyz\\,dV = \\left(\\int_0^a x\\,dx\\right)\\left(\\int_0^b y\\,dy\\right)\\left(\\int_0^c z\\,dz\\right) = \\frac{(abc)^2}{8}.$$\n\nOver $[0, 2] \\times [0, 3] \\times [0, 5]$ this is $\\frac{30^2}{8} = \\frac{225}{2}$.\n\n> **Watch out.** The three single integrals are multiplied, not added, and each one is $\\frac{a^2}{2}$, so the result is divided by $8$.",
+        "在长方体 $[0, a] \\times [0, b] \\times [0, c]$ 上，单变量乘积函数 $f(x)g(y)h(z)$ 的三重积分可因式分解为三个单积分的乘积：\n\n$$\\iiint_B xyz\\,dV = \\left(\\int_0^a x\\,dx\\right)\\left(\\int_0^b y\\,dy\\right)\\left(\\int_0^c z\\,dz\\right) = \\frac{(abc)^2}{8}$$\n\n在 $[0, 2] \\times [0, 3] \\times [0, 5]$ 上，结果为 $\\frac{30^2}{8} = \\frac{225}{2}$。\n\n> **注意。** 三个单积分要相乘而不是相加，并且每一个都是 $\\frac{a^2}{2}$ 的形式，所以结果要除以 $8$。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(1, 4);
         const b = rng.int(1, 4);
         const c = rng.int(1, 4);
-
         const prod = a * b * c;
         const ans = Q.of(prod * prod, 8);
-
-        const prompt = t(
-          `Evaluate $\\iiint_B xyz\\,dV$ over the rectangular box $B = [0, ${a}] \\times [0, ${b}] \\times [0, ${c}]$.`,
-          `计算三重积分 $\\iiint_B xyz\\,dV$ 的值，其中长方体区域为 $B = [0, ${a}] \\times [0, ${b}] \\times [0, ${c}]$。`,
-        );
-        const solution = t(
-          steps(
-            `Because the integrand is separable and the domain is a box, factor into three independent integrals:\n\n$$\\iiint_B xyz\\,dV = \\left(\\int_0^{${a}} x\\,dx\\right)\\left(\\int_0^{${b}} y\\,dy\\right)\\left(\\int_0^{${c}} z\\,dz\\right)$$`,
-            `Compute each factor: $\\frac{${a}^2}{2} = \\frac{${a * a}}{2}$, $\\frac{${b}^2}{2} = \\frac{${b * b}}{2}$, $\\frac{${c}^2}{2} = \\frac{${c * c}}{2}$.`,
-            `Multiply the results: $\\frac{${a * a}}{2} \\times \\frac{${b * b}}{2} \\times \\frac{${c * c}}{2} = \\frac{${prod * prod}}{8} = ${ans.toLatex()}$.`,
-          ),
-          steps(
-            `由于被积函数可分离且积分区域为长方体，可因式分解为三个独立的单积分：\n\n$$\\iiint_B xyz\\,dV = \\left(\\int_0^{${a}} x\\,dx\\right)\\left(\\int_0^{${b}} y\\,dy\\right)\\left(\\int_0^{${c}} z\\,dz\\right)$$`,
-            `计算各因子：$\\frac{${a}^2}{2} = \\frac{${a * a}}{2}$，$\\frac{${b}^2}{2} = \\frac{${b * b}}{2}$，$\\frac{${c}^2}{2} = \\frac{${c * c}}{2}$。`,
-            `各因子相乘：$\\frac{${a * a}}{2} \\times \\frac{${b * b}}{2} \\times \\frac{${c * c}}{2} = \\frac{${prod * prod}}{8} = ${ans.toLatex()}$。`,
-          ),
-        );
         return numberProblem({
-          prompt,
-          solution,
+          prompt: t(
+            `Evaluate $\\iiint_B xyz\\,dV$ over the rectangular box $B = [0, ${a}] \\times [0, ${b}] \\times [0, ${c}]$.`,
+            `计算三重积分 $\\iiint_B xyz\\,dV$ 的值，其中长方体区域为 $B = [0, ${a}] \\times [0, ${b}] \\times [0, ${c}]$。`,
+          ),
           answer: ans,
-          wrong: [Q.of(prod * prod, 4), Q.of(prod * prod, 2), ans.mul(Q.of(2))],
+          mistakes: distinct(ans, [
+            why(
+              Q.of(prod * prod),
+              "Each factor $\\int_0^a x\\,dx$ is $\\frac{a^2}{2}$; the three halves are missing.",
+              "每个因子 $\\int_0^a x\\,dx$ 都是 $\\frac{a^2}{2}$；漏了三个 $\\frac{1}{2}$。",
+            ),
+            why(
+              Q.of(a * a + b * b + c * c, 2),
+              "That adds the three single integrals; for a product integrand they multiply.",
+              "那是把三个单积分相加；被积函数是乘积时它们要相乘。",
+            ),
+            why(
+              prod,
+              `That is the volume $${prod}$ of the box; the integrand is $xyz$, not $1$.`,
+              `那是长方体的体积 $${prod}$；被积函数是 $xyz$，不是 $1$。`,
+            ),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Factor the integral", "分解积分"],
+                t(
+                  `The integrand is a product and the domain is a box, so $\\iiint_B xyz\\,dV = \\int_0^{${a}} x\\,dx \\cdot \\int_0^{${b}} y\\,dy \\cdot \\int_0^{${c}} z\\,dz$.`,
+                  `被积函数是乘积且区域是长方体，所以 $\\iiint_B xyz\\,dV = \\int_0^{${a}} x\\,dx \\cdot \\int_0^{${b}} y\\,dy \\cdot \\int_0^{${c}} z\\,dz$。`,
+                ),
+              ],
+              [
+                ["Multiply the factors", "因子相乘"],
+                t(
+                  `$\\frac{${a * a}}{2} \\cdot \\frac{${b * b}}{2} \\cdot \\frac{${c * c}}{2} = \\frac{${prod * prod}}{8} = ${ans.toLatex()}$.`,
+                  `$\\frac{${a * a}}{2} \\cdot \\frac{${b * b}}{2} \\cdot \\frac{${c * c}}{2} = \\frac{${prod * prod}}{8} = ${ans.toLatex()}$。`,
+                ),
+              ],
+            ],
+            t(
+              `The average of $xyz$ over the box is $\\frac{${a}}{2} \\cdot \\frac{${b}}{2} \\cdot \\frac{${c}}{2} = ${Q.of(prod, 8).toLatex()}$, and times the volume $${prod}$ that is $${ans.toLatex()}$.`,
+              `$xyz$ 在长方体上的平均值为 $\\frac{${a}}{2} \\cdot \\frac{${b}}{2} \\cdot \\frac{${c}}{2} = ${Q.of(prod, 8).toLatex()}$，乘以体积 $${prod}$ 得 $${ans.toLatex()}$。`,
+            ),
+          ),
         });
       },
     },
@@ -2589,8 +2677,8 @@ export const tripleIntegralsOverRectangularDomains: TopicDef = {
       figure: multivariableDrawings4["triple-integrals-over-rectangular-domains#a-triple-integral-of-a-single-variable-over-a-box"],
       title: t("Integrating $cx^2$ over a box", "在长方体上积分 $cx^2$"),
       explanation: t(
-        "If the integrand depends on only one variable, integrating the other two over a box simply multiplies by the lengths of their intervals:\n\n$$\\iiint_{[0, a] \\times [0, b] \\times [0, d]} c\\,x^2\\,dV = c\\cdot\\frac{a^3}{3}\\cdot b \\cdot d.$$\n\nThe factor $bd$ is the area of the cross-section perpendicular to the $x$-axis.",
-        "若被积函数只依赖一个变量，在长方体上对另外两个变量积分就相当于乘以它们区间的长度：\n\n$$\\iiint_{[0, a] \\times [0, b] \\times [0, d]} c\\,x^2\\,dV = c\\cdot\\frac{a^3}{3}\\cdot b \\cdot d$$\n\n因子 $bd$ 是垂直于 $x$ 轴的截面面积。",
+        "If the integrand depends on only one variable, integrating the other two over a box simply multiplies by the lengths of their intervals:\n\n$$\\iiint_{[0, a] \\times [0, b] \\times [0, d]} c\\,x^2\\,dV = c\\cdot\\frac{a^3}{3}\\cdot b \\cdot d.$$\n\nThe factor $bd$ is the area of the cross-section perpendicular to the $x$-axis. For $2x^2$ over $[0, 6] \\times [0, 1] \\times [0, 1]$ this is $2 \\cdot 72 = 144$.\n\n> **Watch out.** The integrals in $y$ and $z$ are not $1$; they are the lengths $b$ and $d$. And $x^2$ integrates to $\\frac{a^3}{3}$, not $a^2$.",
+        "若被积函数只依赖一个变量，在长方体上对另外两个变量积分就相当于乘以它们区间的长度：\n\n$$\\iiint_{[0, a] \\times [0, b] \\times [0, d]} c\\,x^2\\,dV = c\\cdot\\frac{a^3}{3}\\cdot b \\cdot d$$\n\n因子 $bd$ 是垂直于 $x$ 轴的截面面积。对 $[0, 6] \\times [0, 1] \\times [0, 1]$ 上的 $2x^2$，结果为 $2 \\cdot 72 = 144$。\n\n> **注意。** 对 $y$ 和 $z$ 的积分不是 $1$，而是长度 $b$ 和 $d$。$x^2$ 积分得 $\\frac{a^3}{3}$，不是 $a^2$。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(1, 4);
@@ -2598,16 +2686,51 @@ export const tripleIntegralsOverRectangularDomains: TopicDef = {
         const d = rng.int(1, 4);
         const c = rng.int(1, 3);
         const ans = Q.of(c * a ** 3 * b * d, 3);
+        const lead = c === 1 ? "" : `${c} \\cdot `;
         return numberProblem({
           prompt: t(
-            `Evaluate $\\iiint_B ${c === 1 ? "" : c}x^2\\,dV$ over the box $B = [0, ${a}] \\times [0, ${b}] \\times [0, ${d}]$.`,
-            `计算 $\\iiint_B ${c === 1 ? "" : c}x^2\\,dV$，其中长方体 $B = [0, ${a}] \\times [0, ${b}] \\times [0, ${d}]$。`,
+            `Evaluate $\\iiint_B ${coef(c)}x^2\\,dV$ over the box $B = [0, ${a}] \\times [0, ${b}] \\times [0, ${d}]$.`,
+            `计算 $\\iiint_B ${coef(c)}x^2\\,dV$，其中长方体 $B = [0, ${a}] \\times [0, ${b}] \\times [0, ${d}]$。`,
           ),
           answer: ans,
-          wrong: [Q.of(c * a ** 3, 3), Q.of(c * a ** 2 * b * d), Q.of(c * a ** 3 * b * d), Q.of(c * a ** 2 * b * d, 2)],
-          solution: t(
-            `$${c === 1 ? "" : `${c} \\cdot `}\\int_0^{${a}} x^2\\,dx \\cdot ${b} \\cdot ${d} = ${c === 1 ? "" : `${c} \\cdot `}\\frac{${a ** 3}}{3} \\cdot ${b * d} = ${ans.toLatex()}$.`,
-            `$${c === 1 ? "" : `${c} \\cdot `}\\int_0^{${a}} x^2\\,dx \\cdot ${b} \\cdot ${d} = ${c === 1 ? "" : `${c} \\cdot `}\\frac{${a ** 3}}{3} \\cdot ${b * d} = ${ans.toLatex()}$。`,
+          mistakes: distinct(ans, [
+            why(
+              Q.of(c * a ** 3, 3),
+              `The integrals in $y$ and $z$ multiply by the lengths $${b}$ and $${d}$; they are missing.`,
+              `对 $y$、$z$ 的积分要乘以长度 $${b}$ 和 $${d}$；漏了。`,
+            ),
+            why(
+              Q.of(c * a ** 2 * b * d),
+              `That is the largest value $${c * a * a}$ of the integrand times the volume; integrating $x^2$ gives $\\frac{${a}^3}{3}$.`,
+              `那是被积函数的最大值 $${c * a * a}$ 乘以体积；对 $x^2$ 积分得 $\\frac{${a}^3}{3}$。`,
+            ),
+            why(
+              Q.of(c * a ** 3 * b * d),
+              "The antiderivative of $x^2$ is $\\frac{x^3}{3}$; the division by $3$ is missing.",
+              "$x^2$ 的原函数是 $\\frac{x^3}{3}$；漏了除以 $3$。",
+            ),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Integrate the constant directions", "对常数方向积分"],
+                t(
+                  `$y$ and $z$ do not appear, so they contribute the lengths: $\\iiint_B ${coef(c)}x^2\\,dV = ${lead}${b} \\cdot ${d}\\int_0^{${a}} x^2\\,dx$.`,
+                  `被积函数不含 $y$、$z$，它们贡献长度：$\\iiint_B ${coef(c)}x^2\\,dV = ${lead}${b} \\cdot ${d}\\int_0^{${a}} x^2\\,dx$。`,
+                ),
+              ],
+              [
+                ["Integrate in x", "对 x 积分"],
+                t(
+                  `$${lead}${b * d} \\cdot \\frac{${a ** 3}}{3} = ${ans.toLatex()}$.`,
+                  `$${lead}${b * d} \\cdot \\frac{${a ** 3}}{3} = ${ans.toLatex()}$。`,
+                ),
+              ],
+            ],
+            t(
+              `The integrand lies between $0$ and $${c * a * a}$ on a box of volume $${a * b * d}$, so the integral lies between $0$ and $${c * a * a * a * b * d}$; $${ans.toLatex()}$ is a third of the upper bound, as for $\\int_0^a x^2\\,dx$ against $a \\cdot a^2$.`,
+              `被积函数在体积为 $${a * b * d}$ 的长方体上介于 $0$ 与 $${c * a * a}$ 之间，所以积分介于 $0$ 与 $${c * a * a * a * b * d}$ 之间；$${ans.toLatex()}$ 恰为上界的三分之一，正如 $\\int_0^a x^2\\,dx$ 与 $a \\cdot a^2$ 之比。`,
+            ),
           ),
         });
       },
@@ -2623,6 +2746,10 @@ export const typeIIiAndIiiRegionsInThreeDimensionalSpace: TopicDef = {
     "Type I regions project to the xy-plane (z bounds), Type II project to the xz-plane (y bounds), and Type III project to the yz-plane (x bounds).",
     "Type I 型区域向 xy 平面投影（z 处于两曲面之间），Type II 向 xz 平面投影（y 处于两曲面之间），Type III 向 yz 平面投影（x 处于两曲面之间）。",
   ),
+  intro: t(
+    "The wedge $E = \\{0 \\le x \\le 2,\\ 0 \\le y \\le 3,\\ 0 \\le z \\le 2 - x\\}$ is Type I: $z$ lies between the surfaces $z = 0$ and $z = 2 - x$ over the rectangle $[0, 2] \\times [0, 3]$ in the $xy$-plane. Its volume is $\\iint (2 - x)\\,dA = 3 \\cdot 2 = 6$.\n\nCheck: $E$ is also Type II, with $0 \\le y \\le 3$ over the triangle $x \\ge 0$, $z \\ge 0$, $x + z \\le 2$ in the $xz$-plane. That triangle has area $2$, and $3 \\cdot 2 = 6$.\n\nIn this lesson we classify solids by which variable lies between two surfaces, and find the region they project onto.",
+    "楔形体 $E = \\{0 \\le x \\le 2,\\ 0 \\le y \\le 3,\\ 0 \\le z \\le 2 - x\\}$ 是 Type I 型：在 $xy$ 平面的矩形 $[0, 2] \\times [0, 3]$ 上，$z$ 夹在曲面 $z = 0$ 与 $z = 2 - x$ 之间。它的体积为 $\\iint (2 - x)\\,dA = 3 \\cdot 2 = 6$。\n\n检验：$E$ 也是 Type II 型，在 $xz$ 平面的三角形 $x \\ge 0$，$z \\ge 0$，$x + z \\le 2$ 上 $0 \\le y \\le 3$。该三角形面积为 $2$，而 $3 \\cdot 2 = 6$。\n\n本课我们按哪个变量夹在两个曲面之间来给立体分类，并求出它们的投影区域。",
+  ),
   prerequisites: ["triple-integrals-over-rectangular-domains"],
   encompasses: [],
   xp: 10,
@@ -2631,72 +2758,65 @@ export const typeIIiAndIiiRegionsInThreeDimensionalSpace: TopicDef = {
       id: "classifying-3d-regions-by-bounding-surfaces",
       title: t("Classifying 3D regions by bounding surfaces", "按曲面边界分类三维区域"),
       explanation: t(
-        "A 3D region is:\n- **Type I** if bounded between two surfaces $z = u_1(x, y)$ and $z = u_2(x, y)$.\n- **Type II** if bounded between two surfaces $y = v_1(x, z)$ and $y = v_2(x, z)$.\n- **Type III** if bounded between two surfaces $x = w_1(y, z)$ and $x = w_2(y, z)$.",
-        "三维区域的分类：\n- **Type I**：夹在两个曲面 $z = u_1(x, y)$ 与 $z = u_2(x, y)$ 之间。\n- **Type II**：夹在两个曲面 $y = v_1(x, z)$ 与 $y = v_2(x, z)$ 之间。\n- **Type III**：夹在两个曲面 $x = w_1(y, z)$ 与 $x = w_2(y, z)$ 之间。",
+        "A 3D region is:\n- **Type I** if bounded between two surfaces $z = u_1(x, y)$ and $z = u_2(x, y)$.\n- **Type II** if bounded between two surfaces $y = v_1(x, z)$ and $y = v_2(x, z)$.\n- **Type III** if bounded between two surfaces $x = w_1(y, z)$ and $x = w_2(y, z)$.\n\nFor example $\\{(y, z) \\in D,\\ y^2 \\le x \\le 4\\}$ is Type III: $x$ lies between two functions of $y$ and $z$.\n\n> **Watch out.** The type is named by the variable that lies between two surfaces, and the other two variables range over the projection $D$. A function of $x$ and $y$ appearing somewhere does not make a region Type I unless $z$ is the variable it bounds.",
+        "三维区域的分类：\n- **Type I**：夹在两个曲面 $z = u_1(x, y)$ 与 $z = u_2(x, y)$ 之间。\n- **Type II**：夹在两个曲面 $y = v_1(x, z)$ 与 $y = v_2(x, z)$ 之间。\n- **Type III**：夹在两个曲面 $x = w_1(y, z)$ 与 $x = w_2(y, z)$ 之间。\n\n例如 $\\{(y, z) \\in D,\\ y^2 \\le x \\le 4\\}$ 是 Type III 型：$x$ 夹在 $y$、$z$ 的两个函数之间。\n\n> **注意。** 类型由夹在两个曲面之间的那个变量决定，另外两个变量取遍投影 $D$。某处出现 $x$、$y$ 的函数，并不说明区域是 Type I 型，除非它界定的是 $z$。",
       ),
       generate(rng: Rng): Problem {
-        const choice = rng.int(1, 3);
+        const choice = rng.int(1, 3) - 1;
         const a = rng.int(1, 4);
         const b = rng.int(1, 4);
-
-        let desc: Text;
-        let right: Text;
-        let wrong: readonly Text[];
-        let sol: Text;
-
-        if (choice === 1) {
-          desc = t(
-            `\\{(x, y, z) : (x, y) \\in D, 0 \\le z \\le ${poly([a, "x^2"])} + ${poly([b, "y^2"])}\\}`,
-            `\\{(x, y, z) : (x, y) \\in D, 0 \\le z \\le ${poly([a, "x^2"])} + ${poly([b, "y^2"])}\\}`,
-          );
-          right = t("Type I (bounded in z)", "Type I 型（z 处于两曲面之间）");
-          wrong = [
-            t("Type II (bounded in y)", "Type II 型（y 处于两曲面之间）"),
-            t("Type III (bounded in x)", "Type III 型（x 处于两曲面之间）"),
-          ];
-          sol = t(
-            `The variable $z$ is bounded between two continuous functions of $(x, y)$, so the solid is Type I.`,
-            `变量 $z$ 夹在 $(x, y)$ 的两个连续函数之间，故该几何体为 Type I 型。`,
-          );
-        } else if (choice === 2) {
-          desc = t(
-            `\\{(x, y, z) : (x, z) \\in D, 0 \\le y \\le ${poly([a, "x^2"])} + ${poly([b, "z^2"])}\\}`,
-            `\\{(x, y, z) : (x, z) \\in D, 0 \\le y \\le ${poly([a, "x^2"])} + ${poly([b, "z^2"])}\\}`,
-          );
-          right = t("Type II (bounded in y)", "Type II 型（y 处于两曲面之间）");
-          wrong = [
-            t("Type I (bounded in z)", "Type I 型（z 处于两曲面之间）"),
-            t("Type III (bounded in x)", "Type III 型（x 处于两曲面之间）"),
-          ];
-          sol = t(
-            `The variable $y$ is bounded between two continuous functions of $(x, z)$, so the solid is Type II.`,
-            `变量 $y$ 夹在 $(x, z)$ 的两个连续函数之间，故该几何体为 Type II 型。`,
-          );
-        } else {
-          desc = t(
-            `\\{(x, y, z) : (y, z) \\in D, 0 \\le x \\le ${poly([a, "y^2"])} + ${poly([b, "z^2"])}\\}`,
-            `\\{(x, y, z) : (y, z) \\in D, 0 \\le x \\le ${poly([a, "y^2"])} + ${poly([b, "z^2"])}\\}`,
-          );
-          right = t("Type III (bounded in x)", "Type III 型（x 处于两曲面之间）");
-          wrong = [
-            t("Type I (bounded in z)", "Type I 型（z 处于两曲面之间）"),
-            t("Type II (bounded in y)", "Type II 型（y 处于两曲面之间）"),
-          ];
-          sol = t(
-            `The variable $x$ is bounded between two continuous functions of $(y, z)$, so the solid is Type III.`,
-            `变量 $x$ 夹在 $(y, z)$ 的两个连续函数之间，故该几何体为 Type III 型。`,
-          );
-        }
-
-        const prompt = t(
-          `Classify the 3D solid region $E = ${desc.en}$ as Type I, Type II, or Type III.`,
-          `将三维立体区域 $E = ${desc["zh-CN"]}$ 分类为 Type I、Type II 或 Type III 型。`,
-        );
-        const solution = t(
-          `The region is ${right.en} because ${sol.en.charAt(0).toLowerCase()}${sol.en.slice(1)}`,
-          `该区域为${right["zh-CN"]}，因为${sol["zh-CN"]}`,
-        );
-        return pickChoice(rng, prompt, right, wrong, solution);
+        const [bound, u, v] = (
+          [
+            ["z", "x", "y"],
+            ["y", "x", "z"],
+            ["x", "y", "z"],
+          ] as const
+        )[choice]!;
+        const names = [
+          t("Type I (bounded in z)", "Type I 型（z 处于两曲面之间）"),
+          t("Type II (bounded in y)", "Type II 型（y 处于两曲面之间）"),
+          t("Type III (bounded in x)", "Type III 型（x 处于两曲面之间）"),
+        ];
+        const varOf = ["z", "y", "x"] as const;
+        const set = `\\{(x, y, z) : (${u}, ${v}) \\in D, 0 \\le ${bound} \\le ${poly([a, `${u}^2`])} + ${poly([b, `${v}^2`])}\\}`;
+        return explainedChoice(rng, {
+          prompt: t(
+            `Classify the 3D solid region $E = ${set}$ as Type I, Type II, or Type III.`,
+            `将三维立体区域 $E = ${set}$ 分类为 Type I、Type II 或 Type III 型。`,
+          ),
+          correct: names[choice]!,
+          wrong: [0, 1, 2]
+            .filter((i) => i !== choice)
+            .map((i) => ({
+              option: names[i]!,
+              why: t(
+                `That type needs $${varOf[i]}$ between two surfaces; here $${varOf[i]}$ ranges over $D$ and $${bound}$ is the bounded variable.`,
+                `那种类型要求 $${varOf[i]}$ 夹在两个曲面之间；这里 $${varOf[i]}$ 取遍 $D$，被夹住的是 $${bound}$。`,
+              ),
+            })),
+          solution: walked(
+            [
+              [
+                ["Find the bounded variable", "找出被夹住的变量"],
+                t(
+                  `$${bound}$ lies between $0$ and $${poly([a, `${u}^2`])} + ${poly([b, `${v}^2`])}$, two continuous functions of $(${u}, ${v})$.`,
+                  `$${bound}$ 介于 $0$ 与 $${poly([a, `${u}^2`])} + ${poly([b, `${v}^2`])}$ 之间，它们是 $(${u}, ${v})$ 的两个连续函数。`,
+                ),
+              ],
+              [
+                ["Name the type", "确定类型"],
+                t(
+                  `A region bounded in $${bound}$ over a region $D$ of the $${u}${v}$-plane is ${names[choice]!.en}.`,
+                  `在 $${u}${v}$ 平面区域 $D$ 上于 $${bound}$ 方向有界的区域是${names[choice]!["zh-CN"]}。`,
+                ),
+              ],
+            ],
+            t(
+              `The integral over $E$ is then $\\iint_D \\int_0^{${poly([a, `${u}^2`])} + ${poly([b, `${v}^2`])}} f\\,d${bound}\\,dA$, with $d${bound}$ innermost, as the type requires.`,
+              `于是 $E$ 上的积分为 $\\iint_D \\int_0^{${poly([a, `${u}^2`])} + ${poly([b, `${v}^2`])}} f\\,d${bound}\\,dA$，$d${bound}$ 在最内层，正符合该类型。`,
+            ),
+          ),
+        });
       },
     },
     {
@@ -2705,16 +2825,20 @@ export const typeIIiAndIiiRegionsInThreeDimensionalSpace: TopicDef = {
         multivariableDrawings4["type-i-ii-and-iii-regions-in-three-dimensional-space#the-projection-of-a-tetrahedron-for-each-region-type"],
       title: t("The projection of a tetrahedron for each region type", "按区域类型取四面体的投影"),
       explanation: t(
-        "The tetrahedron cut from the first octant by $\\frac{x}{a} + \\frac{y}{b} + \\frac{z}{c} = 1$ is of all three types. Viewing it as Type I means projecting onto the $xy$-plane, Type II onto the $xz$-plane, and Type III onto the $yz$-plane. Each projection is a right triangle whose legs are the two intercepts in that plane, so its area is half their product, for example $\\frac{ab}{2}$ in the $xy$-plane.",
-        "平面 $\\frac{x}{a} + \\frac{y}{b} + \\frac{z}{c} = 1$ 在第一卦限截出的四面体同时属于三种类型。视为 Type I 型时投影到 $xy$ 平面，Type II 型投影到 $xz$ 平面，Type III 型投影到 $yz$ 平面。每个投影都是直角三角形，两条直角边是该平面内的两个截距，所以面积为两者乘积的一半，例如在 $xy$ 平面上为 $\\frac{ab}{2}$。",
+        "The tetrahedron cut from the first octant by $\\frac{x}{a} + \\frac{y}{b} + \\frac{z}{c} = 1$ is of all three types. Viewing it as Type I means projecting onto the $xy$-plane, Type II onto the $xz$-plane, and Type III onto the $yz$-plane. Each projection is a right triangle whose legs are the two intercepts in that plane, so its area is half their product, for example $\\frac{ab}{2}$ in the $xy$-plane. For $\\frac{x}{8} + \\frac{y}{2} + \\frac{z}{7} = 1$ viewed as Type II, the projection onto the $xz$-plane has area $\\frac{8 \\cdot 7}{2} = 28$.\n\n> **Watch out.** Type II projects onto the $xz$-plane, so its legs are the $x$- and $z$-intercepts. The projection is a triangle, so take half the product of the legs.",
+        "平面 $\\frac{x}{a} + \\frac{y}{b} + \\frac{z}{c} = 1$ 在第一卦限截出的四面体同时属于三种类型。视为 Type I 型时投影到 $xy$ 平面，Type II 型投影到 $xz$ 平面，Type III 型投影到 $yz$ 平面。每个投影都是直角三角形，两条直角边是该平面内的两个截距，所以面积为两者乘积的一半，例如在 $xy$ 平面上为 $\\frac{ab}{2}$。把 $\\frac{x}{8} + \\frac{y}{2} + \\frac{z}{7} = 1$ 视为 Type II 型，它在 $xz$ 平面上的投影面积为 $\\frac{8 \\cdot 7}{2} = 28$。\n\n> **注意。** Type II 型投影到 $xz$ 平面，所以直角边是 $x$ 截距和 $z$ 截距。投影是三角形，要取两直角边乘积的一半。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(1, 6);
         const b = rng.int(1, 6);
         const c = rng.int(1, 6);
         const kind = rng.int(1, 3);
-        const [plane, u, v] = kind === 1 ? ["xy", a, b] : kind === 2 ? ["xz", a, c] : ["yz", b, c];
-        const roman = ["I", "II", "III"][kind - 1]!;
+        const planes = [
+          ["xy", a, b, "I"],
+          ["xz", a, c, "II"],
+          ["yz", b, c, "III"],
+        ] as const;
+        const [plane, u, v, roman] = planes[kind - 1]!;
         const ans = Q.of(u * v, 2);
         return numberProblem({
           prompt: t(
@@ -2722,10 +2846,48 @@ export const typeIIiAndIiiRegionsInThreeDimensionalSpace: TopicDef = {
             `$E$ 是由坐标平面与 $\\frac{x}{${a}} + \\frac{y}{${b}} + \\frac{z}{${c}} = 1$ 围成的四面体。视为 Type ${roman} 型区域时，$E$ 位于某个坐标平面内区域 $D$ 的上方。求 $D$ 的面积。`,
           ),
           answer: ans,
-          wrong: [Q.of(a * b, 2), Q.of(a * c, 2), Q.of(b * c, 2), Q.of(a * b * c, 6), Q.of(u * v)],
-          solution: t(
-            `Type ${roman} projects onto the $${plane}$-plane, where $D$ is a right triangle with legs $${u}$ and $${v}$. Its area is $\\frac{${u} \\cdot ${v}}{2} = ${ans.toLatex()}$.`,
-            `Type ${roman} 型投影到 $${plane}$ 平面，$D$ 是直角边为 $${u}$ 和 $${v}$ 的直角三角形，面积为 $\\frac{${u} \\cdot ${v}}{2} = ${ans.toLatex()}$。`,
+          mistakes: distinct(ans, [
+            ...planes
+              .filter((p) => p[3] !== roman)
+              .map(([p, pu, pv, r]) =>
+                why(
+                  Q.of(pu * pv, 2),
+                  `That is the projection onto the $${p}$-plane, which belongs to Type ${r}.`,
+                  `那是投影到 $${p}$ 平面，对应 Type ${r} 型。`,
+                ),
+              ),
+            why(
+              Q.of(a * b * c, 6),
+              "That is the volume of $E$; the question asks for the area of its projection.",
+              "那是 $E$ 的体积；题目问的是投影的面积。",
+            ),
+            why(
+              Q.of(u * v),
+              `$D$ is a right triangle with legs $${u}$ and $${v}$, so its area is half their product.`,
+              `$D$ 是直角边为 $${u}$ 和 $${v}$ 的直角三角形，面积是乘积的一半。`,
+            ),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Choose the plane", "选择平面"],
+                t(
+                  `Type ${roman} projects onto the $${plane}$-plane, where the intercepts are $${u}$ and $${v}$.`,
+                  `Type ${roman} 型投影到 $${plane}$ 平面，那里的截距是 $${u}$ 和 $${v}$。`,
+                ),
+              ],
+              [
+                ["Find the area", "求面积"],
+                t(
+                  `$D$ is a right triangle with legs $${u}$ and $${v}$, so its area is $\\frac{${u} \\cdot ${v}}{2} = ${ans.toLatex()}$.`,
+                  `$D$ 是直角边为 $${u}$ 和 $${v}$ 的直角三角形，面积为 $\\frac{${u} \\cdot ${v}}{2} = ${ans.toLatex()}$。`,
+                ),
+              ],
+            ],
+            t(
+              `A tetrahedron has volume $\\frac{1}{3}$ base times height. With base $D$ and the third intercept $${(a * b * c) / (u * v)}$ as height, $\\frac{1}{3} \\cdot ${ans.toLatex()} \\cdot ${(a * b * c) / (u * v)} = ${Q.of(a * b * c, 6).toLatex()} = \\frac{${a} \\cdot ${b} \\cdot ${c}}{6}$, the volume of $E$.`,
+              `四面体的体积是 $\\frac{1}{3}$ 底面积乘高。以 $D$ 为底、第三个截距 $${(a * b * c) / (u * v)}$ 为高，$\\frac{1}{3} \\cdot ${ans.toLatex()} \\cdot ${(a * b * c) / (u * v)} = ${Q.of(a * b * c, 6).toLatex()} = \\frac{${a} \\cdot ${b} \\cdot ${c}}{6}$，正是 $E$ 的体积。`,
+            ),
           ),
         });
       },
@@ -2741,6 +2903,10 @@ export const tripleIntegralsOverTypeIRegions: TopicDef = {
     "For a Type I region, integrate first with respect to z from u1(x, y) to u2(x, y), then over the projection in the xy-plane.",
     "对于 Type I 型区域，先对 z 从 u1(x, y) 积到 u2(x, y)，再在 xy 平面的投影区域上进行二重积分。",
   ),
+  intro: t(
+    "Find the volume of the solid $E$ under $z = x^2$ above the rectangle $[0, 1] \\times [0, 2]$. The inner integral $\\int_0^{x^2} dz = x^2$ is the height of the solid, and $\\int_0^1 \\int_0^2 x^2\\,dy\\,dx = 2 \\cdot \\frac{1}{3} = \\frac{2}{3}$.\n\nCheck: slice at a fixed $x$. The cross-section is a rectangle of width $2$ and height $x^2$, so its area is $2x^2$, and $\\int_0^1 2x^2\\,dx = \\frac{2}{3}$.\n\nIn this lesson we integrate over Type I solids, with $z$ innermost between a bottom and a top surface.",
+    "求曲面 $z = x^2$ 下方、矩形 $[0, 1] \\times [0, 2]$ 上方的立体 $E$ 的体积。内层积分 $\\int_0^{x^2} dz = x^2$ 是立体的高度，而 $\\int_0^1 \\int_0^2 x^2\\,dy\\,dx = 2 \\cdot \\frac{1}{3} = \\frac{2}{3}$。\n\n检验：固定 $x$ 作截面。截面是宽 $2$、高 $x^2$ 的矩形，面积为 $2x^2$，而 $\\int_0^1 2x^2\\,dx = \\frac{2}{3}$。\n\n本课我们在 Type I 型立体上积分，$z$ 在最内层，介于底面和顶面之间。",
+  ),
   prerequisites: ["type-i-ii-and-iii-regions-in-three-dimensional-space"],
   encompasses: [{ topic: "type-i-ii-and-iii-regions-in-three-dimensional-space", weight: 0.3 }],
   xp: 10,
@@ -2750,36 +2916,55 @@ export const tripleIntegralsOverTypeIRegions: TopicDef = {
       figure: multivariableDrawings4["triple-integrals-over-type-i-regions#integrating-under-a-surface-over-a-rectangle"],
       title: t("Integrating under a surface over a rectangle", "在矩形投影上计算曲顶柱体的体积积分"),
       explanation: t(
-        "Integrating the constant one over a solid gives its volume, and the inner integral in the vertical direction gives the height of the solid above each point. For $E$ bounded by $0 \\le x \\le a$, $0 \\le y \\le b$, and $0 \\le z \\le cxy$:\n\n$$\\iiint_E 1\\,dV = \\int_0^a \\int_0^b \\int_0^{cxy} 1\\,dz\\,dy\\,dx = c\\frac{a^2 b^2}{4}.$$",
-        "在立体上积分常数 1 得到它的体积，竖直方向的内层积分给出立体在每一点上方的高度。对于由 $0 \\le x \\le a$、$0 \\le y \\le b$ 与 $0 \\le z \\le cxy$ 所围成的区域 $E$：\n\n$$\\iiint_E 1\\,dV = \\int_0^a \\int_0^b \\int_0^{cxy} 1\\,dz\\,dy\\,dx = c\\frac{a^2 b^2}{4}$$",
+        "Integrating the constant one over a solid gives its volume, and the inner integral in the vertical direction gives the height of the solid above each point. For $E$ bounded by $0 \\le x \\le a$, $0 \\le y \\le b$, and $0 \\le z \\le cxy$:\n\n$$\\iiint_E 1\\,dV = \\int_0^a \\int_0^b \\int_0^{cxy} 1\\,dz\\,dy\\,dx = c\\frac{a^2 b^2}{4}.$$\n\nUnder $z = 6xy$ over $[0, 1] \\times [0, 2]$ the volume is $6 \\cdot \\frac{1 \\cdot 4}{4} = 6$.\n\n> **Watch out.** The height $cxy$ varies, so it is integrated over the rectangle, not multiplied by its area; using the largest height $cab$ gives a box that contains the solid.",
+        "在立体上积分常数 1 得到它的体积，竖直方向的内层积分给出立体在每一点上方的高度。对于由 $0 \\le x \\le a$、$0 \\le y \\le b$ 与 $0 \\le z \\le cxy$ 所围成的区域 $E$：\n\n$$\\iiint_E 1\\,dV = \\int_0^a \\int_0^b \\int_0^{cxy} 1\\,dz\\,dy\\,dx = c\\frac{a^2 b^2}{4}$$\n\n在 $[0, 1] \\times [0, 2]$ 上方、$z = 6xy$ 下方，体积为 $6 \\cdot \\frac{1 \\cdot 4}{4} = 6$。\n\n> **注意。** 高度 $cxy$ 是变化的，所以要在矩形上积分它，而不是乘以面积；用最大高度 $cab$ 得到的是包住立体的长方体。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(1, 5);
         const b = rng.int(1, 5);
         const c = rng.int(1, 4);
-
         const num = c * a * a * b * b;
         const ans = Q.of(num, 4);
-
-        const prompt = t(
-          `Find the volume $\\iiint_E 1\\,dV$ of the solid $E$ lying above the rectangle $D = [0, ${a}] \\times [0, ${b}]$ and below the surface $z = ${c}xy$.`,
-          `计算立体 $E$ 的体积 $\\iiint_E 1\\,dV$，其中 $E$ 位于矩形 $D = [0, ${a}] \\times [0, ${b}]$ 上方且在曲面 $z = ${c}xy$ 下方。`,
-        );
-        const solution = t(
-          steps(
-            `Set up the triple integral with $z$ ranging from $0$ to $${c}xy$:\n\n$$\\int_0^{${a}} \\int_0^{${b}} \\int_0^{${c}xy} 1\\,dz\\,dy\\,dx = \\int_0^{${a}} \\int_0^{${b}} ${c}xy\\,dy\\,dx.$$`,
-            `Separate the integrals: $${c}\\left(\\int_0^{${a}} x\\,dx\\right)\\left(\\int_0^{${b}} y\\,dy\\right) = ${c}\\left(\\frac{${a * a}}{2}\\right)\\left(\\frac{${b * b}}{2}\\right) = \\frac{${num}}{4} = ${ans.toLatex()}$.`,
-          ),
-          steps(
-            `建立三重积分，内层 $z$ 从 $0$ 变到 $${c}xy$：\n\n$$\\int_0^{${a}} \\int_0^{${b}} \\int_0^{${c}xy} 1\\,dz\\,dy\\,dx = \\int_0^{${a}} \\int_0^{${b}} ${c}xy\\,dy\\,dx$$`,
-            `分离单积分计算：$${c}\\left(\\int_0^{${a}} x\\,dx\\right)\\left(\\int_0^{${b}} y\\,dy\\right) = ${c}\\left(\\frac{${a * a}}{2}\\right)\\left(\\frac{${b * b}}{2}\\right) = \\frac{${num}}{4} = ${ans.toLatex()}$。`,
-          ),
-        );
         return numberProblem({
-          prompt,
-          solution,
+          prompt: t(
+            `Find the volume $\\iiint_E 1\\,dV$ of the solid $E$ lying above the rectangle $D = [0, ${a}] \\times [0, ${b}]$ and below the surface $z = ${coef(c)}xy$.`,
+            `计算立体 $E$ 的体积 $\\iiint_E 1\\,dV$，其中 $E$ 位于矩形 $D = [0, ${a}] \\times [0, ${b}]$ 上方且在曲面 $z = ${coef(c)}xy$ 下方。`,
+          ),
           answer: ans,
-          wrong: [Q.of(num, 2), Q.of(num), ans.mul(Q.of(2))],
+          mistakes: distinct(ans, [
+            why(
+              Q.of(num),
+              `That is the box of height $${c * a * b}$, the largest height, over the area $${a * b}$; the height varies.`,
+              `那是以最大高度 $${c * a * b}$ 乘以面积 $${a * b}$ 的长方体；高度是变化的。`,
+            ),
+            why(
+              Q.of(num, 2),
+              "Only one of the two factors $\\frac{1}{2}$, from $\\int x\\,dx$ and $\\int y\\,dy$, is kept.",
+              "$\\int x\\,dx$ 与 $\\int y\\,dy$ 带来的两个 $\\frac{1}{2}$ 只保留了一个。",
+            ),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Integrate in z", "对 z 积分"],
+                t(
+                  `$\\int_0^{${coef(c)}xy} 1\\,dz = ${coef(c)}xy$, the height of $E$.`,
+                  `$\\int_0^{${coef(c)}xy} 1\\,dz = ${coef(c)}xy$，即 $E$ 的高度。`,
+                ),
+              ],
+              [
+                ["Integrate over D", "在 D 上积分"],
+                t(
+                  `$${c}\\int_0^{${a}} x\\,dx \\int_0^{${b}} y\\,dy = ${c} \\cdot \\frac{${a * a}}{2} \\cdot \\frac{${b * b}}{2} = ${ans.toLatex()}$.`,
+                  `$${c}\\int_0^{${a}} x\\,dx \\int_0^{${b}} y\\,dy = ${c} \\cdot \\frac{${a * a}}{2} \\cdot \\frac{${b * b}}{2} = ${ans.toLatex()}$。`,
+                ),
+              ],
+            ],
+            t(
+              `The average height of $${coef(c)}xy$ over $D$ is $${c} \\cdot \\frac{${a}}{2} \\cdot \\frac{${b}}{2}$, a quarter of the largest height $${c * a * b}$, so the volume is a quarter of the box: $\\frac{${num}}{4} = ${ans.toLatex()}$.`,
+              `$${coef(c)}xy$ 在 $D$ 上的平均高度为 $${c} \\cdot \\frac{${a}}{2} \\cdot \\frac{${b}}{2}$，是最大高度 $${c * a * b}$ 的四分之一，所以体积是长方体的四分之一：$\\frac{${num}}{4} = ${ans.toLatex()}$。`,
+            ),
+          ),
         });
       },
     },
@@ -2787,8 +2972,8 @@ export const tripleIntegralsOverTypeIRegions: TopicDef = {
       id: "integrating-a-constant-under-a-slanted-plane",
       title: t("Integrating a constant under a slanted plane", "在斜平面下积分常数"),
       explanation: t(
-        "For a Type I solid $E = \\{(x, y) \\in D,\\ 0 \\le z \\le u(x, y)\\}$, integrating $k$ in $z$ first gives $k\\,u(x, y)$, which is then integrated over $D$. Under the plane $z = x + y$ above $[0, a] \\times [0, b]$:\n\n$$\\iiint_E k\\,dV = k\\iint_D (x + y)\\,dA = k\\left(\\frac{a^2b}{2} + \\frac{ab^2}{2}\\right).$$",
-        "对 Type I 型立体 $E = \\{(x, y) \\in D,\\ 0 \\le z \\le u(x, y)\\}$，先对 $z$ 积分常数 $k$ 得 $k\\,u(x, y)$，再在 $D$ 上积分。在 $[0, a] \\times [0, b]$ 上方、平面 $z = x + y$ 下方：\n\n$$\\iiint_E k\\,dV = k\\iint_D (x + y)\\,dA = k\\left(\\frac{a^2b}{2} + \\frac{ab^2}{2}\\right)$$",
+        "For a Type I solid $E = \\{(x, y) \\in D,\\ 0 \\le z \\le u(x, y)\\}$, integrating $k$ in $z$ first gives $k\\,u(x, y)$, which is then integrated over $D$. Under the plane $z = x + y$ above $[0, a] \\times [0, b]$:\n\n$$\\iiint_E k\\,dV = k\\iint_D (x + y)\\,dA = k\\left(\\frac{a^2b}{2} + \\frac{ab^2}{2}\\right).$$\n\nFor $k = 1$ over $[0, 5] \\times [0, 1]$ this is $\\frac{25}{2} + \\frac{5}{2} = 15$.\n\n> **Watch out.** $\\iint_D x\\,dA$ is $\\frac{a^2}{2}$ times the length $b$ of the other side, not $\\frac{a^2}{2}$ alone.",
+        "对 Type I 型立体 $E = \\{(x, y) \\in D,\\ 0 \\le z \\le u(x, y)\\}$，先对 $z$ 积分常数 $k$ 得 $k\\,u(x, y)$，再在 $D$ 上积分。在 $[0, a] \\times [0, b]$ 上方、平面 $z = x + y$ 下方：\n\n$$\\iiint_E k\\,dV = k\\iint_D (x + y)\\,dA = k\\left(\\frac{a^2b}{2} + \\frac{ab^2}{2}\\right)$$\n\n对 $k = 1$ 与 $[0, 5] \\times [0, 1]$，结果为 $\\frac{25}{2} + \\frac{5}{2} = 15$。\n\n> **注意。** $\\iint_D x\\,dA$ 是 $\\frac{a^2}{2}$ 乘以另一边的长度 $b$，而不只是 $\\frac{a^2}{2}$。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(1, 4);
@@ -2801,10 +2986,41 @@ export const tripleIntegralsOverTypeIRegions: TopicDef = {
             `$E$ 位于 $D = [0, ${a}] \\times [0, ${b}]$ 上方、$z = x + y$ 下方。计算 $\\iiint_E ${k}\\,dV$。`,
           ),
           answer: ans,
-          wrong: [Q.of(k * (a * a * b + a * b * b)), Q.of(k * a * b * (a + b)), Q.of(k * (a + b), 2), Q.of(k * (a * a + b * b), 2)],
-          solution: t(
-            `$\\iiint_E ${k}\\,dV = ${k}\\iint_D (x + y)\\,dA = ${k}\\left(\\frac{${a * a} \\cdot ${b}}{2} + \\frac{${a} \\cdot ${b * b}}{2}\\right) = ${ans.toLatex()}$.`,
-            `$\\iiint_E ${k}\\,dV = ${k}\\iint_D (x + y)\\,dA = ${k}\\left(\\frac{${a * a} \\cdot ${b}}{2} + \\frac{${a} \\cdot ${b * b}}{2}\\right) = ${ans.toLatex()}$。`,
+          mistakes: distinct(ans, [
+            why(
+              Q.of(k * (a * a * b + a * b * b)),
+              "The factors $\\frac{1}{2}$ from $\\int x\\,dx$ and $\\int y\\,dy$ are missing.",
+              "漏了 $\\int x\\,dx$ 与 $\\int y\\,dy$ 带来的因子 $\\frac{1}{2}$。",
+            ),
+            why(
+              Q.of(k * (a * a + b * b), 2),
+              "Each term also carries the length of the other side: $\\iint_D x\\,dA = \\frac{a^2}{2} \\cdot b$.",
+              "每一项还要乘以另一边的长度：$\\iint_D x\\,dA = \\frac{a^2}{2} \\cdot b$。",
+            ),
+            why(
+              Q.of(k * (a + b), 2),
+              `That is $${k}$ times the average height; multiply by the area $${a * b}$ of $D$.`,
+              `那是 $${k}$ 乘以平均高度；还要乘以 $D$ 的面积 $${a * b}$。`,
+            ),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Integrate in z", "对 z 积分"],
+                t(`$\\int_0^{x + y} ${k}\\,dz = ${k}(x + y)$.`, `$\\int_0^{x + y} ${k}\\,dz = ${k}(x + y)$。`),
+              ],
+              [
+                ["Integrate over D", "在 D 上积分"],
+                t(
+                  `$${k}\\iint_D (x + y)\\,dA = ${k}\\left(\\frac{${a * a}}{2} \\cdot ${b} + ${a} \\cdot \\frac{${b * b}}{2}\\right) = ${ans.toLatex()}$.`,
+                  `$${k}\\iint_D (x + y)\\,dA = ${k}\\left(\\frac{${a * a}}{2} \\cdot ${b} + ${a} \\cdot \\frac{${b * b}}{2}\\right) = ${ans.toLatex()}$。`,
+                ),
+              ],
+            ],
+            t(
+              `The plane $z = x + y$ is linear, so its average height over $D$ is its value at the center $\\left(\\frac{${a}}{2}, \\frac{${b}}{2}\\right)$, which is $${Q.of(a + b, 2).toLatex()}$; and $${k} \\cdot ${Q.of(a + b, 2).toLatex()} \\cdot ${a * b} = ${ans.toLatex()}$.`,
+              `平面 $z = x + y$ 是线性的，所以它在 $D$ 上的平均高度就是在中心 $\\left(\\frac{${a}}{2}, \\frac{${b}}{2}\\right)$ 处的值 $${Q.of(a + b, 2).toLatex()}$；而 $${k} \\cdot ${Q.of(a + b, 2).toLatex()} \\cdot ${a * b} = ${ans.toLatex()}$。`,
+            ),
           ),
         });
       },
@@ -2820,6 +3036,10 @@ export const tripleIntegralsOverTypeIiRegions: TopicDef = {
     "On a Type II region, integrate first with respect to y between bounding surfaces, then over the xz-projection.",
     "在 Type II 型区域上，先对 y 在两个曲面之间积分，再在 xz 投影平面上进行二重积分。",
   ),
+  intro: t(
+    "Find the volume of $E = \\{0 \\le x \\le 3,\\ 0 \\le z \\le 2,\\ 0 \\le y \\le 2 - z\\}$. Here $y$ lies between two surfaces, so integrate in $y$ first: the thickness is $2 - z$, and $\\int_0^3 \\int_0^2 (2 - z)\\,dz\\,dx = 3 \\cdot 2 = 6$.\n\nCheck: $E$ is a prism. Its cross-section in the $yz$-plane is the triangle $y, z \\ge 0$, $y + z \\le 2$ of area $2$, and it has length $3$ in $x$, so its volume is $6$.\n\nIn this lesson we integrate over Type II solids, with $y$ innermost and the outer integral over the projection in the $xz$-plane.",
+    "求 $E = \\{0 \\le x \\le 3,\\ 0 \\le z \\le 2,\\ 0 \\le y \\le 2 - z\\}$ 的体积。这里 $y$ 夹在两个曲面之间，所以先对 $y$ 积分：厚度为 $2 - z$，而 $\\int_0^3 \\int_0^2 (2 - z)\\,dz\\,dx = 3 \\cdot 2 = 6$。\n\n检验：$E$ 是一个棱柱。它在 $yz$ 平面上的截面是三角形 $y, z \\ge 0$，$y + z \\le 2$，面积为 $2$，沿 $x$ 方向长 $3$，所以体积为 $6$。\n\n本课我们在 Type II 型立体上积分，$y$ 在最内层，外层在 $xz$ 平面的投影上积分。",
+  ),
   prerequisites: ["type-i-ii-and-iii-regions-in-three-dimensional-space"],
   encompasses: [{ topic: "type-i-ii-and-iii-regions-in-three-dimensional-space", weight: 0.3 }],
   xp: 10,
@@ -2828,36 +3048,55 @@ export const tripleIntegralsOverTypeIiRegions: TopicDef = {
       id: "integrating-with-respect-to-y-first",
       title: t("Integrating with respect to y first", "先对 y 积分的三重积分计算"),
       explanation: t(
-        "When the solid is bounded by surfaces given as functions for that variable, integrate in that direction first to get the thickness of the solid. For $E$ bounded by $0 \\le x \\le a$, $0 \\le z \\le b$, and $0 \\le y \\le cxz$:\n\n$$\\iiint_E 1\\,dV = \\int_0^a \\int_0^b \\int_0^{cxz} 1\\,dy\\,dz\\,dx = c\\frac{a^2 b^2}{4}.$$",
-        "当立体由以该变量表示的曲面围成时，先沿那个方向积分，得到立体的厚度。对于由 $0 \\le x \\le a$、$0 \\le z \\le b$ 与 $0 \\le y \\le cxz$ 所围成的区域 $E$：\n\n$$\\iiint_E 1\\,dV = \\int_0^a \\int_0^b \\int_0^{cxz} 1\\,dy\\,dz\\,dx = c\\frac{a^2 b^2}{4}$$",
+        "When the solid is bounded by surfaces given as functions for that variable, integrate in that direction first to get the thickness of the solid. For $E$ bounded by $0 \\le x \\le a$, $0 \\le z \\le b$, and $0 \\le y \\le cxz$:\n\n$$\\iiint_E 1\\,dV = \\int_0^a \\int_0^b \\int_0^{cxz} 1\\,dy\\,dz\\,dx = c\\frac{a^2 b^2}{4}.$$\n\nFor $0 \\le y \\le 8xz$ over $[0, 1] \\times [0, 1]$ in $x$ and $z$ the volume is $\\frac{8}{4} = 2$.\n\n> **Watch out.** The thickness $cxz$ varies over the $xz$-projection; integrate it there rather than multiplying the largest thickness by the area.",
+        "当立体由以该变量表示的曲面围成时，先沿那个方向积分，得到立体的厚度。对于由 $0 \\le x \\le a$、$0 \\le z \\le b$ 与 $0 \\le y \\le cxz$ 所围成的区域 $E$：\n\n$$\\iiint_E 1\\,dV = \\int_0^a \\int_0^b \\int_0^{cxz} 1\\,dy\\,dz\\,dx = c\\frac{a^2 b^2}{4}$$\n\n对 $x$、$z$ 在 $[0, 1] \\times [0, 1]$ 上、$0 \\le y \\le 8xz$，体积为 $\\frac{8}{4} = 2$。\n\n> **注意。** 厚度 $cxz$ 在 $xz$ 投影上是变化的；要在那里积分它，而不是用最大厚度乘以面积。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(1, 5);
         const b = rng.int(1, 5);
         const c = rng.int(1, 4);
-
         const num = c * a * a * b * b;
         const ans = Q.of(num, 4);
-
-        const prompt = t(
-          `Find the volume of the solid $E$ bounded by $0 \\le x \\le ${a}$, $0 \\le z \\le ${b}$, and $0 \\le y \\le ${c}xz$.`,
-          `求由 $0 \\le x \\le ${a}$、$0 \\le z \\le ${b}$ 与 $0 \\le y \\le ${c}xz$ 所围成几何体 $E$ 的体积。`,
-        );
-        const solution = t(
-          steps(
-            `Set up the iterated integral with $y$ as the innermost variable:\n\n$$\\int_0^{${a}} \\int_0^{${b}} \\int_0^{${c}xz} 1\\,dy\\,dz\\,dx = \\int_0^{${a}} \\int_0^{${b}} ${c}xz\\,dz\\,dx.$$`,
-            `Factor into single integrals: $${c}\\left(\\int_0^{${a}} x\\,dx\\right)\\left(\\int_0^{${b}} z\\,dz\\right) = ${c}\\left(\\frac{${a * a}}{2}\\right)\\left(\\frac{${b * b}}{2}\\right) = ${ans.toLatex()}$.`,
-          ),
-          steps(
-            `建立以 $y$ 为最内层变量的二次积分：\n\n$$\\int_0^{${a}} \\int_0^{${b}} \\int_0^{${c}xz} 1\\,dy\\,dz\\,dx = \\int_0^{${a}} \\int_0^{${b}} ${c}xz\\,dz\\,dx$$`,
-            `因式分解为单积分求积：$${c}\\left(\\int_0^{${a}} x\\,dx\\right)\\left(\\int_0^{${b}} z\\,dz\\right) = ${c}\\left(\\frac{${a * a}}{2}\\right)\\left(\\frac{${b * b}}{2}\\right) = ${ans.toLatex()}$。`,
-          ),
-        );
         return numberProblem({
-          prompt,
-          solution,
+          prompt: t(
+            `Find the volume of the solid $E$ bounded by $0 \\le x \\le ${a}$, $0 \\le z \\le ${b}$, and $0 \\le y \\le ${coef(c)}xz$.`,
+            `求由 $0 \\le x \\le ${a}$、$0 \\le z \\le ${b}$ 与 $0 \\le y \\le ${coef(c)}xz$ 所围成几何体 $E$ 的体积。`,
+          ),
           answer: ans,
-          wrong: [Q.of(num, 2), Q.of(num), ans.mul(Q.of(2))],
+          mistakes: distinct(ans, [
+            why(
+              Q.of(num),
+              `That uses the largest thickness $${c * a * b}$ everywhere; the thickness $${coef(c)}xz$ varies.`,
+              `那是处处用最大厚度 $${c * a * b}$；厚度 $${coef(c)}xz$ 是变化的。`,
+            ),
+            why(
+              Q.of(num, 2),
+              "Only one of the two factors $\\frac{1}{2}$, from $\\int x\\,dx$ and $\\int z\\,dz$, is kept.",
+              "$\\int x\\,dx$ 与 $\\int z\\,dz$ 带来的两个 $\\frac{1}{2}$ 只保留了一个。",
+            ),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Integrate in y", "对 y 积分"],
+                t(
+                  `$\\int_0^{${coef(c)}xz} 1\\,dy = ${coef(c)}xz$, the thickness of $E$.`,
+                  `$\\int_0^{${coef(c)}xz} 1\\,dy = ${coef(c)}xz$，即 $E$ 的厚度。`,
+                ),
+              ],
+              [
+                ["Integrate over the projection", "在投影上积分"],
+                t(
+                  `$${c}\\int_0^{${a}} x\\,dx \\int_0^{${b}} z\\,dz = ${c} \\cdot \\frac{${a * a}}{2} \\cdot \\frac{${b * b}}{2} = ${ans.toLatex()}$.`,
+                  `$${c}\\int_0^{${a}} x\\,dx \\int_0^{${b}} z\\,dz = ${c} \\cdot \\frac{${a * a}}{2} \\cdot \\frac{${b * b}}{2} = ${ans.toLatex()}$。`,
+                ),
+              ],
+            ],
+            t(
+              `The average of $xz$ over $[0, ${a}] \\times [0, ${b}]$ is $\\frac{${a}}{2} \\cdot \\frac{${b}}{2}$, so the volume is $${c} \\cdot \\frac{${a * b}}{4} \\cdot ${a * b} = ${ans.toLatex()}$.`,
+              `$xz$ 在 $[0, ${a}] \\times [0, ${b}]$ 上的平均值为 $\\frac{${a}}{2} \\cdot \\frac{${b}}{2}$，所以体积为 $${c} \\cdot \\frac{${a * b}}{4} \\cdot ${a * b} = ${ans.toLatex()}$。`,
+            ),
+          ),
         });
       },
     },
@@ -2865,8 +3104,8 @@ export const tripleIntegralsOverTypeIiRegions: TopicDef = {
       id: "integrating-y-over-a-type-ii-solid",
       title: t("Integrating $cy$ over a Type II solid", "在 Type II 型立体上积分 $cy$"),
       explanation: t(
-        "For a Type II solid the inner integral runs in $y$, between two surfaces that depend on $x$ and $z$, and the outer double integral runs over the projection $D$ in the $xz$-plane. For $0 \\le y \\le kx$ over $D = [0, a] \\times [0, b]$ in $x$ and $z$:\n\n$$\\iint_D \\int_0^{kx} c\\,y\\,dy\\,dA = \\iint_D \\frac{c\\,k^2x^2}{2}\\,dA = \\frac{c\\,k^2a^3b}{6}.$$",
-        "对 Type II 型立体，内层对 $y$ 积分，上下限是依赖 $x$ 和 $z$ 的曲面；外层在 $xz$ 平面的投影 $D$ 上作二重积分。对 $0 \\le y \\le kx$，$D$ 为 $x$、$z$ 的 $[0, a] \\times [0, b]$：\n\n$$\\iint_D \\int_0^{kx} c\\,y\\,dy\\,dA = \\iint_D \\frac{c\\,k^2x^2}{2}\\,dA = \\frac{c\\,k^2a^3b}{6}$$",
+        "For a Type II solid the inner integral runs in $y$, between two surfaces that depend on $x$ and $z$, and the outer double integral runs over the projection $D$ in the $xz$-plane. For $0 \\le y \\le kx$ over $D = [0, a] \\times [0, b]$ in $x$ and $z$:\n\n$$\\iint_D \\int_0^{kx} c\\,y\\,dy\\,dA = \\iint_D \\frac{c\\,k^2x^2}{2}\\,dA = \\frac{c\\,k^2a^3b}{6}.$$\n\nFor $4y$ with $k = 4$ and $a = b = 1$ this is $\\frac{4 \\cdot 16}{6} = \\frac{32}{3}$.\n\n> **Watch out.** The inner integral is $\\frac{(kx)^2}{2}$, so $k$ appears squared, and the outer $x$ integral of $x^2$ divides by $3$.",
+        "对 Type II 型立体，内层对 $y$ 积分，上下限是依赖 $x$ 和 $z$ 的曲面；外层在 $xz$ 平面的投影 $D$ 上作二重积分。对 $0 \\le y \\le kx$，$D$ 为 $x$、$z$ 的 $[0, a] \\times [0, b]$：\n\n$$\\iint_D \\int_0^{kx} c\\,y\\,dy\\,dA = \\iint_D \\frac{c\\,k^2x^2}{2}\\,dA = \\frac{c\\,k^2a^3b}{6}$$\n\n对 $4y$，$k = 4$，$a = b = 1$，结果为 $\\frac{4 \\cdot 16}{6} = \\frac{32}{3}$。\n\n> **注意。** 内层积分是 $\\frac{(kx)^2}{2}$，所以 $k$ 是平方的；外层对 $x^2$ 积分要除以 $3$。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(1, 3);
@@ -2874,21 +3113,51 @@ export const tripleIntegralsOverTypeIiRegions: TopicDef = {
         const k = rng.int(1, 3);
         const c = rng.int(1, 3);
         const ans = Q.of(c * k * k * a ** 3 * b, 6);
+        const ck = coef(c * k * k);
         return numberProblem({
           prompt: t(
-            `$E = \\{(x, y, z) : 0 \\le x \\le ${a},\\ 0 \\le z \\le ${b},\\ 0 \\le y \\le ${k === 1 ? "" : k}x\\}$. Evaluate $\\iiint_E ${c === 1 ? "" : c}y\\,dV$.`,
-            `$E = \\{(x, y, z) : 0 \\le x \\le ${a},\\ 0 \\le z \\le ${b},\\ 0 \\le y \\le ${k === 1 ? "" : k}x\\}$。计算 $\\iiint_E ${c === 1 ? "" : c}y\\,dV$。`,
+            `$E = \\{(x, y, z) : 0 \\le x \\le ${a},\\ 0 \\le z \\le ${b},\\ 0 \\le y \\le ${coef(k)}x\\}$. Evaluate $\\iiint_E ${coef(c)}y\\,dV$.`,
+            `$E = \\{(x, y, z) : 0 \\le x \\le ${a},\\ 0 \\le z \\le ${b},\\ 0 \\le y \\le ${coef(k)}x\\}$。计算 $\\iiint_E ${coef(c)}y\\,dV$。`,
           ),
           answer: ans,
-          wrong: [
-            Q.of(c * k * a * a * b, 2),
-            Q.of(c * k * k * a ** 3 * b, 2),
-            Q.of(c * k * k * a ** 3 * b, 3),
-            Q.of(c * k * k * a * a * b, 4),
-          ],
-          solution: t(
-            `Inner: $\\int_0^{${k === 1 ? "" : k}x} ${c === 1 ? "" : c}y\\,dy = \\frac{${c * k * k === 1 ? "" : c * k * k}x^2}{2}$. Then $\\int_0^{${b}} \\int_0^{${a}} \\frac{${c * k * k === 1 ? "" : c * k * k}x^2}{2}\\,dx\\,dz = \\frac{${c * k * k} \\cdot ${a ** 3}}{6} \\cdot ${b} = ${ans.toLatex()}$.`,
-            `内层：$\\int_0^{${k === 1 ? "" : k}x} ${c === 1 ? "" : c}y\\,dy = \\frac{${c * k * k === 1 ? "" : c * k * k}x^2}{2}$。再算 $\\int_0^{${b}} \\int_0^{${a}} \\frac{${c * k * k === 1 ? "" : c * k * k}x^2}{2}\\,dx\\,dz = \\frac{${c * k * k} \\cdot ${a ** 3}}{6} \\cdot ${b} = ${ans.toLatex()}$。`,
+          mistakes: distinct(ans, [
+            why(
+              Q.of(c * k * a * a * b, 2),
+              `That is $${c}$ times the volume of $E$; the integrand $${coef(c)}y$ is not constant.`,
+              `那是 $${c}$ 乘以 $E$ 的体积；被积函数 $${coef(c)}y$ 不是常数。`,
+            ),
+            why(
+              Q.of(c * k * k * a ** 3 * b, 2),
+              "The outer antiderivative of $x^2$ is $\\frac{x^3}{3}$; the division by $3$ is missing.",
+              "外层 $x^2$ 的原函数是 $\\frac{x^3}{3}$；漏了除以 $3$。",
+            ),
+            why(
+              Q.of(c * k * k * a ** 3 * b, 3),
+              "The inner antiderivative of $y$ is $\\frac{y^2}{2}$; the factor $\\frac{1}{2}$ is missing.",
+              "内层 $y$ 的原函数是 $\\frac{y^2}{2}$；漏了因子 $\\frac{1}{2}$。",
+            ),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Integrate in y", "对 y 积分"],
+                t(
+                  `$\\int_0^{${coef(k)}x} ${coef(c)}y\\,dy = \\frac{${ck}x^2}{2}$.`,
+                  `$\\int_0^{${coef(k)}x} ${coef(c)}y\\,dy = \\frac{${ck}x^2}{2}$。`,
+                ),
+              ],
+              [
+                ["Integrate over the projection", "在投影上积分"],
+                t(
+                  `$\\int_0^{${b}} \\int_0^{${a}} \\frac{${ck}x^2}{2}\\,dx\\,dz = \\frac{${c * k * k} \\cdot ${a ** 3}}{6} \\cdot ${b} = ${ans.toLatex()}$.`,
+                  `$\\int_0^{${b}} \\int_0^{${a}} \\frac{${ck}x^2}{2}\\,dx\\,dz = \\frac{${c * k * k} \\cdot ${a ** 3}}{6} \\cdot ${b} = ${ans.toLatex()}$。`,
+                ),
+              ],
+            ],
+            t(
+              `Along each segment $0 \\le y \\le ${coef(k)}x$ the average of $${coef(c)}y$ is $\\frac{${coef(c * k)}x}{2}$, and the segment has length $${coef(k)}x$, which again gives $\\frac{${ck}x^2}{2}$ before the outer integral.`,
+              `在每条线段 $0 \\le y \\le ${coef(k)}x$ 上 $${coef(c)}y$ 的平均值为 $\\frac{${coef(c * k)}x}{2}$，线段长为 $${coef(k)}x$，在外层积分之前同样得到 $\\frac{${ck}x^2}{2}$。`,
+            ),
           ),
         });
       },
@@ -2904,6 +3173,10 @@ export const tripleIntegralsOverTypeIiiRegions: TopicDef = {
     "On a Type III region, integrate first with respect to x between bounding surfaces, then over the yz-projection.",
     "在 Type III 型区域上，先对 x 在两个曲面之间积分，再在 yz 投影平面上进行二重积分。",
   ),
+  intro: t(
+    "Find the volume of $E = \\{0 \\le y \\le 3,\\ 0 \\le z \\le 1,\\ 0 \\le x \\le 3 - y\\}$. Here $x$ lies between two surfaces, so integrate in $x$ first: the depth is $3 - y$, and $\\int_0^1 \\int_0^3 (3 - y)\\,dy\\,dz = \\frac{9}{2}$.\n\nCheck: $E$ is a prism whose cross-section in the $xy$-plane is the triangle $x, y \\ge 0$, $x + y \\le 3$ of area $\\frac{9}{2}$, with height $1$ in $z$, so its volume is $\\frac{9}{2}$.\n\nIn this lesson we integrate over Type III solids, with $x$ innermost and the outer integral over the projection in the $yz$-plane.",
+    "求 $E = \\{0 \\le y \\le 3,\\ 0 \\le z \\le 1,\\ 0 \\le x \\le 3 - y\\}$ 的体积。这里 $x$ 夹在两个曲面之间，所以先对 $x$ 积分：深度为 $3 - y$，而 $\\int_0^1 \\int_0^3 (3 - y)\\,dy\\,dz = \\frac{9}{2}$。\n\n检验：$E$ 是一个棱柱，它在 $xy$ 平面上的截面是三角形 $x, y \\ge 0$，$x + y \\le 3$，面积为 $\\frac{9}{2}$，沿 $z$ 方向高 $1$，所以体积为 $\\frac{9}{2}$。\n\n本课我们在 Type III 型立体上积分，$x$ 在最内层，外层在 $yz$ 平面的投影上积分。",
+  ),
   prerequisites: ["type-i-ii-and-iii-regions-in-three-dimensional-space"],
   encompasses: [{ topic: "type-i-ii-and-iii-regions-in-three-dimensional-space", weight: 0.3 }],
   xp: 10,
@@ -2912,36 +3185,55 @@ export const tripleIntegralsOverTypeIiiRegions: TopicDef = {
       id: "integrating-with-respect-to-x-first",
       title: t("Integrating with respect to x first", "先对 x 积分的三重积分计算"),
       explanation: t(
-        "Choose the innermost variable to be the one whose bounds are given as functions of the other two, so the limits are easy to write. For $E$ bounded by $0 \\le y \\le a$, $0 \\le z \\le b$, and $0 \\le x \\le cyz$:\n\n$$\\iiint_E 1\\,dV = \\int_0^a \\int_0^b \\int_0^{cyz} 1\\,dx\\,dz\\,dy = c\\frac{a^2 b^2}{4}.$$",
-        "选择边界由另外两个变量的函数给出的那个变量作为最内层变量，这样积分限容易写出。对于由 $0 \\le y \\le a$、$0 \\le z \\le b$ 与 $0 \\le x \\le cyz$ 所围成的区域 $E$：\n\n$$\\iiint_E 1\\,dV = \\int_0^a \\int_0^b \\int_0^{cyz} 1\\,dx\\,dz\\,dy = c\\frac{a^2 b^2}{4}$$",
+        "Choose the innermost variable to be the one whose bounds are given as functions of the other two, so the limits are easy to write. For $E$ bounded by $0 \\le y \\le a$, $0 \\le z \\le b$, and $0 \\le x \\le cyz$:\n\n$$\\iiint_E 1\\,dV = \\int_0^a \\int_0^b \\int_0^{cyz} 1\\,dx\\,dz\\,dy = c\\frac{a^2 b^2}{4}.$$\n\nFor $0 \\le x \\le 5yz$ with $0 \\le y \\le 2$ and $0 \\le z \\le 6$ the volume is $5 \\cdot \\frac{4 \\cdot 36}{4} = 180$.\n\n> **Watch out.** The depth $cyz$ varies over the $yz$-projection, so it must be integrated there; each of $\\int y\\,dy$ and $\\int z\\,dz$ brings a factor $\\frac{1}{2}$.",
+        "选择边界由另外两个变量的函数给出的那个变量作为最内层变量，这样积分限容易写出。对于由 $0 \\le y \\le a$、$0 \\le z \\le b$ 与 $0 \\le x \\le cyz$ 所围成的区域 $E$：\n\n$$\\iiint_E 1\\,dV = \\int_0^a \\int_0^b \\int_0^{cyz} 1\\,dx\\,dz\\,dy = c\\frac{a^2 b^2}{4}$$\n\n对 $0 \\le x \\le 5yz$，$0 \\le y \\le 2$，$0 \\le z \\le 6$，体积为 $5 \\cdot \\frac{4 \\cdot 36}{4} = 180$。\n\n> **注意。** 深度 $cyz$ 在 $yz$ 投影上是变化的，必须在那里积分；$\\int y\\,dy$ 与 $\\int z\\,dz$ 各带来一个因子 $\\frac{1}{2}$。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(1, 5);
         const b = rng.int(1, 5);
         const c = rng.int(1, 4);
-
         const num = c * a * a * b * b;
         const ans = Q.of(num, 4);
-
-        const prompt = t(
-          `Find the volume of the solid $E$ bounded by $0 \\le y \\le ${a}$, $0 \\le z \\le ${b}$, and $0 \\le x \\le ${c}yz$.`,
-          `求由 $0 \\le y \\le ${a}$、$0 \\le z \\le ${b}$ 与 $0 \\le x \\le ${c}yz$ 所围成几何体 $E$ 的体积。`,
-        );
-        const solution = t(
-          steps(
-            `Set up the iterated integral with $x$ as the innermost variable:\n\n$$\\int_0^{${a}} \\int_0^{${b}} \\int_0^{${c}yz} 1\\,dx\\,dz\\,dy = \\int_0^{${a}} \\int_0^{${b}} ${c}yz\\,dz\\,dy.$$`,
-            `Factor into single integrals: $${c}\\left(\\int_0^{${a}} y\\,dy\\right)\\left(\\int_0^{${b}} z\\,dz\\right) = ${c}\\left(\\frac{${a * a}}{2}\\right)\\left(\\frac{${b * b}}{2}\\right) = ${ans.toLatex()}$.`,
-          ),
-          steps(
-            `建立以 $x$ 为最内层变量的二次积分：\n\n$$\\int_0^{${a}} \\int_0^{${b}} \\int_0^{${c}yz} 1\\,dx\\,dz\\,dy = \\int_0^{${a}} \\int_0^{${b}} ${c}yz\\,dz\\,dy$$`,
-            `因式分解为单积分求积：$${c}\\left(\\int_0^{${a}} y\\,dy\\right)\\left(\\int_0^{${b}} z\\,dz\\right) = ${c}\\left(\\frac{${a * a}}{2}\\right)\\left(\\frac{${b * b}}{2}\\right) = ${ans.toLatex()}$。`,
-          ),
-        );
         return numberProblem({
-          prompt,
-          solution,
+          prompt: t(
+            `Find the volume of the solid $E$ bounded by $0 \\le y \\le ${a}$, $0 \\le z \\le ${b}$, and $0 \\le x \\le ${coef(c)}yz$.`,
+            `求由 $0 \\le y \\le ${a}$、$0 \\le z \\le ${b}$ 与 $0 \\le x \\le ${coef(c)}yz$ 所围成几何体 $E$ 的体积。`,
+          ),
           answer: ans,
-          wrong: [Q.of(num, 2), Q.of(num), ans.mul(Q.of(2))],
+          mistakes: distinct(ans, [
+            why(
+              Q.of(num),
+              `That uses the largest depth $${c * a * b}$ everywhere; the depth $${coef(c)}yz$ varies.`,
+              `那是处处用最大深度 $${c * a * b}$；深度 $${coef(c)}yz$ 是变化的。`,
+            ),
+            why(
+              Q.of(num, 2),
+              "Only one of the two factors $\\frac{1}{2}$, from $\\int y\\,dy$ and $\\int z\\,dz$, is kept.",
+              "$\\int y\\,dy$ 与 $\\int z\\,dz$ 带来的两个 $\\frac{1}{2}$ 只保留了一个。",
+            ),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Integrate in x", "对 x 积分"],
+                t(
+                  `$\\int_0^{${coef(c)}yz} 1\\,dx = ${coef(c)}yz$, the depth of $E$.`,
+                  `$\\int_0^{${coef(c)}yz} 1\\,dx = ${coef(c)}yz$，即 $E$ 的深度。`,
+                ),
+              ],
+              [
+                ["Integrate over the projection", "在投影上积分"],
+                t(
+                  `$${c}\\int_0^{${a}} y\\,dy \\int_0^{${b}} z\\,dz = ${c} \\cdot \\frac{${a * a}}{2} \\cdot \\frac{${b * b}}{2} = ${ans.toLatex()}$.`,
+                  `$${c}\\int_0^{${a}} y\\,dy \\int_0^{${b}} z\\,dz = ${c} \\cdot \\frac{${a * a}}{2} \\cdot \\frac{${b * b}}{2} = ${ans.toLatex()}$。`,
+                ),
+              ],
+            ],
+            t(
+              `The average of $yz$ over $[0, ${a}] \\times [0, ${b}]$ is $\\frac{${a}}{2} \\cdot \\frac{${b}}{2}$, so the volume is $${c} \\cdot \\frac{${a * b}}{4} \\cdot ${a * b} = ${ans.toLatex()}$.`,
+              `$yz$ 在 $[0, ${a}] \\times [0, ${b}]$ 上的平均值为 $\\frac{${a}}{2} \\cdot \\frac{${b}}{2}$，所以体积为 $${c} \\cdot \\frac{${a * b}}{4} \\cdot ${a * b} = ${ans.toLatex()}$。`,
+            ),
+          ),
         });
       },
     },
@@ -2949,24 +3241,60 @@ export const tripleIntegralsOverTypeIiiRegions: TopicDef = {
       id: "integrating-x-over-a-type-iii-solid",
       title: t("Integrating $x$ over a Type III solid", "在 Type III 型立体上积分 $x$"),
       explanation: t(
-        "For a Type III solid the inner integral runs in $x$, between surfaces that depend on $y$ and $z$, and the outer double integral runs over the projection $D$ in the $yz$-plane. For $0 \\le x \\le ky$ over $D = [0, a] \\times [0, b]$ in $y$ and $z$:\n\n$$\\iint_D \\int_0^{ky} x\\,dx\\,dA = \\iint_D \\frac{k^2y^2}{2}\\,dA = \\frac{k^2a^3b}{6}.$$\n\nIt is the Type II computation with the roles of $x$ and $y$ exchanged.",
-        "对 Type III 型立体，内层对 $x$ 积分，上下限是依赖 $y$ 和 $z$ 的曲面；外层在 $yz$ 平面的投影 $D$ 上作二重积分。对 $0 \\le x \\le ky$，$D$ 为 $y$、$z$ 的 $[0, a] \\times [0, b]$：\n\n$$\\iint_D \\int_0^{ky} x\\,dx\\,dA = \\iint_D \\frac{k^2y^2}{2}\\,dA = \\frac{k^2a^3b}{6}$$\n\n这就是把 Type II 计算中 $x$ 与 $y$ 的角色互换。",
+        "For a Type III solid the inner integral runs in $x$, between surfaces that depend on $y$ and $z$, and the outer double integral runs over the projection $D$ in the $yz$-plane. For $0 \\le x \\le ky$ over $D = [0, a] \\times [0, b]$ in $y$ and $z$:\n\n$$\\iint_D \\int_0^{ky} x\\,dx\\,dA = \\iint_D \\frac{k^2y^2}{2}\\,dA = \\frac{k^2a^3b}{6}.$$\n\nIt is the Type II computation with the roles of $x$ and $y$ exchanged. For $k = 4$ and $a = b = 1$ it is $\\frac{16}{6} = \\frac{8}{3}$.\n\n> **Watch out.** The inner integral is $\\frac{(ky)^2}{2}$, so $k$ appears squared; and the integrand $x$ is not $1$, so the answer is not the volume.",
+        "对 Type III 型立体，内层对 $x$ 积分，上下限是依赖 $y$ 和 $z$ 的曲面；外层在 $yz$ 平面的投影 $D$ 上作二重积分。对 $0 \\le x \\le ky$，$D$ 为 $y$、$z$ 的 $[0, a] \\times [0, b]$：\n\n$$\\iint_D \\int_0^{ky} x\\,dx\\,dA = \\iint_D \\frac{k^2y^2}{2}\\,dA = \\frac{k^2a^3b}{6}$$\n\n这就是把 Type II 计算中 $x$ 与 $y$ 的角色互换。对 $k = 4$，$a = b = 1$，结果为 $\\frac{16}{6} = \\frac{8}{3}$。\n\n> **注意。** 内层积分是 $\\frac{(ky)^2}{2}$，所以 $k$ 是平方的；被积函数 $x$ 不是 $1$，所以答案不是体积。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(1, 4);
         const b = rng.int(1, 4);
         const k = rng.int(1, 3);
         const ans = Q.of(k * k * a ** 3 * b, 6);
+        const kk = coef(k * k);
         return numberProblem({
           prompt: t(
-            `$E = \\{(x, y, z) : 0 \\le y \\le ${a},\\ 0 \\le z \\le ${b},\\ 0 \\le x \\le ${k === 1 ? "" : k}y\\}$. Evaluate $\\iiint_E x\\,dV$.`,
-            `$E = \\{(x, y, z) : 0 \\le y \\le ${a},\\ 0 \\le z \\le ${b},\\ 0 \\le x \\le ${k === 1 ? "" : k}y\\}$。计算 $\\iiint_E x\\,dV$。`,
+            `$E = \\{(x, y, z) : 0 \\le y \\le ${a},\\ 0 \\le z \\le ${b},\\ 0 \\le x \\le ${coef(k)}y\\}$. Evaluate $\\iiint_E x\\,dV$.`,
+            `$E = \\{(x, y, z) : 0 \\le y \\le ${a},\\ 0 \\le z \\le ${b},\\ 0 \\le x \\le ${coef(k)}y\\}$。计算 $\\iiint_E x\\,dV$。`,
           ),
           answer: ans,
-          wrong: [Q.of(k * a * a * b, 2), Q.of(k * k * a ** 3 * b, 2), Q.of(k * k * a * a * b, 4), Q.of(k * a ** 3 * b, 6)],
-          solution: t(
-            `Inner: $\\int_0^{${k === 1 ? "" : k}y} x\\,dx = \\frac{${k * k === 1 ? "" : k * k}y^2}{2}$. Then $\\int_0^{${b}} \\int_0^{${a}} \\frac{${k * k === 1 ? "" : k * k}y^2}{2}\\,dy\\,dz = \\frac{${k * k} \\cdot ${a ** 3}}{6} \\cdot ${b} = ${ans.toLatex()}$.`,
-            `内层：$\\int_0^{${k === 1 ? "" : k}y} x\\,dx = \\frac{${k * k === 1 ? "" : k * k}y^2}{2}$。再算 $\\int_0^{${b}} \\int_0^{${a}} \\frac{${k * k === 1 ? "" : k * k}y^2}{2}\\,dy\\,dz = \\frac{${k * k} \\cdot ${a ** 3}}{6} \\cdot ${b} = ${ans.toLatex()}$。`,
+          mistakes: distinct(ans, [
+            why(
+              Q.of(k * a * a * b, 2),
+              "That is the volume of $E$; the integrand $x$ is not $1$.",
+              "那是 $E$ 的体积；被积函数 $x$ 不是 $1$。",
+            ),
+            why(
+              Q.of(k * k * a ** 3 * b, 2),
+              "The outer antiderivative of $y^2$ is $\\frac{y^3}{3}$; the division by $3$ is missing.",
+              "外层 $y^2$ 的原函数是 $\\frac{y^3}{3}$；漏了除以 $3$。",
+            ),
+            ...(k === 1
+              ? []
+              : [
+                  why(
+                    Q.of(k * a ** 3 * b, 6),
+                    `The inner integral is $\\frac{(${k}y)^2}{2}$, so $${k}$ is squared.`,
+                    `内层积分是 $\\frac{(${k}y)^2}{2}$，所以 $${k}$ 要平方。`,
+                  ),
+                ]),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Integrate in x", "对 x 积分"],
+                t(`$\\int_0^{${coef(k)}y} x\\,dx = \\frac{${kk}y^2}{2}$.`, `$\\int_0^{${coef(k)}y} x\\,dx = \\frac{${kk}y^2}{2}$。`),
+              ],
+              [
+                ["Integrate over the projection", "在投影上积分"],
+                t(
+                  `$\\int_0^{${b}} \\int_0^{${a}} \\frac{${kk}y^2}{2}\\,dy\\,dz = \\frac{${k * k} \\cdot ${a ** 3}}{6} \\cdot ${b} = ${ans.toLatex()}$.`,
+                  `$\\int_0^{${b}} \\int_0^{${a}} \\frac{${kk}y^2}{2}\\,dy\\,dz = \\frac{${k * k} \\cdot ${a ** 3}}{6} \\cdot ${b} = ${ans.toLatex()}$。`,
+                ),
+              ],
+            ],
+            t(
+              `The volume of $E$ is $\\frac{${k} \\cdot ${a * a}}{2} \\cdot ${b} = ${Q.of(k * a * a * b, 2).toLatex()}$, and the average of $x$ over $E$ is $\\frac{${ans.toLatex()}}{${Q.of(k * a * a * b, 2).toLatex()}} = ${Q.of(k * a, 3).toLatex()}$, a third of the largest depth $${k * a}$, as it should be for a wedge.`,
+              `$E$ 的体积为 $\\frac{${k} \\cdot ${a * a}}{2} \\cdot ${b} = ${Q.of(k * a * a * b, 2).toLatex()}$，$x$ 在 $E$ 上的平均值为 $\\frac{${ans.toLatex()}}{${Q.of(k * a * a * b, 2).toLatex()}} = ${Q.of(k * a, 3).toLatex()}$，是最大深度 $${k * a}$ 的三分之一，正符合楔形体。`,
+            ),
           ),
         });
       },
@@ -2979,6 +3307,10 @@ export const calculatingVolumesOfSolidsUsingTripleIntegrals: TopicDef = {
   id: "calculating-volumes-of-solids-using-triple-integrals",
   title: t("Calculating Volumes of Solids Using Triple Integrals", "利用三重积分计算立体的体积"),
   summary: t("The volume of a solid $E$ is the triple integral $\\iiint_E 1\\,dV$.", "立体 $E$ 的体积等于三重积分 $\\iiint_E 1\\,dV$。"),
+  intro: t(
+    "Find the volume of $E = \\{0 \\le x \\le 1,\\ 0 \\le y \\le 1,\\ x + y \\le z \\le 3\\}$. The inner integral $\\int_{x + y}^{3} 1\\,dz = 3 - x - y$ is the height of the solid, and $\\int_0^1 \\int_0^1 (3 - x - y)\\,dy\\,dx = 3 - \\frac{1}{2} - \\frac{1}{2} = 2$.\n\nCheck: $E$ is the box $[0, 1]^2 \\times [0, 3]$ of volume $3$ with the part under $z = x + y$ removed. That part has average height $1$ over an area $1$, so $3 - 1 = 2$.\n\nIn this lesson we find volumes as $\\iiint_E 1\\,dV$, with the inner integral giving the height of the solid over each point.",
+    "求 $E = \\{0 \\le x \\le 1,\\ 0 \\le y \\le 1,\\ x + y \\le z \\le 3\\}$ 的体积。内层积分 $\\int_{x + y}^{3} 1\\,dz = 3 - x - y$ 是立体的高度，而 $\\int_0^1 \\int_0^1 (3 - x - y)\\,dy\\,dx = 3 - \\frac{1}{2} - \\frac{1}{2} = 2$。\n\n检验：$E$ 是体积为 $3$ 的长方体 $[0, 1]^2 \\times [0, 3]$ 去掉 $z = x + y$ 下方的部分。那部分在面积 $1$ 上的平均高度为 $1$，所以 $3 - 1 = 2$。\n\n本课我们用 $\\iiint_E 1\\,dV$ 求体积，内层积分给出立体在每一点上方的高度。",
+  ),
   prerequisites: ["triple-integrals-over-type-i-regions"],
   encompasses: [{ topic: "triple-integrals-over-type-i-regions", weight: 0.3 }],
   xp: 10,
@@ -2988,38 +3320,59 @@ export const calculatingVolumesOfSolidsUsingTripleIntegrals: TopicDef = {
       figure: multivariableDrawings4["calculating-volumes-of-solids-using-triple-integrals#volume-of-a-standard-simplex"],
       title: t("Volume of a standard simplex", "标准四面体的体积"),
       explanation: t(
-        "A tetrahedron cut off by a plane from the corner of the first octant has one sixth of the volume of the box with the same intercepts. The tetrahedron bounded by the coordinate planes and $\\frac{x}{a} + \\frac{y}{b} + \\frac{z}{c} = 1$ ($a, b, c > 0$) has volume:\n\n$$\\text{Vol}(E) = \\iiint_E 1\\,dV = \\frac{abc}{6}.$$",
-        "被平面从第一卦限的角上截下的四面体，体积是具有相同截距的长方体体积的六分之一。由坐标平面与平面 $\\frac{x}{a} + \\frac{y}{b} + \\frac{z}{c} = 1$（$a, b, c > 0$）围成的四面体的体积为：\n\n$$\\text{Vol}(E) = \\iiint_E 1\\,dV = \\frac{abc}{6}$$",
+        "A tetrahedron cut off by a plane from the corner of the first octant has one sixth of the volume of the box with the same intercepts. The tetrahedron bounded by the coordinate planes and $\\frac{x}{a} + \\frac{y}{b} + \\frac{z}{c} = 1$ ($a, b, c > 0$) has volume:\n\n$$\\text{Vol}(E) = \\iiint_E 1\\,dV = \\frac{abc}{6}.$$\n\nWith intercepts $8$, $9$ and $1$ the volume is $\\frac{72}{6} = 12$.\n\n> **Watch out.** Over a triangular base a pyramid has a third of the prism, so the box is divided by $2$ for the triangle and by $3$ for the pyramid, $6$ in all.",
+        "被平面从第一卦限的角上截下的四面体，体积是具有相同截距的长方体体积的六分之一。由坐标平面与平面 $\\frac{x}{a} + \\frac{y}{b} + \\frac{z}{c} = 1$（$a, b, c > 0$）围成的四面体的体积为：\n\n$$\\text{Vol}(E) = \\iiint_E 1\\,dV = \\frac{abc}{6}$$\n\n截距为 $8$、$9$ 和 $1$ 时，体积为 $\\frac{72}{6} = 12$。\n\n> **注意。** 三角形底面上的锥体是棱柱的三分之一，所以长方体要因三角形除以 $2$，再因锥体除以 $3$，共除以 $6$。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(1, 7);
         const b = rng.int(1, 7);
         const c = rng.int(1, 7);
         const ans = Q.of(a * b * c, 6);
-
-        const prompt = t(
-          `Find the volume of the solid tetrahedron bounded by the coordinate planes $x = 0$, $y = 0$, $z = 0$, and the plane $\\frac{x}{${a}} + \\frac{y}{${b}} + \\frac{z}{${c}} = 1$.`,
-          `求由坐标平面 $x = 0$、$y = 0$、$z = 0$ 与平面 $\\frac{x}{${a}} + \\frac{y}{${b}} + \\frac{z}{${c}} = 1$ 所围成的四面体体积。`,
-        );
-        const solution = t(
-          steps(
-            `Set up the triple integral for volume $\\text{Vol}(E) = \\iiint_E 1\\,dV$:`,
-            `$$\\int_0^{${a}} \\int_0^{${b}(1 - x/${a})} \\int_0^{${c}(1 - x/${a} - y/${b})} 1\\,dz\\,dy\\,dx$$`,
-            `The volume of a right tetrahedron with intercept lengths $a, b, c$ is $\\frac{1}{3}(\\text{Base Area}) \\times (\\text{Height}) = \\frac{1}{3}\\left(\\frac{ab}{2}\\right)c = \\frac{abc}{6}$.`,
-            `Evaluating with $a = ${a}$, $b = ${b}$, $c = ${c}$ yields $\\frac{${a * b * c}}{6} = ${ans.toLatex()}$.`,
-          ),
-          steps(
-            `建立体积的三重积分 $\\text{Vol}(E) = \\iiint_E 1\\,dV$：`,
-            `$$\\int_0^{${a}} \\int_0^{${b}(1 - x/${a})} \\int_0^{${c}(1 - x/${a} - y/${b})} 1\\,dz\\,dy\\,dx$$`,
-            `三条直角边截距为 $a, b, c$ 的直角四面体体积为 $\\frac{1}{3}(\\text{底面积}) \\times (\\text{高}) = \\frac{1}{3}\\left(\\frac{ab}{2}\\right)c = \\frac{abc}{6}$。`,
-            `代入 $a = ${a}$、$b = ${b}$、$c = ${c}$ 得到 $\\frac{${a * b * c}}{6} = ${ans.toLatex()}$。`,
-          ),
-        );
         return numberProblem({
-          prompt,
-          solution,
+          prompt: t(
+            `Find the volume of the solid tetrahedron bounded by the coordinate planes $x = 0$, $y = 0$, $z = 0$, and the plane $\\frac{x}{${a}} + \\frac{y}{${b}} + \\frac{z}{${c}} = 1$.`,
+            `求由坐标平面 $x = 0$、$y = 0$、$z = 0$ 与平面 $\\frac{x}{${a}} + \\frac{y}{${b}} + \\frac{z}{${c}} = 1$ 所围成的四面体体积。`,
+          ),
           answer: ans,
-          wrong: [Q.of(a * b * c, 2), Q.of(a * b * c, 3), ans.mul(Q.of(2))],
+          mistakes: distinct(ans, [
+            why(
+              a * b * c,
+              "That is the box spanned by the intercepts; the tetrahedron is a sixth of it.",
+              "那是截距张成的长方体；四面体只是它的六分之一。",
+            ),
+            why(
+              Q.of(a * b * c, 2),
+              "That is the prism over the triangular base; the tetrahedron is a third of it.",
+              "那是以三角形为底的棱柱；四面体是它的三分之一。",
+            ),
+            why(
+              Q.of(a * b * c, 3),
+              "That takes a third of the rectangle times the height; the base is a triangle, half of the rectangle.",
+              "那是矩形乘高的三分之一；底面是三角形，只有矩形的一半。",
+            ),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Integrate in z", "对 z 积分"],
+                t(
+                  `Over the triangle $x, y \\ge 0$, $\\frac{x}{${a}} + \\frac{y}{${b}} \\le 1$ the height is $${c}\\left(1 - \\frac{x}{${a}} - \\frac{y}{${b}}\\right)$.`,
+                  `在三角形 $x, y \\ge 0$，$\\frac{x}{${a}} + \\frac{y}{${b}} \\le 1$ 上，高度为 $${c}\\left(1 - \\frac{x}{${a}} - \\frac{y}{${b}}\\right)$。`,
+                ),
+              ],
+              [
+                ["Integrate over the triangle", "在三角形上积分"],
+                t(
+                  `The height is linear, so its average is its value $\\frac{${c}}{3}$ at the centroid $\\left(\\frac{${a}}{3}, \\frac{${b}}{3}\\right)$; times the area $${Q.of(a * b, 2).toLatex()}$ this is $${ans.toLatex()}$.`,
+                  `高度是线性的，所以平均值等于在形心 $\\left(\\frac{${a}}{3}, \\frac{${b}}{3}\\right)$ 处的值 $\\frac{${c}}{3}$；乘以面积 $${Q.of(a * b, 2).toLatex()}$ 得 $${ans.toLatex()}$。`,
+                ),
+              ],
+            ],
+            t(
+              `As a pyramid with base area $${Q.of(a * b, 2).toLatex()}$ and height $${c}$: $\\frac{1}{3} \\cdot ${Q.of(a * b, 2).toLatex()} \\cdot ${c} = ${ans.toLatex()}$.`,
+              `看作底面积 $${Q.of(a * b, 2).toLatex()}$、高 $${c}$ 的锥体：$\\frac{1}{3} \\cdot ${Q.of(a * b, 2).toLatex()} \\cdot ${c} = ${ans.toLatex()}$。`,
+            ),
+          ),
         });
       },
     },
@@ -3028,8 +3381,8 @@ export const calculatingVolumesOfSolidsUsingTripleIntegrals: TopicDef = {
       figure: multivariableDrawings4["calculating-volumes-of-solids-using-triple-integrals#the-volume-under-a-paraboloid-over-a-rectangle"],
       title: t("The volume under a paraboloid over a rectangle", "矩形上方抛物面下的体积"),
       explanation: t(
-        "The volume of a solid $E$ is $\\iiint_E 1\\,dV$. For the solid above $[0, a] \\times [0, b]$ and below $z = x^2 + y^2$, the $z$-integral gives the height of the surface, leaving\n\n$$V = \\int_0^a \\int_0^b (x^2 + y^2)\\,dy\\,dx = \\frac{a^3b}{3} + \\frac{ab^3}{3}.$$\n\nEach term comes from one square in the integrand, multiplied by the length of the other side.",
-        "立体 $E$ 的体积为 $\\iiint_E 1\\,dV$。对 $[0, a] \\times [0, b]$ 上方、$z = x^2 + y^2$ 下方的立体，对 $z$ 积分得到曲面高度，于是\n\n$$V = \\int_0^a \\int_0^b (x^2 + y^2)\\,dy\\,dx = \\frac{a^3b}{3} + \\frac{ab^3}{3}$$\n\n每一项来自被积函数中的一个平方项，再乘以另一边的长度。",
+        "The volume of a solid $E$ is $\\iiint_E 1\\,dV$. For the solid above $[0, a] \\times [0, b]$ and below $z = x^2 + y^2$, the $z$-integral gives the height of the surface, leaving\n\n$$V = \\int_0^a \\int_0^b (x^2 + y^2)\\,dy\\,dx = \\frac{a^3b}{3} + \\frac{ab^3}{3}.$$\n\nEach term comes from one square in the integrand, multiplied by the length of the other side. Over $[0, 6] \\times [0, 1]$ the volume is $72 + 2 = 74$.\n\n> **Watch out.** $\\iint x^2\\,dA$ is $\\frac{a^3}{3}$ times the other length $b$. And the height varies, so the largest height times the area is too big.",
+        "立体 $E$ 的体积为 $\\iiint_E 1\\,dV$。对 $[0, a] \\times [0, b]$ 上方、$z = x^2 + y^2$ 下方的立体，对 $z$ 积分得到曲面高度，于是\n\n$$V = \\int_0^a \\int_0^b (x^2 + y^2)\\,dy\\,dx = \\frac{a^3b}{3} + \\frac{ab^3}{3}$$\n\n每一项来自被积函数中的一个平方项，再乘以另一边的长度。在 $[0, 6] \\times [0, 1]$ 上方，体积为 $72 + 2 = 74$。\n\n> **注意。** $\\iint x^2\\,dA$ 是 $\\frac{a^3}{3}$ 乘以另一边的长度 $b$。高度是变化的，用最大高度乘以面积会偏大。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(1, 5);
@@ -3041,10 +3394,41 @@ export const calculatingVolumesOfSolidsUsingTripleIntegrals: TopicDef = {
             `求 $xy$ 平面上 $[0, ${a}] \\times [0, ${b}]$ 上方、抛物面 $z = x^2 + y^2$ 下方的立体体积。`,
           ),
           answer: ans,
-          wrong: [Q.of(a ** 3 + b ** 3, 3), Q.of(a * b * (a * a + b * b)), Q.of(a ** 3 * b + a * b ** 3, 2), Q.of(a * a * b * b, 2)],
-          solution: t(
-            `$V = \\int_0^{${a}} \\int_0^{${b}} (x^2 + y^2)\\,dy\\,dx = \\frac{${a ** 3} \\cdot ${b}}{3} + \\frac{${a} \\cdot ${b ** 3}}{3} = ${ans.toLatex()}$.`,
-            `$V = \\int_0^{${a}} \\int_0^{${b}} (x^2 + y^2)\\,dy\\,dx = \\frac{${a ** 3} \\cdot ${b}}{3} + \\frac{${a} \\cdot ${b ** 3}}{3} = ${ans.toLatex()}$。`,
+          mistakes: distinct(ans, [
+            why(
+              Q.of(a ** 3 + b ** 3, 3),
+              "Each term must also be multiplied by the length of the other side.",
+              "每一项还要乘以另一边的长度。",
+            ),
+            why(
+              a * b * (a * a + b * b),
+              `That is the largest height $${a * a + b * b}$ times the area $${a * b}$; the height varies.`,
+              `那是最大高度 $${a * a + b * b}$ 乘以面积 $${a * b}$；高度是变化的。`,
+            ),
+            why(
+              Q.of(a ** 3 * b + a * b ** 3, 2),
+              "The antiderivative of $x^2$ is $\\frac{x^3}{3}$, not $\\frac{x^3}{2}$.",
+              "$x^2$ 的原函数是 $\\frac{x^3}{3}$，不是 $\\frac{x^3}{2}$。",
+            ),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Integrate in z", "对 z 积分"],
+                t("$\\int_0^{x^2 + y^2} 1\\,dz = x^2 + y^2$, the height.", "$\\int_0^{x^2 + y^2} 1\\,dz = x^2 + y^2$，即高度。"),
+              ],
+              [
+                ["Integrate over the rectangle", "在矩形上积分"],
+                t(
+                  `$\\int_0^{${a}} \\int_0^{${b}} (x^2 + y^2)\\,dy\\,dx = \\frac{${a ** 3}}{3} \\cdot ${b} + ${a} \\cdot \\frac{${b ** 3}}{3} = ${ans.toLatex()}$.`,
+                  `$\\int_0^{${a}} \\int_0^{${b}} (x^2 + y^2)\\,dy\\,dx = \\frac{${a ** 3}}{3} \\cdot ${b} + ${a} \\cdot \\frac{${b ** 3}}{3} = ${ans.toLatex()}$。`,
+                ),
+              ],
+            ],
+            t(
+              `The average of $x^2$ on $[0, ${a}]$ is $\\frac{${a * a}}{3}$ and of $y^2$ on $[0, ${b}]$ is $\\frac{${b * b}}{3}$, so the average height is $${Q.of(a * a + b * b, 3).toLatex()}$, and times the area $${a * b}$ that is $${ans.toLatex()}$.`,
+              `$x^2$ 在 $[0, ${a}]$ 上的平均值为 $\\frac{${a * a}}{3}$，$y^2$ 在 $[0, ${b}]$ 上的平均值为 $\\frac{${b * b}}{3}$，所以平均高度为 $${Q.of(a * a + b * b, 3).toLatex()}$，乘以面积 $${a * b}$ 得 $${ans.toLatex()}$。`,
+            ),
           ),
         });
       },
@@ -3059,6 +3443,10 @@ export const changingTheOrderOfIntegrationInTripleIntegralsChangingProjection: T
   summary: t(
     "Switching the projection plane (e.g., from xy to xz) simplifies boundaries when faces are aligned with coordinate axes.",
     "更换投影平面（例如由 xy 平面转为 xz 平面）能够在立体侧面与坐标轴平行时大幅简化积分限。",
+  ),
+  intro: t(
+    "The solid bounded by $x = 0$, $y = 0$, $z = 0$, $z = 1$ and $x + y = 4$ is a prism. Projecting onto the $xy$-plane gives the triangle $x, y \\ge 0$, $x + y \\le 4$ of area $8$, and the height is $1$, so $\\iiint_E 1\\,dV = 8$.\n\nCheck: project onto the $xz$-plane instead, the rectangle $[0, 4] \\times [0, 1]$, with $0 \\le y \\le 4 - x$: $\\int_0^1 \\int_0^4 (4 - x)\\,dx\\,dz = 8$.\n\nIn this lesson we choose the coordinate plane to project onto so that the limits of the triple integral are as simple as possible.",
+    "由 $x = 0$、$y = 0$、$z = 0$、$z = 1$ 与 $x + y = 4$ 围成的立体是一个棱柱。向 $xy$ 平面投影得到三角形 $x, y \\ge 0$，$x + y \\le 4$，面积为 $8$，高为 $1$，所以 $\\iiint_E 1\\,dV = 8$。\n\n检验：改为向 $xz$ 平面投影，得到矩形 $[0, 4] \\times [0, 1]$，且 $0 \\le y \\le 4 - x$：$\\int_0^1 \\int_0^4 (4 - x)\\,dx\\,dz = 8$。\n\n本课我们选择投影的坐标平面，使三重积分的积分限尽量简单。",
   ),
   prerequisites: ["calculating-volumes-of-solids-using-triple-integrals"],
   encompasses: [
@@ -3077,35 +3465,65 @@ export const changingTheOrderOfIntegrationInTripleIntegralsChangingProjection: T
         ],
       title: t("Reprojecting triple integrals from xy to xz plane", "将三重积分从 xy 投影转为 xz 投影"),
       explanation: t(
-        "The same solid can be projected onto different coordinate planes, and choosing the plane that makes the boundaries simplest leads to easier limits. For a wedge $0 \\le x \\le a$, $0 \\le y \\le b$, $0 \\le z \\le 1 - x/a$, projecting onto the $xz$-plane gives region $0 \\le z \\le 1, 0 \\le x \\le a(1 - z)$. Then $\\iiint_E 1\\,dV = \\int_0^1 \\int_0^{a(1-z)} \\int_0^b 1\\,dy\\,dx\\,dz = \\frac{ab}{2}$.",
-        "同一个立体可以投影到不同的坐标平面上，选择使边界最简单的平面，积分限就更容易。对于楔形体 $0 \\le x \\le a$、$0 \\le y \\le b$、$0 \\le z \\le 1 - x/a$，向 $xz$ 平面投影得到平面区域 $0 \\le z \\le 1, 0 \\le x \\le a(1 - z)$。积分化为 $\\iiint_E 1\\,dV = \\int_0^1 \\int_0^{a(1-z)} \\int_0^b 1\\,dy\\,dx\\,dz = \\frac{ab}{2}$。",
+        "The same solid can be projected onto different coordinate planes, and choosing the plane that makes the boundaries simplest leads to easier limits. For a wedge $0 \\le x \\le a$, $0 \\le y \\le b$, $0 \\le z \\le 1 - x/a$, projecting onto the $xz$-plane gives region $0 \\le z \\le 1, 0 \\le x \\le a(1 - z)$. Then $\\iiint_E 1\\,dV = \\int_0^1 \\int_0^{a(1-z)} \\int_0^b 1\\,dy\\,dx\\,dz = \\frac{ab}{2}$. For $x + 10z = 10$ and $0 \\le y \\le 3$ this is $15$.\n\n> **Watch out.** The projection onto the $xz$-plane is a triangle, so its area is half of $a \\cdot 1$. The solid has constant thickness in $y$, so it is a prism, not a pyramid: there is no extra factor $\\frac{1}{3}$.",
+        "同一个立体可以投影到不同的坐标平面上，选择使边界最简单的平面，积分限就更容易。对于楔形体 $0 \\le x \\le a$、$0 \\le y \\le b$、$0 \\le z \\le 1 - x/a$，向 $xz$ 平面投影得到平面区域 $0 \\le z \\le 1, 0 \\le x \\le a(1 - z)$。积分化为 $\\iiint_E 1\\,dV = \\int_0^1 \\int_0^{a(1-z)} \\int_0^b 1\\,dy\\,dx\\,dz = \\frac{ab}{2}$。对 $x + 10z = 10$ 与 $0 \\le y \\le 3$，结果为 $15$。\n\n> **注意。** 在 $xz$ 平面上的投影是三角形，面积是 $a \\cdot 1$ 的一半。立体在 $y$ 方向厚度不变，是棱柱而不是锥体，没有额外的因子 $\\frac{1}{3}$。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(2, 8);
         const b = rng.int(2, 8);
         const ans = Q.of(a * b, 2);
-
-        const prompt = t(
-          `Evaluate the volume of the solid wedge bounded by $x = 0$, $y = 0$, $z = 0$, $y = ${b}$, and $x + ${a}z = ${a}$ by projecting onto the $xz$-plane and integrating with respect to $y$ first.`,
-          `通过向 $xz$ 平面投影并优先对 $y$ 积分，计算由 $x = 0$、$y = 0$、$z = 0$、$y = ${b}$ 与 $x + ${a}z = ${a}$ 所围成楔形体的体积。`,
-        );
-        const solution = t(
-          steps(
-            `Projecting onto the $xz$-plane, the cross-section is the triangle $0 \\le z \\le 1$ and $0 \\le x \\le ${a}(1 - z)$.`,
-            `Because the solid has uniform thickness in $y$, $0 \\le y \\le ${b}$, integrating $y$ gives $\\int_0^{${b}} 1\\,dy = ${b}$.`,
-            `The remaining double integral over the $xz$-projection is $\\int_0^1 \\int_0^{${a}(1 - z)} ${b}\\,dx\\,dz = ${b} \\int_0^1 ${a}(1 - z)\\,dz = ${b} \\cdot \\frac{${a}}{2} = ${ans.toLatex()}$.`,
-          ),
-          steps(
-            `向 $xz$ 平面投影，所得截面为三角形 $0 \\le z \\le 1$ 且 $0 \\le x \\le ${a}(1 - z)$。`,
-            `由于该楔形体在 $y$ 方向厚度均匀，$0 \\le y \\le ${b}$，对 $y$ 积分得到 $\\int_0^{${b}} 1\\,dy = ${b}$。`,
-            `在 $xz$ 投影上的二重积分为 $\\int_0^1 \\int_0^{${a}(1 - z)} ${b}\\,dx\\,dz = ${b} \\int_0^1 ${a}(1 - z)\\,dz = ${b} \\cdot \\frac{${a}}{2} = ${ans.toLatex()}$。`,
-          ),
-        );
         return numberProblem({
-          prompt,
-          solution,
+          prompt: t(
+            `Evaluate the volume of the solid wedge bounded by $x = 0$, $y = 0$, $z = 0$, $y = ${b}$, and $x + ${a}z = ${a}$ by projecting onto the $xz$-plane and integrating with respect to $y$ first.`,
+            `通过向 $xz$ 平面投影并优先对 $y$ 积分，计算由 $x = 0$、$y = 0$、$z = 0$、$y = ${b}$ 与 $x + ${a}z = ${a}$ 所围成楔形体的体积。`,
+          ),
           answer: ans,
-          wrong: [Q.of(a * b), Q.of(a * b, 3), ans.mul(Q.of(2))],
+          mistakes: distinct(ans, [
+            why(
+              a * b,
+              `That uses the rectangle $[0, ${a}] \\times [0, 1]$; the projection is the triangle under $x + ${a}z = ${a}$.`,
+              `那是用矩形 $[0, ${a}] \\times [0, 1]$；投影是 $x + ${a}z = ${a}$ 下方的三角形。`,
+            ),
+            why(
+              Q.of(a * b, 6),
+              "That treats the wedge as a pyramid; its thickness in $y$ is constant, so it is a prism.",
+              "那是把楔形体当成锥体；它在 $y$ 方向厚度不变，是棱柱。",
+            ),
+            why(
+              Q.of(a, 2),
+              `That is the area of the projection; the thickness $${b}$ in $y$ is missing.`,
+              `那是投影的面积；漏了 $y$ 方向的厚度 $${b}$。`,
+            ),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Project onto the xz-plane", "向 xz 平面投影"],
+                t(
+                  `The projection is the triangle $0 \\le z \\le 1$, $0 \\le x \\le ${a}(1 - z)$, and over it $0 \\le y \\le ${b}$.`,
+                  `投影是三角形 $0 \\le z \\le 1$，$0 \\le x \\le ${a}(1 - z)$，其上 $0 \\le y \\le ${b}$。`,
+                ),
+              ],
+              [
+                ["Integrate in y", "对 y 积分"],
+                t(
+                  `$\\int_0^{${b}} 1\\,dy = ${b}$, the same over the whole projection.`,
+                  `$\\int_0^{${b}} 1\\,dy = ${b}$，在整个投影上相同。`,
+                ),
+              ],
+              [
+                ["Integrate over the projection", "在投影上积分"],
+                t(
+                  `$${b}\\int_0^1 ${a}(1 - z)\\,dz = ${b} \\cdot \\frac{${a}}{2} = ${ans.toLatex()}$.`,
+                  `$${b}\\int_0^1 ${a}(1 - z)\\,dz = ${b} \\cdot \\frac{${a}}{2} = ${ans.toLatex()}$。`,
+                ),
+              ],
+            ],
+            t(
+              `Projected onto the $xy$-plane, the solid lies over $[0, ${a}] \\times [0, ${b}]$ with height $1 - \\frac{x}{${a}}$, whose average is $\\frac{1}{2}$; and $\\frac{1}{2} \\cdot ${a * b} = ${ans.toLatex()}$.`,
+              `向 $xy$ 平面投影，立体位于 $[0, ${a}] \\times [0, ${b}]$ 上方，高度为 $1 - \\frac{x}{${a}}$，平均值为 $\\frac{1}{2}$；而 $\\frac{1}{2} \\cdot ${a * b} = ${ans.toLatex()}$。`,
+            ),
+          ),
         });
       },
     },
@@ -3117,23 +3535,54 @@ export const changingTheOrderOfIntegrationInTripleIntegralsChangingProjection: T
         ],
       title: t("The volume of a parabolic cylinder slab", "抛物柱面板块的体积"),
       explanation: t(
-        "Choosing the right projection can make a triple integral simple. The solid bounded by the parabolic cylinder $y = x^2$, the plane $y = a^2$, and the planes $z = 0$ and $z = h$ has a constant height $h$ over its projection onto the $xy$-plane. That projection is the region $x^2 \\le y \\le a^2$, whose area is $\\int_{-a}^{a} (a^2 - x^2)\\,dx = \\frac{4a^3}{3}$, so the volume is $\\frac{4a^3h}{3}$.",
-        "选择合适的投影可以让三重积分变简单。由抛物柱面 $y = x^2$、平面 $y = a^2$ 以及平面 $z = 0$、$z = h$ 围成的立体，在其 $xy$ 平面投影上高度恒为 $h$。投影区域为 $x^2 \\le y \\le a^2$，面积为 $\\int_{-a}^{a} (a^2 - x^2)\\,dx = \\frac{4a^3}{3}$，所以体积为 $\\frac{4a^3h}{3}$。",
+        "Choosing the right projection can make a triple integral simple. The solid bounded by the parabolic cylinder $y = x^2$, the plane $y = a^2$, and the planes $z = 0$ and $z = h$ has a constant height $h$ over its projection onto the $xy$-plane. That projection is the region $x^2 \\le y \\le a^2$, whose area is $\\int_{-a}^{a} (a^2 - x^2)\\,dx = \\frac{4a^3}{3}$, so the volume is $\\frac{4a^3h}{3}$. For $y = 25$ and $0 \\le z \\le 3$ this is $\\frac{4 \\cdot 125 \\cdot 3}{3} = 500$.\n\n> **Watch out.** The parabola reaches $y = a^2$ at both $x = -a$ and $x = a$, so integrate over $[-a, a]$, not only $[0, a]$; and multiply the area by the height $h$.",
+        "选择合适的投影可以让三重积分变简单。由抛物柱面 $y = x^2$、平面 $y = a^2$ 以及平面 $z = 0$、$z = h$ 围成的立体，在其 $xy$ 平面投影上高度恒为 $h$。投影区域为 $x^2 \\le y \\le a^2$，面积为 $\\int_{-a}^{a} (a^2 - x^2)\\,dx = \\frac{4a^3}{3}$，所以体积为 $\\frac{4a^3h}{3}$。对 $y = 25$ 与 $0 \\le z \\le 3$，结果为 $\\frac{4 \\cdot 125 \\cdot 3}{3} = 500$。\n\n> **注意。** 抛物线在 $x = -a$ 和 $x = a$ 两处都达到 $y = a^2$，所以要在 $[-a, a]$ 上积分，而不只是 $[0, a]$；还要把面积乘以高度 $h$。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(1, 4);
         const h = rng.int(1, 8);
         const ans = Q.of(4 * a ** 3 * h, 3);
+        const area = Q.of(4 * a ** 3, 3);
         return numberProblem({
           prompt: t(
             `Find the volume of the solid bounded by $y = x^2$, $y = ${a * a}$, $z = 0$, and $z = ${h}$.`,
             `求由 $y = x^2$、$y = ${a * a}$、$z = 0$ 和 $z = ${h}$ 围成的立体体积。`,
           ),
           answer: ans,
-          wrong: [Q.of(2 * a ** 3 * h, 3), Q.of(2 * a ** 3 * h), Q.of(4 * a ** 3, 3), Q.of(a ** 3 * h, 3)],
-          solution: t(
-            `The projection onto the $xy$-plane is $-${a} \\le x \\le ${a}$, $x^2 \\le y \\le ${a * a}$, with area $\\int_{-${a}}^{${a}} (${a * a} - x^2)\\,dx = ${Q.of(4 * a ** 3, 3).toLatex()}$. The height is $${h}$, so $V = ${ans.toLatex()}$.`,
-            `在 $xy$ 平面上的投影为 $-${a} \\le x \\le ${a}$，$x^2 \\le y \\le ${a * a}$，面积为 $\\int_{-${a}}^{${a}} (${a * a} - x^2)\\,dx = ${Q.of(4 * a ** 3, 3).toLatex()}$。高度为 $${h}$，所以 $V = ${ans.toLatex()}$。`,
+          mistakes: distinct(ans, [
+            why(
+              Q.of(2 * a ** 3 * h, 3),
+              `That uses only $0 \\le x \\le ${a}$; the region also covers $-${a} \\le x \\le 0$.`,
+              `那只用了 $0 \\le x \\le ${a}$；区域还包括 $-${a} \\le x \\le 0$。`,
+            ),
+            why(
+              2 * a ** 3 * h,
+              `That uses the rectangle $[-${a}, ${a}] \\times [0, ${a * a}]$; the region lies above the parabola.`,
+              `那是用矩形 $[-${a}, ${a}] \\times [0, ${a * a}]$；区域位于抛物线上方。`,
+            ),
+            why(area, `That is the area of the projection; multiply by the height $${h}$.`, `那是投影的面积；还要乘以高度 $${h}$。`),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Project onto the xy-plane", "向 xy 平面投影"],
+                t(
+                  `The projection is $-${a} \\le x \\le ${a}$, $x^2 \\le y \\le ${a * a}$, with area $\\int_{-${a}}^{${a}} (${a * a} - x^2)\\,dx = ${area.toLatex()}$.`,
+                  `投影为 $-${a} \\le x \\le ${a}$，$x^2 \\le y \\le ${a * a}$，面积为 $\\int_{-${a}}^{${a}} (${a * a} - x^2)\\,dx = ${area.toLatex()}$。`,
+                ),
+              ],
+              [
+                ["Multiply by the height", "乘以高度"],
+                t(
+                  `The height in $z$ is $${h}$, so $V = ${area.toLatex()} \\cdot ${h} = ${ans.toLatex()}$.`,
+                  `$z$ 方向的高度为 $${h}$，所以 $V = ${area.toLatex()} \\cdot ${h} = ${ans.toLatex()}$。`,
+                ),
+              ],
+            ],
+            t(
+              `The region above a parabola up to a chord is $\\frac{2}{3}$ of the enclosing rectangle, here $${2 * a} \\times ${a * a}$, so its area is $\\frac{2}{3} \\cdot ${2 * a ** 3} = ${area.toLatex()}$, as found.`,
+              `抛物线与弦之间的区域是外接矩形的 $\\frac{2}{3}$，这里矩形为 $${2 * a} \\times ${a * a}$，所以面积为 $\\frac{2}{3} \\cdot ${2 * a ** 3} = ${area.toLatex()}$，与所得一致。`,
+            ),
           ),
         });
       },
@@ -3149,6 +3598,10 @@ export const changingTheOrderOfIntegrationInTripleIntegralsChangingRegion: Topic
     "Reordering the variables in an iterated triple integral requires reconstructing the limits from the 3D boundary inequalities.",
     "在三次积分中调整变量积分顺序，需要根据三维边界不等式系统重新确定各层积分限。",
   ),
+  intro: t(
+    "$\\int_0^1 \\int_0^2 \\int_z^1 e^{x^2}\\,dx\\,dy\\,dz$ cannot be done in this order, since $e^{x^2}$ has no elementary antiderivative. The limits say $0 \\le z \\le x \\le 1$, which also reads $0 \\le x \\le 1$, $0 \\le z \\le x$. So the integral is $\\int_0^2 \\int_0^1 \\int_0^x e^{x^2}\\,dz\\,dx\\,dy = 2\\int_0^1 x e^{x^2}\\,dx = e - 1$.\n\nCheck: with the integrand $1$, both orders give the volume: $\\int_0^1 (1 - z) \\cdot 2\\,dz = 1$ and $2\\int_0^1 x\\,dx = 1$, so the new limits describe the same solid.\n\nIn this lesson we reorder triple integrals by rewriting the inequalities that define the solid.",
+    "$\\int_0^1 \\int_0^2 \\int_z^1 e^{x^2}\\,dx\\,dy\\,dz$ 不能按这个次序计算，因为 $e^{x^2}$ 没有初等原函数。积分限表示 $0 \\le z \\le x \\le 1$，也可读作 $0 \\le x \\le 1$，$0 \\le z \\le x$。所以积分为 $\\int_0^2 \\int_0^1 \\int_0^x e^{x^2}\\,dz\\,dx\\,dy = 2\\int_0^1 x e^{x^2}\\,dx = e - 1$。\n\n检验：被积函数换成 $1$ 时，两种次序都给出体积：$\\int_0^1 (1 - z) \\cdot 2\\,dz = 1$，$2\\int_0^1 x\\,dx = 1$，所以新积分限描述的是同一个立体。\n\n本课我们通过改写定义立体的不等式来交换三重积分的次序。",
+  ),
   prerequisites: ["changing-the-order-of-integration-in-triple-integrals-changing-projection"],
   encompasses: [
     {
@@ -3162,41 +3615,59 @@ export const changingTheOrderOfIntegrationInTripleIntegralsChangingRegion: Topic
       id: "permuting-limits-of-integration-in-iterated-integrals",
       title: t("Permuting limits of integration in iterated integrals", "置换三次积分中的积分限"),
       explanation: t(
-        "To change the order, describe the same region with the variables nested differently, reading the new limits from the inequalities that define the region. To evaluate $\\int_0^a \\int_0^b \\int_z^a x\\,dx\\,dy\\,dz$, swap the $x$ and $z$ integrations: $0 \\le z \\le x \\le a \\iff 0 \\le x \\le a, 0 \\le z \\le x$:\n\n$$\\int_0^b \\int_0^a \\int_0^x x\\,dz\\,dx\\,dy = \\int_0^b \\int_0^a x^2\\,dx\\,dy = b\\frac{a^3}{3}.$$",
-        "要交换次序，就用不同的嵌套方式描述同一个区域，从定义区域的不等式中读出新的积分限。计算 $\\int_0^a \\int_0^b \\int_z^a x\\,dx\\,dy\\,dz$ 时，对调 $x$ 与 $z$ 的积分次序：$0 \\le z \\le x \\le a \\iff 0 \\le x \\le a, 0 \\le z \\le x$：\n\n$$\\int_0^b \\int_0^a \\int_0^x x\\,dz\\,dx\\,dy = \\int_0^b \\int_0^a x^2\\,dx\\,dy = b\\frac{a^3}{3}$$",
+        "To change the order, describe the same region with the variables nested differently, reading the new limits from the inequalities that define the region. To evaluate $\\int_0^a \\int_0^b \\int_z^a x\\,dx\\,dy\\,dz$, swap the $x$ and $z$ integrations: $0 \\le z \\le x \\le a \\iff 0 \\le x \\le a, 0 \\le z \\le x$:\n\n$$\\int_0^b \\int_0^a \\int_0^x x\\,dz\\,dx\\,dy = \\int_0^b \\int_0^a x^2\\,dx\\,dy = b\\frac{a^3}{3}.$$\n\nWith $a = 6$ and $b = 1$ this is $72$.\n\n> **Watch out.** After the swap, $z$ runs from $0$ up to $x$: the inequality $z \\le x$ stays the same, only the variable it bounds changes. Letting $z$ run to $a$, or from $x$ to $a$, describes a different solid.",
+        "要交换次序，就用不同的嵌套方式描述同一个区域，从定义区域的不等式中读出新的积分限。计算 $\\int_0^a \\int_0^b \\int_z^a x\\,dx\\,dy\\,dz$ 时，对调 $x$ 与 $z$ 的积分次序：$0 \\le z \\le x \\le a \\iff 0 \\le x \\le a, 0 \\le z \\le x$：\n\n$$\\int_0^b \\int_0^a \\int_0^x x\\,dz\\,dx\\,dy = \\int_0^b \\int_0^a x^2\\,dx\\,dy = b\\frac{a^3}{3}$$\n\n当 $a = 6$，$b = 1$ 时，结果为 $72$。\n\n> **注意。** 交换后 $z$ 从 $0$ 到 $x$：不等式 $z \\le x$ 不变，变的只是它界定的变量。让 $z$ 到 $a$，或从 $x$ 到 $a$，描述的是另一个立体。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(1, 5);
         const b = rng.int(1, 5);
         const ans = Q.of(b * a * a * a, 3);
-
-        const prompt = t(
-          `Evaluate the iterated triple integral $\\int_0^{${a}} \\int_0^{${b}} \\int_z^{${a}} x\\,dx\\,dy\\,dz$ by changing the order of integration.`,
-          `通过交换积分次序计算三次积分 $\\int_0^{${a}} \\int_0^{${b}} \\int_z^{${a}} x\\,dx\\,dy\\,dz$ 的值。`,
-        );
-        const solution = t(
-          steps(
-            `The limits for $x$ and $z$ are $0 \\le z \\le ${a}$ and $z \\le x \\le ${a}$.`,
-            `Reversing the order gives $0 \\le x \\le ${a}$ and $0 \\le z \\le x$.`,
-            `The iterated integral becomes $\\int_0^{${b}} \\int_0^{${a}} \\int_0^x x\\,dz\\,dx\\,dy$.`,
-            `Integrate with respect to $z$: $\\int_0^x x\\,dz = x^2$.`,
-            `Integrate with respect to $x$: $\\int_0^{${a}} x^2\\,dx = \\frac{${a}^3}{3} = \\frac{${a * a * a}}{3}$.`,
-            `Integrate with respect to $y$: $\\int_0^{${b}} \\frac{${a * a * a}}{3}\\,dy = ${b} \\times \\frac{${a * a * a}}{3} = ${ans.toLatex()}$.`,
-          ),
-          steps(
-            `由原积分限知 $x$ 与 $z$ 满足 $0 \\le z \\le ${a}$ 且 $z \\le x \\le ${a}$。`,
-            `对调积分次序得到 $0 \\le x \\le ${a}$ 且 $0 \\le z \\le x$。`,
-            `三次积分变为 $\\int_0^{${b}} \\int_0^{${a}} \\int_0^x x\\,dz\\,dx\\,dy$。`,
-            `先对 $z$ 积分：$\\int_0^x x\\,dz = x^2$。`,
-            `再对 $x$ 积分：$\\int_0^{${a}} x^2\\,dx = \\frac{${a}^3}{3} = \\frac{${a * a * a}}{3}$。`,
-            `最后对 $y$ 积分：$\\int_0^{${b}} \\frac{${a * a * a}}{3}\\,dy = ${b} \\times \\frac{${a * a * a}}{3} = ${ans.toLatex()}$。`,
-          ),
-        );
         return numberProblem({
-          prompt,
-          solution,
+          prompt: t(
+            `Evaluate the iterated triple integral $\\int_0^{${a}} \\int_0^{${b}} \\int_z^{${a}} x\\,dx\\,dy\\,dz$ by changing the order of integration.`,
+            `通过交换积分次序计算三次积分 $\\int_0^{${a}} \\int_0^{${b}} \\int_z^{${a}} x\\,dx\\,dy\\,dz$ 的值。`,
+          ),
           answer: ans,
-          wrong: [Q.of(b * a * a * a, 2), Q.of(b * a * a * a), ans.mul(Q.of(2))],
+          mistakes: distinct(ans, [
+            why(
+              Q.of(b * a ** 3, 2),
+              `That lets $z$ run up to $${a}$ after the swap; it runs up to $x$.`,
+              `那是交换后让 $z$ 一直到 $${a}$；它只到 $x$。`,
+            ),
+            why(
+              Q.of(b * a ** 3, 6),
+              `That lets $z$ run from $x$ to $${a}$, which reverses $z \\le x$; it runs from $0$ to $x$.`,
+              `那是让 $z$ 从 $x$ 到 $${a}$，把 $z \\le x$ 反了过来；它应从 $0$ 到 $x$。`,
+            ),
+            why(
+              b * a ** 3,
+              "The antiderivative of $x^2$ is $\\frac{x^3}{3}$; the division by $3$ is missing.",
+              "$x^2$ 的原函数是 $\\frac{x^3}{3}$；漏了除以 $3$。",
+            ),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Rewrite the limits", "改写积分限"],
+                t(
+                  `$0 \\le z \\le ${a}$, $z \\le x \\le ${a}$ is the same as $0 \\le x \\le ${a}$, $0 \\le z \\le x$, so the integral is $\\int_0^{${b}} \\int_0^{${a}} \\int_0^x x\\,dz\\,dx\\,dy$.`,
+                  `$0 \\le z \\le ${a}$，$z \\le x \\le ${a}$ 等价于 $0 \\le x \\le ${a}$，$0 \\le z \\le x$，所以积分为 $\\int_0^{${b}} \\int_0^{${a}} \\int_0^x x\\,dz\\,dx\\,dy$。`,
+                ),
+              ],
+              [["Integrate in z", "对 z 积分"], t("$\\int_0^x x\\,dz = x^2$.", "$\\int_0^x x\\,dz = x^2$。")],
+              [
+                ["Integrate in x and y", "对 x 和 y 积分"],
+                t(
+                  `$\\int_0^{${b}} \\int_0^{${a}} x^2\\,dx\\,dy = ${b} \\cdot \\frac{${a ** 3}}{3} = ${ans.toLatex()}$.`,
+                  `$\\int_0^{${b}} \\int_0^{${a}} x^2\\,dx\\,dy = ${b} \\cdot \\frac{${a ** 3}}{3} = ${ans.toLatex()}$。`,
+                ),
+              ],
+            ],
+            t(
+              `In the original order, $\\int_z^{${a}} x\\,dx = \\frac{${a * a} - z^2}{2}$, and $\\int_0^{${a}} \\frac{${a * a} - z^2}{2}\\,dz = \\frac{1}{2}\\left(${a ** 3} - \\frac{${a ** 3}}{3}\\right) = \\frac{${a ** 3}}{3}$; times $${b}$ that is $${ans.toLatex()}$.`,
+              `按原次序，$\\int_z^{${a}} x\\,dx = \\frac{${a * a} - z^2}{2}$，而 $\\int_0^{${a}} \\frac{${a * a} - z^2}{2}\\,dz = \\frac{1}{2}\\left(${a ** 3} - \\frac{${a ** 3}}{3}\\right) = \\frac{${a ** 3}}{3}$；乘以 $${b}$ 得 $${ans.toLatex()}$。`,
+            ),
+          ),
         });
       },
     },
@@ -3204,30 +3675,62 @@ export const changingTheOrderOfIntegrationInTripleIntegralsChangingRegion: Topic
       id: "reordering-the-limits-of-a-nested-triple-integral",
       title: t("Reordering the limits of a nested triple integral", "重排嵌套三重积分的积分限"),
       explanation: t(
-        "The integral $\\int_0^a \\int_0^x \\int_0^y f\\,dz\\,dy\\,dx$ covers the solid $0 \\le z \\le y \\le x \\le a$. Writing the chain of inequalities makes any other order easy to read off. For the order $dx\\,dy\\,dz$, the outermost variable $z$ runs from $0$ to $a$, then $y$ runs from $z$ to $a$, and finally $x$ runs from $y$ to $a$:\n\n$$\\int_0^a \\int_z^a \\int_y^a f\\,dx\\,dy\\,dz.$$",
-        "积分 $\\int_0^a \\int_0^x \\int_0^y f\\,dz\\,dy\\,dx$ 覆盖立体 $0 \\le z \\le y \\le x \\le a$。写出这串不等式后，任何其他次序都容易读出。对次序 $dx\\,dy\\,dz$，最外层 $z$ 从 $0$ 到 $a$，然后 $y$ 从 $z$ 到 $a$，最后 $x$ 从 $y$ 到 $a$：\n\n$$\\int_0^a \\int_z^a \\int_y^a f\\,dx\\,dy\\,dz$$",
+        "The integral $\\int_0^a \\int_0^x \\int_0^y f\\,dz\\,dy\\,dx$ covers the solid $0 \\le z \\le y \\le x \\le a$. Writing the chain of inequalities makes any other order easy to read off. For the order $dy\\,dz\\,dx$, the outermost variable $x$ runs from $0$ to $a$, then $z$ runs from $0$ to $x$, and finally $y$ lies between them, from $z$ to $x$:\n\n$$\\int_0^a \\int_0^x \\int_z^x f\\,dy\\,dz\\,dx.$$\n\n> **Watch out.** Each limit comes from the neighbours of the variable in the chain: a variable's lower limit is the next smaller variable still inside it, or $0$, and its upper limit is the next larger one, or $a$. Leaving out a neighbour describes a larger solid.",
+        "积分 $\\int_0^a \\int_0^x \\int_0^y f\\,dz\\,dy\\,dx$ 覆盖立体 $0 \\le z \\le y \\le x \\le a$。写出这串不等式后，任何其他次序都容易读出。对次序 $dy\\,dz\\,dx$，最外层 $x$ 从 $0$ 到 $a$，然后 $z$ 从 $0$ 到 $x$，最后 $y$ 夹在它们之间，从 $z$ 到 $x$：\n\n$$\\int_0^a \\int_0^x \\int_z^x f\\,dy\\,dz\\,dx$$\n\n> **注意。** 每个积分限都来自该变量在不等式链中的相邻项：下限是比它小、且尚未积分到外层的相邻变量（或 $0$），上限是比它大的相邻变量（或 $a$）。漏掉相邻项就描述了更大的立体。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(1, 9);
         const f = rng.pick(["x", "y", "z", "xy", "xz", "yz", "xyz"]);
         const opt = (s: string) => t(`$${s}$`, `$${s}$`);
-        return pickChoice(
-          rng,
-          t(
+        return explainedChoice(rng, {
+          prompt: t(
             `Rewrite $\\int_0^{${a}} \\int_0^x \\int_0^y ${f}\\,dz\\,dy\\,dx$ in the order $dx\\,dy\\,dz$.`,
             `把 $\\int_0^{${a}} \\int_0^x \\int_0^y ${f}\\,dz\\,dy\\,dx$ 改写为 $dx\\,dy\\,dz$ 次序。`,
           ),
-          opt(`\\int_0^{${a}} \\int_z^{${a}} \\int_y^{${a}} ${f}\\,dx\\,dy\\,dz`),
-          [
-            opt(`\\int_0^{${a}} \\int_0^z \\int_0^y ${f}\\,dx\\,dy\\,dz`),
-            opt(`\\int_0^{${a}} \\int_z^{${a}} \\int_0^y ${f}\\,dx\\,dy\\,dz`),
-            opt(`\\int_0^{${a}} \\int_0^{${a}} \\int_y^{${a}} ${f}\\,dx\\,dy\\,dz`),
+          correct: opt(`\\int_0^{${a}} \\int_z^{${a}} \\int_y^{${a}} ${f}\\,dx\\,dy\\,dz`),
+          wrong: [
+            {
+              option: opt(`\\int_0^{${a}} \\int_0^z \\int_0^y ${f}\\,dx\\,dy\\,dz`),
+              why: t(
+                "That keeps the old shape of the limits; it puts $y$ below $z$ and $x$ below $y$, the reverse of $z \\le y \\le x$.",
+                "那是照搬原来的积分限形状；它让 $y$ 在 $z$ 下方、$x$ 在 $y$ 下方，与 $z \\le y \\le x$ 相反。",
+              ),
+            },
+            {
+              option: opt(`\\int_0^{${a}} \\int_z^{${a}} \\int_0^y ${f}\\,dx\\,dy\\,dz`),
+              why: t(
+                `The limits for $x$ are reversed: $x \\ge y$, so $x$ runs from $y$ to $${a}$.`,
+                `$x$ 的积分限反了：$x \\ge y$，所以 $x$ 从 $y$ 到 $${a}$。`,
+              ),
+            },
+            {
+              option: opt(`\\int_0^{${a}} \\int_0^{${a}} \\int_y^{${a}} ${f}\\,dx\\,dy\\,dz`),
+              why: t(
+                "That lets $y$ start at $0$, dropping $z \\le y$, so it covers a larger solid.",
+                "那是让 $y$ 从 $0$ 开始，丢掉了 $z \\le y$，覆盖的立体更大。",
+              ),
+            },
           ],
-          t(
-            `The solid is $0 \\le z \\le y \\le x \\le ${a}$. So $z$ runs over $[0, ${a}]$, $y$ over $[z, ${a}]$, and $x$ over $[y, ${a}]$.`,
-            `立体为 $0 \\le z \\le y \\le x \\le ${a}$。所以 $z$ 取 $[0, ${a}]$，$y$ 取 $[z, ${a}]$，$x$ 取 $[y, ${a}]$。`,
+          solution: walked(
+            [
+              [
+                ["Write the solid as a chain", "把立体写成不等式链"],
+                t(`The limits say $0 \\le z \\le y \\le x \\le ${a}$.`, `积分限表示 $0 \\le z \\le y \\le x \\le ${a}$。`),
+              ],
+              [
+                ["Read off the new limits", "读出新的积分限"],
+                t(
+                  `Outermost, $z$ runs over $[0, ${a}]$; then $y$ over $[z, ${a}]$; innermost, $x$ over $[y, ${a}]$.`,
+                  `最外层 $z$ 取 $[0, ${a}]$；然后 $y$ 取 $[z, ${a}]$；最内层 $x$ 取 $[y, ${a}]$。`,
+                ),
+              ],
+            ],
+            t(
+              `With the integrand $1$ both orders give the same volume: $\\int_0^{${a}} \\int_z^{${a}} (${a} - y)\\,dy\\,dz = \\int_0^{${a}} \\frac{(${a} - z)^2}{2}\\,dz = \\frac{${a ** 3}}{6}$, the volume of $0 \\le z \\le y \\le x \\le ${a}$.`,
+              `被积函数为 $1$ 时两种次序给出相同的体积：$\\int_0^{${a}} \\int_z^{${a}} (${a} - y)\\,dy\\,dz = \\int_0^{${a}} \\frac{(${a} - z)^2}{2}\\,dz = \\frac{${a ** 3}}{6}$，正是 $0 \\le z \\le y \\le x \\le ${a}$ 的体积。`,
+            ),
           ),
-        );
+        });
       },
     },
   ],
@@ -3245,6 +3748,10 @@ export const doubleIntegralsInPlanePolarCoordinates: TopicDef = {
     "Converting to plane polar coordinates introduces the area element dA = r dr dθ, simplifying integrals over circular regions.",
     "转化为平面极坐标会引入面积微元 dA = r dr dθ，能极大简化在圆形或扇形区域上的积分计算。",
   ),
+  intro: t(
+    "Integrate $x^2 + y^2$ over the ring $1 \\le x^2 + y^2 \\le 4$. In polar coordinates the ring is $1 \\le r \\le 2$, $0 \\le \\theta \\le 2\\pi$, the integrand is $r^2$ and $dA = r\\,dr\\,d\\theta$, so the integral is $2\\pi \\int_1^2 r^3\\,dr = 2\\pi \\cdot \\frac{15}{4} = \\frac{15\\pi}{2}$.\n\nCheck: the ring is the disk of radius $2$ minus the disk of radius $1$, and over a disk of radius $R$ the integral is $\\frac{\\pi R^4}{2}$, so $8\\pi - \\frac{\\pi}{2} = \\frac{15\\pi}{2}$.\n\nIn this lesson we evaluate double integrals in polar coordinates, where $dA = r\\,dr\\,d\\theta$.",
+    "在圆环 $1 \\le x^2 + y^2 \\le 4$ 上积分 $x^2 + y^2$。在极坐标中圆环为 $1 \\le r \\le 2$，$0 \\le \\theta \\le 2\\pi$，被积函数为 $r^2$，$dA = r\\,dr\\,d\\theta$，所以积分为 $2\\pi \\int_1^2 r^3\\,dr = 2\\pi \\cdot \\frac{15}{4} = \\frac{15\\pi}{2}$。\n\n检验：圆环是半径为 $2$ 的圆盘减去半径为 $1$ 的圆盘，而在半径为 $R$ 的圆盘上积分为 $\\frac{\\pi R^4}{2}$，所以 $8\\pi - \\frac{\\pi}{2} = \\frac{15\\pi}{2}$。\n\n本课我们在极坐标下计算二重积分，其中 $dA = r\\,dr\\,d\\theta$。",
+  ),
   prerequisites: ["changing-the-order-of-integration-in-double-integrals", "polar-coordinate-transformations"],
   encompasses: [{ topic: "polar-coordinate-transformations", weight: 0.3 }],
   xp: 10,
@@ -3253,36 +3760,53 @@ export const doubleIntegralsInPlanePolarCoordinates: TopicDef = {
       id: "integrating-radial-functions-over-disks",
       title: t("Integrating radial functions over disks", "在圆盘上积分径向函数"),
       explanation: t(
-        "In polar coordinates a disk has constant limits and the area element carries an extra factor of the radius, so radial functions become simple to integrate. For a disk $D$ of radius $R$ centered at the origin, the integral of $x^2 + y^2 = r^2$ is:\n\n$$\\iint_D (x^2 + y^2)\\,dA = \\int_0^{2\\pi} \\int_0^R r^2 \\cdot r\\,dr\\,d\\theta = 2\\pi \\left[\\frac{r^4}{4}\\right]_0^R = \\frac{\\pi R^4}{2}.$$",
-        "在极坐标中，圆盘的积分限是常数，面积微元多一个半径因子，所以径向函数变得容易积分。对于以原点为中心、半径为 $R$ 的圆盘 $D$，$x^2 + y^2 = r^2$ 的二重积分为：\n\n$$\\iint_D (x^2 + y^2)\\,dA = \\int_0^{2\\pi} \\int_0^R r^2 \\cdot r\\,dr\\,d\\theta = 2\\pi \\left[\\frac{r^4}{4}\\right]_0^R = \\frac{\\pi R^4}{2}$$",
+        "In polar coordinates a disk has constant limits and the area element carries an extra factor of the radius, so radial functions become simple to integrate. For a disk $D$ of radius $R$ centered at the origin, the integral of $x^2 + y^2 = r^2$ is:\n\n$$\\iint_D (x^2 + y^2)\\,dA = \\int_0^{2\\pi} \\int_0^R r^2 \\cdot r\\,dr\\,d\\theta = 2\\pi \\left[\\frac{r^4}{4}\\right]_0^R = \\frac{\\pi R^4}{2}.$$\n\nOver the unit disk this is $\\frac{\\pi}{2}$.\n\n> **Watch out.** The integrand $r^2$ is multiplied by the $r$ of $dA$, giving $r^3$, whose antiderivative is $\\frac{r^4}{4}$; and the angle contributes the full $2\\pi$.",
+        "在极坐标中，圆盘的积分限是常数，面积微元多一个半径因子，所以径向函数变得容易积分。对于以原点为中心、半径为 $R$ 的圆盘 $D$，$x^2 + y^2 = r^2$ 的二重积分为：\n\n$$\\iint_D (x^2 + y^2)\\,dA = \\int_0^{2\\pi} \\int_0^R r^2 \\cdot r\\,dr\\,d\\theta = 2\\pi \\left[\\frac{r^4}{4}\\right]_0^R = \\frac{\\pi R^4}{2}$$\n\n在单位圆盘上结果为 $\\frac{\\pi}{2}$。\n\n> **注意。** 被积函数 $r^2$ 要乘以 $dA$ 中的 $r$，得到 $r^3$，其原函数为 $\\frac{r^4}{4}$；角度贡献完整的 $2\\pi$。",
       ),
       generate(rng: Rng): Problem {
         const R = rng.int(2, 35);
-        const ans = Q.of(R * R * R * R, 2);
-
-        const prompt = t(
-          `Find the value of $\\frac{1}{\\pi} \\iint_D (x^2 + y^2)\\,dA$, where $D$ is the disk of radius $${R}$ centered at the origin.`,
-          `计算 $\\frac{1}{\\pi} \\iint_D (x^2 + y^2)\\,dA$ 的值，其中 $D$ 为以原点为中心、半径为 $${R}$ 的圆盘。`,
-        );
-        const solution = t(
-          steps(
-            `Convert to polar coordinates: $x^2 + y^2 = r^2$ and $dA = r\\,dr\\,d\\theta$.`,
-            `The limits for disk $D$ are $0 \\le r \\le ${R}$ and $0 \\le \\theta \\le 2\\pi$:`,
-            `$$\\iint_D (x^2 + y^2)\\,dA = \\int_0^{2\\pi} \\int_0^{${R}} r^3\\,dr\\,d\\theta = 2\\pi \\left[\\frac{r^4}{4}\\right]_0^{${R}} = 2\\pi \\cdot \\frac{${R * R * R * R}}{4} = \\pi \\cdot ${ans.toLatex()}.$$ `,
-            `Dividing by $\\pi$ gives $${ans.toLatex()}$.`,
-          ),
-          steps(
-            `转化为极坐标：$x^2 + y^2 = r^2$ 且 $dA = r\\,dr\\,d\\theta$。`,
-            `圆盘 $D$ 的积分限为 $0 \\le r \\le ${R}$ 与 $0 \\le \\theta \\le 2\\pi$：`,
-            `$$\\iint_D (x^2 + y^2)\\,dA = \\int_0^{2\\pi} \\int_0^{${R}} r^3\\,dr\\,d\\theta = 2\\pi \\left[\\frac{r^4}{4}\\right]_0^{${R}} = 2\\pi \\cdot \\frac{${R * R * R * R}}{4} = \\pi \\cdot ${ans.toLatex()}$$ `,
-            `除以 $\\pi$ 得到 $${ans.toLatex()}$。`,
-          ),
-        );
+        const ans = Q.of(R ** 4, 2);
         return numberProblem({
-          prompt,
-          solution,
+          prompt: t(
+            `Find the value of $\\frac{1}{\\pi} \\iint_D (x^2 + y^2)\\,dA$, where $D$ is the disk of radius $${R}$ centered at the origin.`,
+            `计算 $\\frac{1}{\\pi} \\iint_D (x^2 + y^2)\\,dA$ 的值，其中 $D$ 为以原点为中心、半径为 $${R}$ 的圆盘。`,
+          ),
           answer: ans,
-          wrong: [Q.of(R * R * R * R, 4), Q.of(R * R), ans.mul(Q.of(2))],
+          mistakes: distinct(ans, [
+            why(
+              Q.of(2 * R ** 3, 3),
+              "$dA = r\\,dr\\,d\\theta$; the factor $r$ from the area element is missing.",
+              "$dA = r\\,dr\\,d\\theta$；漏了面积微元中的因子 $r$。",
+            ),
+            why(Q.of(R ** 4, 4), "The angle runs from $0$ to $2\\pi$; that uses only half of it.", "角度从 $0$ 到 $2\\pi$；那只用了一半。"),
+            why(
+              R ** 4,
+              "The antiderivative of $r^3$ is $\\frac{r^4}{4}$, not $\\frac{r^4}{2}$.",
+              "$r^3$ 的原函数是 $\\frac{r^4}{4}$，不是 $\\frac{r^4}{2}$。",
+            ),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Convert to polar coordinates", "化为极坐标"],
+                t(
+                  `$x^2 + y^2 = r^2$, $dA = r\\,dr\\,d\\theta$, and the disk is $0 \\le r \\le ${R}$, $0 \\le \\theta \\le 2\\pi$.`,
+                  `$x^2 + y^2 = r^2$，$dA = r\\,dr\\,d\\theta$，圆盘为 $0 \\le r \\le ${R}$，$0 \\le \\theta \\le 2\\pi$。`,
+                ),
+              ],
+              [
+                ["Integrate", "积分"],
+                t(
+                  `$\\int_0^{2\\pi} \\int_0^{${R}} r^3\\,dr\\,d\\theta = 2\\pi \\cdot \\frac{${R ** 4}}{4} = ${ans.toLatex()}\\pi$, and dividing by $\\pi$ gives $${ans.toLatex()}$.`,
+                  `$\\int_0^{2\\pi} \\int_0^{${R}} r^3\\,dr\\,d\\theta = 2\\pi \\cdot \\frac{${R ** 4}}{4} = ${ans.toLatex()}\\pi$，除以 $\\pi$ 得 $${ans.toLatex()}$。`,
+                ),
+              ],
+            ],
+            t(
+              `The average of $r^2$ over the disk is $\\frac{${R * R}}{2}$, half the largest value, because more area lies far from the center; times the area $${R * R}\\pi$ that is $${ans.toLatex()}\\pi$.`,
+              `$r^2$ 在圆盘上的平均值为 $\\frac{${R * R}}{2}$，是最大值的一半，因为更多面积离中心较远；乘以面积 $${R * R}\\pi$ 得 $${ans.toLatex()}\\pi$。`,
+            ),
+          ),
         });
       },
     },
@@ -3290,23 +3814,54 @@ export const doubleIntegralsInPlanePolarCoordinates: TopicDef = {
       id: "integrating-the-distance-from-the-origin-over-a-disk",
       title: t("Integrating distance from the origin over a disk", "在圆盘上积分到原点的距离"),
       explanation: t(
-        "In polar coordinates $\\sqrt{x^2 + y^2} = r$ and $dA = r\\,dr\\,d\\theta$, so the extra factor $r$ from the area element must not be forgotten. Over the disk of radius $R$:\n\n$$\\iint_D c\\sqrt{x^2 + y^2}\\,dA = \\int_0^{2\\pi} \\int_0^R c\\,r \\cdot r\\,dr\\,d\\theta = \\frac{2\\pi cR^3}{3}.$$",
-        "在极坐标中 $\\sqrt{x^2 + y^2} = r$，$dA = r\\,dr\\,d\\theta$，面积元中多出的因子 $r$ 不能忘记。在半径为 $R$ 的圆盘上：\n\n$$\\iint_D c\\sqrt{x^2 + y^2}\\,dA = \\int_0^{2\\pi} \\int_0^R c\\,r \\cdot r\\,dr\\,d\\theta = \\frac{2\\pi cR^3}{3}$$",
+        "In polar coordinates $\\sqrt{x^2 + y^2} = r$ and $dA = r\\,dr\\,d\\theta$, so the extra factor $r$ from the area element must not be forgotten. Over the disk of radius $R$:\n\n$$\\iint_D c\\sqrt{x^2 + y^2}\\,dA = \\int_0^{2\\pi} \\int_0^R c\\,r \\cdot r\\,dr\\,d\\theta = \\frac{2\\pi cR^3}{3}.$$\n\nFor $6\\sqrt{x^2 + y^2}$ over the unit disk this is $4\\pi$.\n\n> **Watch out.** $\\sqrt{x^2 + y^2}$ is $r$, not $r^2$; together with the $r$ of $dA$ the integrand becomes $c\\,r^2$.",
+        "在极坐标中 $\\sqrt{x^2 + y^2} = r$，$dA = r\\,dr\\,d\\theta$，面积元中多出的因子 $r$ 不能忘记。在半径为 $R$ 的圆盘上：\n\n$$\\iint_D c\\sqrt{x^2 + y^2}\\,dA = \\int_0^{2\\pi} \\int_0^R c\\,r \\cdot r\\,dr\\,d\\theta = \\frac{2\\pi cR^3}{3}$$\n\n对单位圆盘上的 $6\\sqrt{x^2 + y^2}$，结果为 $4\\pi$。\n\n> **注意。** $\\sqrt{x^2 + y^2}$ 是 $r$，不是 $r^2$；连同 $dA$ 中的 $r$，被积函数变为 $c\\,r^2$。",
       ),
       generate(rng: Rng): Problem {
         const R = rng.int(1, 6);
         const c = rng.int(1, 5);
         const ans = Q.of(2 * c * R ** 3, 3);
+        const cc = coef(c);
         return numberProblem({
           prompt: t(
-            `$D$ is the disk of radius $${R}$ centered at the origin. Find $\\frac{1}{\\pi}\\iint_D ${c === 1 ? "" : c}\\sqrt{x^2 + y^2}\\,dA$.`,
-            `$D$ 是以原点为圆心、半径为 $${R}$ 的圆盘。求 $\\frac{1}{\\pi}\\iint_D ${c === 1 ? "" : c}\\sqrt{x^2 + y^2}\\,dA$。`,
+            `$D$ is the disk of radius $${R}$ centered at the origin. Find $\\frac{1}{\\pi}\\iint_D ${cc}\\sqrt{x^2 + y^2}\\,dA$.`,
+            `$D$ 是以原点为圆心、半径为 $${R}$ 的圆盘。求 $\\frac{1}{\\pi}\\iint_D ${cc}\\sqrt{x^2 + y^2}\\,dA$。`,
           ),
           answer: ans,
-          wrong: [Q.of(c * R * R), Q.of(c * R ** 3, 3), Q.of(c * R ** 4, 2), Q.of(2 * c * R * R, 3)],
-          solution: t(
-            `$\\int_0^{2\\pi} \\int_0^{${R}} ${c === 1 ? "" : c}r^2\\,dr\\,d\\theta = 2\\pi \\cdot \\frac{${c} \\cdot ${R ** 3}}{3}$. Dividing by $\\pi$ gives $${ans.toLatex()}$.`,
-            `$\\int_0^{2\\pi} \\int_0^{${R}} ${c === 1 ? "" : c}r^2\\,dr\\,d\\theta = 2\\pi \\cdot \\frac{${c} \\cdot ${R ** 3}}{3}$。除以 $\\pi$ 得 $${ans.toLatex()}$。`,
+          mistakes: distinct(ans, [
+            why(
+              c * R * R,
+              "$dA = r\\,dr\\,d\\theta$; the factor $r$ from the area element is missing.",
+              "$dA = r\\,dr\\,d\\theta$；漏了面积微元中的因子 $r$。",
+            ),
+            why(Q.of(c * R ** 4, 2), "$\\sqrt{x^2 + y^2}$ is $r$, not $r^2$.", "$\\sqrt{x^2 + y^2}$ 是 $r$，不是 $r^2$。"),
+            why(
+              Q.of(c * R ** 3, 3),
+              "The angle runs from $0$ to $2\\pi$; that uses only half of it.",
+              "角度从 $0$ 到 $2\\pi$；那只用了一半。",
+            ),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Convert to polar coordinates", "化为极坐标"],
+                t(
+                  `The integrand is $${cc}r$ and $dA = r\\,dr\\,d\\theta$, so it becomes $${cc}r^2\\,dr\\,d\\theta$.`,
+                  `被积函数为 $${cc}r$，$dA = r\\,dr\\,d\\theta$，所以化为 $${cc}r^2\\,dr\\,d\\theta$。`,
+                ),
+              ],
+              [
+                ["Integrate", "积分"],
+                t(
+                  `$\\int_0^{2\\pi} \\int_0^{${R}} ${cc}r^2\\,dr\\,d\\theta = 2\\pi \\cdot \\frac{${c} \\cdot ${R ** 3}}{3}$, and dividing by $\\pi$ gives $${ans.toLatex()}$.`,
+                  `$\\int_0^{2\\pi} \\int_0^{${R}} ${cc}r^2\\,dr\\,d\\theta = 2\\pi \\cdot \\frac{${c} \\cdot ${R ** 3}}{3}$，除以 $\\pi$ 得 $${ans.toLatex()}$。`,
+                ),
+              ],
+            ],
+            t(
+              `The average distance from the center over a disk of radius $${R}$ is $\\frac{2}{3} \\cdot ${R}$, so the integral is $${c} \\cdot \\frac{${2 * R}}{3} \\cdot ${R * R}\\pi = ${ans.toLatex()}\\pi$.`,
+              `半径为 $${R}$ 的圆盘上到中心的平均距离为 $\\frac{2}{3} \\cdot ${R}$，所以积分为 $${c} \\cdot \\frac{${2 * R}}{3} \\cdot ${R * R}\\pi = ${ans.toLatex()}\\pi$。`,
+            ),
           ),
         });
       },

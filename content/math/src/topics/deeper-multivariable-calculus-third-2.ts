@@ -2,7 +2,8 @@
 // line and surface integrals: the reverse question, a harder case or a common trap.
 // See `deeperMultivariableCalculusThird2Points`.
 
-import type { KnowledgePointDef, Rng } from "@ga/content";
+import type { KnowledgePointDef, Rng, Text } from "@ga/content";
+import { t } from "@ga/content";
 import { poly, Q } from "@ga/subject-math";
 import { multivariableDrawings4 } from "../explanation-drawings-multivariable-4.ts";
 import { multivariableDrawings5 } from "../explanation-drawings-multivariable-5.ts";
@@ -10,7 +11,15 @@ import { multivariableDrawings6 } from "../explanation-drawings-multivariable-6.
 import { multivariableDrawings7 } from "../explanation-drawings-multivariable-7.ts";
 import { multivariableDrawings8 } from "../explanation-drawings-multivariable-8.ts";
 
+import { numberProblem, why } from "../problems.ts";
 import { ask, choose, type Pair, point } from "../university-kit.ts";
+import { walked } from "./calculus-i-differentiation.ts";
+
+/** apart drops the mistakes whose value is the answer or repeats an earlier one. */
+const apart = (answer: number | Q, mistakes: readonly { readonly value: number | Q; readonly why: Text }[]) => {
+  const key = (v: number | Q) => (typeof v === "number" ? Q.of(v) : v).toLatex();
+  return mistakes.filter((m, i, all) => key(m.value) !== key(answer) && all.findIndex((x) => key(x.value) === key(m.value)) === i);
+};
 
 /** nz picks a nonzero integer from -r to r. */
 const nz = (rng: Rng, r: number) => rng.pick([...Array(2 * r + 1).keys()].map((i) => i - r).filter((i) => i !== 0));
@@ -41,26 +50,63 @@ const separatingProjection = {
     "a-projection-that-separates-the-variables",
     ["A projection that separates the variables", "使变量分离的投影"],
     [
-      "A triple integral can be set up over any of the three coordinate planes. If the solid is a triangular prism along the $y$-axis, projecting to the $xz$-plane makes the limits for $y$ constant, so an integrand in $y$ alone splits off as a single factor.",
-      "三重积分可以投影到三个坐标平面中的任何一个。如果立体是沿 $y$ 轴的三棱柱，投影到 $xz$ 平面后 $y$ 的积分限是常数，所以只含 $y$ 的被积函数可以单独分离成一个因子。",
+      "A triple integral can be set up over any of the three coordinate planes. If the solid is a triangular prism along the $y$-axis, projecting to the $xz$-plane makes the limits for $y$ constant, so an integrand in $y$ alone splits off as a single factor. For $x + z = 4$, $0 \\le y \\le 1$ and the integrand $10y$, the triangle has area $8$ and $\\int_0^1 10y\\,dy = 5$, so the integral is $40$.\n\n> **Watch out.** The projection is a triangle of area $\\frac{a^2}{2}$, not the square $a^2$ or the length $a$; and the $y$ factor is $\\int_0^b ky\\,dy = \\frac{kb^2}{2}$, not $kb$.",
+      "三重积分可以投影到三个坐标平面中的任何一个。如果立体是沿 $y$ 轴的三棱柱，投影到 $xz$ 平面后 $y$ 的积分限是常数，所以只含 $y$ 的被积函数可以单独分离成一个因子。对 $x + z = 4$，$0 \\le y \\le 1$ 与被积函数 $10y$，三角形面积为 $8$，$\\int_0^1 10y\\,dy = 5$，所以积分为 $40$。\n\n> **注意。** 投影是面积为 $\\frac{a^2}{2}$ 的三角形，不是正方形 $a^2$，也不是长度 $a$；$y$ 的因子是 $\\int_0^b ky\\,dy = \\frac{kb^2}{2}$，不是 $kb$。",
     ],
     (rng) => {
       const a = rng.int(1, 6);
       const b = rng.int(1, 6);
       const k = rng.int(1, 6);
       const answer = Q.of(k * a * a * b * b, 4);
-      return ask(
-        [
-          `$E$ is the solid bounded by $x = 0$, $z = 0$, $x + z = ${a}$, $y = 0$ and $y = ${b}$. Evaluate $\\iiint_{E} ${poly([k, "y"])}\\,dV$.`,
-          `$E$ 是由 $x = 0$，$z = 0$，$x + z = ${a}$，$y = 0$ 和 $y = ${b}$ 围成的立体。求 $\\iiint_{E} ${poly([k, "y"])}\\,dV$。`,
-        ],
+      const area = Q.of(a * a, 2);
+      const factor = Q.of(k * b * b, 2);
+      const ky = poly([k, "y"]);
+      return numberProblem({
+        prompt: t(
+          `$E$ is the solid bounded by $x = 0$, $z = 0$, $x + z = ${a}$, $y = 0$ and $y = ${b}$. Evaluate $\\iiint_{E} ${ky}\\,dV$.`,
+          `$E$ 是由 $x = 0$，$z = 0$，$x + z = ${a}$，$y = 0$ 和 $y = ${b}$ 围成的立体。求 $\\iiint_{E} ${ky}\\,dV$。`,
+        ),
         answer,
-        [Q.of(k * a * a * b * b, 2), Q.of(k * a * b * b, 2), Q.of(k * a * a * b, 2)],
-        [
-          `Over the $xz$-plane the solid projects to a triangle of area $${Q.of(a * a, 2).toLatex()}$, and $\\int_{0}^{${b}} ${poly([k, "y"])} \\, dy = ${Q.of(k * b * b, 2).toLatex()}$. The product is $${answer.toLatex()}$.`,
-          `立体在 $xz$ 平面上的投影是面积为 $${Q.of(a * a, 2).toLatex()}$ 的三角形，且 $\\int_{0}^{${b}} ${poly([k, "y"])} \\, dy = ${Q.of(k * b * b, 2).toLatex()}$。两者之积是 $${answer.toLatex()}$。`,
-        ],
-      );
+        mistakes: apart(answer, [
+          why(
+            Q.of(k * a * a * b * b, 2),
+            `That uses the square of area $${a * a}$; the projection is a triangle of area $${area.toLatex()}$.`,
+            `那是用面积为 $${a * a}$ 的正方形；投影是面积为 $${area.toLatex()}$ 的三角形。`,
+          ),
+          why(
+            Q.of(k * a * b * b, 2),
+            `That uses the length $${a}$ in place of the area $${area.toLatex()}$ of the triangle.`,
+            `那是用长度 $${a}$ 代替三角形的面积 $${area.toLatex()}$。`,
+          ),
+          why(
+            Q.of(k * a * a * b, 2),
+            `That uses $${k * b}$ for the $y$ factor; $\\int_0^{${b}} ${ky}\\,dy = ${factor.toLatex()}$.`,
+            `那是把 $y$ 的因子当成 $${k * b}$；$\\int_0^{${b}} ${ky}\\,dy = ${factor.toLatex()}$。`,
+          ),
+        ]),
+        solution: walked(
+          [
+            [
+              ["Project onto the xz-plane", "向 xz 平面投影"],
+              t(
+                `The projection is the triangle $x, z \\ge 0$, $x + z \\le ${a}$ of area $${area.toLatex()}$, and over it $0 \\le y \\le ${b}$.`,
+                `投影是三角形 $x, z \\ge 0$，$x + z \\le ${a}$，面积为 $${area.toLatex()}$，其上 $0 \\le y \\le ${b}$。`,
+              ),
+            ],
+            [
+              ["Separate the y integral", "分离 y 的积分"],
+              t(
+                `$\\int_0^{${b}} ${ky}\\,dy = ${factor.toLatex()}$, the same over the whole triangle, so the integral is $${area.toLatex()} \\cdot ${factor.toLatex()} = ${answer.toLatex()}$.`,
+                `$\\int_0^{${b}} ${ky}\\,dy = ${factor.toLatex()}$，在整个三角形上相同，所以积分为 $${area.toLatex()} \\cdot ${factor.toLatex()} = ${answer.toLatex()}$。`,
+              ),
+            ],
+          ],
+          t(
+            `The volume of $E$ is $${area.toLatex()} \\cdot ${b} = ${Q.of(a * a * b, 2).toLatex()}$, and the average of $${ky}$ over $0 \\le y \\le ${b}$ is $${Q.of(k * b, 2).toLatex()}$; their product is $${answer.toLatex()}$.`,
+            `$E$ 的体积为 $${area.toLatex()} \\cdot ${b} = ${Q.of(a * a * b, 2).toLatex()}$，$${ky}$ 在 $0 \\le y \\le ${b}$ 上的平均值为 $${Q.of(k * b, 2).toLatex()}$；两者之积为 $${answer.toLatex()}$。`,
+          ),
+        ),
+      });
     },
   ),
   figure:
@@ -74,25 +120,65 @@ const easierOrder = {
     "changing-the-order-to-do-the-easy-integrals-first",
     ["Changing the order to do the easy integrals first", "改变次序先做容易的积分"],
     [
-      "The limits $0 \\le z \\le y \\le x \\le a$ describe one region, whatever the order of integration. When the integrand depends only on $x$, it pays to integrate $z$ and $y$ first: together they give the factor $\\frac{x^{2}}{2}$, the area of a triangle.",
-      "限制 $0 \\le z \\le y \\le x \\le a$ 描述同一个区域，与积分次序无关。当被积函数只依赖 $x$ 时，先对 $z$ 和 $y$ 积分更好：二者合起来给出因子 $\\frac{x^{2}}{2}$，即一个三角形的面积。",
+      "The limits $0 \\le z \\le y \\le x \\le a$ describe one region, whatever the order of integration. When the integrand depends only on $x$, it pays to integrate $z$ and $y$ first: together they give the factor $\\frac{x^{2}}{2}$, the area of a triangle. For $\\int_0^1 \\int_z^1 \\int_y^1 x^2\\,dx\\,dy\\,dz$ this gives $\\int_0^1 x^2 \\cdot \\frac{x^2}{2}\\,dx = \\frac{1}{10}$.\n\n> **Watch out.** For fixed $x$ the pairs $0 \\le z \\le y \\le x$ fill a triangle of area $\\frac{x^2}{2}$; it is not $x^2$, and not the volume $\\frac{x^3}{6}$ of a tetrahedron.",
+      "限制 $0 \\le z \\le y \\le x \\le a$ 描述同一个区域，与积分次序无关。当被积函数只依赖 $x$ 时，先对 $z$ 和 $y$ 积分更好：二者合起来给出因子 $\\frac{x^{2}}{2}$，即一个三角形的面积。对 $\\int_0^1 \\int_z^1 \\int_y^1 x^2\\,dx\\,dy\\,dz$，得 $\\int_0^1 x^2 \\cdot \\frac{x^2}{2}\\,dx = \\frac{1}{10}$。\n\n> **注意。** 固定 $x$ 时，满足 $0 \\le z \\le y \\le x$ 的点对构成面积为 $\\frac{x^2}{2}$ 的三角形；不是 $x^2$，也不是四面体的体积 $\\frac{x^3}{6}$。",
     ],
     (rng) => {
       const a = rng.int(1, 6);
       const k = rng.int(1, 9);
       const answer = Q.of(k * a ** 4, 8);
-      return ask(
-        [
-          `Evaluate $\\int_{0}^{${a}} \\int_{z}^{${a}} \\int_{y}^{${a}} ${poly([k, "x"])}\\,dx\\,dy\\,dz$ by changing the order of integration.`,
-          `通过改变积分次序，求 $\\int_{0}^{${a}} \\int_{z}^{${a}} \\int_{y}^{${a}} ${poly([k, "x"])}\\,dx\\,dy\\,dz$。`,
-        ],
+      const kx = poly([k, "x"]);
+      const half = k === 2 ? "" : Q.of(k, 2).toLatex();
+      return numberProblem({
+        prompt: t(
+          `Evaluate $\\int_{0}^{${a}} \\int_{z}^{${a}} \\int_{y}^{${a}} ${kx}\\,dx\\,dy\\,dz$ by changing the order of integration.`,
+          `通过改变积分次序，求 $\\int_{0}^{${a}} \\int_{z}^{${a}} \\int_{y}^{${a}} ${kx}\\,dx\\,dy\\,dz$。`,
+        ),
         answer,
-        [Q.of(k * a ** 4, 4), Q.of(k * a ** 4, 24), Q.of(k * a ** 3, 6)],
-        [
-          `The region is $0 \\le z \\le y \\le x \\le ${a}$. For fixed $x$, the $z$ and $y$ integrals give $\\frac{x^{2}}{2}$, so the integral is $\\int_{0}^{${a}} ${Q.of(k, 2).toLatex()}x^{3} \\, dx = ${answer.toLatex()}$.`,
-          `区域是 $0 \\le z \\le y \\le x \\le ${a}$。固定 $x$，对 $z$ 和 $y$ 积分得 $\\frac{x^{2}}{2}$，所以积分是 $\\int_{0}^{${a}} ${Q.of(k, 2).toLatex()}x^{3} \\, dx = ${answer.toLatex()}$。`,
-        ],
-      );
+        mistakes: apart(answer, [
+          why(
+            Q.of(k * a ** 4, 4),
+            "The $z$ and $y$ integrals give the triangle area $\\frac{x^{2}}{2}$, not $x^{2}$.",
+            "对 $z$ 和 $y$ 的积分给出三角形面积 $\\frac{x^{2}}{2}$，不是 $x^{2}$。",
+          ),
+          why(
+            Q.of(k * a ** 4, 24),
+            "That uses $\\frac{x^{3}}{6}$, a volume, for the inner factor; two integrals give the area $\\frac{x^{2}}{2}$.",
+            "那是把内层因子当成体积 $\\frac{x^{3}}{6}$；两次积分给出的是面积 $\\frac{x^{2}}{2}$。",
+          ),
+          why(
+            Q.of(k * a ** 3, 6),
+            `That is $${k}$ times the volume of the region; the integrand is $${kx}$, not $${k}$.`,
+            `那是 $${k}$ 乘以区域的体积；被积函数是 $${kx}$，不是 $${k}$。`,
+          ),
+        ]),
+        solution: walked(
+          [
+            [
+              ["Rewrite the region", "改写区域"],
+              t(
+                `The limits say $0 \\le z \\le y \\le x \\le ${a}$, so in the order $dz\\,dy\\,dx$ the integral is $\\int_0^{${a}} \\int_0^x \\int_0^y ${kx}\\,dz\\,dy\\,dx$.`,
+                `积分限表示 $0 \\le z \\le y \\le x \\le ${a}$，所以按 $dz\\,dy\\,dx$ 次序积分为 $\\int_0^{${a}} \\int_0^x \\int_0^y ${kx}\\,dz\\,dy\\,dx$。`,
+              ),
+            ],
+            [
+              ["Integrate in z and y", "对 z 和 y 积分"],
+              t(
+                `$\\int_0^x \\int_0^y dz\\,dy = \\frac{x^{2}}{2}$, so the integrand becomes $${half}x^{3}$.`,
+                `$\\int_0^x \\int_0^y dz\\,dy = \\frac{x^{2}}{2}$，所以被积函数变为 $${half}x^{3}$。`,
+              ),
+            ],
+            [
+              ["Integrate in x", "对 x 积分"],
+              t(`$\\int_0^{${a}} ${half}x^{3}\\,dx = ${answer.toLatex()}$.`, `$\\int_0^{${a}} ${half}x^{3}\\,dx = ${answer.toLatex()}$。`),
+            ],
+          ],
+          t(
+            `The region is a tetrahedron with vertices whose $x$-coordinates are $0, ${a}, ${a}, ${a}$, so the average of $x$ is $${Q.of(3 * a, 4).toLatex()}$; times its volume $${Q.of(a ** 3, 6).toLatex()}$ and $${k}$ this is $${answer.toLatex()}$.`,
+            `区域是四面体，顶点的 $x$ 坐标为 $0, ${a}, ${a}, ${a}$，所以 $x$ 的平均值为 $${Q.of(3 * a, 4).toLatex()}$；乘以体积 $${Q.of(a ** 3, 6).toLatex()}$ 和 $${k}$ 得 $${answer.toLatex()}$。`,
+          ),
+        ),
+      });
     },
   ),
   figure:

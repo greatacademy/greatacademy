@@ -1238,8 +1238,8 @@ const polarLimitsFromRegion: KnowledgePointDef = {
   figure: multivariableDrawings4["double-integrals-in-plane-polar-coordinates#polar-limits-from-a-drawing"],
   title: t("Polar limits from a drawing", "从图形确定极坐标积分限"),
   explanation: t(
-    "A region bounded by arcs around the origin and rays from the origin is a rectangle in polar coordinates. Read $r$ along a ray, from the inner arc to the outer one, and $\\theta$ from the first ray counterclockwise to the last. Then $dA = r \\, dr \\, d\\theta$: the extra factor $r$ is part of the area element and is easy to forget.",
-    "由以原点为中心的圆弧和从原点出发的射线围成的区域，在极坐标下是一个矩形。沿射线读 $r$，从内弧到外弧；从第一条射线逆时针到最后一条射线读 $\\theta$。于是 $dA = r \\, dr \\, d\\theta$：多出的因子 $r$ 是面积元的一部分，很容易漏掉。",
+    "A region bounded by arcs around the origin and rays from the origin is a rectangle in polar coordinates. Read $r$ along a ray, from the inner arc to the outer one, and $\\theta$ from the first ray counterclockwise to the last. Then $dA = r \\, dr \\, d\\theta$: the extra factor $r$ is part of the area element and is easy to forget. The region between the arcs $r = 1$ and $r = 3$ and the rays $\\theta = \\frac{\\pi}{3}$ and $\\theta = \\frac{2\\pi}{3}$ gives $\\int_{\\pi/3}^{2\\pi/3} \\int_1^3 g(r, \\theta)\\,r\\,dr\\,d\\theta$.\n\n> **Watch out.** When the shading reaches the origin, $r$ starts at $0$; when there is a hole, $r$ starts at the inner arc, not at $0$. And the factor $r$ belongs in every polar area integral.",
+    "由以原点为中心的圆弧和从原点出发的射线围成的区域，在极坐标下是一个矩形。沿射线读 $r$，从内弧到外弧；从第一条射线逆时针到最后一条射线读 $\\theta$。于是 $dA = r \\, dr \\, d\\theta$：多出的因子 $r$ 是面积元的一部分，很容易漏掉。圆弧 $r = 1$、$r = 3$ 与射线 $\\theta = \\frac{\\pi}{3}$、$\\theta = \\frac{2\\pi}{3}$ 之间的区域给出 $\\int_{\\pi/3}^{2\\pi/3} \\int_1^3 g(r, \\theta)\\,r\\,dr\\,d\\theta$。\n\n> **注意。** 阴影延伸到原点时，$r$ 从 $0$ 开始；有空洞时，$r$ 从内弧开始，而不是 $0$。每个极坐标面积积分里都要有因子 $r$。",
   ),
   generate(rng: Rng): Problem {
     const inner = rng.int(0, 2);
@@ -1266,24 +1266,61 @@ const polarLimitsFromRegion: KnowledgePointDef = {
     const boundary = [...outerArc, ...innerArc, outerArc[0] as Point];
     const integral = (rLo: number, rHi: number, a: string, b: string, jacobian: boolean) =>
       `\\int_{${a}}^{${b}} \\int_{${rLo}}^{${rHi}} g(r, \\theta) ${jacobian ? "\\, r" : ""} \\, dr \\, d\\theta`;
+    const area = Q.of(Math.round((to - from) * 4) * (outer * outer - inner * inner), 8);
+    const areaPi = area.eq(Q.of(1)) ? "\\pi" : `${area.toLatex()}\\pi`;
     return withFigure(
-      pickChoice(
-        rng,
-        t(
+      explainedChoice(rng, {
+        prompt: t(
           "Which integral equals the integral over the shaded region of a function written as $g(r, \\theta)$ in polar coordinates?",
           "函数在极坐标下写作 $g(r, \\theta)$，哪个积分等于它在阴影区域上的积分？",
         ),
-        math(integral(inner, outer, lo, hi, true)),
-        [
-          math(integral(inner, outer, lo, hi, false)),
-          math(integral(inner, outer, other[0], other[1], true)),
-          math(integral(inner === 0 ? outer : 0, inner === 0 ? outer + 1 : outer, lo, hi, true)),
+        correct: math(integral(inner, outer, lo, hi, true)),
+        wrong: [
+          {
+            option: math(integral(inner, outer, lo, hi, false)),
+            why: t("The area element is $r\\,dr\\,d\\theta$; the factor $r$ is missing.", "面积元是 $r\\,dr\\,d\\theta$；漏了因子 $r$。"),
+          },
+          {
+            option: math(integral(inner, outer, other[0], other[1], true)),
+            why: t(
+              `Those are not the angles of the bounding rays; the region runs from $\\theta = ${lo}$ to $\\theta = ${hi}$.`,
+              `那不是边界射线的角度；区域从 $\\theta = ${lo}$ 到 $\\theta = ${hi}$。`,
+            ),
+          },
+          {
+            option: math(integral(inner === 0 ? outer : 0, inner === 0 ? outer + 1 : outer, lo, hi, true)),
+            why:
+              inner === 0
+                ? t(
+                    `That is the ring just outside the region; the shading runs from the origin to $r = ${outer}$.`,
+                    `那是区域外侧紧邻的圆环；阴影从原点延伸到 $r = ${outer}$。`,
+                  )
+                : t(
+                    `That starts $r$ at $0$ and fills in the hole; the shading starts at the inner arc $r = ${inner}$.`,
+                    `那是让 $r$ 从 $0$ 开始，把空洞也填上了；阴影从内弧 $r = ${inner}$ 开始。`,
+                  ),
+          },
         ],
-        t(
-          `Along a ray in the region, $r$ runs from $${inner}$ to $${outer}$, and the rays sweep counterclockwise from $\\theta = ${lo}$ to $\\theta = ${hi}$. The area element contributes the factor $r$.`,
-          `沿区域内的射线，$r$ 从 $${inner}$ 到 $${outer}$；射线从 $\\theta = ${lo}$ 逆时针扫到 $\\theta = ${hi}$。面积元带来因子 $r$。`,
+        solution: walked(
+          [
+            [
+              ["Read r along a ray", "沿射线读 r"],
+              t(`Along a ray in the region, $r$ runs from $${inner}$ to $${outer}$.`, `沿区域内的射线，$r$ 从 $${inner}$ 到 $${outer}$。`),
+            ],
+            [
+              ["Read the angles", "读出角度"],
+              t(
+                `The rays sweep counterclockwise from $\\theta = ${lo}$ to $\\theta = ${hi}$, and the area element contributes the factor $r$.`,
+                `射线从 $\\theta = ${lo}$ 逆时针扫到 $\\theta = ${hi}$，面积元带来因子 $r$。`,
+              ),
+            ],
+          ],
+          t(
+            `With $g = 1$ the integral is $(${hi} - ${lo}) \\cdot \\frac{${outer * outer} - ${inner * inner}}{2} = ${areaPi}$, the area of the shaded sector.`,
+            `取 $g = 1$，积分为 $(${hi} - ${lo}) \\cdot \\frac{${outer * outer} - ${inner * inner}}{2} = ${areaPi}$，正是阴影扇形的面积。`,
+          ),
         ),
-      ),
+      }),
       drawn(
         square(outer + 1),
         [

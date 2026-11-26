@@ -11,7 +11,7 @@ import { multivariableDrawings3 } from "../explanation-drawings-multivariable-3.
 import { multivariableDrawings4 } from "../explanation-drawings-multivariable-4.ts";
 
 import { explainedChoice, numberProblem, why } from "../problems.ts";
-import { ask, type Pair, point } from "../university-kit.ts";
+import { type Pair, point } from "../university-kit.ts";
 import { walked } from "./calculus-i-differentiation.ts";
 
 /** text turns a pair of English and Chinese strings into a text. */
@@ -2874,25 +2874,63 @@ const sumLimit = point(
   "an-inner-limit-that-is-a-sum",
   ["An inner limit that is a sum", "内层积分限是和式"],
   [
-    "In a repeated integral each limit may depend on the variables of the outer integrals. So integrating with an upper limit such as $x + y$ leaves a function of $x$ and $y$, and the integrals have to be worked from the inside out in that order.",
-    "在累次积分中，每个积分限都可以依赖外层积分的变量。所以上限如 $x + y$ 的积分留下 $x$ 和 $y$ 的函数，必须按这个顺序由内向外计算。",
+    "In a repeated integral each limit may depend on the variables of the outer integrals. So integrating with an upper limit such as $x + y$ leaves a function of $x$ and $y$, and the integrals have to be worked from the inside out in that order. For $\\int_0^1 \\int_0^x \\int_0^{x + 2y} 3\\,dz\\,dy\\,dx$ the inner integral is $3(x + 2y)$, the middle one is $3(x^2 + x^2) = 6x^2$, and the outer one is $2$.\n\n> **Watch out.** Both terms of the inner limit are integrated in the middle step: $\\int_0^x (x + y)\\,dy = x^2 + \\frac{x^2}{2}$, so neither $x$ nor $y$ may be dropped.",
+    "在累次积分中，每个积分限都可以依赖外层积分的变量。所以上限如 $x + y$ 的积分留下 $x$ 和 $y$ 的函数，必须按这个顺序由内向外计算。对 $\\int_0^1 \\int_0^x \\int_0^{x + 2y} 3\\,dz\\,dy\\,dx$，内层积分为 $3(x + 2y)$，中层为 $3(x^2 + x^2) = 6x^2$，外层为 $2$。\n\n> **注意。** 中间一步要对内层上限的两项都积分：$\\int_0^x (x + y)\\,dy = x^2 + \\frac{x^2}{2}$，$x$ 和 $y$ 哪一项都不能丢。",
   ],
   (rng) => {
     const a = rng.int(1, 5);
     const k = rng.int(1, 12);
     const answer = Q.of(k * a ** 3, 2);
-    return ask(
-      [
+    return numberProblem({
+      prompt: text([
         `Evaluate $\\int_{0}^{${a}} \\int_{0}^{x} \\int_{0}^{x + y} ${k}\\,dz\\,dy\\,dx$.`,
         `求 $\\int_{0}^{${a}} \\int_{0}^{x} \\int_{0}^{x + y} ${k}\\,dz\\,dy\\,dx$。`,
-      ],
+      ]),
       answer,
-      [Q.of(k * a ** 3, 3), Q.of(k * a ** 3, 6), k * a ** 3],
-      [
-        `The inner integral gives $${k}(x + y)$. Integrating over $y$ from $0$ to $x$ gives $${k} \\cdot \\frac{3x^{2}}{2}$, and integrating over $x$ gives $${answer.toLatex()}$.`,
-        `内层积分给出 $${k}(x + y)$。对 $y$ 从 $0$ 积到 $x$，得 $${k} \\cdot \\frac{3x^{2}}{2}$；再对 $x$ 积分，得 $${answer.toLatex()}$。`,
-      ],
-    );
+      mistakes: apart(answer, [
+        why(
+          Q.of(k * a ** 3, 3),
+          "That keeps only the $x$ of the inner limit $x + y$; the $y$ adds $\\frac{x^2}{2}$ in the middle integral.",
+          "那只保留了内层上限 $x + y$ 中的 $x$；$y$ 在中层积分里还贡献 $\\frac{x^2}{2}$。",
+        ),
+        why(
+          Q.of(k * a ** 3, 6),
+          "That keeps only the $y$ of the inner limit $x + y$; the $x$ adds $x^2$ in the middle integral.",
+          "那只保留了内层上限 $x + y$ 中的 $y$；$x$ 在中层积分里还贡献 $x^2$。",
+        ),
+        why(
+          Q.of(3 * k * a ** 3, 2),
+          "The outer antiderivative of $x^2$ is $\\frac{x^3}{3}$; the division by $3$ is missing.",
+          "外层 $x^2$ 的原函数是 $\\frac{x^3}{3}$；漏了除以 $3$。",
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Integrate in z", "对 z 积分"],
+            text([`$\\int_0^{x + y} ${k}\\,dz = ${k}(x + y)$.`, `$\\int_0^{x + y} ${k}\\,dz = ${k}(x + y)$。`]),
+          ],
+          [
+            ["Integrate in y", "对 y 积分"],
+            text([
+              `$\\int_0^x ${k}(x + y)\\,dy = ${k}\\left(x^2 + \\frac{x^2}{2}\\right) = \\frac{${3 * k}x^{2}}{2}$.`,
+              `$\\int_0^x ${k}(x + y)\\,dy = ${k}\\left(x^2 + \\frac{x^2}{2}\\right) = \\frac{${3 * k}x^{2}}{2}$。`,
+            ]),
+          ],
+          [
+            ["Integrate in x", "对 x 积分"],
+            text([
+              `$\\int_0^{${a}} \\frac{${3 * k}x^{2}}{2}\\,dx = \\frac{${3 * k} \\cdot ${a ** 3}}{6} = ${answer.toLatex()}$.`,
+              `$\\int_0^{${a}} \\frac{${3 * k}x^{2}}{2}\\,dx = \\frac{${3 * k} \\cdot ${a ** 3}}{6} = ${answer.toLatex()}$。`,
+            ]),
+          ],
+        ],
+        text([
+          `The base is the triangle $0 \\le y \\le x \\le ${a}$ of area $${Q.of(a * a, 2).toLatex()}$ with centroid $\\left(${Q.of(2 * a, 3).toLatex()}, ${Q.of(a, 3).toLatex()}\\right)$. The height $x + y$ is linear, so its average is its value $${a}$ at the centroid, and $${k} \\cdot ${a} \\cdot ${Q.of(a * a, 2).toLatex()} = ${answer.toLatex()}$.`,
+          `底面是三角形 $0 \\le y \\le x \\le ${a}$，面积为 $${Q.of(a * a, 2).toLatex()}$，形心为 $\\left(${Q.of(2 * a, 3).toLatex()}, ${Q.of(a, 3).toLatex()}\\right)$。高度 $x + y$ 是线性的，其平均值等于在形心处的值 $${a}$，而 $${k} \\cdot ${a} \\cdot ${Q.of(a * a, 2).toLatex()} = ${answer.toLatex()}$。`,
+        ]),
+      ),
+    });
   },
 );
 
@@ -2900,8 +2938,8 @@ const tetraVolume = point(
   "the-volume-of-a-tetrahedron-from-its-plane",
   ["The volume of a tetrahedron from its plane", "由平面求四面体的体积"],
   [
-    "The tetrahedron cut from the first octant by a plane has intercepts $a$, $b$, $c$ and volume $\\frac{abc}{6}$. It can be seen as a region of any of the three types, and whichever projection is used, the triple integral gives the same result.",
-    "平面从第一卦限切出的四面体，截距为 $a$、$b$、$c$，体积是 $\\frac{abc}{6}$。它可以看作三种类型中的任何一种，无论用哪种投影，三重积分都给出相同的结果。",
+    "The tetrahedron cut from the first octant by a plane has intercepts $a$, $b$, $c$ and volume $\\frac{abc}{6}$. It can be seen as a region of any of the three types, and whichever projection is used, the triple integral gives the same result. For $x + 2y + 5z = 10$ the intercepts are $10$, $5$ and $2$, so the volume is $\\frac{100}{6} = \\frac{50}{3}$.\n\n> **Watch out.** The intercepts are $\\frac{s}{p}$, $\\frac{s}{q}$, $\\frac{s}{r}$, not the coefficients. And the volume is a sixth of the box they span: a half for the triangular base and a third for the pyramid.",
+    "平面从第一卦限切出的四面体，截距为 $a$、$b$、$c$，体积是 $\\frac{abc}{6}$。它可以看作三种类型中的任何一种，无论用哪种投影，三重积分都给出相同的结果。对 $x + 2y + 5z = 10$，截距为 $10$、$5$ 和 $2$，所以体积为 $\\frac{100}{6} = \\frac{50}{3}$。\n\n> **注意。** 截距是 $\\frac{s}{p}$、$\\frac{s}{q}$、$\\frac{s}{r}$，不是系数。体积是截距张成的长方体的六分之一：三角形底面带来一半，锥体带来三分之一。",
   ],
   (rng) => {
     const p = rng.int(1, 4);
@@ -2909,18 +2947,54 @@ const tetraVolume = point(
     const r = rng.int(1, 4);
     const s = rng.pick([12, 24, 6, 18, 36]);
     const answer = Q.of(s ** 3, 6 * p * q * r);
-    return ask(
-      [
+    const [X, Y, Z] = [Q.of(s, p), Q.of(s, q), Q.of(s, r)];
+    const base = X.mul(Y).div(Q.of(2));
+    return numberProblem({
+      prompt: text([
         `$E$ is the tetrahedron bounded by the coordinate planes and $${poly([p, "x"], [q, "y"], [r, "z"])} = ${s}$. Find its volume.`,
         `$E$ 是由坐标平面和 $${poly([p, "x"], [q, "y"], [r, "z"])} = ${s}$ 围成的四面体。求它的体积。`,
-      ],
+      ]),
       answer,
-      [Q.of(s ** 3, p * q * r), Q.of(s ** 3, 3 * p * q * r), Q.of(s ** 3, 2 * p * q * r)],
-      [
-        `The intercepts are $${Q.of(s, p).toLatex()}$, $${Q.of(s, q).toLatex()}$ and $${Q.of(s, r).toLatex()}$. The volume is their product divided by $6$, which is $${answer.toLatex()}$.`,
-        `截距是 $${Q.of(s, p).toLatex()}$、$${Q.of(s, q).toLatex()}$ 和 $${Q.of(s, r).toLatex()}$。体积是它们的积除以 $6$，等于 $${answer.toLatex()}$。`,
-      ],
-    );
+      mistakes: apart(answer, [
+        why(
+          Q.of(s ** 3, p * q * r),
+          "That is the box spanned by the intercepts; the tetrahedron is a sixth of it.",
+          "那是截距张成的长方体；四面体只是它的六分之一。",
+        ),
+        why(
+          Q.of(s ** 3, 3 * p * q * r),
+          "That takes a third of the rectangle times the height; the base in the $xy$-plane is a triangle, half the rectangle.",
+          "那是矩形乘高的三分之一；$xy$ 平面内的底面是三角形，只有矩形的一半。",
+        ),
+        why(
+          Q.of(s ** 3, 2 * p * q * r),
+          "That is the triangular base times the height, a prism; a pyramid has a third of that.",
+          "那是三角形底面乘高，即棱柱；锥体只有它的三分之一。",
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Find the intercepts", "求截距"],
+            text([
+              `Setting two coordinates to $0$ gives the intercepts $${X.toLatex()}$, $${Y.toLatex()}$ and $${Z.toLatex()}$.`,
+              `令两个坐标为 $0$，得截距 $${X.toLatex()}$、$${Y.toLatex()}$ 和 $${Z.toLatex()}$。`,
+            ]),
+          ],
+          [
+            ["Take a sixth of the product", "取乘积的六分之一"],
+            text([
+              `$\\frac{1}{6} \\cdot ${X.toLatex()} \\cdot ${Y.toLatex()} \\cdot ${Z.toLatex()} = ${answer.toLatex()}$.`,
+              `$\\frac{1}{6} \\cdot ${X.toLatex()} \\cdot ${Y.toLatex()} \\cdot ${Z.toLatex()} = ${answer.toLatex()}$。`,
+            ]),
+          ],
+        ],
+        text([
+          `As a Type I region, $E$ lies over the triangle in the $xy$-plane of area $${base.toLatex()}$ and reaches height $${Z.toLatex()}$; a pyramid has volume $\\frac{1}{3} \\cdot ${base.toLatex()} \\cdot ${Z.toLatex()} = ${answer.toLatex()}$.`,
+          `视为 Type I 型区域，$E$ 位于 $xy$ 平面内面积为 $${base.toLatex()}$ 的三角形上方，高为 $${Z.toLatex()}$；锥体体积为 $\\frac{1}{3} \\cdot ${base.toLatex()} \\cdot ${Z.toLatex()} = ${answer.toLatex()}$。`,
+        ]),
+      ),
+    });
   },
 );
 
@@ -2928,26 +3002,61 @@ const yBetweenSurfaces = point(
   "two-curved-surfaces-as-limits",
   ["Two curved surfaces as limits", "以两个曲面为积分限"],
   [
-    "For a region of type II, the $y$ limits can both be curved. Only their difference matters when finding the volume, so in the integral of $(x^{2} + kz) - x^{2}$ the curved part disappears, and only the term $kz$ remains to be integrated.",
-    "对二型区域，$y$ 的上下限都可以是曲面。求体积时只有它们的差起作用，所以在 $(x^{2} + kz) - x^{2}$ 的积分中，曲面部分消失，只剩 $kz$ 项需要积分。",
+    "For a region of type II, the $y$ limits can both be curved. Only their difference matters when finding the volume, so in the integral of $(x^{2} + kz) - x^{2}$ the curved part disappears, and only the term $kz$ remains to be integrated. For $z^2 \\le y \\le z^2 + 3x$ over $0 \\le x \\le 2$, $0 \\le z \\le 1$ the thickness is $3x$, and the volume is $\\int_0^1 \\int_0^2 3x\\,dx\\,dz = 6$.\n\n> **Watch out.** The lower surface is not $y = 0$; subtract it before integrating. The thickness that remains still varies, so integrate it rather than using its largest value.",
+    "对二型区域，$y$ 的上下限都可以是曲面。求体积时只有它们的差起作用，所以在 $(x^{2} + kz) - x^{2}$ 的积分中，曲面部分消失，只剩 $kz$ 项需要积分。对 $0 \\le x \\le 2$，$0 \\le z \\le 1$ 上的 $z^2 \\le y \\le z^2 + 3x$，厚度为 $3x$，体积为 $\\int_0^1 \\int_0^2 3x\\,dx\\,dz = 6$。\n\n> **注意。** 下曲面不是 $y = 0$，积分前要先减去它。剩下的厚度仍是变化的，要积分它，而不是取它的最大值。",
   ],
   (rng) => {
     const a = rng.int(1, 6);
     const b = rng.int(1, 6);
     const k = rng.int(1, 6);
     const answer = Q.of(a * k * b * b, 2);
-    return ask(
-      [
+    const kz = poly([k, "z"]);
+    return numberProblem({
+      prompt: text([
         `Find the volume of $E = \\{(x, y, z) : 0 \\le x \\le ${a},\\ 0 \\le z \\le ${b},\\ x^{2} \\le y \\le ${poly([1, "x^{2}"], [k, "z"])}\\}$.`,
         `求 $E = \\{(x, y, z) : 0 \\le x \\le ${a},\\ 0 \\le z \\le ${b},\\ x^{2} \\le y \\le ${poly([1, "x^{2}"], [k, "z"])}\\}$ 的体积。`,
-      ],
+      ]),
       answer,
-      [a * k * b, a * k * b * b, Q.of(a ** 3, 3).add(answer)],
-      [
-        `The length in the $y$ direction is $${poly([k, "z"])}$. So the volume is $\\int_{0}^{${a}} \\int_{0}^{${b}} ${poly([k, "z"])} \\, dz \\, dx = ${answer.toLatex()}$.`,
-        `$y$ 方向的长度是 $${poly([k, "z"])}$。所以体积是 $\\int_{0}^{${a}} \\int_{0}^{${b}} ${poly([k, "z"])} \\, dz \\, dx = ${answer.toLatex()}$。`,
-      ],
-    );
+      mistakes: apart(answer, [
+        why(
+          a * k * b * b,
+          `The antiderivative of $${kz}$ is $\\frac{${k}z^{2}}{2}$; the factor $\\frac{1}{2}$ is missing.`,
+          `$${kz}$ 的原函数是 $\\frac{${k}z^{2}}{2}$；漏了因子 $\\frac{1}{2}$。`,
+        ),
+        why(
+          a * k * b,
+          `That uses the thickness $${k}$; the thickness is $${kz}$, which grows with $z$.`,
+          `那是把厚度当成 $${k}$；厚度是 $${kz}$，随 $z$ 增大。`,
+        ),
+        why(
+          Q.of(b * a ** 3, 3).add(answer),
+          "That integrates $y$ from $0$ to the upper surface; the lower surface $y = x^{2}$ must be subtracted.",
+          "那是让 $y$ 从 $0$ 积到上曲面；必须减去下曲面 $y = x^{2}$。",
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Find the thickness", "求厚度"],
+            text([
+              `$\\int_{x^{2}}^{${poly([1, "x^{2}"], [k, "z"])}} dy = ${kz}$; the curved part cancels.`,
+              `$\\int_{x^{2}}^{${poly([1, "x^{2}"], [k, "z"])}} dy = ${kz}$；曲面部分相消。`,
+            ]),
+          ],
+          [
+            ["Integrate over the projection", "在投影上积分"],
+            text([
+              `$\\int_{0}^{${a}} \\int_{0}^{${b}} ${kz}\\,dz\\,dx = ${a} \\cdot \\frac{${k} \\cdot ${b * b}}{2} = ${answer.toLatex()}$.`,
+              `$\\int_{0}^{${a}} \\int_{0}^{${b}} ${kz}\\,dz\\,dx = ${a} \\cdot \\frac{${k} \\cdot ${b * b}}{2} = ${answer.toLatex()}$。`,
+            ]),
+          ],
+        ],
+        text([
+          `At height $z$ the cross-section lies between two copies of the parabola $y = x^{2}$, one shifted up by $${kz}$, over a width $${a}$, so its area is $${a} \\cdot ${kz}$; and $\\int_0^{${b}} ${poly([a * k, "z"])}\\,dz = ${answer.toLatex()}$.`,
+          `在高度 $z$ 处，截面夹在抛物线 $y = x^{2}$ 及其上移 $${kz}$ 的副本之间，宽为 $${a}$，所以面积为 $${a} \\cdot ${kz}$；而 $\\int_0^{${b}} ${poly([a * k, "z"])}\\,dz = ${answer.toLatex()}$。`,
+        ]),
+      ),
+    });
   },
 );
 
@@ -2955,28 +3064,62 @@ const xOverTypeThree = point(
   "integrating-x-with-a-limit-depending-on-two-variables",
   ["Integrating x with a limit depending on two variables", "积分限依赖两个变量时对 x 积分"],
   [
-    "For a region of type III, the inner integral in $x$ can have a limit such as $y + z$. Integrating the function $x$ gives half of the square of this limit, and expanding the square is needed before the other two integrations.",
-    "对三型区域，$x$ 的内层积分可以有 $y + z$ 这样的积分限。对函数 $x$ 积分，得到这个积分限平方的一半，在另外两次积分之前要先展开平方。",
+    "For a region of type III, the inner integral in $x$ can have a limit such as $y + z$. Integrating the function $x$ gives half of the square of this limit, and expanding the square is needed before the other two integrations. For $0 \\le x \\le y + 2z$ over the unit square in $y$ and $z$, the inner integral is $\\frac{y^2 + 4yz + 4z^2}{2}$, and over the square this gives $\\frac{1}{2}\\left(\\frac{1}{3} + 1 + \\frac{4}{3}\\right) = \\frac{4}{3}$.\n\n> **Watch out.** The square of $y + z$ has the cross term $2yz$, and the antiderivative of $x$ brings a factor $\\frac{1}{2}$; integrating $1$ instead of $x$ gives the volume.",
+    "对三型区域，$x$ 的内层积分可以有 $y + z$ 这样的积分限。对函数 $x$ 积分，得到这个积分限平方的一半，在另外两次积分之前要先展开平方。对 $y$、$z$ 在单位正方形上、$0 \\le x \\le y + 2z$，内层积分为 $\\frac{y^2 + 4yz + 4z^2}{2}$，在正方形上积分得 $\\frac{1}{2}\\left(\\frac{1}{3} + 1 + \\frac{4}{3}\\right) = \\frac{4}{3}$。\n\n> **注意。** $y + z$ 的平方有交叉项 $2yz$，$x$ 的原函数带来因子 $\\frac{1}{2}$；积分 $1$ 而不是 $x$ 得到的是体积。",
   ],
   (rng) => {
     const a = rng.int(1, 6);
     const b = rng.int(1, 6);
-    const answer = Q.of(a ** 3 * b, 6)
-      .add(Q.of(a * a * b * b, 4))
-      .add(Q.of(a * b ** 3, 6));
+    const [p, m, q] = [Q.of(a ** 3 * b, 6), Q.of(a * a * b * b, 4), Q.of(a * b ** 3, 6)];
+    const answer = p.add(m).add(q);
     const once = Q.of(a * a * b, 2).add(Q.of(a * b * b, 2));
-    return ask(
-      [
+    const meanSquare = Q.of((a + b) ** 2, 4).add(Q.of(a * a + b * b, 12));
+    return numberProblem({
+      prompt: text([
         `Evaluate $\\iiint_{E} x\\,dV$, where $E = \\{(x, y, z) : 0 \\le y \\le ${a},\\ 0 \\le z \\le ${b},\\ 0 \\le x \\le y + z\\}$.`,
         `求 $\\iiint_{E} x\\,dV$，其中 $E = \\{(x, y, z) : 0 \\le y \\le ${a},\\ 0 \\le z \\le ${b},\\ 0 \\le x \\le y + z\\}$。`,
-      ],
+      ]),
       answer,
-      [once, answer.mul(Q.of(2)), answer.mul(Q.of(1, 2))],
-      [
-        `The inner integral gives $\\frac{(y + z)^{2}}{2}$. Expanding and integrating over the rectangle gives $${Q.of(a ** 3 * b, 6).toLatex()} + ${Q.of(a * a * b * b, 4).toLatex()} + ${Q.of(a * b ** 3, 6).toLatex()} = ${answer.toLatex()}$.`,
-        `内层积分给出 $\\frac{(y + z)^{2}}{2}$。展开后在矩形上积分，得 $${Q.of(a ** 3 * b, 6).toLatex()} + ${Q.of(a * a * b * b, 4).toLatex()} + ${Q.of(a * b ** 3, 6).toLatex()} = ${answer.toLatex()}$。`,
-      ],
-    );
+      mistakes: apart(answer, [
+        why(
+          once,
+          "That is the volume of $E$, the integral of $1$; the integrand is $x$.",
+          "那是 $E$ 的体积，即 $1$ 的积分；被积函数是 $x$。",
+        ),
+        why(
+          answer.mul(Q.of(2)),
+          "The antiderivative of $x$ is $\\frac{x^{2}}{2}$; the factor $\\frac{1}{2}$ is missing.",
+          "$x$ 的原函数是 $\\frac{x^{2}}{2}$；漏了因子 $\\frac{1}{2}$。",
+        ),
+        why(
+          p.add(q),
+          "That squares $y + z$ as $y^{2} + z^{2}$; the cross term $2yz$ is missing.",
+          "那是把 $y + z$ 平方成 $y^{2} + z^{2}$；漏了交叉项 $2yz$。",
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Integrate in x", "对 x 积分"],
+            text([
+              "$\\int_0^{y + z} x\\,dx = \\frac{(y + z)^{2}}{2} = \\frac{y^{2} + 2yz + z^{2}}{2}$.",
+              "$\\int_0^{y + z} x\\,dx = \\frac{(y + z)^{2}}{2} = \\frac{y^{2} + 2yz + z^{2}}{2}$。",
+            ]),
+          ],
+          [
+            ["Integrate each term over the rectangle", "在矩形上逐项积分"],
+            text([
+              `$\\frac{1}{2}\\iint y^{2}\\,dA = ${p.toLatex()}$, $\\iint yz\\,dA = ${m.toLatex()}$, $\\frac{1}{2}\\iint z^{2}\\,dA = ${q.toLatex()}$, and the sum is $${answer.toLatex()}$.`,
+              `$\\frac{1}{2}\\iint y^{2}\\,dA = ${p.toLatex()}$，$\\iint yz\\,dA = ${m.toLatex()}$，$\\frac{1}{2}\\iint z^{2}\\,dA = ${q.toLatex()}$，相加得 $${answer.toLatex()}$。`,
+            ]),
+          ],
+        ],
+        text([
+          `On the rectangle $y + z$ has mean $${Q.of(a + b, 2).toLatex()}$ and variance $\\frac{${a * a} + ${b * b}}{12}$, so the mean of $(y + z)^{2}$ is $${meanSquare.toLatex()}$; half of it times the area $${a * b}$ is $${answer.toLatex()}$.`,
+          `在矩形上 $y + z$ 的均值为 $${Q.of(a + b, 2).toLatex()}$，方差为 $\\frac{${a * a} + ${b * b}}{12}$，所以 $(y + z)^{2}$ 的均值为 $${meanSquare.toLatex()}$；它的一半乘以面积 $${a * b}$ 得 $${answer.toLatex()}$。`,
+        ]),
+      ),
+    });
   },
 );
 

@@ -14,7 +14,6 @@ import { multivariableDrawings8 } from "../explanation-drawings-multivariable-8.
 
 import { explainedChoice, numberProblem, pointLatex, pointProblem, say, vectorLatex, why, withMistakes } from "../problems.ts";
 import { walked } from "./calculus-i-differentiation.ts";
-import { pickChoice } from "./grade-4-fractions.ts";
 
 /** apart drops the mistakes whose value is the answer or repeats an earlier one. */
 const apart = (answer: number | Q, mistakes: readonly { readonly value: number | Q; readonly why: Text }[]) => {
@@ -1036,8 +1035,8 @@ const gaussianOverADisk: KnowledgePointDef = {
   id: "integrating-an-exponential-of-r-squared-over-a-disk",
   title: t("Integrating an exponential of $r^2$ over a disk", "在圆盘上积分 $r^2$ 的指数"),
   explanation: t(
-    "The function $e^{-k(x^2+y^2)}$ has no elementary antiderivative in $x$, but polar coordinates supply the factor $r$ from $dA = r\\,dr\\,d\\theta$, and then $\\int re^{-kr^2}\\,dr$ yields to a substitution. This is the key step in computing the Gaussian integral.",
-    "函数 $e^{-k(x^2+y^2)}$ 对 $x$ 没有初等原函数，但极坐标中 $dA = r\\,dr\\,d\\theta$ 提供了因子 $r$，于是 $\\int re^{-kr^2}\\,dr$ 可以用换元法求出。这是计算高斯积分的关键一步。",
+    "The function $e^{-k(x^2+y^2)}$ has no elementary antiderivative in $x$, but polar coordinates supply the factor $r$ from $dA = r\\,dr\\,d\\theta$, and then $\\int re^{-kr^2}\\,dr$ yields to a substitution. This is the key step in computing the Gaussian integral. Over the disk of radius $5$, $\\iint e^{-(x^2 + y^2)}\\,dA = 2\\pi \\cdot \\frac{1 - e^{-25}}{2} = \\pi(1 - e^{-25})$, and as the radius grows this tends to $\\pi$.\n\n> **Watch out.** The substitution $u = kr^2$ has $du = 2kr\\,dr$, so it divides by $2k$, not $k$. And the lower limit $r = 0$ contributes $e^0 = 1$, which gives the $1$ in $1 - e^{-kR^2}$.",
+    "函数 $e^{-k(x^2+y^2)}$ 对 $x$ 没有初等原函数，但极坐标中 $dA = r\\,dr\\,d\\theta$ 提供了因子 $r$，于是 $\\int re^{-kr^2}\\,dr$ 可以用换元法求出。这是计算高斯积分的关键一步。在半径为 $5$ 的圆盘上，$\\iint e^{-(x^2 + y^2)}\\,dA = 2\\pi \\cdot \\frac{1 - e^{-25}}{2} = \\pi(1 - e^{-25})$，半径增大时它趋于 $\\pi$。\n\n> **注意。** 换元 $u = kr^2$ 有 $du = 2kr\\,dr$，所以要除以 $2k$，不是 $k$。下限 $r = 0$ 贡献 $e^0 = 1$，这就是 $1 - e^{-kR^2}$ 中的 $1$。",
   ),
   generate(rng) {
     const c = rng.int(1, 4);
@@ -1048,23 +1047,65 @@ const gaussianOverADisk: KnowledgePointDef = {
     const head = (q: Q) => (q.eq(Q.of(1)) ? "\\pi" : `${q.toLatex()}\\pi`);
     const power = `e^{-${exponent}}`;
     const integrand = `${coefficient(c)}e^{-${coefficient(k)}(x^2 + y^2)}`;
-    return pickChoice(
-      rng,
-      t(
+    return explainedChoice(rng, {
+      prompt: t(
         `Evaluate $\\iint_D ${integrand}\\,dA$, where $D$ is the disk $x^2 + y^2 \\le ${R * R}$.`,
         `计算 $\\iint_D ${integrand}\\,dA$，其中 $D$ 是圆盘 $x^2 + y^2 \\le ${R * R}$。`,
       ),
-      both(`${head(front)}(1 - ${power})`),
-      [
-        both(`${head(front)}\\,${power}`),
-        both(`${head(front.mul(Q.of(2)))}(1 - ${power})`),
-        both(`${head(front.mul(Q.of(k)))}(1 - e^{-${R * R}})`),
+      correct: both(`${head(front)}(1 - ${power})`),
+      wrong: [
+        {
+          option: both(`${head(front)}\\,${power}`),
+          why: t(
+            "That keeps only the upper limit; the lower limit $r = 0$ contributes $e^0 = 1$.",
+            "那只保留了上限；下限 $r = 0$ 贡献 $e^0 = 1$。",
+          ),
+        },
+        {
+          option: both(`${head(front.mul(Q.of(2)))}(1 - ${power})`),
+          why: t(
+            `The substitution $u = ${k}r^2$ has $du = ${2 * k}r\\,dr$, so it divides by $${2 * k}$, not $${k}$.`,
+            `换元 $u = ${k}r^2$ 有 $du = ${2 * k}r\\,dr$，所以要除以 $${2 * k}$，不是 $${k}$。`,
+          ),
+        },
+        {
+          option: both(`${head(front.mul(Q.of(k)))}(1 - e^{-${R * R}})`),
+          why: t(
+            `That drops the $${k}$ in the exponent $-${k}r^2$, both at $r = ${R}$ and in the substitution.`,
+            `那是丢掉了指数 $-${k}r^2$ 中的 $${k}$，在 $r = ${R}$ 处和换元中都丢了。`,
+          ),
+        },
       ],
-      t(
-        `In polar coordinates it is $2\\pi \\cdot ${c}\\int_0^{${R}} re^{-${k}r^2}\\,dr = 2\\pi \\cdot ${c} \\cdot \\frac{1 - ${power}}{${2 * k}}$. That is $${head(front)}(1 - ${power})$.`,
-        `用极坐标得 $2\\pi \\cdot ${c}\\int_0^{${R}} re^{-${k}r^2}\\,dr = 2\\pi \\cdot ${c} \\cdot \\frac{1 - ${power}}{${2 * k}}$，即 $${head(front)}(1 - ${power})$。`,
+      solution: walked(
+        [
+          [
+            ["Convert to polar coordinates", "化为极坐标"],
+            t(
+              `$\\iint_D ${integrand}\\,dA = \\int_0^{2\\pi} \\int_0^{${R}} ${coefficient(c)}e^{-${coefficient(k)}r^2}\\,r\\,dr\\,d\\theta$.`,
+              `$\\iint_D ${integrand}\\,dA = \\int_0^{2\\pi} \\int_0^{${R}} ${coefficient(c)}e^{-${coefficient(k)}r^2}\\,r\\,dr\\,d\\theta$。`,
+            ),
+          ],
+          [
+            ["Substitute", "换元"],
+            t(
+              `With $u = ${coefficient(k)}r^2$, $\\int_0^{${R}} re^{-${coefficient(k)}r^2}\\,dr = \\frac{1}{${2 * k}}\\int_0^{${exponent}} e^{-u}\\,du = \\frac{1 - ${power}}{${2 * k}}$.`,
+              `令 $u = ${coefficient(k)}r^2$，$\\int_0^{${R}} re^{-${coefficient(k)}r^2}\\,dr = \\frac{1}{${2 * k}}\\int_0^{${exponent}} e^{-u}\\,du = \\frac{1 - ${power}}{${2 * k}}$。`,
+            ),
+          ],
+          [
+            ["Multiply", "相乘"],
+            t(
+              `$2\\pi \\cdot ${c} \\cdot \\frac{1 - ${power}}{${2 * k}} = ${head(front)}(1 - ${power})$.`,
+              `$2\\pi \\cdot ${c} \\cdot \\frac{1 - ${power}}{${2 * k}} = ${head(front)}(1 - ${power})$。`,
+            ),
+          ],
+        ],
+        t(
+          `The integrand is at most $${c}$, so the integral is at most $${c} \\cdot ${R * R}\\pi$; indeed $1 - e^{-u} \\le u$ gives $${head(front)}(1 - ${power}) \\le ${head(front)} \\cdot ${exponent} = ${c * R * R}\\pi$.`,
+          `被积函数不超过 $${c}$，所以积分不超过 $${c} \\cdot ${R * R}\\pi$；确实由 $1 - e^{-u} \\le u$ 得 $${head(front)}(1 - ${power}) \\le ${head(front)} \\cdot ${exponent} = ${c * R * R}\\pi$。`,
+        ),
       ),
-    );
+    });
   },
 };
 
@@ -2284,8 +2325,8 @@ const tetrahedronMoment: KnowledgePointDef = {
   id: "integrating-a-coordinate-over-a-tetrahedron",
   title: t("Integrating a coordinate over a tetrahedron", "在四面体上对坐标积分"),
   explanation: t(
-    "The integral of a coordinate over a solid equals the solid's volume times the average of that coordinate. For a tetrahedron, the centroid is the average of the four vertices. The corner tetrahedron with intercepts $a$, $b$, $c$ has volume $\\frac{abc}{6}$ and centroid at $x = \\frac{a}{4}$, so no iterated integration is needed.",
-    "坐标在立体上的积分，等于立体的体积乘以这个坐标的平均值。四面体的形心是四个顶点的平均。截距为 $a$、$b$、$c$ 的角上四面体，体积是 $\\frac{abc}{6}$，形心在 $x = \\frac{a}{4}$ 处，所以不需要累次积分。",
+    "The integral of a coordinate over a solid equals the solid's volume times the average of that coordinate. For a tetrahedron, the centroid is the average of the four vertices. The corner tetrahedron with intercepts $a$, $b$, $c$ has volume $\\frac{abc}{6}$ and centroid at $x = \\frac{a}{4}$, so no iterated integration is needed. With intercepts $8$, $3$, $2$ the volume is $8$, the average of $x$ is $2$, and $\\iiint_E x\\,dV = 16$.\n\n> **Watch out.** The average of $x$ over a tetrahedron is $\\frac{a}{4}$, not $\\frac{a}{2}$ as on a box: most of the solid lies near the face $x = 0$.",
+    "坐标在立体上的积分，等于立体的体积乘以这个坐标的平均值。四面体的形心是四个顶点的平均。截距为 $a$、$b$、$c$ 的角上四面体，体积是 $\\frac{abc}{6}$，形心在 $x = \\frac{a}{4}$ 处，所以不需要累次积分。截距为 $8$、$3$、$2$ 时，体积为 $8$，$x$ 的平均值为 $2$，所以 $\\iiint_E x\\,dV = 16$。\n\n> **注意。** $x$ 在四面体上的平均值是 $\\frac{a}{4}$，而不是长方体上的 $\\frac{a}{2}$：立体的大部分靠近面 $x = 0$。",
   ),
   generate(rng) {
     const a = rng.int(1, 6);
@@ -2300,10 +2341,51 @@ const tetrahedronMoment: KnowledgePointDef = {
         `设 $E$ 是满足 $x, y, z \\ge 0$ 且 $${overNumber("x", a)} + ${overNumber("y", b)} + ${overNumber("z", c)} \\le 1$ 的立体。计算 $\\iiint_E x\\,dV$。`,
       ),
       answer,
-      wrong: [volume, Q.of(a * a * b * c, 6), Q.of(a * b * c, 24)],
-      solution: t(
-        `The volume is $${volume.toLatex()}$ and the average of $x$ is $${centre.toLatex()}$. Their product is $${answer.toLatex()}$.`,
-        `体积是 $${volume.toLatex()}$，$x$ 的平均值是 $${centre.toLatex()}$。它们的积是 $${answer.toLatex()}$。`,
+      mistakes: apart(answer, [
+        why(
+          volume,
+          "That is the volume of $E$, the integral of $1$; the integrand is $x$.",
+          "那是 $E$ 的体积，即 $1$ 的积分；被积函数是 $x$。",
+        ),
+        why(
+          Q.of(a * a * b * c, 12),
+          `That uses the average $${Q.of(a, 2).toLatex()}$ of $x$ on a box; on the tetrahedron the average is $${centre.toLatex()}$.`,
+          `那是用长方体上 $x$ 的平均值 $${Q.of(a, 2).toLatex()}$；在四面体上平均值是 $${centre.toLatex()}$。`,
+        ),
+        why(
+          Q.of(a * a * b * c, 6),
+          `That multiplies the volume by the largest value $${a}$ of $x$, reached only at one vertex.`,
+          `那是用体积乘以 $x$ 的最大值 $${a}$，而它只在一个顶点取到。`,
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Find the volume", "求体积"],
+            t(
+              `$\\frac{${a} \\cdot ${b} \\cdot ${c}}{6} = ${volume.toLatex()}$.`,
+              `$\\frac{${a} \\cdot ${b} \\cdot ${c}}{6} = ${volume.toLatex()}$。`,
+            ),
+          ],
+          [
+            ["Find the average of x", "求 x 的平均值"],
+            t(
+              `The vertices have $x = 0, 0, 0, ${a}$, so the centroid has $x = ${centre.toLatex()}$.`,
+              `四个顶点的 $x$ 为 $0, 0, 0, ${a}$，所以形心的 $x = ${centre.toLatex()}$。`,
+            ),
+          ],
+          [
+            ["Multiply", "相乘"],
+            t(
+              `$${volume.toLatex()} \\cdot ${centre.toLatex()} = ${answer.toLatex()}$.`,
+              `$${volume.toLatex()} \\cdot ${centre.toLatex()} = ${answer.toLatex()}$。`,
+            ),
+          ],
+        ],
+        t(
+          `Slice at fixed $x$: the cross-section is a triangle of area $\\frac{${b * c}}{2}\\left(1 - \\frac{x}{${a}}\\right)^{2}$, and $\\int_0^{${a}} x \\cdot \\frac{${b * c}}{2}\\left(1 - \\frac{x}{${a}}\\right)^{2} dx = \\frac{${b * c}}{2} \\cdot \\frac{${a * a}}{12} = ${answer.toLatex()}$.`,
+          `固定 $x$ 作截面：截面是面积为 $\\frac{${b * c}}{2}\\left(1 - \\frac{x}{${a}}\\right)^{2}$ 的三角形，而 $\\int_0^{${a}} x \\cdot \\frac{${b * c}}{2}\\left(1 - \\frac{x}{${a}}\\right)^{2} dx = \\frac{${b * c}}{2} \\cdot \\frac{${a * a}}{12} = ${answer.toLatex()}$。`,
+        ),
       ),
     });
   },
@@ -3503,8 +3585,8 @@ const averageOverBox: KnowledgePointDef = {
   id: "the-average-of-a-product-over-a-box",
   title: t("The average of a product over a box", "乘积在长方体上的平均值"),
   explanation: t(
-    "The average of a function over a solid is its triple integral divided by the volume. When the integrand is a product of functions of separate variables on a box, the triple integral splits into three single integrals. Each factor of $\\int_0^a x\\,dx = \\frac{a^2}{2}$ then divides by the matching side $a$, leaving $\\frac{a}{2}$. So the average is the product of the averages of the three coordinates.",
-    "函数在立体上的平均值是三重积分除以体积。当被积函数在长方体上是各变量函数的乘积时，三重积分可分成三个单积分。每个因子 $\\int_0^a x\\,dx = \\frac{a^2}{2}$ 除以相应的边 $a$，剩下 $\\frac{a}{2}$。所以平均值是三个坐标平均值的乘积。",
+    "The average of a function over a solid is its triple integral divided by the volume. When the integrand is a product of functions of separate variables on a box, the triple integral splits into three single integrals. Each factor of $\\int_0^a x\\,dx = \\frac{a^2}{2}$ then divides by the matching side $a$, leaving $\\frac{a}{2}$. So the average is the product of the averages of the three coordinates. For $10xyz$ over $[0, 1] \\times [0, 2] \\times [0, 3]$ the average is $10 \\cdot \\frac{1}{2} \\cdot 1 \\cdot \\frac{3}{2} = \\frac{15}{2}$.\n\n> **Watch out.** The average is the integral divided by the volume, so do not stop at the integral. And it is a product of three halves, an eighth of the largest value, not a half of it.",
+    "函数在立体上的平均值是三重积分除以体积。当被积函数在长方体上是各变量函数的乘积时，三重积分可分成三个单积分。每个因子 $\\int_0^a x\\,dx = \\frac{a^2}{2}$ 除以相应的边 $a$，剩下 $\\frac{a}{2}$。所以平均值是三个坐标平均值的乘积。对 $[0, 1] \\times [0, 2] \\times [0, 3]$ 上的 $10xyz$，平均值为 $10 \\cdot \\frac{1}{2} \\cdot 1 \\cdot \\frac{3}{2} = \\frac{15}{2}$。\n\n> **注意。** 平均值是积分除以体积，不能停在积分上。它是三个一半的乘积，即最大值的八分之一，而不是一半。",
   ),
   generate(rng) {
     const c = rng.int(1, 9);
@@ -3513,16 +3595,48 @@ const averageOverBox: KnowledgePointDef = {
     const d = rng.int(1, 6);
     const answer = Q.of(c * a * b * d, 8);
     const integrand = c === 1 ? "xyz" : `${c}xyz`;
+    const integral = Q.of(c * (a * b * d) ** 2, 8);
     return numberProblem({
       prompt: t(
         `Find the average value of $f(x, y, z) = ${integrand}$ over the box $[0, ${a}] \\times [0, ${b}] \\times [0, ${d}]$.`,
         `求 $f(x, y, z) = ${integrand}$ 在长方体 $[0, ${a}] \\times [0, ${b}] \\times [0, ${d}]$ 上的平均值。`,
       ),
       answer,
-      wrong: [Q.of(c * (a * b * d) ** 2, 8), Q.of(c * a * b * d, 2), Q.of(c * a * b * d, 4), Q.of(a * b * d, 8)],
-      solution: t(
-        `The integral over the box separates into one integral per variable, so the average of the product is the product of the averages. Each coordinate averages half its length: $${c} \\cdot ${Q.of(a, 2).toLatex()} \\cdot ${Q.of(b, 2).toLatex()} \\cdot ${Q.of(d, 2).toLatex()} = ${answer.toLatex()}$.`,
-        `长方体上的积分可以拆成每个变量各一个积分，所以积的平均值等于平均值的积。每个坐标的平均值是其长度的一半：$${c} \\cdot ${Q.of(a, 2).toLatex()} \\cdot ${Q.of(b, 2).toLatex()} \\cdot ${Q.of(d, 2).toLatex()} = ${answer.toLatex()}$。`,
+      mistakes: apart(answer, [
+        why(
+          integral,
+          `That is the integral; divide it by the volume $${a * b * d}$ to get the average.`,
+          `那是积分；要除以体积 $${a * b * d}$ 才是平均值。`,
+        ),
+        why(
+          Q.of(c * a * b * d, 2),
+          `That is half the largest value $${c * a * b * d}$; each of the three coordinates contributes its own half.`,
+          `那是最大值 $${c * a * b * d}$ 的一半；三个坐标各自贡献一个一半。`,
+        ),
+        why(Q.of(c * a * b * d, 4), "Only two of the three factors $\\frac{1}{2}$ are kept.", "三个因子 $\\frac{1}{2}$ 只保留了两个。"),
+        ...(c === 1 ? [] : [why(Q.of(a * b * d, 8), `The coefficient $${c}$ is missing.`, `漏了系数 $${c}$。`)]),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Integrate over the box", "在长方体上积分"],
+            t(
+              `$${c} \\cdot \\frac{${a * a}}{2} \\cdot \\frac{${b * b}}{2} \\cdot \\frac{${d * d}}{2} = ${integral.toLatex()}$.`,
+              `$${c} \\cdot \\frac{${a * a}}{2} \\cdot \\frac{${b * b}}{2} \\cdot \\frac{${d * d}}{2} = ${integral.toLatex()}$。`,
+            ),
+          ],
+          [
+            ["Divide by the volume", "除以体积"],
+            t(
+              `$\\frac{${integral.toLatex()}}{${a * b * d}} = ${answer.toLatex()}$.`,
+              `$\\frac{${integral.toLatex()}}{${a * b * d}} = ${answer.toLatex()}$。`,
+            ),
+          ],
+        ],
+        t(
+          `Each coordinate averages half its length, so the average is $${c} \\cdot ${Q.of(a, 2).toLatex()} \\cdot ${Q.of(b, 2).toLatex()} \\cdot ${Q.of(d, 2).toLatex()} = ${answer.toLatex()}$, which lies between $0$ and the largest value $${c * a * b * d}$.`,
+          `每个坐标的平均值是其长度的一半，所以平均值为 $${c} \\cdot ${Q.of(a, 2).toLatex()} \\cdot ${Q.of(b, 2).toLatex()} \\cdot ${Q.of(d, 2).toLatex()} = ${answer.toLatex()}$，介于 $0$ 与最大值 $${c * a * b * d}$ 之间。`,
+        ),
       ),
     });
   },
@@ -3533,8 +3647,8 @@ const twoCylinders: KnowledgePointDef = {
   figure: multivariableDrawings4["calculating-volumes-of-solids-using-triple-integrals#the-volume-common-to-two-cylinders"],
   title: t("The volume common to two cylinders", "两个圆柱的公共体积"),
   explanation: t(
-    "The solid inside both $x^2 + y^2 = r^2$ and $x^2 + z^2 = r^2$ is easiest to slice at fixed $x$. At that value, $y$ and $z$ each run independently between $\\pm\\sqrt{r^2 - x^2}$, so the cross section is a square rather than a circle. Its area is a simple polynomial in $x$, and no circular functions appear, even though the solid is bounded entirely by curved cylinders.",
-    "同时在 $x^2 + y^2 = r^2$ 和 $x^2 + z^2 = r^2$ 内部的立体，最容易在固定的 $x$ 处切片。这时 $y$ 和 $z$ 各自独立地在 $\\pm\\sqrt{r^2 - x^2}$ 之间变化，所以截面是正方形而不是圆。它的面积是 $x$ 的简单多项式，虽然立体完全由弯曲的圆柱面围成，却不出现三角函数。",
+    "The solid inside both $x^2 + y^2 = r^2$ and $x^2 + z^2 = r^2$ is easiest to slice at fixed $x$. At that value, $y$ and $z$ each run independently between $\\pm\\sqrt{r^2 - x^2}$, so the cross section is a square rather than a circle. Its area is a simple polynomial in $x$, and no circular functions appear, even though the solid is bounded entirely by curved cylinders. For radius $3$, the half with $x \\ge 0$ has squares of side $2\\sqrt{9 - x^2}$, and $\\int_0^3 4(9 - x^2)\\,dx = 72$.\n\n> **Watch out.** The side of the square is $2\\sqrt{r^2 - x^2}$, from $-\\sqrt{r^2 - x^2}$ to $\\sqrt{r^2 - x^2}$, but only $\\sqrt{r^2 - x^2}$ in the first octant, where $y, z \\ge 0$. Match the range of $x$ to the part asked for.",
+    "同时在 $x^2 + y^2 = r^2$ 和 $x^2 + z^2 = r^2$ 内部的立体，最容易在固定的 $x$ 处切片。这时 $y$ 和 $z$ 各自独立地在 $\\pm\\sqrt{r^2 - x^2}$ 之间变化，所以截面是正方形而不是圆。它的面积是 $x$ 的简单多项式，虽然立体完全由弯曲的圆柱面围成，却不出现三角函数。半径为 $3$ 时，$x \\ge 0$ 的一半截面是边长 $2\\sqrt{9 - x^2}$ 的正方形，而 $\\int_0^3 4(9 - x^2)\\,dx = 72$。\n\n> **注意。** 正方形的边长是 $2\\sqrt{r^2 - x^2}$，从 $-\\sqrt{r^2 - x^2}$ 到 $\\sqrt{r^2 - x^2}$；但在 $y, z \\ge 0$ 的第一卦限只有 $\\sqrt{r^2 - x^2}$。$x$ 的范围要与所求的部分一致。",
   ),
   generate(rng) {
     const r = rng.int(1, 15);
@@ -3542,16 +3656,74 @@ const twoCylinders: KnowledgePointDef = {
     const whole = Q.of(16 * r ** 3, 3);
     const part = Q.of(2 * r ** 3, 3);
     const answer = octant ? part : whole;
+    const s = r * r;
     return numberProblem({
       prompt: t(
         `Find the volume of the ${octant ? "first-octant part of the " : ""}solid inside both $x^2 + y^2 = ${r * r}$ and $x^2 + z^2 = ${r * r}$.`,
         `求同时在 $x^2 + y^2 = ${r * r}$ 和 $x^2 + z^2 = ${r * r}$ 内部${octant ? "且位于第一卦限" : ""}的立体体积。`,
       ),
       answer,
-      wrong: [octant ? whole : part, Q.of(8 * r ** 3, 3), Q.of(4 * r ** 3, 3), Q.of(r ** 3, 3), Q.of(16 * r ** 2, 3)],
-      solution: t(
-        `At fixed $x$ the cross section ${octant ? `is a square of side $\\sqrt{${r * r} - x^2}$, and integrating its area from $0$ to $${r}$` : `is a square of side $2\\sqrt{${r * r} - x^2}$, and integrating its area from $-${r}$ to $${r}$`} gives $${answer.toLatex()}$.`,
-        `在固定的 $x$ 处，截面${octant ? `是边长为 $\\sqrt{${r * r} - x^2}$ 的正方形，它的面积从 $0$ 到 $${r}$ 积分` : `是边长为 $2\\sqrt{${r * r} - x^2}$ 的正方形，它的面积从 $-${r}$ 到 $${r}$ 积分`}得 $${answer.toLatex()}$。`,
+      mistakes: apart(
+        answer,
+        octant
+          ? [
+              why(whole, "That is the whole solid; the first octant holds an eighth of it.", "那是整个立体；第一卦限只占它的八分之一。"),
+              why(
+                Q.of(4 * r ** 3, 3),
+                `That lets $x$ run from $-${r}$; in the first octant $x \\ge 0$.`,
+                `那是让 $x$ 从 $-${r}$ 开始；第一卦限中 $x \\ge 0$。`,
+              ),
+              why(
+                Q.of(8 * r ** 3, 3),
+                `That uses the side $2\\sqrt{${s} - x^2}$; in the first octant $y$ and $z$ start at $0$.`,
+                `那是用边长 $2\\sqrt{${s} - x^2}$；在第一卦限中 $y$ 和 $z$ 从 $0$ 开始。`,
+              ),
+            ]
+          : [
+              why(part, "That is the first-octant part only, an eighth of the solid.", "那只是第一卦限的部分，即立体的八分之一。"),
+              why(
+                Q.of(8 * r ** 3, 3),
+                `That lets $x$ run only from $0$ to $${r}$; it runs from $-${r}$.`,
+                `那是让 $x$ 只从 $0$ 到 $${r}$；它应从 $-${r}$ 开始。`,
+              ),
+              why(
+                Q.of(4 * r ** 3, 3),
+                `The side of the square is $2\\sqrt{${s} - x^2}$, not $\\sqrt{${s} - x^2}$.`,
+                `正方形的边长是 $2\\sqrt{${s} - x^2}$，不是 $\\sqrt{${s} - x^2}$。`,
+              ),
+            ],
+      ),
+      solution: walked(
+        [
+          [
+            ["Slice at fixed x", "在固定的 x 处切片"],
+            octant
+              ? t(
+                  `With $y, z \\ge 0$ the cross-section is a square of side $\\sqrt{${s} - x^2}$, of area $${s} - x^2$.`,
+                  `在 $y, z \\ge 0$ 时，截面是边长为 $\\sqrt{${s} - x^2}$ 的正方形，面积为 $${s} - x^2$。`,
+                )
+              : t(
+                  `The cross-section is a square of side $2\\sqrt{${s} - x^2}$, of area $4(${s} - x^2)$.`,
+                  `截面是边长为 $2\\sqrt{${s} - x^2}$ 的正方形，面积为 $4(${s} - x^2)$。`,
+                ),
+          ],
+          [
+            ["Integrate the area", "对面积积分"],
+            octant
+              ? t(
+                  `$\\int_0^{${r}} (${s} - x^2)\\,dx = ${r ** 3} - \\frac{${r ** 3}}{3} = ${answer.toLatex()}$.`,
+                  `$\\int_0^{${r}} (${s} - x^2)\\,dx = ${r ** 3} - \\frac{${r ** 3}}{3} = ${answer.toLatex()}$。`,
+                )
+              : t(
+                  `$\\int_{-${r}}^{${r}} 4(${s} - x^2)\\,dx = 4 \\cdot \\frac{${4 * r ** 3}}{3} = ${answer.toLatex()}$.`,
+                  `$\\int_{-${r}}^{${r}} 4(${s} - x^2)\\,dx = 4 \\cdot \\frac{${4 * r ** 3}}{3} = ${answer.toLatex()}$。`,
+                ),
+          ],
+        ],
+        t(
+          `The sphere of radius $${r}$ fits inside this solid, and at each $x$ its circular slice fills $\\frac{\\pi}{4}$ of the square. So the sphere's volume should be $\\frac{\\pi}{4}$ of this one: $\\frac{\\pi}{4} \\cdot ${whole.toLatex()} = ${Q.of(4 * r ** 3, 3).toLatex()}\\pi$, which is $\\frac{4}{3}\\pi \\cdot ${r}^3$.`,
+          `半径为 $${r}$ 的球位于这个立体内，在每个 $x$ 处它的圆形截面占正方形的 $\\frac{\\pi}{4}$。所以球的体积应为整个立体的 $\\frac{\\pi}{4}$：$\\frac{\\pi}{4} \\cdot ${whole.toLatex()} = ${Q.of(4 * r ** 3, 3).toLatex()}\\pi$，正是 $\\frac{4}{3}\\pi \\cdot ${r}^3$。`,
+        ),
       ),
     });
   },

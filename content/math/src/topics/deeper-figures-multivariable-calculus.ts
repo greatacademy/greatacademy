@@ -11,7 +11,7 @@ import { multivariableDrawings4 } from "../explanation-drawings-multivariable-4.
 import { multivariableDrawings6 } from "../explanation-drawings-multivariable-6.ts";
 import { multivariableDrawings8 } from "../explanation-drawings-multivariable-8.ts";
 import { explainedChoice, numberProblem, why } from "../problems.ts";
-import { ask, choose, observed, type Pair, point, same } from "../university-kit.ts";
+import { ask, observed, type Pair, point, same } from "../university-kit.ts";
 import { walked } from "./calculus-i-differentiation.ts";
 import { drawn } from "./figure-reading-more.ts";
 
@@ -976,8 +976,8 @@ const polarLimits = {
     "polar-limits-of-a-drawn-sector",
     ["Polar limits of a drawn sector", "图中扇形的极坐标积分限"],
     [
-      "A sector of a ring is a rectangle in polar coordinates: the radius runs between two constants and the angle between two constants. So its limits can be read straight from the drawing. The area element in polar coordinates is $r\\,dr\\,d\\theta$, and leaving out the factor $r$ is the most common mistake.",
-      "圆环的扇形在极坐标下是矩形：半径在两个常数之间，角度也在两个常数之间。所以它的积分限可以直接从图中读出。极坐标的面积元是 $r\\,dr\\,d\\theta$，漏掉因子 $r$ 是最常见的错误。",
+      "A sector of a ring is a rectangle in polar coordinates: the radius runs between two constants and the angle between two constants. So its limits can be read straight from the drawing. The area element in polar coordinates is $r\\,dr\\,d\\theta$, and leaving out the factor $r$ is the most common mistake. The sector $1 \\le r \\le 4$, $\\frac{\\pi}{6} \\le \\theta \\le \\frac{\\pi}{3}$ gives $\\int_{\\pi/6}^{\\pi/3} \\int_1^4 f\\,r\\,dr\\,d\\theta$.\n\n> **Watch out.** Keep the factor $r$, read the radii where the shading starts and stops, and run the angle counterclockwise from the smaller to the larger value; reversed limits give the negative.",
+      "圆环的扇形在极坐标下是矩形：半径在两个常数之间，角度也在两个常数之间。所以它的积分限可以直接从图中读出。极坐标的面积元是 $r\\,dr\\,d\\theta$，漏掉因子 $r$ 是最常见的错误。扇形 $1 \\le r \\le 4$，$\\frac{\\pi}{6} \\le \\theta \\le \\frac{\\pi}{3}$ 给出 $\\int_{\\pi/6}^{\\pi/3} \\int_1^4 f\\,r\\,dr\\,d\\theta$。\n\n> **注意。** 保留因子 $r$，半径读阴影开始和结束处的值，角度按逆时针从较小值到较大值；积分限颠倒会得到相反数。",
     ],
     (rng) => {
       const k = rng.int(0, 6);
@@ -991,21 +991,59 @@ const polarLimits = {
       const arc = (r: number) => Array.from({ length: n + 1 }, (_, i) => ray(r, k + (span * i) / n));
       const outer = arc(r2);
       const inner = r1 === 0 ? [[0, 0] as Point] : arc(r1).reverse();
-      return choose(
-        rng,
-        ["Which integral equals $\\iint_R f\\,dA$ over the shaded region $R$?", "哪个积分等于阴影区域 $R$ 上的 $\\iint_R f\\,dA$？"],
-        same(form(k, k + span, r1, r2)),
-        [
-          same(form(k, k + span, r1, r2, "")),
-          same(form(k, k + span + 1, r1, r2)),
-          same(form(k + span, k, r1, r2)),
-          same(form(k, k + span, r1, r2 + 1)),
+      const opt = (s: string) => t(`$${s}$`, `$${s}$`);
+      const area = Q.of(span * (r2 * r2 - r1 * r1), 8);
+      const areaPi = area.eq(Q.of(1)) ? "\\pi" : `${area.toLatex()}\\pi`;
+      return explainedChoice(rng, {
+        prompt: t(
+          "Which integral equals $\\iint_R f\\,dA$ over the shaded region $R$?",
+          "哪个积分等于阴影区域 $R$ 上的 $\\iint_R f\\,dA$？",
+        ),
+        correct: opt(form(k, k + span, r1, r2)),
+        wrong: [
+          {
+            option: opt(form(k, k + span, r1, r2, "")),
+            why: t("The area element is $r\\,dr\\,d\\theta$; the factor $r$ is missing.", "面积元是 $r\\,dr\\,d\\theta$；漏了因子 $r$。"),
+          },
+          {
+            option: opt(form(k, k + span + 1, r1, r2)),
+            why: t(
+              `That angle goes one eighth of a turn too far; the shading stops at $${piTimes(k + span, 4)}$.`,
+              `那个角度多转了八分之一圈；阴影在 $${piTimes(k + span, 4)}$ 处结束。`,
+            ),
+          },
+          {
+            option: opt(form(k + span, k, r1, r2)),
+            why: t(
+              "The angle limits are reversed, which gives the negative of the integral.",
+              "角度的积分限颠倒了，得到的是积分的相反数。",
+            ),
+          },
+          {
+            option: opt(form(k, k + span, r1, r2 + 1)),
+            why: t(`The shading stops at radius $${r2}$, not $${r2 + 1}$.`, `阴影在半径 $${r2}$ 处结束，不是 $${r2 + 1}$。`),
+          },
         ],
-        [
-          `The region runs from radius $${r1}$ to radius $${r2}$, and from angle $${piTimes(k, 4)}$ to angle $${piTimes(k + span, 4)}$. With the area element $r\\,dr\\,d\\theta$ this gives the integral.`,
-          `区域从半径 $${r1}$ 到半径 $${r2}$，从角 $${piTimes(k, 4)}$ 到角 $${piTimes(k + span, 4)}$。用面积元 $r\\,dr\\,d\\theta$ 得到这个积分。`,
-        ],
-        fig(
+        solution: walked(
+          [
+            [
+              ["Read the radii", "读出半径"],
+              t(`Along each ray the shading runs from $r = ${r1}$ to $r = ${r2}$.`, `沿每条射线，阴影从 $r = ${r1}$ 到 $r = ${r2}$。`),
+            ],
+            [
+              ["Read the angles", "读出角度"],
+              t(
+                `The rays bound it from $\\theta = ${piTimes(k, 4)}$ counterclockwise to $\\theta = ${piTimes(k + span, 4)}$, and $dA = r\\,dr\\,d\\theta$.`,
+                `射线把它界定在 $\\theta = ${piTimes(k, 4)}$ 到 $\\theta = ${piTimes(k + span, 4)}$（逆时针）之间，且 $dA = r\\,dr\\,d\\theta$。`,
+              ),
+            ],
+          ],
+          t(
+            `With $f = 1$ the integral is $${piTimes(span, 4)} \\cdot \\frac{${r2 * r2} - ${r1 * r1}}{2} = ${areaPi}$, the area of a ring sector spanning $${span}$ eighths of a turn.`,
+            `取 $f = 1$，积分为 $${piTimes(span, 4)} \\cdot \\frac{${r2 * r2} - ${r1 * r1}}{2} = ${areaPi}$，正是跨越 $${span}$ 个八分之一圈的环形扇形面积。`,
+          ),
+        ),
+        figure: fig(
           square(6),
           [
             { kind: "polygon", points: [...outer, ...inner] },
@@ -1019,7 +1057,7 @@ const polarLimits = {
             `阴影扇形，半径从 ${r1} 到 ${r2}，角度从 ${k * 45} 度到 ${(k + span) * 45} 度。`,
           ],
         ),
-      );
+      });
     },
   ),
   figure: multivariableDrawings4["double-integrals-in-plane-polar-coordinates#polar-limits-of-a-drawn-sector"],
