@@ -1428,8 +1428,8 @@ const richardson: KnowledgePointDef = {
   id: "richardson-extrapolation",
   title: t("Richardson extrapolation", "理查森外推"),
   explanation: t(
-    "If a method has order $p$, halving the step divides the error by about $2^p$. Combining two estimates can cancel this leading error: $y \\approx \\frac{2^py_{h/2} - y_h}{2^p - 1}$. So two runs with different steps give a better answer than either, at no extra cost beyond the runs themselves.",
-    "如果方法是 $p$ 阶的，步长减半时误差大约除以 $2^p$。组合两个估计值可以消去这个主要误差：$y \\approx \\frac{2^py_{h/2} - y_h}{2^p - 1}$。所以用不同步长运行两次，能得到比任何一次都好的答案，除了运行本身没有额外代价。",
+    "If a method has order $p$, halving the step divides the error by about $2^p$. Combining two estimates can cancel this leading error: $y \\approx \\frac{2^py_{h/2} - y_h}{2^p - 1}$. So two runs with different steps give a better answer than either, at no extra cost beyond the runs themselves.\n\n> **Watch out.** Put the weight $2^p$ on the finer estimate, and divide by $2^p - 1$. For a second-order method with $y_h = 2.0$ and $y_{h/2} = 2.3$: $\\frac{4 \\cdot 2.3 - 2.0}{3} = 2.4$; leaving out the division gives $7.2$, far from both estimates.",
+    "如果方法是 $p$ 阶的，步长减半时误差大约除以 $2^p$。组合两个估计值可以消去这个主要误差：$y \\approx \\frac{2^py_{h/2} - y_h}{2^p - 1}$。所以用不同步长运行两次，能得到比任何一次都好的答案，除了运行本身没有额外代价。\n\n> **注意。** 权重 $2^p$ 要放在较细步长的估计值上，并且要除以 $2^p - 1$。对二阶方法，$y_h = 2.0$，$y_{h/2} = 2.3$：$\\frac{4 \\cdot 2.3 - 2.0}{3} = 2.4$；漏掉除法会得到 $7.2$，与两个估计值都相差很远。",
   ),
   generate(rng) {
     const p = rng.int(1, 2);
@@ -1437,16 +1437,53 @@ const richardson: KnowledgePointDef = {
     const y2 = y1 + rng.int(1, 9);
     const factor = 2 ** p;
     const answer = Q.of(factor * y2 - y1, 10 * (factor - 1));
-    const work = p === 1 ? `2 \\cdot ${decimal(y2)} - ${decimal(y1)}` : `\\frac{4 \\cdot ${decimal(y2)} - ${decimal(y1)}}{3}`;
-    return numberProblem({
-      prompt: t(
+    const weighted = Q.of(factor * y2 - y1, 10);
+    const fine = Q.of(y2 - y1, 10 * (factor - 1));
+    const coarse = Q.of(factor * (y2 - y1), 10 * (factor - 1));
+    return explainedNumber(
+      [
         `A method of order ${p} gives the estimate $${decimal(y1)}$ with step $h$ and $${decimal(y2)}$ with step $\\frac{h}{2}$. What value does Richardson extrapolation give?`,
         `一个 ${p} 阶方法用步长 $h$ 得到估计值 $${decimal(y1)}$，用步长 $\\frac{h}{2}$ 得到 $${decimal(y2)}$。理查森外推给出什么值？`,
-      ),
+      ],
       answer,
-      wrong: [Q.of(y2, 10), Q.of(y1 + y2, 20), Q.of(y1, 10)],
-      solution: t(`The formula gives $${work} = ${answer.toLatex()}$.`, `由公式得 $${work} = ${answer.toLatex()}$。`),
-    });
+      [
+        labelled(
+          ["Weight the finer estimate", "给较细的估计值加权"],
+          `For order $${p}$ the weight is $2^p = ${factor}$:`,
+          `对 $${p}$ 阶方法，权重为 $2^p = ${factor}$：`,
+          `${factor} \\cdot ${decimal(y2)} - ${decimal(y1)} = ${dec(weighted)}`,
+        ),
+        p === 1
+          ? labelled(
+              ["Divide by $2^p - 1$", "除以 $2^p - 1$"],
+              `Here $2 - 1 = 1$, so the value stands: $y \\approx ${answer.toLatex()}$.`,
+              `这里 $2 - 1 = 1$，所以数值不变：$y \\approx ${answer.toLatex()}$。`,
+            )
+          : labelled(["Divide by $2^p - 1$", "除以 $2^p - 1$"], "", "", `y \\approx \\frac{${dec(weighted)}}{3} = ${answer.toLatex()}`),
+      ],
+      [
+        `The errors left in the two estimates are $${answer.toLatex()} - ${decimal(y1)} = ${coarse.toLatex()}$ and $${answer.toLatex()} - ${decimal(y2)} = ${fine.toLatex()}$, and $${factor} \\cdot ${fine.toLatex()} = ${coarse.toLatex()}$: halving the step divided the error by $${factor}$, as order $${p}$ predicts.`,
+        `两个估计值剩下的误差为 $${answer.toLatex()} - ${decimal(y1)} = ${coarse.toLatex()}$ 与 $${answer.toLatex()} - ${decimal(y2)} = ${fine.toLatex()}$，而 $${factor} \\cdot ${fine.toLatex()} = ${coarse.toLatex()}$：步长减半使误差除以 $${factor}$，正如 $${p}$ 阶所预言。`,
+      ],
+      [
+        [
+          Q.of(y2, 10),
+          "That is the finer estimate itself; extrapolation goes beyond it by removing its leading error.",
+          "这是较细步长的估计值本身；外推要消去它的主要误差，从而超出它。",
+        ],
+        [
+          Q.of(y1 + y2, 20),
+          "That averages the two estimates; the finer one carries the weight $2^p$.",
+          "这是两个估计值的平均；较细的那个权重为 $2^p$。",
+        ],
+        [
+          p === 1 ? Q.of(4 * y2 - y1, 30) : Q.of(2 * y2 - y1, 10),
+          `That uses the weight for order $${p === 1 ? 2 : 1}$; this method has order $${p}$.`,
+          `这用了 $${p === 1 ? 2 : 1}$ 阶的权重；这个方法是 $${p}$ 阶的。`,
+        ],
+        [weighted, "That leaves out the division by $2^p - 1$.", "这漏掉了除以 $2^p - 1$。"],
+      ],
+    );
   },
 };
 
@@ -2616,8 +2653,8 @@ const severalImplicitSteps: KnowledgePointDef = {
   id: "several-implicit-euler-steps",
   title: t("Several implicit Euler steps", "多步隐式欧拉法"),
   explanation: t(
-    "For $y' = -\\lambda y$, the implicit Euler equation $y_{k+1} = y_k - h\\lambda y_{k+1}$ solves to $y_{k+1} = \\frac{y_k}{1 + h\\lambda}$. So every step divides by the same number, and repeated steps divide by its powers. The values shrink and stay positive for any step size, unlike the explicit method.",
-    "对 $y' = -\\lambda y$，隐式欧拉方程 $y_{k+1} = y_k - h\\lambda y_{k+1}$ 解得 $y_{k+1} = \\frac{y_k}{1 + h\\lambda}$。所以每一步都除以同一个数，多步就是除以它的幂。与显式方法不同，无论步长多大，这些值都会减小并保持为正。",
+    "For $y' = -\\lambda y$, the implicit Euler equation $y_{k+1} = y_k - h\\lambda y_{k+1}$ solves to $y_{k+1} = \\frac{y_k}{1 + h\\lambda}$. So every step divides by the same number, and repeated steps divide by its powers. The values shrink and stay positive for any step size, unlike the explicit method.\n\n> **Watch out.** Divide by $1 + h\\lambda$ once for every step, not by $1 + h\\lambda$ times the number of steps. For $y' = -10y$ with $h = 0.1$ and $y_0 = 8$, each step halves the value, so $y_3 = \\frac{8}{2^{3}} = 1$; dividing by $2 \\cdot 3 = 6$ would give $\\frac{4}{3}$.",
+    "对 $y' = -\\lambda y$，隐式欧拉方程 $y_{k+1} = y_k - h\\lambda y_{k+1}$ 解得 $y_{k+1} = \\frac{y_k}{1 + h\\lambda}$。所以每一步都除以同一个数，多步就是除以它的幂。与显式方法不同，无论步长多大，这些值都会减小并保持为正。\n\n> **注意。** 每走一步都要除以一次 $1 + h\\lambda$，而不是除以 $1 + h\\lambda$ 与步数的乘积。对 $y' = -10y$，$h = 0.1$，$y_0 = 8$，每一步都使数值减半，所以 $y_3 = \\frac{8}{2^{3}} = 1$；若除以 $2 \\cdot 3 = 6$，会得到 $\\frac{4}{3}$。",
   ),
   generate(rng) {
     const F = rng.int(2, 4);
@@ -2626,18 +2663,45 @@ const severalImplicitSteps: KnowledgePointDef = {
     const steps = rng.int(2, 3);
     const answer = rng.int(1, 20);
     const start = answer * F ** steps;
-    return numberProblem({
-      prompt: t(
+    const first = start / F;
+    return explainedNumber(
+      [
         `Apply $${steps}$ steps of the implicit Euler method with $h = ${decimal(tenths)}$ to $y' = ${poly([-lambda, "y"])}$, $y(0) = ${start}$. Find $y_{${steps}}$.`,
         `用隐式欧拉法对 $y' = ${poly([-lambda, "y"])}$，$y(0) = ${start}$ 迭代 $${steps}$ 步，步长 $h = ${decimal(tenths)}$。求 $y_{${steps}}$。`,
-      ),
+      ],
       answer,
-      wrong: [start * (2 - F) ** steps, Q.of(start, F), Q.of(start, F * steps), Q.of(start, (F + 1) ** steps)],
-      solution: t(
-        `Each step divides by $1 + h\\lambda = ${F}$. After $${steps}$ steps, $y_{${steps}} = \\frac{${start}}{${F}^{${steps}}} = ${answer}$.`,
-        `每一步都除以 $1 + h\\lambda = ${F}$。$${steps}$ 步之后，$y_{${steps}} = \\frac{${start}}{${F}^{${steps}}} = ${answer}$。`,
-      ),
-    });
+      [
+        labelled(
+          ["Solve one step", "解出一步"],
+          "Each step solves $y_{k+1} = y_k - h\\lambda y_{k+1}$ for the new value:",
+          "每一步都从 $y_{k+1} = y_k - h\\lambda y_{k+1}$ 解出新值：",
+          `y_{k+1} = \\frac{y_k}{1 + h\\lambda}, \\qquad 1 + h\\lambda = 1 + ${decimal(tenths)} \\cdot ${lambda} = ${F}`,
+        ),
+        labelled(
+          ["Repeat the division", "重复除法"],
+          `Over $${steps}$ steps the value is divided by $${F}$ each time:`,
+          `在 $${steps}$ 步中，数值每次都除以 $${F}$：`,
+          `y_{${steps}} = \\frac{${start}}{${F}^{${steps}}} = ${answer}`,
+        ),
+      ],
+      [
+        `The first step $y_1 = ${first}$ satisfies the implicit equation: $${start} - ${F - 1} \\cdot ${first} = ${first}$, and $${answer} \\cdot ${F}^{${steps}} = ${start}$ takes the last value back to the start.`,
+        `第一步 $y_1 = ${first}$ 满足隐式方程：$${start} - ${F - 1} \\cdot ${first} = ${first}$；而 $${answer} \\cdot ${F}^{${steps}} = ${start}$ 把最后的值还原为初值。`,
+      ],
+      [
+        [
+          start * (2 - F) ** steps,
+          "That is the explicit Euler result, which multiplies by $1 - h\\lambda$ at each step.",
+          "这是显式欧拉法的结果，它每一步乘以 $1 - h\\lambda$。",
+        ],
+        [Q.of(start, F), "That is the value after one step only.", "这只是一步之后的值。"],
+        [
+          Q.of(start, F * steps),
+          `That divides by $${F} \\cdot ${steps}$; each step divides again, so the divisor is $${F}^{${steps}}$.`,
+          `这是除以 $${F} \\cdot ${steps}$；每一步都再除一次，所以除数是 $${F}^{${steps}}$。`,
+        ],
+      ],
+    );
   },
 };
 
@@ -2645,25 +2709,55 @@ const stepWithoutOvershoot: KnowledgePointDef = {
   id: "the-largest-step-without-oscillation",
   title: t("The largest step without oscillation", "不产生振荡的最大步长"),
   explanation: t(
-    "Explicit Euler on $y' = \\lambda(c - y)$ multiplies the distance from $c$ by $1 - h\\lambda$ at each step. The method is stable for $h\\lambda$ up to $2$, but stability alone does not make the result look right. When $h\\lambda$ exceeds $1$ the factor is negative, so the values jump back and forth across $c$, which the true solution never does.",
-    "显式欧拉法用于 $y' = \\lambda(c - y)$ 时，每一步把到 $c$ 的距离乘以 $1 - h\\lambda$。只要 $h\\lambda$ 不超过 $2$，方法就是稳定的，但稳定并不代表结果合理。当 $h\\lambda$ 超过 $1$ 时因子为负，数值会在 $c$ 的两侧来回跳动，而真实解从不这样。",
+    "Explicit Euler on $y' = \\lambda(c - y)$ multiplies the distance from $c$ by $1 - h\\lambda$ at each step. The method is stable for $h\\lambda$ up to $2$, but stability alone does not make the result look right. When $h\\lambda$ exceeds $1$ the factor is negative, so the values jump back and forth across $c$, which the true solution never does.\n\n> **Watch out.** Staying on one side needs $h\\lambda \\le 1$, a stricter bound than the stability bound $h\\lambda \\le 2$. For $y' = 4(3 - y)$ the largest such step is $\\frac{1}{4}$; at $h = 0.4$ the factor is $1 - 1.6 = -0.6$, so the method is stable but every step jumps across $3$.",
+    "显式欧拉法用于 $y' = \\lambda(c - y)$ 时，每一步把到 $c$ 的距离乘以 $1 - h\\lambda$。只要 $h\\lambda$ 不超过 $2$，方法就是稳定的，但稳定并不代表结果合理。当 $h\\lambda$ 超过 $1$ 时因子为负，数值会在 $c$ 的两侧来回跳动，而真实解从不这样。\n\n> **注意。** 要始终留在一侧，需要 $h\\lambda \\le 1$，这比稳定性的界 $h\\lambda \\le 2$ 更严格。对 $y' = 4(3 - y)$，这样的最大步长是 $\\frac{1}{4}$；取 $h = 0.4$ 时因子为 $1 - 1.6 = -0.6$，方法稳定，但每一步都跳到 $3$ 的另一侧。",
   ),
   generate(rng) {
     const lambda = rng.int(2, 40);
     const c = rng.int(1, 20);
     const answer = Q.of(1, lambda);
-    return numberProblem({
-      prompt: t(
+    return explainedNumber(
+      [
         `Explicit Euler is applied to $y' = ${lambda}(${c} - y)$, starting above $${c}$. What is the largest step size $h$ for which the values never cross below $${c}$?`,
         `对 $y' = ${lambda}(${c} - y)$ 使用显式欧拉法，初值大于 $${c}$。步长 $h$ 最大取多少时，数值始终不会低于 $${c}$？`,
-      ),
+      ],
       answer,
-      wrong: [Q.of(2, lambda), lambda, Q.of(1, 2 * lambda), Q.of(c, lambda)],
-      solution: t(
-        `The distance from $${c}$ is multiplied by $1 - ${lambda}h$ at each step. It stays nonnegative when $1 - ${lambda}h \\ge 0$, so the largest step is $h = ${answer.toLatex()}$. The level being approached does not affect it.`,
-        `每一步到 $${c}$ 的距离乘以 $1 - ${lambda}h$。当 $1 - ${lambda}h \\ge 0$ 时它保持非负，所以最大步长是 $h = ${answer.toLatex()}$。趋近的水平不影响这个结果。`,
-      ),
-    });
+      [
+        labelled(
+          ["Follow the distance from the level", "跟踪到该水平的距离"],
+          `One Euler step changes the distance $y_k - ${c}$ by a fixed factor:`,
+          `欧拉法的一步使距离 $y_k - ${c}$ 乘以一个固定因子：`,
+          `y_{k+1} - ${c} = (y_k - ${c}) + ${lambda}h(${c} - y_k) = (1 - ${lambda}h)(y_k - ${c})`,
+        ),
+        labelled(
+          ["Keep the factor nonnegative", "使因子非负"],
+          "A negative factor would carry the value across the level.",
+          "因子为负时，数值会越过这个水平。",
+          `1 - ${lambda}h \\ge 0 \\iff h \\le ${answer.toLatex()}`,
+        ),
+      ],
+      [
+        `At $h = ${answer.toLatex()}$ the factor is $1 - ${lambda} \\cdot ${answer.toLatex()} = 0$: the first step lands exactly on $${c}$ and stays there. Any larger step makes the factor negative, and the next value falls below $${c}$.`,
+        `当 $h = ${answer.toLatex()}$ 时，因子为 $1 - ${lambda} \\cdot ${answer.toLatex()} = 0$：第一步正好落在 $${c}$ 上并停在那里。步长再大，因子就为负，下一个值会低于 $${c}$。`,
+      ],
+      [
+        [
+          Q.of(2, lambda),
+          "That is the stability limit $h\\lambda \\le 2$; up to it the values stay bounded but may cross the level.",
+          "这是稳定性的界 $h\\lambda \\le 2$；在此之内数值有界，但可能越过该水平。",
+        ],
+        [
+          lambda,
+          `That is the rate $\\lambda$ itself; the bound is $h \\le \\frac{1}{\\lambda}$.`,
+          `这是速率 $\\lambda$ 本身；界是 $h \\le \\frac{1}{\\lambda}$。`,
+        ],
+        [
+          Q.of(c, lambda),
+          `That brings in the level $${c}$, which does not enter the factor $1 - h\\lambda$.`,
+          `这引入了水平 $${c}$，而它并不出现在因子 $1 - h\\lambda$ 中。`,
+        ],
+      ],
+    );
   },
 };
 
@@ -2671,8 +2765,8 @@ const stepsForTargetError: KnowledgePointDef = {
   id: "the-steps-needed-for-a-target-error",
   title: t("The steps needed for a target error", "达到目标误差所需的步数"),
   explanation: t(
-    "A method of order $p$ has error about $Ch^p$, and the number of steps on a fixed interval is proportional to $\\frac{1}{h}$. Dividing $h$ by $r$ multiplies the work by $r$ and divides the error by $r^p$. High-order methods therefore gain accuracy cheaply, while a first-order method pays for every factor in full.",
-    "$p$ 阶方法的误差约为 $Ch^p$，而固定区间上的步数与 $\\frac{1}{h}$ 成正比。把 $h$ 除以 $r$，工作量乘以 $r$，误差除以 $r^p$。所以高阶方法能以很小的代价提高精度，而一阶方法的每一分精度都要付出同样多的步数。",
+    "A method of order $p$ has error about $Ch^p$, and the number of steps on a fixed interval is proportional to $\\frac{1}{h}$. Dividing $h$ by $r$ multiplies the work by $r$ and divides the error by $r^p$. High-order methods therefore gain accuracy cheaply, while a first-order method pays for every factor in full.\n\n> **Watch out.** The number of steps grows by the $p$-th root of the error factor, not by the factor itself. A second-order method that needs an error $16$ times smaller takes $r = 4$, so $10$ steps become $40$, not $160$.",
+    "$p$ 阶方法的误差约为 $Ch^p$，而固定区间上的步数与 $\\frac{1}{h}$ 成正比。把 $h$ 除以 $r$，工作量乘以 $r$，误差除以 $r^p$。所以高阶方法能以很小的代价提高精度，而一阶方法的每一分精度都要付出同样多的步数。\n\n> **注意。** 步数按误差倍数的 $p$ 次方根增长，而不是按倍数本身增长。二阶方法要使误差缩小 $16$ 倍，取 $r = 4$，所以 $10$ 步变成 $40$ 步，而不是 $160$ 步。",
   ),
   generate(rng) {
     const p = rng.pick([1, 2, 4]);
@@ -2681,19 +2775,57 @@ const stepsForTargetError: KnowledgePointDef = {
     const r = 2 ** k;
     const factor = r ** p;
     const answer = N * r;
-    return numberProblem({
-      prompt: t(
+    const root = p === 1 ? `r = ${factor}` : `r^{${p}} = ${factor} \\implies r = ${r}`;
+    const shrink = p === 1 ? `$Ch$ shrinks by $${r}$` : `$Ch^{${p}}$ shrinks by $${r}^{${p}} = ${factor}$`;
+    const shrinkZh = p === 1 ? `$Ch$ 缩小 $${r}$ 倍` : `$Ch^{${p}}$ 缩小 $${r}^{${p}} = ${factor}$ 倍`;
+    return explainedNumber(
+      [
         `A method of order $${p}$ takes $${N}$ steps to cross an interval. How many steps does it need on the same interval to make the error $${factor}$ times smaller?`,
         `一个 $${p}$ 阶方法用 $${N}$ 步走完一个区间。要使误差缩小到 $\\frac{1}{${factor}}$，在同一区间上需要多少步？`,
-      ),
+      ],
       answer,
-      form: "integer",
-      wrong: [N * factor, N * p, N * r * r, N + factor],
-      solution: t(
-        `Dividing $h$ by $r$ divides the error by $r^p$, with $p = ${p}$ here. The required factor is reached with $r = ${r}$, so the number of steps becomes $${N} \\cdot ${r} = ${answer}$.`,
-        `把 $h$ 除以 $r$，误差除以 $r^p$，这里 $p = ${p}$。取 $r = ${r}$ 就达到所需的倍数，所以步数变为 $${N} \\cdot ${r} = ${answer}$。`,
-      ),
-    });
+      [
+        labelled(
+          ["Find how much to shrink the step", "求步长缩小的倍数"],
+          `Dividing $h$ by $r$ divides the error by $r^p$, with $p = ${p}$:`,
+          `把 $h$ 除以 $r$，误差除以 $r^p$，这里 $p = ${p}$：`,
+          root,
+        ),
+        labelled(
+          ["Multiply the steps", "步数相乘"],
+          "On a fixed interval the number of steps is proportional to $\\frac{1}{h}$:",
+          "在固定区间上，步数与 $\\frac{1}{h}$ 成正比：",
+          `${N} \\cdot ${r} = ${answer}`,
+        ),
+      ],
+      [
+        `With $${answer}$ steps the step is $\\frac{1}{${r}}$ of the old one, and the error ${shrink}, the factor asked for.`,
+        `用 $${answer}$ 步时，步长是原来的 $\\frac{1}{${r}}$，误差 ${shrinkZh}，正是所要求的倍数。`,
+      ],
+      [
+        [
+          N * factor,
+          "That multiplies the steps by the error factor, which is right only for a first-order method.",
+          "这把步数乘以误差倍数，只有一阶方法才是这样。",
+        ],
+        [
+          N * p,
+          "That multiplies the steps by the order; the step factor is the $p$-th root of the error factor.",
+          "这把步数乘以阶数；步长倍数是误差倍数的 $p$ 次方根。",
+        ],
+        [
+          N + factor,
+          "That adds the error factor to the steps; a smaller step multiplies the number of steps.",
+          "这把误差倍数加到步数上；步长变小时，步数是成倍增加的。",
+        ],
+        [
+          N * r * r,
+          `That squares the step factor $${r}$; the steps grow by $r$ itself.`,
+          `这把步长倍数 $${r}$ 平方了；步数只按 $r$ 本身增长。`,
+        ],
+      ],
+      "integer",
+    );
   },
 };
 
@@ -2701,8 +2833,8 @@ const midpointStep: KnowledgePointDef = {
   id: "a-midpoint-step",
   title: t("A midpoint step", "中点法的一步"),
   explanation: t(
-    "The midpoint method is a second-order relative of Heun's method. It uses Euler's method for half a step to reach an estimated midpoint, and takes the slope there: $k_1 = f(t_n, y_n)$, then $k_2 = f\\left(t_n + \\frac{h}{2}, y_n + \\frac{h}{2}k_1\\right)$. The full step from $y_n$ then uses this better slope: $y_{n+1} = y_n + hk_2$.",
-    "中点法是与 Heun 方法同属二阶的方法。它先用欧拉法走半步，估计出中点，再取那里的斜率：$k_1 = f(t_n, y_n)$，然后 $k_2 = f\\left(t_n + \\frac{h}{2}, y_n + \\frac{h}{2}k_1\\right)$。之后从 $y_n$ 出发，用这个更好的斜率走完整一步：$y_{n+1} = y_n + hk_2$。",
+    "The midpoint method is a second-order relative of Heun's method. It uses Euler's method for half a step to reach an estimated midpoint, and takes the slope there: $k_1 = f(t_n, y_n)$, then $k_2 = f\\left(t_n + \\frac{h}{2}, y_n + \\frac{h}{2}k_1\\right)$. The full step from $y_n$ then uses this better slope: $y_{n+1} = y_n + hk_2$.\n\n> **Watch out.** The full step starts again from $y_n$; the midpoint value only supplies the slope. For $y' = y$, $y_0 = 1$, $h = 1$: $k_1 = 1$, the midpoint value is $1.5$, $k_2 = 1.5$, so $y_1 = 1 + 1.5 = 2.5$; stepping $h$ from the midpoint would give $3$.",
+    "中点法是与 Heun 方法同属二阶的方法。它先用欧拉法走半步，估计出中点，再取那里的斜率：$k_1 = f(t_n, y_n)$，然后 $k_2 = f\\left(t_n + \\frac{h}{2}, y_n + \\frac{h}{2}k_1\\right)$。之后从 $y_n$ 出发，用这个更好的斜率走完整一步：$y_{n+1} = y_n + hk_2$。\n\n> **注意。** 完整的一步要重新从 $y_n$ 出发；中点值只用来提供斜率。对 $y' = y$，$y_0 = 1$，$h = 1$：$k_1 = 1$，中点值为 $1.5$，$k_2 = 1.5$，所以 $y_1 = 1 + 1.5 = 2.5$；若从中点出发走 $h$，会得到 $3$。",
   ),
   generate(rng) {
     const a = nonzero(rng, 6);
@@ -2719,18 +2851,55 @@ const midpointStep: KnowledgePointDef = {
     const k2 = f(Q.of(t0).add(half), middle);
     const answer = start.add(h.mul(k2));
     const k4 = f(Q.of(t0).add(h), start.add(h.mul(k1)));
-    return numberProblem({
-      prompt: t(
+    const tMid = Q.of(t0).add(half);
+    const curvature = Q.of(a).add(Q.of(b).mul(k1));
+    const bTimes = `${b < 0 ? "-" : "+"} ${Math.abs(b)} \\cdot ${signedFactor(k1)}`;
+    return explainedNumber(
+      [
         `Apply one step of the midpoint method with $h = ${decimal(tenths)}$ to $y' = ${poly([a, "t"], [b, "y"])}$, $y(${t0}) = ${y0}$. Find $y_1$.`,
         `用中点法对 $y' = ${poly([a, "t"], [b, "y"])}$，$y(${t0}) = ${y0}$ 走一步，步长 $h = ${decimal(tenths)}$。求 $y_1$。`,
-      ),
+      ],
       answer,
-      wrong: [start.add(h.mul(k1)), start.add(half.mul(k1.add(k4))), start.add(h.mul(f(Q.of(t0).add(half), start))), middle],
-      solution: t(
-        `First $k_1 = ${k1.toLatex()}$, which gives the estimated midpoint value $${middle.toLatex()}$. The slope there is $k_2 = ${k2.toLatex()}$. So $y_1 = ${y0} + ${decimal(tenths)} \\cdot ${signedFactor(k2)} = ${answer.toLatex()}$.`,
-        `先求 $k_1 = ${k1.toLatex()}$，得到中点的估计值 $${middle.toLatex()}$。那里的斜率是 $k_2 = ${k2.toLatex()}$。所以 $y_1 = ${y0} + ${decimal(tenths)} \\cdot ${signedFactor(k2)} = ${answer.toLatex()}$。`,
-      ),
-    });
+      [
+        labelled(["The starting slope", "起点的斜率"], "", "", `k_1 = f(${t0}, ${y0}) = ${k1.toLatex()}`),
+        labelled(
+          ["Half a step to the midpoint", "走半步到中点"],
+          "",
+          "",
+          `y_{1/2} = ${y0} + ${dec(half)} \\cdot ${signedFactor(k1)} = ${middle.toLatex()}`,
+        ),
+        labelled(
+          ["The slope at the midpoint", "中点处的斜率"],
+          "",
+          "",
+          `k_2 = f\\left(${dec(tMid)}, ${middle.toLatex()}\\right) = ${k2.toLatex()}`,
+        ),
+        labelled(
+          ["The full step from the start", "从起点走完整一步"],
+          "",
+          "",
+          `y_1 = ${y0} + ${decimal(tenths)} \\cdot ${signedFactor(k2)} = ${answer.toLatex()}`,
+        ),
+      ],
+      [
+        `For this linear equation the midpoint step equals the second-order Taylor step $y_0 + hy' + \\frac{h^{2}}{2}y''$, where $y'' = ${a} ${bTimes} = ${curvature.toLatex()}$: $${y0} + ${decimal(tenths)} \\cdot ${signedFactor(k1)} + ${dec(h.mul(h).div(Q.of(2)))} \\cdot ${signedFactor(curvature)} = ${answer.toLatex()}$.`,
+        `对这个线性方程，中点法的一步等于二阶泰勒展开 $y_0 + hy' + \\frac{h^{2}}{2}y''$，其中 $y'' = ${a} ${bTimes} = ${curvature.toLatex()}$：$${y0} + ${decimal(tenths)} \\cdot ${signedFactor(k1)} + ${dec(h.mul(h).div(Q.of(2)))} \\cdot ${signedFactor(curvature)} = ${answer.toLatex()}$。`,
+      ],
+      [
+        [start.add(h.mul(k1)), "That is Euler's step, with the starting slope $k_1$.", "这是欧拉法的一步，用的是起点斜率 $k_1$。"],
+        [
+          start.add(half.mul(k1.add(k4))),
+          "That is Heun's method, which averages the slopes at the two ends.",
+          "这是 Heun 方法，它对两端的斜率取平均。",
+        ],
+        [
+          start.add(h.mul(f(tMid, start))),
+          "That takes $k_2$ at $y_n$ instead of at the estimated midpoint value.",
+          "这在 $y_n$ 处取 $k_2$，而不是在估计的中点值处。",
+        ],
+        [middle, "That is the midpoint value, only half a step along.", "这是中点值，只走了半步。"],
+      ],
+    );
   },
 };
 
@@ -2738,8 +2907,8 @@ const rk4OfTime: KnowledgePointDef = {
   id: "an-rk4-step-for-a-function-of-t-alone",
   title: t("An RK4 step for a function of t alone", "右端只含 t 时的 RK4 步"),
   explanation: t(
-    "When the right-hand side depends only on $t$, the slopes $k_2$ and $k_3$ are the same value, both taken at the midpoint. RK4 then becomes $y_{n+1} = y_n + \\frac{h}{6}(k_1 + 4k_2 + k_4)$, which is Simpson's rule for the integral of $f$. Simpson's rule is exact for quadratics, so here the step equals the true solution.",
-    "右端只依赖 $t$ 时，$k_2$ 和 $k_3$ 是同一个值，都在中点处取得。RK4 于是变成 $y_{n+1} = y_n + \\frac{h}{6}(k_1 + 4k_2 + k_4)$，这正是 $f$ 的积分的辛普森公式。辛普森公式对二次函数是精确的，所以这里的一步就等于真实解。",
+    "When the right-hand side depends only on $t$, the slopes $k_2$ and $k_3$ are the same value, both taken at the midpoint. RK4 then becomes $y_{n+1} = y_n + \\frac{h}{6}(k_1 + 4k_2 + k_4)$, which is Simpson's rule for the integral of $f$. Simpson's rule is exact for quadratics, so here the step equals the true solution.\n\n> **Watch out.** The midpoint slope is counted twice, as $k_2$ and as $k_3$, so its weight is $4$, not $2$. For $y' = t^{2}$ from $y(0) = 0$ with $h = 2$: $\\frac{2}{6}(0 + 4 \\cdot 1 + 4) = \\frac{8}{3}$, which is $\\int_0^2 t^{2}\\,dt$.",
+    "右端只依赖 $t$ 时，$k_2$ 和 $k_3$ 是同一个值，都在中点处取得。RK4 于是变成 $y_{n+1} = y_n + \\frac{h}{6}(k_1 + 4k_2 + k_4)$，这正是 $f$ 的积分的辛普森公式。辛普森公式对二次函数是精确的，所以这里的一步就等于真实解。\n\n> **注意。** 中点斜率作为 $k_2$ 和 $k_3$ 被计入两次，所以它的权重是 $4$，不是 $2$。对 $y' = t^{2}$，从 $y(0) = 0$ 出发，$h = 2$：$\\frac{2}{6}(0 + 4 \\cdot 1 + 4) = \\frac{8}{3}$，正是 $\\int_0^2 t^{2}\\,dt$。",
   ),
   generate(rng) {
     const a = nonzero(rng, 3);
@@ -2754,18 +2923,58 @@ const rk4OfTime: KnowledgePointDef = {
     const k4 = f(Q.of(t0 + h));
     const start = Q.of(y0);
     const answer = start.add(Q.of(h, 6).mul(k1.add(k2.mul(Q.of(4))).add(k4)));
-    return numberProblem({
-      prompt: t(
+    const sum = k1.add(k2.mul(Q.of(4))).add(k4);
+    const anti = (x: Q) =>
+      Q.of(a, 3)
+        .mul(x.pow(3))
+        .add(Q.of(b, 2).mul(x.pow(2)))
+        .add(Q.of(c).mul(x));
+    const t1 = Q.of(t0 + h);
+    const area = anti(t1).sub(anti(Q.of(t0)));
+    return explainedNumber(
+      [
         `Apply one RK4 step with $h = ${h}$ to $y' = ${poly([a, "t^2"], [b, "t"], [c, ""])}$, $y(${t0}) = ${y0}$. Find $y_1$.`,
         `用 RK4 对 $y' = ${poly([a, "t^2"], [b, "t"], [c, ""])}$，$y(${t0}) = ${y0}$ 走一步，步长 $h = ${h}$。求 $y_1$。`,
-      ),
+      ],
       answer,
-      wrong: [start.add(Q.of(h).mul(k2)), start.add(Q.of(h).mul(k1)), start.add(Q.of(h, 2).mul(k1.add(k4)))],
-      solution: t(
-        `The slopes are $k_1 = ${k1.toLatex()}$, $k_2 = k_3 = ${k2.toLatex()}$ and $k_4 = ${k4.toLatex()}$. The weighted average gives $y_1 = ${y0} + \\frac{${h}}{6}\\big(k_1 + 4k_2 + k_4\\big) = ${answer.toLatex()}$.`,
-        `斜率是 $k_1 = ${k1.toLatex()}$，$k_2 = k_3 = ${k2.toLatex()}$，$k_4 = ${k4.toLatex()}$。加权平均得 $y_1 = ${y0} + \\frac{${h}}{6}\\big(k_1 + 4k_2 + k_4\\big) = ${answer.toLatex()}$。`,
-      ),
-    });
+      [
+        labelled(
+          ["The slopes", "各个斜率"],
+          "The right side does not involve $y$, so $k_2$ and $k_3$ are both the value at the midpoint:",
+          "右端不含 $y$，所以 $k_2$ 与 $k_3$ 都是中点处的值：",
+          `k_1 = f(${t0}) = ${k1.toLatex()}, \\quad k_2 = k_3 = f\\left(${Q.of(2 * t0 + h, 2).toLatex()}\\right) = ${k2.toLatex()}, \\quad k_4 = f(${t0 + h}) = ${k4.toLatex()}`,
+        ),
+        labelled(
+          ["The weighted sum", "加权和"],
+          "",
+          "",
+          `k_1 + 2k_2 + 2k_3 + k_4 = ${k1.toLatex()} + 4 \\cdot ${signedFactor(k2)} + ${signedFactor(k4)} = ${sum.toLatex()}`,
+        ),
+        labelled(["The step", "这一步"], "", "", `y_1 = ${y0} + \\frac{${h}}{6} \\cdot ${signedFactor(sum)} = ${answer.toLatex()}`),
+      ],
+      [
+        `Simpson's rule is exact for a quadratic, so the step equals $y_0 + \\int_${t0}^${t0 + h} f(t)\\,dt$. With $F(t) = ${poly([Q.of(a, 3), "t^{3}"], [Q.of(b, 2), "t^{2}"], [c, "t"])}$, $F(${t0 + h}) - F(${t0}) = ${area.toLatex()}$, and $${y0} + ${signedFactor(area)} = ${answer.toLatex()}$.`,
+        `辛普森公式对二次函数是精确的，所以这一步等于 $y_0 + \\int_${t0}^${t0 + h} f(t)\\,dt$。取 $F(t) = ${poly([Q.of(a, 3), "t^{3}"], [Q.of(b, 2), "t^{2}"], [c, "t"])}$，$F(${t0 + h}) - F(${t0}) = ${area.toLatex()}$，而 $${y0} + ${signedFactor(area)} = ${answer.toLatex()}$。`,
+      ],
+      [
+        [
+          start.add(Q.of(h).mul(k2)),
+          "That uses only the midpoint slope; RK4 also weighs in the slopes at the two ends.",
+          "这只用了中点斜率；RK4 还要计入两端的斜率。",
+        ],
+        [start.add(Q.of(h).mul(k1)), "That is Euler's step, with the starting slope only.", "这是欧拉法的一步，只用了起点斜率。"],
+        [
+          start.add(Q.of(h, 2).mul(k1.add(k4))),
+          "That is the trapezoidal average of the end slopes, which leaves out the midpoint.",
+          "这是两端斜率的梯形平均，漏掉了中点。",
+        ],
+        [
+          start.add(Q.of(h, 4).mul(k1.add(k2.mul(Q.of(2))).add(k4))),
+          "That counts the midpoint slope once, with weights $1, 2, 1$ over $4$; it enters as both $k_2$ and $k_3$.",
+          "这只计入一次中点斜率，权重为 $1, 2, 1$ 再除以 $4$；它既是 $k_2$ 又是 $k_3$。",
+        ],
+      ],
+    );
   },
 };
 
@@ -2857,8 +3066,8 @@ const radiusOfConvergence: KnowledgePointDef = {
   id: "the-guaranteed-radius-of-convergence",
   title: t("The guaranteed radius of convergence", "有保证的收敛半径"),
   explanation: t(
-    "For $P(x)y'' + Q(x)y' + R(x)y = 0$ with polynomial coefficients, the singular points are the zeros of $P$. A power series solution about an ordinary point $x_0$ converges at least out to the nearest singular point. Complex zeros count too, so the distance must be measured in the complex plane.",
-    "对多项式系数方程 $P(x)y'' + Q(x)y' + R(x)y = 0$，奇点就是 $P$ 的零点。在常点 $x_0$ 处的幂级数解至少收敛到最近的奇点。复零点也算在内，所以距离要在复平面上度量。",
+    "For $P(x)y'' + Q(x)y' + R(x)y = 0$ with polynomial coefficients, the singular points are the zeros of $P$. A power series solution about an ordinary point $x_0$ converges at least out to the nearest singular point. Complex zeros count too, so the distance must be measured in the complex plane.\n\n> **Watch out.** A complex zero of $P$ limits the radius even when $P$ has no real zero. For $(x^{2} + 16)y'' + y = 0$ about $x = 3$, the zeros $\\pm 4i$ lie at distance $\\sqrt{3^{2} + 4^{2}} = 5$, so the guaranteed radius is $5$, not unlimited.",
+    "对多项式系数方程 $P(x)y'' + Q(x)y' + R(x)y = 0$，奇点就是 $P$ 的零点。在常点 $x_0$ 处的幂级数解至少收敛到最近的奇点。复零点也算在内，所以距离要在复平面上度量。\n\n> **注意。** 即使 $P$ 没有实零点，它的复零点也会限制半径。对 $(x^{2} + 16)y'' + y = 0$，以 $x = 3$ 为中心，零点 $\\pm 4i$ 的距离为 $\\sqrt{3^{2} + 4^{2}} = 5$，所以保证的半径是 $5$，而不是无限大。",
   ),
   generate(rng) {
     const k = rng.int(1, 9);
@@ -2874,19 +3083,45 @@ const radiusOfConvergence: KnowledgePointDef = {
         [12, 5, 13],
       ] as const);
       const x0 = rng.pick([leg, -leg]);
-      return numberProblem({
-        prompt: t(
+      return explainedNumber(
+        [
           `A power series solution of $(${poly([1, "x^2"], [q * q, ""])})y'' + ${rest} = 0$ is centered at $x = ${x0}$. How large a radius of convergence does the ordinary-point theorem guarantee?`,
           `$(${poly([1, "x^2"], [q * q, ""])})y'' + ${rest} = 0$ 的幂级数解以 $x = ${x0}$ 为中心。常点定理保证的收敛半径是多少？`,
-        ),
-        answer: hyp,
-        form: "integer",
-        wrong: [leg, q, leg + q],
-        solution: t(
-          `The leading coefficient vanishes at $x = \\pm ${q}i$. Both points lie at distance $\\sqrt{${leg}^2 + ${q}^2} = ${hyp}$ from the center, so the radius is at least $${hyp}$.`,
-          `首项系数在 $x = \\pm ${q}i$ 处为零。这两点到中心的距离都是 $\\sqrt{${leg}^2 + ${q}^2} = ${hyp}$，所以半径至少是 $${hyp}$。`,
-        ),
-      });
+        ],
+        hyp,
+        [
+          labelled(
+            ["Find the singular points", "找出奇点"],
+            "They are the zeros of the leading coefficient, complex ones included:",
+            "奇点是首项系数的零点，包括复零点：",
+            `${poly([1, "x^2"], [q * q, ""])} = 0 \\iff x = \\pm ${q}i`,
+          ),
+          labelled(
+            ["Measure from the center", "从中心量距离"],
+            "",
+            "",
+            `|${x0} - ${q}i| = \\sqrt{${inParens(x0)}^{2} + ${q}^{2}} = \\sqrt{${leg * leg + q * q}} = ${hyp}`,
+          ),
+        ],
+        [
+          `The two points $\\pm ${q}i$ are mirror images across the real axis, so both lie at the same distance $${hyp}$, and $${hyp}^{2} = ${hyp * hyp} = ${leg * leg} + ${q * q}$.`,
+          `两点 $\\pm ${q}i$ 关于实轴对称，所以到中心的距离都是 $${hyp}$，而 $${hyp}^{2} = ${hyp * hyp} = ${leg * leg} + ${q * q}$。`,
+        ],
+        [
+          [
+            leg,
+            `That is the distance from the center to $0$; the singular points lie off the real axis, at $\\pm ${q}i$.`,
+            `这是中心到 $0$ 的距离；奇点不在实轴上，而在 $\\pm ${q}i$。`,
+          ],
+          [
+            q,
+            "That is the distance from $0$ to the singular points, not from the center.",
+            "这是 $0$ 到奇点的距离，而不是中心到奇点的距离。",
+          ],
+          [leg + q, "That adds the two legs; the distance is the hypotenuse.", "这把两条直角边相加了；距离是斜边。"],
+        ],
+        "integer",
+      );
     }
     const a = nonzero(rng, 9);
     const b = different(rng, -9, 9, a);
@@ -2896,19 +3131,56 @@ const radiusOfConvergence: KnowledgePointDef = {
     const second = Math.abs(x0 - b);
     const answer = Math.min(first, second);
     const product = b === 0 ? `x(${shifted(a)})` : `(${shifted(a)})(${shifted(b)})`;
-    return numberProblem({
-      prompt: t(
+    const near = first <= second ? a : b;
+    const far = first <= second ? b : a;
+    const ends =
+      first === second ? "both singular points at its ends" : `the singular point $x = ${near}$ at one end and leaves out $x = ${far}$`;
+    const endsZh = first === second ? "两端恰好是两个奇点" : `一端恰好是奇点 $x = ${near}$，且不含 $x = ${far}$`;
+    return explainedNumber(
+      [
         `A power series solution of $${product}y'' + ${rest} = 0$ is centered at $x = ${x0}$. How large a radius of convergence does the ordinary-point theorem guarantee?`,
         `$${product}y'' + ${rest} = 0$ 的幂级数解以 $x = ${x0}$ 为中心。常点定理保证的收敛半径是多少？`,
-      ),
+      ],
       answer,
-      form: "integer",
-      wrong: [Math.max(first, second), Math.abs(x0), Math.abs(a - b), first + second],
-      solution: t(
-        `The singular points are $x = ${a}$ and $x = ${b}$, at distances $${first}$ and $${second}$ from the center. The nearer one gives the radius $${answer}$.`,
-        `奇点是 $x = ${a}$ 和 $x = ${b}$，到中心的距离分别是 $${first}$ 和 $${second}$。较近的一个给出半径 $${answer}$。`,
-      ),
-    });
+      [
+        labelled(
+          ["Find the singular points", "找出奇点"],
+          "They are the zeros of the coefficient of $y''$:",
+          "奇点是 $y''$ 的系数的零点：",
+          `${product} = 0 \\iff x = ${a} \\text{ or } x = ${b}`,
+        ),
+        labelled(
+          ["Measure from the center", "从中心量距离"],
+          "",
+          "",
+          `|${x0} - ${inParens(a)}| = ${first}, \\qquad |${x0} - ${inParens(b)}| = ${second}`,
+        ),
+        labelled(["Take the nearer one", "取较近的一个"], "", "", `R = \\min(${first}, ${second}) = ${answer}`),
+      ],
+      [
+        `The interval $(${x0 - answer}, ${x0 + answer})$ reaches ${ends}, so no singular point lies inside it.`,
+        `区间 $(${x0 - answer}, ${x0 + answer})$ ${endsZh}，所以区间内部没有奇点。`,
+      ],
+      [
+        [
+          Math.max(first, second),
+          "That is the distance to the farther singular point; the nearer one stops the series.",
+          "这是到较远奇点的距离；较近的奇点就会限制级数。",
+        ],
+        [
+          Math.abs(x0),
+          "That is the distance to $0$, which is not where the coefficient vanishes.",
+          "这是到 $0$ 的距离，而系数并不在那里为零。",
+        ],
+        [
+          Math.abs(a - b),
+          "That is the distance between the two singular points, not from the center.",
+          "这是两个奇点之间的距离，而不是到中心的距离。",
+        ],
+        [first + second, "That adds the two distances; the radius is the smaller one.", "这把两个距离相加了；半径是较小的那个。"],
+      ],
+      "integer",
+    );
   },
 };
 
@@ -4339,8 +4611,8 @@ const airyCoefficient: KnowledgePointDef = {
   id: "a-series-coefficient-of-the-equation-y-double-prime-equals-xy",
   title: t("A series coefficient of the equation y'' = xy", "方程 y'' = xy 的级数系数"),
   explanation: t(
-    "The equation $y'' = xy$ has no solutions in elementary functions, but a power series handles it well. Comparing coefficients of $x^n$ gives $(n + 2)(n + 1)a_{n + 2} = a_{n - 1}$, so each coefficient is tied to the one three places back. Two free constants, $a_0 = y(0)$ and $a_1 = y'(0)$, start two separate chains of coefficients, and the coefficient $a_2$ is zero, starting a third chain of zeros.",
-    "方程 $y'' = xy$ 没有初等函数解，但幂级数能很好地处理它。比较 $x^n$ 的系数，得 $(n + 2)(n + 1)a_{n + 2} = a_{n - 1}$，所以每个系数与前面第三个系数相关。两个自由常数 $a_0 = y(0)$ 和 $a_1 = y'(0)$ 开始两条独立的系数链，系数 $a_2$ 为零，开始第三条全为零的链。",
+    "The equation $y'' = xy$ has no solutions in elementary functions, but a power series handles it well. Comparing coefficients of $x^n$ gives $(n + 2)(n + 1)a_{n + 2} = a_{n - 1}$, so each coefficient is tied to the one three places back. Two free constants, $a_0 = y(0)$ and $a_1 = y'(0)$, start two separate chains of coefficients, and the coefficient $a_2$ is zero, starting a third chain of zeros.\n\n> **Watch out.** Each coefficient is tied to the one three places back, not two. For $y(0) = 6$ and $y'(0) = 0$: $a_3 = \\frac{6}{3 \\cdot 2} = 1$; tying $a_3$ to $a_1 = 0$ would give $0$.",
+    "方程 $y'' = xy$ 没有初等函数解，但幂级数能很好地处理它。比较 $x^n$ 的系数，得 $(n + 2)(n + 1)a_{n + 2} = a_{n - 1}$，所以每个系数与前面第三个系数相关。两个自由常数 $a_0 = y(0)$ 和 $a_1 = y'(0)$ 开始两条独立的系数链，系数 $a_2$ 为零，开始第三条全为零的链。\n\n> **注意。** 每个系数与前面第三个系数相关，而不是第二个。对 $y(0) = 6$，$y'(0) = 0$：$a_3 = \\frac{6}{3 \\cdot 2} = 1$；若把 $a_3$ 与 $a_1 = 0$ 联系起来，会得到 $0$。",
   ),
   generate(rng) {
     const a = nonzero(rng, 12);
@@ -4351,18 +4623,60 @@ const airyCoefficient: KnowledgePointDef = {
     const other = cubic ? b : a;
     const denominator = cubic ? 6 : 12;
     const answer = Q.of(start, denominator);
-    return numberProblem({
-      prompt: t(
+    return explainedNumber(
+      [
         `The solution of $y'' = xy$ with $y(0) = ${a}$ and $y'(0) = ${b}$ has a power series about $x = 0$. Find the coefficient of $x^{${power}}$.`,
         `$y'' = xy$，$y(0) = ${a}$，$y'(0) = ${b}$ 的解在 $x = 0$ 处有幂级数。求 $x^{${power}}$ 的系数。`,
-      ),
+      ],
       answer,
-      wrong: [Q.of(other, denominator), Q.of(start, power), Q.of(start, power - 1), Q.of(start, 2 * denominator)],
-      solution: t(
-        `Comparing coefficients gives $${power}\\cdot${power - 1}\\,a_{${power}} = a_{${power - 3}}$, and $a_{${power - 3}} = ${start}$. So $a_{${power}} = ${answer.toLatex()}$.`,
-        `比较系数，得 $${power}\\cdot${power - 1}\\,a_{${power}} = a_{${power - 3}}$，且 $a_{${power - 3}} = ${start}$。所以 $a_{${power}} = ${answer.toLatex()}$。`,
-      ),
-    });
+      [
+        labelled(
+          ["Match the coefficients of $x^n$", "比较 $x^n$ 的系数"],
+          "Shift both series so that they run over the same powers:",
+          "把两个级数平移，使它们按相同的幂次排列：",
+          "y'' = \\sum_{n \\ge 0} (n + 2)(n + 1)a_{n+2}x^{n}, \\qquad xy = \\sum_{n \\ge 1} a_{n-1}x^{n}",
+          "(n + 2)(n + 1)a_{n+2} = a_{n-1}",
+        ),
+        labelled(
+          [`Take $n = ${power - 2}$`, `取 $n = ${power - 2}$`],
+          cubic ? `Here $a_0 = y(0) = ${a}$:` : `Here $a_1 = y'(0) = ${b}$:`,
+          cubic ? `这里 $a_0 = y(0) = ${a}$：` : `这里 $a_1 = y'(0) = ${b}$：`,
+          `${power} \\cdot ${power - 1} \\cdot a_{${power}} = a_{${power - 3}} = ${start}`,
+          `a_{${power}} = \\frac{${start}}{${denominator}}${lowestTerms(start, denominator)}`,
+        ),
+      ],
+      cubic
+        ? [
+            `Differentiating $y'' = xy$ gives $y''' = y + xy'$, so $y'''(0) = y(0) = ${a}$, and $a_3 = \\frac{y'''(0)}{3!} = ${answer.toLatex()}$.`,
+            `对 $y'' = xy$ 求导得 $y''' = y + xy'$，所以 $y'''(0) = y(0) = ${a}$，而 $a_3 = \\frac{y'''(0)}{3!} = ${answer.toLatex()}$。`,
+          ]
+        : [
+            `Differentiating $y'' = xy$ twice gives $y^{(4)} = 2y' + xy''$, so $y^{(4)}(0) = 2 \\cdot ${inParens(b)} = ${2 * b}$, and $a_4 = \\frac{y^{(4)}(0)}{4!} = ${answer.toLatex()}$.`,
+            `对 $y'' = xy$ 求导两次得 $y^{(4)} = 2y' + xy''$，所以 $y^{(4)}(0) = 2 \\cdot ${inParens(b)} = ${2 * b}$，而 $a_4 = \\frac{y^{(4)}(0)}{4!} = ${answer.toLatex()}$。`,
+          ],
+      [
+        [
+          Q.of(other, denominator),
+          `That starts from the other initial value; $a_{${power}}$ is in the chain of $a_{${power - 3}}$, three places back.`,
+          `这是从另一个初值出发；$a_{${power}}$ 在 $a_{${power - 3}}$ 的链上，相隔三位。`,
+        ],
+        [
+          Q.of(start, power),
+          `That divides by $${power}$ only; the factor is $${power} \\cdot ${power - 1}$.`,
+          `这只除以 $${power}$；因子是 $${power} \\cdot ${power - 1}$。`,
+        ],
+        [
+          Q.of(start, power - 1),
+          `That divides by $${power - 1}$ only; the factor is $${power} \\cdot ${power - 1}$.`,
+          `这只除以 $${power - 1}$；因子是 $${power} \\cdot ${power - 1}$。`,
+        ],
+        [
+          start,
+          `That is $a_{${power - 3}}$ itself, before dividing by $${power} \\cdot ${power - 1}$.`,
+          `这是 $a_{${power - 3}}$ 本身，还没有除以 $${power} \\cdot ${power - 1}$。`,
+        ],
+      ],
+    );
   },
 };
 
@@ -4370,16 +4684,17 @@ const indicialSum: KnowledgePointDef = {
   id: "the-sum-of-the-indicial-roots",
   title: t("The sum of the indicial roots", "指标根之和"),
   explanation: t(
-    "For $x^2y'' + xP(x)y' + Q(x)y = 0$ with a regular singular point at the origin, only $p = P(0)$ and $q = Q(0)$ enter the indicial equation $r(r - 1) + pr + q = 0$. Written out, this is $r^2 + (p - 1)r + q = 0$, and by Vieta's formulas the roots add to $1 - p$. So $q$ and the higher terms of the coefficients play no part in the sum of the roots.",
-    "对原点为正则奇点的 $x^2y'' + xP(x)y' + Q(x)y = 0$，只有 $p = P(0)$ 和 $q = Q(0)$ 进入指标方程 $r(r - 1) + pr + q = 0$。展开得 $r^2 + (p - 1)r + q = 0$，由韦达定理，两根之和是 $1 - p$。所以 $q$ 和系数的高次项对根之和都不起作用。",
+    "For $x^2y'' + xP(x)y' + Q(x)y = 0$ with a regular singular point at the origin, only $p = P(0)$ and $q = Q(0)$ enter the indicial equation $r(r - 1) + pr + q = 0$. Written out, this is $r^2 + (p - 1)r + q = 0$, and by Vieta's formulas the roots add to $1 - p$. So $q$ and the higher terms of the coefficients play no part in the sum of the roots.\n\n> **Watch out.** The sum is $1 - p$, not $-p$: the product $r(r - 1)$ contributes $-r$. For $x^2y'' + 3xy' + y = 0$ the indicial equation is $r^2 + 2r + 1 = 0$, so the roots add to $-2$, not $-3$.",
+    "对原点为正则奇点的 $x^2y'' + xP(x)y' + Q(x)y = 0$，只有 $p = P(0)$ 和 $q = Q(0)$ 进入指标方程 $r(r - 1) + pr + q = 0$。展开得 $r^2 + (p - 1)r + q = 0$，由韦达定理，两根之和是 $1 - p$。所以 $q$ 和系数的高次项对根之和都不起作用。\n\n> **注意。** 两根之和是 $1 - p$，不是 $-p$：乘积 $r(r - 1)$ 贡献了 $-r$。对 $x^2y'' + 3xy' + y = 0$，指标方程是 $r^2 + 2r + 1 = 0$，所以两根之和是 $-2$，不是 $-3$。",
   ),
   generate(rng) {
     const p = nonzero(rng, 9);
     const q = nonzero(rng, 9);
     const c = nonzero(rng, 5);
     const answer = 1 - p;
-    return numberProblem({
-      prompt: t(
+    const pr = p === 1 ? "r" : `${inParens(p)}r`;
+    return explainedNumber(
+      [
         `Find the sum of the indicial roots at $x = 0$ of $x^2y'' + ${p === 1 ? "" : p === -1 ? "-" : p}xy' + (${poly([q, ""], [c, "x"])})y = 0$.`.replace(
           "+ -",
           "- ",
@@ -4388,15 +4703,40 @@ const indicialSum: KnowledgePointDef = {
           "+ -",
           "- ",
         ),
-      ),
+      ],
       answer,
-      form: "integer",
-      wrong: [-p, p, p - 1, q, answer + 1],
-      solution: t(
-        `The indicial equation is $r(r - 1) + ${inParens(p)}r + ${inParens(q)} = 0$, in which $r$ has coefficient $${p - 1}$. So the roots add to $${answer}$.`,
-        `指标方程是 $r(r - 1) + ${inParens(p)}r + ${inParens(q)} = 0$，其中 $r$ 的系数是 $${p - 1}$。所以两根之和是 $${answer}$。`,
-      ),
-    });
+      [
+        labelled(
+          ["Read off $p$ and $q$", "读出 $p$ 与 $q$"],
+          `Here $xP(x) = ${p === 1 ? "" : p === -1 ? "-" : p}x$ and $Q(x) = ${poly([q, ""], [c, "x"])}$:`,
+          `这里 $xP(x) = ${p === 1 ? "" : p === -1 ? "-" : p}x$，$Q(x) = ${poly([q, ""], [c, "x"])}$：`,
+          `p = P(0) = ${p}, \\qquad q = Q(0) = ${q}`,
+        ),
+        labelled(
+          ["Write the indicial equation", "写出指标方程"],
+          "",
+          "",
+          `r(r - 1) + ${pr} + ${inParens(q)} = 0 \\iff ${poly([1, "r^{2}"], [p - 1, "r"], [q, ""])} = 0`,
+        ),
+        labelled(
+          ["Add the roots", "求两根之和"],
+          "By Vieta's formulas the sum is minus the coefficient of $r$:",
+          "由韦达定理，两根之和是 $r$ 的系数的相反数：",
+          `r_1 + r_2 = ${answer}`,
+        ),
+      ],
+      [
+        `The coefficient of $r$ is $-1 + ${inParens(p)} = ${p - 1}$, from $r(r - 1)$ and $pr$ together, and minus it is $${answer}$. The term $${poly([c, "x"])}$ of $Q(x)$ is zero at $x = 0$ and plays no part.`,
+        `$r$ 的系数是 $-1 + ${inParens(p)} = ${p - 1}$，来自 $r(r - 1)$ 与 $pr$ 两部分，它的相反数是 $${answer}$。$Q(x)$ 中的项 $${poly([c, "x"])}$ 在 $x = 0$ 处为零，不起作用。`,
+      ],
+      [
+        [-p, "That leaves out the $-r$ that comes from $r(r - 1)$.", "这漏掉了 $r(r - 1)$ 带来的 $-r$。"],
+        [p - 1, "That is the coefficient of $r$; the sum of the roots is minus it.", "这是 $r$ 的系数；两根之和是它的相反数。"],
+        [q, "That is the product of the roots, not their sum.", "这是两根之积，不是两根之和。"],
+        [p, "That is $p$ itself; the sum of the roots is $1 - p$.", "这是 $p$ 本身；两根之和是 $1 - p$。"],
+      ],
+      "integer",
+    );
   },
 };
 
@@ -4405,8 +4745,8 @@ const twoTrapezoidalSteps: KnowledgePointDef = {
   figure: differentialEquationsDrawings1["the-trapezoidal-method#two-trapezoidal-steps-for-pure-decay"],
   title: t("Two trapezoidal steps for pure decay", "纯衰减的两个梯形步"),
   explanation: t(
-    "For $y' = -ky$, the trapezoidal rule reads $y_{n + 1} = y_n + \\frac{h}{2}(-ky_n - ky_{n + 1})$. Although the method is implicit, this equation is linear in the new value, so it can be solved at once to give $y_{n + 1} = \\frac{2 - hk}{2 + hk}y_n$. Each step multiplies by the same factor, so two steps multiply by its square. The size of the factor is always below 1, which is why the method is stable.",
-    "对 $y' = -ky$，梯形法则是 $y_{n + 1} = y_n + \\frac{h}{2}(-ky_n - ky_{n + 1})$。虽然方法是隐式的，但这个方程对新值是线性的，所以可以立即解出 $y_{n + 1} = \\frac{2 - hk}{2 + hk}y_n$。每一步都乘以同样的因子，所以两步乘以它的平方。因子的大小总小于 1，这就是这个方法稳定的原因。",
+    "For $y' = -ky$, the trapezoidal rule reads $y_{n + 1} = y_n + \\frac{h}{2}(-ky_n - ky_{n + 1})$. Although the method is implicit, this equation is linear in the new value, so it can be solved at once to give $y_{n + 1} = \\frac{2 - hk}{2 + hk}y_n$. Each step multiplies by the same factor, so two steps multiply by its square. The size of the factor is always below 1, which is why the method is stable.\n\n> **Watch out.** The factor is $\\frac{2 - hk}{2 + hk}$, not the explicit Euler factor $1 - hk$, and two steps multiply by its square. For $y' = -2y$ with $h = 0.5$ from $y_0 = 9$: the factor is $\\frac{1}{3}$, so $y_2 = 9 \\cdot \\frac{1}{9} = 1$; explicit Euler would give $0$.",
+    "对 $y' = -ky$，梯形法则是 $y_{n + 1} = y_n + \\frac{h}{2}(-ky_n - ky_{n + 1})$。虽然方法是隐式的，但这个方程对新值是线性的，所以可以立即解出 $y_{n + 1} = \\frac{2 - hk}{2 + hk}y_n$。每一步都乘以同样的因子，所以两步乘以它的平方。因子的大小总小于 1，这就是这个方法稳定的原因。\n\n> **注意。** 因子是 $\\frac{2 - hk}{2 + hk}$，不是显式欧拉法的因子 $1 - hk$，而且两步要乘以它的平方。对 $y' = -2y$，$h = 0.5$，$y_0 = 9$：因子为 $\\frac{1}{3}$，所以 $y_2 = 9 \\cdot \\frac{1}{9} = 1$；显式欧拉法会给出 $0$。",
   ),
   generate(rng) {
     const k = rng.int(1, 6);
@@ -4417,18 +4757,49 @@ const twoTrapezoidalSteps: KnowledgePointDef = {
     const factor = Q.of(top, bottom);
     const answer = factor.mul(factor).mul(Q.of(start));
     const forward = Q.of(d - k, d);
-    return numberProblem({
-      prompt: t(
+    const hk = Q.of(k, d);
+    const first = factor.mul(Q.of(start));
+    const change = first.sub(Q.of(start));
+    const sum = first.sign() < 0 ? `${start} - ${first.abs().toLatex()}` : `${start} + ${first.toLatex()}`;
+    return explainedNumber(
+      [
         `Apply two steps of the trapezoidal method with $h = ${Q.of(1, d).toLatex()}$ to $y' = ${k === 1 ? "-" : `-${k}`}y$, $y(0) = ${start}$. Find the value it gives for $y(${Q.of(2, d).toLatex()})$.`,
         `对 $y' = ${k === 1 ? "-" : `-${k}`}y$，$y(0) = ${start}$，用 $h = ${Q.of(1, d).toLatex()}$ 的梯形法走两步。求它给出的 $y(${Q.of(2, d).toLatex()})$ 的值。`,
-      ),
+      ],
       answer,
-      wrong: [factor.mul(Q.of(start)), forward.mul(forward).mul(Q.of(start)), Q.of(d * d * start, (d + k) * (d + k)), answer.add(Q.of(1))],
-      solution: t(
-        `Each step multiplies by $\\frac{2 - hk}{2 + hk} = ${factor.toLatex()}$. Two steps give $${start} \\cdot \\left(${factor.toLatex()}\\right)^2 = ${answer.toLatex()}$.`,
-        `每一步乘以 $\\frac{2 - hk}{2 + hk} = ${factor.toLatex()}$。两步得 $${start} \\cdot \\left(${factor.toLatex()}\\right)^2 = ${answer.toLatex()}$。`,
-      ),
-    });
+      [
+        labelled(
+          ["Solve one step for the new value", "解出一步的新值"],
+          "The equation is linear in $y_{n+1}$:",
+          "方程对 $y_{n+1}$ 是线性的：",
+          `y_{n+1} = \\frac{2 - hk}{2 + hk}\\,y_n = \\frac{2 - ${hk.toLatex()}}{2 + ${hk.toLatex()}}\\,y_n = ${signedFactor(factor)} \\cdot y_n`,
+        ),
+        labelled(
+          ["Take two steps", "走两步"],
+          "Each step multiplies by the same factor:",
+          "每一步都乘以同一个因子：",
+          `y_2 = ${start} \\cdot \\left(${factor.toLatex()}\\right)^{2} = ${answer.toLatex()}`,
+        ),
+      ],
+      [
+        `The first value $y_1 = ${first.toLatex()}$ satisfies the trapezoidal equation: $y_1 - y_0 = ${change.toLatex()}$, and $-\\frac{${k}}{${2 * d}}\\left(${sum}\\right) = ${change.toLatex()}$.`,
+        `第一步的值 $y_1 = ${first.toLatex()}$ 满足梯形法方程：$y_1 - y_0 = ${change.toLatex()}$，而 $-\\frac{${k}}{${2 * d}}\\left(${sum}\\right) = ${change.toLatex()}$。`,
+      ],
+      [
+        [first, "That is the value after one step only.", "这只是一步之后的值。"],
+        [
+          forward.mul(forward).mul(Q.of(start)),
+          "That is explicit Euler, with the factor $1 - hk$ at each step.",
+          "这是显式欧拉法，每一步的因子是 $1 - hk$。",
+        ],
+        [
+          Q.of(d * d * start, (d + k) * (d + k)),
+          "That is implicit Euler, with the factor $\\frac{1}{1 + hk}$ at each step.",
+          "这是隐式欧拉法，每一步的因子是 $\\frac{1}{1 + hk}$。",
+        ],
+        [first.mul(Q.of(2)), "That doubles the factor instead of squaring it.", "这把因子乘以 $2$，而不是平方。"],
+      ],
+    );
   },
 };
 

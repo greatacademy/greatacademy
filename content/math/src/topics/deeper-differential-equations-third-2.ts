@@ -7,7 +7,7 @@ import { t } from "@ga/content";
 import { paren, poly, Q } from "@ga/subject-math";
 import { differentialEquationsDrawings1 } from "../explanation-drawings-differential-equations-1.ts";
 import { explainedChoice, numberProblem, why } from "../problems.ts";
-import { ask, choose, type Pair, point } from "../university-kit.ts";
+import { type Pair, point } from "../university-kit.ts";
 import { walked } from "./calculus-i-differentiation.ts";
 
 /** apart drops the mistakes whose value is the answer or repeats an earlier one. */
@@ -1464,8 +1464,8 @@ const leadingLimits = point(
   "the-limits-that-enter-the-indicial-equation",
   ["The limits that enter the indicial equation", "进入指标方程的极限"],
   [
-    "At a regular singular point $x = 0$, the numbers $p_{0} = \\lim_{x \\to 0} xP(x)$ and $q_{0} = \\lim_{x \\to 0} x^{2}Q(x)$ are what enter the indicial equation. Only the values at $x = 0$ matter, so the higher terms of the numerators have no effect.",
-    "在正则奇点 $x = 0$ 处，进入指标方程的是 $p_{0} = \\lim_{x \\to 0} xP(x)$ 和 $q_{0} = \\lim_{x \\to 0} x^{2}Q(x)$。只有 $x = 0$ 处的值起作用，所以分子的高次项没有影响。",
+    "At a regular singular point $x = 0$, the numbers $p_{0} = \\lim_{x \\to 0} xP(x)$ and $q_{0} = \\lim_{x \\to 0} x^{2}Q(x)$ are what enter the indicial equation. Only the values at $x = 0$ matter, so the higher terms of the numerators have no effect.\n\n> **Watch out.** Multiply by $x$ for $p_{0}$, or by $x^{2}$ for $q_{0}$, and keep the rest of the denominator before setting $x = 0$. For $P(x) = \\frac{6 + x}{x(x + 3)}$: $xP(x) = \\frac{6 + x}{x + 3}$, so $p_{0} = 2$, not $6$.",
+    "在正则奇点 $x = 0$ 处，进入指标方程的是 $p_{0} = \\lim_{x \\to 0} xP(x)$ 和 $q_{0} = \\lim_{x \\to 0} x^{2}Q(x)$。只有 $x = 0$ 处的值起作用，所以分子的高次项没有影响。\n\n> **注意。** 求 $p_{0}$ 时乘以 $x$，求 $q_{0}$ 时乘以 $x^{2}$，并保留分母的其余部分，再令 $x = 0$。对 $P(x) = \\frac{6 + x}{x(x + 3)}$：$xP(x) = \\frac{6 + x}{x + 3}$，所以 $p_{0} = 2$，不是 $6$。",
   ],
   (rng) => {
     const a = nz(rng, 9);
@@ -1479,22 +1479,55 @@ const leadingLimits = point(
     const P = `\\frac{${poly([a, ""], [b, "x"])}}{x(x + ${e})}`;
     const R = `\\frac{${poly([c, ""], [g, "x"])}}{x^{2}(x + ${f})}`;
     const name = useP ? "p_{0} = \\lim_{x \\to 0} xP(x)" : "q_{0} = \\lim_{x \\to 0} x^{2}Q(x)";
-    return ask(
-      [
+    const top = useP ? a : c;
+    const slope = useP ? b : g;
+    const den = useP ? e : f;
+    const product = useP ? "xP(x)" : "x^{2}Q(x)";
+    const limit = useP ? "p_{0}" : "q_{0}";
+    const value = den === 1 ? `${top}` : `\\frac{${top}}{${den}} = ${answer.toLatex()}`;
+    return numberProblem({
+      prompt: t(
         `For $y'' + P(x)y' + Q(x)y = 0$ with $P(x) = ${P}$ and $Q(x) = ${R}$, find $${name}$.`,
         `对 $y'' + P(x)y' + Q(x)y = 0$，其中 $P(x) = ${P}$，$Q(x) = ${R}$，求 $${name}$。`,
-      ],
+      ),
       answer,
-      [useP ? a : c, useP ? Q.of(b, e) : Q.of(g, f), useP ? Q.of(c, f) : Q.of(a, e)],
-      [
-        useP
-          ? `$xP(x) = \\frac{${poly([a, ""], [b, "x"])}}{x + ${e}}$. Setting $x = 0$ gives $${answer.toLatex()}$.`
-          : `$x^{2}Q(x) = \\frac{${poly([c, ""], [g, "x"])}}{x + ${f}}$. Setting $x = 0$ gives $${answer.toLatex()}$.`,
-        useP
-          ? `$xP(x) = \\frac{${poly([a, ""], [b, "x"])}}{x + ${e}}$。令 $x = 0$，得 $${answer.toLatex()}$。`
-          : `$x^{2}Q(x) = \\frac{${poly([c, ""], [g, "x"])}}{x + ${f}}$。令 $x = 0$，得 $${answer.toLatex()}$。`,
-      ],
-    );
+      mistakes: apart(answer, [
+        why(
+          top,
+          `That keeps only the numerator at $x = 0$; the factor $x + ${den}$ still divides it.`,
+          `这只取了分子在 $x = 0$ 处的值；因子 $x + ${den}$ 仍然要除。`,
+        ),
+        why(
+          Q.of(slope, den),
+          "That takes the coefficient of $x$ in the numerator, a term that vanishes at $x = 0$.",
+          "这取了分子中 $x$ 的系数，而这一项在 $x = 0$ 处为零。",
+        ),
+        why(
+          useP ? Q.of(c, f) : Q.of(a, e),
+          useP ? "That is $q_{0}$, the limit that comes from $Q(x)$." : "That is $p_{0}$, the limit that comes from $P(x)$.",
+          useP ? "这是 $q_{0}$，来自 $Q(x)$ 的极限。" : "这是 $p_{0}$，来自 $P(x)$ 的极限。",
+        ),
+        why(
+          Q.of(top + slope, den + 1),
+          "That sets $x = 1$; the limit is taken as $x \\to 0$.",
+          "这是令 $x = 1$；极限是在 $x \\to 0$ 时取的。",
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            [useP ? "Multiply by $x$" : "Multiply by $x^{2}$", useP ? "乘以 $x$" : "乘以 $x^{2}$"],
+            t("The factor at $x = 0$ cancels:", "$x = 0$ 处的因子约去："),
+            [`${product} = \\frac{${poly([top, ""], [slope, "x"])}}{x + ${den}}`],
+          ],
+          [["Set $x = 0$", "令 $x = 0$"], t("", ""), [`${limit} = ${value}`]],
+        ],
+        t(
+          `The term $${poly([slope, "x"])}$ of the numerator vanishes at $x = 0$, and $${den} \\cdot ${paren(answer)} = ${top}$.`,
+          `分子中的项 $${poly([slope, "x"])}$ 在 $x = 0$ 处为零，而 $${den} \\cdot ${paren(answer)} = ${top}$。`,
+        ),
+      ),
+    });
   },
 );
 
@@ -1502,26 +1535,57 @@ const nonzeroExponent = point(
   "the-recurrence-with-a-nonzero-exponent",
   ["The recurrence with a nonzero exponent", "指数不为零时的递推关系"],
   [
-    "With exponent $r$, the power of $x$ in each term is $n + r$, so the exponent changes the recurrence. For $xy'' + cy = 0$, the coefficient of $x^{n + r}$ gives $a_{n + 1}(n + r + 1)(n + r) + ca_{n} = 0$, which has to be evaluated at the chosen $r$.",
-    "指数为 $r$ 时，每项中 $x$ 的幂是 $n + r$，所以指数会改变递推关系。对 $xy'' + cy = 0$，$x^{n + r}$ 的系数给出 $a_{n + 1}(n + r + 1)(n + r) + ca_{n} = 0$，要在所选的 $r$ 处取值。",
+    "With exponent $r$, the power of $x$ in each term is $n + r$, so the exponent changes the recurrence. For $xy'' + cy = 0$, the coefficient of $x^{n + r}$ gives $a_{n + 1}(n + r + 1)(n + r) + ca_{n} = 0$, which has to be evaluated at the chosen $r$.\n\n> **Watch out.** With $r = 1$ the factors are $(n + 2)(n + 1)$, not the $(n + 1)n$ that $r = 0$ would give. For $xy'' + 6y = 0$ at $n = 1$: $\\frac{a_{2}}{a_{1}} = -\\frac{6}{3 \\cdot 2} = -1$, not $-\\frac{6}{2 \\cdot 1} = -3$.",
+    "指数为 $r$ 时，每项中 $x$ 的幂是 $n + r$，所以指数会改变递推关系。对 $xy'' + cy = 0$，$x^{n + r}$ 的系数给出 $a_{n + 1}(n + r + 1)(n + r) + ca_{n} = 0$，要在所选的 $r$ 处取值。\n\n> **注意。** 当 $r = 1$ 时，因子是 $(n + 2)(n + 1)$，而不是 $r = 0$ 时的 $(n + 1)n$。对 $xy'' + 6y = 0$，在 $n = 1$ 处：$\\frac{a_{2}}{a_{1}} = -\\frac{6}{3 \\cdot 2} = -1$，而不是 $-\\frac{6}{2 \\cdot 1} = -3$。",
   ],
   (rng) => {
     const c = nz(rng, 12);
     const N = rng.int(1, 5);
     const denom = (N + 2) * (N + 1);
     const answer = Q.of(-c, denom);
-    return ask(
-      [
+    return numberProblem({
+      prompt: t(
         `The equation $${poly([1, "xy''"], [c, "y"])} = 0$ has a Frobenius solution $y = \\sum a_{n}x^{n + 1}$ with exponent $r = 1$. Find $\\frac{a_{${N + 1}}}{a_{${N}}}$.`,
         `方程 $${poly([1, "xy''"], [c, "y"])} = 0$ 有弗罗贝尼乌斯解 $y = \\sum a_{n}x^{n + 1}$，指数 $r = 1$。求 $\\frac{a_{${N + 1}}}{a_{${N}}}$。`,
-      ],
+      ),
       answer,
-      [answer.neg(), Q.of(-c, (N + 1) * N), Q.of(-c, N + 1)],
-      [
-        `With $r = 1$ the recurrence is $a_{n + 1}(n + 2)(n + 1) + ${paren(c)}a_{n} = 0$. At $n = ${N}$, the factors are $${N + 2}$ and $${N + 1}$, so the ratio is $${answer.toLatex()}$.`,
-        `当 $r = 1$ 时，递推关系是 $a_{n + 1}(n + 2)(n + 1) + ${paren(c)}a_{n} = 0$。在 $n = ${N}$ 处，因子是 $${N + 2}$ 和 $${N + 1}$，所以比值是 $${answer.toLatex()}$。`,
-      ],
-    );
+      mistakes: apart(answer, [
+        why(
+          answer.neg(),
+          "That drops the minus sign; the two terms of the recurrence add up to zero.",
+          "这漏掉了负号；递推关系中的两项相加为零。",
+        ),
+        why(
+          Q.of(-c, (N + 1) * N),
+          "That uses the factors $(n + 1)n$ of the exponent $r = 0$; with $r = 1$ every power is one higher.",
+          "这用了指数 $r = 0$ 时的因子 $(n + 1)n$；当 $r = 1$ 时每个幂都高一次。",
+        ),
+        why(Q.of(-c, N + 1), "That divides by one of the two factors only.", "这只除以了两个因子中的一个。"),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Differentiate the series", "对级数求导"],
+            t("With $y = \\sum a_{n}x^{n + 1}$:", "由 $y = \\sum a_{n}x^{n + 1}$："),
+            ["xy'' = \\sum (n + 1)n\\,a_{n}x^{n}, \\qquad cy = \\sum c\\,a_{n}x^{n + 1}"],
+          ],
+          [
+            ["Match the powers $x^{n + 1}$", "比较 $x^{n + 1}$ 的系数"],
+            t("In $xy''$ the term with $x^{n + 1}$ carries $a_{n + 1}$:", "在 $xy''$ 中含 $x^{n + 1}$ 的项带有 $a_{n + 1}$："),
+            [`${poly([1, "(n + 2)(n + 1)a_{n + 1}"], [c, "a_{n}"])} = 0`],
+          ],
+          [
+            [`Take $n = ${N}$`, `取 $n = ${N}$`],
+            t("", ""),
+            [`\\frac{a_{${N + 1}}}{a_{${N}}} = \\frac{${-c}}{${N + 2} \\cdot ${N + 1}} = ${answer.toLatex()}`],
+          ],
+        ],
+        t(
+          `Taking $a_{${N}} = ${denom}$ gives $a_{${N + 1}} = ${-c}$, and $${N + 2} \\cdot ${N + 1} \\cdot ${paren(-c)} + ${paren(c)} \\cdot ${denom} = 0$.`,
+          `取 $a_{${N}} = ${denom}$，得 $a_{${N + 1}} = ${-c}$，而 $${N + 2} \\cdot ${N + 1} \\cdot ${paren(-c)} + ${paren(c)} \\cdot ${denom} = 0$。`,
+        ),
+      ),
+    });
   },
 );
 
@@ -1529,8 +1593,8 @@ const secondSolutionForm = point(
   "the-form-of-the-second-solution",
   ["The form of the second solution", "第二个解的形式"],
   [
-    "The difference of the exponents decides the form of the second Frobenius solution. A non-integer difference gives a second series. Equal exponents always bring a logarithm. A positive integer difference may bring a logarithm, with a coefficient that may turn out to be zero.",
-    "指数之差决定第二个弗罗贝尼乌斯解的形式。差不是整数时，得到第二个级数。指数相等时，一定出现对数。差是正整数时，可能出现对数，其系数可能为零。",
+    "The difference of the exponents decides the form of the second Frobenius solution. A non-integer difference gives a second series. Equal exponents always bring a logarithm. A positive integer difference may bring a logarithm, with a coefficient that may turn out to be zero.\n\n> **Watch out.** Look at the difference of the exponents, not at their values. The roots $\\frac{1}{2}$ and $-\\frac{3}{2}$ are both fractions, but they differ by the integer $2$, so a logarithm may appear; the roots $\\frac{1}{2}$ and $1$ differ by $\\frac{1}{2}$, so two series exist.",
+    "指数之差决定第二个弗罗贝尼乌斯解的形式。差不是整数时，得到第二个级数。指数相等时，一定出现对数。差是正整数时，可能出现对数，其系数可能为零。\n\n> **注意。** 要看指数之差，而不是指数本身。根 $\\frac{1}{2}$ 与 $-\\frac{3}{2}$ 都是分数，但它们相差整数 $2$，所以可能出现对数；根 $\\frac{1}{2}$ 与 $1$ 相差 $\\frac{1}{2}$，所以存在两个级数。",
   ],
   (rng) => {
     const kind = rng.pick(["half", "equal", "integer"]);
@@ -1538,17 +1602,23 @@ const secondSolutionForm = point(
     let B = 0;
     let C = 0;
     let roots: Pair = ["", ""];
+    let r1 = Q.zero;
+    let r2 = Q.zero;
     if (kind === "equal") {
       const m = rng.pick([-3, -2, -1, 1, 2, 3, 4]);
       B = 1 - 2 * m;
       C = m * m;
       roots = [`$${m}$ twice`, `$${m}$（二重）`];
+      r1 = Q.of(m);
+      r2 = r1;
     } else if (kind === "integer") {
       const low = rng.int(-3, 3);
       const high = low + rng.int(1, 3);
       B = 1 - low - high;
       C = low * high;
       roots = [`$${high}$ and $${low}$`, `$${high}$ 和 $${low}$`];
+      r1 = Q.of(high);
+      r2 = Q.of(low);
     } else {
       A = 2;
       const i = rng.int(0, 3);
@@ -1557,6 +1627,9 @@ const secondSolutionForm = point(
       C = (2 * i + 1) * j;
       const half = Q.of(2 * i + 1, 2).toLatex();
       roots = [`$${half}$ and $${j}$`, `$${half}$ 和 $${j}$`];
+      const both = [Q.of(2 * i + 1, 2), Q.of(j)].sort((x, y) => y.cmp(x));
+      r1 = both[0] ?? Q.zero;
+      r2 = both[1] ?? Q.zero;
     }
     const two: Pair = [
       "Two series with no logarithm: $y_{2} = x^{r_{2}}\\sum b_{n}x^{n}$",
@@ -1574,25 +1647,81 @@ const secondSolutionForm = point(
     const correct = kind === "half" ? two : kind === "equal" ? log : maybe;
     const eq = poly([A, "x^{2}y''"], [B, "xy'"], [1, "xy"], [C, "y"]);
     const indicial = poly([A, "r(r - 1)"], [B, "r"], [C, ""]);
-    const why: Pair =
+    const reason: Pair =
       kind === "half"
         ? ["The exponents differ by a non-integer, so two series exist.", "指数之差不是整数，所以存在两个级数。"]
         : kind === "equal"
           ? ["The exponents are equal, so a logarithm always appears.", "指数相等，所以一定出现对数。"]
           : ["The exponents differ by a positive integer, so a logarithm may appear.", "指数之差是正整数，所以可能出现对数。"];
-    return choose(
-      rng,
-      [
+    const against: Record<string, Pair> = {
+      two:
+        kind === "equal"
+          ? [
+              "Two separate series need two different exponents; equal exponents give only one.",
+              "两个独立的级数需要两个不同的指数；指数相等时只有一个。",
+            ]
+          : [
+              "When the exponents differ by an integer, the series for the smaller one can break down, so a logarithm cannot be ruled out.",
+              "指数相差整数时，较小指数的级数可能无法求出，所以不能排除对数。",
+            ],
+      log:
+        kind === "half"
+          ? [
+              "A logarithm is forced only when the exponents are equal; here they differ by a non-integer.",
+              "只有指数相等时才一定出现对数；这里它们相差一个非整数。",
+            ]
+          : [
+              "With different exponents the coefficient of the logarithm can be zero, so it is not always there.",
+              "指数不同时，对数的系数可能为零，所以不一定出现。",
+            ],
+      maybe:
+        kind === "half"
+          ? [
+              "That form belongs to exponents that differ by a positive integer; here the difference is not an integer.",
+              "这种形式属于相差正整数的指数；这里的差不是整数。",
+            ]
+          : [
+              "With equal exponents the coefficient of the logarithm is never zero, so the logarithm is certain.",
+              "指数相等时，对数的系数永远不为零，所以一定出现对数。",
+            ],
+      product: [
+        "Multiplying $y_{1}$ by $x$ raises its exponent by $1$, but the result does not solve the equation in general.",
+        "把 $y_{1}$ 乘以 $x$ 会使指数加 $1$，但一般来说结果并不满足方程。",
+      ],
+    };
+    const options: readonly (readonly [string, Pair])[] = [
+      ["two", two],
+      ["log", log],
+      ["maybe", maybe],
+      ["product", product],
+    ];
+    const diff = r1.sub(r2);
+    const lead = A === 1 ? "" : `${A} \\cdot `;
+    const substituted = `${lead}${paren(r1)}\\left(${paren(r1)} - 1\\right) + ${paren(B)} \\cdot ${paren(r1)} + ${paren(C)} = 0`;
+    return explainedChoice(rng, {
+      prompt: t(
         `Near the regular singular point $x = 0$ of $${eq} = 0$, what form does the second solution take, with $r_{1}$ the larger exponent and $r_{2}$ the smaller?`,
         `在 $${eq} = 0$ 的正则奇点 $x = 0$ 附近，第二个解是什么形式？其中 $r_{1}$ 是较大的指数，$r_{2}$ 是较小的指数。`,
-      ],
-      correct,
-      [two, log, maybe, product].filter((o) => o !== correct),
-      [
-        `The indicial equation is $${indicial} = 0$, with roots ${roots[0]}. ${why[0]}`,
-        `指标方程是 $${indicial} = 0$，根是 ${roots[1]}。${why[1]}`,
-      ],
-    );
+      ),
+      correct: t(...correct),
+      wrong: options.filter(([, o]) => o !== correct).map(([key, o]) => ({ option: t(...o), why: t(...(against[key] ?? reason)) })),
+      solution: walked(
+        [
+          [
+            ["Write the indicial equation", "写出指标方程"],
+            t("Only the coefficients at $x = 0$ enter; the term $xy$ does not:", "只有 $x = 0$ 处的系数进入；$xy$ 项不进入："),
+            [`${indicial} = 0`],
+          ],
+          [
+            ["Find the exponents", "求出指数"],
+            t(`The roots are ${roots[0]}.`, `根是 ${roots[1]}。`),
+            [`r_{1} - r_{2} = ${diff.toLatex()}`],
+          ],
+          [["Read off the form", "读出形式"], t(...reason)],
+        ],
+        t(`The larger root solves the indicial equation: $${substituted}$.`, `较大的根满足指标方程：$${substituted}$。`),
+      ),
+    });
   },
 );
 
@@ -1600,8 +1729,8 @@ const stepLimit = point(
   "the-step-limit-set-by-the-fastest-mode",
   ["The step limit set by the fastest mode", "最快模态决定的步长限制"],
   [
-    "Euler's method multiplies a mode with eigenvalue $\\lambda$ by $1 + h\\lambda$ at each step, so a decaying mode decays numerically only when $h < \\frac{2}{|\\lambda|}$. In a system the fastest mode sets the limit, even if that mode is too small to notice in the solution.",
-    "欧拉法每一步把特征值为 $\\lambda$ 的模态乘以 $1 + h\\lambda$，所以衰减模态只有当 $h < \\frac{2}{|\\lambda|}$ 时在数值上才衰减。在方程组中，最快的模态决定限制，即使它在解中小到难以察觉。",
+    "Euler's method multiplies a mode with eigenvalue $\\lambda$ by $1 + h\\lambda$ at each step, so a decaying mode decays numerically only when $h < \\frac{2}{|\\lambda|}$. In a system the fastest mode sets the limit, even if that mode is too small to notice in the solution.\n\n> **Watch out.** Take the limit from the largest $|\\lambda|$, not the smallest. For eigenvalues $-3$ and $-12$: $h_{0} = \\frac{2}{12} = \\frac{1}{6}$; the slow mode's bound $\\frac{2}{3}$ would let the fast mode grow.",
+    "欧拉法每一步把特征值为 $\\lambda$ 的模态乘以 $1 + h\\lambda$，所以衰减模态只有当 $h < \\frac{2}{|\\lambda|}$ 时在数值上才衰减。在方程组中，最快的模态决定限制，即使它在解中小到难以察觉。\n\n> **注意。** 限制要由最大的 $|\\lambda|$ 给出，而不是最小的。对特征值 $-3$ 与 $-12$：$h_{0} = \\frac{2}{12} = \\frac{1}{6}$；慢模态的界 $\\frac{2}{3}$ 会让快模态增长。",
   ],
   (rng) => {
     const l1 = rng.int(1, 12);
@@ -1611,18 +1740,50 @@ const stepLimit = point(
     const slow = Math.min(l1, l2);
     const answer = Q.of(2, fast);
     const A = mat(-l1, b, 0, -l2);
-    return ask(
-      [
+    const bound = (l: number) => `|1 - ${l === 1 ? "" : l}h| < 1 \\iff h < ${Q.of(2, l).toLatex()}`;
+    return numberProblem({
+      prompt: t(
         `Euler's method is applied to $\\mathbf{x}' = ${A}\\mathbf{x}$. Every mode decays numerically exactly when $0 < h < h_{0}$. Find $h_{0}$.`,
         `把欧拉法用于 $\\mathbf{x}' = ${A}\\mathbf{x}$。当且仅当 $0 < h < h_{0}$ 时，每个模态在数值上都衰减。求 $h_{0}$。`,
-      ],
+      ),
       answer,
-      [Q.of(2, slow), Q.of(1, fast), Q.of(2, l1 + l2)],
-      [
-        `The matrix is triangular, so its eigenvalues are $${-l1}$ and $${-l2}$. The condition $|1 + h\\lambda| < 1$ gives $h < \\frac{2}{|\\lambda|}$, and the stricter limit comes from $|\\lambda| = ${fast}$, so $h_{0} = ${answer.toLatex()}$.`,
-        `矩阵是三角矩阵，所以特征值是 $${-l1}$ 和 $${-l2}$。条件 $|1 + h\\lambda| < 1$ 给出 $h < \\frac{2}{|\\lambda|}$，更严格的限制来自 $|\\lambda| = ${fast}$，所以 $h_{0} = ${answer.toLatex()}$。`,
-      ],
-    );
+      mistakes: apart(answer, [
+        why(Q.of(2, slow), "That is the bound of the slow mode; the fast mode is stricter.", "这是慢模态的界；快模态的限制更严格。"),
+        why(
+          Q.of(1, fast),
+          "That uses $h|\\lambda| < 1$; the factor $1 + h\\lambda$ stays above $-1$ up to $h|\\lambda| = 2$.",
+          "这用了 $h|\\lambda| < 1$；因子 $1 + h\\lambda$ 在 $h|\\lambda| = 2$ 之前都大于 $-1$。",
+        ),
+        why(Q.of(2, l1 + l2), "That adds the two rates; each mode must decay on its own.", "这把两个速率相加了；每个模态都要各自衰减。"),
+        why(
+          Q.of(fast, 2),
+          "That turns the bound upside down; it is $h < \\frac{2}{|\\lambda|}$.",
+          "这把界颠倒了；应是 $h < \\frac{2}{|\\lambda|}$。",
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Read off the eigenvalues", "读出特征值"],
+            t("The matrix is triangular, so they are its diagonal entries:", "矩阵是三角矩阵，所以特征值就是对角元："),
+            [`\\lambda_{1} = ${-l1}, \\qquad \\lambda_{2} = ${-l2}`],
+          ],
+          [
+            ["Require each mode to decay", "要求每个模态都衰减"],
+            t(
+              "A mode with eigenvalue $\\lambda$ is multiplied by $1 + h\\lambda$ at each step:",
+              "特征值为 $\\lambda$ 的模态每一步乘以 $1 + h\\lambda$：",
+            ),
+            [bound(l1), bound(l2)],
+          ],
+          [["Keep the stricter bound", "取更严格的界"], t("", ""), [`h_{0} = ${answer.toLatex()}`]],
+        ],
+        t(
+          `At $h = h_{0}$ the fast mode has factor $1 - ${fast} \\cdot ${answer.toLatex()} = -1$, right on the edge, while the slow mode has factor $${Q.one.sub(Q.of(2 * slow, fast)).toLatex()}$, inside $(-1, 1)$.`,
+          `当 $h = h_{0}$ 时，快模态的因子为 $1 - ${fast} \\cdot ${answer.toLatex()} = -1$，恰在边界上；慢模态的因子为 $${Q.one.sub(Q.of(2 * slow, fast)).toLatex()}$，在 $(-1, 1)$ 之内。`,
+        ),
+      ),
+    });
   },
 );
 
@@ -1633,8 +1794,8 @@ const energyGrowth = point(
   "euler-adds-energy-to-an-oscillator",
   ["Euler adds energy to an oscillator", "欧拉法给振子增加能量"],
   [
-    "The exact motion of $y'' + k^{2}y = 0$ keeps $(y')^{2} + k^{2}y^{2}$ constant. Each Euler step multiplies this quantity by $1 + h^{2}k^{2}$, whatever the state is. So the numerical oscillation always grows, and a smaller step only slows the growth.",
-    "$y'' + k^{2}y = 0$ 的精确运动保持 $(y')^{2} + k^{2}y^{2}$ 不变。欧拉法每一步都把这个量乘以 $1 + h^{2}k^{2}$，与状态无关。所以数值振荡总是增长，较小的步长只是减慢增长。",
+    "The exact motion of $y'' + k^{2}y = 0$ keeps $(y')^{2} + k^{2}y^{2}$ constant. Each Euler step multiplies this quantity by $1 + h^{2}k^{2}$, whatever the state is. So the numerical oscillation always grows, and a smaller step only slows the growth.\n\n> **Watch out.** The factor is $1 + h^{2}k^{2}$, with $h$ squared, and it is never below $1$. For $y'' + 4y = 0$ with $h = 0.5$: $1 + 0.25 \\cdot 4 = 2$, so $E$ doubles at every step; $1 + 0.5 \\cdot 4 = 3$ forgets to square $h$.",
+    "$y'' + k^{2}y = 0$ 的精确运动保持 $(y')^{2} + k^{2}y^{2}$ 不变。欧拉法每一步都把这个量乘以 $1 + h^{2}k^{2}$，与状态无关。所以数值振荡总是增长，较小的步长只是减慢增长。\n\n> **注意。** 因子是 $1 + h^{2}k^{2}$，其中 $h$ 要平方，而且它永远不小于 $1$。对 $y'' + 4y = 0$，$h = 0.5$：$1 + 0.25 \\cdot 4 = 2$，所以每一步 $E$ 都加倍；$1 + 0.5 \\cdot 4 = 3$ 忘了把 $h$ 平方。",
   ],
   (rng) => {
     const k = rng.int(1, 6);
@@ -1643,18 +1804,43 @@ const energyGrowth = point(
     const answer = Q.one.add(h.mul(h).mul(k2));
     const left = poly([1, "y''"], [k * k, "y"]);
     const energy = poly([1, "(y')^{2}"], [k * k, "y^{2}"]);
-    return ask(
-      [
+    const v1 = h.mul(k2).neg();
+    const e1 = v1.mul(v1).add(k2);
+    return numberProblem({
+      prompt: t(
         `Euler's method with $h = ${h.toLatex()}$ is applied to $${left} = 0$. By what factor does each step multiply $E = ${energy}$?`,
         `把步长 $h = ${h.toLatex()}$ 的欧拉法用于 $${left} = 0$。每一步把 $E = ${energy}$ 乘以多少？`,
-      ],
+      ),
       answer,
-      [Q.one.add(h.mul(k2)), Q.one.add(h.mul(h).mul(Q.of(k))), Q.one.sub(h.mul(h).mul(k2))],
-      [
-        `A step gives $y_{1} = y + hv$ and $v_{1} = ${poly([1, "v"], [-k * k, "hy"])}$. Expanding $E$ for the new values, the cross terms cancel and $E$ gains $${poly([k * k, "h^{2}E"])}$. So the factor is $1 + ${h.mul(h).mul(k2).toLatex()} = ${answer.toLatex()}$.`,
-        `一步给出 $y_{1} = y + hv$，$v_{1} = ${poly([1, "v"], [-k * k, "hy"])}$。对新值展开 $E$，交叉项抵消，$E$ 增加 $${poly([k * k, "h^{2}E"])}$。所以因子是 $1 + ${h.mul(h).mul(k2).toLatex()} = ${answer.toLatex()}$。`,
-      ],
-    );
+      mistakes: apart(answer, [
+        why(Q.one.add(h.mul(k2)), "That uses $h$ where the expansion gives $h^{2}$.", "这里用了 $h$，而展开式给出的是 $h^{2}$。"),
+        why(Q.one.add(h.mul(h).mul(Q.of(k))), "That uses $k$ where the equation has $k^{2}$.", "这里用了 $k$，而方程中是 $k^{2}$。"),
+        why(
+          Q.one.sub(h.mul(h).mul(k2)),
+          "That subtracts; the squares add up, so Euler's method adds energy.",
+          "这是相减；平方项相加，所以欧拉法会增加能量。",
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Write one Euler step", "写出欧拉法的一步"],
+            t("With $v = y'$ the equation is $y' = v$, $v' = -k^{2}y$:", "令 $v = y'$，方程为 $y' = v$，$v' = -k^{2}y$："),
+            [`y_{1} = y + hv, \\qquad v_{1} = ${poly([1, "v"], [-k * k, "hy"])}`],
+          ],
+          [
+            ["Expand the new energy", "展开新的能量"],
+            t("The cross terms $\\mp 2k^{2}hvy$ cancel:", "交叉项 $\\mp 2k^{2}hvy$ 相互抵消："),
+            ["(v - k^{2}hy)^{2} + k^{2}(y + hv)^{2} = (1 + h^{2}k^{2})(v^{2} + k^{2}y^{2})"],
+          ],
+          [["Substitute", "代入"], t("", ""), [`1 + h^{2}k^{2} = 1 + ${h.mul(h).toLatex()} \\cdot ${k * k} = ${answer.toLatex()}`]],
+        ],
+        t(
+          `From $y = 1$, $v = 0$, where $E = ${k * k}$, one step gives $y_{1} = 1$ and $v_{1} = ${v1.toLatex()}$, so $E_{1} = ${paren(v1)}^{2} + ${k * k} = ${e1.toLatex()}$, which is $${answer.toLatex()} \\cdot ${k * k}$.`,
+          `从 $y = 1$，$v = 0$ 出发，此时 $E = ${k * k}$，一步得 $y_{1} = 1$，$v_{1} = ${v1.toLatex()}$，所以 $E_{1} = ${paren(v1)}^{2} + ${k * k} = ${e1.toLatex()}$，正是 $${answer.toLatex()} \\cdot ${k * k}$。`,
+        ),
+      ),
+    });
   },
 );
 
@@ -1662,8 +1848,8 @@ const errorEstimate = point(
   "the-error-estimate-from-predictor-and-corrector",
   ["The error estimate from predictor and corrector", "由预测值和校正值估计误差"],
   [
-    "A predictor-corrector pair produces an error estimate at no extra cost. For ABM2, the local errors of the predictor and the corrector are $\\frac{5}{12}h^{3}y'''$ and $-\\frac{1}{12}h^{3}y'''$, so the corrector's error is about one sixth of the gap between the two values.",
-    "预测-校正方法不需额外计算就能给出误差估计。对 ABM2，预测值和校正值的局部误差分别是 $\\frac{5}{12}h^{3}y'''$ 和 $-\\frac{1}{12}h^{3}y'''$，所以校正值的误差约为两个值之差的六分之一。",
+    "A predictor-corrector pair produces an error estimate at no extra cost. For ABM2, the local errors of the predictor and the corrector are $\\frac{5}{12}h^{3}y'''$ and $-\\frac{1}{12}h^{3}y'''$, so the corrector's error is about one sixth of the gap between the two values.\n\n> **Watch out.** The estimate is a sixth of the gap, not the gap itself. For a predicted $2.40$ and a corrected $2.34$, the gap is $0.06$ and the corrector's error is about $0.01$.",
+    "预测-校正方法不需额外计算就能给出误差估计。对 ABM2，预测值和校正值的局部误差分别是 $\\frac{5}{12}h^{3}y'''$ 和 $-\\frac{1}{12}h^{3}y'''$，所以校正值的误差约为两个值之差的六分之一。\n\n> **注意。** 估计值是差的六分之一，而不是差本身。若预测值为 $2.40$，校正值为 $2.34$，差为 $0.06$，校正值的误差约为 $0.01$。",
   ],
   (rng) => {
     const m = rng.int(1, 40);
@@ -1672,18 +1858,42 @@ const errorEstimate = point(
     const P = base;
     const C = base + sign * 6 * m;
     const show = (v: number) => (v / 100).toFixed(2);
-    return ask(
-      [
+    const answer = Q.of(m, 100);
+    return numberProblem({
+      prompt: t(
         `In one step of ABM2, the predictor gives $${show(P)}$ and the corrector gives $${show(C)}$. Estimate the size of the local error of the corrected value.`,
         `在 ABM2 的一步中，预测值是 $${show(P)}$，校正值是 $${show(C)}$。估计校正值局部误差的大小。`,
-      ],
-      Q.of(m, 100),
-      [Q.of(6 * m, 100), Q.of(3 * m, 100), Q.of(5 * m, 100)],
-      [
-        `The gap is $${show(6 * m)}$. The errors have the coefficients $\\frac{5}{12}$ and $-\\frac{1}{12}$, which differ by $\\frac{1}{2}$, so the corrector's error is $\\frac{1}{6}$ of the gap, about $${show(m)}$.`,
-        `差是 $${show(6 * m)}$。误差的系数是 $\\frac{5}{12}$ 和 $-\\frac{1}{12}$，相差 $\\frac{1}{2}$，所以校正值的误差是差的 $\\frac{1}{6}$，约为 $${show(m)}$。`,
-      ],
-    );
+      ),
+      answer,
+      form: "decimal",
+      mistakes: apart(answer, [
+        why(Q.of(6 * m, 100), "That is the whole gap; the corrector's error is a sixth of it.", "这是整个差；校正值的误差是它的六分之一。"),
+        why(Q.of(5 * m, 100), "That is the predictor's error, $\\frac{5}{6}$ of the gap.", "这是预测值的误差，为差的 $\\frac{5}{6}$。"),
+        why(
+          Q.of(3 * m, 100),
+          "That takes half the gap; the two error coefficients differ by $\\frac{1}{2}$, and the corrector's is $\\frac{1}{12}$.",
+          "这取了差的一半；两个误差系数相差 $\\frac{1}{2}$，而校正值的系数是 $\\frac{1}{12}$。",
+        ),
+      ]),
+      solution: walked(
+        [
+          [["Find the gap", "求出差"], t("", ""), [`|${show(C)} - ${show(P)}| = ${show(6 * m)}`]],
+          [
+            ["Compare the error coefficients", "比较误差系数"],
+            t(
+              "The gap is about $\\frac{1}{2}h^{3}y'''$, and the corrector's error is $\\frac{1}{12}h^{3}y'''$, a sixth of it:",
+              "差约为 $\\frac{1}{2}h^{3}y'''$，而校正值的误差是 $\\frac{1}{12}h^{3}y'''$，是差的六分之一：",
+            ),
+            ["\\frac{5}{12} - \\left(-\\frac{1}{12}\\right) = \\frac{1}{2}, \\qquad \\frac{1}{12} \\div \\frac{1}{2} = \\frac{1}{6}"],
+          ],
+          [["Divide the gap", "把差相除"], t("", ""), [`\\frac{${show(6 * m)}}{6} = ${show(m)}`]],
+        ],
+        t(
+          `$6 \\cdot ${show(m)} = ${show(6 * m)}$, and the predictor's own error, $\\frac{5}{6}$ of the gap, is $${show(5 * m)}$, five times larger.`,
+          `$6 \\cdot ${show(m)} = ${show(6 * m)}$；而预测值自身的误差是差的 $\\frac{5}{6}$，即 $${show(5 * m)}$，大五倍。`,
+        ),
+      ),
+    });
   },
 );
 
@@ -1691,8 +1901,8 @@ const newtonLinear = point(
   "newton-needs-one-iteration-for-a-linear-equation",
   ["Newton needs one iteration for a linear equation", "线性方程只需一次牛顿迭代"],
   [
-    "When $f$ is linear in $y$, the equation $g(y) = 0$ of implicit Euler is linear too, and Newton's method lands on the exact root in one iteration from any starting guess. So the guess does not appear in the result, and the step is $\\frac{y_{n} + hc}{1 + hk}$ for $y' = -ky + c$.",
-    "当 $f$ 关于 $y$ 是线性时，隐式欧拉法的方程 $g(y) = 0$ 也是线性的，牛顿法从任何初始猜测出发，一次迭代就得到精确的根。所以结果中不出现猜测值，对 $y' = -ky + c$，这一步是 $\\frac{y_{n} + hc}{1 + hk}$。",
+    "When $f$ is linear in $y$, the equation $g(y) = 0$ of implicit Euler is linear too, and Newton's method lands on the exact root in one iteration from any starting guess. So the guess does not appear in the result, and the step is $\\frac{y_{n} + hc}{1 + hk}$ for $y' = -ky + c$.\n\n> **Watch out.** Newton's step divides $g$ by $g'$ and lands on the root; it does not just evaluate $f$ at the guess. For $y' = -y + 4$ with $h = 1$ from $y_{n} = 2$: $g(y) = 2y - 6$, and from the guess $0$ or the guess $10$ alike, $y^{(1)} = 3$.",
+    "当 $f$ 关于 $y$ 是线性时，隐式欧拉法的方程 $g(y) = 0$ 也是线性的，牛顿法从任何初始猜测出发，一次迭代就得到精确的根。所以结果中不出现猜测值，对 $y' = -ky + c$，这一步是 $\\frac{y_{n} + hc}{1 + hk}$。\n\n> **注意。** 牛顿法的一步是用 $g'$ 去除 $g$，并落在根上；它不是只在猜测值处计算 $f$。对 $y' = -y + 4$，$h = 1$，从 $y_{n} = 2$ 出发：$g(y) = 2y - 6$，无论猜测值是 $0$ 还是 $10$，都有 $y^{(1)} = 3$。",
   ],
   (rng) => {
     const k = rng.int(1, 8);
@@ -1704,18 +1914,43 @@ const newtonLinear = point(
     const bottom = Q.one.add(h.mul(Q.of(k)));
     const answer = top.div(bottom);
     const f = poly([-k, "y"], [c, ""]);
-    return ask(
-      [
+    const residual = bottom.mul(Q.of(guess)).sub(top);
+    const g = `${poly([bottom, "y"])} - ${paren(top)}`;
+    return numberProblem({
+      prompt: t(
         `A backward Euler step with $h = ${h.toLatex()}$ for $y' = ${f}$ from $y_{n} = ${yn}$ uses Newton's method with starting guess $y^{(0)} = ${guess}$. Find $y^{(1)}$.`,
         `对 $y' = ${f}$ 从 $y_{n} = ${yn}$ 出发做步长 $h = ${h.toLatex()}$ 的后向欧拉步，用牛顿法，初始猜测 $y^{(0)} = ${guess}$。求 $y^{(1)}$。`,
-      ],
+      ),
       answer,
-      [Q.of(yn).add(h.mul(Q.of(-k * guess + c))), top, guess],
-      [
-        `$g(y) = ${poly([bottom, "y"])} - ${paren(top)}$ is linear, so one Newton iteration reaches its root from any guess. The root is $\\frac{${top.toLatex()}}{${bottom.toLatex()}} = ${answer.toLatex()}$.`,
-        `$g(y) = ${poly([bottom, "y"])} - ${paren(top)}$ 是线性的，所以牛顿法从任何猜测出发，一次迭代就到达它的根。根是 $\\frac{${top.toLatex()}}{${bottom.toLatex()}} = ${answer.toLatex()}$。`,
-      ],
-    );
+      mistakes: apart(answer, [
+        why(
+          Q.of(yn).add(h.mul(Q.of(-k * guess + c))),
+          "That evaluates the slope at the guess and takes an explicit step; Newton's method solves $g(y) = 0$.",
+          "这是在猜测值处计算斜率并走一个显式步；牛顿法要解的是 $g(y) = 0$。",
+        ),
+        why(top, `That leaves out the division by $g' = ${bottom.toLatex()}$.`, `这漏掉了除以 $g' = ${bottom.toLatex()}$。`),
+        why(guess, "That keeps the starting guess; one iteration already moves to the root.", "这保留了初始猜测；一次迭代就已经移到根上。"),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Write the equation of the step", "写出这一步的方程"],
+            t("Backward Euler requires $g(y) = y - y_{n} - hf(y) = 0$:", "后向欧拉法要求 $g(y) = y - y_{n} - hf(y) = 0$："),
+            [`g(y) = ${g}, \\qquad g'(y) = ${bottom.toLatex()}`],
+          ],
+          [["Evaluate at the guess", "在猜测值处求值"], t("", ""), [`g(${guess}) = ${residual.toLatex()}`]],
+          [
+            ["Take the Newton step", "做牛顿迭代"],
+            t("", ""),
+            [`y^{(1)} = ${guess} - ${paren(residual)} \\div ${paren(bottom)} = ${answer.toLatex()}`],
+          ],
+        ],
+        t(
+          `$g$ is linear, so its tangent is $g$ itself and one step reaches the root from any guess: $${bottom.toLatex()} \\cdot ${paren(answer)} - ${paren(top)} = 0$.`,
+          `$g$ 是线性的，它的切线就是它本身，所以从任何猜测出发一步就到达根：$${bottom.toLatex()} \\cdot ${paren(answer)} - ${paren(top)} = 0$。`,
+        ),
+      ),
+    });
   },
 );
 
@@ -1724,8 +1959,8 @@ const trapezoidalFactor = {
     "the-amplification-factor-of-the-trapezoidal-method",
     ["The amplification factor of the trapezoidal method", "梯形法的放大因子"],
     [
-      "For $y' = -ky$, solving the trapezoidal equation gives $y_{n + 1} = \\frac{1 - hk/2}{1 + hk/2}y_{n}$. This factor has size below $1$ for every $h$, so the method is stable. But for large $hk$ it nears $-1$, so stiff components oscillate and hardly decay.",
-      "对 $y' = -ky$，解梯形方程得 $y_{n + 1} = \\frac{1 - hk/2}{1 + hk/2}y_{n}$。对任何 $h$，这个因子的绝对值都小于 $1$，所以方法稳定。但 $hk$ 很大时它接近 $-1$，所以刚性分量会振荡，几乎不衰减。",
+      "For $y' = -ky$, solving the trapezoidal equation gives $y_{n + 1} = \\frac{1 - hk/2}{1 + hk/2}y_{n}$. This factor has size below $1$ for every $h$, so the method is stable. But for large $hk$ it nears $-1$, so stiff components oscillate and hardly decay.\n\n> **Watch out.** Only half of $hk$ goes on each side. For $k = 6$ and $h = 1$: $R = \\frac{1 - 3}{1 + 3} = -\\frac{1}{2}$; the factors $\\frac{1}{7}$ and $1 - 6 = -5$ belong to implicit and explicit Euler.",
+      "对 $y' = -ky$，解梯形方程得 $y_{n + 1} = \\frac{1 - hk/2}{1 + hk/2}y_{n}$。对任何 $h$，这个因子的绝对值都小于 $1$，所以方法稳定。但 $hk$ 很大时它接近 $-1$，所以刚性分量会振荡，几乎不衰减。\n\n> **注意。** 两边各只有 $hk$ 的一半。对 $k = 6$，$h = 1$：$R = \\frac{1 - 3}{1 + 3} = -\\frac{1}{2}$；因子 $\\frac{1}{7}$ 与 $1 - 6 = -5$ 分别属于隐式欧拉法与显式欧拉法。",
     ],
     (rng) => {
       const k = rng.int(1, 20);
@@ -1733,18 +1968,57 @@ const trapezoidalFactor = {
       const half = h.mul(Q.of(k)).div(Q.of(2));
       const answer = Q.one.sub(half).div(Q.one.add(half));
       const hk = h.mul(Q.of(k));
-      return ask(
-        [
+      const before = Q.one.add(half);
+      const after = Q.one.sub(half);
+      const sum = after.sign() < 0 ? `${before.toLatex()} - ${after.abs().toLatex()}` : `${before.toLatex()} + ${after.toLatex()}`;
+      return numberProblem({
+        prompt: t(
           `The trapezoidal method with $h = ${h.toLatex()}$ is applied to $y' = ${poly([-k, "y"])}$. It gives $y_{n + 1} = Ry_{n}$. Find $R$.`,
           `把步长 $h = ${h.toLatex()}$ 的梯形法用于 $y' = ${poly([-k, "y"])}$，得 $y_{n + 1} = Ry_{n}$。求 $R$。`,
-        ],
+        ),
         answer,
-        [Q.one.div(Q.one.add(hk)), Q.one.sub(hk), answer.neg()],
-        [
-          `The method reads $y_{n + 1} = y_{n} - ${half.toLatex()}(y_{n} + y_{n + 1})$, using $\\frac{hk}{2} = ${half.toLatex()}$. Collecting terms gives $R = \\frac{1 - ${half.toLatex()}}{1 + ${half.toLatex()}} = ${answer.toLatex()}$.`,
-          `方法写作 $y_{n + 1} = y_{n} - ${half.toLatex()}(y_{n} + y_{n + 1})$，其中 $\\frac{hk}{2} = ${half.toLatex()}$。合并同类项得 $R = \\frac{1 - ${half.toLatex()}}{1 + ${half.toLatex()}} = ${answer.toLatex()}$。`,
-        ],
-      );
+        mistakes: apart(answer, [
+          why(
+            Q.one.div(Q.one.add(hk)),
+            "That is the implicit Euler factor, with all of $hk$ on the new value.",
+            "这是隐式欧拉法的因子，$hk$ 全部作用在新值上。",
+          ),
+          why(
+            Q.one.sub(hk),
+            "That is the explicit Euler factor, with all of $hk$ on the old value.",
+            "这是显式欧拉法的因子，$hk$ 全部作用在旧值上。",
+          ),
+          why(
+            answer.neg(),
+            "That swaps the numerator and denominator signs; the old value carries $1 - \\frac{hk}{2}$.",
+            "这弄反了符号；旧值带的是 $1 - \\frac{hk}{2}$。",
+          ),
+          why(
+            Q.one.sub(hk).div(Q.one.add(hk)),
+            "That puts all of $hk$ on each side; each end gets only half.",
+            "这在两边都用了整个 $hk$；每一端只分到一半。",
+          ),
+        ]),
+        solution: walked(
+          [
+            [
+              ["Write the step", "写出这一步"],
+              t(`Here $\\frac{hk}{2} = ${half.toLatex()}$:`, `这里 $\\frac{hk}{2} = ${half.toLatex()}$：`),
+              [`y_{n + 1} = y_{n} - ${half.toLatex()}\\left(y_{n} + y_{n + 1}\\right)`],
+            ],
+            [
+              ["Collect the terms", "合并同类项"],
+              t("", ""),
+              [`\\left(1 + ${half.toLatex()}\\right)y_{n + 1} = \\left(1 - ${half.toLatex()}\\right)y_{n}`],
+            ],
+            [["Divide", "相除"], t("", ""), [`R = \\frac{1 - ${half.toLatex()}}{1 + ${half.toLatex()}} = ${answer.toLatex()}`]],
+          ],
+          t(
+            `Take $y_{n} = ${before.toLatex()}$, so that $y_{n + 1} = ${after.toLatex()}$. Then $y_{n + 1} - y_{n} = ${after.sub(before).toLatex()}$, and $-${half.toLatex()}\\left(${sum}\\right) = ${after.sub(before).toLatex()}$ as well.`,
+            `取 $y_{n} = ${before.toLatex()}$，则 $y_{n + 1} = ${after.toLatex()}$。于是 $y_{n + 1} - y_{n} = ${after.sub(before).toLatex()}$，而 $-${half.toLatex()}\\left(${sum}\\right) = ${after.sub(before).toLatex()}$，两者相同。`,
+          ),
+        ),
+      });
     },
   ),
   figure:
