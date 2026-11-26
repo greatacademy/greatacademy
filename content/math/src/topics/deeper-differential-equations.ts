@@ -401,25 +401,46 @@ const dragFromTerminal: KnowledgePointDef = {
   id: "the-drag-coefficient-from-terminal-velocity",
   title: t("The drag coefficient from terminal velocity", "由终端速度求阻力系数"),
   explanation: t(
-    "At terminal velocity the acceleration is zero, so drag exactly balances weight. With quadratic drag, $mv' = mg - kv^2$ gives $kv_T^2 = mg$. A measured terminal velocity therefore gives the coefficient $k$, with no need to solve the differential equation at all.",
-    "达到终端速度时加速度为零，所以阻力恰好与重力平衡。对二次阻力，由 $mv' = mg - kv^2$ 得 $kv_T^2 = mg$。所以测出终端速度就能得到系数 $k$，完全不必解微分方程。",
+    "At terminal velocity the acceleration is zero, so drag exactly balances weight. With quadratic drag, $mv' = mg - kv^2$ gives $kv_T^2 = mg$. A measured terminal velocity therefore gives the coefficient $k$, with no need to solve the differential equation at all.\n\n> **Watch out.** The drag uses the square of the speed. A $2$ kg object with terminal velocity $10$ m/s and $g = 10$ m/s² has $k = \\frac{20}{100} = 0.2$, not $\\frac{20}{10} = 2$.",
+    "达到终端速度时加速度为零，所以阻力恰好与重力平衡。对二次阻力，由 $mv' = mg - kv^2$ 得 $kv_T^2 = mg$。所以测出终端速度就能得到系数 $k$，完全不必解微分方程。\n\n> **注意。** 阻力用的是速度的平方。质量 $2$ kg、终端速度 $10$ m/s、取 $g = 10$ m/s² 的物体，$k = \\frac{20}{100} = 0.2$，不是 $\\frac{20}{10} = 2$。",
   ),
   generate(rng) {
     const m = rng.int(1, 9);
     const v = rng.int(5, 30);
     const answer = Q.of(10 * m, v * v);
-    return numberProblem({
-      prompt: t(
+    return explainedNumber(
+      [
         `An object of mass ${m} kg falls with drag force $kv^2$ and reaches a terminal velocity of ${v} m/s. Taking $g = 10$ m/s², find $k$.`,
         `质量为 ${m} kg 的物体下落，阻力是 $kv^2$，终端速度是 ${v} m/s。取 $g = 10$ m/s²，求 $k$。`,
-      ),
+      ],
       answer,
-      wrong: [Q.of(10 * m, v), Q.of(10, v * v), Q.of(v * v, 10 * m)],
-      solution: t(
-        `At terminal velocity, $k \\cdot ${v}^2 = ${m} \\cdot 10$. So $k = \\frac{${10 * m}}{${v * v}} = ${answer.toLatex()}$.`,
-        `达到终端速度时，$k \\cdot ${v}^2 = ${m} \\cdot 10$。所以 $k = \\frac{${10 * m}}{${v * v}} = ${answer.toLatex()}$。`,
-      ),
-    });
+      [
+        labelled(
+          ["Balance the forces", "力的平衡"],
+          "At terminal velocity the drag equals the weight.",
+          "达到终端速度时阻力等于重力。",
+          `k \\cdot ${v}^2 = ${m} \\cdot 10 = ${10 * m}`,
+        ),
+        labelled(["Solve for k", "解出 k"], "", "", `k = ${10 * m} \\div ${v * v} = ${answer.toLatex()}`),
+      ],
+      [
+        `With this $k$ the drag at ${v} m/s is $${answer.toLatex()} \\cdot ${v * v} = ${10 * m}$ N, the weight, so the acceleration is zero.`,
+        `取这个 $k$，${v} m/s 时的阻力为 $${answer.toLatex()} \\cdot ${v * v} = ${10 * m}$ N，等于重力，所以加速度为零。`,
+      ],
+      [
+        [
+          Q.of(10 * m, v),
+          "That divides the weight by the speed; the drag is $kv^2$, so divide by its square.",
+          "这用重力除以速度；阻力是 $kv^2$，应除以速度的平方。",
+        ],
+        [Q.of(10, v * v), "That leaves out the mass: the weight is $mg$.", "这漏了质量：重力是 $mg$。"],
+        [
+          Q.of(v * v, 10 * m),
+          "That divides the square of the speed by the weight, the wrong way round.",
+          "这用速度的平方除以重力，颠倒了。",
+        ],
+      ],
+    );
   },
 };
 
@@ -427,26 +448,44 @@ const escapeRatio: KnowledgePointDef = {
   id: "comparing-the-escape-velocities-of-two-planets",
   title: t("Comparing the escape velocities of two planets", "比较两颗行星的逃逸速度"),
   explanation: t(
-    "The escape velocity $v = \\sqrt{\\frac{2GM}{R}}$ depends on mass and radius only through their quotient, and then only by a square root. So in a comparison the constants cancel. Multiplying the mass by $a$ and the radius by $b$ multiplies the escape velocity by $\\sqrt{\\frac{a}{b}}$.",
-    "逃逸速度 $v = \\sqrt{\\frac{2GM}{R}}$ 只通过商依赖于质量和半径，而且还要开平方。所以比较时常数都约去了。质量乘以 $a$、半径乘以 $b$，逃逸速度就乘以 $\\sqrt{\\frac{a}{b}}$。",
+    "The escape velocity $v = \\sqrt{\\frac{2GM}{R}}$ depends on mass and radius only through their quotient, and then only by a square root. So in a comparison the constants cancel. Multiplying the mass by $a$ and the radius by $b$ multiplies the escape velocity by $\\sqrt{\\frac{a}{b}}$.\n\n> **Watch out.** Divide the mass factor by the radius factor, then take the square root. With $18$ times the mass and $2$ times the radius the factor is $\\sqrt{9} = 3$, not $9$.",
+    "逃逸速度 $v = \\sqrt{\\frac{2GM}{R}}$ 只通过商依赖于质量和半径，而且还要开平方。所以比较时常数都约去了。质量乘以 $a$、半径乘以 $b$，逃逸速度就乘以 $\\sqrt{\\frac{a}{b}}$。\n\n> **注意。** 先用质量倍数除以半径倍数，再开平方。质量为 $18$ 倍、半径为 $2$ 倍时，倍数是 $\\sqrt{9} = 3$，不是 $9$。",
   ),
   generate(rng) {
     const a = rng.int(2, 6);
     const r = rng.int(2, 7);
     const M = a * a * r;
-    return numberProblem({
-      prompt: t(
+    return explainedNumber(
+      [
         `A planet has ${M} times the mass and ${r} times the radius of another. How many times the other's escape velocity is its escape velocity?`,
         `一颗行星的质量是另一颗的 ${M} 倍，半径是其 ${r} 倍。它的逃逸速度是另一颗的多少倍？`,
-      ),
-      answer: a,
-      form: "integer",
-      wrong: [a * a, M, r],
-      solution: t(
-        `The escape velocity is proportional to $\\sqrt{\\frac{M}{R}}$, so the factor is $\\sqrt{\\frac{${M}}{${r}}} = ${a}$.`,
-        `逃逸速度与 $\\sqrt{\\frac{M}{R}}$ 成正比，所以倍数是 $\\sqrt{\\frac{${M}}{${r}}} = ${a}$。`,
-      ),
-    });
+      ],
+      a,
+      [
+        labelled(
+          ["Form the ratio", "写出比值"],
+          "The constants $2G$ cancel.",
+          "常数 $2G$ 约去了。",
+          `\\frac{v_1}{v_2} = \\sqrt{\\frac{M_1 / R_1}{M_2 / R_2}} = \\sqrt{${M} \\div ${r}}`,
+        ),
+        labelled(["Take the root", "开平方"], "", "", `\\sqrt{${a * a}} = ${a}`),
+      ],
+      [`Squaring back, $${a}^2 \\cdot ${r} = ${M}$, the mass factor.`, `平方回去，$${a}^2 \\cdot ${r} = ${M}$，正是质量倍数。`],
+      [
+        [a * a, "That is the ratio $\\frac{M}{R}$ before the square root.", "这是开平方之前的比值 $\\frac{M}{R}$。"],
+        [
+          M,
+          "That ignores the radius: a larger planet holds things less tightly at its surface.",
+          "这忽略了半径：半径更大的行星对表面物体的束缚更弱。",
+        ],
+        [
+          Q.of(M * r),
+          "That multiplies by the radius factor instead of dividing, and skips the square root.",
+          "这乘以了半径倍数而不是除以它，还漏了开平方。",
+        ],
+      ],
+      "integer",
+    );
   },
 };
 
@@ -1301,26 +1340,43 @@ const timeConstantOfDrag: KnowledgePointDef = {
   id: "the-time-constant-of-linear-drag",
   title: t("The time constant of linear drag", "线性阻力的时间常数"),
   explanation: t(
-    "A body falling from rest with drag $bv$ has speed $v = v_T\\left(1 - e^{-bt/m}\\right)$, where $v_T$ is its terminal speed. The fraction of the terminal speed reached depends only on $\\frac{bt}{m}$, not on $g$. So $\\frac{m}{b}$ sets the time scale of the fall, and it is called the time constant.",
-    "从静止开始、受阻力 $bv$ 的落体，速度为 $v = v_T\\left(1 - e^{-bt/m}\\right)$，其中 $v_T$ 是终端速度。达到终端速度的比例只取决于 $\\frac{bt}{m}$，与 $g$ 无关。所以 $\\frac{m}{b}$ 决定了下落的时间尺度，它叫作时间常数。",
+    "A body falling from rest with drag $bv$ has speed $v = v_T\\left(1 - e^{-bt/m}\\right)$, where $v_T$ is its terminal speed. The fraction of the terminal speed reached depends only on $\\frac{bt}{m}$, not on $g$. So $\\frac{m}{b}$ sets the time scale of the fall, and it is called the time constant.\n\n> **Watch out.** The time constant is $\\frac{m}{b}$, mass over drag coefficient. A $10$ kg body with drag $2v$ N reaches $1 - e^{-1}$ of its terminal speed after $\\frac{10}{2} = 5$ s, not $\\frac{2}{10} = 0.2$ s.",
+    "从静止开始、受阻力 $bv$ 的落体，速度为 $v = v_T\\left(1 - e^{-bt/m}\\right)$，其中 $v_T$ 是终端速度。达到终端速度的比例只取决于 $\\frac{bt}{m}$，与 $g$ 无关。所以 $\\frac{m}{b}$ 决定了下落的时间尺度，它叫作时间常数。\n\n> **注意。** 时间常数是 $\\frac{m}{b}$，质量除以阻力系数。质量 $10$ kg、阻力 $2v$ N 的物体，经过 $\\frac{10}{2} = 5$ 秒达到终端速度的 $1 - e^{-1}$，不是 $\\frac{2}{10} = 0.2$ 秒。",
   ),
   generate(rng) {
     const m = rng.int(2, 20);
     const b = rng.int(2, 10);
     const k = rng.int(1, 3);
     const answer = Q.of(k * m, b);
-    return numberProblem({
-      prompt: t(
+    return explainedNumber(
+      [
         `An object of mass $${m}\\text{ kg}$ falls from rest with air resistance $${b}v\\text{ N}$. After how many seconds has its speed reached the fraction $1 - e^{-${k}}$ of its terminal speed?`,
         `质量为 $${m}\\text{ kg}$ 的物体从静止开始下落，空气阻力为 $${b}v\\text{ N}$。经过多少秒，它的速度达到终端速度的 $1 - e^{-${k}}$ 倍？`,
-      ),
+      ],
       answer,
-      wrong: [Q.of(m, b), Q.of(k * b, m), Q.of(k * m)],
-      solution: t(
-        `The fraction reached at time $t$ is $1 - e^{-${b}t/${m}}$. Matching the exponents gives $\\frac{${b}t}{${m}} = ${k}$, so $t = ${answer.toLatex()}$.`,
-        `时刻 $t$ 达到的比例是 $1 - e^{-${b}t/${m}}$。比较指数得 $\\frac{${b}t}{${m}} = ${k}$，所以 $t = ${answer.toLatex()}$。`,
-      ),
-    });
+      [
+        labelled(["Write the fraction reached", "写出达到的比例"], "", "", `\\frac{v}{v_T} = 1 - e^{-${b}t/${m}}`),
+        labelled(
+          ["Match the exponents", "比较指数"],
+          "",
+          "",
+          `\\frac{${b}t}{${m}} = ${k}, \\qquad t = ${k * m} \\div ${b} = ${answer.toLatex()}`,
+        ),
+      ],
+      [
+        `At $t = ${answer.toLatex()}$ the exponent is $\\frac{${b}}{${m}} \\cdot ${answer.toLatex()} = ${k}$, as required.`,
+        `在 $t = ${answer.toLatex()}$ 时，指数为 $\\frac{${b}}{${m}} \\cdot ${answer.toLatex()} = ${k}$，符合要求。`,
+      ],
+      [
+        [
+          Q.of(m, b),
+          `That is one time constant; the fraction $1 - e^{-${k}}$ needs ${k} of them.`,
+          `这是一个时间常数；比例 $1 - e^{-${k}}$ 需要 ${k} 个。`,
+        ],
+        [Q.of(k * b, m), "That turns the time constant upside down; it is $\\frac{m}{b}$.", "这把时间常数颠倒了；它是 $\\frac{m}{b}$。"],
+        [Q.of(k * m), "That forgets to divide by the drag coefficient $b$.", "这忘了除以阻力系数 $b$。"],
+      ],
+    );
   },
 };
 
@@ -1328,8 +1384,8 @@ const rateOfCurrent: KnowledgePointDef = {
   id: "the-rate-of-the-current-at-a-moment",
   title: t("The rate of the current at a moment", "某一时刻电流的变化率"),
   explanation: t(
-    "In a series RL circuit the voltages balance, so $Li' + Ri = V$ at every moment. This gives the rate of change of the current directly from its present value, with no need to solve the equation. The current rises while it is below $\\frac{V}{R}$ and falls while it is above.",
-    "在串联 RL 电路中电压始终平衡，所以每一时刻都有 $Li' + Ri = V$。由此可以直接从当前电流得到它的变化率，不需要解方程。电流低于 $\\frac{V}{R}$ 时上升，高于它时下降。",
+    "In a series RL circuit the voltages balance, so $Li' + Ri = V$ at every moment. This gives the rate of change of the current directly from its present value, with no need to solve the equation. The current rises while it is below $\\frac{V}{R}$ and falls while it is above.\n\n> **Watch out.** Subtract the resistor's voltage before dividing by $L$. With $L = 2$ H, $R = 5\\ \\Omega$, $V = 40$ V and $i = 6$ A, $i' = \\frac{40 - 30}{2} = 5$ A/s, not $\\frac{40}{2} = 20$ A/s.",
+    "在串联 RL 电路中电压始终平衡，所以每一时刻都有 $Li' + Ri = V$。由此可以直接从当前电流得到它的变化率，不需要解方程。电流低于 $\\frac{V}{R}$ 时上升，高于它时下降。\n\n> **注意。** 先减去电阻上的电压，再除以 $L$。若 $L = 2$ H，$R = 5\\ \\Omega$，$V = 40$ V，$i = 6$ A，则 $i' = \\frac{40 - 30}{2} = 5$ A/s，不是 $\\frac{40}{2} = 20$ A/s。",
   ),
   generate(rng) {
     const L = rng.int(1, 10);
@@ -1337,18 +1393,37 @@ const rateOfCurrent: KnowledgePointDef = {
     const V = 10 * rng.int(1, 12);
     const i = rng.int(1, 10);
     const answer = Q.of(V - R * i, L);
-    return numberProblem({
-      prompt: t(
+    const left = V - R * i;
+    return explainedNumber(
+      [
         `A series circuit has $L = ${L}\\text{ H}$, $R = ${R}\\ \\Omega$ and a constant voltage $${V}\\text{ V}$. At a moment when the current is $${i}\\text{ A}$, how fast is it changing, in $\\text{A/s}$? Give a negative number if it is falling.`,
         `串联电路中 $L = ${L}\\text{ H}$，$R = ${R}\\ \\Omega$，恒定电压为 $${V}\\text{ V}$。在电流为 $${i}\\text{ A}$ 的时刻，它的变化率是多少 $\\text{A/s}$？如果电流在下降，答案取负数。`,
-      ),
+      ],
       answer,
-      wrong: [Q.of(V, L), Q.of(V + R * i, L), Q.of(V - R * i, R), Q.of(V - R * i)],
-      solution: t(
-        `The balance of voltages reads $${poly([L, "i'"])} + ${R} \\cdot ${i} = ${V}$. Solving for the rate gives $i' = ${answer.toLatex()}$.`,
-        `电压平衡式是 $${poly([L, "i'"])} + ${R} \\cdot ${i} = ${V}$。解出变化率，得 $i' = ${answer.toLatex()}$。`,
-      ),
-    });
+      [
+        labelled(["Balance the voltages", "电压平衡"], "", "", `${poly([L, "i'"])} + ${R} \\cdot ${i} = ${V}`),
+        labelled(
+          ["Solve for the rate", "解出变化率"],
+          "What the resistor does not use drives the inductor.",
+          "电阻没有用掉的电压加在电感上。",
+          `${poly([L, "i'"])} = ${V} - ${R * i} = ${left}, \\qquad i' = ${answer.toLatex()}`,
+        ),
+      ],
+      [
+        `The current $${i}$ A is ${left > 0 ? "below" : left < 0 ? "above" : "at"} the steady value $${Q.of(V, R).toLatex()}$ A, so a ${left > 0 ? "positive" : left < 0 ? "negative" : "zero"} rate is what we expect.`,
+        `电流 $${i}$ A ${left > 0 ? "低于" : left < 0 ? "高于" : "等于"}稳态值 $${Q.of(V, R).toLatex()}$ A，所以变化率应为${left > 0 ? "正" : left < 0 ? "负" : "零"}。`,
+      ],
+      [
+        [Q.of(V, L), "That leaves out the resistor's voltage $Ri$.", "这漏了电阻上的电压 $Ri$。"],
+        [Q.of(V + R * i, L), "That adds the resistor's voltage instead of subtracting it.", "这加上了电阻上的电压，而应减去它。"],
+        [
+          Q.of(V - R * i, R),
+          "That divides by $R$; the rate of the current is multiplied by $L$.",
+          "这除以了 $R$；乘在电流变化率上的是 $L$。",
+        ],
+        [Q.of(V - R * i), "That forgets to divide by the inductance $L$.", "这忘了除以电感 $L$。"],
+      ],
+    );
   },
 };
 
@@ -2371,8 +2446,8 @@ const rateWithChangingVolume: KnowledgePointDef = {
   id: "the-rate-when-the-volume-changes",
   title: t("The rate when the volume changes", "体积变化时的变化率"),
   explanation: t(
-    "In a mixture problem the amount of solute changes at the rate in minus the rate out. The rate in is the inflow concentration times the inflow rate. The rate out uses the current concentration, $\\frac{Q}{V(t)}$. If inflow and outflow differ, the volume $V(t)$ changes linearly with time, so the volume at that moment must be found first.",
-    "在混合问题中，溶质量的变化率等于流入率减去流出率。流入率是流入浓度乘以流入速度。流出率要用当前浓度 $\\frac{Q}{V(t)}$。如果流入和流出的速度不同，体积 $V(t)$ 随时间线性变化，所以必须先求出那一时刻的体积。",
+    "In a mixture problem the amount of solute changes at the rate in minus the rate out. The rate in is the inflow concentration times the inflow rate. The rate out uses the current concentration, $\\frac{Q}{V(t)}$. If inflow and outflow differ, the volume $V(t)$ changes linearly with time, so the volume at that moment must be found first.\n\n> **Watch out.** Use the volume at that moment, not the starting volume, and the outflow rate, not the inflow rate. A tank that starts at $100$ L, gains $2$ L/min and drains at $3$ L/min holds $120$ L at $t = 10$; with $60$ g of solute the rate out is $3 \\cdot \\frac{60}{120} = 1.5$ g/min, not $3 \\cdot \\frac{60}{100} = 1.8$ g/min.",
+    "在混合问题中，溶质量的变化率等于流入率减去流出率。流入率是流入浓度乘以流入速度。流出率要用当前浓度 $\\frac{Q}{V(t)}$。如果流入和流出的速度不同，体积 $V(t)$ 随时间线性变化，所以必须先求出那一时刻的体积。\n\n> **注意。** 要用那一时刻的体积而不是初始体积，要用流出速度而不是流入速度。开始时 $100$ L、每分钟净增 $2$ L、以 $3$ L/min 流出的水箱，在 $t = 10$ 时有 $120$ L；若含溶质 $60$ g，流出率为 $3 \\cdot \\frac{60}{120} = 1.5$ g/min，不是 $3 \\cdot \\frac{60}{100} = 1.8$ g/min。",
   ),
   generate(rng) {
     const start = 50 * rng.int(2, 10);
@@ -2383,19 +2458,41 @@ const rateWithChangingVolume: KnowledgePointDef = {
     const S = 10 * rng.int(5, 30);
     const V = start + (into - out) * T;
     const inflow = c * into;
-    const answer = Q.of(inflow).sub(Q.of(out * S, V));
-    return numberProblem({
-      prompt: t(
+    const rateOut = Q.of(out * S, V);
+    const answer = Q.of(inflow).sub(rateOut);
+    return explainedNumber(
+      [
         `A tank starts with $${start}$ liters. A solution of concentration $${c}\\text{ g/L}$ flows in at $${into}\\text{ L/min}$, and the mixture drains at $${out}\\text{ L/min}$. At $t = ${T}$ minutes it holds $${S}$ grams of solute. How fast is the solute changing then, in $\\text{g/min}$? Give a negative number if it is falling.`,
         `水箱开始时有 $${start}$ 升液体。浓度为 $${c}\\text{ g/L}$ 的溶液以 $${into}\\text{ L/min}$ 流入，混合液以 $${out}\\text{ L/min}$ 流出。在 $t = ${T}$ 分钟时，水箱中有 $${S}$ 克溶质。此时溶质的变化率是多少 $\\text{g/min}$？如果在减少，答案取负数。`,
-      ),
+      ],
       answer,
-      wrong: [Q.of(inflow).sub(Q.of(out * S, start)), Q.of(inflow).sub(Q.of(into * S, V)), inflow],
-      solution: t(
-        `The volume at that time is $${start} + ${into - out} \\cdot ${T} = ${V}$ liters. The rate in is $${inflow}$ and the rate out is $${out} \\cdot \\frac{${S}}{${V}}$. The difference is $${answer.toLatex()}$.`,
-        `那时的体积是 $${start} + ${into - out} \\cdot ${T} = ${V}$ 升。流入率是 $${inflow}$，流出率是 $${out} \\cdot \\frac{${S}}{${V}}$。两者之差是 $${answer.toLatex()}$。`,
-      ),
-    });
+      [
+        labelled(["Find the volume then", "求那时的体积"], "", "", `V(${T}) = ${start} + (${into} - ${out}) \\cdot ${T} = ${V}`),
+        labelled(
+          ["Rate in minus rate out", "流入率减流出率"],
+          "",
+          "",
+          `${c} \\cdot ${into} - ${out} \\cdot \\frac{${S}}{${V}} = ${inflow} - ${rateOut.toLatex()} = ${answer.toLatex()}`,
+        ),
+      ],
+      [
+        `The tank's concentration $\\frac{${S}}{${V}}$ g/L is ${answer.sign() > 0 ? "below" : answer.sign() < 0 ? "above" : "equal to"} the incoming $${c}$ g/L, so the solute is ${answer.sign() > 0 ? "rising" : answer.sign() < 0 ? "falling" : "steady"}, as the sign of $${answer.toLatex()}$ says.`,
+        `水箱浓度 $\\frac{${S}}{${V}}$ g/L ${answer.sign() > 0 ? "低于" : answer.sign() < 0 ? "高于" : "等于"}流入的 $${c}$ g/L，所以溶质${answer.sign() > 0 ? "在增加" : answer.sign() < 0 ? "在减少" : "不变"}，与 $${answer.toLatex()}$ 的符号一致。`,
+      ],
+      [
+        [
+          Q.of(inflow).sub(Q.of(out * S, start)),
+          "That uses the starting volume; the volume has changed by then.",
+          "这用了初始体积；那时体积已经变了。",
+        ],
+        [
+          Q.of(inflow).sub(Q.of(into * S, V)),
+          "That drains the mixture at the inflow rate instead of the outflow rate.",
+          "这按流入速度计算流出，应该用流出速度。",
+        ],
+        [inflow, "That counts only the rate in and forgets the solute leaving.", "这只算了流入率，忘了流出的溶质。"],
+      ],
+    );
   },
 };
 
@@ -2530,8 +2627,8 @@ const limitFromThreeReadings: KnowledgePointDef = {
   id: "the-limit-from-three-readings",
   title: t("The limit from three readings", "由三次读数求极限值"),
   explanation: t(
-    "Under inhibited growth $y' = k(M - y)$, the distance to the limit $M$ shrinks by a fixed factor over each equal time interval. So the increases between equally spaced readings form a geometric sequence. Their ratio gives that factor, and summing the increases still to come gives $M$, without ever finding $k$.",
-    "在抑制增长 $y' = k(M - y)$ 中，到极限 $M$ 的距离在每段相等的时间内都缩小相同的倍数。所以等间隔读数之间的增量构成等比数列。增量之比就是这个倍数，把以后的增量全部加起来就得到 $M$，完全不需要求 $k$。",
+    "Under inhibited growth $y' = k(M - y)$, the distance to the limit $M$ shrinks by a fixed factor over each equal time interval. So the increases between equally spaced readings form a geometric sequence. Their ratio gives that factor, and summing the increases still to come gives $M$, without ever finding $k$.\n\n> **Watch out.** Add all the increases still to come, not just the next one. For readings $60$, $80$, $90$ the increases halve, so the rest add up to $5 + 2.5 + \\cdots = 10$ and $M = 100$, not $90 + 5 = 95$.",
+    "在抑制增长 $y' = k(M - y)$ 中，到极限 $M$ 的距离在每段相等的时间内都缩小相同的倍数。所以等间隔读数之间的增量构成等比数列。增量之比就是这个倍数，把以后的增量全部加起来就得到 $M$，完全不需要求 $k$。\n\n> **注意。** 要把以后的增量全部加起来，而不只是下一个。读数为 $60$、$80$、$90$ 时增量每次减半，以后的增量之和为 $5 + 2.5 + \\cdots = 10$，所以 $M = 100$，不是 $90 + 5 = 95$。",
   ),
   generate(rng) {
     const M = 150 + 10 * rng.int(0, 15);
@@ -2544,19 +2641,42 @@ const limitFromThreeReadings: KnowledgePointDef = {
     const gap1 = second - first;
     const gap2 = third - second;
     const left = Q.of(gap2, shrink - 1);
-    return numberProblem({
-      prompt: t(
+    return explainedNumber(
+      [
         `A quantity grows according to $y' = k(M - y)$. It equals $${first}$ at $t = ${T}$, $${second}$ at $t = ${2 * T}$ and $${third}$ at $t = ${3 * T}$. Find the limit $M$.`,
         `某个量按 $y' = k(M - y)$ 增长。它在 $t = ${T}$ 时等于 $${first}$，在 $t = ${2 * T}$ 时等于 $${second}$，在 $t = ${3 * T}$ 时等于 $${third}$。求极限 $M$。`,
-      ),
-      answer: M,
-      form: "integer",
-      wrong: [third + gap2, third + gap1, third, first + gap1 * shrink],
-      solution: t(
-        `The increases are $${gap1}$ and $${gap2}$, so each is $\\frac{1}{${shrink}}$ of the one before. The increases still to come form a geometric series with the sum $${gap2}\\left(\\frac{1}{${shrink}} + \\frac{1}{${shrink * shrink}} + \\cdots\\right) = ${left.toLatex()}$. So $M = ${third} + ${left.toLatex()} = ${M}$.`,
-        `增量是 $${gap1}$ 和 $${gap2}$，所以每个增量都是前一个的 $\\frac{1}{${shrink}}$。以后的增量构成等比级数，其和为 $${gap2}\\left(\\frac{1}{${shrink}} + \\frac{1}{${shrink * shrink}} + \\cdots\\right) = ${left.toLatex()}$。所以 $M = ${third} + ${left.toLatex()} = ${M}$。`,
-      ),
-    });
+      ],
+      M,
+      [
+        labelled(
+          ["Find the factor", "求倍数"],
+          "Compare the two increases.",
+          "比较两个增量。",
+          `${second} - ${first} = ${gap1}, \\qquad ${third} - ${second} = ${gap2}, \\qquad \\frac{${gap2}}{${gap1}} = \\frac{1}{${shrink}}`,
+        ),
+        labelled(
+          ["Sum the increases to come", "把以后的增量加起来"],
+          "",
+          "",
+          `${gap2}\\left(\\frac{1}{${shrink}} + \\frac{1}{${shrink * shrink}} + \\cdots\\right) = ${shrink === 2 ? "" : `\\frac{${gap2}}{${shrink - 1}} = `}${left.toLatex()}`,
+          `M = ${third} + ${left.toLatex()} = ${M}`,
+        ),
+      ],
+      [
+        `The distances to $${M}$ are $${M - first}$, $${M - second}$ and $${M - third}$, each $\\frac{1}{${shrink}}$ of the one before, as the model requires.`,
+        `到 $${M}$ 的距离为 $${M - first}$、$${M - second}$、$${M - third}$，每个都是前一个的 $\\frac{1}{${shrink}}$，符合模型。`,
+      ],
+      [
+        [
+          third + gap2,
+          "That adds only one more increase of the same size; the increases keep shrinking but never stop.",
+          "这只加了一个同样大小的增量；增量不断缩小但不会停止。",
+        ],
+        [third + gap1, "That adds the first increase again; the increases shrink.", "这又加了一次第一个增量；增量在缩小。"],
+        [third, "That takes the last reading as the limit; the quantity is still growing.", "这把最后一次读数当作极限；该量仍在增长。"],
+      ],
+      "integer",
+    );
   },
 };
 
@@ -3026,8 +3146,8 @@ const tankTransient: KnowledgePointDef = {
   id: "the-transient-coefficient-of-a-mixing-tank",
   title: t("The transient coefficient of a mixing tank", "混合罐的瞬态系数"),
   explanation: t(
-    "When brine flows in and out at the same rate, the amount of salt obeys a linear equation, and its solution has two parts. The constant part is the amount that the tank would hold at the concentration of the incoming brine. The other part is an exponential decay that carries the initial difference from this amount. Since it equals the whole difference at $t = 0$, its coefficient can be negative, if the tank starts with too little salt.",
-    "当盐水以相同速率流入流出时，盐量服从线性方程，它的解有两部分。常数部分是罐内浓度等于流入盐水浓度时的盐量。另一部分是指数衰减，携带着初始时与这个量的差。由于它在 $t = 0$ 时等于全部差值，如果罐里起初盐太少，它的系数可以是负的。",
+    "When brine flows in and out at the same rate, the amount of salt obeys a linear equation, and its solution has two parts. The constant part is the amount that the tank would hold at the concentration of the incoming brine. The other part is an exponential decay that carries the initial difference from this amount. Since it equals the whole difference at $t = 0$, its coefficient can be negative, if the tank starts with too little salt.\n\n> **Watch out.** $K$ is the start minus the long-run amount, in that order. A $100$ L tank with $50$ g of salt fed $2$ g/L brine has $M = 200$ and $K = 50 - 200 = -150$, not $150$.",
+    "当盐水以相同速率流入流出时，盐量服从线性方程，它的解有两部分。常数部分是罐内浓度等于流入盐水浓度时的盐量。另一部分是指数衰减，携带着初始时与这个量的差。由于它在 $t = 0$ 时等于全部差值，如果罐里起初盐太少，它的系数可以是负的。\n\n> **注意。** $K$ 是初始量减去长期量，顺序不能反。$100$ L、含盐 $50$ g、注入 $2$ g/L 盐水的罐，$M = 200$，$K = 50 - 200 = -150$，不是 $150$。",
   ),
   generate(rng) {
     const volume = rng.int(2, 20) * 10;
@@ -3036,19 +3156,38 @@ const tankTransient: KnowledgePointDef = {
     const start = rng.int(0, 40) * 10;
     const limit = c * volume;
     const answer = start - limit;
-    return numberProblem({
-      prompt: t(
+    return explainedNumber(
+      [
         `A tank holds ${volume} L of water containing ${start} g of salt. Brine with ${c} g/L flows in at ${r} L/min, and the stirred mixture flows out at the same rate. The salt has the form $A(t) = M + Ke^{-kt}$. Find $K$.`,
         `一个罐装有 ${volume} L 水，含盐 ${start} g。浓度为 ${c} g/L 的盐水以 ${r} L/min 流入，搅拌后的混合液以相同速率流出。盐量的形式是 $A(t) = M + Ke^{-kt}$。求 $K$。`,
-      ),
+      ],
       answer,
-      form: "integer",
-      wrong: [start, limit, limit - start, c * r, answer + 10],
-      solution: t(
-        `The long-run amount is $M = ${c} \\cdot ${volume} = ${limit}$. At $t = 0$, $M + K = ${start}$, so $K = ${answer}$.`,
-        `长期盐量是 $M = ${c} \\cdot ${volume} = ${limit}$。在 $t = 0$ 时，$M + K = ${start}$，所以 $K = ${answer}$。`,
-      ),
-    });
+      [
+        labelled(
+          ["Find the long-run amount", "求长期盐量"],
+          "The tank ends at the incoming concentration.",
+          "罐最终达到流入盐水的浓度。",
+          `M = ${c} \\cdot ${volume} = ${limit}`,
+        ),
+        labelled(
+          ["Use the start", "用初始条件"],
+          "At $t = 0$ the exponential is $1$.",
+          "在 $t = 0$ 时指数函数等于 $1$。",
+          `M + K = ${start}, \\qquad K = ${start} - ${limit} = ${answer}`,
+        ),
+      ],
+      [
+        `Then $A(0) = ${limit} ${answer < 0 ? "-" : "+"} ${Math.abs(answer)} = ${start}$ g, the salt the tank starts with.`,
+        `于是 $A(0) = ${limit} ${answer < 0 ? "-" : "+"} ${Math.abs(answer)} = ${start}$ g，正是罐里起初的盐量。`,
+      ],
+      [
+        [start, "That is the starting amount $A(0) = M + K$; subtract $M$.", "这是初始量 $A(0) = M + K$；还要减去 $M$。"],
+        [limit, "That is the long-run amount $M$, not the coefficient of the decaying part.", "这是长期量 $M$，不是衰减部分的系数。"],
+        [limit - start, "That subtracts in the wrong order; $K = A(0) - M$.", "这减反了；$K = A(0) - M$。"],
+        [c * r, "That is the rate at which salt flows in, in grams per minute.", "这是盐流入的速率，单位是克/分。"],
+      ],
+      "integer",
+    );
   },
 };
 
@@ -3057,27 +3196,53 @@ const orthogonalThroughPoint: KnowledgePointDef = {
   figure: differentialEquationsDrawings1["orthogonal-trajectories#the-orthogonal-trajectory-through-a-point"],
   title: t("The orthogonal trajectory through a point", "过一点的正交轨线"),
   explanation: t(
-    "To find orthogonal trajectories, first remove the constant from the family. For $y = cx^n$, dividing gives $y' = \\frac{ny}{x}$, a slope that holds for every curve in the family. A curve crossing at right angles has the negative reciprocal slope, $y' = -\\frac{x}{ny}$. This equation is separable, and its solutions are ellipses. The initial point then fixes the particular ellipse, just as for any other family of solutions.",
-    "求正交轨线时，先从曲线族中消去常数。对 $y = cx^n$，相除得 $y' = \\frac{ny}{x}$，这个斜率对族中每条曲线都成立。以直角相交的曲线有负倒数斜率 $y' = -\\frac{x}{ny}$。这个方程可分离变量，解是椭圆。然后由给定的点确定具体的椭圆，就像其他解族一样。",
+    "To find orthogonal trajectories, first remove the constant from the family. For $y = cx^n$, dividing gives $y' = \\frac{ny}{x}$, a slope that holds for every curve in the family. A curve crossing at right angles has the negative reciprocal slope, $y' = -\\frac{x}{ny}$. This equation is separable, and its solutions are ellipses. The initial point then fixes the particular ellipse, just as for any other family of solutions.\n\n> **Watch out.** The factor $n$ goes with $y^2$, because $ny\\,dy = -x\\,dx$. For $y = cx^2$ through $(1, 2)$ the trajectory is $x^2 + 2y^2 = 9$, not $2x^2 + y^2 = 6$.",
+    "求正交轨线时，先从曲线族中消去常数。对 $y = cx^n$，相除得 $y' = \\frac{ny}{x}$，这个斜率对族中每条曲线都成立。以直角相交的曲线有负倒数斜率 $y' = -\\frac{x}{ny}$。这个方程可分离变量，解是椭圆。然后由给定的点确定具体的椭圆，就像其他解族一样。\n\n> **注意。** 因子 $n$ 跟着 $y^2$，因为 $ny\\,dy = -x\\,dx$。对 $y = cx^2$ 过 $(1, 2)$ 的正交轨线是 $x^2 + 2y^2 = 9$，不是 $2x^2 + y^2 = 6$。",
   ),
   generate(rng) {
     const n = rng.int(2, 5);
     const a = nonzero(rng, 6);
     const b = nonzero(rng, 6);
     const answer = a * a + n * b * b;
-    return numberProblem({
-      prompt: t(
+    return explainedNumber(
+      [
         `The orthogonal trajectory of the family $y = cx^{${n}}$ through $(${a}, ${b})$ has an equation $x^2 + py^2 = K$. Find $K$.`,
         `曲线族 $y = cx^{${n}}$ 过 $(${a}, ${b})$ 的正交轨线的方程是 $x^2 + py^2 = K$。求 $K$。`,
-      ),
+      ],
       answer,
-      form: "integer",
-      wrong: [a * a + b * b, n * a * a + b * b, n * (a * a + b * b), answer + 1],
-      solution: t(
-        `Separating $y' = -\\frac{x}{${n}y}$ gives $x^2 + ${n}y^2 = K$. At the point, $K = ${a * a} + ${n} \\cdot ${b * b} = ${answer}$.`,
-        `分离 $y' = -\\frac{x}{${n}y}$，得 $x^2 + ${n}y^2 = K$。在该点，$K = ${a * a} + ${n} \\cdot ${b * b} = ${answer}$。`,
-      ),
-    });
+      [
+        labelled(
+          ["Find the trajectories", "求正交轨线"],
+          `The family has slope $\\frac{${n}y}{x}$; take the negative reciprocal and separate.`,
+          `曲线族的斜率是 $\\frac{${n}y}{x}$；取负倒数再分离变量。`,
+          `y' = -\\frac{x}{${n}y}, \\qquad ${n}y\\,dy = -x\\,dx, \\qquad x^2 + ${n}y^2 = K`,
+        ),
+        labelled(
+          ["Use the point", "代入点"],
+          "",
+          "",
+          `K = ${inParens(a)}^2 + ${n} \\cdot ${inParens(b)}^2 = ${a * a} + ${n * b * b} = ${answer}`,
+        ),
+      ],
+      [
+        `At $(${a}, ${b})$ the family's slope is $${Q.of(n * b, a).toLatex()}$ and the trajectory's is $${Q.of(-a, n * b).toLatex()}$; their product is $-1$.`,
+        `在 $(${a}, ${b})$ 处曲线族的斜率是 $${Q.of(n * b, a).toLatex()}$，正交轨线的斜率是 $${Q.of(-a, n * b).toLatex()}$，两者之积为 $-1$。`,
+      ],
+      [
+        [
+          a * a + b * b,
+          "That drops the factor $n$, as if the family were the lines $y = cx$.",
+          "这丢了因子 $n$，好像曲线族是直线 $y = cx$。",
+        ],
+        [
+          n * a * a + b * b,
+          "That puts $n$ on $x^2$; it multiplies $y\\,dy$, so it goes with $y^2$.",
+          "这把 $n$ 放在 $x^2$ 上；它乘在 $y\\,dy$ 上，应跟着 $y^2$。",
+        ],
+        [n * (a * a + b * b), "That multiplies both squares by $n$.", "这把两个平方都乘以了 $n$。"],
+      ],
+      "integer",
+    );
   },
 };
 
@@ -3151,27 +3316,48 @@ const periodOfOrbit: KnowledgePointDef = {
   id: "the-period-of-a-larger-circular-orbit",
   title: t("The period of a larger circular orbit", "更大圆轨道的周期"),
   explanation: t(
-    "For a circular orbit, gravity supplies the centripetal force, so $\\frac{GMm}{r^2} = \\frac{mv^2}{r}$, and the speed satisfies $v^2 = \\frac{GM}{r}$. One full turn takes $T = \\frac{2\\pi r}{v}$, and combining these gives $T^2 = \\frac{4\\pi^2 r^3}{GM}$. So the square of the period is proportional to the cube of the radius, which is Kepler's third law. Neither the mass of the satellite nor the value of $G$ matters in a comparison.",
-    "对圆轨道，引力提供向心力，所以 $\\frac{GMm}{r^2} = \\frac{mv^2}{r}$，速度满足 $v^2 = \\frac{GM}{r}$。转一整圈需要 $T = \\frac{2\\pi r}{v}$，合起来得 $T^2 = \\frac{4\\pi^2 r^3}{GM}$。所以周期的平方与半径的立方成正比，这就是开普勒第三定律。做比较时，卫星的质量和 $G$ 的值都不起作用。",
+    "For a circular orbit, gravity supplies the centripetal force, so $\\frac{GMm}{r^2} = \\frac{mv^2}{r}$, and the speed satisfies $v^2 = \\frac{GM}{r}$. One full turn takes $T = \\frac{2\\pi r}{v}$, and combining these gives $T^2 = \\frac{4\\pi^2 r^3}{GM}$. So the square of the period is proportional to the cube of the radius, which is Kepler's third law. Neither the mass of the satellite nor the value of $G$ matters in a comparison.\n\n> **Watch out.** The period grows like $r^{3/2}$, faster than the radius. An orbit $4$ times as large takes $4^{3/2} = 8$ times as long, not $4$ times.",
+    "对圆轨道，引力提供向心力，所以 $\\frac{GMm}{r^2} = \\frac{mv^2}{r}$，速度满足 $v^2 = \\frac{GM}{r}$。转一整圈需要 $T = \\frac{2\\pi r}{v}$，合起来得 $T^2 = \\frac{4\\pi^2 r^3}{GM}$。所以周期的平方与半径的立方成正比，这就是开普勒第三定律。做比较时，卫星的质量和 $G$ 的值都不起作用。\n\n> **注意。** 周期按 $r^{3/2}$ 增长，比半径增长得快。半径为 $4$ 倍的轨道，周期是 $4^{3/2} = 8$ 倍，不是 $4$ 倍。",
   ),
   generate(rng) {
     const k = rng.int(2, 5);
     const period = rng.int(1, 12);
     const ratio = k * k;
     const answer = k ** 3 * period;
-    return numberProblem({
-      prompt: t(
+    return explainedNumber(
+      [
         `Two satellites circle the same planet. The outer orbit has ${ratio} times the radius of the inner one, and the inner satellite has a period of ${period} hours. Find the period of the outer satellite, in hours.`,
         `两颗卫星绕同一行星运行。外轨道的半径是内轨道的 ${ratio} 倍，内侧卫星的周期是 ${period} 小时。求外侧卫星的周期（小时）。`,
-      ),
+      ],
       answer,
-      form: "integer",
-      wrong: [ratio * period, k * period, ratio * ratio * period, answer + 1],
-      solution: t(
-        `Since $T^2$ is proportional to $r^3$, the period is multiplied by $${ratio}^{3/2} = ${k ** 3}$. This gives $${answer}$ hours.`,
-        `由于 $T^2$ 与 $r^3$ 成正比，周期乘以 $${ratio}^{3/2} = ${k ** 3}$。这样得 $${answer}$ 小时。`,
-      ),
-    });
+      [
+        labelled(
+          ["Compare the periods", "比较周期"],
+          "Since $T^2$ is proportional to $r^3$:",
+          "由于 $T^2$ 与 $r^3$ 成正比：",
+          `\\frac{T_2}{T_1} = ${ratio}^{3/2} = \\left(\\sqrt{${ratio}}\\right)^3 = ${k}^3 = ${k ** 3}`,
+        ),
+        labelled(["Scale the period", "换算周期"], "", "", `T_2 = ${k ** 3} \\cdot ${period} = ${answer}`),
+      ],
+      [
+        `Squaring, $\\left(\\frac{T_2}{T_1}\\right)^2 = ${k ** 3}^2 = ${k ** 6}$, and $${ratio}^3 = ${k ** 6}$ as well.`,
+        `平方得 $\\left(\\frac{T_2}{T_1}\\right)^2 = ${k ** 3}^2 = ${k ** 6}$，而 $${ratio}^3 = ${k ** 6}$ 也是如此。`,
+      ],
+      [
+        [
+          ratio * period,
+          "That scales the period like the radius; it grows like $r^{3/2}$.",
+          "这让周期像半径一样增长；它按 $r^{3/2}$ 增长。",
+        ],
+        [
+          k * period,
+          "That scales the period like $\\sqrt{r}$; the exponent is $\\frac{3}{2}$.",
+          "这让周期按 $\\sqrt{r}$ 增长；指数是 $\\frac{3}{2}$。",
+        ],
+        [ratio * ratio * period, "That scales the period like $r^2$ instead of $r^{3/2}$.", "这让周期按 $r^2$ 增长，而不是 $r^{3/2}$。"],
+      ],
+      "integer",
+    );
   },
 };
 
@@ -3179,26 +3365,44 @@ const initialCurrent: KnowledgePointDef = {
   id: "the-initial-current-of-a-charging-circuit",
   title: t("The initial current of a charging circuit", "充电电路的初始电流"),
   explanation: t(
-    "In the equation $Rq' + \\frac{q}{C} = V$, an uncharged capacitor has $q = 0$ at the moment the switch closes, and so no voltage across it. The whole battery voltage then falls across the resistor, and $q'(0) = \\frac{V}{R}$. The capacitance does not enter, because it only matters once charge has built up. As charging goes on, the current falls towards zero, with time constant $RC$.",
-    "在方程 $Rq' + \\frac{q}{C} = V$ 中，未充电的电容器在开关闭合瞬间 $q = 0$，所以两端没有电压。这时电池的全部电压都加在电阻上，$q'(0) = \\frac{V}{R}$。电容不出现，因为只有积累了电荷它才起作用。随着充电进行，电流趋于零，时间常数是 $RC$。",
+    "In the equation $Rq' + \\frac{q}{C} = V$, an uncharged capacitor has $q = 0$ at the moment the switch closes, and so no voltage across it. The whole battery voltage then falls across the resistor, and $q'(0) = \\frac{V}{R}$. The capacitance does not enter, because it only matters once charge has built up. As charging goes on, the current falls towards zero, with time constant $RC$.\n\n> **Watch out.** The current is largest at the start, not zero. A $12$ V battery with a $4\\ \\Omega$ resistor drives $\\frac{12}{4} = 3$ A into an empty capacitor at once; the current dies away only as charge builds up.",
+    "在方程 $Rq' + \\frac{q}{C} = V$ 中，未充电的电容器在开关闭合瞬间 $q = 0$，所以两端没有电压。这时电池的全部电压都加在电阻上，$q'(0) = \\frac{V}{R}$。电容不出现，因为只有积累了电荷它才起作用。随着充电进行，电流趋于零，时间常数是 $RC$。\n\n> **注意。** 电流在开始时最大，而不是零。$12$ V 电池与 $4\\ \\Omega$ 电阻一接通，就向空电容器送入 $\\frac{12}{4} = 3$ A 的电流；只有随着电荷积累电流才衰减。",
   ),
   generate(rng) {
     const r = rng.int(2, 20);
     const v = rng.int(6, 24);
     const n = rng.int(2, 9);
     const answer = Q.of(v, r);
-    return numberProblem({
-      prompt: t(
+    return explainedNumber(
+      [
         `An uncharged capacitor of $\\frac{1}{${n}}$ F, a resistor of ${r} Ω and a ${v} V battery are connected in series. Find the current, in amperes, at the moment the circuit is closed.`,
         `未充电的 $\\frac{1}{${n}}$ F 电容器、${r} Ω 电阻和 ${v} V 电池串联。求电路闭合瞬间的电流（安培）。`,
-      ),
+      ],
       answer,
-      wrong: [Q.of(v, n), Q.of(v * r), Q.of(r, v), Q.of(0)],
-      solution: t(
-        `At first $q = 0$, so the equation gives $${r}q'(0) = ${v}$. Thus the current is $${answer.toLatex()}$ A.`,
-        `起初 $q = 0$，所以方程给出 $${r}q'(0) = ${v}$。于是电流是 $${answer.toLatex()}$ A。`,
-      ),
-    });
+      [
+        labelled(
+          ["Use the empty capacitor", "电容器为空"],
+          "At first $q = 0$, so the capacitor has no voltage.",
+          "起初 $q = 0$，所以电容器两端没有电压。",
+          `${r}q'(0) + ${n} \\cdot 0 = ${v}`,
+        ),
+        labelled(["Solve", "求解"], "", "", `q'(0) = ${v} \\div ${r} = ${answer.toLatex()}`),
+      ],
+      [
+        `The resistor then drops $${r} \\cdot ${answer.toLatex()} = ${v}$ V, the whole battery voltage, as it must while the capacitor is empty.`,
+        `此时电阻上的压降为 $${r} \\cdot ${answer.toLatex()} = ${v}$ V，正是电池的全部电压，这在电容器为空时是必然的。`,
+      ],
+      [
+        [
+          Q.of(v, n),
+          "That multiplies the voltage by the capacitance; with no charge yet, the capacitor plays no part.",
+          "这把电压乘以了电容；还没有电荷时电容器不起作用。",
+        ],
+        [Q.of(v * r), "That multiplies the voltage by the resistance; Ohm's law divides.", "这把电压乘以电阻；欧姆定律是相除。"],
+        [Q.of(r, v), "That divides the resistance by the voltage, the wrong way round.", "这用电阻除以电压，颠倒了。"],
+        [Q.of(0), "That is the current at the end of charging, not at the start.", "这是充电结束时的电流，不是开始时的。"],
+      ],
+    );
   },
 };
 

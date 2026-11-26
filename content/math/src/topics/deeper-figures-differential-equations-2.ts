@@ -10,7 +10,7 @@ import { calculusDrawings5 } from "../explanation-drawings-calculus-5.ts";
 import { differentialEquationsDrawings1 } from "../explanation-drawings-differential-equations-1.ts";
 import { explainedChoice, numberProblem } from "../problems.ts";
 
-import { ask, choose, type Pair, point, same } from "../university-kit.ts";
+import { type Pair, point, same } from "../university-kit.ts";
 import { type Step, walked } from "./calculus-i-differentiation.ts";
 import { chart, curvePath, intTicks, type Scale } from "./figure-charts.ts";
 import { drawn } from "./figure-reading-more.ts";
@@ -543,8 +543,8 @@ const inhibitedRate = point(
   "the-constant-of-a-drawn-inhibited-growth-curve",
   ["The constant of a drawn inhibited growth curve", "所画受限增长曲线的常数"],
   [
-    "For $y' = k(L - y)$, the curve approaches the limit $L$. The tangent at $t = 0$ has slope $k(L - y(0))$, so it reaches the level $L$ at exactly $t = \\frac{1}{k}$.",
-    "对 $y' = k(L - y)$，曲线趋于极限 $L$。$t = 0$ 处切线的斜率为 $k(L - y(0))$，所以它恰好在 $t = \\frac{1}{k}$ 时到达水平 $L$。",
+    "For $y' = k(L - y)$, the curve approaches the limit $L$. The tangent at $t = 0$ has slope $k(L - y(0))$, so it reaches the level $L$ at exactly $t = \\frac{1}{k}$.\n\n> **Watch out.** The time where the tangent meets the limit is $\\frac{1}{k}$, not $k$. A tangent that reaches the limit at $t = 4$ means $k = \\frac{1}{4}$.",
+    "对 $y' = k(L - y)$，曲线趋于极限 $L$。$t = 0$ 处切线的斜率为 $k(L - y(0))$，所以它恰好在 $t = \\frac{1}{k}$ 时到达水平 $L$。\n\n> **注意。** 切线与极限相交的时刻是 $\\frac{1}{k}$，不是 $k$。切线在 $t = 4$ 时到达极限，说明 $k = \\frac{1}{4}$。",
   ],
   (rng) => {
     const y0 = rng.int(0, 3);
@@ -556,7 +556,8 @@ const inhibitedRate = point(
       [y0, String(y0)],
       [L, String(L)],
     ]);
-    return ask(
+    const k = Q.of(1, tau);
+    return figureNumber(
       kind === "k"
         ? [
             `The curve solves $y' = k(L - y)$. The horizontal dashed line is its limit, and the slanted dashed line is its tangent at $t = 0$. Find $k$.`,
@@ -566,12 +567,43 @@ const inhibitedRate = point(
             `The curve solves $y' = k(L - y)$. The horizontal dashed line is its limit, and the slanted dashed line is its tangent at $t = 0$. Find $y'(0)$.`,
             `这条曲线是 $y' = k(L - y)$ 的解。水平虚线是它的极限，斜虚线是它在 $t = 0$ 处的切线。求 $y'(0)$。`,
           ],
-      kind === "k" ? Q.of(1, tau) : start,
-      kind === "k" ? [tau, Q.of(L - y0, tau), Q.of(1, L), Q.of(y0 + 1, tau)] : [Q.of(1, tau), L - y0, Q.of(L, tau), Q.of(tau, L - y0)],
+      kind === "k" ? k : start,
       [
-        `The tangent climbs from $${y0}$ to $${L}$ in time $${tau}$, so $y'(0) = \\frac{${L - y0}}{${tau}}$ and $k = \\frac{1}{${tau}}$.`,
-        `切线在时间 $${tau}$ 内从 $${y0}$ 升到 $${L}$，所以 $y'(0) = \\frac{${L - y0}}{${tau}}$，$k = \\frac{1}{${tau}}$。`,
+        stepOf(
+          ["Read the tangent", "读出切线"],
+          [`The tangent climbs from $${y0}$ to the limit $${L}$ in time $${tau}$.`, `切线在时间 $${tau}$ 内从 $${y0}$ 升到极限 $${L}$。`],
+          `y'(0) = (${L} - ${y0}) \\div ${tau} = ${start.toLatex()}`,
+        ),
+        stepOf(
+          ["Divide by the gap", "除以差距"],
+          ["Since $y'(0) = k(L - y(0))$:", "由于 $y'(0) = k(L - y(0))$："],
+          `k = ${start.toLatex()} \\div ${L - y0} = ${k.toLatex()}`,
+        ),
       ],
+      [
+        `With $k = ${k.toLatex()}$ the tangent reaches the limit at $t = \\frac{1}{k} = ${tau}$, where the drawing shows it.`,
+        `取 $k = ${k.toLatex()}$，切线在 $t = \\frac{1}{k} = ${tau}$ 时到达极限，与图一致。`,
+      ],
+      kind === "k"
+        ? [
+            [
+              tau,
+              "That is the time $\\frac{1}{k}$ where the tangent meets the limit; take its reciprocal.",
+              "这是切线与极限相交的时刻 $\\frac{1}{k}$；要取倒数。",
+            ],
+            [start, "That is the starting slope $y'(0)$; divide it by $L - y(0)$.", "这是初始斜率 $y'(0)$；还要除以 $L - y(0)$。"],
+            [
+              Q.of(1, L),
+              "That divides by the limit instead of reading the time where the tangent meets it.",
+              "这除以了极限值，而应读出切线与它相交的时刻。",
+            ],
+          ]
+        : [
+            [k, "That is $k$; the slope is $k$ times the gap $L - y(0)$.", "这是 $k$；斜率是 $k$ 乘以差距 $L - y(0)$。"],
+            [L - y0, "That is the rise of the tangent; divide by the time it takes.", "这是切线升高的量；还要除以所用时间。"],
+            [Q.of(L, tau), "That measures the rise from $0$ instead of from $y(0)$.", "这从 $0$ 而不是从 $y(0)$ 量升高。"],
+            [Q.of(tau, L - y0), "That divides the run by the rise, upside down.", "这用水平距离除以升高，颠倒了。"],
+          ],
       figureOf(svg, [
         `A curve rising from ${y0} toward the dashed limit ${L}, with a tangent at t = 0 that reaches the limit at t = ${tau}.`,
         `从 ${y0} 上升并趋于虚线极限 ${L} 的曲线，t = 0 处的切线在 t = ${tau} 时到达极限。`,
@@ -584,8 +616,8 @@ const coolingLimit = point(
   "the-surroundings-of-a-drawn-cooling-curve",
   ["The surroundings of a drawn cooling curve", "所画冷却曲线的环境"],
   [
-    "Inhibited decay $y' = -k(y - L)$ falls toward the limit $L$, the temperature of the surroundings. At any time, the rate of change is $-k$ times the distance above the limit.",
-    "受限衰减 $y' = -k(y - L)$ 下降并趋于极限 $L$，即环境温度。任何时刻的变化率都是 $-k$ 乘以高出极限的距离。",
+    "Inhibited decay $y' = -k(y - L)$ falls toward the limit $L$, the temperature of the surroundings. At any time, the rate of change is $-k$ times the distance above the limit.\n\n> **Watch out.** Measure from the dashed limit, not from zero. With $L = 20$, $k = \\frac{1}{5}$ and $y = 30$, $y' = -\\frac{1}{5} \\cdot 10 = -2$, not $-\\frac{1}{5} \\cdot 30 = -6$.",
+    "受限衰减 $y' = -k(y - L)$ 下降并趋于极限 $L$，即环境温度。任何时刻的变化率都是 $-k$ 乘以高出极限的距离。\n\n> **注意。** 要从虚线极限量起，而不是从零。若 $L = 20$，$k = \\frac{1}{5}$，$y = 30$，则 $y' = -\\frac{1}{5} \\cdot 10 = -2$，不是 $-\\frac{1}{5} \\cdot 30 = -6$。",
   ],
   (rng) => {
     const L = rng.pick([10, 20, 30]);
@@ -604,16 +636,29 @@ const coolingLimit = point(
       (x, y) => curvePath(f, 0, 5 * tau, x, y) + guide(x, y, [0, L], [5 * tau, L]),
     );
     const answer = Q.of(-(now - L), tau);
-    return ask(
+    return figureNumber(
       [
         `The curve shows a temperature with $y' = -k(y - L)$ and $k = \\frac{1}{${tau}}$. The dashed line is its limit. Find $y'$ at the moment when $y = ${now}$.`,
         `曲线表示温度，满足 $y' = -k(y - L)$，$k = \\frac{1}{${tau}}$。虚线是它的极限。求 $y = ${now}$ 时的 $y'$。`,
       ],
       answer,
-      [Q.of(now - L, tau), Q.of(-now, tau), Q.of(-(y0 - L), tau), Q.of(-(now - L), 1)],
       [
-        `The dashed line gives $L = ${L}$, so $y' = -\\frac{1}{${tau}}(${now} - ${L}) = ${answer.toLatex()}$.`,
-        `由虚线得 $L = ${L}$，所以 $y' = -\\frac{1}{${tau}}(${now} - ${L}) = ${answer.toLatex()}$。`,
+        stepOf(
+          ["Read the limit", "读出极限"],
+          ["The dashed line is the temperature of the surroundings.", "虚线是环境温度。"],
+          `L = ${L}, \\qquad y - L = ${now} - ${L} = ${now - L}`,
+        ),
+        stepOf(["Apply the law", "代入定律"], ["", ""], `y' = -\\frac{1}{${tau}} \\cdot ${now - L} = ${answer.toLatex()}`),
+      ],
+      [
+        `The rate is negative because $y = ${now}$ is above the limit $${L}$, so the temperature is still falling, and it is smaller in size than the starting rate $\\frac{${y0 - L}}{${tau}}$.`,
+        `变化率为负，因为 $y = ${now}$ 高于极限 $${L}$，温度仍在下降；它的大小也小于初始速率 $\\frac{${y0 - L}}{${tau}}$。`,
+      ],
+      [
+        [Q.of(now - L, tau), "The sign is lost: above the limit the temperature falls.", "丢了负号：高于极限时温度下降。"],
+        [Q.of(-now, tau), "That measures from zero instead of from the limit $L$.", "这从零量起，而应从极限 $L$ 量起。"],
+        [Q.of(-(y0 - L), tau), `That uses the starting temperature instead of $y = ${now}$.`, `这用了初始温度，而不是 $y = ${now}$。`],
+        [Q.of(-(now - L), 1), "That forgets to multiply by $k$.", "这忘了乘以 $k$。"],
       ],
       figureOf(svg, [`A curve falling from ${y0} toward the dashed limit ${L}.`, `从 ${y0} 下降并趋于虚线极限 ${L} 的曲线。`]),
     );
@@ -624,8 +669,8 @@ const terminalDrag = point(
   "linear-drag-from-a-drawn-velocity-curve",
   ["Linear drag from a drawn velocity curve", "由所画的速度曲线求线性阻力"],
   [
-    "With linear drag, $v' = g - cv$. The velocity levels off when $v' = 0$, at the terminal velocity $v_T = \\frac{g}{c}$, so reading $v_T$ gives $c$.",
-    "线性阻力下 $v' = g - cv$。速度在 $v' = 0$ 时趋于稳定，终端速度为 $v_T = \\frac{g}{c}$，所以读出 $v_T$ 就得到 $c$。",
+    "With linear drag, $v' = g - cv$. The velocity levels off when $v' = 0$, at the terminal velocity $v_T = \\frac{g}{c}$, so reading $v_T$ gives $c$.\n\n> **Watch out.** Solve $g = cv_T$ for $c$: it is $\\frac{g}{v_T}$, not $\\frac{v_T}{g}$. A curve levelling off at $20$ with $g = 10$ gives $c = \\frac{1}{2}$, not $2$.",
+    "线性阻力下 $v' = g - cv$。速度在 $v' = 0$ 时趋于稳定，终端速度为 $v_T = \\frac{g}{c}$，所以读出 $v_T$ 就得到 $c$。\n\n> **注意。** 由 $g = cv_T$ 解出 $c$：它是 $\\frac{g}{v_T}$，不是 $\\frac{v_T}{g}$。曲线趋于 $20$、$g = 10$ 时，$c = \\frac{1}{2}$，不是 $2$。",
   ],
   (rng) => {
     const g = 10;
@@ -643,7 +688,7 @@ const terminalDrag = point(
     );
     const c = Q.of(g, vT);
     const answer = kind === "c" ? c : Q.of(m * g, vT);
-    return ask(
+    return figureNumber(
       kind === "c"
         ? [
             `An object falls from rest with $v' = 10 - cv$, and the curve shows $v$ with its dashed limit. Find $c$.`,
@@ -654,11 +699,37 @@ const terminalDrag = point(
             `质量为 $${m}$ 的物体从静止下落，$mv' = 10m - bv$，曲线表示 $v$，虚线是它的极限。求 $b$。`,
           ],
       answer,
-      kind === "c" ? [vT, Q.of(vT, g), Q.of(1, vT), Q.of(g, 2 * vT)] : [Q.of(g, vT), Q.of(m, vT), Q.of(vT, m * g), m * g],
       [
-        `The limit is $v_T = ${vT}$, where $v' = 0$. ${kind === "c" ? `So $10 = c(${vT})$ and $c = ${c.toLatex()}$.` : `So $10(${m}) = b(${vT})$ and $b = ${answer.toLatex()}$.`}`,
-        `极限为 $v_T = ${vT}$，此时 $v' = 0$。${kind === "c" ? `所以 $10 = c(${vT})$，$c = ${c.toLatex()}$。` : `所以 $10(${m}) = b(${vT})$，$b = ${answer.toLatex()}$。`}`,
+        stepOf(["Read the limit", "读出极限"], ["The velocity levels off where $v' = 0$.", "速度在 $v' = 0$ 处趋于稳定。"], `v_T = ${vT}`),
+        kind === "c"
+          ? stepOf(["Solve for c", "解出 c"], ["", ""], `10 - c \\cdot ${vT} = 0, \\qquad c = 10 \\div ${vT} = ${c.toLatex()}`)
+          : stepOf(
+              ["Solve for b", "解出 b"],
+              ["", ""],
+              `10 \\cdot ${m} - b \\cdot ${vT} = 0, \\qquad b = ${10 * m} \\div ${vT} = ${answer.toLatex()}`,
+            ),
       ],
+      kind === "c"
+        ? [
+            `At $v = ${vT}$, $v' = 10 - ${c.toLatex()} \\cdot ${vT} = 0$, so the curve is level there.`,
+            `在 $v = ${vT}$ 处，$v' = 10 - ${c.toLatex()} \\cdot ${vT} = 0$，所以曲线在那里是水平的。`,
+          ]
+        : [
+            `At $v = ${vT}$ the drag is $${answer.toLatex()} \\cdot ${vT} = ${10 * m}$, the weight, so $v' = 0$ there.`,
+            `在 $v = ${vT}$ 处阻力为 $${answer.toLatex()} \\cdot ${vT} = ${10 * m}$，等于重力，所以那里 $v' = 0$。`,
+          ],
+      kind === "c"
+        ? [
+            [vT, "That is the terminal velocity itself; $c$ comes from $10 = cv_T$.", "这是终端速度本身；$c$ 要由 $10 = cv_T$ 求出。"],
+            [Q.of(vT, g), "That divides $v_T$ by $g$, the wrong way round.", "这用 $v_T$ 除以 $g$，颠倒了。"],
+            [Q.of(1, vT), "That leaves out $g = 10$.", "这漏了 $g = 10$。"],
+          ]
+        : [
+            [Q.of(g, vT), "That is $c = \\frac{b}{m}$; multiply by the mass for $b$.", "这是 $c = \\frac{b}{m}$；乘以质量才得 $b$。"],
+            [Q.of(m, vT), "That leaves out $g = 10$ in the weight $10m$.", "这在重力 $10m$ 中漏了 $g = 10$。"],
+            [Q.of(vT, m * g), "That divides $v_T$ by the weight, the wrong way round.", "这用 $v_T$ 除以重力，颠倒了。"],
+            [m * g, "That is the weight $10m$; divide it by $v_T$.", "这是重力 $10m$；还要除以 $v_T$。"],
+          ],
       figureOf(svg, [`A velocity curve from 0 rising toward the dashed limit ${vT}.`, `从 0 上升并趋于虚线极限 ${vT} 的速度曲线。`]),
     );
   },
@@ -668,8 +739,8 @@ const rcCircuit = point(
   "an-rc-circuit-from-a-drawn-charging-curve",
   ["An RC circuit from a drawn charging curve", "由所画充电曲线求 RC 电路"],
   [
-    "A charging capacitor has $RQ' + \\frac{Q}{C} = V$, so $Q$ approaches $CV$ with time constant $\\tau = RC$. The tangent at $t = 0$ reaches the limit at $t = \\tau$.",
-    "充电电容满足 $RQ' + \\frac{Q}{C} = V$，所以 $Q$ 趋于 $CV$，时间常数 $\\tau = RC$。$t = 0$ 处的切线在 $t = \\tau$ 时到达极限。",
+    "A charging capacitor has $RQ' + \\frac{Q}{C} = V$, so $Q$ approaches $CV$ with time constant $\\tau = RC$. The tangent at $t = 0$ reaches the limit at $t = \\tau$.\n\n> **Watch out.** The drawing gives $\\tau = RC$, so divide by $R$ to get $C$. A tangent meeting the limit at $t = 6$ with $R = 3$ means $C = 2$, not $6$.",
+    "充电电容满足 $RQ' + \\frac{Q}{C} = V$，所以 $Q$ 趋于 $CV$，时间常数 $\\tau = RC$。$t = 0$ 处的切线在 $t = \\tau$ 时到达极限。\n\n> **注意。** 图给出的是 $\\tau = RC$，所以要除以 $R$ 才得 $C$。切线在 $t = 6$ 时到达极限且 $R = 3$，则 $C = 2$，不是 $6$。",
   ],
   (rng) => {
     const tau = rng.int(1, 6);
@@ -687,16 +758,29 @@ const rcCircuit = point(
               .replace(/\\frac\{(\d+)\}\{(\d+)\}/, "$1/$2"),
       ],
     ]);
-    return ask(
+    return figureNumber(
       [
         `The curve shows the charge on a capacitor in an RC circuit with $R = ${R}$, charged from zero. The horizontal dashed line is the limit, and the slanted dashed line is the tangent at $t = 0$. Find $C$.`,
         `曲线表示电阻 $R = ${R}$ 的 RC 电路中从零开始充电的电容电荷。水平虚线是极限，斜虚线是 $t = 0$ 处的切线。求 $C$。`,
       ],
       C,
-      [tau, R * tau, Q.of(R, tau), Q.of(1, tau)],
       [
-        `The tangent reaches the limit at $t = ${tau}$, so $\\tau = RC = ${tau}$ and $C = \\frac{${tau}}{${R}} = ${C.toLatex()}$.`,
-        `切线在 $t = ${tau}$ 时到达极限，所以 $\\tau = RC = ${tau}$，$C = \\frac{${tau}}{${R}} = ${C.toLatex()}$。`,
+        stepOf(
+          ["Read the time constant", "读出时间常数"],
+          ["The tangent at $t = 0$ reaches the limit at $t = \\tau$.", "$t = 0$ 处的切线在 $t = \\tau$ 时到达极限。"],
+          `\\tau = RC = ${tau}`,
+        ),
+        stepOf(["Divide by R", "除以 R"], ["", ""], `C = ${tau} \\div ${R} = ${C.toLatex()}`),
+      ],
+      [
+        `Then $RC = ${R} \\cdot ${C.toLatex()} = ${tau}$, the time where the drawn tangent meets the limit.`,
+        `于是 $RC = ${R} \\cdot ${C.toLatex()} = ${tau}$，正是所画切线与极限相交的时刻。`,
+      ],
+      [
+        [tau, "That is the time constant $RC$; divide it by $R$.", "这是时间常数 $RC$；还要除以 $R$。"],
+        [R * tau, "That multiplies by $R$ instead of dividing.", "这乘以了 $R$，而应相除。"],
+        [Q.of(R, tau), "That divides $R$ by the time constant, the wrong way round.", "这用 $R$ 除以时间常数，颠倒了。"],
+        [Q.of(tau, V), "That divides by the voltage instead of the resistance.", "这除以了电压，而应除以电阻。"],
       ],
       figureOf(svg, [
         `A curve rising from 0 toward a dashed limit, with a tangent at t = 0 that reaches the limit at t = ${tau}.`,
@@ -710,18 +794,18 @@ const rlCircuit = point(
   "an-rl-circuit-from-a-drawn-current-curve",
   ["An RL circuit from a drawn current curve", "由所画电流曲线求 RL 电路"],
   [
-    "An RL circuit has $LI' + RI = V$. The current levels off when $I' = 0$, at $I = \\frac{V}{R}$, and the time constant is $\\tau = \\frac{L}{R}$.",
-    "RL 电路满足 $LI' + RI = V$。电流在 $I' = 0$ 时趋于稳定，$I = \\frac{V}{R}$，时间常数 $\\tau = \\frac{L}{R}$。",
+    "An RL circuit has $LI' + RI = V$. The current levels off when $I' = 0$, at $I = \\frac{V}{R}$, and the time constant is $\\tau = \\frac{L}{R}$.\n\n> **Watch out.** The time constant is $\\frac{L}{R}$, so $L = R\\tau$. A tangent meeting the limit at $t = 2$ with $R = 5$ means $L = 10$, not $2$.",
+    "RL 电路满足 $LI' + RI = V$。电流在 $I' = 0$ 时趋于稳定，$I = \\frac{V}{R}$，时间常数 $\\tau = \\frac{L}{R}$。\n\n> **注意。** 时间常数是 $\\frac{L}{R}$，所以 $L = R\\tau$。切线在 $t = 2$ 时到达极限且 $R = 5$，则 $L = 10$，不是 $2$。",
   ],
   (rng) => {
     const limit = rng.int(1, 8);
-    const R = rng.int(1, 6);
+    const R = rng.int(2, 6);
     const tau = rng.int(1, 5);
     const V = limit * R;
     const svg = approach(0, limit, tau, 5 * tau, limit * 1.2, [[limit, String(limit)]]);
     const kind = rng.pick(["R", "L"] as const);
     const answer = kind === "R" ? R : R * tau;
-    return ask(
+    return figureNumber(
       kind === "R"
         ? [
             `The curve shows the current in an RL circuit with constant voltage $V = ${V}$, with its dashed limit. Find $R$.`,
@@ -732,15 +816,44 @@ const rlCircuit = point(
             `曲线表示 $R = ${R}$ 的 RL 电路中从零开始的电流。水平虚线是极限，斜虚线是 $t = 0$ 处的切线。求 $L$。`,
           ],
       answer,
-      kind === "R" ? [V, limit, V + limit, V * limit] : [R, tau, R + tau, limit * tau],
       kind === "R"
         ? [
-            `The current levels off at $${limit} = \\frac{${V}}{R}$, so $R = ${R}$.`,
-            `电流趋于 $${limit} = \\frac{${V}}{R}$，所以 $R = ${R}$。`,
+            stepOf(
+              ["Read the limit", "读出极限"],
+              ["The current levels off where $I' = 0$.", "电流在 $I' = 0$ 处趋于稳定。"],
+              `I_\\infty = ${limit}`,
+            ),
+            stepOf(["Solve for R", "解出 R"], ["", ""], `R \\cdot ${limit} = ${V}, \\qquad R = ${V} \\div ${limit} = ${R}`),
           ]
         : [
-            `The tangent reaches the limit at $t = ${tau}$, so $\\frac{L}{${R}} = ${tau}$ and $L = ${answer}$.`,
-            `切线在 $t = ${tau}$ 时到达极限，所以 $\\frac{L}{${R}} = ${tau}$，$L = ${answer}$。`,
+            stepOf(
+              ["Read the time constant", "读出时间常数"],
+              ["The tangent at $t = 0$ reaches the limit at $t = \\tau$.", "$t = 0$ 处的切线在 $t = \\tau$ 时到达极限。"],
+              `\\tau = \\frac{L}{${R}} = ${tau}`,
+            ),
+            stepOf(["Solve for L", "解出 L"], ["", ""], `L = ${R} \\cdot ${tau} = ${answer}`),
+          ],
+      kind === "R"
+        ? [
+            `With $R = ${R}$ the steady current is $${V} \\div ${R} = ${limit}$, the dashed level.`,
+            `取 $R = ${R}$，稳态电流为 $${V} \\div ${R} = ${limit}$，正是虚线的高度。`,
+          ]
+        : [
+            `Then $\\frac{L}{R} = ${answer} \\div ${R} = ${tau}$, the time where the drawn tangent meets the limit.`,
+            `于是 $\\frac{L}{R} = ${answer} \\div ${R} = ${tau}$，正是所画切线与极限相交的时刻。`,
+          ],
+      kind === "R"
+        ? [
+            [V, "That is the voltage; divide it by the steady current.", "这是电压；还要除以稳态电流。"],
+            [limit, "That is the steady current read from the drawing, not the resistance.", "这是从图中读出的稳态电流，不是电阻。"],
+            [V * limit, "That multiplies the voltage by the current; Ohm's law divides.", "这把电压乘以电流；欧姆定律是相除。"],
+            [Q.of(limit, V), "That divides the current by the voltage, the wrong way round.", "这用电流除以电压，颠倒了。"],
+          ]
+        : [
+            [tau, "That is the time constant $\\frac{L}{R}$; multiply by $R$.", "这是时间常数 $\\frac{L}{R}$；还要乘以 $R$。"],
+            [R, "That is the resistance, not the inductance.", "这是电阻，不是电感。"],
+            [Q.of(tau, R), "That divides the time constant by $R$ instead of multiplying.", "这把时间常数除以 $R$，而应相乘。"],
+            [limit * tau, "That multiplies by the steady current instead of the resistance.", "这乘以了稳态电流，而应乘以电阻。"],
           ],
       figureOf(svg, [
         `A curve rising from 0 toward the dashed limit ${limit}, with a tangent at t = 0 that reaches the limit at t = ${tau}.`,
@@ -1468,8 +1581,8 @@ const orthogonalFamily = point(
   "orthogonal-trajectories-of-a-drawn-family",
   ["Orthogonal trajectories of a drawn family", "所画曲线族的正交轨线"],
   [
-    "For the family $y = cx^n$, eliminating $c$ gives $y' = \\frac{ny}{x}$. The orthogonal trajectories have the negative reciprocal slope, $y' = -\\frac{x}{ny}$, and separating variables gives $x^2 + ny^2 = K$.",
-    "对曲线族 $y = cx^n$，消去 $c$ 得 $y' = \\frac{ny}{x}$。正交轨线的斜率为负倒数，$y' = -\\frac{x}{ny}$，分离变量得 $x^2 + ny^2 = K$。",
+    "For the family $y = cx^n$, eliminating $c$ gives $y' = \\frac{ny}{x}$. The orthogonal trajectories have the negative reciprocal slope, $y' = -\\frac{x}{ny}$, and separating variables gives $x^2 + ny^2 = K$.\n\n> **Watch out.** Read $n$ from the shape of the curves, and keep the plus sign. For parabolas $y = cx^2$ the trajectories are the ellipses $x^2 + 2y^2 = K$, not the hyperbolas $x^2 - 2y^2 = K$.",
+    "对曲线族 $y = cx^n$，消去 $c$ 得 $y' = \\frac{ny}{x}$。正交轨线的斜率为负倒数，$y' = -\\frac{x}{ny}$，分离变量得 $x^2 + ny^2 = K$。\n\n> **注意。** 从曲线的形状读出 $n$，并保留加号。对抛物线 $y = cx^2$，正交轨线是椭圆 $x^2 + 2y^2 = K$，不是双曲线 $x^2 - 2y^2 = K$。",
   ],
   (rng) => {
     const n = rng.int(1, 3);
@@ -1477,17 +1590,47 @@ const orthogonalFamily = point(
     const marks: PlaneMark[] = cs.map((c): PlaneMark => ({ kind: "curve", f: (v) => c * v ** n, accent: true }));
     const form = (k: number) => same(`x^2 + ${k === 1 ? "" : k}y^2 = K`);
     const name = n === 1 ? "y = cx" : `y = cx^${n}`;
-    return choose(
+    const shape = (k: number): Pair => (k === 1 ? ["lines $y = cx$", "直线 $y = cx$"] : [`curves $y = cx^{${k}}$`, `曲线 $y = cx^{${k}}$`]);
+    const others: Because<Pair>[] = [1, 2, 3, 4]
+      .filter((k) => k !== n)
+      .map((k) => [
+        form(k),
+        `That belongs to the ${shape(k)[0]}; the drawn curves are ${["lines", "parabolas", "cubics"][n - 1]}, so $n = ${n}$.`,
+        `这属于${shape(k)[1]}；所画的是${["直线", "抛物线", "三次曲线"][n - 1]}，所以 $n = ${n}$。`,
+      ]);
+    return figureChoice(
       rng,
       [
         "The curves are members of the family $y = cx^n$, where $n$ is $1$, $2$ or $3$. Lines have $n = 1$, parabolas $n = 2$ and cubics $n = 3$. Which equation gives the orthogonal trajectories of the family?",
         "这些曲线属于曲线族 $y = cx^n$，$n$ 是 $1$、$2$ 或 $3$。直线对应 $n = 1$，抛物线对应 $n = 2$，三次曲线对应 $n = 3$。哪个方程给出该曲线族的正交轨线？",
       ],
       form(n),
-      [...[1, 2, 3, 4].filter((k) => k !== n).map((k) => form(k)), same(`x^2 - ${n === 1 ? "" : n}y^2 = K`)].slice(0, 4),
       [
-        `The curves are $${name}$, so $y' = ${n === 1 ? "\\frac{y}{x}" : `\\frac{${n}y}{x}`}$. The trajectories have $y' = -\\frac{x}{${n === 1 ? "" : n}y}$, and separating variables gives $x^2 + ${n === 1 ? "" : n}y^2 = K$.`,
-        `曲线为 $${name}$，所以 $y' = ${n === 1 ? "\\frac{y}{x}" : `\\frac{${n}y}{x}`}$。正交轨线满足 $y' = -\\frac{x}{${n === 1 ? "" : n}y}$，分离变量得 $x^2 + ${n === 1 ? "" : n}y^2 = K$。`,
+        ...others,
+        [
+          same(`x^2 - ${n === 1 ? "" : n}y^2 = K`),
+          "That keeps the family's slope sign; the trajectories need the negative reciprocal, which gives a plus sign.",
+          "这保留了曲线族斜率的符号；正交轨线要取负倒数，得到的是加号。",
+        ],
+      ],
+      [
+        stepOf(
+          ["Read the family", "读出曲线族"],
+          [
+            `The drawn curves are ${["lines", "parabolas", "cubics"][n - 1]}, so they are $${name}$.`,
+            `所画的是${["直线", "抛物线", "三次曲线"][n - 1]}，所以是 $${name}$。`,
+          ],
+          `y' = ${n === 1 ? "\\frac{y}{x}" : `\\frac{${n}y}{x}`}`,
+        ),
+        stepOf(
+          ["Take the negative reciprocal", "取负倒数"],
+          ["Then separate the variables.", "再分离变量。"],
+          `y' = -\\frac{x}{${n === 1 ? "" : n}y}, \\qquad ${n === 1 ? "" : n}y\\,dy = -x\\,dx, \\qquad x^2 + ${n === 1 ? "" : n}y^2 = K`,
+        ),
+      ],
+      [
+        `The product of the slopes is $${n === 1 ? "\\frac{y}{x}" : `\\frac{${n}y}{x}`} \\cdot \\left(-\\frac{x}{${n === 1 ? "" : n}y}\\right) = -1$, so the curves cross at right angles.`,
+        `两斜率之积为 $${n === 1 ? "\\frac{y}{x}" : `\\frac{${n}y}{x}`} \\cdot \\left(-\\frac{x}{${n === 1 ? "" : n}y}\\right) = -1$，所以曲线垂直相交。`,
       ],
       drawn(
         { xMin: -4, xMax: 4, yMin: -4, yMax: 4 },

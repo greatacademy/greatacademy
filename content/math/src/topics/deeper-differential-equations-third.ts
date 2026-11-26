@@ -8,7 +8,7 @@ import { linear, paren, poly, Q } from "@ga/subject-math";
 import { differentialEquationsDrawings1 } from "../explanation-drawings-differential-equations-1.ts";
 
 import { explainedChoice, numberProblem, why } from "../problems.ts";
-import { ask, type Pair, point } from "../university-kit.ts";
+import { type Pair, point } from "../university-kit.ts";
 import { walked } from "./calculus-i-differentiation.ts";
 
 /** apart drops the mistakes whose value is the answer or repeats an earlier one. */
@@ -418,8 +418,8 @@ const ambientFromReadings = point(
   "the-room-temperature-from-three-readings",
   ["The room temperature from three readings", "由三个读数求室温"],
   [
-    "Under Newton's law the difference $T - A$ shrinks by the same factor over equal times, so $(T_{1} - A)^{2} = (T_{0} - A)(T_{2} - A)$. Three equally spaced readings therefore give the room temperature without knowing the rate constant, and it is lower than every reading.",
-    "按牛顿定律，差值 $T - A$ 在相等的时间内按相同比例缩小，所以 $(T_{1} - A)^{2} = (T_{0} - A)(T_{2} - A)$。因此三个等间隔的读数不需要速率常数就能给出室温，而且它低于每个读数。",
+    "Under Newton's law the difference $T - A$ shrinks by the same factor over equal times, so $(T_{1} - A)^{2} = (T_{0} - A)(T_{2} - A)$. Three equally spaced readings therefore give the room temperature without knowing the rate constant, and it is lower than every reading.\n\n> **Watch out.** The room is not the last reading: the object is still cooling. For readings $90$, $50$, $30$ the drops halve, so $(50 - A)^{2} = (90 - A)(30 - A)$ gives $A = 10$, not $30$.",
+    "按牛顿定律，差值 $T - A$ 在相等的时间内按相同比例缩小，所以 $(T_{1} - A)^{2} = (T_{0} - A)(T_{2} - A)$。因此三个等间隔的读数不需要速率常数就能给出室温，而且它低于每个读数。\n\n> **注意。** 室温不是最后一个读数：物体还在冷却。读数为 $90$、$50$、$30$ 时降幅每次减半，由 $(50 - A)^{2} = (90 - A)(30 - A)$ 得 $A = 10$，不是 $30$。",
   ],
   (rng) => {
     const A = rng.int(10, 30);
@@ -429,18 +429,50 @@ const ambientFromReadings = point(
     const T1 = A + d * ratio;
     const T0 = A + d * ratio * ratio;
     const gap = rng.int(2, 20);
-    return ask(
-      [
+    const coef = T0 + T2 - 2 * T1;
+    const rhs = T0 * T2 - T1 * T1;
+    return numberProblem({
+      prompt: t(
         `An object cools by Newton's law. Its temperature is $${T0}$ degrees at first, $${T1}$ degrees after $${gap}$ minutes and $${T2}$ degrees after $${2 * gap}$ minutes. Find the room temperature.`,
         `一个物体按牛顿定律冷却。它的温度开始时是 $${T0}$ 度，$${gap}$ 分钟后是 $${T1}$ 度，$${2 * gap}$ 分钟后是 $${T2}$ 度。求室温。`,
-      ],
-      A,
-      [T2, T1, Q.of(T0 + T1 + T2, 3)],
-      [
-        `$(${T1} - A)^{2} = (${T0} - A)(${T2} - A)$. The $A^{2}$ terms cancel, and solving the linear equation gives $A = ${A}$. Check: the differences $${T0 - A}$, $${T1 - A}$ and $${T2 - A}$ shrink by the same factor.`,
-        `$(${T1} - A)^{2} = (${T0} - A)(${T2} - A)$。$A^{2}$ 项抵消，解一次方程得 $A = ${A}$。检验：差值 $${T0 - A}$、$${T1 - A}$ 和 $${T2 - A}$ 按相同比例缩小。`,
-      ],
-    );
+      ),
+      answer: A,
+      mistakes: apart(A, [
+        why(
+          T2,
+          "That is the last reading; the object is still cooling, so the room is colder.",
+          "这是最后一个读数；物体还在冷却，所以室温更低。",
+        ),
+        why(
+          Q.of(T0 + T1 + T2, 3),
+          "That averages the readings; the room temperature is below all of them.",
+          "这是读数的平均值；室温比每个读数都低。",
+        ),
+        why(
+          2 * T2 - T1,
+          "That lets the temperature drop once more by the same amount and stop; the drops keep shrinking.",
+          "这让温度再降同样的量就停下；降幅其实在不断缩小。",
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Use the equal factor", "用相同的比例"],
+            t("The differences from the room form a geometric sequence.", "与室温之差构成等比数列。"),
+            [`(${T1} - A)^{2} = (${T0} - A)(${T2} - A)`],
+          ],
+          [
+            ["Expand and solve", "展开并求解"],
+            t("The $A^{2}$ terms cancel.", "$A^{2}$ 项抵消。"),
+            [`${T1 * T1} - ${2 * T1}A = ${T0 * T2} - ${T0 + T2}A`, `${coef}A = ${rhs}, \\qquad A = ${A}`],
+          ],
+        ],
+        t(
+          `The differences $${T0 - A}$, $${T1 - A}$ and $${T2 - A}$ each shrink by the factor $\\frac{1}{${ratio}}$, and $${A}$ is below every reading.`,
+          `差值 $${T0 - A}$、$${T1 - A}$、$${T2 - A}$ 每次都缩小为 $\\frac{1}{${ratio}}$，并且 $${A}$ 低于每个读数。`,
+        ),
+      ),
+    });
   },
 );
 
