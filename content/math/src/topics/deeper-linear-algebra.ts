@@ -2419,8 +2419,8 @@ const perpendicularEigenvectors: KnowledgePointDef = {
   figure: linearAlgebraDrawings2["symmetric-matrices#the-second-eigenvector-of-a-symmetric-matrix"],
   title: t("The second eigenvector of a symmetric matrix", "对称矩阵的第二个特征向量"),
   explanation: t(
-    "Eigenvectors of a symmetric matrix that belong to different eigenvalues are perpendicular. So knowing one eigenvector is enough to fix the direction of the other in the plane, with no need to know the matrix.",
-    "对称矩阵属于不同特征值的特征向量互相垂直。所以在平面上，知道一个特征向量就确定了另一个的方向，甚至不需要知道矩阵本身。",
+    "Eigenvectors of a symmetric matrix that belong to different eigenvalues are perpendicular. So knowing one eigenvector is enough to fix the direction of the other in the plane, with no need to know the matrix. For example, if $(2, 3)$ and $(k, 4)$ are eigenvectors for different eigenvalues, then $2k + 3 \\cdot 4 = 0$, so $k = -6$.\n\n> **Watch out.** Pair the components in order: the first with the first and the second with the second. Then move the known product across with its sign changed before dividing.",
+    "对称矩阵属于不同特征值的特征向量互相垂直。所以在平面上，知道一个特征向量就确定了另一个的方向，甚至不需要知道矩阵本身。例如若 $(2, 3)$ 与 $(k, 4)$ 是不同特征值的特征向量，则 $2k + 3 \\cdot 4 = 0$，所以 $k = -6$。\n\n> **注意。** 分量要按顺序配对：第一个乘第一个，第二个乘第二个。然后把已知的乘积变号移到另一边，再做除法。",
   ),
   generate(rng) {
     const p = nonzero(rng, 4);
@@ -2429,6 +2429,7 @@ const perpendicularEigenvectors: KnowledgePointDef = {
     const l1 = nonzero(rng, 5);
     const l2 = l1 > 0 ? l1 + rng.int(1, 4) : l1 - rng.int(1, 4);
     const answer = Q.of(-w * q, p);
+    const pk = p === 1 ? "k" : p === -1 ? "-k" : `${p}k`;
     return numberProblem({
       prompt: t(
         `A symmetric matrix $A$ has $A${col(p, q)} = ${l1}${col(p, q)}$ and $A${col("k", w)} = ${l2}${col("k", w)}$. Find $k$.`,
@@ -2437,9 +2438,32 @@ const perpendicularEigenvectors: KnowledgePointDef = {
       answer,
       solveFor: "k",
       wrong: [Q.of(w * q, p), Q.of(-w * p, q), Q.of(w * p, q)],
-      solution: t(
-        `The eigenvalues differ, so the eigenvectors are perpendicular: $${p}k + ${inParens(q)}(${w}) = 0$. So $k = ${answer.toLatex()}$.`,
-        `特征值不同，所以特征向量垂直：$${p}k + ${inParens(q)}(${w}) = 0$。所以 $k = ${answer.toLatex()}$。`,
+      mistakes: [
+        why(
+          Q.of(w * q, p),
+          `The sign is lost: moving $${q * w}$ across gives $${pk} = ${-q * w}$.`,
+          `符号丢了：把 $${q * w}$ 移到另一边得 $${pk} = ${-q * w}$。`,
+        ),
+        why(
+          Q.of(-w * p, q),
+          `The components are paired the wrong way: $k$ multiplies $${p}$, and $${w}$ multiplies $${q}$.`,
+          `分量配对错了：$k$ 乘的是 $${p}$，$${w}$ 乘的是 $${q}$。`,
+        ),
+        why(Q.of(w * p, q), "The components are paired the wrong way and the sign is lost as well.", "分量配对错了，符号也丢了。"),
+      ].filter((m, i, all) => String(m.value) !== String(answer) && all.findIndex((o) => String(o.value) === String(m.value)) === i),
+      solution: walked(
+        [
+          [
+            ["Set the dot product to zero", "令点积为零"],
+            t("The eigenvalues differ, so the eigenvectors are perpendicular:", "特征值不同，所以特征向量垂直："),
+            [`${pk} + ${inParens(q)}(${w}) = 0`],
+          ],
+          [["Solve for k", "解出 k"], t("", ""), [`${pk} = ${-q * w}`, `k = ${answer.toLatex()}`]],
+        ],
+        t(
+          `$${p} \\cdot ${answer.isInteger() ? inParens(answer.toNumber()) : `\\left(${answer.toLatex()}\\right)`} + ${inParens(q)}(${w}) = ${-q * w} + ${inParens(q * w)} = 0$.`,
+          `$${p} \\cdot ${answer.isInteger() ? inParens(answer.toNumber()) : `\\left(${answer.toLatex()}\\right)`} + ${inParens(q)}(${w}) = ${-q * w} + ${inParens(q * w)} = 0$。`,
+        ),
       ),
     });
   },
@@ -2449,8 +2473,8 @@ const evaluatingAQuadraticForm: KnowledgePointDef = {
   id: "evaluating-a-quadratic-form-from-its-matrix",
   title: t("Evaluating a quadratic form from its matrix", "由矩阵计算二次型的值"),
   explanation: t(
-    "The value $\\mathbf{x}^TA\\mathbf{x}$ is a number. Compute $A\\mathbf{x}$ first and then take the dot product with $\\mathbf{x}$. Written out, each off-diagonal entry counts twice, because $a_{ij}x_ix_j$ and $a_{ji}x_jx_i$ are both present.",
-    "$\\mathbf{x}^TA\\mathbf{x}$ 的值是一个数。先算 $A\\mathbf{x}$，再与 $\\mathbf{x}$ 作数量积。展开时，每个非对角元都算两次，因为 $a_{ij}x_ix_j$ 和 $a_{ji}x_jx_i$ 都出现。",
+    "The value $\\mathbf{x}^TA\\mathbf{x}$ is a number. Compute $A\\mathbf{x}$ first and then take the dot product with $\\mathbf{x}$. Written out, each off-diagonal entry counts twice, because $a_{ij}x_ix_j$ and $a_{ji}x_jx_i$ are both present. For example, $A = \\begin{pmatrix} 1 & 2 \\\\ 2 & -1 \\end{pmatrix}$ and $\\mathbf{x} = (1, 1)$ give $A\\mathbf{x} = (3, 1)$ and $\\mathbf{x}^TA\\mathbf{x} = 3 + 1 = 4$, which is also $1 + 2 \\cdot 2 - 1$.\n\n> **Watch out.** Dot $A\\mathbf{x}$ with $\\mathbf{x}$, not with $(1, 1, 1)$. In the written-out sum the off-diagonal entries count twice, and leaving them out keeps only the diagonal part.",
+    "$\\mathbf{x}^TA\\mathbf{x}$ 的值是一个数。先算 $A\\mathbf{x}$，再与 $\\mathbf{x}$ 作数量积。展开时，每个非对角元都算两次，因为 $a_{ij}x_ix_j$ 和 $a_{ji}x_jx_i$ 都出现。例如 $A = \\begin{pmatrix} 1 & 2 \\\\ 2 & -1 \\end{pmatrix}$，$\\mathbf{x} = (1, 1)$ 时 $A\\mathbf{x} = (3, 1)$，$\\mathbf{x}^TA\\mathbf{x} = 3 + 1 = 4$，也等于 $1 + 2 \\cdot 2 - 1$。\n\n> **注意。** 要把 $A\\mathbf{x}$ 与 $\\mathbf{x}$ 作数量积，而不是与 $(1, 1, 1)$。展开式中非对角元算两次，漏掉它们就只剩对角部分。",
   ),
   generate(rng) {
     const [a, b, c] = [rng.int(-3, 4), rng.int(-3, 4), rng.int(-3, 4)];
@@ -2472,9 +2496,38 @@ const evaluatingAQuadraticForm: KnowledgePointDef = {
       answer,
       form: "integer",
       wrong: [diagonal, (answer + diagonal) / 2, dot(Ax, [1, 1, 1])],
-      solution: t(
-        `First $A\\mathbf{x} = (${Ax.join(", ")})$. Its dot product with $\\mathbf{x}$ is $${answer}$.`,
-        `先算 $A\\mathbf{x} = (${Ax.join(", ")})$。它与 $\\mathbf{x}$ 的数量积是 $${answer}$。`,
+      mistakes: [
+        why(
+          diagonal,
+          "That keeps only the diagonal terms; the off-diagonal entries contribute too.",
+          "这只保留了对角项；非对角元也有贡献。",
+        ),
+        why(
+          (answer + diagonal) / 2,
+          "Each off-diagonal entry was counted once; $a_{ij}$ and $a_{ji}$ both contribute.",
+          "每个非对角元只算了一次；$a_{ij}$ 和 $a_{ji}$ 都有贡献。",
+        ),
+        why(
+          dot(Ax, [1, 1, 1]),
+          "That adds the entries of $A\\mathbf{x}$; dot them with $\\mathbf{x}$ instead.",
+          "这是把 $A\\mathbf{x}$ 的分量相加；应与 $\\mathbf{x}$ 作数量积。",
+        ),
+      ].filter((m, i, all) => m.value !== answer && all.findIndex((o) => o.value === m.value) === i),
+      solution: walked(
+        [
+          [["Multiply A by x", "计算 Ax"], t("", ""), [`A\\mathbf{x} = ${col(...Ax)}`]],
+          [
+            ["Dot with x", "与 x 作数量积"],
+            t("", ""),
+            [
+              `${x[0]} \\cdot ${inParens(Ax[0]!)} + ${inParens(x[1]!)} \\cdot ${inParens(Ax[1]!)} + ${inParens(x[2]!)} \\cdot ${inParens(Ax[2]!)} = ${answer}`,
+            ],
+          ],
+        ],
+        t(
+          `Written out, the diagonal terms give $${diagonal}$ and the off-diagonal terms give $2(${d * x[0]! * x[1]!} ${signedTerm(e * x[0]! * x[2]!)} ${signedTerm(f * x[1]! * x[2]!)}) = ${answer - diagonal}$, and $${diagonal} + ${inParens(answer - diagonal)} = ${answer}$.`,
+          `展开后，对角项给出 $${diagonal}$，非对角项给出 $2(${d * x[0]! * x[1]!} ${signedTerm(e * x[0]! * x[2]!)} ${signedTerm(f * x[1]! * x[2]!)}) = ${answer - diagonal}$，而 $${diagonal} + ${inParens(answer - diagonal)} = ${answer}$。`,
+        ),
       ),
     });
   },
@@ -2484,8 +2537,8 @@ const definiteRange: KnowledgePointDef = {
   id: "the-largest-entry-that-keeps-a-form-positive-definite",
   title: t("The largest entry that keeps a form positive definite", "保持二次型正定的最大元素"),
   explanation: t(
-    "A symmetric $\\begin{pmatrix} a & k \\\\ k & b \\end{pmatrix}$ is positive definite exactly when $a > 0$ and $ab - k^2 > 0$. The second inequality is strict, so when $ab$ is a perfect square the value $k = \\sqrt{ab}$ is not allowed: the matrix would be singular.",
-    "对称矩阵 $\\begin{pmatrix} a & k \\\\ k & b \\end{pmatrix}$ 正定，当且仅当 $a > 0$ 且 $ab - k^2 > 0$。第二个不等式是严格的，所以 $ab$ 是完全平方数时不能取 $k = \\sqrt{ab}$：那时矩阵是奇异的。",
+    "A symmetric $\\begin{pmatrix} a & k \\\\ k & b \\end{pmatrix}$ is positive definite exactly when $a > 0$ and $ab - k^2 > 0$. The second inequality is strict, so when $ab$ is a perfect square the value $k = \\sqrt{ab}$ is not allowed: the matrix would be singular. For example, with $a = 2$ and $b = 8$ we need $k^2 < 16$; $k = 4$ makes the determinant $0$, so the largest integer is $k = 3$.\n\n> **Watch out.** The bound $ab$ is on $k^2$, not on $k$, and it is strict: take the largest integer whose square is below $ab$.",
+    "对称矩阵 $\\begin{pmatrix} a & k \\\\ k & b \\end{pmatrix}$ 正定，当且仅当 $a > 0$ 且 $ab - k^2 > 0$。第二个不等式是严格的，所以 $ab$ 是完全平方数时不能取 $k = \\sqrt{ab}$：那时矩阵是奇异的。例如 $a = 2$，$b = 8$ 时需要 $k^2 < 16$；$k = 4$ 使行列式为 $0$，所以最大整数是 $k = 3$。\n\n> **注意。** 界 $ab$ 限制的是 $k^2$，不是 $k$，而且是严格的：取平方小于 $ab$ 的最大整数。",
   ),
   generate(rng) {
     const a = rng.int(1, 6);
@@ -2507,9 +2560,36 @@ const definiteRange: KnowledgePointDef = {
       answer,
       solveFor: "k",
       wrong: [answer + 1, ab, ab - 1],
-      solution: t(
-        `The leading entry $${a}$ is positive, so we need $k^2 < ${ab}$. Now $${answer}^2 = ${answer * answer}$ is below $${ab}$, and $${answer + 1}^2 = ${(answer + 1) ** 2}$ is not.`,
-        `首元素 $${a}$ 为正，所以需要 $k^2 < ${ab}$。而 $${answer}^2 = ${answer * answer}$ 小于 $${ab}$，$${answer + 1}^2 = ${(answer + 1) ** 2}$ 则不小于。`,
+      mistakes: [
+        why(
+          answer + 1,
+          (answer + 1) ** 2 === ab
+            ? `At $k = ${answer + 1}$ the determinant is $${ab} - ${ab} = 0$, and positive definite needs it strictly positive.`
+            : `$${answer + 1}^2 = ${(answer + 1) ** 2}$ is more than $${ab}$, so the determinant would be negative.`,
+          (answer + 1) ** 2 === ab
+            ? `$k = ${answer + 1}$ 时行列式为 $${ab} - ${ab} = 0$，而正定要求它严格为正。`
+            : `$${answer + 1}^2 = ${(answer + 1) ** 2}$ 大于 $${ab}$，行列式会是负的。`,
+        ),
+        why(ab, `$${ab}$ bounds $k^2$, not $k$.`, `$${ab}$ 限制的是 $k^2$，不是 $k$。`),
+        why(ab - 1, `$${ab - 1}$ is the largest allowed value of $k^2$, not of $k$.`, `$${ab - 1}$ 是 $k^2$ 允许的最大值，不是 $k$ 的。`),
+      ].filter((m, i, all) => m.value !== answer && all.findIndex((o) => o.value === m.value) === i),
+      solution: walked(
+        [
+          [
+            ["Write the conditions", "写出条件"],
+            t(`The leading entry $${a}$ is positive, so only the determinant matters:`, `首元素 $${a}$ 为正，所以只需看行列式：`),
+            [`${a} \\cdot ${b} - k^2 > 0`, `k^2 < ${ab}`],
+          ],
+          [
+            ["Find the largest integer", "找出最大整数"],
+            t("", ""),
+            [`${answer}^2 = ${answer * answer} < ${ab}`, `${answer + 1}^2 = ${(answer + 1) ** 2} \\ge ${ab}`],
+          ],
+        ],
+        t(
+          `At $k = ${answer}$ the determinant is $${ab} - ${answer * answer} = ${ab - answer * answer} > 0$, and at $k = ${answer + 1}$ it is $${ab - (answer + 1) ** 2}$, which is not positive.`,
+          `$k = ${answer}$ 时行列式为 $${ab} - ${answer * answer} = ${ab - answer * answer} > 0$，$k = ${answer + 1}$ 时为 $${ab - (answer + 1) ** 2}$，不是正的。`,
+        ),
       ),
     });
   },
@@ -5553,8 +5633,12 @@ const determinantFromQr: KnowledgePointDef = {
         ),
         why(
           answer * Math.abs(p),
-          `That also multiplies in the entry $${p}$ above the diagonal, which does not affect $\\det R$.`,
-          `这还乘上了对角线上方的元素 $${p}$，它不影响 $\\det R$。`,
+          p < 0
+            ? `That also multiplies in $|${p}| = ${-p}$, the size of the entry above the diagonal, which does not affect $\\det R$.`
+            : `That also multiplies in the entry $${p}$ above the diagonal, which does not affect $\\det R$.`,
+          p < 0
+            ? `这还乘上了对角线上方元素的绝对值 $|${p}| = ${-p}$，它不影响 $\\det R$。`
+            : `这还乘上了对角线上方的元素 $${p}$，它不影响 $\\det R$。`,
         ),
         why(
           answer * Math.abs(p * q * s),
@@ -5595,8 +5679,8 @@ const squareRootOfSymmetric: KnowledgePointDef = {
   id: "an-entry-of-the-positive-square-root-of-a-symmetric-matrix",
   title: t("An entry of the positive square root of a symmetric matrix", "对称矩阵正平方根的元素"),
   explanation: t(
-    "The spectral theorem writes a symmetric matrix as $\\lambda_1P_1 + \\lambda_2P_2$, where $P_1$ and $P_2$ are the orthogonal projections onto the eigenspaces. Since $P_1P_2 = 0$ and each $P_i^2 = P_i$, a function can be applied through the eigenvalues alone. So the positive square root of a matrix with positive eigenvalues is $\\sqrt{\\lambda_1}P_1 + \\sqrt{\\lambda_2}P_2$. Each projection is $\\frac{\\mathbf{v}\\mathbf{v}^T}{\\mathbf{v}^T\\mathbf{v}}$ for an eigenvector $\\mathbf{v}$.",
-    "谱定理把对称矩阵写成 $\\lambda_1P_1 + \\lambda_2P_2$，其中 $P_1$、$P_2$ 是到特征空间的正交投影。由于 $P_1P_2 = 0$ 且 $P_i^2 = P_i$，函数可以只通过特征值作用。所以特征值为正的矩阵的正平方根是 $\\sqrt{\\lambda_1}P_1 + \\sqrt{\\lambda_2}P_2$。对特征向量 $\\mathbf{v}$，每个投影是 $\\frac{\\mathbf{v}\\mathbf{v}^T}{\\mathbf{v}^T\\mathbf{v}}$。",
+    "The spectral theorem writes a symmetric matrix as $\\lambda_1P_1 + \\lambda_2P_2$, where $P_1$ and $P_2$ are the orthogonal projections onto the eigenspaces. Since $P_1P_2 = 0$ and each $P_i^2 = P_i$, a function can be applied through the eigenvalues alone. So the positive square root of a matrix with positive eigenvalues is $\\sqrt{\\lambda_1}P_1 + \\sqrt{\\lambda_2}P_2$. Each projection is $\\frac{\\mathbf{v}\\mathbf{v}^T}{\\mathbf{v}^T\\mathbf{v}}$ for an eigenvector $\\mathbf{v}$. For example, if $A$ has eigenvalue $9$ on $(1, 1)$ and $1$ on $(-1, 1)$, then $P_1 = \\frac{1}{2}\\begin{pmatrix} 1 & 1 \\\\ 1 & 1 \\end{pmatrix}$, $P_2 = \\frac{1}{2}\\begin{pmatrix} 1 & -1 \\\\ -1 & 1 \\end{pmatrix}$, and the square root is $3P_1 + P_2 =\\begin{pmatrix} 2 & 1 \\\\ 1 & 2 \\end{pmatrix}$, whose square is $\\begin{pmatrix} 5 & 4 \\\\ 4 & 5 \\end{pmatrix} = A$.\n\n> **Watch out.** Take the square roots of the eigenvalues, not the eigenvalues themselves, and keep each root with the projection onto its own eigenvector.",
+    "谱定理把对称矩阵写成 $\\lambda_1P_1 + \\lambda_2P_2$，其中 $P_1$、$P_2$ 是到特征空间的正交投影。由于 $P_1P_2 = 0$ 且 $P_i^2 = P_i$，函数可以只通过特征值作用。所以特征值为正的矩阵的正平方根是 $\\sqrt{\\lambda_1}P_1 + \\sqrt{\\lambda_2}P_2$。对特征向量 $\\mathbf{v}$，每个投影是 $\\frac{\\mathbf{v}\\mathbf{v}^T}{\\mathbf{v}^T\\mathbf{v}}$。例如若 $A$ 在 $(1, 1)$ 上的特征值为 $9$，在 $(-1, 1)$ 上的特征值为 $1$，则 $P_1 = \\frac{1}{2}\\begin{pmatrix} 1 & 1 \\\\ 1 & 1 \\end{pmatrix}$，$P_2 = \\frac{1}{2}\\begin{pmatrix} 1 & -1 \\\\ -1 & 1 \\end{pmatrix}$，平方根为 $3P_1 + P_2 =\\begin{pmatrix} 2 & 1 \\\\ 1 & 2 \\end{pmatrix}$，它的平方是 $\\begin{pmatrix} 5 & 4 \\\\ 4 & 5 \\end{pmatrix} = A$。\n\n> **注意。** 要取特征值的平方根，而不是特征值本身，并且每个平方根要配上它自己特征向量的投影。",
   ),
   generate(rng) {
     const [p, q] = rng.pick([
@@ -5627,12 +5711,54 @@ const squareRootOfSymmetric: KnowledgePointDef = {
         diagonal ? Q.of(s * s * p * p + u * u * q * q, norm) : Q.of((s * s - u * u) * p * q, norm),
         diagonal ? Q.of(s * q * q + u * p * p, norm) : Q.of((u - s) * p * q, norm),
         Q.of(s + u, 2),
-        answer.add(Q.of(1)),
-        answer.neg(),
       ],
-      solution: t(
-        `The square root is $${s}P_1 + ${u}P_2$, with $P_1$ and $P_2$ built from the eigenvectors over their common squared length ${norm}. The entry is $${diagonal ? `\\frac{${s} \\cdot ${p * p} + ${u} \\cdot ${q * q}}{${norm}}` : `\\frac{${s} \\cdot ${inParens(p * q)} - ${u} \\cdot ${inParens(p * q)}}{${norm}}`} = ${answer.toLatex()}$.`,
-        `平方根是 $${s}P_1 + ${u}P_2$，其中 $P_1$、$P_2$ 由特征向量除以它们共同的长度平方 ${norm} 构成。这个元素是 $${diagonal ? `\\frac{${s} \\cdot ${p * p} + ${u} \\cdot ${q * q}}{${norm}}` : `\\frac{${s} \\cdot ${inParens(p * q)} - ${u} \\cdot ${inParens(p * q)}}{${norm}}`} = ${answer.toLatex()}$。`,
+      mistakes: [
+        why(
+          diagonal ? Q.of(s * s * p * p + u * u * q * q, norm) : Q.of((s * s - u * u) * p * q, norm),
+          `That uses the eigenvalues $${s * s}$ and $${u * u}$, which gives an entry of $A$ itself; the square root uses $${s}$ and $${u}$.`,
+          `这用的是特征值 $${s * s}$ 和 $${u * u}$，得到的是 $A$ 本身的元素；平方根要用 $${s}$ 和 $${u}$。`,
+        ),
+        why(
+          diagonal ? Q.of(s * q * q + u * p * p, norm) : Q.of((u - s) * p * q, norm),
+          diagonal
+            ? `The roots are paired with the wrong projections: $${s}$ goes with $P_1$, whose entry is $\\frac{${p * p}}{${norm}}$.`
+            : `The roots are paired with the wrong projections: $${s}$ goes with $P_1$, whose entry is $\\frac{${p * q}}{${norm}}$.`,
+          diagonal
+            ? `平方根与投影配错了：$${s}$ 配 $P_1$，它的这个元素是 $\\frac{${p * p}}{${norm}}$。`
+            : `平方根与投影配错了：$${s}$ 配 $P_1$，它的这个元素是 $\\frac{${p * q}}{${norm}}$。`,
+        ),
+        why(
+          Q.of(s + u, 2),
+          "That averages the two roots; the projections weight them by the eigenvector directions.",
+          "这是两个平方根的平均；投影要按特征向量的方向给它们加权。",
+        ),
+      ].filter((m, i, all) => String(m.value) !== String(answer) && all.findIndex((o) => String(o.value) === String(m.value)) === i),
+      solution: walked(
+        [
+          [
+            ["Take the roots of the eigenvalues", "取特征值的平方根"],
+            t("", ""),
+            [`\\sqrt{${s * s}} = ${s}, \\quad \\sqrt{${u * u}} = ${u}`, `\\sqrt{A} = ${s === 1 ? "" : s}P_1 + ${u === 1 ? "" : u}P_2`],
+          ],
+          [
+            ["Build the projections", "构造投影矩阵"],
+            t(`Both eigenvectors have squared length $${norm}$:`, `两个特征向量的长度平方都是 $${norm}$：`),
+            [
+              `P_1 = \\frac{1}{${norm}}\\begin{pmatrix} ${p * p} & ${p * q} \\\\ ${p * q} & ${q * q} \\end{pmatrix}, \\quad P_2 = \\frac{1}{${norm}}\\begin{pmatrix} ${q * q} & ${-p * q} \\\\ ${-p * q} & ${p * p} \\end{pmatrix}`,
+            ],
+          ],
+          [
+            ["Combine the entry", "合成这个元素"],
+            t("", ""),
+            [
+              `${diagonal ? `\\frac{${s} \\cdot ${p * p} + ${u} \\cdot ${q * q}}{${norm}}` : `\\frac{${s} \\cdot ${inParens(p * q)} - ${u} \\cdot ${inParens(p * q)}}{${norm}}`} = ${answer.toLatex()}`,
+            ],
+          ],
+        ],
+        t(
+          `$\\sqrt{A}$ must send $${col(p, q)}$ to $${s === 1 ? "" : s}${col(p, q)}$. Its first row is $\\frac{1}{${norm}}(${s * p * p + u * q * q}, ${(s - u) * p * q})$, and $\\frac{${s * p * p + u * q * q} \\cdot ${inParens(p)} + ${inParens((s - u) * p * q)} \\cdot ${inParens(q)}}{${norm}} = ${s * p}$, which is $${s} \\cdot ${inParens(p)}$.`,
+          `$\\sqrt{A}$ 必须把 $${col(p, q)}$ 变为 $${s === 1 ? "" : s}${col(p, q)}$。它的第一行是 $\\frac{1}{${norm}}(${s * p * p + u * q * q}, ${(s - u) * p * q})$，而 $\\frac{${s * p * p + u * q * q} \\cdot ${inParens(p)} + ${inParens((s - u) * p * q)} \\cdot ${inParens(q)}}{${norm}} = ${s * p}$，正是 $${s} \\cdot ${inParens(p)}$。`,
+        ),
       ),
     });
   },
@@ -5642,8 +5768,8 @@ const symmetricMatrixOfForm: KnowledgePointDef = {
   id: "the-symmetric-matrix-with-the-same-quadratic-form",
   title: t("The symmetric matrix with the same quadratic form", "具有相同二次型的对称矩阵"),
   explanation: t(
-    "Different matrices can give the same quadratic form $\\mathbf{x}^TA\\mathbf{x}$, because only the sum of the two off-diagonal entries reaches the coefficient of $xy$. Among these matrices exactly one is symmetric, the symmetric part $\\frac{1}{2}(A + A^T)$, which shares the off-diagonal sum equally. This is why a quadratic form is always written with a symmetric matrix: it is then unique, and the spectral theorem applies to it.",
-    "不同的矩阵可以给出相同的二次型 $\\mathbf{x}^TA\\mathbf{x}$，因为只有两个非对角元之和才影响 $xy$ 的系数。这些矩阵中恰有一个是对称的，即对称部分 $\\frac{1}{2}(A + A^T)$，它把非对角元之和平均分配。这就是二次型总用对称矩阵写出的原因：这样矩阵就是唯一的，并且可以应用谱定理。",
+    "Different matrices can give the same quadratic form $\\mathbf{x}^TA\\mathbf{x}$, because only the sum of the two off-diagonal entries reaches the coefficient of $xy$. Among these matrices exactly one is symmetric, the symmetric part $\\frac{1}{2}(A + A^T)$, which shares the off-diagonal sum equally. This is why a quadratic form is always written with a symmetric matrix: it is then unique, and the spectral theorem applies to it. For example, $\\begin{pmatrix} 1 & 5 \\\\ 1 & 2 \\end{pmatrix}$ gives $x^2 + 6xy + 2y^2$, and so does the symmetric $\\begin{pmatrix} 1 & 3 \\\\ 3 & 2 \\end{pmatrix}$.\n\n> **Watch out.** Add the two off-diagonal entries first, then halve the sum. Keeping one of them, or their full sum, gives a different form.",
+    "不同的矩阵可以给出相同的二次型 $\\mathbf{x}^TA\\mathbf{x}$，因为只有两个非对角元之和才影响 $xy$ 的系数。这些矩阵中恰有一个是对称的，即对称部分 $\\frac{1}{2}(A + A^T)$，它把非对角元之和平均分配。这就是二次型总用对称矩阵写出的原因：这样矩阵就是唯一的，并且可以应用谱定理。例如 $\\begin{pmatrix} 1 & 5 \\\\ 1 & 2 \\end{pmatrix}$ 给出 $x^2 + 6xy + 2y^2$，对称矩阵 $\\begin{pmatrix} 1 & 3 \\\\ 3 & 2 \\end{pmatrix}$ 也给出它。\n\n> **注意。** 先把两个非对角元相加，再把和减半。只保留其中一个，或用整个和，得到的都是不同的二次型。",
   ),
   generate(rng) {
     const a = nonzero(rng, 9);
@@ -5663,10 +5789,38 @@ const symmetricMatrixOfForm: KnowledgePointDef = {
         ])}$。求给出相同二次型的对称矩阵第 1 行第 2 列的元素。`,
       ),
       answer,
-      wrong: [Q.of(b), Q.of(c), Q.of(b + c), Q.of(b - c, 2), answer.add(Q.of(1))],
-      solution: t(
-        `The coefficient of $xy$ is $${b} ${signedTerm(c)} = ${b + c}$, and the symmetric matrix shares it equally between its two off-diagonal entries. So the entry is $${answer.toLatex()}$.`,
-        `$xy$ 的系数是 $${b} ${signedTerm(c)} = ${b + c}$，对称矩阵把它平均分给两个非对角元。所以这个元素是 $${answer.toLatex()}$。`,
+      wrong: [Q.of(b), Q.of(c), Q.of(b + c), Q.of(b - c, 2)],
+      mistakes: [
+        why(
+          Q.of(b),
+          `That keeps the entry $${b}$ of $A$; the symmetric matrix shares $${b} ${signedTerm(c)}$ equally.`,
+          `这保留了 $A$ 的元素 $${b}$；对称矩阵要平分 $${b} ${signedTerm(c)}$。`,
+        ),
+        why(
+          Q.of(c),
+          `That takes the entry $${c}$ of $A$; the symmetric matrix shares $${b} ${signedTerm(c)}$ equally.`,
+          `这取了 $A$ 的元素 $${c}$；对称矩阵要平分 $${b} ${signedTerm(c)}$。`,
+        ),
+        why(
+          Q.of(b + c),
+          `That is the whole coefficient of $xy$; each off-diagonal entry gets half of $${b + c}$.`,
+          `这是 $xy$ 的整个系数；每个非对角元只得 $${b + c}$ 的一半。`,
+        ),
+        why(Q.of(b - c, 2), "The two entries are added, not subtracted, before halving.", "减半之前两个元素要相加，而不是相减。"),
+      ].filter((m, i, all) => String(m.value) !== String(answer) && all.findIndex((o) => String(o.value) === String(m.value)) === i),
+      solution: walked(
+        [
+          [
+            ["Find the coefficient of xy", "求 xy 的系数"],
+            t("Both off-diagonal entries multiply $xy$:", "两个非对角元都乘以 $xy$："),
+            [`${b} ${signedTerm(c)} = ${b + c}`],
+          ],
+          [["Share it equally", "平均分配"], t("", ""), [`\\frac{1}{2} \\cdot ${inParens(b + c)} = ${answer.toLatex()}`]],
+        ],
+        t(
+          `The symmetric matrix has $${answer.toLatex()}$ in both off-diagonal places, which gives $2 \\cdot ${answer.isInteger() ? inParens(answer.toNumber()) : `\\left(${answer.toLatex()}\\right)`} = ${b + c}$ as the coefficient of $xy$, the same as $A$; the diagonal entries $${a}$ and $${d}$ stay as they are.`,
+          `对称矩阵两个非对角位置都是 $${answer.toLatex()}$，给出 $xy$ 的系数 $2 \\cdot ${answer.isInteger() ? inParens(answer.toNumber()) : `\\left(${answer.toLatex()}\\right)`} = ${b + c}$，与 $A$ 相同；对角元 $${a}$ 和 $${d}$ 保持不变。`,
+        ),
       ),
     });
   },
@@ -5676,8 +5830,8 @@ const indexAfterCompletingSquare: KnowledgePointDef = {
   id: "the-signs-of-a-form-after-completing-the-square",
   title: t("The signs of a form after completing the square", "配方后二次型的符号"),
   explanation: t(
-    "Lagrange's method turns a quadratic form into a sum of multiples of squares. The coefficients depend on the choices made along the way, but Sylvester's law of inertia says that the numbers of positive and of negative coefficients never change. So these two counts are properties of the form itself. The cross term is what makes this subtle, because completing the square moves part of a coefficient into the square, and this can change its sign.",
-    "拉格朗日方法把二次型化为平方项的倍数之和。系数取决于过程中的选择，但西尔维斯特惯性定律指出，正系数和负系数的个数不变。所以这两个个数是二次型本身的性质。微妙之处在于交叉项，因为配方把系数的一部分移进平方，这可能改变它的符号。",
+    "Lagrange's method turns a quadratic form into a sum of multiples of squares. The coefficients depend on the choices made along the way, but Sylvester's law of inertia says that the numbers of positive and of negative coefficients never change. So these two counts are properties of the form itself. The cross term is what makes this subtle, because completing the square moves part of a coefficient into the square, and this can change its sign. For example, $x^2 + 4xy + y^2 - 3z^2 = (x + 2y)^2 - 3y^2 - 3z^2$: the coefficient of $y^2$ was $1$ but becomes $1 - 2^2 = -3$, so the form has one positive and two negative coefficients.\n\n> **Watch out.** Do not count signs in the original form. Complete the square first: the coefficient of $y^2$ loses the square of half the $xy$ coefficient.",
+    "拉格朗日方法把二次型化为平方项的倍数之和。系数取决于过程中的选择，但西尔维斯特惯性定律指出，正系数和负系数的个数不变。所以这两个个数是二次型本身的性质。微妙之处在于交叉项，因为配方把系数的一部分移进平方，这可能改变它的符号。例如 $x^2 + 4xy + y^2 - 3z^2 = (x + 2y)^2 - 3y^2 - 3z^2$：$y^2$ 的系数原来是 $1$，变成 $1 - 2^2 = -3$，所以这个二次型有一个正系数、两个负系数。\n\n> **注意。** 不要在原来的二次型里数符号。先配方：$y^2$ 的系数要减去 $xy$ 系数一半的平方。",
   ),
   generate(rng) {
     const a = nonzero(rng, 4);
@@ -5697,9 +5851,44 @@ const indexAfterCompletingSquare: KnowledgePointDef = {
       answer,
       form: "integer",
       wrong: [0, 1, 2, 3],
-      solution: t(
-        `Completing the square gives $${squares}$. The coefficients are $${coefficients.join(", ")}$, of which $${answer}$ ${answer === 1 ? "is" : "are"} ${asksPositive ? "positive" : "negative"}.`,
-        `配方得 $${squares}$。系数是 $${coefficients.join(", ")}$，其中有 $${answer}$ 个是${asksPositive ? "正" : "负"}的。`,
+      mistakes: [
+        why(
+          [1, b, c].filter((v) => (asksPositive ? v > 0 : v < 0)).length,
+          `That counts the signs in the original form. Completing the square turns the coefficient $${b}$ of $y^2$ into $${b} - ${inParens(a)}^2 = ${left}$.`,
+          `这数的是原二次型中的符号。配方把 $y^2$ 的系数 $${b}$ 变成 $${b} - ${inParens(a)}^2 = ${left}$。`,
+        ),
+        ...(asksPositive
+          ? [
+              why(
+                answer - 1,
+                "The square $(x + \\dots)^2$ has coefficient $1$, which is positive too.",
+                "平方 $(x + \\dots)^2$ 的系数是 $1$，它也是正的。",
+              ),
+            ]
+          : []),
+      ].filter((m, i, all) => m.value !== answer && all.findIndex((o) => o.value === m.value) === i),
+      solution: walked(
+        [
+          [
+            ["Complete the square in x", "对 x 配方"],
+            t(
+              `The terms with $x$ make a square, and $${inParens(a)}^2 y^2$ is taken away from the $y^2$ term:`,
+              `含 $x$ 的项组成一个平方，从 $y^2$ 项中减去 $${inParens(a)}^2 y^2$：`,
+            ),
+            [`${form} = ${squares}`],
+          ],
+          [
+            ["Count the signs", "数符号"],
+            t(
+              `The coefficients are $${coefficients.join(", ")}$, of which $${answer}$ ${answer === 1 ? "is" : "are"} ${asksPositive ? "positive" : "negative"}.`,
+              `系数是 $${coefficients.join(", ")}$，其中有 $${answer}$ 个是${asksPositive ? "正" : "负"}的。`,
+            ),
+          ],
+        ],
+        t(
+          `Expanding $(${poly([1, "x"], [a, "y"])})^2$ gives $${poly([1, "x^2"], [2 * a, "xy"], [a * a, "y^2"])}$, and $${a * a} ${signedTerm(left)} = ${b}$ restores the coefficient of $y^2$.`,
+          `展开 $(${poly([1, "x"], [a, "y"])})^2$ 得 $${poly([1, "x^2"], [2 * a, "xy"], [a * a, "y^2"])}$，而 $${a * a} ${signedTerm(left)} = ${b}$ 还原了 $y^2$ 的系数。`,
+        ),
       ),
     });
   },

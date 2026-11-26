@@ -1291,8 +1291,8 @@ const symmetricAction = point(
   "acting-with-a-symmetric-matrix-through-its-eigenvectors",
   ["Acting with a symmetric matrix through its eigenvectors", "通过特征向量计算对称矩阵的作用"],
   [
-    "The eigenvectors of a symmetric $2 \\times 2$ matrix with distinct eigenvalues are orthogonal, so one eigenvector gives the other direction. A vector can then be split along the two by dot products, and each part is scaled by its own eigenvalue, with no need to build the matrix.",
-    "特征值互异的对称 $2 \\times 2$ 矩阵的特征向量正交，所以一个特征向量就给出另一个方向。向量可以用点积沿这两个方向分解，每一部分乘以各自的特征值，不需要构造矩阵。",
+    "The eigenvectors of a symmetric $2 \\times 2$ matrix with distinct eigenvalues are orthogonal, so one eigenvector gives the other direction. A vector can then be split along the two by dot products, and each part is scaled by its own eigenvalue, with no need to build the matrix. For example, with $\\lambda = 2$ on $(1, 1)$ and the other eigenvalue $5$, the other eigenvector is $(-1, 1)$; then $(1, 3) = 2(1, 1) + 1(-1, 1)$, so $A(1, 3) = 4(1, 1) + 5(-1, 1) = (-1, 9)$.\n\n> **Watch out.** Scale each part by its own eigenvalue, not the whole vector by one of them, and keep the minus sign in the other eigenvector $(-q, p)$.",
+    "特征值互异的对称 $2 \\times 2$ 矩阵的特征向量正交，所以一个特征向量就给出另一个方向。向量可以用点积沿这两个方向分解，每一部分乘以各自的特征值，不需要构造矩阵。例如 $\\lambda = 2$ 对应 $(1, 1)$，另一个特征值为 $5$，则另一个特征向量是 $(-1, 1)$；于是 $(1, 3) = 2(1, 1) + 1(-1, 1)$，所以 $A(1, 3) = 4(1, 1) + 5(-1, 1) = (-1, 9)$。\n\n> **注意。** 每一部分乘以它自己的特征值，而不是把整个向量乘以其中一个特征值；另一个特征向量 $(-q, p)$ 中的负号也不能丢。",
   ],
   (rng) => {
     const p = nz(rng, 3);
@@ -1305,18 +1305,56 @@ const symmetricAction = point(
     const x2 = s * q + t * p;
     const answer = s * l1 * p - t * l2 * q;
     const norm = p * p + q * q;
-    return ask(
-      [
+    const second = s * l1 * q + t * l2 * p;
+    return numberProblem({
+      prompt: text([
         `$A$ is symmetric, with $${vec(p, q)}$ an eigenvector for $\\lambda = ${l1}$, and its other eigenvalue is $${l2}$. Find the first entry of $A${vec(x1, x2)}$.`,
         `$A$ 是对称矩阵，$${vec(p, q)}$ 是关于 $\\lambda = ${l1}$ 的特征向量，另一个特征值是 $${l2}$。求 $A${vec(x1, x2)}$ 的第一个元素。`,
-      ],
+      ]),
       answer,
-      [l1 * x1, l2 * x1, s * l1 * p + t * l2 * q],
-      [
-        `The other eigenvector is $${vec(-q, p)}$. Dot products with squared length $${norm}$ give $${vec(x1, x2)} = ${poly([s, vec(p, q)], [t, vec(-q, p)])}$. So the first entry is $${wrap(s)} \\cdot ${wrap(l1)} \\cdot ${wrap(p)} + ${wrap(t)} \\cdot ${wrap(l2)} \\cdot ${wrap(-q)} = ${answer}$.`,
-        `另一个特征向量是 $${vec(-q, p)}$。用长度平方 $${norm}$ 作点积，得 $${vec(x1, x2)} = ${poly([s, vec(p, q)], [t, vec(-q, p)])}$。所以第一个元素是 $${wrap(s)} \\cdot ${wrap(l1)} \\cdot ${wrap(p)} + ${wrap(t)} \\cdot ${wrap(l2)} \\cdot ${wrap(-q)} = ${answer}$。`,
-      ],
-    );
+      mistakes: [
+        why(
+          l1 * x1,
+          `That scales the whole vector by $${l1}$; only its part along $${vec(p, q)}$ is scaled by $${l1}$.`,
+          `这是把整个向量乘以 $${l1}$；只有沿 $${vec(p, q)}$ 的部分才乘以 $${l1}$。`,
+        ),
+        why(
+          l2 * x1,
+          `That scales the whole vector by $${l2}$; only its part along the other eigenvector is scaled by $${l2}$.`,
+          `这是把整个向量乘以 $${l2}$；只有沿另一个特征向量的部分才乘以 $${l2}$。`,
+        ),
+        why(
+          s * l1 * p + t * l2 * q,
+          `The first entry of the other eigenvector is $${-q}$, not $${q}$.`,
+          `另一个特征向量的第一个元素是 $${-q}$，不是 $${q}$。`,
+        ),
+      ].filter((w, i, all) => w.value !== answer && all.findIndex((o) => o.value === w.value) === i),
+      solution: walked(
+        [
+          [
+            ["Find the other eigenvector", "求另一个特征向量"],
+            text([`It is orthogonal to $${vec(p, q)}$, so take $${vec(-q, p)}$.`, `它与 $${vec(p, q)}$ 正交，所以取 $${vec(-q, p)}$。`]),
+          ],
+          [
+            ["Split the vector", "分解向量"],
+            text([
+              `Dot products with each eigenvector, divided by the squared length $${norm}$, give the coefficients:`,
+              `与每个特征向量作点积，再除以长度平方 $${norm}$，得到系数：`,
+            ]),
+            [`${vec(x1, x2)} = ${poly([s, vec(p, q)], [t, vec(-q, p)])}`],
+          ],
+          [
+            ["Scale each part and read the first entry", "分别缩放并读出第一个元素"],
+            text(["", ""]),
+            [`${wrap(s)} \\cdot ${wrap(l1)} \\cdot ${wrap(p)} + ${wrap(t)} \\cdot ${wrap(l2)} \\cdot ${wrap(-q)} = ${answer}`],
+          ],
+        ],
+        text([
+          `The second entry is likewise $${second}$, and $${wrap(answer)} \\cdot ${wrap(p)} + ${wrap(second)} \\cdot ${wrap(q)} = ${l1 * s * norm} = ${wrap(l1)} \\cdot ${wrap(s * norm)}$, which is $\\lambda$ times the dot product of the vector with $${vec(p, q)}$, as it must be.`,
+          `同理第二个元素是 $${second}$，而 $${wrap(answer)} \\cdot ${wrap(p)} + ${wrap(second)} \\cdot ${wrap(q)} = ${l1 * s * norm} = ${wrap(l1)} \\cdot ${wrap(s * norm)}$，正是 $\\lambda$ 乘以该向量与 $${vec(p, q)}$ 的点积，理应如此。`,
+        ]),
+      ),
+    });
   },
 );
 
@@ -1324,8 +1362,8 @@ const repeatedSymmetric = point(
   "the-last-eigenvalue-from-the-trace",
   ["The last eigenvalue from the trace", "由迹求最后一个特征值"],
   [
-    "The trace of a matrix is the sum of its eigenvalues counted with multiplicity. So when a symmetric $3 \\times 3$ matrix has an eigenvalue of multiplicity $2$, the remaining eigenvalue follows from the diagonal, with no need to expand the characteristic polynomial.",
-    "矩阵的迹等于按重数计算的特征值之和。所以当对称 $3 \\times 3$ 矩阵有一个重数为 $2$ 的特征值时，剩下的特征值由对角线就能求出，不需要展开特征多项式。",
+    "The trace of a matrix is the sum of its eigenvalues counted with multiplicity. So when a symmetric $3 \\times 3$ matrix has an eigenvalue of multiplicity $2$, the remaining eigenvalue follows from the diagonal, with no need to expand the characteristic polynomial. For example, if the diagonal is $3, 2, 4$ and $1$ is an eigenvalue of multiplicity $2$, the trace is $9$ and the other eigenvalue is $9 - 2 \\cdot 1 = 7$.\n\n> **Watch out.** An eigenvalue of multiplicity $2$ is counted twice in the trace, so subtract it twice.",
+    "矩阵的迹等于按重数计算的特征值之和。所以当对称 $3 \\times 3$ 矩阵有一个重数为 $2$ 的特征值时，剩下的特征值由对角线就能求出，不需要展开特征多项式。例如对角线为 $3, 2, 4$，且 $1$ 是重数为 $2$ 的特征值，则迹是 $9$，另一个特征值是 $9 - 2 \\cdot 1 = 7$。\n\n> **注意。** 重数为 $2$ 的特征值在迹中算两次，所以要减两次。",
   ],
   (rng) => {
     const c = rng.int(-5, 5);
@@ -1335,18 +1373,45 @@ const repeatedSymmetric = point(
     const norm = v[0] ** 2 + v[1] ** 2 + v[2] ** 2;
     const trace = 3 * c + k * norm;
     const answer = c + k * norm;
-    return ask(
-      [
+    const diag = rows.map((r, i) => r[i]!);
+    return numberProblem({
+      prompt: text([
         `The symmetric matrix $${mat(rows)}$ has the eigenvalue $${c}$ with multiplicity $2$. Find its other eigenvalue.`,
         `对称矩阵 $${mat(rows)}$ 有重数为 $2$ 的特征值 $${c}$。求它的另一个特征值。`,
-      ],
+      ]),
       answer,
-      [trace, trace - c, k * norm],
-      [
-        `The trace is $${trace}$, and it equals the sum of the eigenvalues. So the other eigenvalue is $${trace} - 2 \\cdot ${wrap(c)} = ${answer}$.`,
-        `迹是 $${trace}$，它等于特征值之和。所以另一个特征值是 $${trace} - 2 \\cdot ${wrap(c)} = ${answer}$。`,
-      ],
-    );
+      mistakes: [
+        why(
+          trace,
+          `That is the whole trace; the eigenvalue $${c}$ must still be subtracted twice.`,
+          `这是整个迹；还要减去两次特征值 $${c}$。`,
+        ),
+        why(
+          trace - c,
+          `The eigenvalue $${c}$ has multiplicity $2$, so it is subtracted twice, not once.`,
+          `特征值 $${c}$ 的重数为 $2$，所以要减两次，而不是一次。`,
+        ),
+        why(
+          k * norm,
+          `That subtracts $${c}$ three times; it appears only twice among the eigenvalues.`,
+          `这是减了三次 $${c}$；它在特征值中只出现两次。`,
+        ),
+      ].filter((w, i, all) => w.value !== answer && all.findIndex((o) => o.value === w.value) === i),
+      solution: walked(
+        [
+          [
+            ["Add the diagonal", "把对角元相加"],
+            text(["The trace is the sum of the eigenvalues:", "迹等于特征值之和："]),
+            [`${diag[0]} + ${wrap(diag[1]!)} + ${wrap(diag[2]!)} = ${trace}`],
+          ],
+          [["Subtract the repeated eigenvalue twice", "减去两次重特征值"], text(["", ""]), [`${trace} - 2 \\cdot ${wrap(c)} = ${answer}`]],
+        ],
+        text([
+          `Subtracting $${c}$ from the diagonal leaves a matrix whose rows are all multiples of $${vec(...v)}$, so it has rank $1$ and its one nonzero eigenvalue is its trace $${k * norm}$; adding back $${c}$ gives $${answer}$ again.`,
+          `从对角线上减去 $${c}$ 后，剩下矩阵的每一行都是 $${vec(...v)}$ 的倍数，所以秩为 $1$，唯一的非零特征值就是它的迹 $${k * norm}$；再加回 $${c}$ 又得到 $${answer}$。`,
+        ]),
+      ),
+    });
   },
 );
 
@@ -1354,8 +1419,8 @@ const shearRemoving = point(
   "the-shear-that-removes-the-cross-term",
   ["The shear that removes the cross term", "消去交叉项的剪切变换"],
   [
-    "A change of variables need not be orthogonal to remove a cross term. Substituting $x_{1} = y_{1} + ky_{2}$, $x_{2} = y_{2}$ makes the coefficient of $y_{1}y_{2}$ a linear expression in $k$, which can be set to zero. This is completing the square written as a change of variables.",
-    "消去交叉项的变量替换不一定是正交的。代入 $x_{1} = y_{1} + ky_{2}$，$x_{2} = y_{2}$ 后，$y_{1}y_{2}$ 的系数是 $k$ 的线性式，可以令它为零。这就是用变量替换的形式写出的配方。",
+    "A change of variables need not be orthogonal to remove a cross term. Substituting $x_{1} = y_{1} + ky_{2}$, $x_{2} = y_{2}$ makes the coefficient of $y_{1}y_{2}$ a linear expression in $k$, which can be set to zero. This is completing the square written as a change of variables. For example, in $2x_{1}^{2} + 8x_{1}x_{2} + x_{2}^{2}$ the square gives $2(y_{1} + ky_{2})^{2}$, whose cross term is $4ky_{1}y_{2}$; with $8y_{1}y_{2}$ from the cross term, $4k + 8 = 0$ gives $k = -2$.\n\n> **Watch out.** Squaring $y_{1} + ky_{2}$ gives the cross term $2ky_{1}y_{2}$, so the coefficient of $k$ is twice the coefficient of $x_{1}^{2}$.",
+    "消去交叉项的变量替换不一定是正交的。代入 $x_{1} = y_{1} + ky_{2}$，$x_{2} = y_{2}$ 后，$y_{1}y_{2}$ 的系数是 $k$ 的线性式，可以令它为零。这就是用变量替换的形式写出的配方。例如在 $2x_{1}^{2} + 8x_{1}x_{2} + x_{2}^{2}$ 中，平方项给出 $2(y_{1} + ky_{2})^{2}$，其交叉项是 $4ky_{1}y_{2}$；加上交叉项给出的 $8y_{1}y_{2}$，由 $4k + 8 = 0$ 得 $k = -2$。\n\n> **注意。** $y_{1} + ky_{2}$ 平方后的交叉项是 $2ky_{1}y_{2}$，所以 $k$ 的系数是 $x_{1}^{2}$ 系数的两倍。",
   ],
   (rng) => {
     const a = nz(rng, 5);
@@ -1363,18 +1428,43 @@ const shearRemoving = point(
     const c = nz(rng, 5);
     const answer = Q.of(-b, 2 * a);
     const form = poly([a, "x_{1}^{2}"], [b, "x_{1}x_{2}"], [c, "x_{2}^{2}"]);
-    return ask(
-      [
+    return numberProblem({
+      prompt: text([
         `Find $k$ so that $x_{1} = y_{1} + ky_{2}$, $x_{2} = y_{2}$ removes the $y_{1}y_{2}$ term from $Q = ${form}$.`,
         `求 $k$，使 $x_{1} = y_{1} + ky_{2}$，$x_{2} = y_{2}$ 消去 $Q = ${form}$ 中的 $y_{1}y_{2}$ 项。`,
-      ],
+      ]),
       answer,
-      [answer.neg(), Q.of(-b, a), Q.of(-2 * a, b)],
-      [
-        `The $y_{1}y_{2}$ coefficient is $${poly([2 * a, "k"], [b, ""])}$, with $${poly([2 * a, "k"])}$ from the square and $${b}$ from the cross term. Setting it to zero gives $k = ${answer.toLatex()}$.`,
-        `$y_{1}y_{2}$ 的系数是 $${poly([2 * a, "k"], [b, ""])}$，其中 $${poly([2 * a, "k"])}$ 来自平方项，$${b}$ 来自交叉项。令它为零，得 $k = ${answer.toLatex()}$。`,
-      ],
-    );
+      mistakes: [
+        why(
+          answer.neg(),
+          "The sign is flipped: $k$ must cancel the cross term, not double it.",
+          "符号反了：$k$ 要抵消交叉项，而不是使它加倍。",
+        ),
+        why(
+          Q.of(-b, a),
+          `Squaring gives $2ky_{1}y_{2}$, so the square contributes $${poly([2 * a, "k"])}$, not $${poly([a, "k"])}$.`,
+          `平方给出 $2ky_{1}y_{2}$，所以平方项贡献 $${poly([2 * a, "k"])}$，不是 $${poly([a, "k"])}$。`,
+        ),
+        why(Q.of(-2 * a, b), "The equation was solved upside down.", "方程解成了倒数。"),
+      ].filter((w, i, all) => String(w.value) !== String(answer) && all.findIndex((o) => String(o.value) === String(w.value)) === i),
+      solution: walked(
+        [
+          [
+            ["Substitute", "代入"],
+            text([
+              `The square term gives $${a}(y_{1} + ky_{2})^{2}$ and the cross term gives $${b === 1 ? "" : b === -1 ? "-" : b}(y_{1} + ky_{2})y_{2}$. Collect the $y_{1}y_{2}$ terms:`,
+              `平方项给出 $${a}(y_{1} + ky_{2})^{2}$，交叉项给出 $${b === 1 ? "" : b === -1 ? "-" : b}(y_{1} + ky_{2})y_{2}$。合并 $y_{1}y_{2}$ 项：`,
+            ]),
+            [`${poly([2 * a, "k"], [b, ""])} = 0`],
+          ],
+          [["Solve for k", "解出 k"], text(["", ""]), [`k = ${answer.toLatex()}`]],
+        ],
+        text([
+          `Putting $k$ back, $${2 * a} \\cdot ${a * b > 0 ? `\\left(${answer.toLatex()}\\right)` : answer.toLatex()} ${b < 0 ? `- ${-b}` : `+ ${b}`} = 0$, so the $y_{1}y_{2}$ term is gone.`,
+          `代回 $k$：$${2 * a} \\cdot ${a * b > 0 ? `\\left(${answer.toLatex()}\\right)` : answer.toLatex()} ${b < 0 ? `- ${-b}` : `+ ${b}`} = 0$，所以 $y_{1}y_{2}$ 项消失了。`,
+        ]),
+      ),
+    });
   },
 );
 
@@ -1382,8 +1472,8 @@ const singleSquare = point(
   "a-canonical-form-with-a-single-square",
   ["A canonical form with a single square", "只有一个平方项的标准形"],
   [
-    "The canonical form has as many squares as the rank of the matrix of the form. A form with the cross term written as $2kx_{1}x_{2}$ has the off-diagonal entry $k$ in its matrix, so it reduces to a single square exactly when the determinant $ac - k^{2}$ is zero.",
-    "标准形中平方项的个数等于二次型矩阵的秩。交叉项写成 $2kx_{1}x_{2}$ 的二次型，其矩阵的非对角元素是 $k$，所以它化为单个平方项，当且仅当行列式 $ac - k^{2}$ 为零。",
+    "The canonical form has as many squares as the rank of the matrix of the form. A form with the cross term written as $2kx_{1}x_{2}$ has the off-diagonal entry $k$ in its matrix, so it reduces to a single square exactly when the determinant $ac - k^{2}$ is zero. For example, $4x_{1}^{2} + 2kx_{1}x_{2} + 9x_{2}^{2}$ needs $36 - k^{2} = 0$, so $k = 6$, and then the form is $(2x_{1} + 3x_{2})^{2}$.\n\n> **Watch out.** The matrix entry is $k$, half the coefficient $2k$ of $x_{1}x_{2}$; the condition is $k^{2} = ac$, not $k = ac$.",
+    "标准形中平方项的个数等于二次型矩阵的秩。交叉项写成 $2kx_{1}x_{2}$ 的二次型，其矩阵的非对角元素是 $k$，所以它化为单个平方项，当且仅当行列式 $ac - k^{2}$ 为零。例如 $4x_{1}^{2} + 2kx_{1}x_{2} + 9x_{2}^{2}$ 需要 $36 - k^{2} = 0$，所以 $k = 6$，这时二次型是 $(2x_{1} + 3x_{2})^{2}$。\n\n> **注意。** 矩阵元素是 $k$，即 $x_{1}x_{2}$ 系数 $2k$ 的一半；条件是 $k^{2} = ac$，不是 $k = ac$。",
   ],
   (rng) => {
     const m = nz(rng, 4);
@@ -1393,18 +1483,48 @@ const singleSquare = point(
     const c = m * q * q;
     const answer = Math.abs(m) * p * q;
     const form = poly([a, "x_{1}^{2}"], [1, "2kx_{1}x_{2}"], [c, "x_{2}^{2}"]);
-    return ask(
-      [
+    return numberProblem({
+      prompt: text([
         `For which $k > 0$ does an orthogonal transformation reduce $Q = ${form}$ to a single square term?`,
         `当 $k > 0$ 为何值时，正交变换把 $Q = ${form}$ 化为单个平方项？`,
-      ],
+      ]),
       answer,
-      [2 * answer, a * c, Math.abs(a) + Math.abs(c)],
-      [
-        `The matrix of $Q$ has off-diagonal entry $k$, and one square term means one eigenvalue is zero. So $${wrap(a)} \\cdot ${wrap(c)} - k^{2} = 0$, which gives $k = ${answer}$.`,
-        `$Q$ 的矩阵的非对角元素是 $k$，只有一个平方项意味着有一个特征值为零。所以 $${wrap(a)} \\cdot ${wrap(c)} - k^{2} = 0$，得 $k = ${answer}$。`,
-      ],
-    );
+      mistakes: [
+        why(
+          2 * answer,
+          `$${2 * answer}$ is the coefficient $2k$ of $x_{1}x_{2}$; the matrix entry is $k$ itself.`,
+          `$${2 * answer}$ 是 $x_{1}x_{2}$ 的系数 $2k$；矩阵元素是 $k$ 本身。`,
+        ),
+        why(a * c, `$${a * c}$ is $ac$, which equals $k^{2}$, not $k$.`, `$${a * c}$ 是 $ac$，它等于 $k^{2}$，不是 $k$。`),
+        why(
+          Math.abs(a) + Math.abs(c),
+          "That adds the sizes of the diagonal entries; one square term needs the determinant to be zero.",
+          "这是把对角元的绝对值相加；单个平方项要求行列式为零。",
+        ),
+      ].filter((w, i, all) => w.value !== answer && all.findIndex((o) => o.value === w.value) === i),
+      solution: walked(
+        [
+          [
+            ["Write the matrix", "写出矩阵"],
+            text([
+              "The off-diagonal entry is half the coefficient of $x_{1}x_{2}$, and one square term means one eigenvalue is zero:",
+              "非对角元素是 $x_{1}x_{2}$ 系数的一半，只有一个平方项意味着有一个特征值为零：",
+            ]),
+            [
+              `\\det ${mat([
+                [a, "k"],
+                ["k", c],
+              ])} = ${wrap(a)} \\cdot ${wrap(c)} - k^{2} = 0`,
+            ],
+          ],
+          [["Take the positive root", "取正根"], text(["", ""]), [`k^{2} = ${a * c}`, `k = ${answer}`]],
+        ],
+        text([
+          `With $k = ${answer}$ the form is $${m === 1 ? "" : m === -1 ? "-" : m}(${poly([p, "x_{1}"], [Math.sign(m) * q, "x_{2}"])})^{2}$, a single square.`,
+          `$k = ${answer}$ 时二次型是 $${m === 1 ? "" : m === -1 ? "-" : m}(${poly([p, "x_{1}"], [Math.sign(m) * q, "x_{2}"])})^{2}$，只有一个平方项。`,
+        ]),
+      ),
+    });
   },
 );
 

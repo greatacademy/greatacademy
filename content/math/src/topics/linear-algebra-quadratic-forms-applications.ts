@@ -3,8 +3,21 @@ import { t } from "@ga/content";
 import { Q } from "@ga/subject-math";
 import { linearAlgebraDrawings2 } from "../explanation-drawings-linear-algebra-2.ts";
 
-import { article, choiceProblem, numberProblem, pointProblem, solutionsProblem } from "../problems.ts";
+import {
+  article,
+  choiceProblem,
+  numberProblem,
+  pointLatex,
+  pointProblem,
+  say,
+  solutionsProblem,
+  vectorLatex,
+  why,
+  whySet,
+  withMistakes,
+} from "../problems.ts";
 import { reasoned } from "../wrong-reasons.ts";
+import { walked } from "./calculus-i-differentiation.ts";
 
 // Linear Algebra Units 7 & 8: Diagonalization of Symmetric Matrices, Quadratic Forms,
 // Quadratic Forms in Euclidean Space, Singular Value Decomposition, Linear Least-Squares,
@@ -117,6 +130,25 @@ function oneOf(rng: Rng, prompt: Text, right: Text, wrong: readonly Text[], solu
   return choiceProblem({ prompt, options: order.map((i) => options[i]!), correct: order.indexOf(0), solution });
 }
 
+/** dedupeSaid drops mistakes that repeat the right response or an earlier mistake. */
+function dedupeSaid<T extends { readonly response: string }>(list: readonly T[], right: string): T[] {
+  return list.filter((m, i, all) => m.response !== right && all.findIndex((o) => o.response === m.response) === i);
+}
+
+/** distinct drops number mistakes that equal the answer or repeat an earlier one. */
+function distinct<T extends { readonly value: number | Q }>(list: readonly T[], answer: number | Q): T[] {
+  return list.filter((m, i, all) => String(m.value) !== String(answer) && all.findIndex((o) => String(o.value) === String(m.value)) === i);
+}
+
+/** paren wraps a negative number in parentheses for use inside a product. */
+const paren = (x: number) => (x < 0 ? `(${x})` : `${x}`);
+
+/** lead writes a leading coefficient in front of a vector or symbol, dropping a 1. */
+const lead = (c: number, body: string) => `${c === 1 ? "" : c === -1 ? "-" : c}${body}`;
+
+/** plus writes "+ c body" or "- |c| body" after an earlier term, dropping a 1. */
+const plus = (c: number, body: string) => (c < 0 ? `- ${lead(-c, body)}` : `+ ${lead(c, body)}`);
+
 /** symFromEigen is the symmetric matrix with eigenvalue l1 on (1, k) and l2 on (-k, 1); l1 - l2 must be a multiple of 1 + k^2. */
 function symFromEigen(l1: number, l2: number, k: number): Mat2 {
   const n = 1 + k * k;
@@ -148,6 +180,10 @@ export const symmetricMatrices: TopicDef = {
     "Identify symmetric matrices, verify the reality of their eigenvalues, and apply the orthogonality of eigenvectors for distinct eigenvalues.",
     "识别对称矩阵，掌握实对称矩阵特征值为实数以及不同特征值对应的特征向量相互正交的性质。",
   ),
+  intro: t(
+    "The matrix $A = \\begin{pmatrix} 2 & 1 \\\\ 1 & 2 \\end{pmatrix}$ equals its transpose. It sends $(1, 1)$ to $(3, 3)$ and $(1, -1)$ to $(1, -1)$, so its eigenvalues are $3$ and $1$, and the two eigenvectors have dot product $1 - 1 = 0$.\n\nCheck: $\\det(A - \\lambda I) = (2 - \\lambda)^2 - 1$ is zero at $\\lambda = 1$ and $\\lambda = 3$, the same two eigenvalues, both real.\n\nIn this lesson we recognise symmetric matrices, fill in entries that make a matrix symmetric, and use the fact that eigenvectors for different eigenvalues are orthogonal to find one eigenvector from another.",
+    "矩阵 $A = \\begin{pmatrix} 2 & 1 \\\\ 1 & 2 \\end{pmatrix}$ 等于它的转置。它把 $(1, 1)$ 变为 $(3, 3)$，把 $(1, -1)$ 变为 $(1, -1)$，所以特征值是 $3$ 和 $1$，两个特征向量的点积为 $1 - 1 = 0$。\n\n检验：$\\det(A - \\lambda I) = (2 - \\lambda)^2 - 1$ 在 $\\lambda = 1$ 和 $\\lambda = 3$ 处为零，正是这两个特征值，而且都是实数。\n\n本课我们识别对称矩阵，补全使矩阵对称的元素，并利用不同特征值的特征向量相互正交，由一个特征向量求出另一个。",
+  ),
   prerequisites: ["calculating-the-eigenvalues-of-a-2x2-matrix"],
   encompasses: [],
   xp: 14,
@@ -156,8 +192,8 @@ export const symmetricMatrices: TopicDef = {
       id: "symmetric-matrices-properties",
       title: t("Orthogonality of Eigenvectors of Symmetric Matrices", "对称矩阵特征向量的正交性"),
       explanation: t(
-        "A real matrix $A$ is symmetric if $A^T = A$. For any real symmetric matrix, all eigenvalues are real, and eigenvectors corresponding to distinct eigenvalues are mutually orthogonal ($u \\cdot v = 0$).",
-        "实矩阵 $A$ 满足 $A^T = A$ 时称为实对称矩阵。实对称矩阵的特征值全为实数，且属于不同特征值的特征向量相互正交（点积为 0）。",
+        "A real matrix $A$ is symmetric if $A^T = A$. For any real symmetric matrix, all eigenvalues are real, and eigenvectors corresponding to distinct eigenvalues are mutually orthogonal ($u \\cdot v = 0$). For example, if $(2, 1)$ is one eigenvector of a $2 \\times 2$ symmetric matrix, an eigenvector for the other eigenvalue with first component $-2$ satisfies $2(-2) + 1 \\cdot x_2 = 0$, so it is $(-2, 4)$.\n\n> **Watch out.** The second eigenvector is orthogonal to the first, not equal to it, and its first component is the one given. Set the dot product to zero and solve for the missing component.",
+        "实矩阵 $A$ 满足 $A^T = A$ 时称为实对称矩阵。实对称矩阵的特征值全为实数，且属于不同特征值的特征向量相互正交（点积为 0）。例如若 $(2, 1)$ 是某 $2 \\times 2$ 对称矩阵的一个特征向量，则另一特征值的、第一个分量为 $-2$ 的特征向量满足 $2(-2) + 1 \\cdot x_2 = 0$，所以它是 $(-2, 4)$。\n\n> **注意。** 第二个特征向量与第一个正交，而不是相等，并且它的第一个分量是题目给定的。令点积为零，解出缺少的分量。",
       ),
       generate: (rng: Rng): Problem => {
         const u1 = rng.nonZero(-6, 6);
@@ -171,32 +207,62 @@ export const symmetricMatrices: TopicDef = {
           `设 $A$ 为 $2 \\times 2$ 实对称矩阵，具有两个不相等的特征值 $\\lambda_1 \\ne \\lambda_2$。若 $v_1 = ${vec2Latex([u1, u2])}$ 是对应于 $\\lambda_1$ 的特征向量，求对应于 $\\lambda_2$ 且第一个分量为 $x_1 = ${v1}$ 的特征向量 $v_2 = \\langle x_1, x_2 \\rangle$。以 $\\langle x_1, x_2 \\rangle$ 的形式输入向量。`,
         );
 
-        const solution = t(
-          `Because $A$ is a real symmetric matrix, eigenvectors corresponding to distinct eigenvalues are orthogonal: $v_1 \\cdot v_2 = 0$. Hence $(${u1})(${v1}) + (${u2})x_2 = 0$, giving $(${u2})x_2 = ${-u1 * v1}$, which yields $x_2 = ${v2}$. Thus $v_2 = \\langle ${v1}, ${v2} \\rangle$.`,
-          `因为 $A$ 为实对称矩阵，不同特征值对应的特征向量相互正交：$v_1 \\cdot v_2 = 0$。即 $(${u1})(${v1}) + (${u2})x_2 = 0$，得 $(${u2})x_2 = ${-u1 * v1}$，解得 $x_2 = ${v2}$。因此 $v_2 = \\langle ${v1}, ${v2} \\rangle$。`,
+        const solution = walked(
+          [
+            [
+              ["Use orthogonality", "利用正交性"],
+              t(
+                "$A$ is symmetric and the eigenvalues differ, so $v_1 \\cdot v_2 = 0$:",
+                "$A$ 是对称矩阵且两个特征值不同，所以 $v_1 \\cdot v_2 = 0$：",
+              ),
+              [`(${u1})(${v1}) + (${u2})x_2 = 0`],
+            ],
+            [["Solve for the second component", "解出第二个分量"], t("", ""), [`(${u2})x_2 = ${-u1 * v1}`, `x_2 = ${v2}`]],
+          ],
+          t(
+            `$(${u1})(${v1}) + (${u2})(${v2}) = ${u1 * v1} + ${paren(u2 * v2)} = 0$, so $v_2 = \\langle ${v1}, ${v2} \\rangle$ is orthogonal to $v_1$.`,
+            `$(${u1})(${v1}) + (${u2})(${v2}) = ${u1 * v1} + ${paren(u2 * v2)} = 0$，所以 $v_2 = \\langle ${v1}, ${v2} \\rangle$ 与 $v_1$ 正交。`,
+          ),
         );
 
-        return pointProblem({
-          prompt,
-          answer: [v1, v2],
-          vector: true,
-          vars: ["x_1", "x_2"],
-          solution,
-          wrong: [
-            [v1, -v2],
-            [-v1, v2],
-            [u1, u2],
-            [-u2, u1],
-          ],
-        });
+        const wrong = [
+          [v1, -v2],
+          [-v1, v2],
+          [u1, u2],
+          [-u2, u1],
+        ];
+        return withMistakes(
+          pointProblem({ prompt, answer: [v1, v2], vector: true, vars: ["x_1", "x_2"], solution, wrong }),
+          dedupeSaid(
+            [
+              say(
+                vectorLatex(wrong[0]!),
+                `The sign of $x_2$ is flipped: its dot product with $v_1$ is $${2 * u1 * v1}$, not $0$.`,
+                `$x_2$ 的符号反了：它与 $v_1$ 的点积是 $${2 * u1 * v1}$，不是 $0$。`,
+              ),
+              say(vectorLatex(wrong[1]!), `The first component must be the given $x_1 = ${v1}$.`, `第一个分量必须是给定的 $x_1 = ${v1}$。`),
+              say(
+                vectorLatex(wrong[2]!),
+                "That is $v_1$ itself; an eigenvector for $\\lambda_2$ must be orthogonal to $v_1$.",
+                "这是 $v_1$ 本身；$\\lambda_2$ 的特征向量必须与 $v_1$ 正交。",
+              ),
+              say(
+                vectorLatex(wrong[3]!),
+                `That points the right way but is not scaled to the given first component $${v1}$.`,
+                `方向对了，但没有按给定的第一个分量 $${v1}$ 缩放。`,
+              ),
+            ],
+            vectorLatex([v1, v2]),
+          ),
+        );
       },
     },
     {
       id: "making-a-matrix-symmetric",
       title: t("Making a matrix symmetric", "使矩阵成为对称矩阵"),
       explanation: t(
-        "A square matrix is symmetric when $A^T = A$, that is, $a_{ij} = a_{ji}$ for every pair of positions mirrored across the main diagonal. The diagonal entries are unrestricted. To make a matrix with an unknown entry symmetric, set that entry equal to its mirror image and solve the resulting equation.",
-        "方阵满足 $A^T = A$，即关于主对角线对称的每对位置都有 $a_{ij} = a_{ji}$ 时，称为对称矩阵。对角元不受限制。要让含未知元的矩阵对称，令该元等于它的镜像元并解所得方程。",
+        "A square matrix is symmetric when $A^T = A$, that is, $a_{ij} = a_{ji}$ for every pair of positions mirrored across the main diagonal. The diagonal entries are unrestricted. To make a matrix with an unknown entry symmetric, set that entry equal to its mirror image and solve the resulting equation. For example, if $a_{12} = 3x - 1$ and $a_{21} = 8$, symmetry needs $3x - 1 = 8$, so $3x = 9$ and $x = 3$.\n\n> **Watch out.** Undo the constant before dividing by the coefficient: from $3x - 1 = 8$, add $1$ first to get $3x = 9$, then divide by $3$.",
+        "方阵满足 $A^T = A$，即关于主对角线对称的每对位置都有 $a_{ij} = a_{ji}$ 时，称为对称矩阵。对角元不受限制。要让含未知元的矩阵对称，令该元等于它的镜像元并解所得方程。例如若 $a_{12} = 3x - 1$，$a_{21} = 8$，对称要求 $3x - 1 = 8$，于是 $3x = 9$，$x = 3$。\n\n> **注意。** 先消去常数项，再除以系数：由 $3x - 1 = 8$，先加 $1$ 得 $3x = 9$，再除以 $3$。",
       ),
       generate(rng: Rng): Problem {
         const p = rng.pick([2, 3, 4, -2, -3]);
@@ -223,13 +289,41 @@ export const symmetricMatrices: TopicDef = {
         });
         const [i, j] = pairs[pos]!;
         const latex = `\\begin{pmatrix} ${m.map((r) => r.join(" & ")).join(" \\\\ ")} \\end{pmatrix}`;
+        const px = `${p}x`;
+        const moved = q === 0 ? [] : [`${px} = ${v} ${q > 0 ? `- ${q}` : `+ ${-q}`} = ${v - q}`];
         return numberProblem({
           prompt: t(`Find $x$ so that $${latex}$ is symmetric.`, `求 $x$，使 $${latex}$ 为对称矩阵。`),
           answer: x,
           wrong: [v - q, -x, Q.of(v, p), Q.of(v + q, p)],
-          solution: t(
-            `Symmetry requires $a_{${i + 1}${j + 1}} = a_{${j + 1}${i + 1}}$: $${expr} = ${v}$, so $x = ${x}$.`,
-            `对称要求 $a_{${i + 1}${j + 1}} = a_{${j + 1}${i + 1}}$：$${expr} = ${v}$，所以 $x = ${x}$。`,
+          solution: walked(
+            [
+              [
+                ["Match the mirrored entries", "令对称位置相等"],
+                t(
+                  `Symmetry requires $a_{${i + 1}${j + 1}} = a_{${j + 1}${i + 1}}$:`,
+                  `对称要求 $a_{${i + 1}${j + 1}} = a_{${j + 1}${i + 1}}$：`,
+                ),
+                [`${expr} = ${v}`],
+              ],
+              [["Solve for x", "解出 x"], t("", ""), [...moved, `x = ${x}`]],
+            ],
+            t(
+              `$${p}(${x}) ${q === 0 ? "" : q > 0 ? `+ ${q}` : `- ${-q}`} = ${v}$, the mirrored entry.`.replace("  ", " "),
+              `$${p}(${x}) ${q === 0 ? "" : q > 0 ? `+ ${q}` : `- ${-q}`} = ${v}$，正是对称位置的元素。`.replace("  ", " "),
+            ),
+          ),
+          mistakes: distinct(
+            [
+              why(v - q, `That is $${px}$, not $x$; divide by $${p}$ as well.`, `这是 $${px}$，不是 $x$；还要除以 $${p}$。`),
+              why(-x, "The sign is flipped; recheck the division.", "符号反了；重新检查除法。"),
+              why(
+                Q.of(v, p),
+                `That divides $${v}$ by $${p}$ before removing the constant $${q}$.`,
+                `这是没有先消去常数 $${q}$ 就用 $${v}$ 除以 $${p}$。`,
+              ),
+              why(Q.of(v + q, p), `The constant $${q}$ was moved across without changing its sign.`, `常数 $${q}$ 移项时没有变号。`),
+            ],
+            x,
           ),
         });
       },
@@ -245,6 +339,10 @@ export const diagonalizationOf2x2SymmetricMatrices: TopicDef = {
     "Orthogonally diagonalize a $2 \\times 2$ symmetric matrix as $A = PDP^T$ with $P$ orthogonal and $D$ diagonal.",
     "将 $2 \\times 2$ 对称矩阵正交对角化为 $A = PDP^T$，其中 $P$ 为正交矩阵，$D$ 为对角矩阵。",
   ),
+  intro: t(
+    "For $A = \\begin{pmatrix} 3 & 1 \\\\ 1 & 3 \\end{pmatrix}$, the eigenvalues are $3 - 1 = 2$ with unit eigenvector $\\frac{1}{\\sqrt{2}}(1, -1)$ and $3 + 1 = 4$ with unit eigenvector $\\frac{1}{\\sqrt{2}}(1, 1)$. Putting these as the columns of $P$ and the eigenvalues in the same order on the diagonal of $D$ gives $A = PDP^T$ with $D = \\begin{pmatrix} 2 & 0 \\\\ 0 & 4 \\end{pmatrix}$.\n\nCheck: the trace of $D$ is $2 + 4 = 6$, the trace of $A$, and $\\det D = 8 = 9 - 1 = \\det A$.\n\nIn this lesson we find the diagonal factor $D$ of a $2 \\times 2$ symmetric matrix, and run $A = PDP^T$ backwards to rebuild $A$ from its eigenvectors and eigenvalues.",
+    "对 $A = \\begin{pmatrix} 3 & 1 \\\\ 1 & 3 \\end{pmatrix}$，特征值 $3 - 1 = 2$ 的单位特征向量为 $\\frac{1}{\\sqrt{2}}(1, -1)$，特征值 $3 + 1 = 4$ 的单位特征向量为 $\\frac{1}{\\sqrt{2}}(1, 1)$。把它们作为 $P$ 的列，并按同样的顺序把特征值放在 $D$ 的对角线上，就得到 $A = PDP^T$，其中 $D = \\begin{pmatrix} 2 & 0 \\\\ 0 & 4 \\end{pmatrix}$。\n\n检验：$D$ 的迹是 $2 + 4 = 6$，等于 $A$ 的迹；$\\det D = 8 = 9 - 1 = \\det A$。\n\n本课我们求 $2 \\times 2$ 对称矩阵的对角因子 $D$，并把 $A = PDP^T$ 反过来用，由特征向量和特征值还原 $A$。",
+  ),
   prerequisites: ["symmetric-matrices"],
   encompasses: [],
   xp: 15,
@@ -253,8 +351,8 @@ export const diagonalizationOf2x2SymmetricMatrices: TopicDef = {
       id: "orthogonal-diagonalization-2x2",
       title: t("Orthogonal Diagonalization of a 2x2 Matrix", "2x2 矩阵的正交对角化"),
       explanation: t(
-        "Every real symmetric matrix $A$ can be orthogonally diagonalized as $A = P D P^T$, where $P$ is an orthogonal matrix ($P^{-1} = P^T$) whose columns are orthonormal eigenvectors, and $D$ contains the eigenvalues of $A$.",
-        "任意实对称矩阵 $A$ 都可以正交对角化为 $A = P D P^T$，其中正交矩阵 $P$（满足 $P^{-1} = P^T$）的各列为标准正交特征向量，对角矩阵 $D$ 的对角元为 $A$ 的特征值。",
+        "Every real symmetric matrix $A$ can be orthogonally diagonalized as $A = P D P^T$, where $P$ is an orthogonal matrix ($P^{-1} = P^T$) whose columns are orthonormal eigenvectors, and $D$ contains the eigenvalues of $A$. For example, $\\begin{pmatrix} a & b \\\\ b & a \\end{pmatrix}$ has $\\det(A - \\lambda I) = (a - \\lambda)^2 - b^2$, so $\\lambda = a \\pm b$; for $a = 1$, $b = 4$ this gives $D = \\begin{pmatrix} -3 & 0 \\\\ 0 & 5 \\end{pmatrix}$.\n\n> **Watch out.** The diagonal of $D$ holds the eigenvalues, not the entries of $A$. Keep the order asked for: with $\\lambda_1 \\le \\lambda_2$, the smaller eigenvalue comes first.",
+        "任意实对称矩阵 $A$ 都可以正交对角化为 $A = P D P^T$，其中正交矩阵 $P$（满足 $P^{-1} = P^T$）的各列为标准正交特征向量，对角矩阵 $D$ 的对角元为 $A$ 的特征值。例如 $\\begin{pmatrix} a & b \\\\ b & a \\end{pmatrix}$ 有 $\\det(A - \\lambda I) = (a - \\lambda)^2 - b^2$，所以 $\\lambda = a \\pm b$；当 $a = 1$，$b = 4$ 时得 $D = \\begin{pmatrix} -3 & 0 \\\\ 0 & 5 \\end{pmatrix}$。\n\n> **注意。** $D$ 的对角线上是特征值，而不是 $A$ 的元素。按题目要求的顺序排列：$\\lambda_1 \\le \\lambda_2$ 时较小的特征值在前。",
       ),
       generate: (rng: Rng): Problem => {
         const m = rng.int(-5, 5);
@@ -330,37 +428,65 @@ export const diagonalizationOf2x2SymmetricMatrices: TopicDef = {
           ),
         ];
 
-        const solution = t(
-          `The characteristic equation of $A$ is $\\det(A - \\lambda I) = (${a} - \\lambda)^2 - ${b}^2 = 0$. Solving gives $(${a} - \\lambda - ${b})(${a} - \\lambda + ${b}) = 0$, so $\\lambda_1 = ${lambda1}$ and $\\lambda_2 = ${lambda2}$. Thus $D = ${mat2Latex(
+        const dRight = mat2Latex([
+          [lambda1, 0],
+          [0, lambda2],
+        ]);
+        const solution = walked(
+          [
             [
-              [lambda1, 0],
-              [0, lambda2],
+              ["Write the characteristic equation", "写出特征方程"],
+              t("", ""),
+              [`\\det(A - \\lambda I) = (${a} - \\lambda)^2 - ${b}^2 = 0`, `${a} - \\lambda = \\pm ${b}`],
             ],
-          )}$.`,
-          `矩阵 $A$ 的特征方程为 $\\det(A - \\lambda I) = (${a} - \\lambda)^2 - ${b}^2 = 0$。解得 $(${a} - \\lambda - ${b})(${a} - \\lambda + ${b}) = 0$，即特征值为 $\\lambda_1 = ${lambda1}$ 和 $\\lambda_2 = ${lambda2}$。因此 $D = ${mat2Latex(
             [
-              [lambda1, 0],
-              [0, lambda2],
+              ["Order the eigenvalues", "排列特征值"],
+              t(`So $\\lambda = ${a} \\pm ${b}$, and the smaller one goes first:`, `所以 $\\lambda = ${a} \\pm ${b}$，较小的在前：`),
+              [`\\lambda_1 = ${lambda1}, \\quad \\lambda_2 = ${lambda2}`, `D = ${dRight}`],
             ],
-          )}$。`,
+          ],
+          t(
+            `The trace of $D$ is $${lambda1} + ${paren(lambda2)} = ${2 * a}$ and the trace of $A$ is $${a} + ${paren(a)} = ${2 * a}$; $\\det D = ${lambda1 * lambda2} = ${a * a} - ${b * b} = \\det A$.`,
+            `$D$ 的迹为 $${lambda1} + ${paren(lambda2)} = ${2 * a}$，$A$ 的迹为 $${a} + ${paren(a)} = ${2 * a}$；$\\det D = ${lambda1 * lambda2} = ${a * a} - ${b * b} = \\det A$。`,
+          ),
         );
 
-        return oneOf(rng, prompt, right, wrong, solution);
+        return reasoned(oneOf(rng, prompt, right, wrong, solution), [
+          [
+            wrong[0]!.en,
+            "Those are the eigenvalues in the wrong order; the problem asks for $\\lambda_1 \\le \\lambda_2$.",
+            "特征值的顺序反了；题目要求 $\\lambda_1 \\le \\lambda_2$。",
+          ],
+          [wrong[1]!.en, "Those are two entries of $A$, not its eigenvalues.", "这是 $A$ 的两个元素，不是它的特征值。"],
+          [
+            wrong[2]!.en,
+            `The second eigenvalue is $${a} + ${b} = ${lambda2}$; its sign was flipped.`,
+            `第二个特征值是 $${a} + ${b} = ${lambda2}$；符号被弄反了。`,
+          ],
+          [
+            wrong[3]!.en,
+            `That is the diagonal of $A$; the off-diagonal entries $${b}$ shift the eigenvalues to $${a} \\pm ${b}$.`,
+            `这是 $A$ 的对角线；非对角元 $${b}$ 使特征值变为 $${a} \\pm ${b}$。`,
+          ],
+        ]);
       },
     },
     {
       id: "rebuilding-a-symmetric-matrix-from-its-eigen-data",
       title: t("Rebuilding a symmetric matrix from $P$ and $D$", "由 $P$ 与 $D$ 还原对称矩阵"),
       explanation: t(
-        "An orthogonal diagonalization $A = PDP^T$ can be run backwards. If the unit eigenvectors are $\\frac{1}{\\sqrt{n}}(1, k)$ for $\\lambda_1$ and $\\frac{1}{\\sqrt{n}}(-k, 1)$ for $\\lambda_2$, with $n = 1 + k^2$, then multiplying out gives\n\n$$A = \\frac{1}{n}\\begin{pmatrix} \\lambda_1 + k^2\\lambda_2 & k(\\lambda_1 - \\lambda_2) \\\\ k(\\lambda_1 - \\lambda_2) & k^2\\lambda_1 + \\lambda_2 \\end{pmatrix}.$$\n\nThe result is automatically symmetric, and its trace is $\\lambda_1 + \\lambda_2$.",
-        "正交对角化 $A = PDP^T$ 可以反过来用。若 $\\lambda_1$ 的单位特征向量为 $\\frac{1}{\\sqrt{n}}(1, k)$，$\\lambda_2$ 的为 $\\frac{1}{\\sqrt{n}}(-k, 1)$，$n = 1 + k^2$，则乘开得\n\n$$A = \\frac{1}{n}\\begin{pmatrix} \\lambda_1 + k^2\\lambda_2 & k(\\lambda_1 - \\lambda_2) \\\\ k(\\lambda_1 - \\lambda_2) & k^2\\lambda_1 + \\lambda_2 \\end{pmatrix}$$\n\n结果自然是对称的，迹为 $\\lambda_1 + \\lambda_2$。",
+        "An orthogonal diagonalization $A = PDP^T$ can be run backwards. If the unit eigenvectors are $\\frac{1}{\\sqrt{n}}(1, k)$ for $\\lambda_1$ and $\\frac{1}{\\sqrt{n}}(-k, 1)$ for $\\lambda_2$, with $n = 1 + k^2$, then multiplying out gives\n\n$$A = \\frac{1}{n}\\begin{pmatrix} \\lambda_1 + k^2\\lambda_2 & k(\\lambda_1 - \\lambda_2) \\\\ k(\\lambda_1 - \\lambda_2) & k^2\\lambda_1 + \\lambda_2 \\end{pmatrix}.$$\n\nThe result is automatically symmetric, and its trace is $\\lambda_1 + \\lambda_2$. For example, with $k = 1$, $\\lambda_1 = 5$ and $\\lambda_2 = 1$, $A = \\frac{1}{2}\\begin{pmatrix} 6 & 4 \\\\ 4 & 6 \\end{pmatrix} = \\begin{pmatrix} 3 & 2 \\\\ 2 & 3 \\end{pmatrix}$.\n\n> **Watch out.** Multiply in the order $PDP^T$, with the eigenvectors as the columns of $P$. The order $P^TDP$ flips the sign of the off-diagonal entry, and $D$ alone is not $A$.",
+        "正交对角化 $A = PDP^T$ 可以反过来用。若 $\\lambda_1$ 的单位特征向量为 $\\frac{1}{\\sqrt{n}}(1, k)$，$\\lambda_2$ 的为 $\\frac{1}{\\sqrt{n}}(-k, 1)$，$n = 1 + k^2$，则乘开得\n\n$$A = \\frac{1}{n}\\begin{pmatrix} \\lambda_1 + k^2\\lambda_2 & k(\\lambda_1 - \\lambda_2) \\\\ k(\\lambda_1 - \\lambda_2) & k^2\\lambda_1 + \\lambda_2 \\end{pmatrix}$$\n\n结果自然是对称的，迹为 $\\lambda_1 + \\lambda_2$。例如 $k = 1$，$\\lambda_1 = 5$，$\\lambda_2 = 1$ 时，$A = \\frac{1}{2}\\begin{pmatrix} 6 & 4 \\\\ 4 & 6 \\end{pmatrix} = \\begin{pmatrix} 3 & 2 \\\\ 2 & 3 \\end{pmatrix}$。\n\n> **注意。** 按 $PDP^T$ 的顺序相乘，$P$ 的列是特征向量。按 $P^TDP$ 的顺序会使非对角元变号，而 $D$ 本身也不是 $A$。",
       ),
       generate(rng: Rng): Problem {
         const [l1, l2, k] = pickEigenPair(rng, -4, 6);
         const A = symFromEigen(l1, l2, k);
         const n = 1 + k * k;
         const ans = [A[0][0], A[0][1], A[1][1]] as const;
-        return pointProblem({
+        const swapped = [A[1][1], A[0][1], A[0][0]];
+        const flipped = [A[0][0], -A[0][1], A[1][1]];
+        const justD = [l1, 0, l2];
+        const problem = pointProblem({
           prompt: t(
             `A symmetric matrix $A = PDP^T$ has $P = \\frac{1}{\\sqrt{${n}}}${mat2Latex([
               [1, -k],
@@ -379,22 +505,50 @@ export const diagonalizationOf2x2SymmetricMatrices: TopicDef = {
           ),
           answer: ans,
           vars: ["a_{11}", "a_{12}", "a_{22}"],
-          wrong: [
-            [A[1][1], A[0][1], A[0][0]],
-            [A[0][0], -A[0][1], A[1][1]],
-            [l1, 0, l2],
-          ],
-          solution: t(
-            `$A = \\frac{1}{${n}}${mat2Latex([
-              [l1 + l2 * k * k, k * (l1 - l2)],
-              [k * (l1 - l2), l1 * k * k + l2],
-            ])} = ${mat2Latex(A)}$. Check: the trace is $${A[0][0] + A[1][1]} = ${l1} + ${l2 < 0 ? `(${l2})` : l2}$.`,
-            `$A = \\frac{1}{${n}}${mat2Latex([
-              [l1 + l2 * k * k, k * (l1 - l2)],
-              [k * (l1 - l2), l1 * k * k + l2],
-            ])} = ${mat2Latex(A)}$。检验：迹为 $${A[0][0] + A[1][1]} = ${l1} + ${l2 < 0 ? `(${l2})` : l2}$。`,
+          wrong: [swapped, flipped, justD],
+          solution: walked(
+            [
+              [
+                ["Multiply out the product", "乘开乘积"],
+                t(`With $k = ${k}$ and $n = 1 + ${k}^2 = ${n}$, the formula gives`, `这里 $k = ${k}$，$n = 1 + ${k}^2 = ${n}$，由公式得`),
+                [
+                  `A = \\frac{1}{${n}}${mat2Latex([
+                    [l1 + l2 * k * k, k * (l1 - l2)],
+                    [k * (l1 - l2), l1 * k * k + l2],
+                  ])} = ${mat2Latex(A)}`,
+                ],
+              ],
+              [
+                ["Read off the entries", "读出元素"],
+                t("", ""),
+                [`a_{11} = ${A[0][0]}, \\quad a_{12} = ${A[0][1]}, \\quad a_{22} = ${A[1][1]}`],
+              ],
+            ],
+            t(
+              `The trace is $${A[0][0]} + ${paren(A[1][1])} = ${A[0][0] + A[1][1]} = ${l1} + ${paren(l2)}$, the sum of the eigenvalues.`,
+              `迹为 $${A[0][0]} + ${paren(A[1][1])} = ${A[0][0] + A[1][1]} = ${l1} + ${paren(l2)}$，等于特征值之和。`,
+            ),
           ),
         });
+        return withMistakes(
+          problem,
+          dedupeSaid(
+            [
+              say(pointLatex(swapped), "The two diagonal entries are swapped.", "两个对角元的位置换反了。"),
+              say(
+                pointLatex(flipped),
+                "The sign of $a_{12}$ is flipped, as if the product were $P^TDP$ instead of $PDP^T$.",
+                "$a_{12}$ 的符号反了，好像算的是 $P^TDP$ 而不是 $PDP^T$。",
+              ),
+              say(
+                pointLatex(justD),
+                "That reads the entries off $D$; $A = PDP^T$ also mixes in the eigenvectors.",
+                "这是直接读 $D$ 的元素；$A = PDP^T$ 还要乘上特征向量。",
+              ),
+            ],
+            pointLatex(ans),
+          ),
+        );
       },
     },
   ],
@@ -408,6 +562,10 @@ export const diagonalizationOf3x3SymmetricMatrices: TopicDef = {
     "Orthogonally diagonalize 3x3 symmetric matrices, including finding orthonormal bases for eigenspaces.",
     "对 3x3 对称矩阵进行正交对角化，包括求特征子空间标准正交基。",
   ),
+  intro: t(
+    "The matrix $A = \\begin{pmatrix} 2 & 1 & 0 \\\\ 1 & 2 & 0 \\\\ 0 & 0 & 5 \\end{pmatrix}$ splits into the block $\\begin{pmatrix} 2 & 1 \\\\ 1 & 2 \\end{pmatrix}$, with eigenvalues $1$ and $3$ on $(1, -1, 0)$ and $(1, 1, 0)$, and the entry $5$ on $(0, 0, 1)$. These three eigenvectors are mutually orthogonal, and dividing each by its length gives the columns of an orthogonal $P$.\n\nCheck: $1 + 3 + 5 = 9 = 2 + 2 + 5$, the trace of $A$.\n\nIn this lesson we find the three eigenvalues of a $3 \\times 3$ symmetric matrix, and use orthogonality to find a third eigenvector from two known ones.",
+    "矩阵 $A = \\begin{pmatrix} 2 & 1 & 0 \\\\ 1 & 2 & 0 \\\\ 0 & 0 & 5 \\end{pmatrix}$ 分成块 $\\begin{pmatrix} 2 & 1 \\\\ 1 & 2 \\end{pmatrix}$ 与元素 $5$：前者的特征值 $1$ 和 $3$ 对应 $(1, -1, 0)$ 和 $(1, 1, 0)$，后者的特征值 $5$ 对应 $(0, 0, 1)$。这三个特征向量两两正交，各自除以长度就得到正交矩阵 $P$ 的列。\n\n检验：$1 + 3 + 5 = 9 = 2 + 2 + 5$，正是 $A$ 的迹。\n\n本课我们求 $3 \\times 3$ 对称矩阵的三个特征值，并利用正交性由两个已知特征向量求出第三个。",
+  ),
   prerequisites: ["diagonalization-of-2x2-symmetric-matrices"],
   encompasses: [],
   xp: 16,
@@ -416,8 +574,8 @@ export const diagonalizationOf3x3SymmetricMatrices: TopicDef = {
       id: "orthogonal-diagonalization-3x3",
       title: t("Eigenvalues and Orthogonal Diagonalization of a 3x3 Symmetric Matrix", "3x3 对称矩阵的特征值与正交对角化"),
       explanation: t(
-        "A $3 \\times 3$ real symmetric matrix has 3 real eigenvalues (counting multiplicity). An orthonormal basis of $\\mathbb{R}^3$ consisting of eigenvectors of $A$ can always be constructed, using the Gram-Schmidt process on any repeated eigenspace.",
-        "$3 \\times 3$ 实对称矩阵具有 $3$ 个实特征值（计重数）。总能构造由其特征向量组成的 $\\mathbb{R}^3$ 标准正交基；当出现重特征值时，可对其特征子空间使用施密特正交化。",
+        "A $3 \\times 3$ real symmetric matrix has 3 real eigenvalues (counting multiplicity). An orthonormal basis of $\\mathbb{R}^3$ consisting of eigenvectors of $A$ can always be constructed, using the Gram-Schmidt process on any repeated eigenspace. For example, when $A$ is block diagonal with a block $\\begin{pmatrix} m & k \\\\ k & m \\end{pmatrix}$ and a lone entry $c$, the eigenvalues are $m - k$, $m + k$ and $c$: for $m = 1$, $k = 3$, $c = 5$ they are $-2, 4, 5$.\n\n> **Watch out.** The eigenvalues of the block are $m \\pm k$, not its entries $m$ and $k$. The lone entry $c$ is itself an eigenvalue, with its own sign.",
+        "$3 \\times 3$ 实对称矩阵具有 $3$ 个实特征值（计重数）。总能构造由其特征向量组成的 $\\mathbb{R}^3$ 标准正交基；当出现重特征值时，可对其特征子空间使用施密特正交化。例如当 $A$ 是由块 $\\begin{pmatrix} m & k \\\\ k & m \\end{pmatrix}$ 与单独元素 $c$ 组成的分块对角矩阵时，特征值为 $m - k$、$m + k$ 和 $c$：$m = 1$，$k = 3$，$c = 5$ 时为 $-2, 4, 5$。\n\n> **注意。** 块的特征值是 $m \\pm k$，不是它的元素 $m$ 和 $k$。单独元素 $c$ 本身就是特征值，符号不变。",
       ),
       generate: (rng: Rng): Problem => {
         const m = rng.int(-4, 4);
@@ -443,20 +601,54 @@ export const diagonalizationOf3x3SymmetricMatrices: TopicDef = {
         const sorted = [l1, l2, c].sort((x, y) => x - y);
         const values = sorted.map(String);
 
-        const solution = t(
-          `Because $A$ is block diagonal with a $2 \\times 2$ block $\\begin{pmatrix} ${m} & ${k} \\\\ ${k} & ${m} \\end{pmatrix}$ and a $1 \\times 1$ block $(${c})$, its characteristic polynomial factors as $\\det(A - \\lambda I) = [(${m} - \\lambda)^2 - ${k}^2](${c} - \\lambda) = 0$. Solving gives $\\lambda = ${l1}$, $\\lambda = ${l2}$, and $\\lambda = ${c}$.`,
-          `因为 $A$ 为分块对角矩阵，包含 $2 \\times 2$ 块 $\\begin{pmatrix} ${m} & ${k} \\\\ ${k} & ${m} \\end{pmatrix}$ 与 $1 \\times 1$ 块 $(${c})$，其特征多项式分解为 $\\det(A - \\lambda I) = [(${m} - \\lambda)^2 - ${k}^2](${c} - \\lambda) = 0$。解得特征值为 $\\lambda = ${l1}, ${l2}, ${c}$。`,
+        const solution = walked(
+          [
+            [
+              ["Factor by blocks", "按块分解"],
+              t(
+                `$A$ is block diagonal with the block $\\begin{pmatrix} ${m} & ${k} \\\\ ${k} & ${m} \\end{pmatrix}$ and the entry $${c}$, so`,
+                `$A$ 是由块 $\\begin{pmatrix} ${m} & ${k} \\\\ ${k} & ${m} \\end{pmatrix}$ 与元素 $${c}$ 组成的分块对角矩阵，所以`,
+              ),
+              [`\\det(A - \\lambda I) = \\left[(${m} - \\lambda)^2 - ${k}^2\\right](${c} - \\lambda) = 0`],
+            ],
+            [
+              ["Solve each factor", "分别求解每个因子"],
+              t("", ""),
+              [`${m} - \\lambda = \\pm ${k} \\implies \\lambda = ${l1}, ${l2}`, `${c} - \\lambda = 0 \\implies \\lambda = ${c}`],
+            ],
+          ],
+          t(
+            `$${l1} + ${paren(l2)} + ${paren(c)} = ${l1 + l2 + c} = ${m} + ${paren(m)} + ${paren(c)}$, the trace of $A$.`,
+            `$${l1} + ${paren(l2)} + ${paren(c)} = ${l1 + l2 + c} = ${m} + ${paren(m)} + ${paren(c)}$，正是 $A$ 的迹。`,
+          ),
         );
 
         return solutionsProblem({
           prompt,
           values,
           solution,
-          wrong: [
-            [m, k, c].sort((x, y) => x - y).map(String),
-            [l1, l2, -c].sort((x, y) => x - y).map(String),
-            [m - 2 * k, m + 2 * k, c].sort((x, y) => x - y).map(String),
-          ],
+          mistakes: [
+            whySet(
+              [m, k, c].sort((x, y) => x - y).map(String),
+              `$${m}$ and $${k}$ are entries of the block; its eigenvalues are $${m} \\pm ${k}$.`,
+              `$${m}$ 和 $${k}$ 是块的元素；它的特征值是 $${m} \\pm ${k}$。`,
+            ),
+            whySet(
+              [l1, l2, -c].sort((x, y) => x - y).map(String),
+              `The lone entry gives $\\lambda = ${c}$ from $${c} - \\lambda = 0$; its sign was flipped.`,
+              `由 $${c} - \\lambda = 0$ 得 $\\lambda = ${c}$；符号被弄反了。`,
+            ),
+            whySet(
+              [m - 2 * k, m + 2 * k, c].sort((x, y) => x - y).map(String),
+              `From $(${m} - \\lambda)^2 = ${k}^2$ the shift is $\\pm ${k}$, not $\\pm ${2 * k}$.`,
+              `由 $(${m} - \\lambda)^2 = ${k}^2$ 得偏移为 $\\pm ${k}$，不是 $\\pm ${2 * k}$。`,
+            ),
+          ].filter(
+            (w, i, all) =>
+              new Set(w.values).size === w.values.length &&
+              w.values.join() !== values.join() &&
+              all.findIndex((o) => o.values.join() === w.values.join()) === i,
+          ),
         });
       },
     },
@@ -464,8 +656,8 @@ export const diagonalizationOf3x3SymmetricMatrices: TopicDef = {
       id: "the-third-eigenvector-of-a-3x3-symmetric-matrix",
       title: t("The third eigenvector by orthogonality", "用正交性求第三个特征向量"),
       explanation: t(
-        "Eigenvectors of a symmetric matrix that belong to different eigenvalues are orthogonal. So if a $3 \\times 3$ symmetric matrix has three distinct eigenvalues and two of its eigenvectors $\\mathbf{v}_1, \\mathbf{v}_2$ are known, the third eigenvector must be orthogonal to both. The cross product $\\mathbf{v}_1 \\times \\mathbf{v}_2$ is such a vector, and any nonzero multiple of it works.",
-        "对称矩阵属于不同特征值的特征向量相互正交。所以若 $3 \\times 3$ 对称矩阵有三个不同特征值，且已知其中两个特征向量 $\\mathbf{v}_1, \\mathbf{v}_2$，则第三个特征向量必与二者都正交。叉积 $\\mathbf{v}_1 \\times \\mathbf{v}_2$ 就是这样的向量，它的任意非零倍数都可以。",
+        "Eigenvectors of a symmetric matrix that belong to different eigenvalues are orthogonal. So if a $3 \\times 3$ symmetric matrix has three distinct eigenvalues and two of its eigenvectors $\\mathbf{v}_1, \\mathbf{v}_2$ are known, the third eigenvector must be orthogonal to both. The cross product $\\mathbf{v}_1 \\times \\mathbf{v}_2$ is such a vector, and any nonzero multiple of it works. For example, $(1, 1, 0) \\times (1, -1, 1) = (1 \\cdot 1 - 0 \\cdot (-1),\\ 0 \\cdot 1 - 1 \\cdot 1,\\ 1 \\cdot (-1) - 1 \\cdot 1) = (1, -1, -2)$, which has dot product $0$ with both.\n\n> **Watch out.** The middle component of $\\mathbf{a} \\times \\mathbf{b}$ is $a_3 b_1 - a_1 b_3$, in that order; writing $a_1 b_3 - a_3 b_1$ flips its sign. Check the answer against both given vectors.",
+        "对称矩阵属于不同特征值的特征向量相互正交。所以若 $3 \\times 3$ 对称矩阵有三个不同特征值，且已知其中两个特征向量 $\\mathbf{v}_1, \\mathbf{v}_2$，则第三个特征向量必与二者都正交。叉积 $\\mathbf{v}_1 \\times \\mathbf{v}_2$ 就是这样的向量，它的任意非零倍数都可以。例如 $(1, 1, 0) \\times (1, -1, 1) = (1 \\cdot 1 - 0 \\cdot (-1),\\ 0 \\cdot 1 - 1 \\cdot 1,\\ 1 \\cdot (-1) - 1 \\cdot 1) = (1, -1, -2)$，它与两者的点积都是 $0$。\n\n> **注意。** $\\mathbf{a} \\times \\mathbf{b}$ 的中间分量是 $a_3 b_1 - a_1 b_3$，顺序不能反；写成 $a_1 b_3 - a_3 b_1$ 会使它变号。用两个给定向量检验答案。",
       ),
       generate(rng: Rng): Problem {
         let v1: [number, number, number] = [1, rng.nonZero(-2, 2), rng.int(-2, 2)];
@@ -487,7 +679,13 @@ export const diagonalizationOf3x3SymmetricMatrices: TopicDef = {
           c = [1, -1, -2];
         }
         const ans = [Q.of(1), Q.of(c[1], c[0]), Q.of(c[2], c[0])];
-        return pointProblem({
+        const middle = [Q.of(1), Q.of(-c[1], c[0]), Q.of(c[2], c[0])];
+        const swapped = [Q.of(1), Q.of(c[2], c[0]), Q.of(c[1], c[0])];
+        const first = [Q.of(1), Q.of(v1[1]), Q.of(v1[2])];
+        const dot = (a: readonly number[], b: readonly number[]) => a[0]! * b[0]! + a[1]! * b[1]! + a[2]! * b[2]!;
+        const sum = (a: readonly number[], b: readonly number[]) =>
+          `${a[0]! * b[0]!} + ${paren(a[1]! * b[1]!)} + ${paren(a[2]! * b[2]!)} = ${dot(a, b)}`;
+        const problem = pointProblem({
           prompt: t(
             `A $3 \\times 3$ symmetric matrix has three distinct eigenvalues, and $${vec3Latex(v1)}$ and $${vec3Latex(v2)}$ are eigenvectors for two of them. Find the eigenvector for the third eigenvalue scaled so that its first component is $1$.`,
             `某 $3 \\times 3$ 对称矩阵有三个不同特征值，$${vec3Latex(v1)}$ 与 $${vec3Latex(v2)}$ 是其中两个特征值的特征向量。求第三个特征值的特征向量，并缩放使其第一个分量为 $1$。`,
@@ -495,15 +693,48 @@ export const diagonalizationOf3x3SymmetricMatrices: TopicDef = {
           answer: ans,
           vector: true,
           vars: ["x_1", "x_2", "x_3"],
-          wrong: [
-            [Q.of(1), Q.of(-c[1], c[0]), Q.of(-c[2], c[0])],
-            [Q.of(1), Q.of(c[2], c[0]), Q.of(c[1], c[0])],
-          ],
-          solution: t(
-            `The third eigenvector is orthogonal to both, so take $\\mathbf{v}_1 \\times \\mathbf{v}_2 = ${vec3Latex(c)}$ and divide by $${c[0]}$.`,
-            `第三个特征向量与二者都正交，取 $\\mathbf{v}_1 \\times \\mathbf{v}_2 = ${vec3Latex(c)}$，再除以 $${c[0]}$。`,
+          wrong: [middle, swapped, first],
+          solution: walked(
+            [
+              [
+                ["Take the cross product", "求叉积"],
+                t(
+                  "Call the given eigenvectors $\\mathbf{v}_1$ and $\\mathbf{v}_2$. The third eigenvector is orthogonal to both, and so is their cross product:",
+                  "记两个已知特征向量为 $\\mathbf{v}_1$ 和 $\\mathbf{v}_2$。第三个特征向量与二者都正交，它们的叉积也是如此：",
+                ),
+                [`\\mathbf{v}_1 \\times \\mathbf{v}_2 = ${vec3Latex(c)}`],
+              ],
+              [
+                ["Scale the first component to 1", "把第一个分量缩放为 1"],
+                t(`Divide by $${c[0]}$:`, `除以 $${c[0]}$：`),
+                [vectorLatex(ans)],
+              ],
+            ],
+            t(
+              `$\\mathbf{v}_1 \\cdot (\\mathbf{v}_1 \\times \\mathbf{v}_2) = ${sum(v1, c)}$ and $\\mathbf{v}_2 \\cdot (\\mathbf{v}_1 \\times \\mathbf{v}_2) = ${sum(v2, c)}$, so it is orthogonal to both.`,
+              `$\\mathbf{v}_1 \\cdot (\\mathbf{v}_1 \\times \\mathbf{v}_2) = ${sum(v1, c)}$，$\\mathbf{v}_2 \\cdot (\\mathbf{v}_1 \\times \\mathbf{v}_2) = ${sum(v2, c)}$，所以它与二者都正交。`,
+            ),
           ),
         });
+        return withMistakes(
+          problem,
+          dedupeSaid(
+            [
+              say(
+                vectorLatex(middle),
+                "The middle component of the cross product has the wrong sign: it is $a_3 b_1 - a_1 b_3$.",
+                "叉积中间分量的符号错了：它是 $a_3 b_1 - a_1 b_3$。",
+              ),
+              say(vectorLatex(swapped), "The second and third components are swapped.", "第二和第三个分量的位置换反了。"),
+              say(
+                vectorLatex(first),
+                "That is $\\mathbf{v}_1$ itself; the third eigenvector must be orthogonal to it.",
+                "这是 $\\mathbf{v}_1$ 本身；第三个特征向量必须与它正交。",
+              ),
+            ],
+            vectorLatex(ans),
+          ),
+        );
       },
     },
   ],
@@ -517,6 +748,10 @@ export const spectralTheorem: TopicDef = {
     "State the Spectral Theorem and write symmetric matrices as spectral decompositions $\\sum \\lambda_i \\mathbf{u}_i \\mathbf{u}_i^T$.",
     "陈述谱定理，并将实对称矩阵写成谱分解 $\\sum \\lambda_i \\mathbf{u}_i \\mathbf{u}_i^T$。",
   ),
+  intro: t(
+    "The matrix $A = \\begin{pmatrix} 3 & 1 \\\\ 1 & 3 \\end{pmatrix}$ has eigenvalue $4$ on $\\mathbf{u}_1 = \\frac{1}{\\sqrt{2}}(1, 1)$ and $2$ on $\\mathbf{u}_2 = \\frac{1}{\\sqrt{2}}(1, -1)$. The projections are $\\mathbf{u}_1\\mathbf{u}_1^T = \\frac{1}{2}\\begin{pmatrix} 1 & 1 \\\\ 1 & 1 \\end{pmatrix}$ and $\\mathbf{u}_2\\mathbf{u}_2^T = \\frac{1}{2}\\begin{pmatrix} 1 & -1 \\\\ -1 & 1 \\end{pmatrix}$, and $4\\mathbf{u}_1\\mathbf{u}_1^T + 2\\mathbf{u}_2\\mathbf{u}_2^T = \\begin{pmatrix} 3 & 1 \\\\ 1 & 3 \\end{pmatrix}$.\n\nCheck: the two projections add up to $\\begin{pmatrix} 1 & 0 \\\\ 0 & 1 \\end{pmatrix}$, as they must.\n\nIn this lesson we build the projection matrices of a spectral decomposition, and use the decomposition to apply a symmetric matrix to a vector by scaling its eigenvector components.",
+    "矩阵 $A = \\begin{pmatrix} 3 & 1 \\\\ 1 & 3 \\end{pmatrix}$ 在 $\\mathbf{u}_1 = \\frac{1}{\\sqrt{2}}(1, 1)$ 上的特征值是 $4$，在 $\\mathbf{u}_2 = \\frac{1}{\\sqrt{2}}(1, -1)$ 上的特征值是 $2$。投影矩阵为 $\\mathbf{u}_1\\mathbf{u}_1^T = \\frac{1}{2}\\begin{pmatrix} 1 & 1 \\\\ 1 & 1 \\end{pmatrix}$ 和 $\\mathbf{u}_2\\mathbf{u}_2^T = \\frac{1}{2}\\begin{pmatrix} 1 & -1 \\\\ -1 & 1 \\end{pmatrix}$，而 $4\\mathbf{u}_1\\mathbf{u}_1^T + 2\\mathbf{u}_2\\mathbf{u}_2^T = \\begin{pmatrix} 3 & 1 \\\\ 1 & 3 \\end{pmatrix}$。\n\n检验：两个投影矩阵之和是 $\\begin{pmatrix} 1 & 0 \\\\ 0 & 1 \\end{pmatrix}$，理应如此。\n\n本课我们构造谱分解中的投影矩阵，并利用谱分解把对称矩阵作用于向量：只需按特征值缩放向量在特征向量上的分量。",
+  ),
   prerequisites: ["diagonalization-of-3x3-symmetric-matrices"],
   encompasses: [],
   xp: 15,
@@ -525,8 +760,8 @@ export const spectralTheorem: TopicDef = {
       id: "spectral-decomposition",
       title: t("Spectral Decomposition of a Symmetric Matrix", "实对称矩阵的谱分解"),
       explanation: t(
-        "By the Spectral Theorem, any $n \\times n$ real symmetric matrix $A$ can be written as $A = \\sum_{i=1}^n \\lambda_i u_i u_i^T$, where $\\{u_1, \\dots, u_n\\}$ is an orthonormal basis of eigenvectors. Each $P_i = u_i u_i^T$ is a rank-1 orthogonal projection matrix satisfying $P_i^2 = P_i$, $P_i P_j = 0$ for $i \\ne j$, and $\\sum P_i = I$.",
-        "根据谱定理，任意 $n \\times n$ 实对称矩阵 $A$ 均可表示为谱分解 $A = \\sum_{i=1}^n \\lambda_i u_i u_i^T$，其中 $\\{u_1, \\dots, u_n\\}$ 为标准正交特征向量基。每个 $P_i = u_i u_i^T$ 均为秩 1 正交投影矩阵，满足 $P_i^2 = P_i$、$i \\ne j$ 时 $P_i P_j = 0$ 以及 $\\sum P_i = I$。",
+        "By the Spectral Theorem, any $n \\times n$ real symmetric matrix $A$ can be written as $A = \\sum_{i=1}^n \\lambda_i u_i u_i^T$, where $\\{u_1, \\dots, u_n\\}$ is an orthonormal basis of eigenvectors. Each $P_i = u_i u_i^T$ is a rank-1 orthogonal projection matrix satisfying $P_i^2 = P_i$, $P_i P_j = 0$ for $i \\ne j$, and $\\sum P_i = I$. For example, for $u = \\frac{1}{\\sqrt{5}}(1, 2)$, entry $(i, j)$ of $uu^T$ is $u_i u_j$, so $uu^T = \\frac{1}{5}\\begin{pmatrix} 1 & 2 \\\\ 2 & 4 \\end{pmatrix}$.\n\n> **Watch out.** The factor $\\frac{1}{\\sqrt{5}}$ appears in both $u$ and $u^T$, so the product carries $\\frac{1}{5}$, not $\\frac{1}{\\sqrt{5}}$. The result is always symmetric, with the squares $u_1^2$ and $u_2^2$ on the diagonal.",
+        "根据谱定理，任意 $n \\times n$ 实对称矩阵 $A$ 均可表示为谱分解 $A = \\sum_{i=1}^n \\lambda_i u_i u_i^T$，其中 $\\{u_1, \\dots, u_n\\}$ 为标准正交特征向量基。每个 $P_i = u_i u_i^T$ 均为秩 1 正交投影矩阵，满足 $P_i^2 = P_i$、$i \\ne j$ 时 $P_i P_j = 0$ 以及 $\\sum P_i = I$。例如对 $u = \\frac{1}{\\sqrt{5}}(1, 2)$，$uu^T$ 的 $(i, j)$ 元是 $u_i u_j$，所以 $uu^T = \\frac{1}{5}\\begin{pmatrix} 1 & 2 \\\\ 2 & 4 \\end{pmatrix}$。\n\n> **注意。** 因子 $\\frac{1}{\\sqrt{5}}$ 在 $u$ 和 $u^T$ 中各出现一次，所以乘积带的是 $\\frac{1}{5}$，不是 $\\frac{1}{\\sqrt{5}}$。结果总是对称的，对角线上是平方 $u_1^2$ 和 $u_2^2$。",
       ),
       generate: (rng: Rng): Problem => {
         const a = rng.nonZero(-6, 6);
@@ -595,30 +830,63 @@ export const spectralTheorem: TopicDef = {
           ),
         ];
 
-        const solution = t(
-          `Compute the outer product: $P_1 = u_1 u_1^T = \\frac{1}{${hypSq}} ${vec2Latex([a, b])} \\begin{pmatrix} ${a} & ${b} \\end{pmatrix} = \\frac{1}{${hypSq}} ${mat2Latex(
+        const solution = walked(
+          [
             [
-              [p11, p12],
-              [p12, p22],
+              ["Combine the scalar factors", "合并数量因子"],
+              t(
+                `Both $u_1$ and $u_1^T$ carry $\\frac{1}{\\sqrt{${hypSq}}}$, so together they give $\\frac{1}{${hypSq}}$:`,
+                `$u_1$ 与 $u_1^T$ 各带一个 $\\frac{1}{\\sqrt{${hypSq}}}$，合起来是 $\\frac{1}{${hypSq}}$：`,
+              ),
+              [`P_1 = \\frac{1}{${hypSq}} ${vec2Latex([a, b])} \\begin{pmatrix} ${a} & ${b} \\end{pmatrix}`],
             ],
-          )}$.`,
-          `计算外积：$P_1 = u_1 u_1^T = \\frac{1}{${hypSq}} ${vec2Latex([a, b])} \\begin{pmatrix} ${a} & ${b} \\end{pmatrix} = \\frac{1}{${hypSq}} ${mat2Latex(
             [
-              [p11, p12],
-              [p12, p22],
+              ["Multiply out the outer product", "乘开外积"],
+              t("Entry $(i, j)$ is the product of components $i$ and $j$:", "$(i, j)$ 元是第 $i$ 个与第 $j$ 个分量之积："),
+              [
+                `P_1 = \\frac{1}{${hypSq}} ${mat2Latex([
+                  [p11, p12],
+                  [p12, p22],
+                ])}`,
+              ],
             ],
-          )}$。`,
+          ],
+          t(
+            `The trace is $\\frac{${p11} + ${p22}}{${hypSq}} = 1$, as it must be for a projection onto a line.`,
+            `迹为 $\\frac{${p11} + ${p22}}{${hypSq}} = 1$，投影到一条直线上的矩阵理应如此。`,
+          ),
         );
 
-        return oneOf(rng, prompt, right, wrong, solution);
+        return reasoned(oneOf(rng, prompt, right, wrong, solution), [
+          [
+            wrong[0]!.en,
+            `The off-diagonal entries are $(${a})(${b}) = ${p12}$; their sign was flipped.`,
+            `非对角元是 $(${a})(${b}) = ${p12}$；符号被弄反了。`,
+          ],
+          [
+            wrong[1]!.en,
+            "The entries are out of place: entry $(i, j)$ of $u_1 u_1^T$ is $u_i u_j$, which makes the matrix symmetric.",
+            "元素放错了位置：$u_1 u_1^T$ 的 $(i, j)$ 元是 $u_i u_j$，所以矩阵是对称的。",
+          ],
+          [
+            wrong[2]!.en,
+            `The factor $\\frac{1}{\\sqrt{${hypSq}}}$ comes from both $u_1$ and $u_1^T$, so the product carries $\\frac{1}{${hypSq}}$.`,
+            `因子 $\\frac{1}{\\sqrt{${hypSq}}}$ 来自 $u_1$ 与 $u_1^T$ 两处，所以乘积带的是 $\\frac{1}{${hypSq}}$。`,
+          ],
+          [
+            wrong[3]!.en,
+            `The diagonal entries are swapped: entry $(1, 1)$ is $${a < 0 ? `(${a})` : a}^2 = ${p11}$.`,
+            `对角元的位置换反了：$(1, 1)$ 元是 $${a < 0 ? `(${a})` : a}^2 = ${p11}$。`,
+          ],
+        ]);
       },
     },
     {
       id: "applying-a-spectral-decomposition-to-a-vector",
       title: t("Applying a spectral decomposition to a vector", "用谱分解作用于向量"),
       explanation: t(
-        "The spectral theorem writes a symmetric matrix as $A = \\lambda_1\\mathbf{u}_1\\mathbf{u}_1^T + \\lambda_2\\mathbf{u}_2\\mathbf{u}_2^T$ with orthonormal eigenvectors $\\mathbf{u}_1, \\mathbf{u}_2$. To apply $A$ to a vector, write the vector in the eigenvector basis: if $\\mathbf{x} = \\alpha\\mathbf{v}_1 + \\beta\\mathbf{v}_2$ with eigenvectors $\\mathbf{v}_1, \\mathbf{v}_2$, then $A\\mathbf{x} = \\lambda_1\\alpha\\mathbf{v}_1 + \\lambda_2\\beta\\mathbf{v}_2$. Each component is simply scaled by its eigenvalue.",
-        "谱定理把对称矩阵写成 $A = \\lambda_1\\mathbf{u}_1\\mathbf{u}_1^T + \\lambda_2\\mathbf{u}_2\\mathbf{u}_2^T$，$\\mathbf{u}_1, \\mathbf{u}_2$ 为标准正交特征向量。要把 $A$ 作用于向量，先把向量写在特征向量基下：若 $\\mathbf{x} = \\alpha\\mathbf{v}_1 + \\beta\\mathbf{v}_2$，$\\mathbf{v}_1, \\mathbf{v}_2$ 为特征向量，则 $A\\mathbf{x} = \\lambda_1\\alpha\\mathbf{v}_1 + \\lambda_2\\beta\\mathbf{v}_2$。每个分量只是按其特征值缩放。",
+        "The spectral theorem writes a symmetric matrix as $A = \\lambda_1\\mathbf{u}_1\\mathbf{u}_1^T + \\lambda_2\\mathbf{u}_2\\mathbf{u}_2^T$ with orthonormal eigenvectors $\\mathbf{u}_1, \\mathbf{u}_2$. To apply $A$ to a vector, write the vector in the eigenvector basis: if $\\mathbf{x} = \\alpha\\mathbf{v}_1 + \\beta\\mathbf{v}_2$ with eigenvectors $\\mathbf{v}_1, \\mathbf{v}_2$, then $A\\mathbf{x} = \\lambda_1\\alpha\\mathbf{v}_1 + \\lambda_2\\beta\\mathbf{v}_2$. Each component is simply scaled by its eigenvalue. For example, with eigenvalue $3$ on $(1, 1)$ and $-1$ on $(-1, 1)$, the vector $(0, 2)$ is $1(1, 1) + 1(-1, 1)$, so $A(0, 2) = 3(1, 1) - 1(-1, 1) = (4, 2)$.\n\n> **Watch out.** Scale the coefficients $\\alpha$ and $\\beta$ along the eigenvectors, not the coordinates of $\\mathbf{x}$, and give each eigenvector its own eigenvalue.",
+        "谱定理把对称矩阵写成 $A = \\lambda_1\\mathbf{u}_1\\mathbf{u}_1^T + \\lambda_2\\mathbf{u}_2\\mathbf{u}_2^T$，$\\mathbf{u}_1, \\mathbf{u}_2$ 为标准正交特征向量。要把 $A$ 作用于向量，先把向量写在特征向量基下：若 $\\mathbf{x} = \\alpha\\mathbf{v}_1 + \\beta\\mathbf{v}_2$，$\\mathbf{v}_1, \\mathbf{v}_2$ 为特征向量，则 $A\\mathbf{x} = \\lambda_1\\alpha\\mathbf{v}_1 + \\lambda_2\\beta\\mathbf{v}_2$。每个分量只是按其特征值缩放。例如特征值 $3$ 对应 $(1, 1)$，$-1$ 对应 $(-1, 1)$，向量 $(0, 2) = 1(1, 1) + 1(-1, 1)$，所以 $A(0, 2) = 3(1, 1) - 1(-1, 1) = (4, 2)$。\n\n> **注意。** 要缩放的是沿特征向量的系数 $\\alpha$ 和 $\\beta$，而不是 $\\mathbf{x}$ 的坐标，并且每个特征向量用它自己的特征值。",
       ),
       generate(rng: Rng): Problem {
         const [l1, l2, k] = pickEigenPair(rng, -3, 5);
@@ -626,23 +894,69 @@ export const spectralTheorem: TopicDef = {
         const be = rng.nonZero(-3, 3);
         const x = [al - k * be, al * k + be] as const;
         const ax = [l1 * al - l2 * k * be, l1 * al * k + l2 * be] as const;
-        return pointProblem({
+        const coords = [l1 * x[0], l2 * x[1]];
+        const swappedL = [l2 * al - l1 * k * be, l2 * al * k + l1 * be];
+        const trace = [(l1 + l2) * x[0], (l1 + l2) * x[1]];
+        const n = 1 + k * k;
+        const problem = pointProblem({
           prompt: t(
             `A symmetric matrix $A$ has eigenvalue $${l1}$ with eigenvector $${vec2Latex([1, k])}$ and eigenvalue $${l2}$ with eigenvector $${vec2Latex([-k, 1])}$. Find $A\\mathbf{x}$ for $\\mathbf{x} = ${vec2Latex(x)}$.`,
             `对称矩阵 $A$ 有特征值 $${l1}$，特征向量 $${vec2Latex([1, k])}$，以及特征值 $${l2}$，特征向量 $${vec2Latex([-k, 1])}$。对 $\\mathbf{x} = ${vec2Latex(x)}$ 求 $A\\mathbf{x}$。`,
           ),
           answer: ax,
           vector: true,
-          wrong: [
-            [l1 * x[0], l2 * x[1]],
-            [l2 * al - l1 * k * be, l2 * al * k + l1 * be],
-            [(l1 + l2) * x[0], (l1 + l2) * x[1]],
-          ],
-          solution: t(
-            `$\\mathbf{x} = ${al}${vec2Latex([1, k])} + ${be < 0 ? `(${be})` : be}${vec2Latex([-k, 1])}$, so $A\\mathbf{x} = ${l1 * al}${vec2Latex([1, k])} + ${l2 * be < 0 ? `(${l2 * be})` : l2 * be}${vec2Latex([-k, 1])} = ${vec2Latex(ax)}$.`,
-            `$\\mathbf{x} = ${al}${vec2Latex([1, k])} + ${be < 0 ? `(${be})` : be}${vec2Latex([-k, 1])}$，所以 $A\\mathbf{x} = ${l1 * al}${vec2Latex([1, k])} + ${l2 * be < 0 ? `(${l2 * be})` : l2 * be}${vec2Latex([-k, 1])} = ${vec2Latex(ax)}$。`,
+          wrong: [coords, swappedL, trace],
+          solution: walked(
+            [
+              [
+                ["Write x in the eigenvector basis", "把 x 写在特征向量基下"],
+                t(
+                  `Call the eigenvectors $\\mathbf{v}_1 = ${vec2Latex([1, k])}$ and $\\mathbf{v}_2 = ${vec2Latex([-k, 1])}$. They are orthogonal, so the coefficients are $\\alpha = \\frac{\\mathbf{x} \\cdot \\mathbf{v}_1}{${n}} = ${al}$ and $\\beta = \\frac{\\mathbf{x} \\cdot \\mathbf{v}_2}{${n}} = ${be}$:`,
+                  `记特征向量为 $\\mathbf{v}_1 = ${vec2Latex([1, k])}$，$\\mathbf{v}_2 = ${vec2Latex([-k, 1])}$。它们相互正交，所以系数为 $\\alpha = \\frac{\\mathbf{x} \\cdot \\mathbf{v}_1}{${n}} = ${al}$，$\\beta = \\frac{\\mathbf{x} \\cdot \\mathbf{v}_2}{${n}} = ${be}$：`,
+                ),
+                [`\\mathbf{x} = ${lead(al, vec2Latex([1, k]))} ${plus(be, vec2Latex([-k, 1]))}`],
+              ],
+              [
+                ["Scale each part by its eigenvalue", "每部分乘以各自的特征值"],
+                t("", ""),
+                [
+                  l1 * al === 0
+                    ? `A\\mathbf{x} = ${l1}${vec2Latex([1, k])} ${plus(l2 * be, vec2Latex([-k, 1]))} = ${vec2Latex(ax)}`
+                    : l2 * be === 0
+                      ? `A\\mathbf{x} = ${lead(l1 * al, vec2Latex([1, k]))} + ${l2}${vec2Latex([-k, 1])} = ${vec2Latex(ax)}`
+                      : `A\\mathbf{x} = ${lead(l1 * al, vec2Latex([1, k]))} ${plus(l2 * be, vec2Latex([-k, 1]))} = ${vec2Latex(ax)}`,
+                ],
+              ],
+            ],
+            t(
+              `$A\\mathbf{x} \\cdot \\mathbf{v}_1 = ${ax[0] + k * ax[1]} = ${paren(l1)} \\cdot ${paren(x[0] + k * x[1])} = \\lambda_1 (\\mathbf{x} \\cdot \\mathbf{v}_1)$, as it should be for a symmetric $A$.`,
+              `$A\\mathbf{x} \\cdot \\mathbf{v}_1 = ${ax[0] + k * ax[1]} = ${paren(l1)} \\cdot ${paren(x[0] + k * x[1])} = \\lambda_1 (\\mathbf{x} \\cdot \\mathbf{v}_1)$，对称矩阵理应如此。`,
+            ),
           ),
         });
+        return withMistakes(
+          problem,
+          dedupeSaid(
+            [
+              say(
+                vectorLatex(coords),
+                "That scales the coordinates of $\\mathbf{x}$; scale its coefficients along the eigenvectors instead.",
+                "这是缩放 $\\mathbf{x}$ 的坐标；应该缩放它沿特征向量的系数。",
+              ),
+              say(
+                vectorLatex(swappedL),
+                `The eigenvalues are swapped: $${l1}$ belongs to $${vec2Latex([1, k])}$.`,
+                `特征值配反了：$${l1}$ 对应 $${vec2Latex([1, k])}$。`,
+              ),
+              say(
+                vectorLatex(trace),
+                "That multiplies $\\mathbf{x}$ by $\\lambda_1 + \\lambda_2$; each eigenvector part is scaled by its own eigenvalue.",
+                "这是把 $\\mathbf{x}$ 乘以 $\\lambda_1 + \\lambda_2$；每个特征向量部分要乘以各自的特征值。",
+              ),
+            ],
+            vectorLatex(ax),
+          ),
+        );
       },
     },
   ],
@@ -660,6 +974,10 @@ export const bilinearForms: TopicDef = {
     "Define bilinear forms on vector spaces, find their matrix representations, and evaluate them on vector pairs.",
     "定义向量空间上的双线性型，求其矩阵表示，并计算其在向量对上的取值。",
   ),
+  intro: t(
+    "The form $B(\\mathbf{x}, \\mathbf{y}) = 2x_1y_1 + 3x_1y_2 - x_2y_1 + 4x_2y_2$ is linear in $\\mathbf{x}$ and linear in $\\mathbf{y}$. Putting the coefficient of $x_iy_j$ in row $i$, column $j$ gives $A = \\begin{pmatrix} 2 & 3 \\\\ -1 & 4 \\end{pmatrix}$, and then $B(\\mathbf{x}, \\mathbf{y}) = \\mathbf{x}^TA\\mathbf{y}$.\n\nCheck: for $\\mathbf{x} = (1, 1)$ and $\\mathbf{y} = (1, 0)$ the formula gives $2 - 1 = 1$, and $A\\mathbf{y} = (2, -1)$ dotted with $\\mathbf{x}$ is also $1$.\n\nIn this lesson we write the matrix of a bilinear form and evaluate a bilinear form from its matrix.",
+    "形式 $B(\\mathbf{x}, \\mathbf{y}) = 2x_1y_1 + 3x_1y_2 - x_2y_1 + 4x_2y_2$ 对 $\\mathbf{x}$ 线性，对 $\\mathbf{y}$ 也线性。把 $x_iy_j$ 的系数放在第 $i$ 行第 $j$ 列，得 $A = \\begin{pmatrix} 2 & 3 \\\\ -1 & 4 \\end{pmatrix}$，于是 $B(\\mathbf{x}, \\mathbf{y}) = \\mathbf{x}^TA\\mathbf{y}$。\n\n检验：对 $\\mathbf{x} = (1, 1)$，$\\mathbf{y} = (1, 0)$，公式给出 $2 - 1 = 1$，而 $A\\mathbf{y} = (2, -1)$ 与 $\\mathbf{x}$ 的点积也是 $1$。\n\n本课我们写出双线性型的矩阵，并由矩阵计算双线性型的值。",
+  ),
   prerequisites: ["spectral-theorem"],
   encompasses: [],
   xp: 14,
@@ -668,8 +986,8 @@ export const bilinearForms: TopicDef = {
       id: "bilinear-forms-matrix",
       title: t("Matrix Representation of a Bilinear Form", "双线性型的矩阵表示"),
       explanation: t(
-        "A bilinear form $B(x, y)$ on $\\mathbb{R}^n$ can be expressed uniquely as $B(x, y) = x^T A y$, where the entry $a_{ij} = B(e_i, e_j)$ is the coefficient of $x_i y_j$.",
-        "$\\mathbb{R}^n$ 上的双线性型 $B(x, y)$ 可唯一表示为 $B(x, y) = x^T A y$，其中矩阵元 $a_{ij} = B(e_i, e_j)$ 即为对应项 $x_i y_j$ 的系数。",
+        "A bilinear form $B(x, y)$ on $\\mathbb{R}^n$ can be expressed uniquely as $B(x, y) = x^T A y$, where the entry $a_{ij} = B(e_i, e_j)$ is the coefficient of $x_i y_j$. For example, $B(x, y) = x_1y_1 - 5x_1y_2 + 2x_2y_1$ has $a_{12} = -5$, $a_{21} = 2$ and $a_{22} = 0$, so $A = \\begin{pmatrix} 1 & -5 \\\\ 2 & 0 \\end{pmatrix}$.\n\n> **Watch out.** The index of $x$ picks the row and the index of $y$ picks the column. Putting the coefficient of $x_1y_2$ in row 2 writes $A^T$ instead, and the matrix need not be symmetric.",
+        "$\\mathbb{R}^n$ 上的双线性型 $B(x, y)$ 可唯一表示为 $B(x, y) = x^T A y$，其中矩阵元 $a_{ij} = B(e_i, e_j)$ 即为对应项 $x_i y_j$ 的系数。例如 $B(x, y) = x_1y_1 - 5x_1y_2 + 2x_2y_1$ 有 $a_{12} = -5$，$a_{21} = 2$，$a_{22} = 0$，所以 $A = \\begin{pmatrix} 1 & -5 \\\\ 2 & 0 \\end{pmatrix}$。\n\n> **注意。** $x$ 的下标决定行，$y$ 的下标决定列。把 $x_1y_2$ 的系数放在第 2 行就写成了 $A^T$；这个矩阵也不必对称。",
       ),
       generate: (rng: Rng): Problem => {
         const a11 = rng.nonZero(-6, 6);
@@ -737,30 +1055,63 @@ export const bilinearForms: TopicDef = {
           ),
         ];
 
-        const solution = t(
-          `The entry in row $i$, column $j$ of $A$ is the coefficient of $x_i y_j$. Therefore, $a_{11} = ${a11}$, $a_{12} = ${a12}$, $a_{21} = ${a21}$, and $a_{22} = ${a22}$, giving $A = ${mat2Latex(
+        const solution = walked(
+          [
             [
-              [a11, a12],
-              [a21, a22],
+              ["Read each coefficient", "读出每个系数"],
+              t(
+                "The entry in row $i$, column $j$ of $A$ is the coefficient of $x_i y_j$:",
+                "$A$ 第 $i$ 行第 $j$ 列的元素是 $x_i y_j$ 的系数：",
+              ),
+              [`a_{11} = ${a11}, \\quad a_{12} = ${a12}, \\quad a_{21} = ${a21}, \\quad a_{22} = ${a22}`],
             ],
-          )}$.`,
-          `矩阵 $A$ 第 $i$ 行第 $j$ 列的元素就是 $x_i y_j$ 的系数。因此 $a_{11} = ${a11}$，$a_{12} = ${a12}$，$a_{21} = ${a21}$，$a_{22} = ${a22}$，故 $A = ${mat2Latex(
             [
-              [a11, a12],
-              [a21, a22],
+              ["Place them in the matrix", "放入矩阵"],
+              t("", ""),
+              [
+                `A = ${mat2Latex([
+                  [a11, a12],
+                  [a21, a22],
+                ])}`,
+              ],
             ],
-          )}$。`,
+          ],
+          t(
+            `$B(\\mathbf{e}_1, \\mathbf{e}_2) = \\mathbf{e}_1^TA\\mathbf{e}_2$ is the entry in row 1, column 2, which is $${a12}$, the coefficient of $x_1y_2$.`,
+            `$B(\\mathbf{e}_1, \\mathbf{e}_2) = \\mathbf{e}_1^TA\\mathbf{e}_2$ 是第 1 行第 2 列的元素 $${a12}$，正是 $x_1y_2$ 的系数。`,
+          ),
         );
 
-        return oneOf(rng, prompt, right, wrong, solution);
+        return reasoned(oneOf(rng, prompt, right, wrong, solution), [
+          [
+            wrong[0]!.en,
+            "That is $A^T$: the coefficient of $x_1y_2$ belongs in row 1, column 2, not row 2, column 1.",
+            "这是 $A^T$：$x_1y_2$ 的系数应在第 1 行第 2 列，而不是第 2 行第 1 列。",
+          ],
+          [
+            wrong[1]!.en,
+            `The diagonal entries are swapped: $a_{11}$ is the coefficient of $x_1y_1$, which is $${a11}$.`,
+            `对角元换反了：$a_{11}$ 是 $x_1y_1$ 的系数，即 $${a11}$。`,
+          ],
+          [
+            wrong[2]!.en,
+            "The off-diagonal entries have the wrong signs; each entry keeps the sign of its coefficient.",
+            "非对角元的符号错了；每个元素保留其系数的符号。",
+          ],
+          [
+            wrong[3]!.en,
+            "The two columns are swapped: column $j$ holds the coefficients of the terms with $y_j$.",
+            "两列换反了：第 $j$ 列放的是含 $y_j$ 的项的系数。",
+          ],
+        ]);
       },
     },
     {
       id: "evaluating-a-bilinear-form-from-its-matrix",
       title: t("Evaluating a bilinear form from its matrix", "由矩阵计算双线性型的值"),
       explanation: t(
-        "A bilinear form on $\\mathbb{R}^2$ with matrix $A$ is $B(\\mathbf{x}, \\mathbf{y}) = \\mathbf{x}^T A\\mathbf{y} = \\sum_{i, j} a_{ij}x_iy_j$. To evaluate it, first compute $A\\mathbf{y}$ and then take the dot product with $\\mathbf{x}$. When $A$ is not symmetric, swapping the arguments can change the value, since $B(\\mathbf{y}, \\mathbf{x}) = \\mathbf{x}^T A^T\\mathbf{y}$.",
-        "$\\mathbb{R}^2$ 上矩阵为 $A$ 的双线性型为 $B(\\mathbf{x}, \\mathbf{y}) = \\mathbf{x}^T A\\mathbf{y} = \\sum_{i, j} a_{ij}x_iy_j$。计算时先求 $A\\mathbf{y}$，再与 $\\mathbf{x}$ 作点积。当 $A$ 不对称时，交换两个自变量可能改变值，因为 $B(\\mathbf{y}, \\mathbf{x}) = \\mathbf{x}^T A^T\\mathbf{y}$。",
+        "A bilinear form on $\\mathbb{R}^2$ with matrix $A$ is $B(\\mathbf{x}, \\mathbf{y}) = \\mathbf{x}^T A\\mathbf{y} = \\sum_{i, j} a_{ij}x_iy_j$. To evaluate it, first compute $A\\mathbf{y}$ and then take the dot product with $\\mathbf{x}$. When $A$ is not symmetric, swapping the arguments can change the value, since $B(\\mathbf{y}, \\mathbf{x}) = \\mathbf{x}^T A^T\\mathbf{y}$. For example, with $A = \\begin{pmatrix} 1 & 2 \\\\ 0 & 3 \\end{pmatrix}$, $\\mathbf{x} = (1, 2)$ and $\\mathbf{y} = (2, 1)$, $A\\mathbf{y} = (4, 3)$ and $B(\\mathbf{x}, \\mathbf{y}) = 4 + 6 = 10$, while $B(\\mathbf{y}, \\mathbf{x}) = 16$.\n\n> **Watch out.** $A$ multiplies $\\mathbf{y}$, and the result is dotted with $\\mathbf{x}$; computing $A\\mathbf{x}$ and dotting with $\\mathbf{y}$ gives $B(\\mathbf{y}, \\mathbf{x})$. The answer is one number, not the sum of the entries of $A\\mathbf{y}$.",
+        "$\\mathbb{R}^2$ 上矩阵为 $A$ 的双线性型为 $B(\\mathbf{x}, \\mathbf{y}) = \\mathbf{x}^T A\\mathbf{y} = \\sum_{i, j} a_{ij}x_iy_j$。计算时先求 $A\\mathbf{y}$，再与 $\\mathbf{x}$ 作点积。当 $A$ 不对称时，交换两个自变量可能改变值，因为 $B(\\mathbf{y}, \\mathbf{x}) = \\mathbf{x}^T A^T\\mathbf{y}$。例如 $A = \\begin{pmatrix} 1 & 2 \\\\ 0 & 3 \\end{pmatrix}$，$\\mathbf{x} = (1, 2)$，$\\mathbf{y} = (2, 1)$ 时，$A\\mathbf{y} = (4, 3)$，$B(\\mathbf{x}, \\mathbf{y}) = 4 + 6 = 10$，而 $B(\\mathbf{y}, \\mathbf{x}) = 16$。\n\n> **注意。** $A$ 乘的是 $\\mathbf{y}$，结果再与 $\\mathbf{x}$ 作点积；先算 $A\\mathbf{x}$ 再与 $\\mathbf{y}$ 作点积得到的是 $B(\\mathbf{y}, \\mathbf{x})$。答案是这个数，而不是 $A\\mathbf{y}$ 各分量之和。",
       ),
       generate(rng: Rng): Problem {
         const A: Mat2 = [
@@ -778,10 +1129,40 @@ export const bilinearForms: TopicDef = {
             `$B(\\mathbf{x}, \\mathbf{y}) = \\mathbf{x}^T A\\mathbf{y}$，$A = ${mat2Latex(A)}$。对 $\\mathbf{x} = ${vec2Latex(x)}$ 与 $\\mathbf{y} = ${vec2Latex(y)}$ 求 $B(\\mathbf{x}, \\mathbf{y})$。`,
           ),
           answer: ans,
-          wrong: [swapped, Ay[0] + Ay[1], -ans, x[0] * y[0] + x[1] * y[1]],
-          solution: t(
-            `$A\\mathbf{y} = ${vec2Latex(Ay)}$, so $B(\\mathbf{x}, \\mathbf{y}) = ${x[0]} \\cdot ${Ay[0] < 0 ? `(${Ay[0]})` : Ay[0]} + ${x[1] < 0 ? `(${x[1]})` : x[1]} \\cdot ${Ay[1] < 0 ? `(${Ay[1]})` : Ay[1]} = ${ans}$.`,
-            `$A\\mathbf{y} = ${vec2Latex(Ay)}$，所以 $B(\\mathbf{x}, \\mathbf{y}) = ${x[0]} \\cdot ${Ay[0] < 0 ? `(${Ay[0]})` : Ay[0]} + ${x[1] < 0 ? `(${x[1]})` : x[1]} \\cdot ${Ay[1] < 0 ? `(${Ay[1]})` : Ay[1]} = ${ans}$。`,
+          wrong: [swapped, Ay[0] + Ay[1], x[0] * y[0] + x[1] * y[1]],
+          mistakes: distinct(
+            [
+              why(
+                swapped,
+                "That is $B(\\mathbf{y}, \\mathbf{x})$: $A$ multiplies $\\mathbf{y}$, not $\\mathbf{x}$.",
+                "这是 $B(\\mathbf{y}, \\mathbf{x})$：$A$ 乘的是 $\\mathbf{y}$，不是 $\\mathbf{x}$。",
+              ),
+              why(
+                Ay[0] + Ay[1],
+                "That adds the entries of $A\\mathbf{y}$; dot them with $\\mathbf{x}$ instead.",
+                "这是把 $A\\mathbf{y}$ 的分量相加；应与 $\\mathbf{x}$ 作点积。",
+              ),
+              why(
+                x[0] * y[0] + x[1] * y[1],
+                "That is $\\mathbf{x} \\cdot \\mathbf{y}$, which leaves out $A$.",
+                "这是 $\\mathbf{x} \\cdot \\mathbf{y}$，漏掉了 $A$。",
+              ),
+            ],
+            ans,
+          ),
+          solution: walked(
+            [
+              [["Multiply A by y", "计算 Ay"], t("", ""), [`A\\mathbf{y} = ${vec2Latex(Ay)}`]],
+              [
+                ["Dot with x", "与 x 作点积"],
+                t("", ""),
+                [`B(\\mathbf{x}, \\mathbf{y}) = ${x[0]} \\cdot ${paren(Ay[0])} + ${paren(x[1])} \\cdot ${paren(Ay[1])} = ${ans}`],
+              ],
+            ],
+            t(
+              `Summing $a_{ij}x_iy_j$ term by term: $${A[0][0] * x[0] * y[0]} + ${paren(A[0][1] * x[0] * y[1])} + ${paren(A[1][0] * x[1] * y[0])} + ${paren(A[1][1] * x[1] * y[1])} = ${ans}$.`,
+              `逐项求和 $a_{ij}x_iy_j$：$${A[0][0] * x[0] * y[0]} + ${paren(A[0][1] * x[0] * y[1])} + ${paren(A[1][0] * x[1] * y[0])} + ${paren(A[1][1] * x[1] * y[1])} = ${ans}$。`,
+            ),
           ),
         });
       },
@@ -797,6 +1178,10 @@ export const quadraticForms: TopicDef = {
     "Write quadratic forms as polynomials and in symmetric matrix form $\\mathbf{x}^T A \\mathbf{x}$.",
     "将二次型表示为多项式以及对称矩阵形式 $\\mathbf{x}^T A \\mathbf{x}$。",
   ),
+  intro: t(
+    "The quadratic form $Q = 3x_1^2 + 8x_1x_2 - x_2^2$ has the squares' coefficients $3$ and $-1$ on the diagonal of its symmetric matrix, and the cross coefficient $8$ split evenly as $4$ and $4$: $A = \\begin{pmatrix} 3 & 4 \\\\ 4 & -1 \\end{pmatrix}$.\n\nCheck: at $\\mathbf{x} = (1, 1)$, $Q = 3 + 8 - 1 = 10$, and $A\\mathbf{x} = (7, 3)$ dotted with $(1, 1)$ is also $10$.\n\nIn this lesson we write the symmetric matrix of a quadratic form and read the coefficients of a quadratic form off its matrix.",
+    "二次型 $Q = 3x_1^2 + 8x_1x_2 - x_2^2$ 的对称矩阵中，对角线上是平方项系数 $3$ 和 $-1$，交叉项系数 $8$ 平分为 $4$ 和 $4$：$A = \\begin{pmatrix} 3 & 4 \\\\ 4 & -1 \\end{pmatrix}$。\n\n检验：在 $\\mathbf{x} = (1, 1)$ 处 $Q = 3 + 8 - 1 = 10$，而 $A\\mathbf{x} = (7, 3)$ 与 $(1, 1)$ 的点积也是 $10$。\n\n本课我们写出二次型的对称矩阵，并从矩阵读出二次型的系数。",
+  ),
   prerequisites: ["bilinear-forms"],
   encompasses: [],
   xp: 14,
@@ -805,8 +1190,8 @@ export const quadraticForms: TopicDef = {
       id: "quadratic-forms-symmetric-matrix",
       title: t("Symmetric Matrix of a Quadratic Form", "二次型的对称矩阵"),
       explanation: t(
-        "A quadratic form $Q(x) = x^T A x$ is represented uniquely by a symmetric matrix $A = A^T$. The diagonal entry $a_{ii}$ is the coefficient of $x_i^2$, and the off-diagonal entries are $a_{ij} = a_{ji} = \\frac{1}{2} c_{ij}$, where $c_{ij}$ is the coefficient of $x_i x_j$.",
-        "二次型 $Q(x) = x^T A x$ 可由唯一的实对称矩阵 $A = A^T$ 表示。主对角元 $a_{ii}$ 为 $x_i^2$ 的系数，非对角元 $a_{ij} = a_{ji} = \\frac{1}{2} c_{ij}$，其中 $c_{ij}$ 为交叉项 $x_i x_j$ 的系数。",
+        "A quadratic form $Q(x) = x^T A x$ is represented uniquely by a symmetric matrix $A = A^T$. The diagonal entry $a_{ii}$ is the coefficient of $x_i^2$, and the off-diagonal entries are $a_{ij} = a_{ji} = \\frac{1}{2} c_{ij}$, where $c_{ij}$ is the coefficient of $x_i x_j$. For example, $Q = 2x_1^2 - 6x_1x_2 + 5x_2^2$ has $A = \\begin{pmatrix} 2 & -3 \\\\ -3 & 5 \\end{pmatrix}$.\n\n> **Watch out.** Halve the cross coefficient: $a_{12}$ and $a_{21}$ both contribute to $x_1x_2$, so each is half of it. Writing the whole coefficient in one corner and $0$ in the other gives the same form but not the symmetric matrix.",
+        "二次型 $Q(x) = x^T A x$ 可由唯一的实对称矩阵 $A = A^T$ 表示。主对角元 $a_{ii}$ 为 $x_i^2$ 的系数，非对角元 $a_{ij} = a_{ji} = \\frac{1}{2} c_{ij}$，其中 $c_{ij}$ 为交叉项 $x_i x_j$ 的系数。例如 $Q = 2x_1^2 - 6x_1x_2 + 5x_2^2$ 的矩阵是 $A = \\begin{pmatrix} 2 & -3 \\\\ -3 & 5 \\end{pmatrix}$。\n\n> **注意。** 交叉项系数要减半：$a_{12}$ 与 $a_{21}$ 都贡献给 $x_1x_2$，所以各占一半。把整个系数写在一角、另一角写 $0$，得到的二次型相同，但不是对称矩阵。",
       ),
       generate: (rng: Rng): Problem => {
         const a = rng.nonZero(-8, 8);
@@ -874,30 +1259,57 @@ export const quadraticForms: TopicDef = {
           ),
         ];
 
-        const solution = t(
-          `For a symmetric matrix $A$, the diagonal entries are the squared term coefficients: $a_{11} = ${a}$ and $a_{22} = ${c}$. The off-diagonal entries split the cross-term coefficient evenly: $a_{12} = a_{21} = \\frac{${twoB}}{2} = ${b}$. Thus $A = ${mat2Latex(
+        const solution = walked(
+          [
             [
-              [a, b],
-              [b, c],
+              ["Put the square coefficients on the diagonal", "把平方项系数放在对角线上"],
+              t("", ""),
+              [`a_{11} = ${a}, \\quad a_{22} = ${c}`],
             ],
-          )}$.`,
-          `对于实对称矩阵 $A$，主对角元为平方项系数：$a_{11} = ${a}$，$a_{22} = ${c}$。非对角元平分交叉项系数：$a_{12} = a_{21} = \\frac{${twoB}}{2} = ${b}$。因此 $A = ${mat2Latex(
             [
-              [a, b],
-              [b, c],
+              ["Halve the cross coefficient", "交叉项系数减半"],
+              t("", ""),
+              [
+                `a_{12} = a_{21} = \\frac{${twoB}}{2} = ${b}`,
+                `A = ${mat2Latex([
+                  [a, b],
+                  [b, c],
+                ])}`,
+              ],
             ],
-          )}$。`,
+          ],
+          t(
+            `Expanding $\\mathbf{x}^TA\\mathbf{x}$ gives $${formatQuadratic(a, 2 * b, c)}$, since $a_{12}$ and $a_{21}$ each contribute $${lead(b, "x_1x_2")}$.`,
+            `展开 $\\mathbf{x}^TA\\mathbf{x}$ 得 $${formatQuadratic(a, 2 * b, c)}$，因为 $a_{12}$ 与 $a_{21}$ 各贡献 $${lead(b, "x_1x_2")}$。`,
+          ),
         );
 
-        return oneOf(rng, prompt, right, wrong, solution);
+        return reasoned(oneOf(rng, prompt, right, wrong, solution), [
+          [
+            wrong[0]!.en,
+            `The cross coefficient $${twoB}$ is split between $a_{12}$ and $a_{21}$, so each is $${b}$.`,
+            `交叉项系数 $${twoB}$ 由 $a_{12}$ 与 $a_{21}$ 平分，所以各为 $${b}$。`,
+          ],
+          [wrong[1]!.en, "That matrix gives the same form, but it is not symmetric.", "这个矩阵给出相同的二次型，但它不是对称矩阵。"],
+          [
+            wrong[2]!.en,
+            `The diagonal entries are swapped: $a_{11}$ is the coefficient of $x_1^2$, which is $${a}$.`,
+            `对角元换反了：$a_{11}$ 是 $x_1^2$ 的系数，即 $${a}$。`,
+          ],
+          [
+            wrong[3]!.en,
+            `The off-diagonal entries have the wrong sign: half of $${twoB}$ is $${b}$.`,
+            `非对角元的符号错了：$${twoB}$ 的一半是 $${b}$。`,
+          ],
+        ]);
       },
     },
     {
       id: "reading-coefficients-of-a-quadratic-form-from-its-matrix",
       title: t("Reading coefficients of a quadratic form from its matrix", "从矩阵读出二次型的系数"),
       explanation: t(
-        "For a symmetric $3 \\times 3$ matrix $A$, the quadratic form $Q(\\mathbf{x}) = \\mathbf{x}^T A\\mathbf{x}$ expands to\n\n$$Q = a_{11}x_1^2 + a_{22}x_2^2 + a_{33}x_3^2 + 2a_{12}x_1x_2 + 2a_{13}x_1x_3 + 2a_{23}x_2x_3.$$\n\nA square term takes its diagonal entry directly, while a cross term $x_ix_j$ collects both $a_{ij}$ and $a_{ji}$, so its coefficient is $2a_{ij}$.",
-        "对 $3 \\times 3$ 对称矩阵 $A$，二次型 $Q(\\mathbf{x}) = \\mathbf{x}^T A\\mathbf{x}$ 展开为\n\n$$Q = a_{11}x_1^2 + a_{22}x_2^2 + a_{33}x_3^2 + 2a_{12}x_1x_2 + 2a_{13}x_1x_3 + 2a_{23}x_2x_3$$\n\n平方项直接取对角元，而交叉项 $x_ix_j$ 同时汇集 $a_{ij}$ 与 $a_{ji}$，所以系数为 $2a_{ij}$。",
+        "For a symmetric $3 \\times 3$ matrix $A$, the quadratic form $Q(\\mathbf{x}) = \\mathbf{x}^T A\\mathbf{x}$ expands to\n\n$$Q = a_{11}x_1^2 + a_{22}x_2^2 + a_{33}x_3^2 + 2a_{12}x_1x_2 + 2a_{13}x_1x_3 + 2a_{23}x_2x_3.$$\n\nA square term takes its diagonal entry directly, while a cross term $x_ix_j$ collects both $a_{ij}$ and $a_{ji}$, so its coefficient is $2a_{ij}$. For example, if $a_{13} = a_{31} = -3$, the coefficient of $x_1x_3$ is $2(-3) = -6$, while $a_{22} = 4$ makes the coefficient of $x_2^2$ just $4$.\n\n> **Watch out.** Double only the off-diagonal entries; a diagonal entry appears once in the expansion and is already the coefficient of its square.",
+        "对 $3 \\times 3$ 对称矩阵 $A$，二次型 $Q(\\mathbf{x}) = \\mathbf{x}^T A\\mathbf{x}$ 展开为\n\n$$Q = a_{11}x_1^2 + a_{22}x_2^2 + a_{33}x_3^2 + 2a_{12}x_1x_2 + 2a_{13}x_1x_3 + 2a_{23}x_2x_3$$\n\n平方项直接取对角元，而交叉项 $x_ix_j$ 同时汇集 $a_{ij}$ 与 $a_{ji}$，所以系数为 $2a_{ij}$。例如若 $a_{13} = a_{31} = -3$，则 $x_1x_3$ 的系数是 $2(-3) = -6$，而 $a_{22} = 4$ 使 $x_2^2$ 的系数就是 $4$。\n\n> **注意。** 只有非对角元要加倍；对角元在展开式中只出现一次，本身就是对应平方项的系数。",
       ),
       generate(rng: Rng): Problem {
         const d = [rng.int(-5, 6), rng.int(-5, 6), rng.int(-5, 6)];
@@ -921,13 +1333,59 @@ export const quadraticForms: TopicDef = {
             `$Q(\\mathbf{x}) = \\mathbf{x}^T A\\mathbf{x}$，$A = ${mat3Latex(A)}$。$Q$ 中 $${term.name}$ 的系数是多少？`,
           ),
           answer: term.v,
-          wrong: cross ? [term.e, term.e * 4, -term.v] : [2 * term.v, d[0]!, d[2]!],
+          wrong: cross ? [term.e, term.e * 4] : [2 * term.v, d[0]!, d[2]!],
+          mistakes: distinct(
+            cross
+              ? [
+                  why(
+                    term.e,
+                    `That is $${term.at}$ alone; the mirrored entry contributes the same amount again.`,
+                    `这只是 $${term.at}$；对称位置的元素还要再贡献同样的量。`,
+                  ),
+                  why(term.e * 4, "The entry was doubled twice; it is doubled once.", "这个元素被加倍了两次；只需加倍一次。"),
+                ]
+              : [
+                  why(
+                    2 * term.v,
+                    "A diagonal entry is not doubled; only cross terms collect two entries.",
+                    "对角元不加倍；只有交叉项才汇集两个元素。",
+                  ),
+                  why(d[0]!, "That is $a_{11}$, the coefficient of $x_1^2$.", "这是 $a_{11}$，即 $x_1^2$ 的系数。"),
+                  why(d[2]!, "That is $a_{33}$, the coefficient of $x_3^2$.", "这是 $a_{33}$，即 $x_3^2$ 的系数。"),
+                ],
+            term.v,
+          ),
           solution: cross
-            ? t(
-                `The cross term collects $a_{ij}$ and $a_{ji}$: its coefficient is $2${term.at} = 2 \\cdot ${term.e < 0 ? `(${term.e})` : term.e} = ${term.v}$.`,
-                `交叉项汇集 $a_{ij}$ 与 $a_{ji}$：系数为 $2${term.at} = 2 \\cdot ${term.e < 0 ? `(${term.e})` : term.e} = ${term.v}$。`,
+            ? walked(
+                [
+                  [
+                    ["Find the two entries", "找出两个元素"],
+                    t(
+                      `$x_${term.name[2]}x_${term.name[5]}$ comes from $${term.at}$ and its mirror image, which are equal:`,
+                      `$x_${term.name[2]}x_${term.name[5]}$ 来自 $${term.at}$ 及其对称位置的元素，二者相等：`,
+                    ),
+                    [`${term.at} = ${term.e}`],
+                  ],
+                  [["Add them", "相加"], t("", ""), [`${term.e} + ${paren(term.e)} = ${term.v}`]],
+                ],
+                t(
+                  `In the expansion $\\sum a_{ij}x_ix_j$, the two terms are $${lead(term.e, `x_${term.name[2]}x_${term.name[5]}`)}$ and $${lead(term.e, `x_${term.name[5]}x_${term.name[2]}`)}$, which add to $${lead(term.v, term.name)}$.`,
+                  `在展开式 $\\sum a_{ij}x_ix_j$ 中，这两项是 $${lead(term.e, `x_${term.name[2]}x_${term.name[5]}`)}$ 和 $${lead(term.e, `x_${term.name[5]}x_${term.name[2]}`)}$，合起来是 $${lead(term.v, term.name)}$。`,
+                ),
               )
-            : t(`A square term takes its diagonal entry: $${term.at} = ${term.v}$.`, `平方项取对角元：$${term.at} = ${term.v}$。`),
+            : walked(
+                [
+                  [
+                    ["Take the diagonal entry", "取对角元"],
+                    t("$x_2^2$ comes only from the term $a_{22}x_2x_2$:", "$x_2^2$ 只来自 $a_{22}x_2x_2$ 这一项："),
+                    [`a_{22} = ${term.v}`],
+                  ],
+                ],
+                t(
+                  "Every off-diagonal entry multiplies two different variables, so none of them adds to $x_2^2$.",
+                  "每个非对角元乘的都是两个不同的变量，所以它们都不会加到 $x_2^2$ 上。",
+                ),
+              ),
         });
       },
     },
@@ -942,6 +1400,10 @@ export const changeOfVariablesInQuadraticForms: TopicDef = {
     "Apply an invertible change of variables $\\mathbf{x} = P\\mathbf{y}$ to a quadratic form to obtain the congruent matrix $P^T A P$.",
     "对二次型作可逆变量替换 $\\mathbf{x} = P\\mathbf{y}$，求出合同矩阵 $P^T A P$。",
   ),
+  intro: t(
+    "Take $Q = x_1^2 + 3x_2^2$ and substitute $x_1 = y_1 + y_2$, $x_2 = y_2$, that is $\\mathbf{x} = P\\mathbf{y}$ with $P = \\begin{pmatrix} 1 & 1 \\\\ 0 & 1 \\end{pmatrix}$. Then $Q = (y_1 + y_2)^2 + 3y_2^2 = y_1^2 + 2y_1y_2 + 4y_2^2$, whose matrix is $P^TAP = \\begin{pmatrix} 1 & 1 \\\\ 1 & 4 \\end{pmatrix}$.\n\nCheck: at $\\mathbf{y} = (1, 1)$, $\\mathbf{x} = (2, 1)$ and $Q = 4 + 3 = 7$, while $1 + 2 + 4 = 7$ as well.\n\nIn this lesson we compute the matrix $P^TAP$ of a quadratic form after a change of variables, and substitute a shear directly into a form.",
+    "取 $Q = x_1^2 + 3x_2^2$，代入 $x_1 = y_1 + y_2$，$x_2 = y_2$，即 $\\mathbf{x} = P\\mathbf{y}$，$P = \\begin{pmatrix} 1 & 1 \\\\ 0 & 1 \\end{pmatrix}$。于是 $Q = (y_1 + y_2)^2 + 3y_2^2 = y_1^2 + 2y_1y_2 + 4y_2^2$，它的矩阵是 $P^TAP = \\begin{pmatrix} 1 & 1 \\\\ 1 & 4 \\end{pmatrix}$。\n\n检验：在 $\\mathbf{y} = (1, 1)$ 处 $\\mathbf{x} = (2, 1)$，$Q = 4 + 3 = 7$，而 $1 + 2 + 4 = 7$ 也一样。\n\n本课我们计算变量替换后二次型的矩阵 $P^TAP$，并把剪切变换直接代入二次型。",
+  ),
   prerequisites: ["quadratic-forms"],
   encompasses: [],
   xp: 15,
@@ -950,8 +1412,8 @@ export const changeOfVariablesInQuadraticForms: TopicDef = {
       id: "change-of-variables-congruence",
       title: t("Congruent Matrix Under Change of Variables", "变量替换下的合同矩阵"),
       explanation: t(
-        "If a quadratic form $Q(x) = x^T A x$ undergoes an invertible change of variables $x = P y$, then $Q(P y) = y^T (P^T A P) y$. The matrix of the new quadratic form is $B = P^T A P$, which is congruent to $A$.",
-        "若二次型 $Q(x) = x^T A x$ 进行可逆变量替换 $x = P y$，则 $Q(P y) = y^T (P^T A P) y$。新二次型的矩阵为 $B = P^T A P$，与 $A$ 互为合同矩阵。",
+        "If a quadratic form $Q(x) = x^T A x$ undergoes an invertible change of variables $x = P y$, then $Q(P y) = y^T (P^T A P) y$. The matrix of the new quadratic form is $B = P^T A P$, which is congruent to $A$. For example, $A = \\begin{pmatrix} 2 & 0 \\\\ 0 & -1 \\end{pmatrix}$ and $P = \\begin{pmatrix} 1 & 1 \\\\ 1 & 2 \\end{pmatrix}$ give $P^TA = \\begin{pmatrix} 2 & -1 \\\\ 2 & -2 \\end{pmatrix}$ and $B = \\begin{pmatrix} 1 & 0 \\\\ 0 & -2 \\end{pmatrix}$.\n\n> **Watch out.** Multiply on both sides: $AP$ alone is not the new matrix, and $B$ is symmetric but need not be diagonal. Its entry $b_{ij}$ is $\\mathbf{p}_i^TA\\mathbf{p}_j$ for the columns $\\mathbf{p}_i$ of $P$.",
+        "若二次型 $Q(x) = x^T A x$ 进行可逆变量替换 $x = P y$，则 $Q(P y) = y^T (P^T A P) y$。新二次型的矩阵为 $B = P^T A P$，与 $A$ 互为合同矩阵。例如 $A = \\begin{pmatrix} 2 & 0 \\\\ 0 & -1 \\end{pmatrix}$，$P = \\begin{pmatrix} 1 & 1 \\\\ 1 & 2 \\end{pmatrix}$ 时，$P^TA = \\begin{pmatrix} 2 & -1 \\\\ 2 & -2 \\end{pmatrix}$，$B = \\begin{pmatrix} 1 & 0 \\\\ 0 & -2 \\end{pmatrix}$。\n\n> **注意。** 两边都要乘：只算 $AP$ 不是新矩阵；$B$ 是对称的，但不一定是对角的。它的元素 $b_{ij}$ 等于 $\\mathbf{p}_i^TA\\mathbf{p}_j$，$\\mathbf{p}_i$ 是 $P$ 的列。",
       ),
       generate: (rng: Rng): Problem => {
         const d1 = rng.nonZero(-4, 4);
@@ -1029,32 +1491,55 @@ export const changeOfVariablesInQuadraticForms: TopicDef = {
           ),
         ];
 
-        const solution = t(
-          `Calculate $B = P^T A P$:\n\n$$P^T A = ${mat2Latex([
-            [p11, p21],
-            [p12, p22],
-          ])} ${mat2Latex(A)} = ${mat2Latex([
-            [d1 * p11, d2 * p21],
-            [d1 * p12, d2 * p22],
-          ])}.$$\n\nMultiplying by $P$ gives $B = ${mat2Latex(B)}$.`,
-          `计算 $B = P^T A P$：\n\n$$P^T A = ${mat2Latex([
-            [p11, p21],
-            [p12, p22],
-          ])} ${mat2Latex(A)} = ${mat2Latex([
-            [d1 * p11, d2 * p21],
-            [d1 * p12, d2 * p22],
-          ])}$$\n\n再右乘 $P$ 得到 $B = ${mat2Latex(B)}$。`,
+        const solution = walked(
+          [
+            [
+              ["Multiply the transpose by A", "先算转置乘 A"],
+              t("", ""),
+              [
+                `P^T A = ${mat2Latex([
+                  [p11, p21],
+                  [p12, p22],
+                ])} ${mat2Latex(A)} = ${mat2Latex([
+                  [d1 * p11, d2 * p21],
+                  [d1 * p12, d2 * p22],
+                ])}`,
+              ],
+            ],
+            [["Multiply by P on the right", "再右乘 P"], t("", ""), [`B = (P^T A)P = ${mat2Latex(B)}`]],
+          ],
+          t(
+            `$b_{11}$ is the form at the first column of $P$: $${d1}(${p11})^2 + ${paren(d2)}(${p21})^2 = ${b11}$.`,
+            `$b_{11}$ 是二次型在 $P$ 第一列处的值：$${d1}(${p11})^2 + ${paren(d2)}(${p21})^2 = ${b11}$。`,
+          ),
         );
 
-        return oneOf(rng, prompt, right, wrong, solution);
+        return reasoned(oneOf(rng, prompt, right, wrong, solution), [
+          [
+            wrong[0]!.en,
+            `The off-diagonal entry is $${d1}(${p11})(${p12}) + ${paren(d2)}(${p21})(${p22}) = ${b12}$; its sign was flipped.`,
+            `非对角元是 $${d1}(${p11})(${p12}) + ${paren(d2)}(${p21})(${p22}) = ${b12}$；符号被弄反了。`,
+          ],
+          [
+            wrong[1]!.en,
+            `The diagonal entries are swapped: $b_{11}$ comes from the first column of $P$ and equals $${b11}$.`,
+            `对角元换反了：$b_{11}$ 来自 $P$ 的第一列，等于 $${b11}$。`,
+          ],
+          [wrong[2]!.en, "That is $AP$; it still has to be multiplied by $P^T$ on the left.", "这是 $AP$；还要在左边乘上 $P^T$。"],
+          [
+            wrong[3]!.en,
+            `The off-diagonal entries were dropped; $P^TAP$ is symmetric but not diagonal here, with $b_{12} = ${b12}$.`,
+            `漏掉了非对角元；这里 $P^TAP$ 是对称的，但不是对角的，$b_{12} = ${b12}$。`,
+          ],
+        ]);
       },
     },
     {
       id: "substituting-a-shear-into-a-quadratic-form",
       title: t("Substituting a shear into a quadratic form", "将剪切变换代入二次型"),
       explanation: t(
-        "A change of variables can be carried out by direct substitution as well as by $B = P^TAP$. Under $x_1 = y_1 + ky_2$, $x_2 = y_2$, the form $Q = ax_1^2 + bx_1x_2 + cx_2^2$ becomes\n\n$$a(y_1 + ky_2)^2 + b(y_1 + ky_2)y_2 + cy_2^2 = ay_1^2 + (2ak + b)y_1y_2 + (ak^2 + bk + c)y_2^2.$$\n\nChoosing $k = -\\frac{b}{2a}$ removes the cross term, which is exactly completing the square.",
-        "变量替换既可以用 $B = P^TAP$，也可以直接代入。在 $x_1 = y_1 + ky_2$，$x_2 = y_2$ 下，$Q = ax_1^2 + bx_1x_2 + cx_2^2$ 变为\n\n$$a(y_1 + ky_2)^2 + b(y_1 + ky_2)y_2 + cy_2^2 = ay_1^2 + (2ak + b)y_1y_2 + (ak^2 + bk + c)y_2^2$$\n\n取 $k = -\\frac{b}{2a}$ 可消去交叉项，这正是配方。",
+        "A change of variables can be carried out by direct substitution as well as by $B = P^TAP$. Under $x_1 = y_1 + ky_2$, $x_2 = y_2$, the form $Q = ax_1^2 + bx_1x_2 + cx_2^2$ becomes\n\n$$a(y_1 + ky_2)^2 + b(y_1 + ky_2)y_2 + cy_2^2 = ay_1^2 + (2ak + b)y_1y_2 + (ak^2 + bk + c)y_2^2.$$\n\nChoosing $k = -\\frac{b}{2a}$ removes the cross term, which is exactly completing the square. For example, $Q = x_1^2 + 4x_1x_2 + x_2^2$ with $k = -2$ has $y_1y_2$ coefficient $2(1)(-2) + 4 = 0$ and $y_2^2$ coefficient $1 \\cdot 4 + 4(-2) + 1 = -3$.\n\n> **Watch out.** Expanding $(y_1 + ky_2)^2$ gives $2ky_1y_2$, with a factor $2$, and $k^2y_2^2$, with $k$ squared; the middle term $bx_1x_2$ also adds $bk$ to the $y_2^2$ coefficient.",
+        "变量替换既可以用 $B = P^TAP$，也可以直接代入。在 $x_1 = y_1 + ky_2$，$x_2 = y_2$ 下，$Q = ax_1^2 + bx_1x_2 + cx_2^2$ 变为\n\n$$a(y_1 + ky_2)^2 + b(y_1 + ky_2)y_2 + cy_2^2 = ay_1^2 + (2ak + b)y_1y_2 + (ak^2 + bk + c)y_2^2$$\n\n取 $k = -\\frac{b}{2a}$ 可消去交叉项，这正是配方。例如 $Q = x_1^2 + 4x_1x_2 + x_2^2$ 取 $k = -2$ 时，$y_1y_2$ 的系数为 $2(1)(-2) + 4 = 0$，$y_2^2$ 的系数为 $1 \\cdot 4 + 4(-2) + 1 = -3$。\n\n> **注意。** 展开 $(y_1 + ky_2)^2$ 得 $2ky_1y_2$（有因子 $2$）和 $k^2y_2^2$（$k$ 要平方）；中间项 $bx_1x_2$ 还会给 $y_2^2$ 的系数加上 $bk$。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.nonZero(-3, 4);
@@ -1071,10 +1556,65 @@ export const changeOfVariablesInQuadraticForms: TopicDef = {
             `把 $${sub}$，$x_2 = y_2$ 代入 $Q = ${formatQuadratic(a, b, c)}$。$${askCross ? "y_1y_2" : "y_2^2"}$ 的系数是多少？`,
           ),
           answer: askCross ? cross : sq,
-          wrong: askCross ? [a * k + b, 2 * a * k, b, cross + 2 * a] : [a * k * k + c, a * k + b * k + c, sq - b * k, c],
-          solution: t(
-            `Expanding, the $y_1y_2$ coefficient is $2(${a})(${k}) + ${b < 0 ? `(${b})` : b} = ${cross}$ and the $y_2^2$ coefficient is $${a}(${k})^2 + ${b < 0 ? `(${b})` : b}(${k}) + ${c < 0 ? `(${c})` : c} = ${sq}$.`,
-            `展开后，$y_1y_2$ 的系数为 $2(${a})(${k}) + ${b < 0 ? `(${b})` : b} = ${cross}$，$y_2^2$ 的系数为 $${a}(${k})^2 + ${b < 0 ? `(${b})` : b}(${k}) + ${c < 0 ? `(${c})` : c} = ${sq}$。`,
+          wrong: askCross ? [a * k + b, 2 * a * k, b] : [a * k * k + c, a * k + b * k + c, c],
+          mistakes: distinct(
+            askCross
+              ? [
+                  why(
+                    a * k + b,
+                    `The factor $2$ from $(y_1 ${formatAddVar(k, "y_2")})^2$ is missing: it gives $${lead(2 * k, "y_1y_2")}$, not $${lead(k, "y_1y_2")}$.`,
+                    `漏掉了 $(y_1 ${formatAddVar(k, "y_2")})^2$ 中的因子 $2$：它给出 $${lead(2 * k, "y_1y_2")}$，而不是 $${lead(k, "y_1y_2")}$。`,
+                  ),
+                  why(
+                    2 * a * k,
+                    `The term $${lead(b, "x_1x_2")}$ also becomes $${lead(b, "y_1y_2")} + \\dots$; its $${b}$ was left out.`,
+                    `$${lead(b, "x_1x_2")}$ 这一项也会变为 $${lead(b, "y_1y_2")} + \\dots$；漏掉了它的 $${b}$。`,
+                  ),
+                  why(
+                    b,
+                    "That is the old cross coefficient; the substitution adds $2ak$ to it.",
+                    "这是原来的交叉项系数；代换还会给它加上 $2ak$。",
+                  ),
+                ]
+              : [
+                  why(
+                    a * k * k + c,
+                    `The term $${lead(b, "x_1x_2")}$ also adds $${b}(${k}) = ${b * k}$ to the $y_2^2$ coefficient.`,
+                    `$${lead(b, "x_1x_2")}$ 这一项也给 $y_2^2$ 的系数加上 $${b}(${k}) = ${b * k}$。`,
+                  ),
+                  why(
+                    a * k + b * k + c,
+                    `$k$ was not squared: $(y_1 ${formatAddVar(k, "y_2")})^2$ contains $${k * k}y_2^2$.`,
+                    `$k$ 没有平方：$(y_1 ${formatAddVar(k, "y_2")})^2$ 含有 $${k * k}y_2^2$。`,
+                  ),
+                  why(
+                    c,
+                    "That is the old $x_2^2$ coefficient; the substitution adds $ak^2 + bk$ to it.",
+                    "这是原来 $x_2^2$ 的系数；代换还会给它加上 $ak^2 + bk$。",
+                  ),
+                ],
+            askCross ? cross : sq,
+          ),
+          solution: walked(
+            [
+              [
+                ["Expand the square", "展开平方"],
+                t("", ""),
+                [`(y_1 ${formatAddVar(k, "y_2")})^2 = y_1^2 ${formatSignedTerm(2 * k, "y_1y_2")} + ${k * k === 1 ? "" : k * k}y_2^2`],
+              ],
+              [
+                ["Collect the coefficients", "合并系数"],
+                t(
+                  `$${lead(a, "x_1^2")}$ contributes $${a}$ times this, $${lead(b, "x_1x_2")}$ contributes $${lead(b, `(y_1 ${formatAddVar(k, "y_2")})y_2`)}$, and the $x_2^2$ term adds $${c}$ to the $y_2^2$ coefficient:`,
+                  `$${lead(a, "x_1^2")}$ 贡献它的 $${a}$ 倍，$${lead(b, "x_1x_2")}$ 贡献 $${lead(b, `(y_1 ${formatAddVar(k, "y_2")})y_2`)}$，$x_2^2$ 项再给 $y_2^2$ 的系数加上 $${c}$：`,
+                ),
+                [`y_1y_2: \\ 2(${a})(${k}) + ${paren(b)} = ${cross}`, `y_2^2: \\ ${a}(${k})^2 + ${paren(b)}(${k}) + ${paren(c)} = ${sq}`],
+              ],
+            ],
+            t(
+              `At $\\mathbf{y} = (1, 1)$, $\\mathbf{x} = (${1 + k}, 1)$ and $Q = ${a * (1 + k) * (1 + k) + b * (1 + k) + c}$, which equals $${a} + ${paren(cross)} + ${paren(sq)}$, the sum of the three new coefficients.`,
+              `在 $\\mathbf{y} = (1, 1)$ 处 $\\mathbf{x} = (${1 + k}, 1)$，$Q = ${a * (1 + k) * (1 + k) + b * (1 + k) + c}$，等于三个新系数之和 $${a} + ${paren(cross)} + ${paren(sq)}$。`,
+            ),
           ),
         });
       },
@@ -1090,6 +1630,10 @@ export const canonicalFormOfAQuadraticFormUsingLagrangesMethod: TopicDef = {
     "Transform a quadratic form into a diagonal sum of squares using Lagrange's method of completing the square.",
     "利用拉格朗日配方法将二次型化为只含平方项的标准形。",
   ),
+  intro: t(
+    "In $Q = x_1^2 + 4x_1x_2 + 7x_2^2$, the terms with $x_1$ complete to $(x_1 + 2x_2)^2 = x_1^2 + 4x_1x_2 + 4x_2^2$, which leaves $3x_2^2$. With $y_1 = x_1 + 2x_2$ and $y_2 = x_2$, the form is $y_1^2 + 3y_2^2$, a sum of squares with no cross term.\n\nCheck: at $\\mathbf{x} = (1, 1)$, $Q = 1 + 4 + 7 = 12$, and $y_1 = 3$, $y_2 = 1$ give $9 + 3 = 12$.\n\nIn this lesson we reduce a quadratic form to canonical form by completing the square, and handle a form with no square terms by first creating them.",
+    "在 $Q = x_1^2 + 4x_1x_2 + 7x_2^2$ 中，含 $x_1$ 的项配成 $(x_1 + 2x_2)^2 = x_1^2 + 4x_1x_2 + 4x_2^2$，剩下 $3x_2^2$。令 $y_1 = x_1 + 2x_2$，$y_2 = x_2$，二次型就是 $y_1^2 + 3y_2^2$，只含平方项，没有交叉项。\n\n检验：在 $\\mathbf{x} = (1, 1)$ 处 $Q = 1 + 4 + 7 = 12$，而 $y_1 = 3$，$y_2 = 1$ 给出 $9 + 3 = 12$。\n\n本课我们用配方法把二次型化为标准形，并处理没有平方项的二次型：先造出平方项。",
+  ),
   prerequisites: ["change-of-variables-in-quadratic-forms"],
   encompasses: [],
   xp: 15,
@@ -1098,8 +1642,8 @@ export const canonicalFormOfAQuadraticFormUsingLagrangesMethod: TopicDef = {
       id: "lagrange-completing-the-square",
       title: t("Lagrange Reduction by Completing the Square", "拉格朗日配方法"),
       explanation: t(
-        "Completing the square on one variable at a time removes the cross terms, rewriting the quadratic form as a weighted sum of squares. Lagrange's method repeatedly completes the square on each variable to eliminate cross-product terms: $a x_1^2 + 2b x_1 x_2 + c x_2^2 = a\\left(x_1 + \\frac{b}{a} x_2\\right)^2 + \\left(c - \\frac{b^2}{a}\\right) x_2^2 = d_1 y_1^2 + d_2 y_2^2$.",
-        "一次对一个变量配方可以消去交叉项，把二次型改写成平方的加权和。拉格朗日配方法通过逐个变量配方以消除交叉项：$a x_1^2 + 2b x_1 x_2 + c x_2^2 = a\\left(x_1 + \\frac{b}{a} x_2\\right)^2 + \\left(c - \\frac{b^2}{a}\\right) x_2^2 = d_1 y_1^2 + d_2 y_2^2$。",
+        "Completing the square on one variable at a time removes the cross terms, rewriting the quadratic form as a weighted sum of squares. Lagrange's method repeatedly completes the square on each variable to eliminate cross-product terms: $a x_1^2 + 2b x_1 x_2 + c x_2^2 = a\\left(x_1 + \\frac{b}{a} x_2\\right)^2 + \\left(c - \\frac{b^2}{a}\\right) x_2^2 = d_1 y_1^2 + d_2 y_2^2$. For example, $2x_1^2 + 12x_1x_2 + 13x_2^2 = 2(x_1 + 3x_2)^2 - 18x_2^2 + 13x_2^2 = 2y_1^2 - 5y_2^2$.\n\n> **Watch out.** Completing the square adds $ak^2x_2^2$, here $2 \\cdot 9 = 18$, which must be subtracted from the $x_2^2$ coefficient. Keep $d_1 = a$ first and $d_2$ second.",
+        "一次对一个变量配方可以消去交叉项，把二次型改写成平方的加权和。拉格朗日配方法通过逐个变量配方以消除交叉项：$a x_1^2 + 2b x_1 x_2 + c x_2^2 = a\\left(x_1 + \\frac{b}{a} x_2\\right)^2 + \\left(c - \\frac{b^2}{a}\\right) x_2^2 = d_1 y_1^2 + d_2 y_2^2$。例如 $2x_1^2 + 12x_1x_2 + 13x_2^2 = 2(x_1 + 3x_2)^2 - 18x_2^2 + 13x_2^2 = 2y_1^2 - 5y_2^2$。\n\n> **注意。** 配方时多出了 $ak^2x_2^2$，这里是 $2 \\cdot 9 = 18$，必须从 $x_2^2$ 的系数中减去。$d_1 = a$ 在前，$d_2$ 在后。",
       ),
       generate: (rng: Rng): Problem => {
         const a = rng.nonZero(-3, 3);
@@ -1116,31 +1660,70 @@ export const canonicalFormOfAQuadraticFormUsingLagrangesMethod: TopicDef = {
           `使用拉格朗日配方法，将二次型\n\n$$Q(x_1, x_2) = ${qStr}$$\n\n化为标准形 $d_1 y_1^2 + d_2 y_2^2$（其中 $y_1 = x_1 ${kTerm}$，$y_2 = x_2$）。以有序数对 $(d_1, d_2)$ 的形式输入系数。`,
         );
 
-        const solution = t(
-          `Complete the square in $x_1$:\n\n$$Q(x_1, x_2) = ${formatFirstTerm(a, `(x_1 ${kTerm})^2`)} ${formatSignedTerm(-a * k * k, "x_2^2")} + (${c})x_2^2 = ${formatFirstTerm(a, "y_1^2")} ${formatSignedTerm(rem, "y_2^2")}.$$\n\nHence $(d_1, d_2) = (${a}, ${rem})$.`,
-          `对 $x_1$ 配方：\n\n$$Q(x_1, x_2) = ${formatFirstTerm(a, `(x_1 ${kTerm})^2`)} ${formatSignedTerm(-a * k * k, "x_2^2")} + (${c})x_2^2 = ${formatFirstTerm(a, "y_1^2")} ${formatSignedTerm(rem, "y_2^2")}$$\n\n故系数对为 $(d_1, d_2) = (${a}, ${rem})$。`,
+        const solution = walked(
+          [
+            [
+              ["Complete the square in x1", "对 x1 配方"],
+              t(
+                `$${formatFirstTerm(a, `(x_1 ${kTerm})^2`)}$ reproduces the $x_1$ terms and adds $${formatFirstTerm(a * k * k, "x_2^2")}$, so subtract it:`,
+                `$${formatFirstTerm(a, `(x_1 ${kTerm})^2`)}$ 给出含 $x_1$ 的项，并多出 $${formatFirstTerm(a * k * k, "x_2^2")}$，所以减去它：`,
+              ),
+              [`Q = ${formatFirstTerm(a, `(x_1 ${kTerm})^2`)} ${formatSignedTerm(-a * k * k, "x_2^2")} ${formatSignedTerm(c, "x_2^2")}`],
+            ],
+            [
+              ["Rename the variables", "换成新变量"],
+              t("", ""),
+              [`Q = ${formatFirstTerm(a, "y_1^2")} ${formatSignedTerm(rem, "y_2^2")}`, `(d_1, d_2) = (${a}, ${rem})`],
+            ],
+          ],
+          t(
+            `At $\\mathbf{x} = (1, 1)$, $Q = ${a} + ${paren(twoAk)} + ${paren(c)} = ${a + twoAk + c}$, and $y_1 = ${1 + k}$, $y_2 = 1$ give $${a}(${1 + k})^2 + ${paren(rem)} = ${a * (1 + k) * (1 + k) + rem}$.`,
+            `在 $\\mathbf{x} = (1, 1)$ 处 $Q = ${a} + ${paren(twoAk)} + ${paren(c)} = ${a + twoAk + c}$，而 $y_1 = ${1 + k}$，$y_2 = 1$ 给出 $${a}(${1 + k})^2 + ${paren(rem)} = ${a * (1 + k) * (1 + k) + rem}$。`,
+          ),
         );
 
-        return pointProblem({
-          prompt,
-          answer: [a, rem],
-          vars: ["d_1", "d_2"],
-          solution,
-          wrong: [
-            [a, c],
-            [a, -rem],
-            [rem, a],
-            [a, c - a * k],
-          ],
-        });
+        const wrong = [
+          [a, c],
+          [a, -rem],
+          [rem, a],
+          [a, c - a * k],
+        ];
+        return withMistakes(
+          pointProblem({ prompt, answer: [a, rem], vars: ["d_1", "d_2"], solution, wrong }),
+          dedupeSaid(
+            [
+              say(
+                pointLatex(wrong[0]!),
+                `Completing the square adds $${formatFirstTerm(a * k * k, "x_2^2")}$, which must be subtracted from $${c}$.`,
+                `配方多出了 $${formatFirstTerm(a * k * k, "x_2^2")}$，必须从 $${c}$ 中减去。`,
+              ),
+              say(
+                pointLatex(wrong[1]!),
+                `The sign of $d_2$ is flipped: $${c} - ${paren(a * k * k)} = ${rem}$.`,
+                `$d_2$ 的符号反了：$${c} - ${paren(a * k * k)} = ${rem}$。`,
+              ),
+              say(
+                pointLatex(wrong[2]!),
+                "The two coefficients are swapped; $d_1$ is the coefficient of $y_1^2$.",
+                "两个系数换反了；$d_1$ 是 $y_1^2$ 的系数。",
+              ),
+              say(
+                pointLatex(wrong[3]!),
+                `The subtracted amount is $ak^2 = ${a * k * k}$, with $k$ squared, not $ak = ${a * k}$.`,
+                `要减去的是 $ak^2 = ${a * k * k}$，$k$ 要平方，而不是 $ak = ${a * k}$。`,
+              ),
+            ],
+            pointLatex([a, rem]),
+          ),
+        );
       },
     },
     {
       id: "lagranges-method-with-no-square-terms",
       title: t("Lagrange's method when there are no square terms", "没有平方项时的拉格朗日配方法"),
       explanation: t(
-        "Completing the square needs a square term to start from. When the form is a pure product such as $Q = kx_1x_2$, first create squares with $x_1 = y_1 + cy_2$, $x_2 = y_1 - cy_2$:\n\n$$kx_1x_2 = k(y_1 + cy_2)(y_1 - cy_2) = ky_1^2 - kc^2y_2^2.$$\n\nThe result is already canonical, with one positive and one negative coefficient.",
-        "配方需要一个平方项作为起点。当二次型是纯乘积如 $Q = kx_1x_2$ 时，先用 $x_1 = y_1 + cy_2$，$x_2 = y_1 - cy_2$ 造出平方：\n\n$$kx_1x_2 = k(y_1 + cy_2)(y_1 - cy_2) = ky_1^2 - kc^2y_2^2$$\n\n结果已是标准形，一个系数为正、一个为负。",
+        "Completing the square needs a square term to start from. When the form is a pure product such as $Q = kx_1x_2$, first create squares with $x_1 = y_1 + cy_2$, $x_2 = y_1 - cy_2$:\n\n$$kx_1x_2 = k(y_1 + cy_2)(y_1 - cy_2) = ky_1^2 - kc^2y_2^2.$$\n\nThe result is already canonical, with one positive and one negative coefficient. For example, $x_1 = y_1 + 2y_2$, $x_2 = y_1 - 2y_2$ turns $3x_1x_2$ into $3(y_1^2 - 4y_2^2) = 3y_1^2 - 12y_2^2$.\n\n> **Watch out.** The product $(y_1 + cy_2)(y_1 - cy_2)$ is $y_1^2 - c^2y_2^2$: $c$ is squared and the sign is minus, and both are then multiplied by $k$.",
+        "配方需要一个平方项作为起点。当二次型是纯乘积如 $Q = kx_1x_2$ 时，先用 $x_1 = y_1 + cy_2$，$x_2 = y_1 - cy_2$ 造出平方：\n\n$$kx_1x_2 = k(y_1 + cy_2)(y_1 - cy_2) = ky_1^2 - kc^2y_2^2$$\n\n结果已是标准形，一个系数为正、一个为负。例如 $x_1 = y_1 + 2y_2$，$x_2 = y_1 - 2y_2$ 把 $3x_1x_2$ 变为 $3(y_1^2 - 4y_2^2) = 3y_1^2 - 12y_2^2$。\n\n> **注意。** 乘积 $(y_1 + cy_2)(y_1 - cy_2)$ 等于 $y_1^2 - c^2y_2^2$：$c$ 要平方，符号是减号，然后两项都乘以 $k$。",
       ),
       generate(rng: Rng): Problem {
         const k = rng.nonZero(-9, 9);
@@ -1155,9 +1738,31 @@ export const canonicalFormOfAQuadraticFormUsingLagrangesMethod: TopicDef = {
           ),
           answer: d2,
           wrong: [k * c * c, -2 * k * c, k],
-          solution: t(
-            `$(y_1 + ${cy})(y_1 - ${cy}) = y_1^2 - ${c * c === 1 ? "" : c * c}y_2^2$, so $Q = ${formatDiagonalForm(d1, d2)}$ and $d_2 = ${d2}$.`,
-            `$(y_1 + ${cy})(y_1 - ${cy}) = y_1^2 - ${c * c === 1 ? "" : c * c}y_2^2$，所以 $Q = ${formatDiagonalForm(d1, d2)}$，$d_2 = ${d2}$。`,
+          mistakes: distinct(
+            [
+              why(k * c * c, "The sign is lost: the product of the two factors has $-c^2y_2^2$.", "符号丢了：两个因式之积含 $-c^2y_2^2$。"),
+              why(
+                -2 * k * c,
+                `$c$ was doubled instead of squared: $${c}^2 = ${c * c}$.`,
+                `$c$ 被乘以 $2$ 而不是平方：$${c}^2 = ${c * c}$。`,
+              ),
+              why(k, "That is $d_1$, the coefficient of $y_1^2$.", "这是 $d_1$，即 $y_1^2$ 的系数。"),
+            ],
+            d2,
+          ),
+          solution: walked(
+            [
+              [
+                ["Multiply the two factors", "两个因式相乘"],
+                t("", ""),
+                [`(y_1 + ${cy})(y_1 - ${cy}) = y_1^2 - ${c * c === 1 ? "" : c * c}y_2^2`],
+              ],
+              [["Multiply by the coefficient", "乘以系数"], t("", ""), [`Q = ${formatDiagonalForm(d1, d2)}`, `d_2 = ${d2}`]],
+            ],
+            t(
+              `At $\\mathbf{y} = (1, 1)$, $x_1 = ${1 + c}$ and $x_2 = ${1 - c}$, so $Q = ${k} \\cdot ${1 + c} \\cdot ${paren(1 - c)} = ${k * (1 + c) * (1 - c)}$, and $d_1 + d_2 = ${d1} + ${paren(d2)}$ gives the same.`,
+              `在 $\\mathbf{y} = (1, 1)$ 处 $x_1 = ${1 + c}$，$x_2 = ${1 - c}$，所以 $Q = ${k} \\cdot ${1 + c} \\cdot ${paren(1 - c)} = ${k * (1 + c) * (1 - c)}$，而 $d_1 + d_2 = ${d1} + ${paren(d2)}$ 也是这个值。`,
+            ),
           ),
         });
       },
@@ -1173,6 +1778,10 @@ export const canonicalFormOfAQuadraticFormUsingOrthogonalTransformations: TopicD
     "Reduce a quadratic form to the canonical form $\\lambda_1 y_1^2 + \\cdots + \\lambda_n y_n^2$ using an orthogonal change of variables.",
     "通过正交变换将二次型化为标准形 $\\lambda_1 y_1^2 + \\cdots + \\lambda_n y_n^2$，其中系数为对称矩阵的特征值。",
   ),
+  intro: t(
+    "The form $Q = 5x_1^2 + 4x_1x_2 + 5x_2^2$ has the symmetric matrix $A = \\begin{pmatrix} 5 & 2 \\\\ 2 & 5 \\end{pmatrix}$, with eigenvalues $5 - 2 = 3$ and $5 + 2 = 7$. Rotating to the orthonormal eigenvectors, $\\mathbf{x} = P\\mathbf{y}$, turns the form into $3y_1^2 + 7y_2^2$.\n\nCheck: $3 + 7 = 10 = 5 + 5$, the trace of $A$, and $3 \\cdot 7 = 21 = 25 - 4 = \\det A$.\n\nIn this lesson we find the canonical form of a quadratic form under an orthogonal change of variables, and read the sum and product of its coefficients from the trace and determinant.",
+    "二次型 $Q = 5x_1^2 + 4x_1x_2 + 5x_2^2$ 的对称矩阵为 $A = \\begin{pmatrix} 5 & 2 \\\\ 2 & 5 \\end{pmatrix}$，特征值为 $5 - 2 = 3$ 和 $5 + 2 = 7$。旋转到标准正交特征向量上，即 $\\mathbf{x} = P\\mathbf{y}$，二次型就变为 $3y_1^2 + 7y_2^2$。\n\n检验：$3 + 7 = 10 = 5 + 5$，等于 $A$ 的迹；$3 \\cdot 7 = 21 = 25 - 4 = \\det A$。\n\n本课我们求二次型在正交变量替换下的标准形，并由迹和行列式读出其系数之和与积。",
+  ),
   prerequisites: ["canonical-form-of-a-quadratic-form-using-lagranges-method"],
   encompasses: [],
   xp: 15,
@@ -1181,8 +1790,8 @@ export const canonicalFormOfAQuadraticFormUsingOrthogonalTransformations: TopicD
       id: "orthogonal-transformation-canonical-form",
       title: t("Canonical Form via Orthogonal Transformation", "正交变换下的标准形"),
       explanation: t(
-        "By the Principal Axes Theorem, any quadratic form $x^T A x$ can be transformed by an orthogonal substitution $x = P y$ into $Q = \\lambda_1 y_1^2 + \\dots + \\lambda_n y_n^2$, where the coefficients $\\lambda_i$ are the eigenvalues of the symmetric matrix $A$.",
-        "根据主轴定理，任意二次型 $x^T A x$ 均可通过正交变换 $x = P y$ 化为标准形 $Q = \\lambda_1 y_1^2 + \\dots + \\lambda_n y_n^2$，其中系数 $\\lambda_i$ 为实对称矩阵 $A$ 的特征值。",
+        "By the Principal Axes Theorem, any quadratic form $x^T A x$ can be transformed by an orthogonal substitution $x = P y$ into $Q = \\lambda_1 y_1^2 + \\dots + \\lambda_n y_n^2$, where the coefficients $\\lambda_i$ are the eigenvalues of the symmetric matrix $A$. For example, $Q = 3x_1^2 + 2x_1x_2 + 3x_2^2$ has $A = \\begin{pmatrix} 3 & 1 \\\\ 1 & 3 \\end{pmatrix}$ with eigenvalues $2$ and $4$, so its canonical form is $2y_1^2 + 4y_2^2$.\n\n> **Watch out.** Build $A$ with half the cross coefficient off the diagonal, and use its eigenvalues as the coefficients, not its entries.",
+        "根据主轴定理，任意二次型 $x^T A x$ 均可通过正交变换 $x = P y$ 化为标准形 $Q = \\lambda_1 y_1^2 + \\dots + \\lambda_n y_n^2$，其中系数 $\\lambda_i$ 为实对称矩阵 $A$ 的特征值。例如 $Q = 3x_1^2 + 2x_1x_2 + 3x_2^2$ 的矩阵 $A = \\begin{pmatrix} 3 & 1 \\\\ 1 & 3 \\end{pmatrix}$ 的特征值为 $2$ 和 $4$，所以标准形是 $2y_1^2 + 4y_2^2$。\n\n> **注意。** 构造 $A$ 时非对角元取交叉项系数的一半，标准形的系数用它的特征值，而不是它的元素。",
       ),
       generate: (rng: Rng): Problem => {
         const m = rng.int(-5, 5);
@@ -1207,15 +1816,29 @@ export const canonicalFormOfAQuadraticFormUsingOrthogonalTransformations: TopicD
           t(`$${formatDiagonalForm(m, k)}$`, `$${formatDiagonalForm(m, k)}$`),
         ];
 
-        const solution = t(
-          `The symmetric matrix of $Q$ is $A = ${mat2Latex([
-            [m, k],
-            [k, m],
-          ])}$. Its characteristic equation is $(${m} - \\lambda)^2 - ${k}^2 = 0$, giving eigenvalues $\\lambda_1 = ${l1}$ and $\\lambda_2 = ${l2}$. Under an orthogonal transformation, the coefficients of the canonical form are the eigenvalues, yielding $${rightStr}$.`,
-          `二次型 $Q$ 的实对称矩阵为 $A = ${mat2Latex([
-            [m, k],
-            [k, m],
-          ])}$。其特征方程为 $(${m} - \\lambda)^2 - ${k}^2 = 0$，解得特征值 $\\lambda_1 = ${l1}$，$\\lambda_2 = ${l2}$。在正交变换下，标准形的系数即为特征值，故为 $${rightStr}$。`,
+        const solution = walked(
+          [
+            [
+              ["Write the symmetric matrix", "写出对称矩阵"],
+              t(`Half of $${twoK}$ goes off the diagonal:`, `$${twoK}$ 的一半放在非对角位置：`),
+              [
+                `A = ${mat2Latex([
+                  [m, k],
+                  [k, m],
+                ])}`,
+              ],
+            ],
+            [
+              ["Find the eigenvalues", "求特征值"],
+              t("", ""),
+              [`(${m} - \\lambda)^2 - ${k}^2 = 0`, `\\lambda_1 = ${l1}, \\quad \\lambda_2 = ${l2}`],
+            ],
+            [["Use them as the coefficients", "以特征值为系数"], t("", ""), [`Q = ${rightStr}`]],
+          ],
+          t(
+            `$${l1} + ${paren(l2)} = ${2 * m} = \\operatorname{tr}A$ and $${paren(l1)} \\cdot ${paren(l2)} = ${l1 * l2} = ${m * m} - ${k * k} = \\det A$.`,
+            `$${l1} + ${paren(l2)} = ${2 * m} = \\operatorname{tr}A$，$${paren(l1)} \\cdot ${paren(l2)} = ${l1 * l2} = ${m * m} - ${k * k} = \\det A$。`,
+          ),
         );
         return reasoned(oneOf(rng, prompt, right, wrong, solution), [
           [
@@ -1245,8 +1868,8 @@ export const canonicalFormOfAQuadraticFormUsingOrthogonalTransformations: TopicD
       id: "invariants-of-the-orthogonal-canonical-form",
       title: t("Trace and determinant of the canonical form", "标准形的迹与行列式"),
       explanation: t(
-        "Under an orthogonal transformation the canonical form is $\\lambda_1y_1^2 + \\lambda_2y_2^2$, where $\\lambda_1, \\lambda_2$ are the eigenvalues of the symmetric matrix $A$. Similar matrices share trace and determinant, so without finding the eigenvalues:\n\n$$\\lambda_1 + \\lambda_2 = a_{11} + a_{22}, \\qquad \\lambda_1\\lambda_2 = a_{11}a_{22} - a_{12}^2.$$\n\nFor $Q = ax_1^2 + bx_1x_2 + cx_2^2$ remember that $a_{12} = \\frac{b}{2}$.",
-        "在正交变换下标准形为 $\\lambda_1y_1^2 + \\lambda_2y_2^2$，$\\lambda_1, \\lambda_2$ 是对称矩阵 $A$ 的特征值。相似矩阵有相同的迹与行列式，所以不必求特征值：\n\n$$\\lambda_1 + \\lambda_2 = a_{11} + a_{22}, \\qquad \\lambda_1\\lambda_2 = a_{11}a_{22} - a_{12}^2$$\n\n对 $Q = ax_1^2 + bx_1x_2 + cx_2^2$，记住 $a_{12} = \\frac{b}{2}$。",
+        "Under an orthogonal transformation the canonical form is $\\lambda_1y_1^2 + \\lambda_2y_2^2$, where $\\lambda_1, \\lambda_2$ are the eigenvalues of the symmetric matrix $A$. Similar matrices share trace and determinant, so without finding the eigenvalues:\n\n$$\\lambda_1 + \\lambda_2 = a_{11} + a_{22}, \\qquad \\lambda_1\\lambda_2 = a_{11}a_{22} - a_{12}^2.$$\n\nFor $Q = ax_1^2 + bx_1x_2 + cx_2^2$ remember that $a_{12} = \\frac{b}{2}$. For example, $Q = 4x_1^2 + 6x_1x_2 - x_2^2$ has $\\lambda_1 + \\lambda_2 = 4 + (-1) = 3$ and $\\lambda_1\\lambda_2 = 4(-1) - 3^2 = -13$.\n\n> **Watch out.** In the determinant, square half the cross coefficient, $\\left(\\frac{b}{2}\\right)^2$, not $b^2$, and subtract it. The cross coefficient plays no part in the sum.",
+        "在正交变换下标准形为 $\\lambda_1y_1^2 + \\lambda_2y_2^2$，$\\lambda_1, \\lambda_2$ 是对称矩阵 $A$ 的特征值。相似矩阵有相同的迹与行列式，所以不必求特征值：\n\n$$\\lambda_1 + \\lambda_2 = a_{11} + a_{22}, \\qquad \\lambda_1\\lambda_2 = a_{11}a_{22} - a_{12}^2$$\n\n对 $Q = ax_1^2 + bx_1x_2 + cx_2^2$，记住 $a_{12} = \\frac{b}{2}$。例如 $Q = 4x_1^2 + 6x_1x_2 - x_2^2$ 有 $\\lambda_1 + \\lambda_2 = 4 + (-1) = 3$，$\\lambda_1\\lambda_2 = 4(-1) - 3^2 = -13$。\n\n> **注意。** 行列式中要平方的是交叉项系数的一半 $\\left(\\frac{b}{2}\\right)^2$，而不是 $b^2$，并且要减去它。交叉项系数与和无关。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(-5, 6);
@@ -1262,15 +1885,65 @@ export const canonicalFormOfAQuadraticFormUsingOrthogonalTransformations: TopicD
           ),
           answer: ans,
           wrong: askSum ? [a + c + b, a * c - h * h, a - c] : [a * c - b * b, a * c + h * h, a + c],
-          solution: askSum
-            ? t(
-                `$\\lambda_1 + \\lambda_2 = \\operatorname{tr}A = ${a} + ${c < 0 ? `(${c})` : c} = ${ans}$.`,
-                `$\\lambda_1 + \\lambda_2 = \\operatorname{tr}A = ${a} + ${c < 0 ? `(${c})` : c} = ${ans}$。`,
-              )
-            : t(
-                `$a_{12} = ${h}$, so $\\lambda_1\\lambda_2 = \\det A = ${a} \\cdot ${c < 0 ? `(${c})` : c} - ${h < 0 ? `(${h})` : h}^2 = ${ans}$.`,
-                `$a_{12} = ${h}$，所以 $\\lambda_1\\lambda_2 = \\det A = ${a} \\cdot ${c < 0 ? `(${c})` : c} - ${h < 0 ? `(${h})` : h}^2 = ${ans}$。`,
-              ),
+          mistakes: distinct(
+            askSum
+              ? [
+                  why(
+                    a + c + b,
+                    "The cross coefficient does not enter the trace; add only the diagonal.",
+                    "交叉项系数不进入迹；只把对角元相加。",
+                  ),
+                  why(
+                    a * c - h * h,
+                    "That is $\\det A$, the product $\\lambda_1\\lambda_2$, not the sum.",
+                    "这是 $\\det A$，即乘积 $\\lambda_1\\lambda_2$，不是和。",
+                  ),
+                  why(a - c, "The trace adds the diagonal entries; it does not subtract them.", "迹是把对角元相加，而不是相减。"),
+                ]
+              : [
+                  why(
+                    a * c - b * b,
+                    `That squares the whole cross coefficient $${b}$; the entry $a_{12}$ is half of it, $${h}$.`,
+                    `这是把整个交叉项系数 $${b}$ 平方了；元素 $a_{12}$ 是它的一半，即 $${h}$。`,
+                  ),
+                  why(
+                    a * c + h * h,
+                    `The determinant subtracts $a_{12}^2 = ${h * h}$; it does not add it.`,
+                    `行列式要减去 $a_{12}^2 = ${h * h}$，而不是加上。`,
+                  ),
+                  why(
+                    a + c,
+                    "That is the trace, the sum $\\lambda_1 + \\lambda_2$, not the product.",
+                    "这是迹，即和 $\\lambda_1 + \\lambda_2$，不是积。",
+                  ),
+                ],
+            ans,
+          ),
+          solution: walked(
+            [
+              [
+                ["Write the symmetric matrix", "写出对称矩阵"],
+                t(`Half of $${b}$ goes off the diagonal:`, `$${b}$ 的一半放在非对角位置：`),
+                [
+                  `A = ${mat2Latex([
+                    [a, h],
+                    [h, c],
+                  ])}`,
+                ],
+              ],
+              askSum
+                ? [["Take the trace", "求迹"], t("", ""), [`\\lambda_1 + \\lambda_2 = \\operatorname{tr}A = ${a} + ${paren(c)} = ${ans}`]]
+                : [
+                    ["Take the determinant", "求行列式"],
+                    t("", ""),
+                    [`\\lambda_1\\lambda_2 = \\det A = ${a} \\cdot ${paren(c)} - ${paren(h)}^2 = ${ans}`],
+                  ],
+            ],
+            t(
+              `$\\det(A - \\lambda I) = (${a} - \\lambda)(${c} - \\lambda) - ${h * h} = \\lambda^2 ${formatSignedTerm(-(a + c), "\\lambda")} ${a * c - h * h === 0 ? "" : a * c - h * h > 0 ? `+ ${a * c - h * h}` : `- ${h * h - a * c}`}$. The sum of its roots is $${a + c}$ and their product is $${a * c - h * h}$, so $${askSum ? "\\lambda_1 + \\lambda_2" : "\\lambda_1\\lambda_2"} = ${ans}$.`,
+              `$\\det(A - \\lambda I) = (${a} - \\lambda)(${c} - \\lambda) - ${h * h} = \\lambda^2 ${formatSignedTerm(-(a + c), "\\lambda")} ${a * c - h * h === 0 ? "" : a * c - h * h > 0 ? `+ ${a * c - h * h}` : `- ${h * h - a * c}`}$。它的两根之和为 $${a + c}$，之积为 $${a * c - h * h}$，所以 $${askSum ? "\\lambda_1 + \\lambda_2" : "\\lambda_1\\lambda_2"} = ${ans}$。`,
+            ),
+          ),
         });
       },
     },
@@ -1285,6 +1958,10 @@ export const positiveDefiniteAndNegativeDefiniteQuadraticForms: TopicDef = {
     "Classify quadratic forms as positive definite, negative definite, semidefinite, or indefinite using Sylvester's criterion and eigenvalues.",
     "利用西尔维斯特准则（顺序主子式）及特征值判定二次型的正定性、负定性、半定性与不定性。",
   ),
+  intro: t(
+    "The form $Q = 2x_1^2 + 2x_1x_2 + 3x_2^2$ has $A = \\begin{pmatrix} 2 & 1 \\\\ 1 & 3 \\end{pmatrix}$, with leading principal minors $\\Delta_1 = 2 > 0$ and $\\Delta_2 = 6 - 1 = 5 > 0$. By Sylvester's criterion the form is positive definite: $Q(\\mathbf{x}) > 0$ for every $\\mathbf{x} \\ne \\mathbf{0}$.\n\nCheck: completing the square gives $Q = 2\\left(x_1 + \\frac{1}{2}x_2\\right)^2 + \\frac{5}{2}x_2^2$, a sum of squares with positive weights.\n\nIn this lesson we classify quadratic forms in two and three variables as positive definite, negative definite or indefinite from their leading principal minors.",
+    "二次型 $Q = 2x_1^2 + 2x_1x_2 + 3x_2^2$ 的矩阵为 $A = \\begin{pmatrix} 2 & 1 \\\\ 1 & 3 \\end{pmatrix}$，顺序主子式为 $\\Delta_1 = 2 > 0$，$\\Delta_2 = 6 - 1 = 5 > 0$。由西尔维斯特准则，该二次型正定：对每个 $\\mathbf{x} \\ne \\mathbf{0}$ 都有 $Q(\\mathbf{x}) > 0$。\n\n检验：配方得 $Q = 2\\left(x_1 + \\frac{1}{2}x_2\\right)^2 + \\frac{5}{2}x_2^2$，是权重为正的平方和。\n\n本课我们由顺序主子式判定二元和三元二次型是正定、负定还是不定。",
+  ),
   prerequisites: ["canonical-form-of-a-quadratic-form-using-orthogonal-transformations"],
   encompasses: [],
   xp: 15,
@@ -1293,8 +1970,8 @@ export const positiveDefiniteAndNegativeDefiniteQuadraticForms: TopicDef = {
       id: "quadratic-forms-definiteness",
       title: t("Classifying Definiteness of Quadratic Forms", "二次型定性的判定"),
       explanation: t(
-        "A quadratic form is:\n- **Positive definite** iff all eigenvalues are $> 0$ (all leading principal minors $\\Delta_k > 0$).\n- **Negative definite** iff all eigenvalues are $< 0$ ($(-1)^k \\Delta_k > 0$).\n- **Indefinite** iff it has both positive and negative eigenvalues.",
-        "二次型的定性判定：\n- **正定**：当且仅当所有特征值大于 0（所有顺序主子式 $\\Delta_k > 0$）；\n- **负定**：当且仅当所有特征值小于 0（顺序主子式正负相错，即 $(-1)^k \\Delta_k > 0$）；\n- **不定**：具有异号特征值。",
+        "A quadratic form is:\n- **Positive definite** iff all eigenvalues are $> 0$ (all leading principal minors $\\Delta_k > 0$).\n- **Negative definite** iff all eigenvalues are $< 0$ ($(-1)^k \\Delta_k > 0$).\n- **Indefinite** iff it has both positive and negative eigenvalues.\n\nFor example, $Q = -x_1^2 + 4x_1x_2 - 5x_2^2$ has $\\Delta_1 = -1 < 0$ and $\\Delta_2 = (-1)(-5) - 2^2 = 1 > 0$, so it is negative definite.\n\n> **Watch out.** Use half the cross coefficient in $\\Delta_2 = ac - b^2$. A negative definite form has $\\Delta_2 > 0$, not $\\Delta_2 < 0$; a negative $\\Delta_2$ means the form is indefinite.",
+        "二次型的定性判定：\n- **正定**：当且仅当所有特征值大于 0（所有顺序主子式 $\\Delta_k > 0$）；\n- **负定**：当且仅当所有特征值小于 0（顺序主子式正负相错，即 $(-1)^k \\Delta_k > 0$）；\n- **不定**：具有异号特征值。\n\n例如 $Q = -x_1^2 + 4x_1x_2 - 5x_2^2$ 有 $\\Delta_1 = -1 < 0$，$\\Delta_2 = (-1)(-5) - 2^2 = 1 > 0$，所以它是负定的。\n\n> **注意。** $\\Delta_2 = ac - b^2$ 中用的是交叉项系数的一半。负定二次型的 $\\Delta_2 > 0$，而不是 $\\Delta_2 < 0$；$\\Delta_2$ 为负说明二次型不定。",
       ),
       generate: (rng: Rng): Problem => {
         const kind = rng.int(0, 2);
@@ -1342,31 +2019,78 @@ export const positiveDefiniteAndNegativeDefiniteQuadraticForms: TopicDef = {
           t("Positive semidefinite (not positive definite)", "半正定（非正定）"),
         ].filter((opt) => opt.en !== classificationEn);
 
-        const reasonEn =
+        const minorsLine = `\\Delta_1 = ${delta1}, \\quad \\Delta_2 = (${a})(${c}) - ${b}^2 = ${delta2}`;
+        const conclude =
           kind === 0
-            ? `The leading principal minors are $\\Delta_1 = ${delta1} > 0$ and $\\Delta_2 = ac - b^2 = (${a})(${c}) - ${b}^2 = ${delta2} > 0$. By Sylvester's criterion, the quadratic form is positive definite.`
+            ? t(
+                "Both minors are positive, so by Sylvester's criterion the form is positive definite.",
+                "两个主子式都为正，由西尔维斯特准则，该二次型正定。",
+              )
             : kind === 1
-              ? `The leading principal minors are $\\Delta_1 = ${delta1} < 0$ and $\\Delta_2 = ac - b^2 = (${a})(${c}) - ${b}^2 = ${delta2} > 0$. The signs alternate starting with negative, so the quadratic form is negative definite.`
-              : `The determinant of the matrix is $\\Delta_2 = ac - b^2 = (${a})(${c}) - ${b}^2 = ${delta2} < 0$. The eigenvalues have opposite signs, so the quadratic form is indefinite.`;
+              ? t(
+                  "$\\Delta_1 < 0$ and $\\Delta_2 > 0$: the signs alternate starting with negative, so the form is negative definite.",
+                  "$\\Delta_1 < 0$ 且 $\\Delta_2 > 0$：符号由负开始交替，所以该二次型负定。",
+                )
+              : t(
+                  "$\\Delta_2 = \\det A < 0$, so the two eigenvalues have opposite signs and the form is indefinite.",
+                  "$\\Delta_2 = \\det A < 0$，所以两个特征值异号，该二次型不定。",
+                );
+        const solution = walked(
+          [
+            [
+              ["Write the symmetric matrix", "写出对称矩阵"],
+              t(`Half of $${twoB}$ goes off the diagonal:`, `$${twoB}$ 的一半放在非对角位置：`),
+              [
+                `A = ${mat2Latex([
+                  [a, b],
+                  [b, c],
+                ])}`,
+              ],
+            ],
+            [["Compute the leading principal minors", "计算顺序主子式"], t("", ""), [minorsLine]],
+            [["Apply the criterion", "应用判据"], conclude],
+          ],
+          kind === 2
+            ? t(
+                `$Q(1, 0) = ${a} > 0$ while $Q(0, 1) = ${c} < 0$, so $Q$ takes both signs.`,
+                `$Q(1, 0) = ${a} > 0$，而 $Q(0, 1) = ${c} < 0$，所以 $Q$ 取到两种符号。`,
+              )
+            : t(
+                `$Q(1, 0) = ${a}$ and $Q(0, 1) = ${c}$ are both ${kind === 0 ? "positive" : "negative"}, as they must be.`,
+                `$Q(1, 0) = ${a}$ 与 $Q(0, 1) = ${c}$ 都是${kind === 0 ? "正" : "负"}的，理应如此。`,
+              ),
+        );
 
-        const reasonZh =
-          kind === 0
-            ? `顺序主子式分别为 $\\Delta_1 = ${delta1} > 0$ 且 $\\Delta_2 = ac - b^2 = (${a})(${c}) - ${b}^2 = ${delta2} > 0$。根据西尔维斯特准则，该二次型为正定。`
-            : kind === 1
-              ? `顺序主子式分别为 $\\Delta_1 = ${delta1} < 0$ 且 $\\Delta_2 = ac - b^2 = (${a})(${c}) - ${b}^2 = ${delta2} > 0$。符号正负相错且由负开始，故该二次型为负定。`
-              : `行列式 $\\Delta_2 = ac - b^2 = (${a})(${c}) - ${b}^2 = ${delta2} < 0$。两特征值异号，故该二次型为不定。`;
-
-        const solution = t(reasonEn, reasonZh);
-
-        return oneOf(rng, prompt, right, wrong, solution);
+        const opposite: [string, string] = [
+          `$\\Delta_2 = ${delta2} < 0$, so the eigenvalues have opposite signs.`,
+          `$\\Delta_2 = ${delta2} < 0$，所以特征值异号。`,
+        ];
+        const notPositive: [string, string] =
+          kind === 2 ? opposite : [`$\\Delta_1 = ${delta1} < 0$, so $Q(1, 0) < 0$.`, `$\\Delta_1 = ${delta1} < 0$，所以 $Q(1, 0) < 0$。`];
+        const notNegative: [string, string] =
+          kind === 2 ? opposite : [`$\\Delta_1 = ${delta1} > 0$, so $Q(1, 0) > 0$.`, `$\\Delta_1 = ${delta1} > 0$，所以 $Q(1, 0) > 0$。`];
+        return reasoned(oneOf(rng, prompt, right, wrong, solution), [
+          ["Positive definite", ...notPositive],
+          ["Negative definite", ...notNegative],
+          [
+            "Indefinite",
+            `$\\Delta_2 = ${delta2} > 0$, so both eigenvalues have the same sign.`,
+            `$\\Delta_2 = ${delta2} > 0$，所以两个特征值同号。`,
+          ],
+          [
+            "Positive semidefinite (not positive definite)",
+            `$\\Delta_2 = ${delta2} \\ne 0$, so $0$ is not an eigenvalue and the form is not merely semidefinite.`,
+            `$\\Delta_2 = ${delta2} \\ne 0$，所以 $0$ 不是特征值，该二次型不只是半定的。`,
+          ],
+        ]);
       },
     },
     {
       id: "sylvesters-criterion-for-three-variables",
       title: t("Sylvester's criterion in three variables", "三元二次型的西尔维斯特判据"),
       explanation: t(
-        "Sylvester's criterion classifies a symmetric matrix by its leading principal minors $D_1 = a_{11}$, $D_2 = \\det$ of the top-left $2 \\times 2$ block, and $D_3 = \\det A$. The form is positive definite exactly when $D_1, D_2, D_3 > 0$, and negative definite exactly when the signs alternate $D_1 < 0$, $D_2 > 0$, $D_3 < 0$. If $D_3 \\ne 0$ and neither pattern holds, the form is indefinite.",
-        "西尔维斯特判据用顺序主子式 $D_1 = a_{11}$、左上 $2 \\times 2$ 块的行列式 $D_2$ 与 $D_3 = \\det A$ 来分类对称矩阵。二次型正定当且仅当 $D_1, D_2, D_3 > 0$；负定当且仅当符号交替 $D_1 < 0$，$D_2 > 0$，$D_3 < 0$。若 $D_3 \\ne 0$ 且两种模式都不满足，则二次型不定。",
+        "Sylvester's criterion classifies a symmetric matrix by its leading principal minors $D_1 = a_{11}$, $D_2 = \\det$ of the top-left $2 \\times 2$ block, and $D_3 = \\det A$. The form is positive definite exactly when $D_1, D_2, D_3 > 0$, and negative definite exactly when the signs alternate $D_1 < 0$, $D_2 > 0$, $D_3 < 0$. If $D_3 \\ne 0$ and neither pattern holds, the form is indefinite. For example, $A = \\begin{pmatrix} 2 & 0 & 0 \\\\ 0 & 3 & 0 \\\\ 0 & 0 & -1 \\end{pmatrix}$ has $D_1 = 2$, $D_2 = 6$ and $D_3 = -6$, so it is indefinite even though the first two minors are positive.\n\n> **Watch out.** Check all three minors. Negative definite does not mean all minors negative: the signs must alternate, so $D_2$ is positive.",
+        "西尔维斯特判据用顺序主子式 $D_1 = a_{11}$、左上 $2 \\times 2$ 块的行列式 $D_2$ 与 $D_3 = \\det A$ 来分类对称矩阵。二次型正定当且仅当 $D_1, D_2, D_3 > 0$；负定当且仅当符号交替 $D_1 < 0$，$D_2 > 0$，$D_3 < 0$。若 $D_3 \\ne 0$ 且两种模式都不满足，则二次型不定。例如 $A = \\begin{pmatrix} 2 & 0 & 0 \\\\ 0 & 3 & 0 \\\\ 0 & 0 & -1 \\end{pmatrix}$ 有 $D_1 = 2$，$D_2 = 6$，$D_3 = -6$，所以虽然前两个主子式为正，它仍是不定的。\n\n> **注意。** 三个主子式都要检查。负定并不是所有主子式都为负：符号必须交替，所以 $D_2$ 为正。",
       ),
       generate(rng: Rng): Problem {
         const kind = rng.int(0, 2);
@@ -1400,18 +2124,80 @@ export const positiveDefiniteAndNegativeDefiniteQuadraticForms: TopicDef = {
         const I = t("Indefinite", "不定");
         const S = t("Positive semidefinite but not definite", "半正定但不正定");
         const right = pd ? P : nd ? N : I;
-        return oneOf(
-          rng,
-          t(
-            `Classify the quadratic form $\\mathbf{x}^T A\\mathbf{x}$ with $A = ${mat3Latex(A as unknown as Mat3)}$.`,
-            `判定二次型 $\\mathbf{x}^T A\\mathbf{x}$ 的类型，$A = ${mat3Latex(A as unknown as Mat3)}$。`,
+        const r = A as unknown as Mat3;
+        const diagonal = [r[0][0], r[1][1], r[2][2]];
+        const up = diagonal.findIndex((v) => v > 0);
+        const down = diagonal.findIndex((v) => v < 0);
+        const minorLines = [
+          `D_1 = ${D[0]}`,
+          `D_2 = ${r[0][0]} \\cdot ${paren(r[1][1])} - ${paren(r[0][1])}^2 = ${D[1]}`,
+          `D_3 = \\det A = ${D[2]}`,
+        ];
+        const solution = walked(
+          [
+            [["Compute the leading principal minors", "计算顺序主子式"], t("", ""), minorLines],
+            [
+              ["Compare with the sign patterns", "对照符号模式"],
+              pd
+                ? t("All three are positive, so the form is positive definite.", "三个都为正，所以二次型正定。")
+                : nd
+                  ? t(
+                      "The signs alternate $-, +, -$, so the form is negative definite.",
+                      "符号依次为 $-, +, -$，交替出现，所以二次型负定。",
+                    )
+                  : t(
+                      "$D_3 \\ne 0$ and the signs fit neither pattern, so the form is indefinite.",
+                      "$D_3 \\ne 0$，且符号不符合任何一种模式，所以二次型不定。",
+                    ),
+            ],
+          ],
+          pd || nd || up < 0 || down < 0
+            ? t(
+                `The diagonal entries $${diagonal.join(", ")}$ are the values $Q(\\mathbf{e}_1), Q(\\mathbf{e}_2), Q(\\mathbf{e}_3)$, and they agree with this.`,
+                `对角元 $${diagonal.join(", ")}$ 就是 $Q(\\mathbf{e}_1), Q(\\mathbf{e}_2), Q(\\mathbf{e}_3)$ 的值，与上面的结论一致。`,
+              )
+            : t(
+                `$Q(\\mathbf{e}_${up + 1}) = ${diagonal[up]} > 0$ while $Q(\\mathbf{e}_${down + 1}) = ${diagonal[down]} < 0$, so $Q$ takes both signs.`,
+                `$Q(\\mathbf{e}_${up + 1}) = ${diagonal[up]} > 0$，而 $Q(\\mathbf{e}_${down + 1}) = ${diagonal[down]} < 0$，所以 $Q$ 取到两种符号。`,
+              ),
+        );
+        const failP: [string, string] =
+          D[0] <= 0
+            ? [`$D_1 = ${D[0]}$ is not positive.`, `$D_1 = ${D[0]}$ 不是正的。`]
+            : D[1] <= 0
+              ? [`$D_2 = ${D[1]}$ is not positive.`, `$D_2 = ${D[1]}$ 不是正的。`]
+              : [`$D_3 = ${D[2]}$ is not positive.`, `$D_3 = ${D[2]}$ 不是正的。`];
+        const failN: [string, string] =
+          D[0] >= 0
+            ? [`Negative definite needs $D_1 < 0$, but $D_1 = ${D[0]}$.`, `负定要求 $D_1 < 0$，但 $D_1 = ${D[0]}$。`]
+            : D[1] <= 0
+              ? [`Negative definite needs $D_2 > 0$, but $D_2 = ${D[1]}$.`, `负定要求 $D_2 > 0$，但 $D_2 = ${D[1]}$。`]
+              : [`Negative definite needs $D_3 < 0$, but $D_3 = ${D[2]}$.`, `负定要求 $D_3 < 0$，但 $D_3 = ${D[2]}$。`];
+        return reasoned(
+          oneOf(
+            rng,
+            t(
+              `Classify the quadratic form $\\mathbf{x}^T A\\mathbf{x}$ with $A = ${mat3Latex(A as unknown as Mat3)}$.`,
+              `判定二次型 $\\mathbf{x}^T A\\mathbf{x}$ 的类型，$A = ${mat3Latex(A as unknown as Mat3)}$。`,
+            ),
+            right,
+            [P, N, I, S].filter((o) => o !== right),
+            solution,
           ),
-          right,
-          [P, N, I, S].filter((o) => o !== right),
-          t(
-            `The leading principal minors are $D_1 = ${D[0]}$, $D_2 = ${D[1]}$, $D_3 = ${D[2]}$, so the form is ${pd ? "positive definite" : nd ? "negative definite" : "indefinite"}.`,
-            `顺序主子式为 $D_1 = ${D[0]}$，$D_2 = ${D[1]}$，$D_3 = ${D[2]}$，所以二次型${pd ? "正定" : nd ? "负定" : "不定"}。`,
-          ),
+          [
+            [P.en, ...failP],
+            [N.en, ...failN],
+            [
+              I.en,
+              `The minors follow the ${pd ? "all-positive" : "alternating"} pattern, so the form is definite.`,
+              `主子式符合${pd ? "全为正" : "交替"}的模式，所以二次型是定的。`,
+            ],
+            [
+              S.en,
+              `$D_3 = \\det A = ${D[2]} \\ne 0$, so $0$ is not an eigenvalue and the form is not merely semidefinite.`,
+              `$D_3 = \\det A = ${D[2]} \\ne 0$，所以 $0$ 不是特征值，二次型不只是半定的。`,
+            ],
+          ],
         );
       },
     },

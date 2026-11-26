@@ -744,6 +744,7 @@ const projectionFromDrawing = {
       const v: Point = [a * u[0] + b * n[0], a * u[1] + b * n[1]];
       const proj: Point = [a * u[0], a * u[1]];
       const rest: Point = [b * n[0], b * n[1]];
+      const au = a === 1 ? "" : a === -1 ? "-" : `${a}`;
       const wrong = [rest, u, v, [-proj[0], -proj[1]], [dot(v, u) * u[0], dot(v, u) * u[1]]] as Point[];
       const slips: [string, string][] = [
         ["That is the part of $v$ perpendicular to the line, $v$ minus its projection.", "这是 $v$ 垂直于直线的部分，即 $v$ 减去投影。"],
@@ -771,8 +772,8 @@ const projectionFromDrawing = {
           same(col(proj[0], proj[1])),
           wrong.map((c) => same(col(c[0], c[1]))),
           [
-            `**Step 1: Read a direction.** Take $u = (${u[0]}, ${u[1]})$ on the line; the arrow is $v = (${v[0]}, ${v[1]})$.\n\n**Step 2: Find the factor.** $v \\cdot u = ${dot(v, u)}$ and $u \\cdot u = ${dot(u, u)}$, so the factor is $\\frac{${dot(v, u)}}{${dot(u, u)}} = ${a}$.\n\n**Step 3: Scale the direction.** The projection is $${a}u = (${proj[0]}, ${proj[1]})$.\n\n**Check.** $v$ minus the projection is $(${rest[0]}, ${rest[1]})$, and $(${rest[0]})(${u[0]}) + (${rest[1]})(${u[1]}) = 0$, so it is perpendicular to the line.`,
-            `**第一步：读出方向。** 在直线上取 $u = (${u[0]}, ${u[1]})$；箭头是 $v = (${v[0]}, ${v[1]})$。\n\n**第二步：求倍数。** $v \\cdot u = ${dot(v, u)}$，$u \\cdot u = ${dot(u, u)}$，所以倍数是 $\\frac{${dot(v, u)}}{${dot(u, u)}} = ${a}$。\n\n**第三步：伸缩方向。** 投影是 $${a}u = (${proj[0]}, ${proj[1]})$。\n\n**检验。** $v$ 减去投影得 $(${rest[0]}, ${rest[1]})$，而 $(${rest[0]})(${u[0]}) + (${rest[1]})(${u[1]}) = 0$，所以它垂直于直线。`,
+            `**Step 1: Read a direction.** Take $u = (${u[0]}, ${u[1]})$ on the line; the arrow is $v = (${v[0]}, ${v[1]})$.\n\n**Step 2: Find the factor.** $v \\cdot u = ${dot(v, u)}$ and $u \\cdot u = ${dot(u, u)}$, so the factor is $\\frac{${dot(v, u)}}{${dot(u, u)}} = ${a}$.\n\n**Step 3: Scale the direction.** The projection is $${au}u = (${proj[0]}, ${proj[1]})$.\n\n**Check.** $v$ minus the projection is $(${rest[0]}, ${rest[1]})$, and $(${rest[0]})(${u[0]}) + (${rest[1]})(${u[1]}) = 0$, so it is perpendicular to the line.`,
+            `**第一步：读出方向。** 在直线上取 $u = (${u[0]}, ${u[1]})$；箭头是 $v = (${v[0]}, ${v[1]})$。\n\n**第二步：求倍数。** $v \\cdot u = ${dot(v, u)}$，$u \\cdot u = ${dot(u, u)}$，所以倍数是 $\\frac{${dot(v, u)}}{${dot(u, u)}} = ${a}$。\n\n**第三步：伸缩方向。** 投影是 $${au}u = (${proj[0]}, ${proj[1]})$。\n\n**检验。** $v$ 减去投影得 $(${rest[0]}, ${rest[1]})$，而 $(${rest[0]})(${u[0]}) + (${rest[1]})(${u[1]}) = 0$，所以它垂直于直线。`,
           ],
           fig(
             6,

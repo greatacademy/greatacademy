@@ -1815,6 +1815,7 @@ const columnSpaceMatrix = point(
     const d = rng.pick(slanted);
     const a = rng.pick([-3, -2, -1, 1, 2, 3]);
     const b = rng.pick([-3, -2, -1, 1, 2, 3].filter((x) => x !== a));
+    const times = (k: number) => (k === 1 ? "" : k === -1 ? "-" : `${k}`);
     const tip: Point = [2 * d[0], 2 * d[1]];
     const wrong = [
       same(mat(a * d[0], a * d[1], b * d[0], b * d[1])),
@@ -1847,8 +1848,8 @@ const columnSpaceMatrix = point(
         same(mat(a * d[0], b * d[0], a * d[1], b * d[1])),
         wrong,
         [
-          `**Step 1: Read a direction.** The marked point gives the direction $${at(d)}$ of the line.\n\n**Step 2: Test the columns.** The columns of this matrix are $${at([a * d[0], a * d[1]])} = ${a}${at(d)}$ and $${at([b * d[0], b * d[1]])} = ${b}${at(d)}$, both multiples of the direction, so they span the line.\n\n**Check.** Its determinant is $(${a * d[0]})(${b * d[1]}) - (${b * d[0]})(${a * d[1]}) = 0$, so the rank is one and the column space is no bigger than the line.`,
-          `**第一步：读出方向。** 标出的点给出直线的方向 $${at(d)}$。\n\n**第二步：检查各列。** 这个矩阵的两列是 $${at([a * d[0], a * d[1]])} = ${a}${at(d)}$ 和 $${at([b * d[0], b * d[1]])} = ${b}${at(d)}$，都是方向的倍数，所以它们张成这条直线。\n\n**检验。** 它的行列式为 $(${a * d[0]})(${b * d[1]}) - (${b * d[0]})(${a * d[1]}) = 0$，所以秩为一，列空间不比这条直线大。`,
+          `**Step 1: Read a direction.** The marked point gives the direction $${at(d)}$ of the line.\n\n**Step 2: Test the columns.** The columns of this matrix are $${at([a * d[0], a * d[1]])} = ${times(a)}${at(d)}$ and $${at([b * d[0], b * d[1]])} = ${times(b)}${at(d)}$, both multiples of the direction, so they span the line.\n\n**Check.** Its determinant is $(${a * d[0]})(${b * d[1]}) - (${b * d[0]})(${a * d[1]}) = 0$, so the rank is one and the column space is no bigger than the line.`,
+          `**第一步：读出方向。** 标出的点给出直线的方向 $${at(d)}$。\n\n**第二步：检查各列。** 这个矩阵的两列是 $${at([a * d[0], a * d[1]])} = ${times(a)}${at(d)}$ 和 $${at([b * d[0], b * d[1]])} = ${times(b)}${at(d)}$，都是方向的倍数，所以它们张成这条直线。\n\n**检验。** 它的行列式为 $(${a * d[0]})(${b * d[1]}) - (${b * d[0]})(${a * d[1]}) = 0$，所以秩为一，列空间不比这条直线大。`,
         ],
         fig(
           7,
@@ -1876,8 +1877,8 @@ const formClass = {
     "the-type-of-a-quadratic-form-from-a-level-curve",
     ["The type of a quadratic form from a level curve", "由等值线判断二次型的类型"],
     [
-      "In principal axes $Q = \\lambda_1 s^2 + \\lambda_2 t^2$. An ellipse at a positive level means both eigenvalues are positive, and at a negative level both are negative. A hyperbola means opposite signs. Two parallel lines mean one eigenvalue is zero.",
-      "在主轴下 $Q = \\lambda_1 s^2 + \\lambda_2 t^2$。正水平的椭圆表示两个特征值都为正，负水平的椭圆表示都为负。双曲线表示符号相反。两条平行线表示有一个特征值为零。",
+      "In principal axes $Q = \\lambda_1 s^2 + \\lambda_2 t^2$. An ellipse at a positive level means both eigenvalues are positive, and at a negative level both are negative. A hyperbola means opposite signs. Two parallel lines mean one eigenvalue is zero. For example, $Q = -s^2 - 2t^2$ has the ellipse $s^2 + 2t^2 = 1$ as its level set $Q = -1$, and it is negative definite; $Q = s^2 - t^2$ has a hyperbola at every nonzero level, and it is indefinite.\n\n> **Watch out.** Read the level as well as the shape. An ellipse at level $-1$ means negative definite, and parallel lines mean semidefinite, not definite, because $Q$ is zero along the direction of the lines.",
+      "在主轴下 $Q = \\lambda_1 s^2 + \\lambda_2 t^2$。正水平的椭圆表示两个特征值都为正，负水平的椭圆表示都为负。双曲线表示符号相反。两条平行线表示有一个特征值为零。例如 $Q = -s^2 - 2t^2$ 的等值线 $Q = -1$ 是椭圆 $s^2 + 2t^2 = 1$，它是负定的；$Q = s^2 - t^2$ 在每个非零水平上都是双曲线，它是不定的。\n\n> **注意。** 既要看形状，也要看水平。水平 $-1$ 的椭圆表示负定；平行线表示半定而非定，因为 $Q$ 沿这些直线的方向为零。",
     ],
     (rng) => {
       const shape = rng.pick(["ellipse", "hyperbola", "lines"] as const);
@@ -1928,16 +1929,61 @@ const formClass = {
                 `Parallel lines run along a direction on which $Q$ is zero, and the level $${level}$ gives the sign elsewhere.`,
                 `平行线所沿的方向上 $Q$ 为零，水平 $${level}$ 给出其他方向的符号。`,
               ];
-      return choose(
-        rng,
-        [
-          `The drawn curve is the level set $Q(x, y) = ${level}$ of a quadratic form $Q$. What type of form is $Q$?`,
-          `所画的曲线是二次型 $Q$ 的等值线 $Q(x, y) = ${level}$。$Q$ 是什么类型？`,
-        ],
-        name(kind),
-        all.filter((k) => k !== kind).map(name),
-        why,
-        fig(7, [{ kind: "contour", f, level: 1, accent: true }], [`${curve[0]} centered at the origin.`, `${curve[1]}，中心在原点。`]),
+      const sign: Pair = level > 0 ? ["positive", "正"] : ["negative", "负"];
+      const reason = (wrong: (typeof all)[number]): Pair => {
+        if (wrong === "ind")
+          return [
+            "An indefinite form takes both signs, so its level curves are hyperbolas; this curve shows one sign only.",
+            "不定二次型取两种符号，所以等值线是双曲线；这条曲线只表现出一种符号。",
+          ];
+        if (shape === "hyperbola")
+          return [
+            "A hyperbola shows that $Q$ takes opposite signs along its two axes, which no definite or semidefinite form does.",
+            "双曲线表明 $Q$ 在两个轴上符号相反，定或半定二次型都不会这样。",
+          ];
+        const wrongDefinite = wrong === "pos" || wrong === "neg";
+        const wrongSign = (wrong === "pos" || wrong === "psd") !== level > 0;
+        if (wrongSign)
+          return [`The level is $${level}$, so $Q$ is ${sign[0]} on the curve.`, `水平是 $${level}$，所以 $Q$ 在曲线上为${sign[1]}。`];
+        return wrongDefinite
+          ? [
+              "A definite form is zero only at the origin, so its level curves are closed ellipses; parallel lines mean $Q$ is zero along their direction.",
+              "定二次型只在原点为零，所以等值线是闭合的椭圆；平行线表示 $Q$ 沿它们的方向为零。",
+            ]
+          : [
+              "A semidefinite form that is not definite is zero along a line, so its level curves are parallel lines, not a closed ellipse.",
+              "半定而非定的二次型沿一条直线为零，所以等值线是平行线，而不是闭合的椭圆。",
+            ];
+      };
+      const frac = (n: number) => `\\frac{1}{${n * n}}`;
+      const axes =
+        shape === "ellipse"
+          ? `${level < 0 ? "-" : ""}${frac(p)}s^2 ${level < 0 ? "-" : "+"} ${frac(q)}t^2`
+          : shape === "hyperbola"
+            ? `${level < 0 ? "-" : ""}${frac(p)}s^2 ${level < 0 ? "+" : "-"} ${frac(q)}t^2`
+            : `${level < 0 ? "-" : ""}${frac(p)}s^2`;
+      const seen: Pair =
+        shape === "ellipse"
+          ? ["an ellipse", "椭圆"]
+          : shape === "hyperbola"
+            ? ["a hyperbola", "双曲线"]
+            : ["a pair of parallel lines", "一对平行线"];
+      return reasoned(
+        choose(
+          rng,
+          [
+            `The drawn curve is the level set $Q(x, y) = ${level}$ of a quadratic form $Q$. What type of form is $Q$?`,
+            `所画的曲线是二次型 $Q$ 的等值线 $Q(x, y) = ${level}$。$Q$ 是什么类型？`,
+          ],
+          name(kind),
+          all.filter((k) => k !== kind).map(name),
+          [
+            `**Step 1: Name the curve.** The drawing shows ${seen[0]} at the level $${level}$.\n\n**Step 2: Read the signs.** ${why[0]} So $Q$ is ${name(kind)[0].toLowerCase()}.\n\n**Check.** Along the principal axes of the drawing, $Q = ${axes}$, and setting this equal to $${level}$ gives the drawn curve.`,
+            `**第一步：认出曲线。** 图中是水平 $${level}$ 上的${seen[1]}。\n\n**第二步：读出符号。** ${why[1]}所以 $Q$ 是${name(kind)[1]}的。\n\n**检验。** 沿图中的主轴，$Q = ${axes}$，令它等于 $${level}$ 就得到所画的曲线。`,
+          ],
+          fig(7, [{ kind: "contour", f, level: 1, accent: true }], [`${curve[0]} centered at the origin.`, `${curve[1]}，中心在原点。`]),
+        ),
+        all.filter((k) => k !== kind).map((k) => [name(k)[0], ...reason(k)] as const),
       );
     },
   ),
