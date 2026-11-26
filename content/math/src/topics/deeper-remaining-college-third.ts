@@ -1,9 +1,12 @@
 // A third knowledge point for the discrete mathematics and machine learning topics that still had two.
 
 import type { KnowledgePointDef } from "@ga/content";
+import { t } from "@ga/content";
 import { dec, Q } from "@ga/subject-math";
 import { discreteDrawings2 } from "../explanation-drawings-discrete-mathematics-2.ts";
 
+import { numberProblem, why } from "../problems.ts";
+import { walked } from "./calculus-i-differentiation.ts";
 import { whole } from "./early-grades-more-kit.ts";
 import { chooseFilled, decimal, frac, fraction, integer, signed, skill } from "./third-kit.ts";
 
@@ -331,23 +334,65 @@ export const deeperRemainingCollegeThirdPoints: Readonly<Record<string, readonly
       "a-sum-of-cubes-between-bounds",
       ["A sum of cubes between bounds", "两个界之间的立方和"],
       [
-        "A sum that does not start at 1 is a difference of two sums that do. So subtract the sum up to just below the lower bound, using the formula that the cubes add up to a triangular number squared.",
-        "不从 1 开始的和，是两个从 1 开始的和之差。所以减去到下界前一项为止的和，公式是立方和等于三角形数的平方。",
+        "A sum that does not start at 1 is a difference of two sums that do. So subtract the sum up to just below the lower bound, using the formula that the cubes add up to a triangular number squared. For $\\sum_{k=11}^{20} k^3$, the triangular numbers are $210$ and $55$, so the sum is $210^2 - 55^2 = 44100 - 3025 = 41075$.\n\n> **Watch out.** Subtract the sum up to $m - 1$, not up to $m$; and square each triangular number before subtracting, since $(210 - 55)^2$ is not the answer.",
+        "不从 1 开始的和，是两个从 1 开始的和之差。所以减去到下界前一项为止的和，公式是立方和等于三角形数的平方。对 $\\sum_{k=11}^{20} k^3$，三角形数是 $210$ 和 $55$，所以和为 $210^2 - 55^2 = 44100 - 3025 = 41075$。\n\n> **注意。** 要减去到 $m - 1$ 的和，而不是到 $m$ 的；要先把每个三角形数平方再相减，因为 $(210 - 55)^2$ 不是答案。",
       ],
       (rng) => {
         const m = rng.int(2, 8);
         const n = m + rng.int(2, 8);
         const upper = (n * (n + 1)) / 2;
         const lower = ((m - 1) * m) / 2;
-        return whole(
-          [`Evaluate $\\sum_{k=${m}}^{${n}} k^{3}$.`, `计算 $\\sum_{k=${m}}^{${n}} k^{3}$。`],
-          upper * upper - lower * lower,
-          [upper * upper, upper * upper - (((m * (m + 1)) / 2) * (m * (m + 1))) / 2, (upper - lower) ** 2],
-          [
-            `Take the sum up to ${n} minus the sum up to ${m - 1}, each a square of a triangular number: $${upper}^{2} - ${lower}^{2} = ${upper * upper - lower * lower}$.`,
-            `用到 ${n} 的和减去到 ${m - 1} 的和，它们都是三角形数的平方：$${upper}^{2} - ${lower}^{2} = ${upper * upper - lower * lower}$。`,
-          ],
-        );
+        const answer = upper * upper - lower * lower;
+        const atM = (m * (m + 1)) / 2;
+        return numberProblem({
+          prompt: t(`Evaluate $\\sum_{k=${m}}^{${n}} k^{3}$.`, `计算 $\\sum_{k=${m}}^{${n}} k^{3}$。`),
+          answer,
+          form: "integer",
+          mistakes: [
+            why(
+              upper * upper,
+              "That is the whole sum from $k = 1$; subtract the cubes below the lower bound.",
+              "那是从 $k = 1$ 开始的全部和；还要减去下界以下的立方。",
+            ),
+            why(
+              upper * upper - atM * atM,
+              `That subtracts the cubes up to $${m}$, which removes $${m}^3$ as well.`,
+              `那是减去了到 $${m}$ 的立方和，把 $${m}^3$ 也去掉了。`,
+            ),
+            why(
+              (upper - lower) ** 2,
+              "That subtracts the triangular numbers before squaring; square each one first.",
+              "那是先把三角形数相减再平方；应先分别平方。",
+            ),
+          ].filter((w, i, all) => w.value !== answer && all.findIndex((o) => o.value === w.value) === i),
+          solution: walked(
+            [
+              [
+                ["Find the triangular numbers", "求三角形数"],
+                m === 2
+                  ? t(
+                      `$\\frac{${n} \\cdot ${n + 1}}{2} = ${upper}$, and below the bound there is only $k = 1$, whose triangular number is $1$.`,
+                      `$\\frac{${n} \\cdot ${n + 1}}{2} = ${upper}$，下界以下只有 $k = 1$，其三角形数是 $1$。`,
+                    )
+                  : t(
+                      `$\\frac{${n} \\cdot ${n + 1}}{2} = ${upper}$ and $\\frac{${m - 1} \\cdot ${m}}{2} = ${lower}$.`,
+                      `$\\frac{${n} \\cdot ${n + 1}}{2} = ${upper}$，$\\frac{${m - 1} \\cdot ${m}}{2} = ${lower}$。`,
+                    ),
+              ],
+              [
+                ["Subtract their squares", "平方相减"],
+                t(
+                  `$${upper}^{2} - ${lower}^{2} = ${upper * upper} - ${lower * lower} = ${answer}$.`,
+                  `$${upper}^{2} - ${lower}^{2} = ${upper * upper} - ${lower * lower} = ${answer}$。`,
+                ),
+              ],
+            ],
+            t(
+              `As a difference of squares, $(${upper} - ${lower})(${upper} + ${lower}) = ${upper - lower} \\cdot ${upper + lower} = ${answer}$.`,
+              `用平方差公式，$(${upper} - ${lower})(${upper} + ${lower}) = ${upper - lower} \\cdot ${upper + lower} = ${answer}$。`,
+            ),
+          ),
+        });
       },
     ),
   ],

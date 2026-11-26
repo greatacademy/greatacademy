@@ -889,8 +889,8 @@ const pairsWithASum: KnowledgePointDef = {
   id: "the-pigeonhole-principle-with-pairs-of-numbers",
   title: t("The pigeonhole principle with pairs of numbers", "数对上的鸽巢原理"),
   explanation: t(
-    "The pigeonhole principle only needs boxes, and the boxes need not be given. To force two chosen numbers to have a given sum, make each box a pair of numbers with that sum. A number with no partner forms a box of its own. One number from each box avoids the sum, and one more number forces it.",
-    "鸽巢原理只需要盒子，而盒子不必是现成的。要迫使选出的两个数有给定的和，就让每个盒子是和为该值的一对数。没有配对的数自成一盒。每盒选一个数可以避开这个和，再多选一个就无法避开。",
+    "The pigeonhole principle only needs boxes, and the boxes need not be given. To force two chosen numbers to have a given sum, make each box a pair of numbers with that sum. A number with no partner forms a box of its own. One number from each box avoids the sum, and one more number forces it. From $1, 2, \\dots, 100$, the pairs with sum $101$ are $\\{1, 100\\}, \\{2, 99\\}, \\dots, \\{50, 51\\}$, which is $50$ boxes, so $51$ numbers force a sum of $101$.\n\n> **Watch out.** Choosing one number from every box still avoids the sum, so the answer is one more than the number of boxes; and when the range has odd length, the middle number is a box by itself.",
+    "鸽巢原理只需要盒子，而盒子不必是现成的。要迫使选出的两个数有给定的和，就让每个盒子是和为该值的一对数。没有配对的数自成一盒。每盒选一个数可以避开这个和，再多选一个就无法避开。从 $1, 2, \\dots, 100$ 中，和为 $101$ 的数对是 $\\{1, 100\\}, \\{2, 99\\}, \\dots, \\{50, 51\\}$，共 $50$ 个盒子，所以取 $51$ 个数就必有和为 $101$ 的两个数。\n\n> **注意。** 每个盒子各取一个数仍能避开这个和，所以答案是盒子数加一；范围内数的个数为奇数时，中间的数自成一盒。",
   ),
   generate(rng) {
     const N = rng.int(8, 60);
@@ -903,14 +903,46 @@ const pairsWithASum: KnowledgePointDef = {
       ),
       answer,
       solveFor: "k",
-      wrong: [boxes, N - 1, boxes + 2],
-      solution: t(
-        N % 2 === 0
-          ? `The numbers form ${boxes} pairs with sum ${N + 1}. Taking one from each pair avoids the sum, and one more number forces it, so $k = ${answer}$.`
-          : `The numbers form ${boxes - 1} pairs with sum ${N + 1}, and the middle number ${boxes} has no partner, which makes ${boxes} boxes. One from each box avoids the sum, and one more number forces it, so $k = ${answer}$.`,
-        N % 2 === 0
-          ? `这些数组成 ${boxes} 对和为 ${N + 1} 的数。每对取一个可以避开这个和，再多取一个就无法避开，所以 $k = ${answer}$。`
-          : `这些数组成 ${boxes - 1} 对和为 ${N + 1} 的数，中间的数 ${boxes} 没有配对，共 ${boxes} 个盒子。每盒取一个可以避开这个和，再多取一个就无法避开，所以 $k = ${answer}$。`,
+      mistakes: [
+        why(
+          boxes,
+          "That many numbers can be one from each box, which still avoids the sum; one more is needed.",
+          "这么多个数可以每盒各取一个，仍能避开这个和；还需要再多一个。",
+        ),
+        why(
+          N - 1,
+          "That is far more than needed; the number of boxes, not the size of the range, decides.",
+          "那比需要的多得多；起决定作用的是盒子数，而不是范围的大小。",
+        ),
+        why(
+          boxes + 2,
+          "That is one more than needed; one number beyond one per box already forces the sum.",
+          "那比需要的多一个；每盒一个之外再多一个就已经必然出现这个和。",
+        ),
+      ].filter((m, i, all) => m.value !== answer && all.findIndex((o) => o.value === m.value) === i),
+      solution: walked(
+        [
+          [
+            ["Make the boxes", "构造盒子"],
+            N % 2 === 0
+              ? t(`The numbers form $${boxes}$ pairs with sum $${N + 1}$.`, `这些数组成 $${boxes}$ 对和为 $${N + 1}$ 的数。`)
+              : t(
+                  `The numbers form $${boxes - 1}$ pairs with sum $${N + 1}$, and the middle number $${boxes}$ is a box by itself: $${boxes}$ boxes.`,
+                  `这些数组成 $${boxes - 1}$ 对和为 $${N + 1}$ 的数，中间的数 $${boxes}$ 自成一盒：共 $${boxes}$ 个盒子。`,
+                ),
+          ],
+          [
+            ["Add one", "再加一个"],
+            t(
+              `One from each box avoids the sum, and one more forces it: $k = ${boxes} + 1 = ${answer}$.`,
+              `每盒取一个可以避开这个和，再多取一个就无法避开：$k = ${boxes} + 1 = ${answer}$。`,
+            ),
+          ],
+        ],
+        t(
+          `The numbers $1, \\dots, ${boxes}$ show that $${boxes}$ is not enough: their largest sum is $${boxes} + ${boxes - 1} = ${2 * boxes - 1}$, below $${N + 1}$.`,
+          `数 $1, \\dots, ${boxes}$ 说明 $${boxes}$ 个不够：它们的最大和是 $${boxes} + ${boxes - 1} = ${2 * boxes - 1}$，小于 $${N + 1}$。`,
+        ),
       ),
     });
   },
@@ -920,8 +952,8 @@ const fixedPoints: KnowledgePointDef = {
   id: "permutations-with-exactly-k-fixed-points",
   title: t("Permutations with exactly k fixed points", "恰有 k 个不动点的排列"),
   explanation: t(
-    "Inclusion-exclusion counts the derangements, the permutations that leave nothing in place: $D_m = m!\\sum_{j=0}^{m} \\frac{(-1)^j}{j!}$, which begins $1, 0, 1, 2, 9, 44, 265$. To leave exactly $k$ items in place, first choose those $k$ items. The remaining items must then form a derangement, and the two counts multiply.",
-    "容斥原理可以数出错排，即没有任何元素留在原位的排列：$D_m = m!\\sum_{j=0}^{m} \\frac{(-1)^j}{j!}$，开头几项是 $1, 0, 1, 2, 9, 44, 265$。要恰好使 $k$ 个元素留在原位，先选出这 $k$ 个元素。其余元素必须构成错排，两个计数相乘。",
+    "Inclusion-exclusion counts the derangements, the permutations that leave nothing in place: $D_m = m!\\sum_{j=0}^{m} \\frac{(-1)^j}{j!}$, which begins $1, 0, 1, 2, 9, 44, 265$. To leave exactly $k$ items in place, first choose those $k$ items. The remaining items must then form a derangement, and the two counts multiply. Of the arrangements of $1, 2, 3$, exactly one number stays in place in $\\binom{3}{1} D_2 = 3$ of them: $132$, $321$ and $213$.\n\n> **Watch out.** The items not chosen must all move, so count their derangements, not all their orders; and do not forget the factor that chooses which items stay.",
+    "容斥原理可以数出错排，即没有任何元素留在原位的排列：$D_m = m!\\sum_{j=0}^{m} \\frac{(-1)^j}{j!}$，开头几项是 $1, 0, 1, 2, 9, 44, 265$。要恰好使 $k$ 个元素留在原位，先选出这 $k$ 个元素。其余元素必须构成错排，两个计数相乘。在 $1, 2, 3$ 的排列中，恰有一个数留在原位的有 $\\binom{3}{1} D_2 = 3$ 个：$132$、$321$ 和 $213$。\n\n> **注意。** 没被选中的元素必须全部移动，所以要数它们的错排，而不是全部排列；也不要忘了选出哪些元素留在原位的那个因子。",
   ),
   generate(rng) {
     const [n, k] = rng.pick(range(4, 10).flatMap((n) => range(1, n - 2).map((k) => [n, k] as const)));
@@ -930,6 +962,9 @@ const fixedPoints: KnowledgePointDef = {
     const choose = binom(n, k);
     const answer = choose * d;
     const factorial = range(1, left).reduce((s, i) => s * i, 1);
+    const derangeTerms = range(0, left)
+      .map((j) => `${j === 0 ? "" : j % 2 === 1 ? " - " : " + "}${factorial / range(1, j).reduce((s, i) => s * i, 1)}`)
+      .join("");
     return numberProblem({
       prompt: t(
         `${n} letters are put into ${n} addressed envelopes, one per envelope. In how many ways do exactly ${k} letters reach the right envelope?`,
@@ -937,10 +972,36 @@ const fixedPoints: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong: [choose, choose * factorial, d],
-      solution: t(
-        `Choose the ${k} correct letters in $\\binom{${n}}{${k}} = ${choose}$ ways. The other ${left} must all be wrong, which is $D_{${left}} = ${d}$ ways. The total is $${choose} \\cdot ${d} = ${answer}$.`,
-        `选出放对的 ${k} 封信有 $\\binom{${n}}{${k}} = ${choose}$ 种方式。其余 ${left} 封必须全放错，有 $D_{${left}} = ${d}$ 种方式。总数是 $${choose} \\cdot ${d} = ${answer}$。`,
+      mistakes: [
+        why(
+          choose,
+          "That only chooses the correct letters; the other letters must still all go wrong, which multiplies the count.",
+          "那只是选出了放对的信；其余的信还必须全部放错，这要乘上去。",
+        ),
+        why(
+          choose * factorial,
+          "That lets the other letters go anywhere, so some of them may land right as well.",
+          "那是让其余的信随便放，于是其中一些也可能放对。",
+        ),
+        why(
+          d,
+          "That counts the ways the other letters all go wrong but forgets to choose which letters are right.",
+          "那是数了其余信全放错的方式，却忘了选出哪些信放对。",
+        ),
+      ].filter((m, i, all) => m.value !== answer && all.findIndex((o) => o.value === m.value) === i),
+      solution: walked(
+        [
+          [["Choose the right letters", "选出放对的信"], t(`$\\binom{${n}}{${k}} = ${choose}$.`, `$\\binom{${n}}{${k}} = ${choose}$。`)],
+          [
+            ["Derange the rest", "其余错排"],
+            t(`The other $${left}$ must all be wrong: $D_{${left}} = ${d}$.`, `其余 $${left}$ 封必须全放错：$D_{${left}} = ${d}$。`),
+          ],
+          [["Multiply", "相乘"], t(`$${choose} \\cdot ${d} = ${answer}$.`, `$${choose} \\cdot ${d} = ${answer}$。`)],
+        ],
+        t(
+          `Inclusion-exclusion gives $D_{${left}} = ${derangeTerms}$, which is $${d}$ again.`,
+          `由容斥原理 $D_{${left}} = ${derangeTerms}$，同样是 $${d}$。`,
+        ),
       ),
     });
   },
@@ -1332,12 +1393,14 @@ const partitionsIntoThree: KnowledgePointDef = {
   id: "partitions-into-exactly-three-parts",
   title: t("Partitions into exactly three parts", "恰好分成三部分的分拆"),
   explanation: t(
-    "To count partitions of $n$ into exactly three parts, list them with $a \\ge b \\ge c \\ge 1$, so that each partition appears once. A useful shortcut is that the count equals $\\frac{n^2}{12}$ rounded to the nearest whole number. Compositions are a different thing: there, order matters and the count is $\\binom{n - 1}{2}$. Each partition corresponds to as many as six compositions.",
-    "要计算 $n$ 恰好分成三部分的分拆数，就按 $a \\ge b \\ge c \\ge 1$ 列出，使每个分拆只出现一次。一个有用的捷径是，这个个数等于 $\\frac{n^2}{12}$ 四舍五入到最接近的整数。有序分解是另一回事：那里顺序有关，个数是 $\\binom{n - 1}{2}$。每个分拆最多对应六个有序分解。",
+    "To count partitions of $n$ into exactly three parts, list them with $a \\ge b \\ge c \\ge 1$, so that each partition appears once. A useful shortcut is that the count equals $\\frac{n^2}{12}$ rounded to the nearest whole number. Compositions are a different thing: there, order matters and the count is $\\binom{n - 1}{2}$. Each partition corresponds to as many as six compositions. For $n = 42$, $\\frac{1764}{12} = 147$ partitions, while there are $\\binom{41}{2} = 820$ compositions.\n\n> **Watch out.** Round $\\frac{n^2}{12}$ to the nearest whole number, not always up or always down; and $\\binom{n-1}{2}$ counts ordered sums, not partitions.",
+    "要计算 $n$ 恰好分成三部分的分拆数，就按 $a \\ge b \\ge c \\ge 1$ 列出，使每个分拆只出现一次。一个有用的捷径是，这个个数等于 $\\frac{n^2}{12}$ 四舍五入到最接近的整数。有序分解是另一回事：那里顺序有关，个数是 $\\binom{n - 1}{2}$。每个分拆最多对应六个有序分解。对 $n = 42$，分拆有 $\\frac{1764}{12} = 147$ 个，而有序分解有 $\\binom{41}{2} = 820$ 个。\n\n> **注意。** $\\frac{n^2}{12}$ 要四舍五入到最接近的整数，不能总是向上或总是向下取整；$\\binom{n-1}{2}$ 计数的是有序和，不是分拆。",
   ),
   generate(rng) {
     const n = rng.int(3, 40);
     const answer = Math.round((n * n) / 12);
+    const q = Math.floor((n * n) / 12);
+    const r = (n * n) % 12;
     return numberProblem({
       prompt: t(
         `In how many ways can ${n} be written as a sum of exactly 3 positive integers, if order does not matter?`,
@@ -1345,10 +1408,33 @@ const partitionsIntoThree: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong: [binom(n - 1, 2), Math.floor(n / 2), n, answer + 1],
-      solution: t(
-        `The count is $\\frac{${n * n}}{12}$ rounded to the nearest whole number, which is ${answer}.`,
-        `这个个数是 $\\frac{${n * n}}{12}$ 四舍五入到最接近的整数，也就是 ${answer}。`,
+      mistakes: [
+        why(
+          binom(n - 1, 2),
+          "That counts ordered sums, the compositions; a partition ignores order.",
+          "那是数了有序和，即有序分解；分拆不计顺序。",
+        ),
+        why(Math.floor(n / 2), "That counts partitions into two parts, not three.", "那是分成两部分的分拆数，不是三部分。"),
+        why(Math.ceil((n * n) / 12), "That rounds up; round to the nearest whole number.", "那是向上取整；应四舍五入到最接近的整数。"),
+        why(Math.floor((n * n) / 12), "That rounds down; round to the nearest whole number.", "那是向下取整；应四舍五入到最接近的整数。"),
+      ].filter((m, i, all) => m.value !== answer && all.findIndex((o) => o.value === m.value) === i),
+      solution: walked(
+        [
+          [
+            ["Divide the square by 12", "平方除以 12"],
+            r === 0
+              ? t(`$\\frac{${n * n}}{12} = ${q}$.`, `$\\frac{${n * n}}{12} = ${q}$。`)
+              : t(
+                  `$\\frac{${n * n}}{12}$ is $${q}$ and $\\frac{${r}}{12}$, which is ${2 * r > 12 ? "more" : "less"} than one half.`,
+                  `$\\frac{${n * n}}{12}$ 等于 $${q}$ 加 $\\frac{${r}}{12}$，${2 * r > 12 ? "大于" : "小于"}一半。`,
+                ),
+          ],
+          [["Round", "取整"], t(`The nearest whole number is $${answer}$.`, `最接近的整数是 $${answer}$。`)],
+        ],
+        t(
+          `Partitions with a part equal to one number $p(${n - 1}, 2) = ${Math.floor((n - 1) / 2)}$, and the rest, less one in each part, number $p(${n - 3}, 3) = ${Math.round(((n - 3) * (n - 3)) / 12)}$: $${Math.floor((n - 1) / 2)} + ${Math.round(((n - 3) * (n - 3)) / 12)} = ${answer}$.`,
+          `含有部分为一的分拆有 $p(${n - 1}, 2) = ${Math.floor((n - 1) / 2)}$ 个，其余的每部分减一后有 $p(${n - 3}, 3) = ${Math.round(((n - 3) * (n - 3)) / 12)}$ 个：$${Math.floor((n - 1) / 2)} + ${Math.round(((n - 3) * (n - 3)) / 12)} = ${answer}$。`,
+        ),
       ),
     });
   },
@@ -1358,8 +1444,8 @@ const twoUpperBounds: KnowledgePointDef = {
   id: "integer-solutions-with-two-upper-bounds",
   title: t("Integer solutions with two upper bounds", "带两个上界的整数解"),
   explanation: t(
-    "Upper bounds are handled by inclusion and exclusion. Start from all nonnegative solutions, then subtract those that break the first bound and those that break the second. Breaking $x_1 \\le a$ means $x_1 \\ge a + 1$, and subtracting $a + 1$ from $x_1$ turns this into an ordinary count with a smaller total. Solutions that break both were subtracted twice, so add them back.",
-    "上界用容斥原理处理。先取所有非负解，再减去违反第一个上界的解和违反第二个上界的解。违反 $x_1 \\le a$ 就是 $x_1 \\ge a + 1$，从 $x_1$ 中减去 $a + 1$，就化成总和更小的普通计数。同时违反两者的解被减了两次，所以要加回来。",
+    "Upper bounds are handled by inclusion and exclusion. Start from all nonnegative solutions, then subtract those that break the first bound and those that break the second. Breaking $x_1 \\le a$ means $x_1 \\ge a + 1$, and subtracting $a + 1$ from $x_1$ turns this into an ordinary count with a smaller total. Solutions that break both were subtracted twice, so add them back. For $x_1 + x_2 + x_3 = 22$ with $x_1 \\le 15$ and $x_2 \\le 12$: $\\binom{24}{2} = 276$ in all, $\\binom{8}{2} = 28$ with $x_1 \\ge 16$, $\\binom{11}{2} = 55$ with $x_2 \\ge 13$, and none break both since $16 + 13 > 22$, so $276 - 28 - 55 = 193$.\n\n> **Watch out.** Subtract the solutions that break each bound, both of them, and add back those that break both; and multiplying the ranges of $x_1$ and $x_2$ fails once a pair adds up to more than the total.",
+    "上界用容斥原理处理。先取所有非负解，再减去违反第一个上界的解和违反第二个上界的解。违反 $x_1 \\le a$ 就是 $x_1 \\ge a + 1$，从 $x_1$ 中减去 $a + 1$，就化成总和更小的普通计数。同时违反两者的解被减了两次，所以要加回来。对 $x_1 + x_2 + x_3 = 22$，$x_1 \\le 15$，$x_2 \\le 12$：全部有 $\\binom{24}{2} = 276$ 组，$x_1 \\ge 16$ 的有 $\\binom{8}{2} = 28$ 组，$x_2 \\ge 13$ 的有 $\\binom{11}{2} = 55$ 组，因为 $16 + 13 > 22$，没有同时违反两者的解，所以是 $276 - 28 - 55 = 193$。\n\n> **注意。** 违反每个上界的解都要减去，两个都要减，再加回同时违反两者的解；当一对取值之和超过总数时，把 $x_1$ 与 $x_2$ 的取值范围相乘就不对了。",
   ),
   generate(rng) {
     const n = rng.int(8, 20);
@@ -1371,6 +1457,7 @@ const twoUpperBounds: KnowledgePointDef = {
     const overB = count(n - b - 1);
     const overBoth = count(n - a - b - 2);
     const answer = all - overA - overB + overBoth;
+    const perX = range(0, Math.min(a, n)).map((x) => Math.min(b, n - x) + 1);
     return numberProblem({
       prompt: t(
         `How many solutions in nonnegative integers does $x_{1} + x_{2} + x_{3} = ${n}$ have with $x_{1} \\le ${a}$ and $x_{2} \\le ${b}$?`,
@@ -1378,10 +1465,40 @@ const twoUpperBounds: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong: [all, all - overA, all - overB, all - overA - overB, (a + 1) * (b + 1)],
-      solution: t(
-        `There are ${all} solutions in all, ${overA} break the first bound, ${overB} break the second, and ${overBoth} break both. So the count is $${all} - ${overA} - ${overB} + ${overBoth} = ${answer}$.`,
-        `一共有 ${all} 组解，${overA} 组违反第一个上界，${overB} 组违反第二个上界，${overBoth} 组同时违反两者。所以个数是 $${all} - ${overA} - ${overB} + ${overBoth} = ${answer}$。`,
+      mistakes: [
+        why(all, "That ignores both upper bounds.", "那是忽略了两个上界。"),
+        why(all - overA, "That removes only the solutions that break the first bound.", "那是只去掉了违反第一个上界的解。"),
+        why(all - overB, "That removes only the solutions that break the second bound.", "那是只去掉了违反第二个上界的解。"),
+        why(
+          all - overA - overB,
+          "That forgets to add back the solutions that break both bounds, which were removed twice.",
+          "那是忘了加回同时违反两个上界的解，它们被减了两次。",
+        ),
+        why(
+          (a + 1) * (b + 1),
+          "That multiplies the ranges of $x_1$ and $x_2$, but for some pairs $x_3$ would have to be negative.",
+          "那是把 $x_1$ 与 $x_2$ 的取值范围相乘，但有些组合会使 $x_3$ 为负。",
+        ),
+      ].filter((m, i, all) => m.value !== answer && all.findIndex((o) => o.value === m.value) === i),
+      solution: walked(
+        [
+          [["Count all solutions", "数全部解"], t(`$\\binom{${n + 2}}{2} = ${all}$.`, `$\\binom{${n + 2}}{2} = ${all}$。`)],
+          [
+            ["Count those breaking each bound", "数违反各上界的解"],
+            t(
+              `$x_1 \\ge ${a + 1}$ leaves a sum of $${n - a - 1}$: $${overA}$. $x_2 \\ge ${b + 1}$ leaves $${n - b - 1}$: $${overB}$. ${n - a - b - 2 < 0 ? `None break both, since $${a + 1} + ${b + 1} > ${n}$.` : `Both leave $${n - a - b - 2}$: $${overBoth}$.`}`,
+              `$x_1 \\ge ${a + 1}$ 后和为 $${n - a - 1}$：$${overA}$ 组。$x_2 \\ge ${b + 1}$ 后和为 $${n - b - 1}$：$${overB}$ 组。${n - a - b - 2 < 0 ? `因为 $${a + 1} + ${b + 1} > ${n}$，没有同时违反两者的解。` : `两者都违反后和为 $${n - a - b - 2}$：$${overBoth}$ 组。`}`,
+            ),
+          ],
+          [
+            ["Combine", "合并"],
+            t(`$${all} - ${overA} - ${overB} + ${overBoth} = ${answer}$.`, `$${all} - ${overA} - ${overB} + ${overBoth} = ${answer}$。`),
+          ],
+        ],
+        t(
+          `For each $x_1 = 0, \\dots, ${Math.min(a, n)}$, $x_2$ runs from $0$ to the smaller of $${b}$ and $${n} - x_1$, giving $${perX.join(" + ")} = ${answer}$.`,
+          `对每个 $x_1 = 0, \\dots, ${Math.min(a, n)}$，$x_2$ 从 $0$ 取到 $${b}$ 与 $${n} - x_1$ 中较小的那个，得 $${perX.join(" + ")} = ${answer}$。`,
+        ),
       ),
     });
   },
@@ -2828,8 +2945,8 @@ const totalProbabilityTwoDraws: KnowledgePointDef = {
   id: "total-probability-with-a-calculation-in-each-case",
   title: t("Total probability with a calculation in each case", "每种情形都要计算的全概率"),
   explanation: t(
-    "In the law of total probability the conditional probabilities are not always handed to you. Often each case is a small problem of its own, and the partition only tells you which problem you are in. Solve each case separately under its condition, and only then weight the answers by the probabilities of the cases.",
-    "在全概率公式中，条件概率不一定是直接给出的。每种情形常常本身就是一个小问题，划分只告诉你身处哪个问题。先在各自的条件下分别求解，然后才用各情形的概率加权。",
+    "In the law of total probability the conditional probabilities are not always handed to you. Often each case is a small problem of its own, and the partition only tells you which problem you are in. Solve each case separately under its condition, and only then weight the answers by the probabilities of the cases. With two equally likely boxes, one holding $3$ red and $1$ white and the other $2$ red and $2$ white, two draws are both red with probability $\\frac{6}{12} = \\frac{1}{2}$ or $\\frac{2}{12} = \\frac{1}{6}$, so the total is $\\frac{1}{2} \\cdot \\frac{1}{2} + \\frac{1}{2} \\cdot \\frac{1}{6} = \\frac{1}{3}$.\n\n> **Watch out.** Without replacement the second draw has one red ball fewer and one ball fewer in all, so do not square the single-draw chance; and weight each box by its own probability, not equally.",
+    "在全概率公式中，条件概率不一定是直接给出的。每种情形常常本身就是一个小问题，划分只告诉你身处哪个问题。先在各自的条件下分别求解，然后才用各情形的概率加权。有两个等可能的箱子，一个有 $3$ 个红球和 $1$ 个白球，另一个有 $2$ 个红球和 $2$ 个白球，两次都取到红球的概率分别为 $\\frac{6}{12} = \\frac{1}{2}$ 与 $\\frac{2}{12} = \\frac{1}{6}$，所以总概率为 $\\frac{1}{2} \\cdot \\frac{1}{2} + \\frac{1}{2} \\cdot \\frac{1}{6} = \\frac{1}{3}$。\n\n> **注意。** 不放回时第二次取球红球少一个、总数也少一个，所以不能把单次概率平方；每个箱子要按自己的概率加权，而不是平均。",
   ),
   generate(rng) {
     const weights = rng.pick([
@@ -2855,18 +2972,43 @@ const totalProbabilityTwoDraws: KnowledgePointDef = {
       ),
       answer,
       form: "fraction",
-      wrong: [
-        total(single),
-        total(single.map((v) => v.mul(v))),
-        both.reduce((s, v) => s.add(v), Q.of(0)).div(Q.of(3)),
-        total(single).mul(total(single)),
-        both[0] as Q,
-        both[2] as Q,
-        total(single).mul(Q.of(1, 2)),
-      ],
-      solution: t(
-        `Within a box with $r$ red among $n$ balls, both are red with probability $\\frac{r(r - 1)}{n(n - 1)}$, since the second draw has one red ball fewer and one ball fewer overall. Weighting the three boxes gives $${sum} = ${answer.toLatex()}$.`,
-        `在 $n$ 个球中有 $r$ 个红球的箱子里，两个都是红球的概率是 $\\frac{r(r - 1)}{n(n - 1)}$，因为第二次取时红球和总球数都少了一个。对三个箱子加权得 $${sum} = ${answer.toLatex()}$。`,
+      mistakes: [
+        why(
+          total(single),
+          "That is the chance that one ball is red; both balls must be red.",
+          "那是一个球为红球的概率；两个球都要是红球。",
+        ),
+        why(
+          total(single.map((v) => v.mul(v))),
+          "That squares the single chance, as if the first ball were put back.",
+          "那是把单次概率平方，好像第一个球放回去了。",
+        ),
+        why(
+          both.reduce((s, v) => s.add(v), Q.of(0)).div(Q.of(3)),
+          "That averages the boxes equally; weight each by its own probability.",
+          "那是把各箱平均；每个箱子要按自己的概率加权。",
+        ),
+        why(
+          total(single).mul(total(single)),
+          "That squares the overall chance of red; the two draws come from the same box.",
+          "那是把总体红球概率平方；两次都是从同一个箱子取。",
+        ),
+      ].filter((m, i, all) => !(m.value as Q).eq(answer) && all.findIndex((x) => (x.value as Q).eq(m.value as Q)) === i),
+      solution: walked(
+        [
+          [
+            ["Solve each box", "分别求每个箱子"],
+            t(
+              `With $r$ red among $n$ balls, both are red with probability $\\frac{r(r - 1)}{n(n - 1)}$: ${boxes.map(([r, w], i) => `box ${names[i]} gives $\\frac{${r * (r - 1)}}{${(r + w) * (r + w - 1)}} = ${(both[i] as Q).toLatex()}$`).join(", ")}.`,
+              `$n$ 个球中有 $r$ 个红球时，两个都是红球的概率为 $\\frac{r(r - 1)}{n(n - 1)}$：${boxes.map(([r, w], i) => `${names[i]} 箱为 $\\frac{${r * (r - 1)}}{${(r + w) * (r + w - 1)}} = ${(both[i] as Q).toLatex()}$`).join("，")}。`,
+            ),
+          ],
+          [["Weight the boxes", "按箱子加权"], t(`$${sum} = ${answer.toLatex()}$.`, `$${sum} = ${answer.toLatex()}$。`)],
+        ],
+        t(
+          `$${answer.toLatex()}$ lies between the smallest and the largest of the three box probabilities, as a weighted average must.`,
+          `$${answer.toLatex()}$ 介于三个箱子概率的最小值与最大值之间，加权平均理应如此。`,
+        ),
       ),
     });
   },
@@ -2912,14 +3054,18 @@ const termsFromALinearSum: KnowledgePointDef = {
   id: "the-number-of-terms-from-a-linear-sum",
   title: t("The number of terms from a linear sum", "由线性和式求项数"),
   explanation: t(
-    "A sum of a linear expression is itself a quadratic function of its upper limit, so a sum with an unknown number of terms can be solved. Apply the formula for the sum of the first integers, clear the fraction, and solve the quadratic equation. Only a positive integer root makes sense as a number of terms.",
-    "线性表达式的和本身是上限的二次函数，所以项数未知的和式可以求解。用前若干个整数之和的公式，去掉分母，解这个二次方程。作为项数，只有正整数根才有意义。",
+    "A sum of a linear expression is itself a quadratic function of its upper limit, so a sum with an unknown number of terms can be solved. Apply the formula for the sum of the first integers, clear the fraction, and solve the quadratic equation. Only a positive integer root makes sense as a number of terms. For $\\sum_{k=1}^{N} (7k + 1) = 203$: $\\frac{7N(N + 1)}{2} + N = 203$ gives $7N^2 + 9N - 406 = 0$, which is $(N - 7)(7N + 58) = 0$, so $N = 7$.\n\n> **Watch out.** Do not divide the total by the coefficient of $k$: the sum grows like $\\frac{a}{2}N^2$, not $aN$; and the constant term contributes $bN$, so it is multiplied by $N$ too.",
+    "线性表达式的和本身是上限的二次函数，所以项数未知的和式可以求解。用前若干个整数之和的公式，去掉分母，解这个二次方程。作为项数，只有正整数根才有意义。对 $\\sum_{k=1}^{N} (7k + 1) = 203$：$\\frac{7N(N + 1)}{2} + N = 203$ 化为 $7N^2 + 9N - 406 = 0$，即 $(N - 7)(7N + 58) = 0$，所以 $N = 7$。\n\n> **注意。** 不要用总和除以 $k$ 的系数：和的增长像 $\\frac{a}{2}N^2$，而不是 $aN$；常数项贡献 $bN$，也要乘以 $N$。",
   ),
   generate(rng) {
     const a = rng.int(2, 6);
     const b = rng.pick(range(-3, 9).filter((v) => v !== 0));
     const N = rng.int(5, 40);
     const S = (a * N * (N + 1)) / 2 + b * N;
+    const lin = a + 2 * b;
+    const disc = lin * lin + 8 * a * S;
+    const top = lin === 0 ? `\\sqrt{${disc}}` : `${-lin} + \\sqrt{${disc}}`;
+    const topValue = lin === 0 ? `${2 * a * N}` : `${-lin} + ${2 * a * N + lin}`;
     const quadratic = sumOfTerms([
       [a, "N^2"],
       [a + 2 * b, "N"],
@@ -2938,10 +3084,42 @@ const termsFromALinearSum: KnowledgePointDef = {
       ),
       answer: N,
       form: "integer",
-      wrong: [N + 1, N - 1, N + 2, Math.round(S / a), Math.round(S / (a + Math.abs(b)))],
-      solution: t(
-        `The sum equals $${a} \\cdot \\frac{N(N + 1)}{2} ${b < 0 ? "-" : "+"} ${Math.abs(b) === 1 ? "" : Math.abs(b)}N$. Setting it equal to $${S}$ and multiplying by two gives $${quadratic} = 0$. Its positive root is $N = ${N}$, and the other root is negative, so it cannot count terms.`,
-        `这个和等于 $${a} \\cdot \\frac{N(N + 1)}{2} ${b < 0 ? "-" : "+"} ${Math.abs(b) === 1 ? "" : Math.abs(b)}N$。令它等于 $${S}$ 并乘以二，得 $${quadratic} = 0$。正根是 $N = ${N}$，另一个根是负数，不能作为项数。`,
+      mistakes: [
+        why(N + 1, `That is one term too many: the sum to $N + 1$ is larger than $${S}$.`, `那多了一项：到 $N + 1$ 的和大于 $${S}$。`),
+        why(N - 1, `That is one term too few: the sum to $N - 1$ falls short of $${S}$.`, `那少了一项：到 $N - 1$ 的和不到 $${S}$。`),
+        why(
+          Math.round(S / a),
+          "That divides the total by the coefficient of $k$, but the sum grows like a square, not linearly.",
+          "那是用总和除以 $k$ 的系数，但和是按平方增长的，不是线性的。",
+        ),
+        why(
+          Math.round(S / (a + Math.abs(b))),
+          "That divides the total by the first term, as if every term were equal; the terms grow.",
+          "那是用总和除以第一项，好像每一项都相等；但各项在增大。",
+        ),
+      ].filter((m, i, all) => m.value !== N && all.findIndex((o) => o.value === m.value) === i),
+      solution: walked(
+        [
+          [
+            ["Write the sum in N", "用 N 表示和"],
+            t(
+              `$${a} \\cdot \\frac{N(N + 1)}{2} ${b < 0 ? "-" : "+"} ${Math.abs(b) === 1 ? "" : Math.abs(b)}N = ${S}$.`,
+              `$${a} \\cdot \\frac{N(N + 1)}{2} ${b < 0 ? "-" : "+"} ${Math.abs(b) === 1 ? "" : Math.abs(b)}N = ${S}$。`,
+            ),
+          ],
+          [["Clear the fraction", "去分母"], t(`Multiplying by two: $${quadratic} = 0$.`, `乘以二：$${quadratic} = 0$。`)],
+          [
+            ["Solve", "求解"],
+            t(
+              `$N = \\frac{${top}}{${2 * a}} = \\frac{${topValue}}{${2 * a}} = ${N}$; the other root is negative, so it cannot count terms.`,
+              `$N = \\frac{${top}}{${2 * a}} = \\frac{${topValue}}{${2 * a}} = ${N}$；另一个根是负数，不能作为项数。`,
+            ),
+          ],
+        ],
+        t(
+          `With $N = ${N}$: $${a} \\cdot \\frac{${N} \\cdot ${N + 1}}{2} ${b < 0 ? "-" : "+"} ${Math.abs(b * N)} = ${(a * N * (N + 1)) / 2} ${b < 0 ? "-" : "+"} ${Math.abs(b * N)} = ${S}$.`,
+          `取 $N = ${N}$：$${a} \\cdot \\frac{${N} \\cdot ${N + 1}}{2} ${b < 0 ? "-" : "+"} ${Math.abs(b * N)} = ${(a * N * (N + 1)) / 2} ${b < 0 ? "-" : "+"} ${Math.abs(b * N)} = ${S}$。`,
+        ),
       ),
     });
   },
@@ -2951,8 +3129,8 @@ const alternatingSquares: KnowledgePointDef = {
   id: "alternating-sums-of-squares",
   title: t("Alternating sums of squares", "平方的交错和"),
   explanation: t(
-    "When the signs of a sum of squares alternate, the formula for the sum of squares is the wrong tool, because the terms nearly cancel. Pair each square with the next, starting from the largest. A difference of consecutive squares equals the sum of the two numbers, so the alternating sum collapses to a sum of integers.",
-    "平方和的符号交替时，平方和公式不是合适的工具，因为各项几乎相互抵消。从最大的一项开始，把每个平方与下一个配对。相邻两个平方之差等于这两个数之和，所以交错和就化成了整数的和。",
+    "When the signs of a sum of squares alternate, the formula for the sum of squares is the wrong tool, because the terms nearly cancel. Pair each square with the next, starting from the largest. A difference of consecutive squares equals the sum of the two numbers, so the alternating sum collapses to a sum of integers. For $1^2 - 2^2 + 3^2 - \\cdots - 100^2$, each pair $(2j - 1)^2 - (2j)^2$ is $-(4j - 1)$, and the total is $-(1 + 2 + \\cdots + 100) = -5050$.\n\n> **Watch out.** The sign of the whole sum is the sign of its largest term, so check whether $k = n$ carries a plus or a minus; and ignoring the signs gives the ordinary sum of squares, far too large.",
+    "平方和的符号交替时，平方和公式不是合适的工具，因为各项几乎相互抵消。从最大的一项开始，把每个平方与下一个配对。相邻两个平方之差等于这两个数之和，所以交错和就化成了整数的和。对 $1^2 - 2^2 + 3^2 - \\cdots - 100^2$，每对 $(2j - 1)^2 - (2j)^2$ 等于 $-(4j - 1)$，总和为 $-(1 + 2 + \\cdots + 100) = -5050$。\n\n> **注意。** 整个和的符号就是最大一项的符号，所以要看 $k = n$ 这一项带正号还是负号；忽略符号得到的是普通平方和，大得多。",
   ),
   generate(rng) {
     const n = rng.int(5, 60);
@@ -2962,14 +3140,57 @@ const alternatingSquares: KnowledgePointDef = {
     const answer = largestPositive ? size : -size;
     const sign = plusFirst ? "(-1)^{k+1}" : "(-1)^{k}";
     const allSquares = (n * (n + 1) * (2 * n + 1)) / 6;
+    const prevSize = ((n - 1) * n) / 2;
     return numberProblem({
       prompt: t(`Evaluate $\\sum_{k=1}^{${n}} ${sign} k^2$.`, `计算 $\\sum_{k=1}^{${n}} ${sign} k^2$。`),
       answer,
       form: "integer",
-      wrong: [-answer, allSquares, -allSquares, answer > 0 ? n * n : -n * n, answer > 0 ? size - n : n - size],
-      solution: t(
-        `Pair from the top: $${n}^2 - ${n - 1}^2 = ${n} + ${n - 1}$, and in the same way for each lower pair, since $a^2 - (a - 1)^2 = a + (a - 1)$. So the size of the sum is $${n} + ${n - 1} + \\cdots + 1 = \\frac{${n} \\cdot ${n + 1}}{2} = ${size}$. The term $k = ${n}$ has a ${largestPositive ? "plus" : "minus"} sign, so the sum is $${answer}$.`,
-        `从最大的项开始配对：$${n}^2 - ${n - 1}^2 = ${n} + ${n - 1}$，较小的各对也一样，因为 $a^2 - (a - 1)^2 = a + (a - 1)$。所以和的绝对值是 $${n} + ${n - 1} + \\cdots + 1 = \\frac{${n} \\cdot ${n + 1}}{2} = ${size}$。$k = ${n}$ 这一项的符号是${largestPositive ? "正" : "负"}，所以和是 $${answer}$。`,
+      mistakes: [
+        why(
+          -answer,
+          `That has the wrong sign: the term $k = ${n}$ carries a ${largestPositive ? "plus" : "minus"} sign and decides the sign of the sum.`,
+          `那是符号错了：$k = ${n}$ 这一项带${largestPositive ? "正" : "负"}号，决定了和的符号。`,
+        ),
+        why(allSquares, "That ignores the signs and adds all the squares.", "那是忽略了符号，把所有平方相加。"),
+        why(
+          answer > 0 ? n * n : -n * n,
+          "That keeps only the largest term; the other terms do not cancel completely.",
+          "那是只保留了最大的一项；其余各项并没有完全抵消。",
+        ),
+        why(
+          answer > 0 ? size - n : n - size,
+          `That leaves $${n}$ out of the sum of the integers; each pair gives both of its numbers.`,
+          `那是在整数和中漏掉了 $${n}$；每一对都给出它的两个数。`,
+        ),
+      ].filter((m, i, all) => m.value !== answer && all.findIndex((o) => o.value === m.value) === i),
+      solution: walked(
+        [
+          [
+            ["Pair from the top", "从最大项配对"],
+            t(
+              `$${n}^2 - ${n - 1}^2 = ${n} + ${n - 1}$, and likewise for each lower pair, since $a^2 - (a - 1)^2 = a + (a - 1)$.`,
+              `$${n}^2 - ${n - 1}^2 = ${n} + ${n - 1}$，较小的各对也一样，因为 $a^2 - (a - 1)^2 = a + (a - 1)$。`,
+            ),
+          ],
+          [
+            ["Add the integers", "整数求和"],
+            t(
+              `The size is $${n} + ${n - 1} + \\cdots + 1 = \\frac{${n} \\cdot ${n + 1}}{2} = ${size}$.`,
+              `绝对值为 $${n} + ${n - 1} + \\cdots + 1 = \\frac{${n} \\cdot ${n + 1}}{2} = ${size}$。`,
+            ),
+          ],
+          [
+            ["Fix the sign", "确定符号"],
+            t(
+              `The term $k = ${n}$ has a ${largestPositive ? "plus" : "minus"} sign, so the sum is $${answer}$.`,
+              `$k = ${n}$ 这一项带${largestPositive ? "正" : "负"}号，所以和是 $${answer}$。`,
+            ),
+          ],
+        ],
+        t(
+          `The sum to $${n - 1}$ has size $\\frac{${n - 1} \\cdot ${n}}{2} = ${prevSize}$ and the opposite sign, and $${n}^2 - ${prevSize} = ${n * n - prevSize}$ is the size found.`,
+          `到 $${n - 1}$ 的和绝对值为 $\\frac{${n - 1} \\cdot ${n}}{2} = ${prevSize}$，符号相反，而 $${n}^2 - ${prevSize} = ${n * n - prevSize}$ 正是所得的绝对值。`,
+        ),
       ),
     });
   },

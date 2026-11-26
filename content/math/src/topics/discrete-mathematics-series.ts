@@ -2,7 +2,8 @@ import type { Rng, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { dec, Q } from "@ga/subject-math";
 
-import { numberProblem } from "../problems.ts";
+import { numberProblem, why } from "../problems.ts";
+import { walked } from "./calculus-i-differentiation.ts";
 import { range } from "./methods-of-proof-common.ts";
 
 // Discrete Mathematics unit 5: finite power sums, the generalized binomial theorem and the multinomial theorem.
@@ -16,6 +17,14 @@ function choose(n: number, k: number): number {
   let r = 1;
   for (let i = 1; i <= k; i++) r = (r * (n - k + i)) / i;
   return r;
+}
+
+/** asQ turns a number into a rational. */
+const asQ = (v: number | Q): Q => (typeof v === "number" ? Q.of(v) : v);
+
+/** distinct drops the mistakes whose value is the answer or repeats an earlier one. */
+function distinct<M extends { readonly value: number | Q }>(answer: number | Q, mistakes: readonly M[]): M[] {
+  return mistakes.filter((m, i, all) => !asQ(m.value).eq(asQ(answer)) && all.findIndex((x) => asQ(x.value).eq(asQ(m.value))) === i);
 }
 
 /** s1 is 1 + 2 + ⋯ + n. */
@@ -59,6 +68,16 @@ const xk = (k: number) => (k === 1 ? "x" : `x^{${k}}`);
 /** sumTex writes Σ from m to n of a summand. */
 const sumTex = (m: number, n: number, body: string) => `\\sum_{k=${m}}^{${n}} ${body}`;
 
+/** mul writes a times a factor, dropping a coefficient of 1 or −1 to a sign. */
+const mul = (a: number, x: string | number) => (a === 1 ? `${x}` : a === -1 ? `-${x}` : `${a} \\cdot ${x}`);
+
+/** combo writes a₁x₁ ± a₂x₂ ± ⋯ with products shown by mul, skipping zero coefficients. */
+const combo = (pairs: readonly (readonly [number, string | number])[]) =>
+  pairs
+    .filter(([a]) => a !== 0)
+    .map(([a, x], i) => (i === 0 ? mul(a, x) : ` ${a < 0 ? "-" : "+"} ${mul(Math.abs(a), x)}`))
+    .join("");
+
 /** finiteLinearSeries sums linear expressions with Σk = n(n + 1)/2. */
 export const finiteLinearSeries: TopicDef = {
   id: "finite-linear-series",
@@ -66,6 +85,10 @@ export const finiteLinearSeries: TopicDef = {
   summary: t(
     "1 + 2 + ⋯ + n = n(n + 1)/2, so Σₖ₌₁ⁿ (ak + b) = a·n(n + 1)/2 + bn; a sum starting at m is the sum to n minus the sum to m − 1.",
     "1 + 2 + ⋯ + n = n(n + 1)/2，所以 Σₖ₌₁ⁿ (ak + b) = a·n(n + 1)/2 + bn；从 m 开始的和等于到 n 的和减去到 m − 1 的和。",
+  ),
+  intro: t(
+    "$1 + 2 + \\cdots + 8 = \\frac{8 \\cdot 9}{2} = 36$: writing the sum forwards and backwards gives $8$ columns that each add to $9$, which is twice the sum.\n\nCheck: the pairs $1 + 8$, $2 + 7$, $3 + 6$ and $4 + 5$ each make $9$, and $4 \\cdot 9 = 36$.\n\nIn this lesson we use $\\sum_{k=1}^{n} k = \\frac{n(n + 1)}{2}$ to add up linear expressions, including sums that do not start at $1$.",
+    "$1 + 2 + \\cdots + 8 = \\frac{8 \\cdot 9}{2} = 36$：把这个和正着写一遍、倒着写一遍，得到 $8$ 列，每列之和都是 $9$，合起来是和的两倍。\n\n检验：$1 + 8$、$2 + 7$、$3 + 6$ 和 $4 + 5$ 每对都是 $9$，而 $4 \\cdot 9 = 36$。\n\n本课我们用 $\\sum_{k=1}^{n} k = \\frac{n(n + 1)}{2}$ 求线性式之和，包括不从 $1$ 开始的和。",
   ),
   prerequisites: ["properties-of-finite-series"],
   encompasses: [],
@@ -76,8 +99,8 @@ export const finiteLinearSeries: TopicDef = {
       id: "sums-of-linear-expressions",
       title: t("Sums of linear expressions", "线性式的和"),
       explanation: t(
-        "Split the sum into a multiple of the sum of the first integers and a constant added once for every term. $\\sum_{k=1}^{20} (3k - 2) = 3\\sum_{k=1}^{20} k - 2 \\cdot 20 = 3 \\cdot \\frac{20 \\cdot 21}{2} - 40 = 590$. The constant is added $n$ times, not once.",
-        "把和拆成前若干个整数之和的倍数，加上每一项都加一次的常数。$\\sum_{k=1}^{20} (3k - 2) = 3\\sum_{k=1}^{20} k - 2 \\cdot 20 = 3 \\cdot \\frac{20 \\cdot 21}{2} - 40 = 590$。常数要加 $n$ 次，而不是一次。",
+        "Split the sum into a multiple of the sum of the first integers and a constant added once for every term. $\\sum_{k=1}^{100} (3k - 2) = 3\\sum_{k=1}^{100} k - 2 \\cdot 100 = 3 \\cdot \\frac{100 \\cdot 101}{2} - 200 = 14950$.\n\n> **Watch out.** The constant is added $n$ times, not once; and $\\sum_{k=1}^{n} k$ is $\\frac{n(n + 1)}{2}$, not $n^2$ or $\\frac{n(n - 1)}{2}$.",
+        "把和拆成前若干个整数之和的倍数，加上每一项都加一次的常数。$\\sum_{k=1}^{100} (3k - 2) = 3\\sum_{k=1}^{100} k - 2 \\cdot 100 = 3 \\cdot \\frac{100 \\cdot 101}{2} - 200 = 14950$。\n\n> **注意。** 常数要加 $n$ 次，而不是一次；$\\sum_{k=1}^{n} k$ 是 $\\frac{n(n + 1)}{2}$，不是 $n^2$ 或 $\\frac{n(n - 1)}{2}$。",
       ),
       generate(rng) {
         const a = rng.nonZero(-6, 9);
@@ -88,13 +111,61 @@ export const finiteLinearSeries: TopicDef = {
           [a, "k"],
           [b, ""],
         ])})`;
+        const first = a + b;
+        const last = a * n + b;
         return numberProblem({
           prompt: t(`Evaluate $${sumTex(1, n, body)}$.`, `计算 $${sumTex(1, n, body)}$。`),
           answer: value,
-          wrong: [a * s1(n) + b, a * s1(n - 1) + b * n, a * n * n + b * n, (a * n * (n - 1)) / 2 + b * n],
-          solution: t(
-            `$${a}\\sum k ${b < 0 ? "-" : "+"} ${Math.abs(b)} \\cdot ${n} = ${a} \\cdot \\frac{${n} \\cdot ${n + 1}}{2} ${b < 0 ? "-" : "+"} ${Math.abs(b * n)} = ${value}$.`,
-            `$${a}\\sum k ${b < 0 ? "-" : "+"} ${Math.abs(b)} \\cdot ${n} = ${a} \\cdot \\frac{${n} \\cdot ${n + 1}}{2} ${b < 0 ? "-" : "+"} ${Math.abs(b * n)} = ${value}$。`,
+          mistakes: distinct(value, [
+            why(
+              a * s1(n) + b,
+              `That adds the constant once; it is added for each of the $${n}$ terms.`,
+              `那是只加了一次常数；$${n}$ 项中每一项都要加。`,
+            ),
+            why(
+              a * s1(n - 1) + b * n,
+              "That uses $\\frac{n(n - 1)}{2}$ for $\\sum k$, which stops one term short.",
+              "那是把 $\\sum k$ 当成 $\\frac{n(n - 1)}{2}$，少了一项。",
+            ),
+            why(
+              a * n * n + b * n,
+              "That uses $n^2$ for $\\sum k$; the sum of the first $n$ integers is $\\frac{n(n + 1)}{2}$.",
+              "那是把 $\\sum k$ 当成 $n^2$；前 $n$ 个整数之和是 $\\frac{n(n + 1)}{2}$。",
+            ),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Split the sum", "拆分和式"],
+                t(
+                  `$${sumTex(1, n, body)} = ${combo([
+                    [a, "\\sum k"],
+                    [b, n],
+                  ])}$.`,
+                  `$${sumTex(1, n, body)} = ${combo([
+                    [a, "\\sum k"],
+                    [b, n],
+                  ])}$。`,
+                ),
+              ],
+              [
+                ["Use the formula", "用公式"],
+                t(
+                  `$\\sum k = \\frac{${n} \\cdot ${n + 1}}{2} = ${s1(n)}$, so the sum is $${combo([
+                    [a, s1(n)],
+                    [b, n],
+                  ])} = ${value}$.`,
+                  `$\\sum k = \\frac{${n} \\cdot ${n + 1}}{2} = ${s1(n)}$，所以和为 $${combo([
+                    [a, s1(n)],
+                    [b, n],
+                  ])} = ${value}$。`,
+                ),
+              ],
+            ],
+            t(
+              `The terms go up evenly from $${first}$ to $${last}$, so the sum is the number of terms times their average: $${n} \\cdot \\frac{${first} + ${pn(last)}}{2} = ${value}$.`,
+              `各项从 $${first}$ 均匀变到 $${last}$，所以和等于项数乘以平均值：$${n} \\cdot \\frac{${first} + ${pn(last)}}{2} = ${value}$。`,
+            ),
           ),
         });
       },
@@ -103,8 +174,8 @@ export const finiteLinearSeries: TopicDef = {
       id: "linear-sums-with-a-shifted-start",
       title: t("Sums not starting at 1", "不从 1 开始的和"),
       explanation: t(
-        "A sum that starts later is the full sum up to the end minus the full sum up to just before the start. $\\sum_{k=11}^{30} k = \\sum_{k=1}^{30} k - \\sum_{k=1}^{10} k = 465 - 55 = 410$. Subtract up to $m - 1$, not up to $m$.",
-        "从较后位置开始的和，等于到末项的完整和减去到起点前一项的完整和。$\\sum_{k=11}^{30} k = \\sum_{k=1}^{30} k - \\sum_{k=1}^{10} k = 465 - 55 = 410$。减去到 $m - 1$ 的和，而不是到 $m$ 的和。",
+        "A sum that starts later is the full sum up to the end minus the full sum up to just before the start. $\\sum_{k=41}^{100} k = \\sum_{k=1}^{100} k - \\sum_{k=1}^{40} k = 5050 - 820 = 4230$.\n\n> **Watch out.** Subtract the sum up to $m - 1$, not up to $m$, or the first term is lost; and a sum from $m$ to $n$ has $n - m + 1$ terms.",
+        "从较后位置开始的和，等于到末项的完整和减去到起点前一项的完整和。$\\sum_{k=41}^{100} k = \\sum_{k=1}^{100} k - \\sum_{k=1}^{40} k = 5050 - 820 = 4230$。\n\n> **注意。** 要减去到 $m - 1$ 的和，而不是到 $m$ 的和，否则会丢掉第一项；从 $m$ 到 $n$ 的和有 $n - m + 1$ 项。",
       ),
       generate(rng) {
         const m = rng.int(5, 30);
@@ -123,10 +194,44 @@ export const finiteLinearSeries: TopicDef = {
         return numberProblem({
           prompt: t(`Evaluate $${sumTex(m, n, body)}$.`, `计算 $${sumTex(m, n, body)}$。`),
           answer: value,
-          wrong: [brute(m + 1, n, f), brute(1, n, f), brute(m, n - 1, f), value + b],
-          solution: t(
-            `There are $${n - m + 1}$ terms: $${sumTex(1, n, body)} - ${sumTex(1, m - 1, body)} = ${brute(1, n, f)} - ${pn(brute(1, m - 1, f))} = ${value}$.`,
-            `共有 $${n - m + 1}$ 项：$${sumTex(1, n, body)} - ${sumTex(1, m - 1, body)} = ${brute(1, n, f)} - ${pn(brute(1, m - 1, f))} = ${value}$。`,
+          mistakes: distinct(value, [
+            why(
+              brute(m + 1, n, f),
+              `That subtracts the sum up to $${m}$, which removes the first term $k = ${m}$ as well.`,
+              `那是减去了到 $${m}$ 的和，把第一项 $k = ${m}$ 也去掉了。`,
+            ),
+            why(
+              brute(1, n, f),
+              "That is the whole sum from $k = 1$; subtract the terms before the start.",
+              "那是从 $k = 1$ 开始的全部和；还要减去起点之前的项。",
+            ),
+            why(
+              brute(m, n - 1, f),
+              "That stops one term early; the last term $k = n$ is included.",
+              "那是提前一项停止了；最后一项 $k = n$ 也要算。",
+            ),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Write it as a difference", "写成差"],
+                t(
+                  `$${sumTex(m, n, body)} = ${sumTex(1, n, body)} - ${sumTex(1, m - 1, body)}$.`,
+                  `$${sumTex(m, n, body)} = ${sumTex(1, n, body)} - ${sumTex(1, m - 1, body)}$。`,
+                ),
+              ],
+              [
+                ["Evaluate both", "分别计算"],
+                t(
+                  `$${brute(1, n, f)} - ${pn(brute(1, m - 1, f))} = ${value}$.`,
+                  `$${brute(1, n, f)} - ${pn(brute(1, m - 1, f))} = ${value}$。`,
+                ),
+              ],
+            ],
+            t(
+              `There are $${n - m + 1}$ terms, from $${f(m)}$ to $${f(n)}$, so the sum is $${n - m + 1} \\cdot \\frac{${f(m)} + ${f(n)}}{2} = ${value}$.`,
+              `共有 $${n - m + 1}$ 项，从 $${f(m)}$ 到 $${f(n)}$，所以和为 $${n - m + 1} \\cdot \\frac{${f(m)} + ${f(n)}}{2} = ${value}$。`,
+            ),
           ),
         });
       },
@@ -142,6 +247,10 @@ export const finiteQuadraticSeries: TopicDef = {
     "1² + 2² + ⋯ + n² = n(n + 1)(2n + 1)/6; with linearity, this sums any quadratic in k.",
     "1² + 2² + ⋯ + n² = n(n + 1)(2n + 1)/6；结合线性性，可以求任意关于 k 的二次式之和。",
   ),
+  intro: t(
+    "$1^2 + 2^2 + 3^2 + 4^2 + 5^2 = \\frac{5 \\cdot 6 \\cdot 11}{6} = 55$, by the formula $\\sum_{k=1}^{n} k^2 = \\frac{n(n + 1)(2n + 1)}{6}$.\n\nCheck: $1 + 4 + 9 + 16 + 25 = 55$.\n\nIn this lesson we sum squares, and with linearity any quadratic expression in $k$, over a range of $k$.",
+    "$1^2 + 2^2 + 3^2 + 4^2 + 5^2 = \\frac{5 \\cdot 6 \\cdot 11}{6} = 55$，用的是公式 $\\sum_{k=1}^{n} k^2 = \\frac{n(n + 1)(2n + 1)}{6}$。\n\n检验：$1 + 4 + 9 + 16 + 25 = 55$。\n\n本课我们求平方和，并借助线性性求任意关于 $k$ 的二次式在某个范围内的和。",
+  ),
   prerequisites: ["finite-linear-series"],
   encompasses: [],
   xp: 10,
@@ -151,8 +260,8 @@ export const finiteQuadraticSeries: TopicDef = {
       id: "sums-of-quadratic-expressions",
       title: t("Sums of quadratic expressions", "二次式的和"),
       explanation: t(
-        "Split the expression into its square, linear and constant parts, and use the known formula for each kind of sum. $\\sum_{k=1}^{10} (k^2 + 2k) = \\frac{10 \\cdot 11 \\cdot 21}{6} + 2 \\cdot \\frac{10 \\cdot 11}{2} = 385 + 110 = 495$.",
-        "把表达式拆成平方项、一次项和常数项，对每一类和使用已知公式。$\\sum_{k=1}^{10} (k^2 + 2k) = \\frac{10 \\cdot 11 \\cdot 21}{6} + 2 \\cdot \\frac{10 \\cdot 11}{2} = 385 + 110 = 495$。",
+        "Split the expression into its square, linear and constant parts, and use the known formula for each kind of sum. $\\sum_{k=1}^{40} (k^2 + 2k) = \\frac{40 \\cdot 41 \\cdot 81}{6} + 2 \\cdot \\frac{40 \\cdot 41}{2} = 22140 + 1640 = 23780$.\n\n> **Watch out.** $\\sum k^2$ is not $\\left(\\sum k\\right)^2$, which is the sum of cubes; and a constant term is added $n$ times.",
+        "把表达式拆成平方项、一次项和常数项，对每一类和使用已知公式。$\\sum_{k=1}^{40} (k^2 + 2k) = \\frac{40 \\cdot 41 \\cdot 81}{6} + 2 \\cdot \\frac{40 \\cdot 41}{2} = 22140 + 1640 = 23780$。\n\n> **注意。** $\\sum k^2$ 不是 $\\left(\\sum k\\right)^2$，后者是立方和；常数项要加 $n$ 次。",
       ),
       generate(rng) {
         const a = rng.nonZero(-3, 4);
@@ -165,18 +274,57 @@ export const finiteQuadraticSeries: TopicDef = {
           [b, "k"],
           [c, ""],
         ])})`;
+        const third = (n * (n + 1) * (n + 2)) / 3;
         return numberProblem({
           prompt: t(`Evaluate $${sumTex(1, n, body)}$.`, `计算 $${sumTex(1, n, body)}$。`),
           answer: value,
-          wrong: [
-            a * s1(n) ** 2 + b * s1(n) + c * n,
-            a * s2(n) + b * s1(n) + c,
-            a * n * n + b * n + c,
-            a * ((n * (n + 1) * (n + 2)) / 6) + b * s1(n) + c * n,
-          ],
-          solution: t(
-            `$\\sum k^2 = \\frac{${n} \\cdot ${n + 1} \\cdot ${2 * n + 1}}{6} = ${s2(n)}$ and $\\sum k = ${s1(n)}$, so the sum is $${a} \\cdot ${s2(n)} + ${pn(b)} \\cdot ${s1(n)} + ${pn(c)} \\cdot ${n} = ${value}$.`,
-            `$\\sum k^2 = \\frac{${n} \\cdot ${n + 1} \\cdot ${2 * n + 1}}{6} = ${s2(n)}$，$\\sum k = ${s1(n)}$，所以和为 $${a} \\cdot ${s2(n)} + ${pn(b)} \\cdot ${s1(n)} + ${pn(c)} \\cdot ${n} = ${value}$。`,
+          mistakes: distinct(value, [
+            why(
+              a * s1(n) ** 2 + b * s1(n) + c * n,
+              "That uses $\\left(\\sum k\\right)^2$ for $\\sum k^2$; that square is the sum of cubes.",
+              "那是把 $\\sum k^2$ 当成 $\\left(\\sum k\\right)^2$；后者是立方和。",
+            ),
+            why(
+              a * s2(n) + b * s1(n) + c,
+              `That adds the constant once; it is added for each of the $${n}$ terms.`,
+              `那是只加了一次常数；$${n}$ 项中每一项都要加。`,
+            ),
+            why(a * n * n + b * n + c, "That is only the last term, not the sum.", "那只是最后一项，不是和。"),
+            why(
+              a * ((n * (n + 1) * (n + 2)) / 6) + b * s1(n) + c * n,
+              "That uses $\\frac{n(n + 1)(n + 2)}{6}$ for $\\sum k^2$; the last factor is $2n + 1$.",
+              "那是把 $\\sum k^2$ 当成 $\\frac{n(n + 1)(n + 2)}{6}$；最后一个因子是 $2n + 1$。",
+            ),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Use the formulas", "用公式"],
+                t(
+                  `$\\sum k^2 = \\frac{${n} \\cdot ${n + 1} \\cdot ${2 * n + 1}}{6} = ${s2(n)}$ and $\\sum k = ${s1(n)}$.`,
+                  `$\\sum k^2 = \\frac{${n} \\cdot ${n + 1} \\cdot ${2 * n + 1}}{6} = ${s2(n)}$，$\\sum k = ${s1(n)}$。`,
+                ),
+              ],
+              [
+                ["Combine", "合并"],
+                t(
+                  `$${combo([
+                    [a, s2(n)],
+                    [b, s1(n)],
+                    [c, n],
+                  ])} = ${value}$.`,
+                  `$${combo([
+                    [a, s2(n)],
+                    [b, s1(n)],
+                    [c, n],
+                  ])} = ${value}$。`,
+                ),
+              ],
+            ],
+            t(
+              `Since $k^2 = k(k + 1) - k$, $\\sum k^2 = \\frac{${n} \\cdot ${n + 1} \\cdot ${n + 2}}{3} - ${s1(n)} = ${third} - ${s1(n)} = ${s2(n)}$, as used.`,
+              `由 $k^2 = k(k + 1) - k$，$\\sum k^2 = \\frac{${n} \\cdot ${n + 1} \\cdot ${n + 2}}{3} - ${s1(n)} = ${third} - ${s1(n)} = ${s2(n)}$，与所用的一致。`,
+            ),
           ),
         });
       },
@@ -185,8 +333,8 @@ export const finiteQuadraticSeries: TopicDef = {
       id: "sums-of-squares-in-a-range",
       title: t("Sums of squares in a range", "某范围内的平方和"),
       explanation: t(
-        "Subtract the sum of squares up to just before the start from the sum of squares up to the end. $11^2 + 12^2 + \\cdots + 20^2 = \\sum_{k=1}^{20} k^2 - \\sum_{k=1}^{10} k^2 = 2870 - 385 = 2485$.",
-        "用到末项的平方和减去到起点前一项的平方和。$11^2 + 12^2 + \\cdots + 20^2 = \\sum_{k=1}^{20} k^2 - \\sum_{k=1}^{10} k^2 = 2870 - 385 = 2485$。",
+        "Subtract the sum of squares up to just before the start from the sum of squares up to the end. $31^2 + 32^2 + \\cdots + 40^2 = \\sum_{k=1}^{40} k^2 - \\sum_{k=1}^{30} k^2 = 22140 - 9455 = 12685$. For odd squares, expand $(2k - 1)^2 = 4k^2 - 4k + 1$ first.\n\n> **Watch out.** Subtract up to $m - 1$, not $m$; and the sum of the squares is not the square of the sum.",
+        "用到末项的平方和减去到起点前一项的平方和。$31^2 + 32^2 + \\cdots + 40^2 = \\sum_{k=1}^{40} k^2 - \\sum_{k=1}^{30} k^2 = 22140 - 9455 = 12685$。求奇数的平方和时，先展开 $(2k - 1)^2 = 4k^2 - 4k + 1$。\n\n> **注意。** 要减去到 $m - 1$ 的和，而不是到 $m$ 的；平方和不是和的平方。",
       ),
       generate(rng) {
         const m = rng.int(3, 20);
@@ -199,20 +347,82 @@ export const finiteQuadraticSeries: TopicDef = {
           return numberProblem({
             prompt: t(`Evaluate $1^2 + 3^2 + 5^2 + \\cdots + ${2 * N - 1}^2$.`, `计算 $1^2 + 3^2 + 5^2 + \\cdots + ${2 * N - 1}^2$。`),
             answer: v,
-            wrong: [Math.round(s2(2 * N - 1) / 2), s2(2 * N - 1) - s2(N), 4 * s2(N) - s1(N) + N],
-            solution: t(
-              `$\\sum_{k=1}^{${N}} (2k - 1)^2 = 4\\sum k^2 - 4\\sum k + ${N} = 4 \\cdot ${s2(N)} - 4 \\cdot ${s1(N)} + ${N} = ${v}$.`,
-              `$\\sum_{k=1}^{${N}} (2k - 1)^2 = 4\\sum k^2 - 4\\sum k + ${N} = 4 \\cdot ${s2(N)} - 4 \\cdot ${s1(N)} + ${N} = ${v}$。`,
+            mistakes: distinct(v, [
+              why(
+                Math.round(s2(2 * N - 1) / 2),
+                "That takes half of all the squares, but the odd squares are not half of them.",
+                "那是取了全部平方和的一半，但奇数的平方和并不是一半。",
+              ),
+              why(
+                s2(2 * N - 1) - s2(N),
+                "That subtracts the first squares; the squares to remove are the even ones.",
+                "那是减去了前几个平方；要去掉的是偶数的平方。",
+              ),
+              why(
+                4 * s2(N) - s1(N) + N,
+                "That uses $-\\sum k$ for the middle part; $(2k - 1)^2$ has $-4k$.",
+                "那是中间部分用了 $-\\sum k$；$(2k - 1)^2$ 中是 $-4k$。",
+              ),
+            ]),
+            solution: walked(
+              [
+                [
+                  ["Write the terms", "写出通项"],
+                  t(
+                    `The terms are $(2k - 1)^2 = 4k^2 - 4k + 1$ for $k = 1, \\dots, ${N}$.`,
+                    `各项为 $(2k - 1)^2 = 4k^2 - 4k + 1$，$k = 1, \\dots, ${N}$。`,
+                  ),
+                ],
+                [
+                  ["Sum each part", "逐部分求和"],
+                  t(`$4 \\cdot ${s2(N)} - 4 \\cdot ${s1(N)} + ${N} = ${v}$.`, `$4 \\cdot ${s2(N)} - 4 \\cdot ${s1(N)} + ${N} = ${v}$。`),
+                ],
+              ],
+              t(
+                `All squares up to $${2 * N}^2$ minus the even ones $4\\sum_{k=1}^{${N}} k^2$: $${s2(2 * N)} - 4 \\cdot ${s2(N)} = ${v}$.`,
+                `到 $${2 * N}^2$ 的全部平方和减去偶数的平方和 $4\\sum_{k=1}^{${N}} k^2$：$${s2(2 * N)} - 4 \\cdot ${s2(N)} = ${v}$。`,
+              ),
             ),
           });
         }
+        const L = n - m;
         return numberProblem({
           prompt: t(`Evaluate $${sumTex(m, n, "k^2")}$.`, `计算 $${sumTex(m, n, "k^2")}$。`),
           answer: value,
-          wrong: [s2(n) - s2(m), s2(n - m + 1), s2(n), (s1(n) - s1(m - 1)) ** 2],
-          solution: t(
-            `$${sumTex(1, n, "k^2")} - ${sumTex(1, m - 1, "k^2")} = ${s2(n)} - ${s2(m - 1)} = ${value}$.`,
-            `$${sumTex(1, n, "k^2")} - ${sumTex(1, m - 1, "k^2")} = ${s2(n)} - ${s2(m - 1)} = ${value}$。`,
+          mistakes: distinct(value, [
+            why(
+              s2(n) - s2(m),
+              `That subtracts the squares up to $${m}$, which removes $${m}^2$ as well.`,
+              `那是减去了到 $${m}$ 的平方和，把 $${m}^2$ 也去掉了。`,
+            ),
+            why(
+              s2(n - m + 1),
+              "That sums the squares of $1$ to the number of terms, not of the actual values.",
+              "那是对 $1$ 到项数求平方和，而不是对实际的数。",
+            ),
+            why(
+              s2(n),
+              "That is the whole sum from $k = 1$; subtract the squares before the start.",
+              "那是从 $k = 1$ 开始的全部平方和；还要减去起点之前的平方。",
+            ),
+            why(
+              (s1(n) - s1(m - 1)) ** 2,
+              "That squares the sum of the numbers; the sum of squares is smaller.",
+              "那是对这些数之和取平方；平方和比它小。",
+            ),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Write it as a difference", "写成差"],
+                t(`$${sumTex(1, n, "k^2")} - ${sumTex(1, m - 1, "k^2")}$.`, `$${sumTex(1, n, "k^2")} - ${sumTex(1, m - 1, "k^2")}$。`),
+              ],
+              [["Evaluate both", "分别计算"], t(`$${s2(n)} - ${s2(m - 1)} = ${value}$.`, `$${s2(n)} - ${s2(m - 1)} = ${value}$。`)],
+            ],
+            t(
+              `Writing $k = ${m} + j$ for $j = 0, \\dots, ${L}$: $\\sum (${m} + j)^2 = ${L + 1} \\cdot ${m * m} + ${2 * m} \\cdot ${s1(L)} + ${s2(L)} = ${value}$.`,
+              `令 $k = ${m} + j$，$j = 0, \\dots, ${L}$：$\\sum (${m} + j)^2 = ${L + 1} \\cdot ${m * m} + ${2 * m} \\cdot ${s1(L)} + ${s2(L)} = ${value}$。`,
+            ),
           ),
         });
       },
@@ -228,6 +438,10 @@ export const finiteCubicSeries: TopicDef = {
     "1³ + 2³ + ⋯ + n³ = (n(n + 1)/2)², the square of 1 + 2 + ⋯ + n; with Σk² and Σk, this sums any cubic in k.",
     "1³ + 2³ + ⋯ + n³ = (n(n + 1)/2)²，正是 1 + 2 + ⋯ + n 的平方；结合 Σk² 与 Σk，可以求任意关于 k 的三次式之和。",
   ),
+  intro: t(
+    "$1^3 + 2^3 + 3^3 + 4^3 = \\left(\\frac{4 \\cdot 5}{2}\\right)^2 = 10^2 = 100$: the sum of the first cubes is the square of the sum of the first integers.\n\nCheck: $1 + 8 + 27 + 64 = 100$.\n\nIn this lesson we sum cubes, and by expanding first, any cubic expression in $k$.",
+    "$1^3 + 2^3 + 3^3 + 4^3 = \\left(\\frac{4 \\cdot 5}{2}\\right)^2 = 10^2 = 100$：前若干个立方数之和等于前若干个整数之和的平方。\n\n检验：$1 + 8 + 27 + 64 = 100$。\n\n本课我们求立方和，并通过先展开求任意关于 $k$ 的三次式之和。",
+  ),
   prerequisites: ["finite-quadratic-series"],
   encompasses: [],
   xp: 10,
@@ -237,8 +451,8 @@ export const finiteCubicSeries: TopicDef = {
       id: "sums-of-cubes",
       title: t("Sums of cubes", "立方和"),
       explanation: t(
-        "The sum of the first cubes is the square of the sum of the first integers, a surprising and useful identity. $\\sum_{k=1}^{10} k^3 = \\left(\\frac{10 \\cdot 11}{2}\\right)^2 = 55^2 = 3025$, and $\\sum_{k=6}^{10} k^3 = 3025 - 15^2 = 2800$.",
-        "前若干个立方数之和等于前若干个整数之和的平方，这是一个令人惊讶又很有用的恒等式。$\\sum_{k=1}^{10} k^3 = \\left(\\frac{10 \\cdot 11}{2}\\right)^2 = 55^2 = 3025$，$\\sum_{k=6}^{10} k^3 = 3025 - 15^2 = 2800$。",
+        "The sum of the first cubes is the square of the sum of the first integers, a surprising and useful identity. $\\sum_{k=1}^{30} k^3 = \\left(\\frac{30 \\cdot 31}{2}\\right)^2 = 465^2 = 216225$, and $\\sum_{k=21}^{30} k^3 = 216225 - 210^2 = 172125$.\n\n> **Watch out.** The sum of cubes is the square of $\\sum k$, not its cube; and for a range, subtract up to $m - 1$, not $m$.",
+        "前若干个立方数之和等于前若干个整数之和的平方，这是一个令人惊讶又很有用的恒等式。$\\sum_{k=1}^{30} k^3 = \\left(\\frac{30 \\cdot 31}{2}\\right)^2 = 465^2 = 216225$，$\\sum_{k=21}^{30} k^3 = 216225 - 210^2 = 172125$。\n\n> **注意。** 立方和是 $\\sum k$ 的平方，不是立方；求某范围内的和时，要减去到 $m - 1$ 的和，而不是到 $m$ 的。",
       ),
       generate(rng) {
         const m = rng.bool() ? 1 : rng.int(3, 12);
@@ -247,16 +461,64 @@ export const finiteCubicSeries: TopicDef = {
         return numberProblem({
           prompt: t(`Evaluate $${sumTex(m, n, "k^3")}$.`, `计算 $${sumTex(m, n, "k^3")}$。`),
           answer: value,
-          wrong: [s3(n) - s3(m), s1(n) ** 3, s2(n) * s1(n), m === 1 ? s1(n) * (n + 1) : s3(n)],
+          mistakes: distinct(value, [
+            why(
+              s3(n) - s3(m),
+              `That subtracts the cubes up to $${m}$, which removes $${m}^3$ as well.`,
+              `那是减去了到 $${m}$ 的立方和，把 $${m}^3$ 也去掉了。`,
+            ),
+            why(s1(n) ** 3, "That cubes $\\sum k$; the sum of cubes is its square.", "那是对 $\\sum k$ 取立方；立方和是它的平方。"),
+            why(
+              s2(n) * s1(n),
+              "That multiplies $\\sum k^2$ by $\\sum k$, which is not the sum of the products.",
+              "那是把 $\\sum k^2$ 乘以 $\\sum k$，这不是乘积之和。",
+            ),
+            ...(m === 1
+              ? []
+              : [
+                  why(
+                    s3(n),
+                    "That is the whole sum from $k = 1$; subtract the cubes before the start.",
+                    "那是从 $k = 1$ 开始的全部立方和；还要减去起点之前的立方。",
+                  ),
+                ]),
+          ]),
           solution:
             m === 1
-              ? t(
-                  `$${sumTex(1, n, "k^3")} = \\left(\\frac{${n} \\cdot ${n + 1}}{2}\\right)^2 = ${s1(n)}^2 = ${value}$.`,
-                  `$${sumTex(1, n, "k^3")} = \\left(\\frac{${n} \\cdot ${n + 1}}{2}\\right)^2 = ${s1(n)}^2 = ${value}$。`,
+              ? walked(
+                  [
+                    [
+                      ["Sum the integers", "求整数和"],
+                      t(`$\\frac{${n} \\cdot ${n + 1}}{2} = ${s1(n)}$.`, `$\\frac{${n} \\cdot ${n + 1}}{2} = ${s1(n)}$。`),
+                    ],
+                    [["Square it", "平方"], t(`$${s1(n)}^2 = ${value}$.`, `$${s1(n)}^2 = ${value}$。`)],
+                  ],
+                  t(
+                    `Without the last term the sum is $${s1(n - 1)}^2 = ${s3(n - 1)}$, and adding $${n}^3 = ${n ** 3}$ gives $${value}$.`,
+                    `去掉最后一项，和为 $${s1(n - 1)}^2 = ${s3(n - 1)}$，加上 $${n}^3 = ${n ** 3}$ 得 $${value}$。`,
+                  ),
                 )
-              : t(
-                  `$${sumTex(1, n, "k^3")} - ${sumTex(1, m - 1, "k^3")} = ${s1(n)}^2 - ${s1(m - 1)}^2 = ${value}$.`,
-                  `$${sumTex(1, n, "k^3")} - ${sumTex(1, m - 1, "k^3")} = ${s1(n)}^2 - ${s1(m - 1)}^2 = ${value}$。`,
+              : walked(
+                  [
+                    [
+                      ["Write it as a difference", "写成差"],
+                      t(
+                        `$${sumTex(1, n, "k^3")} - ${sumTex(1, m - 1, "k^3")}$.`,
+                        `$${sumTex(1, n, "k^3")} - ${sumTex(1, m - 1, "k^3")}$。`,
+                      ),
+                    ],
+                    [
+                      ["Square the integer sums", "整数和平方"],
+                      t(
+                        `$${s1(n)}^2 - ${s1(m - 1)}^2 = ${s3(n)} - ${s3(m - 1)} = ${value}$.`,
+                        `$${s1(n)}^2 - ${s1(m - 1)}^2 = ${s3(n)} - ${s3(m - 1)} = ${value}$。`,
+                      ),
+                    ],
+                  ],
+                  t(
+                    `As a difference of squares, $(${s1(n)} - ${s1(m - 1)})(${s1(n)} + ${s1(m - 1)}) = ${s1(n) - s1(m - 1)} \\cdot ${s1(n) + s1(m - 1)} = ${value}$.`,
+                    `用平方差公式，$(${s1(n)} - ${s1(m - 1)})(${s1(n)} + ${s1(m - 1)}) = ${s1(n) - s1(m - 1)} \\cdot ${s1(n) + s1(m - 1)} = ${value}$。`,
+                  ),
                 ),
         });
       },
@@ -265,8 +527,8 @@ export const finiteCubicSeries: TopicDef = {
       id: "sums-of-cubic-expressions",
       title: t("Sums of cubic expressions", "三次式的和"),
       explanation: t(
-        "Expand the expression into powers of the index first, then apply the formulas for sums of cubes, squares and integers. Expand first: $\\sum_{k=1}^{n} k(k + 1)^2 = \\sum (k^3 + 2k^2 + k)$. For $n = 5$: $225 + 2 \\cdot 55 + 15 = 350$.",
-        "先把表达式展开成下标的各次幂，再分别用立方和、平方和与整数和的公式。先展开：$\\sum_{k=1}^{n} k(k + 1)^2 = \\sum (k^3 + 2k^2 + k)$。$n = 5$ 时：$225 + 2 \\cdot 55 + 15 = 350$。",
+        "Expand the expression into powers of the index first, then apply the formulas for sums of cubes, squares and integers. Expand first: $\\sum_{k=1}^{n} k(k + 1)^2 = \\sum (k^3 + 2k^2 + k)$. For $n = 30$: $216225 + 2 \\cdot 9455 + 465 = 235600$.\n\n> **Watch out.** Expand before summing: the sum of a product is not the product of the sums; and keep every power, the linear part included.",
+        "先把表达式展开成下标的各次幂，再分别用立方和、平方和与整数和的公式。先展开：$\\sum_{k=1}^{n} k(k + 1)^2 = \\sum (k^3 + 2k^2 + k)$。$n = 30$ 时：$216225 + 2 \\cdot 9455 + 465 = 235600$。\n\n> **注意。** 先展开再求和：乘积之和不等于和之积；每一次幂都要保留，包括一次项。",
       ),
       generate(rng) {
         const n = rng.int(5, 20);
@@ -296,13 +558,55 @@ export const finiteCubicSeries: TopicDef = {
           [1, c + 1, c],
         ][kind]!;
         const value = brute(1, n, f);
+        const small = brute(1, 3, f);
         return numberProblem({
           prompt: t(`Evaluate $${sumTex(1, n, body)}$.`, `计算 $${sumTex(1, n, body)}$。`),
           answer: value,
-          wrong: [s3(n) + coeffs[1]! * s2(n), s1(n) * f(n), s3(n), value - coeffs[2]! * s1(n) + coeffs[2]!],
-          solution: t(
-            `$${body} = ${expanded}$, so the sum is $${s3(n)} + ${coeffs[1]! < 0 ? `(${coeffs[1]})` : coeffs[1]} \\cdot ${s2(n)} + ${coeffs[2]} \\cdot ${s1(n)} = ${value}$.`,
-            `$${body} = ${expanded}$，所以和为 $${s3(n)} + ${coeffs[1]! < 0 ? `(${coeffs[1]})` : coeffs[1]} \\cdot ${s2(n)} + ${coeffs[2]} \\cdot ${s1(n)} = ${value}$。`,
+          mistakes: distinct(value, [
+            why(s3(n) + coeffs[1]! * s2(n), "That drops the linear part of the expansion.", "那是丢掉了展开式中的一次项。"),
+            why(
+              s1(n) * f(n),
+              "That multiplies $\\sum k$ by the last term; a sum of products is not found that way.",
+              "那是把 $\\sum k$ 乘以最后一项；乘积之和不能这样求。",
+            ),
+            why(s3(n), "That keeps only the cubes and drops the other powers.", "那是只保留了立方项，丢掉了其他次幂。"),
+            why(
+              value - coeffs[2]! * s1(n) + coeffs[2]!,
+              "That adds the coefficient of $k$ once instead of multiplying it by $\\sum k$.",
+              "那是只加了一次 $k$ 的系数，而没有乘以 $\\sum k$。",
+            ),
+          ]),
+          solution: walked(
+            [
+              [["Expand", "展开"], t(`$${body} = ${expanded}$.`, `$${body} = ${expanded}$。`)],
+              [
+                ["Sum each power", "逐次幂求和"],
+                t(
+                  `$\\sum k^3 = ${s3(n)}$, $\\sum k^2 = ${s2(n)}$, $\\sum k = ${s1(n)}$, so the sum is $${combo([
+                    [1, s3(n)],
+                    [coeffs[1]!, s2(n)],
+                    [coeffs[2]!, s1(n)],
+                  ])} = ${value}$.`,
+                  `$\\sum k^3 = ${s3(n)}$，$\\sum k^2 = ${s2(n)}$，$\\sum k = ${s1(n)}$，所以和为 $${combo([
+                    [1, s3(n)],
+                    [coeffs[1]!, s2(n)],
+                    [coeffs[2]!, s1(n)],
+                  ])} = ${value}$。`,
+                ),
+              ],
+            ],
+            t(
+              `The same method for $n = 3$ gives $${combo([
+                [1, 36],
+                [coeffs[1]!, 14],
+                [coeffs[2]!, 6],
+              ])} = ${small}$, which matches $${[1, 2, 3].map((k) => pn(f(k))).join(" + ")} = ${small}$.`,
+              `同样的方法对 $n = 3$ 得 $${combo([
+                [1, 36],
+                [coeffs[1]!, 14],
+                [coeffs[2]!, 6],
+              ])} = ${small}$，与 $${[1, 2, 3].map((k) => pn(f(k))).join(" + ")} = ${small}$ 一致。`,
+            ),
           ),
         });
       },

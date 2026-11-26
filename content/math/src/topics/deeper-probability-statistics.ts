@@ -8,6 +8,16 @@ import { probabilityDrawings1 } from "../explanation-drawings-probability-and-st
 
 import { numberProblem, steps, why } from "../problems.ts";
 import { stepLabel } from "../solution-kit.ts";
+import { walked } from "./calculus-i-differentiation.ts";
+
+/** apart drops explained mistakes that equal the answer, are negative, or repeat an earlier one. */
+const apart = (answer: number | Q, mistakes: readonly { readonly value: number | Q; readonly why: Text }[]) => {
+  const key = (v: number | Q) => (typeof v === "number" ? Q.of(v) : v).toLatex();
+  return mistakes.filter(
+    (m, i, all) =>
+      key(m.value) !== key(answer) && !key(m.value).startsWith("-") && all.findIndex((x) => key(x.value) === key(m.value)) === i,
+  );
+};
 
 /** nonzero picks a nonzero integer from -r to r. */
 const nonzero = (rng: Rng, r: number) => rng.pick([...Array(2 * r + 1).keys()].map((i) => i - r).filter((i) => i !== 0));
@@ -26,8 +36,8 @@ const bayesTwice: KnowledgePointDef = {
   id: "bayes-theorem-after-two-positive-tests",
   title: t("Bayes' theorem after two positive tests", "两次阳性后的贝叶斯定理"),
   explanation: t(
-    "When two tests are independent given the true state, their likelihoods multiply. So for two positive results, each branch of the tree gets the square of its single-test probability, and the posterior is the part of the total coming from the true branch.",
-    "如果两次检测在真实状态给定时独立，它们的似然相乘。所以两次都阳性时，树的每个分支都乘以单次概率的平方，后验概率就是真实分支在总和中所占的比例。",
+    "When two tests are independent given the true state, their likelihoods multiply. So for two positive results, each branch of the tree gets the square of its single-test probability, and the posterior is the part of the total coming from the true branch. With a prior of $0.5$, $P(+ \\mid D) = 0.8$ and $P(+ \\mid D') = 0.2$, the branches are $0.5 \\cdot 0.8^2 = 0.32$ and $0.5 \\cdot 0.2^2 = 0.02$, so the posterior is $\\frac{0.32}{0.34} = \\frac{16}{17}$.\n\n> **Watch out.** Square the probability on both branches, not only on the true one; and stopping after one test gives the smaller posterior of a single positive.",
+    "如果两次检测在真实状态给定时独立，它们的似然相乘。所以两次都阳性时，树的每个分支都乘以单次概率的平方，后验概率就是真实分支在总和中所占的比例。若先验为 $0.5$，$P(+ \\mid D) = 0.8$，$P(+ \\mid D') = 0.2$，两个分支为 $0.5 \\cdot 0.8^2 = 0.32$ 与 $0.5 \\cdot 0.2^2 = 0.02$，所以后验概率为 $\\frac{0.32}{0.34} = \\frac{16}{17}$。\n\n> **注意。** 两个分支都要平方，不能只平方真实分支；只算一次检测得到的是单次阳性时较小的后验概率。",
   ),
   generate(rng) {
     const p = rng.int(1, 4);
@@ -46,10 +56,49 @@ const bayesTwice: KnowledgePointDef = {
         `某种情况在人群中占 ${p * 10}%。如果情况存在，检测呈阳性的概率是 ${tenths(s)}；如果不存在，概率是 ${tenths(f)}。在真实状态给定时，重复检测相互独立。一个人两次检测都呈阳性，此人确实有这种情况的概率是多少？`,
       ),
       answer,
-      wrong: [once.div(once.add(onceNo)), yes, Q.of(s, 10)],
-      solution: t(
-        `The true branch has probability $${tenths(p)} \\cdot ${tenths(s)}^2 = ${yes.toLatex()}$. The false branch has probability $${tenths(10 - p)} \\cdot ${tenths(f)}^2 = ${no.toLatex()}$. The posterior is the share of the true branch, $${answer.toLatex()}$.`,
-        `真实分支的概率是 $${tenths(p)} \\cdot ${tenths(s)}^2 = ${yes.toLatex()}$。错误分支的概率是 $${tenths(10 - p)} \\cdot ${tenths(f)}^2 = ${no.toLatex()}$。后验概率是真实分支所占的比例，$${answer.toLatex()}$。`,
+      mistakes: apart(answer, [
+        why(
+          once.div(once.add(onceNo)),
+          "That is the posterior after one positive test; the second test multiplies each branch again.",
+          "那是一次阳性后的后验概率；第二次检测要让每个分支再乘一次。",
+        ),
+        why(yes, "That is the true branch alone; divide it by the total of both branches.", "那只是真实分支；还要除以两个分支之和。"),
+        why(
+          Q.of(s, 10),
+          "That is $P(+ \\mid D)$ for one test, not the probability of the condition.",
+          "那是单次检测的 $P(+ \\mid D)$，不是有这种情况的概率。",
+        ),
+        why(
+          yes.div(yes.add(onceNo)),
+          "That squares only the true branch; the false branch also needs two positives.",
+          "那是只平方了真实分支；错误分支也要两次阳性。",
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Weight the true branch", "真实分支"],
+            t(`$${tenths(p)} \\cdot ${tenths(s)}^2 = ${yes.toLatex()}$.`, `$${tenths(p)} \\cdot ${tenths(s)}^2 = ${yes.toLatex()}$。`),
+          ],
+          [
+            ["Weight the false branch", "错误分支"],
+            t(
+              `$${tenths(10 - p)} \\cdot ${tenths(f)}^2 = ${no.toLatex()}$.`,
+              `$${tenths(10 - p)} \\cdot ${tenths(f)}^2 = ${no.toLatex()}$。`,
+            ),
+          ],
+          [
+            ["Take the share", "求所占比例"],
+            t(
+              `$\\frac{${yes.toLatex()}}{${yes.toLatex()} + ${no.toLatex()}} = ${answer.toLatex()}$.`,
+              `$\\frac{${yes.toLatex()}}{${yes.toLatex()} + ${no.toLatex()}} = ${answer.toLatex()}$。`,
+            ),
+          ],
+        ],
+        t(
+          `One positive gives $${once.div(once.add(onceNo)).toLatex()}$, and the second positive raises it to $${answer.toLatex()}$, as more evidence should.`,
+          `一次阳性给出 $${once.div(once.add(onceNo)).toLatex()}$，第二次阳性把它提高到 $${answer.toLatex()}$，更多证据理应如此。`,
+        ),
       ),
     });
   },
@@ -59,8 +108,8 @@ const starsWithLowerBounds: KnowledgePointDef = {
   id: "stars-and-bars-with-lower-bounds",
   title: t("Stars and bars with lower bounds", "带下界的隔板法"),
   explanation: t(
-    "To count solutions in which some variables have minimum values, first hand out those minimums. What remains is a count of nonnegative solutions with a smaller total, which stars and bars handles: $n$ items among $3$ variables can be split in $\\binom{n+2}{2}$ ways.",
-    "要数某些变量有最小值的解，先把这些最小值分出去。剩下的就是总数更小的非负解计数，可以用隔板法：$n$ 个物品分给 $3$ 个变量有 $\\binom{n+2}{2}$ 种分法。",
+    "To count solutions in which some variables have minimum values, first hand out those minimums. What remains is a count of nonnegative solutions with a smaller total, which stars and bars handles: $n$ items among $3$ variables can be split in $\\binom{n+2}{2}$ ways. For $x + y + z = 25$ with $x \\ge 5$ and $y \\ge 2$, hand out $7$, leaving $18$ to share: $\\binom{20}{2} = 190$.\n\n> **Watch out.** Subtract every minimum before counting, not only one of them; and $18$ stars with $2$ bars fill $20$ places, not $19$ or $21$.",
+    "要数某些变量有最小值的解，先把这些最小值分出去。剩下的就是总数更小的非负解计数，可以用隔板法：$n$ 个物品分给 $3$ 个变量有 $\\binom{n+2}{2}$ 种分法。对 $x + y + z = 25$，$x \\ge 5$，$y \\ge 2$，先分出 $7$，剩下 $18$ 自由分配：$\\binom{20}{2} = 190$。\n\n> **注意。** 计数前要减去每一个最小值，不能只减一个；$18$ 颗星和 $2$ 根隔板占 $20$ 个位置，不是 $19$ 或 $21$ 个。",
   ),
   generate(rng) {
     const n = rng.int(8, 20);
@@ -75,10 +124,41 @@ const starsWithLowerBounds: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong: [choose2(n + 2), choose2(left + 1), choose2(left + 3)],
-      solution: t(
-        `Give $x$ and $y$ their minimums, using $${a + b}$ and leaving $${left}$ to share freely among three variables. That can be done in $\\binom{${left + 2}}{2} = ${answer}$ ways.`,
-        `先把最小值分给 $x$ 和 $y$，用去 $${a + b}$，剩下 $${left}$ 由三个变量自由分配。分法有 $\\binom{${left + 2}}{2} = ${answer}$ 种。`,
+      mistakes: apart(answer, [
+        why(choose2(n + 2), "That ignores the minimums and counts every nonnegative solution.", "那是忽略了最小值，数了全部非负解。"),
+        why(choose2(n - a + 2), "That hands out only the minimum of $x$; $y$ has one too.", "那是只分出了 $x$ 的最小值；$y$ 也有最小值。"),
+        why(
+          choose2(left + 1),
+          "That uses one place too few, which also forces $z \\ge 1$.",
+          "那是少用了一个位置，相当于还要求 $z \\ge 1$。",
+        ),
+        why(
+          choose2(left + 3),
+          "That uses one place too many; the stars and the two bars fill only the places they need.",
+          "那是多用了一个位置；星和两根隔板只占它们所需的位置。",
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Hand out the minimums", "分出最小值"],
+            t(
+              `$x$ and $y$ take $${a} + ${b} = ${a + b}$, leaving $${n} - ${a + b} = ${left}$.`,
+              `$x$ 与 $y$ 先取 $${a} + ${b} = ${a + b}$，剩下 $${n} - ${a + b} = ${left}$。`,
+            ),
+          ],
+          [
+            ["Use stars and bars", "用隔板法"],
+            t(
+              `$${left}$ stars and $2$ bars: $\\binom{${left + 2}}{2} = ${answer}$.`,
+              `$${left}$ 颗星和 $2$ 根隔板：$\\binom{${left + 2}}{2} = ${answer}$。`,
+            ),
+          ],
+        ],
+        t(
+          `Once the extra amount of $x$ is fixed at $j$, the other two share $${left} - j$ in $${left} - j + 1$ ways, so the count is $1 + 2 + \\cdots + ${left + 1} = \\frac{${left + 1} \\cdot ${left + 2}}{2} = ${answer}$.`,
+          `固定 $x$ 多出的部分为 $j$ 后，另两个变量分 $${left} - j$，有 $${left} - j + 1$ 种，所以总数为 $1 + 2 + \\cdots + ${left + 1} = \\frac{${left + 1} \\cdot ${left + 2}}{2} = ${answer}$。`,
+        ),
       ),
     });
   },
@@ -88,8 +168,8 @@ const repeatsKeptTogether: KnowledgePointDef = {
   id: "arrangements-with-identical-letters-kept-together",
   title: t("Arrangements with identical letters kept together", "相同字母相邻的排列"),
   explanation: t(
-    "If all copies of one letter must stand together, treat them as a single block. The block is one object in the arrangement, and its copies are identical, so there is no need to arrange inside it. Other repeated letters still divide the count.",
-    "如果某个字母的所有副本必须相邻，就把它们看成一个整体。这个整体在排列中算一个对象，里面的字母相同，不必再排。其他重复的字母仍然要除掉重复计数。",
+    "If all copies of one letter must stand together, treat them as a single block. The block is one object in the arrangement, and its copies are identical, so there is no need to arrange inside it. Other repeated letters still divide the count. For six A's, two B's and one C with the A's together, the objects are the block, B, B and C: $\\frac{4!}{2!} = 12$ rows.\n\n> **Watch out.** Do not multiply by $6!$ for orders inside the block, since the A's are identical; and still divide by $2!$ for the two B's.",
+    "如果某个字母的所有副本必须相邻，就把它们看成一个整体。这个整体在排列中算一个对象，里面的字母相同，不必再排。其他重复的字母仍然要除掉重复计数。六个 A、两个 B 和一个 C 排成一行且 A 相邻时，对象是整体、B、B 和 C：共 $\\frac{4!}{2!} = 12$ 种。\n\n> **注意。** 不要为整体内部的顺序乘以 $6!$，因为 A 都相同；两个 B 仍然要除以 $2!$。",
   ),
   generate(rng) {
     const a = rng.int(2, 5);
@@ -106,10 +186,41 @@ const repeatsKeptTogether: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong: [factorial(a + b + c) / (factorial(a) * factorial(b)), factorial(objects), factorial(objects) * factorial(a)],
-      solution: t(
-        `Treat the A's as one block. That leaves $${objects}$ objects, among them $${b}$ identical B's, so the count is $\\frac{${objects}!}{${b}!} = ${answer}$.`,
-        `把所有 A 看成一个整体。这样共有 $${objects}$ 个对象，其中 $${b}$ 个相同的 B，所以排法有 $\\frac{${objects}!}{${b}!} = ${answer}$ 种。`,
+      mistakes: apart(answer, [
+        why(
+          factorial(a + b + c) / (factorial(a) * factorial(b)),
+          "That counts every row and drops the condition that the A's stand together.",
+          "那是数了所有排法，丢掉了 A 相邻的条件。",
+        ),
+        why(
+          factorial(objects),
+          "That treats the B's as different; divide by the orders of the identical B's.",
+          "那是把 B 当成不同的；要除以相同 B 之间的排列数。",
+        ),
+        why(
+          factorial(objects) * factorial(a),
+          "That arranges the A's inside the block, but identical letters have one order.",
+          "那是在整体内部排列 A，但相同字母只有一种顺序。",
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Glue the A's", "把 A 粘在一起"],
+            t(
+              `The block and the other $${b + c}$ letters make $${objects}$ objects.`,
+              `整体与其余 $${b + c}$ 个字母共 $${objects}$ 个对象。`,
+            ),
+          ],
+          [
+            ["Divide out the B's", "除去 B 的重复"],
+            t(`$\\frac{${objects}!}{${b}!} = ${answer}$.`, `$\\frac{${objects}!}{${b}!} = ${answer}$。`),
+          ],
+        ],
+        t(
+          `Arrange the other letters first in $\\frac{${b + c}!}{${b}!} = ${factorial(b + c) / factorial(b)}$ ways, then put the block in one of the $${b + c + 1}$ gaps: $${factorial(b + c) / factorial(b)} \\cdot ${b + c + 1} = ${answer}$.`,
+          `先排其余字母，有 $\\frac{${b + c}!}{${b}!} = ${factorial(b + c) / factorial(b)}$ 种，再把整体放进 $${b + c + 1}$ 个空隙之一：$${factorial(b + c) / factorial(b)} \\cdot ${b + c + 1} = ${answer}$。`,
+        ),
       ),
     });
   },
@@ -755,8 +866,8 @@ const evenOddsPrior: KnowledgePointDef = {
   id: "the-prior-that-gives-even-posterior-odds",
   title: t("The prior that gives even posterior odds", "使后验概率为一半的先验"),
   explanation: t(
-    "Bayes' theorem says the posterior is the true-positive weight divided by all the positive weight. The posterior is one half exactly when true positives and false positives are equally common, that is when $pr = (1 - p)q$. Solving gives $p = \\frac{q}{r + q}$. A rarer condition than this means a positive result is more likely a false alarm.",
-    "贝叶斯定理说，后验概率是真阳性的权重除以全部阳性的权重。当真阳性和假阳性同样常见，即 $pr = (1 - p)q$ 时，后验概率恰好是一半。解得 $p = \\frac{q}{r + q}$。如果情况比这更罕见，阳性结果就更可能是误报。",
+    "Bayes' theorem says the posterior is the true-positive weight divided by all the positive weight. The posterior is one half exactly when true positives and false positives are equally common, that is when $pr = (1 - p)q$. Solving gives $p = \\frac{q}{r + q}$. A rarer condition than this means a positive result is more likely a false alarm. For $r = 0.6$ and $q = 0.15$, $p = \\frac{0.15}{0.75} = \\frac{1}{5}$.\n\n> **Watch out.** The false-positive rate goes in the numerator: $p = \\frac{q}{r + q}$, not $\\frac{r}{r + q}$; and the denominator is the sum of the two rates, not $r$ alone.",
+    "贝叶斯定理说，后验概率是真阳性的权重除以全部阳性的权重。当真阳性和假阳性同样常见，即 $pr = (1 - p)q$ 时，后验概率恰好是一半。解得 $p = \\frac{q}{r + q}$。如果情况比这更罕见，阳性结果就更可能是误报。对 $r = 0.6$，$q = 0.15$，$p = \\frac{0.15}{0.75} = \\frac{1}{5}$。\n\n> **注意。** 分子是假阳性率：$p = \\frac{q}{r + q}$，不是 $\\frac{r}{r + q}$；分母是两个比率之和，不是单独的 $r$。",
   ),
   generate(rng) {
     const q = rng.int(1, 8);
@@ -764,16 +875,51 @@ const evenOddsPrior: KnowledgePointDef = {
     const answer = Q.of(q, r + q);
     const hit = Q.of(r, 10);
     const miss = Q.of(q, 10);
+    const weight = answer.mul(hit);
     return numberProblem({
       prompt: t(
         `A test has $P(+ \\mid D) = ${hit.toLatex()}$ and $P(+ \\mid D') = ${miss.toLatex()}$. For which prior $P(D)$ does a positive result give $P(D \\mid +) = \\frac{1}{2}$?`,
         `一项检测的 $P(+ \\mid D) = ${hit.toLatex()}$，$P(+ \\mid D') = ${miss.toLatex()}$。先验概率 $P(D)$ 为多少时，阳性结果给出 $P(D \\mid +) = \\frac{1}{2}$？`,
       ),
       answer,
-      wrong: [Q.of(r, r + q), Q.of(q, r), Q.of(1, 2)],
-      solution: t(
-        `Setting $p \\cdot ${hit.toLatex()} = (1 - p) \\cdot ${miss.toLatex()}$ gives $p = \\frac{${q}}{${r} + ${q}} = ${answer.toLatex()}$.`,
-        `令 $p \\cdot ${hit.toLatex()} = (1 - p) \\cdot ${miss.toLatex()}$，得 $p = \\frac{${q}}{${r} + ${q}} = ${answer.toLatex()}$。`,
+      mistakes: apart(answer, [
+        why(
+          Q.of(r, r + q),
+          "That puts the true-positive rate in the numerator; solving $pr = (1 - p)q$ puts $q$ there.",
+          "那是把真阳性率放在分子；解 $pr = (1 - p)q$ 时分子是 $q$。",
+        ),
+        why(
+          Q.of(q, r),
+          "That divides by $r$ alone; collecting the $p$ terms gives $p(r + q) = q$.",
+          "那是只除以 $r$；合并 $p$ 的项得 $p(r + q) = q$。",
+        ),
+        why(
+          Q.of(1, 2),
+          "A prior of one half gives an even posterior only when the two rates are equal.",
+          "只有两个比率相等时，先验为一半才给出一半的后验。",
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Balance the two kinds of positive", "令两类阳性相等"],
+            t(
+              `$P(D \\mid +) = \\frac{1}{2}$ means $p \\cdot ${hit.toLatex()} = (1 - p) \\cdot ${miss.toLatex()}$.`,
+              `$P(D \\mid +) = \\frac{1}{2}$ 意味着 $p \\cdot ${hit.toLatex()} = (1 - p) \\cdot ${miss.toLatex()}$。`,
+            ),
+          ],
+          [
+            ["Solve", "求解"],
+            t(
+              `Multiplying by $10$ and collecting the $p$ terms, $p(${r} + ${q}) = ${q}$, so $p = \\frac{${q}}{${r + q}} = ${answer.toLatex()}$.`,
+              `乘以 $10$ 并合并 $p$ 的项，$p(${r} + ${q}) = ${q}$，所以 $p = \\frac{${q}}{${r + q}} = ${answer.toLatex()}$。`,
+            ),
+          ],
+        ],
+        t(
+          `True positives: $${answer.toLatex()} \\cdot ${hit.toLatex()} = ${weight.toLatex()}$. False positives: $${Q.of(1).sub(answer).toLatex()} \\cdot ${miss.toLatex()} = ${Q.of(1).sub(answer).mul(miss).toLatex()}$. They are equal.`,
+          `真阳性：$${answer.toLatex()} \\cdot ${hit.toLatex()} = ${weight.toLatex()}$。假阳性：$${Q.of(1).sub(answer).toLatex()} \\cdot ${miss.toLatex()} = ${Q.of(1).sub(answer).mul(miss).toLatex()}$。二者相等。`,
+        ),
       ),
     });
   },
@@ -783,13 +929,14 @@ const atLeastOneSymbol: KnowledgePointDef = {
   id: "sequences-containing-a-given-symbol",
   title: t("Sequences containing a given symbol", "含有给定符号的序列"),
   explanation: t(
-    "Counting the sequences that contain a symbol at least once directly would split into many cases, by how many times it appears and where. The complement is far simpler: count all the sequences, then remove those that avoid the symbol. With $n$ symbols and length $k$, that leaves $n^k - (n - 1)^k$ sequences.",
-    "直接计算至少含一次某符号的序列，要按出现次数和位置分很多种情况。补集要简单得多：先数所有序列，再去掉不含这个符号的序列。有 $n$ 个符号、长度为 $k$ 时，剩下 $n^k - (n - 1)^k$ 个序列。",
+    "Counting the sequences that contain a symbol at least once directly would split into many cases, by how many times it appears and where. The complement is far simpler: count all the sequences, then remove those that avoid the symbol. With $n$ symbols and length $k$, that leaves $n^k - (n - 1)^k$ sequences. Of the $20^3 = 8000$ three-letter strings from $20$ letters, $19^3 = 6859$ avoid A, so $8000 - 6859 = 1141$ contain it.\n\n> **Watch out.** Fixing A in one of the $k$ places and filling the rest freely, $k \\cdot n^{k-1}$, counts a sequence with two A's twice; and $(n - 1)^k$ alone is the complement, not the answer.",
+    "直接计算至少含一次某符号的序列，要按出现次数和位置分很多种情况。补集要简单得多：先数所有序列，再去掉不含这个符号的序列。有 $n$ 个符号、长度为 $k$ 时，剩下 $n^k - (n - 1)^k$ 个序列。用 $20$ 个字母组成的 $20^3 = 8000$ 个三字母串中，$19^3 = 6859$ 个不含 A，所以含 A 的有 $8000 - 6859 = 1141$ 个。\n\n> **注意。** 把 A 固定在 $k$ 个位置之一、其余自由填写得 $k \\cdot n^{k-1}$，含两个 A 的序列会被重复计数；单独的 $(n - 1)^k$ 是补集，不是答案。",
   ),
   generate(rng) {
     const n = rng.int(3, 12);
     const k = rng.int(2, 5);
     const answer = n ** k - (n - 1) ** k;
+    const firstA = [...Array(k).keys()].map((i) => (n - 1) ** i * n ** (k - 1 - i));
     return numberProblem({
       prompt: t(
         `Sequences of length ${k} are formed from ${n} different symbols, with repetition allowed. How many of them contain the symbol A, which is one of the ${n}, at least once?`,
@@ -797,10 +944,25 @@ const atLeastOneSymbol: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong: [n ** k, k * n ** (k - 1), (n - 1) ** k],
-      solution: t(
-        `There are $${n}^{${k}}$ sequences, and $${n - 1}^{${k}}$ of them avoid A. The difference is $${answer}$.`,
-        `一共有 $${n}^{${k}}$ 个序列，其中 $${n - 1}^{${k}}$ 个不含 A。差是 $${answer}$。`,
+      mistakes: apart(answer, [
+        why(n ** k, "That is every sequence; remove those that avoid A.", "那是全部序列；还要去掉不含 A 的。"),
+        why(
+          k * n ** (k - 1),
+          "That fixes A in one place and fills the rest freely, so sequences with several A's are counted more than once.",
+          "那是把 A 固定在一个位置、其余自由填写，含多个 A 的序列被重复计数。",
+        ),
+        why((n - 1) ** k, "That counts the sequences that avoid A, the complement.", "那是不含 A 的序列个数，是补集。"),
+      ]),
+      solution: walked(
+        [
+          [["Count all sequences", "数全部序列"], t(`$${n}^{${k}} = ${n ** k}$.`, `$${n}^{${k}} = ${n ** k}$。`)],
+          [["Count those without A", "数不含 A 的"], t(`$${n - 1}^{${k}} = ${(n - 1) ** k}$.`, `$${n - 1}^{${k}} = ${(n - 1) ** k}$。`)],
+          [["Subtract", "相减"], t(`$${n ** k} - ${(n - 1) ** k} = ${answer}$.`, `$${n ** k} - ${(n - 1) ** k} = ${answer}$。`)],
+        ],
+        t(
+          `Sorting by the place where A first appears gives $${firstA.join(" + ")} = ${answer}$.`,
+          `按 A 第一次出现的位置分类，得 $${firstA.join(" + ")} = ${answer}$。`,
+        ),
       ),
     });
   },

@@ -2411,28 +2411,66 @@ const bayesFromTree: KnowledgePointDef = {
   id: "reversing-a-probability-tree",
   title: t("Reversing a probability tree", "把概率树反过来"),
   explanation: t(
-    "Given a tree that goes from A to B, the reverse probability of A given B is not on the drawing, and it must be calculated. Take the path that passes through A and ends in B, and divide by all the paths that end in B. Confusing this with the probability of B given A, which is on the drawing, is the base-rate error that Bayes' theorem corrects.",
-    "给定从 A 到 B 的树，已知 B 时 A 的反向概率不在图上，必须计算。取经过 A 并以 B 结尾的路径，除以所有以 B 结尾的路径。把它和图上已知 A 时 B 的概率弄混，就是贝叶斯定理所纠正的基础比率错误。",
+    "Given a tree that goes from A to B, the reverse probability of A given B is not on the drawing, and it must be calculated. Take the path that passes through A and ends in B, and divide by all the paths that end in B. Confusing this with the probability of B given A, which is on the drawing, is the base-rate error that Bayes' theorem corrects. With $P(A) = 0.7$, $P(B \\mid A) = 0.4$ and $P(B \\mid A') = 0.2$, the paths ending in B are $0.28$ and $0.06$, so $P(A \\mid B) = \\frac{0.28}{0.34} = \\frac{14}{17}$.\n\n> **Watch out.** The number on the branch from A to B is $P(B \\mid A)$, not $P(A \\mid B)$; and the path through A must be divided by all the paths that end in B.",
+    "给定从 A 到 B 的树，已知 B 时 A 的反向概率不在图上，必须计算。取经过 A 并以 B 结尾的路径，除以所有以 B 结尾的路径。把它和图上已知 A 时 B 的概率弄混，就是贝叶斯定理所纠正的基础比率错误。若 $P(A) = 0.7$，$P(B \\mid A) = 0.4$，$P(B \\mid A') = 0.2$，以 B 结尾的路径为 $0.28$ 与 $0.06$，所以 $P(A \\mid B) = \\frac{0.28}{0.34} = \\frac{14}{17}$。\n\n> **注意。** 从 A 到 B 的分支上的数是 $P(B \\mid A)$，不是 $P(A \\mid B)$；经过 A 的路径要除以所有以 B 结尾的路径之和。",
   ),
   generate(rng) {
     const a = rng.pick([2, 3, 4, 5, 6, 8]);
     const ba = rng.pick([2, 4, 5, 6, 8]);
     const bn = rng.pick([1, 2, 3, 5].filter((v) => v !== ba));
     const pathA = a * ba;
-    const total = pathA + (10 - a) * bn;
+    const pathN = (10 - a) * bn;
+    const total = pathA + pathN;
     const answer = Q.of(pathA, total);
-    return numeric(
-      t(
-        "Using this probability tree, what is $P(A \\mid B)$? Answer as a fraction.",
-        "根据这棵概率树，$P(A \\mid B)$ 是多少？用分数作答。",
+    const w = (value: Q, en: string, zh: string) => ({ value, why: t(en, zh) });
+    const reasons = [
+      w(
+        Q.of(ba, 10),
+        "That is $P(B \\mid A)$, read from the branch; the question asks the reverse.",
+        "那是从分支上读出的 $P(B \\mid A)$；题目问的是反方向。",
       ),
-      answer,
-      [Q.of(ba, 10), Q.of(a, 10), Q.of(pathA, 100), Q.of(total, 100), Q.of((10 - a) * bn, total)],
-      t(
-        `The path through A has probability $${pathA / 100}$, and all paths ending in B total $${total / 100}$. Their ratio is $${answer.toLatex()}$.`,
-        `经过 A 的路径概率是 $${pathA / 100}$，以 B 结尾的路径总概率是 $${total / 100}$。它们的比是 $${answer.toLatex()}$。`,
-      ),
-      treeFigure(
+      w(Q.of(a, 10), "That is $P(A)$ before B is known; knowing B changes it.", "那是知道 B 之前的 $P(A)$；知道 B 会改变它。"),
+      w(Q.of(pathA, 100), "That is the path through A alone; divide it by $P(B)$.", "那只是经过 A 的路径；还要除以 $P(B)$。"),
+      w(Q.of(total, 100), "That is $P(B)$, the total of the paths ending in B.", "那是 $P(B)$，即以 B 结尾的路径之和。"),
+      w(Q.of(pathN, total), "That is $P(A' \\mid B)$, the share of the other path.", "那是 $P(A' \\mid B)$，即另一条路径所占的比例。"),
+    ];
+    return {
+      ...numberProblem({
+        prompt: t(
+          "Using this probability tree, what is $P(A \\mid B)$? Answer as a fraction.",
+          "根据这棵概率树，$P(A \\mid B)$ 是多少？用分数作答。",
+        ),
+        answer,
+        form: "fraction",
+        mistakes: reasons.filter((m, i, all) => !m.value.eq(answer) && all.findIndex((x) => x.value.eq(m.value)) === i),
+        solution: walked(
+          [
+            [
+              ["Follow the path through A", "沿经过 A 的路径"],
+              t(`$${a / 10} \\cdot ${ba / 10} = ${pathA / 100}$.`, `$${a / 10} \\cdot ${ba / 10} = ${pathA / 100}$。`),
+            ],
+            [
+              ["Add all paths ending in B", "所有以 B 结尾的路径相加"],
+              t(
+                `$P(B) = ${pathA / 100} + ${(10 - a) / 10} \\cdot ${bn / 10} = ${pathA / 100} + ${pathN / 100} = ${total / 100}$.`,
+                `$P(B) = ${pathA / 100} + ${(10 - a) / 10} \\cdot ${bn / 10} = ${pathA / 100} + ${pathN / 100} = ${total / 100}$。`,
+              ),
+            ],
+            [
+              ["Divide", "相除"],
+              t(
+                `$P(A \\mid B) = \\frac{${pathA / 100}}{${total / 100}} = ${answer.toLatex()}$.`,
+                `$P(A \\mid B) = \\frac{${pathA / 100}}{${total / 100}} = ${answer.toLatex()}$。`,
+              ),
+            ],
+          ],
+          t(
+            `$P(A' \\mid B) = \\frac{${pathN / 100}}{${total / 100}} = ${Q.of(pathN, total).toLatex()}$, and $${answer.toLatex()} + ${Q.of(pathN, total).toLatex()} = 1$.`,
+            `$P(A' \\mid B) = \\frac{${pathN / 100}}{${total / 100}} = ${Q.of(pathN, total).toLatex()}$，而 $${answer.toLatex()} + ${Q.of(pathN, total).toLatex()} = 1$。`,
+          ),
+        ),
+      }),
+      figure: treeFigure(
         `${a / 10}`,
         `${(10 - a) / 10}`,
         `${ba / 10}`,
@@ -2442,8 +2480,7 @@ const bayesFromTree: KnowledgePointDef = {
           `一棵概率树：P(A) = ${a / 10}，P(B | A) = ${ba / 10}，P(B | A′) = ${bn / 10}。`,
         ),
       ),
-      "fraction",
-    );
+    };
   },
 };
 
