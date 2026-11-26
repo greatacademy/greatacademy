@@ -1174,8 +1174,8 @@ const pulseLaplace = point(
   "the-laplace-transform-of-a-drawn-pulse",
   ["The Laplace transform of a drawn pulse", "图中脉冲的拉普拉斯变换"],
   [
-    "A rectangular pulse of height $h$ from $t = a$ to $t = b$ equals $h$ times $u(t - a) - u(t - b)$, where $u$ is the unit step. By the second shifting theorem, each step transforms to an exponential over $s$. So the transform is $h(e^{-as} - e^{-bs})/s$, with the turn-on time first and the turn-off time second.",
-    "高度为 $h$、从 $t = a$ 到 $t = b$ 的矩形脉冲等于 $h$ 乘以 $u(t - a) - u(t - b)$，其中 $u$ 是单位阶跃函数。由第二平移定理，每个阶跃变换为指数除以 $s$。所以变换是 $h(e^{-as} - e^{-bs})/s$，先是开启时刻，后是关闭时刻。",
+    "A rectangular pulse of height $h$ from $t = a$ to $t = b$ equals $h$ times $u(t - a) - u(t - b)$, where $u$ is the unit step. By the second shifting theorem, each step transforms to an exponential over $s$. So the transform is $h(e^{-as} - e^{-bs})/s$, with the turn-on time first and the turn-off time second.\n\n> **Watch out.** The height multiplies the transform; the width enters only through the two delays. A pulse of height $2$ from $t = 1$ to $t = 4$ transforms to $\\frac{2\\left(e^{-s} - e^{-4s}\\right)}{s}$, not $\\frac{3\\left(e^{-s} - e^{-4s}\\right)}{s}$.",
+    "高度为 $h$、从 $t = a$ 到 $t = b$ 的矩形脉冲等于 $h$ 乘以 $u(t - a) - u(t - b)$，其中 $u$ 是单位阶跃函数。由第二平移定理，每个阶跃变换为指数除以 $s$。所以变换是 $h(e^{-as} - e^{-bs})/s$，先是开启时刻，后是关闭时刻。\n\n> **注意。** 高度乘在变换前面；宽度只通过两个延迟出现。高度为 $2$、从 $t = 1$ 到 $t = 4$ 的脉冲，变换为 $\\frac{2\\left(e^{-s} - e^{-4s}\\right)}{s}$，不是 $\\frac{3\\left(e^{-s} - e^{-4s}\\right)}{s}$。",
   ],
   (rng) => {
     const a = rng.int(1, 4);
@@ -1183,22 +1183,59 @@ const pulseLaplace = point(
     const h = rng.int(1, 5);
     const e = (c: number) => (c === 1 ? "e^{-s}" : `e^{-${c}s}`);
     const form = (k: number, x: number, y: number) => `\\frac{${k === 1 ? "" : k}\\left(${e(x)} - ${e(y)}\\right)}{s}`;
-    return choose(
+    const hh = h === 1 ? "" : `${h}`;
+    const wrong: [Pair, string, string][] = [
+      [
+        same(form(h, b, a)),
+        "That puts the turn-off time first; the pulse switches on at the earlier time, which gives the positive term.",
+        "这把关闭时刻放在前面；脉冲在较早的时刻开启，那一项带正号。",
+      ],
+      [
+        same(`\\frac{${hh}${e(a)}}{s}`),
+        "That is a step that never switches off; the pulse also needs the step that turns it off.",
+        "这是一个从不关闭的阶跃；脉冲还需要使它关闭的那个阶跃。",
+      ],
+      [
+        same(`\\frac{${hh}\\left(${e(a)} - ${e(b)}\\right)}{s^2}`),
+        "That has $s^2$, the denominator for a ramp; a step transforms to an exponential over $s$.",
+        "这里是 $s^2$，那是斜坡函数的分母；阶跃变换为指数除以 $s$。",
+      ],
+    ];
+    if (b - a !== h)
+      wrong.push([
+        same(form(b - a, a, b)),
+        "That multiplies by the width of the pulse; the factor in front is its height.",
+        "这乘的是脉冲的宽度；前面的因子应是它的高度。",
+      ]);
+    return figureChoice(
       rng,
       [
         "The graph shows a pulse $f(t)$, which is zero outside the part drawn above the axis. What is its Laplace transform?",
         "图中是脉冲 $f(t)$，它在轴上方所画部分之外为零。它的拉普拉斯变换是什么？",
       ],
       same(form(h, a, b)),
+      wrong,
       [
-        same(form(h, b, a)),
-        same(form(b - a, a, b)),
-        same(`\\frac{${h === 1 ? "" : h}${e(a)}}{s}`),
-        same(`\\frac{${h === 1 ? "" : h}\\left(${e(a)} - ${e(b)}\\right)}{s^2}`),
+        stepOf(
+          ["Read the pulse", "读出脉冲"],
+          [
+            `The pulse has height $${h}$, turns on at $t = ${a}$ and turns off at $t = ${b}$.`,
+            `脉冲高度为 $${h}$，在 $t = ${a}$ 开启，在 $t = ${b}$ 关闭。`,
+          ],
+          `f(t) = ${hh}\\left(u(t - ${a}) - u(t - ${b})\\right)`,
+        ),
+        stepOf(
+          ["Transform each step", "变换每个阶跃"],
+          [
+            "By the second shifting theorem, $\\mathcal{L}\\{u(t - c)\\} = \\frac{e^{-cs}}{s}$:",
+            "由第二平移定理，$\\mathcal{L}\\{u(t - c)\\} = \\frac{e^{-cs}}{s}$：",
+          ],
+          `F(s) = ${form(h, a, b)}`,
+        ),
       ],
       [
-        `The pulse has height $${h}$, turns on at $t = ${a}$ and turns off at $t = ${b}$. So it is $${h}$ times $u(t - ${a}) - u(t - ${b})$, and each step transforms to an exponential over $s$.`,
-        `脉冲高度为 $${h}$，在 $t = ${a}$ 开启，在 $t = ${b}$ 关闭。所以它是 $u(t - ${a}) - u(t - ${b})$ 的 $${h}$ 倍，每个阶跃变换为指数除以 $s$。`,
+        `As $s \\to 0$, $${e(a)} - ${e(b)} \\approx ${b - a === 1 ? "" : b - a}s$, so $F(s) \\to ${h} \\cdot ${b - a} = ${h * (b - a)}$, the area of the pulse, as $\\int_0^\\infty f(t)\\,dt$ requires.`,
+        `当 $s \\to 0$ 时 $${e(a)} - ${e(b)} \\approx ${b - a === 1 ? "" : b - a}s$，所以 $F(s) \\to ${h} \\cdot ${b - a} = ${h * (b - a)}$，正是脉冲的面积，与 $\\int_0^\\infty f(t)\\,dt$ 一致。`,
       ],
       fig(
         { xMin: 0, xMax: 9, yMin: 0, yMax: 6, xName: "t", yName: "f" },

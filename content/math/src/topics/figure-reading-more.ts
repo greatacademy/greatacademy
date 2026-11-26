@@ -1696,8 +1696,8 @@ const stepFromGraph: KnowledgePointDef = {
   figure: differentialEquationsDrawings1["the-unit-step-function#a-step-function-from-its-graph"],
   title: t("A step function from its graph", "由图写阶跃函数"),
   explanation: t(
-    "The unit step $u(t - a)$ is zero before a and one after it, so a multiple of it switches on a constant at time a. A jump in a graph therefore corresponds to one step term whose coefficient is the size of the jump, up or down. Reading the graph from left to right, write one such term for each jump, starting from the initial level.",
-    "单位阶跃 $u(t - a)$ 在 a 之前为零，之后为一，所以它的倍数在 a 时刻接通一个常数。因此图上的一次跳跃对应一个阶跃项，系数是跳跃的大小，向上或向下。从左到右读图，从初始高度开始，每次跳跃写一项。",
+    "The unit step $u(t - a)$ is zero before a and one after it, so a multiple of it switches on a constant at time a. A jump in a graph therefore corresponds to one step term whose coefficient is the size of the jump, up or down. Reading the graph from left to right, write one such term for each jump, starting from the initial level.\n\nFor example, a graph at height $0$ until $t = 1$, at $4$ until $t = 3$, at $2$ until $t = 6$ and at $5$ after that jumps by $4$, then by $2 - 4 = -2$, then by $5 - 2 = 3$. So it is $4u(t - 1) - 2u(t - 3) + 3u(t - 6)$. After $t = 6$ all three terms are on, and $4 - 2 + 3 = 5$ is the last height.\n\n> **Watch out.** The coefficient of a step is the jump, the new height minus the old one, not the new height itself. A jump down has a negative coefficient. Each step belongs to the time where its jump happens, so do not swap the times.",
+    "单位阶跃 $u(t - a)$ 在 a 之前为零，之后为一，所以它的倍数在 a 时刻接通一个常数。因此图上的一次跳跃对应一个阶跃项，系数是跳跃的大小，向上或向下。从左到右读图，从初始高度开始，每次跳跃写一项。\n\n例如，图像在 $t = 1$ 之前高度为 $0$，到 $t = 3$ 为 $4$，到 $t = 6$ 为 $2$，之后为 $5$，依次跳了 $4$、$2 - 4 = -2$、$5 - 2 = 3$。所以函数是 $4u(t - 1) - 2u(t - 3) + 3u(t - 6)$。$t = 6$ 之后三项都接通，$4 - 2 + 3 = 5$ 正是最后的高度。\n\n> **注意。** 阶跃项的系数是跳跃量，即新高度减旧高度，而不是新高度本身。向下跳的系数为负。每个阶跃项属于它跳跃发生的时刻，不要把时刻对调。",
   ),
   generate(rng) {
     const a = rng.int(1, 3);
@@ -1707,18 +1707,28 @@ const stepFromGraph: KnowledgePointDef = {
     const step = (c: number, d: number) => `${c === 1 ? "" : `${c} `}u(t - ${d})`;
     const signed = (c: number, d: number) => `${c < 0 ? "-" : "+"} ${Math.abs(c) === 1 ? "" : `${Math.abs(c)} `}u(t - ${d})`;
     const expr = (first: number, d1: number, change: number, d2: number) => `${step(first, d1)} ${signed(change, d2)}`;
-    return pickChoice(
+    const jump = h2 - h1;
+    const height = expr(h1, a, h2, b);
+    const swappedLevels = expr(h2, a, h1 - h2, b);
+    const third = jump === h1 ? expr(h1 + 1, a, jump, b) : expr(h1, b, jump, a);
+    const thirdReason: [string, string] =
+      jump === h1
+        ? [
+            `This switches on ${h1 + 1} at $t = ${a}$, but the first flat piece is at height ${h1}: the first level is misread.`,
+            `这在 $t = ${a}$ 处接通了 ${h1 + 1}，但第一段平线的高度是 ${h1}：第一级高度读错了。`,
+          ]
+        : [
+            `The times are swapped: this jumps by ${h1} at $t = ${b}$ and by $${jump}$ at $t = ${a}$, but the graph's first jump is at $t = ${a}$.`,
+            `时刻对调了：这在 $t = ${b}$ 处跳 ${h1}，在 $t = ${a}$ 处跳 $${jump}$，但图像的第一次跳跃在 $t = ${a}$。`,
+          ];
+    const problem = pickChoice(
       rng,
       t("Which function has this graph?", "哪个函数有这样的图像？"),
-      math(expr(h1, a, h2 - h1, b)),
-      [
-        math(expr(h1, a, h2, b)),
-        math(expr(h2, a, h1 - h2, b)),
-        math(h2 - h1 === h1 ? expr(h1 + 1, a, h2 - h1, b) : expr(h1, b, h2 - h1, a)),
-      ],
+      math(expr(h1, a, jump, b)),
+      [math(height), math(swappedLevels), math(third)],
       t(
-        `The graph jumps by ${h1} at $t = ${a}$, and by $${h2 - h1}$ at $t = ${b}$. Each jump gives one step term with that coefficient.`,
-        `图像在 $t = ${a}$ 处跳了 ${h1}，在 $t = ${b}$ 处跳了 $${h2 - h1}$。每次跳跃给出一个以此为系数的阶跃项。`,
+        `**Step 1: Read the levels.** The graph is at $0$ before $t = ${a}$, at $${h1}$ from $t = ${a}$ to $t = ${b}$, and at $${h2}$ after $t = ${b}$.\n\n**Step 2: Find the jumps.** At $t = ${a}$ it jumps by $${h1} - 0 = ${h1}$, and at $t = ${b}$ by $${h2} - ${h1} = ${jump}$.\n\n**Step 3: Write one step per jump.** The function is $${expr(h1, a, jump, b)}$.\n\n**Check.** Between $t = ${a}$ and $t = ${b}$ only the first term is on, giving $${h1}$. After $t = ${b}$ both are on, giving $${h1} + (${jump}) = ${h2}$, the last height.`,
+        `**第一步：读出各段高度。**图像在 $t = ${a}$ 之前为 $0$，从 $t = ${a}$ 到 $t = ${b}$ 为 $${h1}$，$t = ${b}$ 之后为 $${h2}$。\n\n**第二步：求跳跃量。**在 $t = ${a}$ 处跳了 $${h1} - 0 = ${h1}$，在 $t = ${b}$ 处跳了 $${h2} - ${h1} = ${jump}$。\n\n**第三步：每次跳跃写一项。**函数是 $${expr(h1, a, jump, b)}$。\n\n**检验。**在 $t = ${a}$ 与 $t = ${b}$ 之间只有第一项接通，值为 $${h1}$。$t = ${b}$ 之后两项都接通，值为 $${h1} + (${jump}) = ${h2}$，正是最后的高度。`,
       ),
       drawn(
         { xMin: -1, xMax: 8, yMin: -1, yMax: 6 },
@@ -1733,6 +1743,19 @@ const stepFromGraph: KnowledgePointDef = {
         ),
       ),
     );
+    return reasoned(problem, [
+      [
+        `$${height}$`,
+        `The second coefficient is the new height ${h2}, not the jump: at $t = ${b}$ the graph changes by $${h2} - ${h1} = ${jump}$, and with $${h2}$ it would end at $${h1 + h2}$.`,
+        `第二个系数用了新高度 ${h2}，而不是跳跃量：在 $t = ${b}$ 处图像变化了 $${h2} - ${h1} = ${jump}$，用 $${h2}$ 的话最后会到 $${h1 + h2}$。`,
+      ],
+      [
+        `$${swappedLevels}$`,
+        `The two levels are swapped: this is at ${h2} between $t = ${a}$ and $t = ${b}$ and at ${h1} after, but the graph is at ${h1} first.`,
+        `两段高度对调了：这在 $t = ${a}$ 与 $t = ${b}$ 之间为 ${h2}，之后为 ${h1}，但图像先是 ${h1}。`,
+      ],
+      [`$${third}$`, ...thirdReason],
+    ]);
   },
 };
 

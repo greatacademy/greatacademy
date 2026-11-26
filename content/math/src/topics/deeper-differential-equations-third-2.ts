@@ -720,8 +720,8 @@ const cornerJump = point(
   "a-corner-is-a-jump-in-the-derivative",
   ["A corner is a jump in the derivative", "尖角是导数的跳跃"],
   [
-    "A piecewise smooth function can be continuous and still have a corner. Then the function has no jump, but its derivative does, and the size of that jump is the right-hand derivative minus the left-hand derivative at the joining point.",
-    "分段光滑的函数可以连续却仍有尖角。这时函数本身没有跳跃，但导数有，跳跃的大小等于连接点处的右导数减去左导数。",
+    "A piecewise smooth function can be continuous and still have a corner. Then the function has no jump, but its derivative does, and the size of that jump is the right-hand derivative minus the left-hand derivative at the joining point.\n\n> **Watch out.** Compare the slopes, not the values, which agree at a corner. For $f = t^{2}$ before $t = 2$ and $f = 6t - 8$ after it, both pieces equal $4$ at $t = 2$, but the slopes are $4$ and $6$, so $f'$ jumps by $6 - 4 = 2$.",
+    "分段光滑的函数可以连续却仍有尖角。这时函数本身没有跳跃，但导数有，跳跃的大小等于连接点处的右导数减去左导数。\n\n> **注意。** 要比较斜率，而不是函数值，尖角处的函数值是相等的。对 $t = 2$ 之前为 $f = t^{2}$、之后为 $f = 6t - 8$ 的函数，两段在 $t = 2$ 处都等于 $4$，但斜率分别是 $4$ 和 $6$，所以 $f'$ 跳跃 $6 - 4 = 2$。",
   ],
   (rng) => {
     const p = nz(rng, 4);
@@ -734,18 +734,38 @@ const cornerJump = point(
     const right = poly([r, "t"], [s, ""]);
     const f = `f(t) = \\begin{cases} ${left}, & 0 \\le t < ${T} \\\\ ${right}, & t \\ge ${T} \\end{cases}`;
     const answer = r - 2 * p * T;
-    return ask(
-      [
+    const value = p * T * T + q;
+    return numberProblem({
+      prompt: t(
         `The function $${f}$ is continuous at $t = ${T}$. Find the jump of $f'$ there, right value minus left value.`,
         `函数 $${f}$ 在 $t = ${T}$ 处连续。求 $f'$ 在该处的跳跃（右值减左值）。`,
-      ],
+      ),
       answer,
-      [-answer, r - p * T, r],
-      [
-        `On the left $f'(t) = ${poly([2 * p, "t"])}$, which tends to $${2 * p * T}$. On the right $f'(t) = ${r}$. So the jump is $${r} - ${paren(2 * p * T)} = ${answer}$.`,
-        `左边 $f'(t) = ${poly([2 * p, "t"])}$，趋于 $${2 * p * T}$。右边 $f'(t) = ${r}$。所以跳跃是 $${r} - ${paren(2 * p * T)} = ${answer}$。`,
-      ],
-    );
+      mistakes: apart(answer, [
+        why(-answer, "That is the left slope minus the right slope; the jump is right minus left.", "这是左斜率减右斜率；跳跃是右减左。"),
+        why(
+          r - p * T,
+          `That takes the derivative of $${poly([p, "t^{2}"])}$ as $${poly([p, "t"])}$; the power rule brings down a factor $2$.`,
+          `这把 $${poly([p, "t^{2}"])}$ 的导数算成了 $${poly([p, "t"])}$；幂法则会带下因子 $2$。`,
+        ),
+        why(r, "That is the right slope alone; the left slope must be subtracted.", "这只是右斜率；还要减去左斜率。"),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Find the left slope", "求左斜率"],
+            t(`Differentiate the first piece and let $t \\to ${T}$.`, `对第一段求导并令 $t \\to ${T}$。`),
+            [`f'(t) = ${poly([2 * p, "t"])} \\to ${2 * p * T}`],
+          ],
+          [["Find the right slope", "求右斜率"], t("", ""), [`f'(t) = ${r}`]],
+          [["Subtract", "相减"], t("", ""), [`${r} - ${paren(2 * p * T)} = ${answer}`]],
+        ],
+        t(
+          `Both pieces equal $${value}$ at $t = ${T}$, so $f$ itself does not jump, and only its slope changes, from $${2 * p * T}$ to $${r}$.`,
+          `两段在 $t = ${T}$ 处都等于 $${value}$，所以 $f$ 本身没有跳跃，只有斜率从 $${2 * p * T}$ 变为 $${r}$。`,
+        ),
+      ),
+    });
   },
 );
 
@@ -753,8 +773,8 @@ const transformOfT = point(
   "the-transform-of-t-from-the-definition",
   ["The transform of t from the definition", "由定义求 t 的变换"],
   [
-    "The definition also handles a factor of $t$, through integration by parts: $\\int_{0}^{\\infty} te^{-kt} \\, dt = \\frac{1}{k^{2}}$ for $k > 0$. An exponential factor just shifts $s$, so the combined rate is $k = s - a$, and the exponent of the denominator is $2$, not $1$.",
-    "定义也能处理因子 $t$，用分部积分：当 $k > 0$ 时，$\\int_{0}^{\\infty} te^{-kt} \\, dt = \\frac{1}{k^{2}}$。指数因子只是平移 $s$，所以合起来的速率是 $k = s - a$，分母的指数是 $2$，而不是 $1$。",
+    "The definition also handles a factor of $t$, through integration by parts: $\\int_{0}^{\\infty} te^{-kt} \\, dt = \\frac{1}{k^{2}}$ for $k > 0$. An exponential factor just shifts $s$, so the combined rate is $k = s - a$, and the exponent of the denominator is $2$, not $1$.\n\n> **Watch out.** The rate is $s - a$, not $s$. For $\\int_{0}^{\\infty} te^{t}e^{-st} \\, dt$ at $s = 3$, $k = 3 - 1 = 2$ and the value is $\\frac{1}{4}$, not $\\frac{1}{9}$.",
+    "定义也能处理因子 $t$，用分部积分：当 $k > 0$ 时，$\\int_{0}^{\\infty} te^{-kt} \\, dt = \\frac{1}{k^{2}}$。指数因子只是平移 $s$，所以合起来的速率是 $k = s - a$，分母的指数是 $2$，而不是 $1$。\n\n> **注意。** 速率是 $s - a$，不是 $s$。对 $\\int_{0}^{\\infty} te^{t}e^{-st} \\, dt$，在 $s = 3$ 处 $k = 3 - 1 = 2$，值为 $\\frac{1}{4}$，不是 $\\frac{1}{9}$。",
   ],
   (rng) => {
     const c = nz(rng, 12);
@@ -763,18 +783,61 @@ const transformOfT = point(
     const s = a + k;
     const answer = Q.of(c, k * k);
     const integrand = poly([c, a === 0 ? "t" : `t${expOf(a)}`]);
-    return ask(
-      [
+    const kt = expOf(-k);
+    return numberProblem({
+      prompt: t(
         `Evaluate $\\int_{0}^{\\infty} ${integrand}e^{-st} \\, dt$ at $s = ${s}$.`,
         `当 $s = ${s}$ 时，求 $\\int_{0}^{\\infty} ${integrand}e^{-st} \\, dt$。`,
-      ],
+      ),
       answer,
-      [Q.of(c, k), Q.of(c, k * k * k), answer.neg()],
-      [
-        `The exponentials combine into $${expOf(-k)}$. Integration by parts gives $\\int_{0}^{\\infty} t${expOf(-k)} \\, dt = \\frac{1}{${k * k}}$, so the value is $${answer.toLatex()}$.`,
-        `指数函数合并为 $${expOf(-k)}$。分部积分得 $\\int_{0}^{\\infty} t${expOf(-k)} \\, dt = \\frac{1}{${k * k}}$，所以值是 $${answer.toLatex()}$。`,
-      ],
-    );
+      mistakes: apart(answer, [
+        why(
+          Q.of(c, k),
+          "That uses the power $1$ in the denominator; integrating $t$ by parts gives $k^{2}$.",
+          "这在分母用了幂 $1$；对 $t$ 分部积分得到 $k^{2}$。",
+        ),
+        why(
+          Q.of(c, k * k * k),
+          "That uses the power $3$, which belongs to $t^{2}$, not $t$.",
+          "这用了幂 $3$，那是 $t^{2}$ 的，不是 $t$ 的。",
+        ),
+        why(
+          answer.neg(),
+          "The sign is flipped; the integrand has the sign of the coefficient throughout.",
+          "符号反了；被积函数处处与系数同号。",
+        ),
+        ...(a === 0 || s === 0
+          ? []
+          : [
+              why(
+                Q.of(c, s * s),
+                `That uses the rate $s = ${s}$; the exponential factor makes it $${s} - ${paren(a)} = ${k}$.`,
+                `这用了速率 $s = ${s}$；指数因子使它变成 $${s} - ${paren(a)} = ${k}$。`,
+              ),
+            ]),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Find the rate", "求速率"],
+            t(`At $s = ${s}$ the rate is $${s} - ${paren(a)} = ${k}$.`, `在 $s = ${s}$ 处速率为 $${s} - ${paren(a)} = ${k}$。`),
+            [`\\int_{0}^{\\infty} ${poly([c, `t${kt}`])} \\, dt`],
+          ],
+          [
+            ["Integrate by parts", "分部积分"],
+            t("", ""),
+            [
+              `\\int_{0}^{\\infty} t${kt} \\, dt = \\left[-\\frac{t}{${k}}${kt}\\right]_{0}^{\\infty} + \\frac{1}{${k}}\\int_{0}^{\\infty} ${kt} \\, dt = \\frac{1}{${k * k}}`,
+              `${c} \\cdot \\frac{1}{${k * k}} = ${answer.toLatex()}`,
+            ],
+          ],
+        ],
+        t(
+          `The table gives $\\mathcal{L}\\{t\\} = \\frac{1}{s^{2}}$, and ${a === 0 ? "with no exponential it is not shifted" : `the factor $${expOf(a)}$ shifts it to $\\frac{1}{(s - ${paren(a)})^{2}}$`}; at $s = ${s}$ this is $\\frac{1}{${k * k}}$, and times $${c}$ it is $${answer.toLatex()}$.`,
+          `查表得 $\\mathcal{L}\\{t\\} = \\frac{1}{s^{2}}$，${a === 0 ? "没有指数因子，不需平移" : `因子 $${expOf(a)}$ 把它平移为 $\\frac{1}{(s - ${paren(a)})^{2}}$`}；在 $s = ${s}$ 处为 $\\frac{1}{${k * k}}$，乘以 $${c}$ 得 $${answer.toLatex()}$。`,
+        ),
+      ),
+    });
   },
 );
 
@@ -782,29 +845,57 @@ const transformValue = point(
   "the-initial-value-in-the-transformed-equation",
   ["The initial value in the transformed equation", "变换后方程中的初值"],
   [
-    "The rule $\\mathcal{L}\\{y'\\} = sY - y(0)$ brings the initial value in as a term of the algebra. So for $y' + ky = c$, $Y(s) = \\frac{y(0) + c/s}{s + k}$. Dropping $y(0)$ gives the response from rest, which is a different function.",
-    "规则 $\\mathcal{L}\\{y'\\} = sY - y(0)$ 把初值作为代数项带入。所以对 $y' + ky = c$，$Y(s) = \\frac{y(0) + c/s}{s + k}$。漏掉 $y(0)$ 得到的是从静止开始的响应，那是另一个函数。",
+    "The rule $\\mathcal{L}\\{y'\\} = sY - y(0)$ brings the initial value in as a term of the algebra. So for $y' + ky = c$, $Y(s) = \\frac{y(0) + c/s}{s + k}$. Dropping $y(0)$ gives the response from rest, which is a different function.\n\n> **Watch out.** Keep both the initial value and the $\\frac{1}{s}$ of the constant. For $y' + 2y = 6$ with $y(0) = 3$ at $s = 2$, $Y(2) = \\frac{3 + 3}{4} = \\frac{3}{2}$; dropping $y(0)$ gives $\\frac{3}{4}$ instead.",
+    "规则 $\\mathcal{L}\\{y'\\} = sY - y(0)$ 把初值作为代数项带入。所以对 $y' + ky = c$，$Y(s) = \\frac{y(0) + c/s}{s + k}$。漏掉 $y(0)$ 得到的是从静止开始的响应，那是另一个函数。\n\n> **注意。** 初值和常数的 $\\frac{1}{s}$ 都要保留。对 $y' + 2y = 6$，$y(0) = 3$，在 $s = 2$ 处 $Y(2) = \\frac{3 + 3}{4} = \\frac{3}{2}$；漏掉 $y(0)$ 会得到 $\\frac{3}{4}$。",
   ],
   (rng) => {
     const k = rng.int(1, 6);
     const c = nz(rng, 12);
     const y0 = nz(rng, 9);
-    const s = rng.int(1, 5);
+    const s = rng.int(2, 5);
     const forcing = Q.of(c, s);
     const denom = Q.of(s + k);
     const answer = Q.of(y0).add(forcing).div(denom);
-    return ask(
-      [
+    const free = Q.of(y0, s + k);
+    const forced = Q.of(c, s * (s + k));
+    return numberProblem({
+      prompt: t(
         `For $${poly([1, "y'"], [k, "y"])} = ${c}$ with $y(0) = ${y0}$, find the value of the Laplace transform $Y(s)$ at $s = ${s}$.`,
         `对 $${poly([1, "y'"], [k, "y"])} = ${c}$，$y(0) = ${y0}$，求拉普拉斯变换 $Y(s)$ 在 $s = ${s}$ 处的值。`,
-      ],
+      ),
       answer,
-      [forcing.div(denom), forcing.sub(Q.of(y0)).div(denom), Q.of(y0 + c).div(denom)],
-      [
-        `Transforming gives $(s + ${k})Y - ${paren(y0)} = \\frac{${c}}{s}$. So $Y(${s}) = \\frac{${y0} + ${paren(forcing)}}{${s + k}} = ${answer.toLatex()}$.`,
-        `变换后得 $(s + ${k})Y - ${paren(y0)} = \\frac{${c}}{s}$。所以 $Y(${s}) = \\frac{${y0} + ${paren(forcing)}}{${s + k}} = ${answer.toLatex()}$。`,
-      ],
-    );
+      mistakes: apart(answer, [
+        why(
+          forcing.div(denom),
+          "That drops $y(0)$, which $\\mathcal{L}\\{y'\\} = sY - y(0)$ brings in.",
+          "这漏掉了 $\\mathcal{L}\\{y'\\} = sY - y(0)$ 带入的 $y(0)$。",
+        ),
+        why(
+          forcing.sub(Q.of(y0)).div(denom),
+          "That subtracts $y(0)$; it moves to the right side with a plus sign.",
+          "这减去了 $y(0)$；它移到右边时带正号。",
+        ),
+        why(
+          Q.of(y0 + c).div(denom),
+          `That transforms the constant $${c}$ as $${c}$; its transform is $\\frac{${c}}{s}$.`,
+          `这把常数 $${c}$ 的变换当成了 $${c}$；它的变换是 $\\frac{${c}}{s}$。`,
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Transform the equation", "对方程取变换"],
+            t("", ""),
+            [`sY - ${paren(y0)} + ${k === 1 ? "" : k}Y = \\frac{${c}}{s}`, `Y(s) = \\frac{${y0} + \\frac{${c}}{s}}{s + ${k}}`],
+          ],
+          [["Evaluate", "求值"], t("", ""), [`Y(${s}) = \\frac{${y0} + ${paren(forcing)}}{${s + k}} = ${answer.toLatex()}`]],
+        ],
+        t(
+          `Split $Y$ into the part from $y(0)$, $\\frac{${y0}}{s + ${k}}$, and the part from the forcing, $\\frac{${c}}{s(s + ${k})}$. At $s = ${s}$ they are $${free.toLatex()}$ and $${forced.toLatex()}$, which add to $${answer.toLatex()}$.`,
+          `把 $Y$ 拆成来自 $y(0)$ 的部分 $\\frac{${y0}}{s + ${k}}$ 与来自外力的部分 $\\frac{${c}}{s(s + ${k})}$。在 $s = ${s}$ 处它们分别为 $${free.toLatex()}$ 与 $${forced.toLatex()}$，之和为 $${answer.toLatex()}$。`,
+        ),
+      ),
+    });
   },
 );
 
@@ -812,8 +903,8 @@ const afterSwitchOff = point(
   "the-response-after-a-switch-off",
   ["The response after a switch off", "关闭之后的响应"],
   [
-    "Forcing $c(1 - u(t - T))$ is on until $T$ and off after it. By the delay theorem the response is the rise from rest minus the same rise delayed by $T$. So after $T$ the solution simply decays from the value it reached, with no further rise.",
-    "强迫项 $c(1 - u(t - T))$ 在 $T$ 之前开启，之后关闭。由时滞定理，响应是从静止开始的上升减去延迟 $T$ 的同样上升。所以 $T$ 之后，解只是从已达到的值衰减，不再上升。",
+    "Forcing $c(1 - u(t - T))$ is on until $T$ and off after it. By the delay theorem the response is the rise from rest minus the same rise delayed by $T$. So after $T$ the solution simply decays from the value it reached, with no further rise.\n\n> **Watch out.** After the switch-off $y$ decays from where it was; it does not keep rising. For $y' + y = 8\\left(1 - u(t - \\ln 2)\\right)$, $y(\\ln 2) = 4$ and $y(2\\ln 2) = 2$, not the $6$ that a force left on would give.",
+    "强迫项 $c(1 - u(t - T))$ 在 $T$ 之前开启，之后关闭。由时滞定理，响应是从静止开始的上升减去延迟 $T$ 的同样上升。所以 $T$ 之后，解只是从已达到的值衰减，不再上升。\n\n> **注意。** 关闭之后 $y$ 从当时的值开始衰减，不再继续上升。对 $y' + y = 8\\left(1 - u(t - \\ln 2)\\right)$，$y(\\ln 2) = 4$，$y(2\\ln 2) = 2$，而不是外力一直作用时的 $6$。",
   ],
   (rng) => {
     const k = rng.int(1, 6);
@@ -823,18 +914,44 @@ const afterSwitchOff = point(
     const level = Q.of(c, k);
     const answer = Q.of(c, k * 2 ** n);
     const risen = level.mul(Q.of(2 ** n - 1, 2 ** n));
-    return ask(
-      [
+    const half = level.mul(Q.of(1, 2));
+    const kk = k === 1 ? "" : `${k}`;
+    return numberProblem({
+      prompt: t(
         `$${poly([1, "y'"], [k, "y"])} = ${c}\\left(1 - u(t - T)\\right)$ with $y(0) = 0$ and $T = ${T}$. Find $y(${n}T)$.`,
         `$${poly([1, "y'"], [k, "y"])} = ${c}\\left(1 - u(t - T)\\right)$，$y(0) = 0$，$T = ${T}$。求 $y(${n}T)$。`,
-      ],
+      ),
       answer,
-      [risen, level, level.mul(Q.of(1, 2))],
-      [
-        `Up to $T$, $y$ rises toward $${level.toLatex()}$ and reaches half of it, since $${expOf(-k)}$ is $\\frac{1}{2}$ at $T$. After that $y$ only decays, halving every $T$, so $y(${n}T)$ is $${level.toLatex()}$ times $\\frac{1}{${2 ** n}}$, which is $${answer.toLatex()}$.`,
-        `到 $T$ 为止，$y$ 向 $${level.toLatex()}$ 上升并达到它的一半，因为 $${expOf(-k)}$ 在 $T$ 处等于 $\\frac{1}{2}$。此后 $y$ 只衰减，每过 $T$ 减半，所以 $y(${n}T)$ 是 $${level.toLatex()}$ 乘以 $\\frac{1}{${2 ** n}}$，即 $${answer.toLatex()}$。`,
-      ],
-    );
+      mistakes: apart(answer, [
+        why(
+          risen,
+          "That keeps the force on after $T$; once it is off, $y$ only decays.",
+          "这让外力在 $T$ 之后仍然作用；关闭之后 $y$ 只会衰减。",
+        ),
+        why(level, "That is the level the force would lead to if it stayed on forever.", "这是外力一直作用时 $y$ 趋向的水平。"),
+        why(half, "That is $y(T)$, the value at the switch-off; $y$ decays after it.", "这是关闭时刻的值 $y(T)$；此后 $y$ 还会衰减。"),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Rise until T", "到 T 为止的上升"],
+            t(`From rest, and $e^{-${kk}T} = \\frac{1}{2}$:`, `从静止出发，且 $e^{-${kk}T} = \\frac{1}{2}$：`),
+            [`y(t) = ${poly([level, `\\left(1 - ${expOf(-k)}\\right)`])}, \\qquad y(T) = ${half.toLatex()}`],
+          ],
+          [
+            ["Decay after T", "T 之后的衰减"],
+            t("The force is off, so $y$ halves every $T$:", "外力已关闭，所以 $y$ 每过 $T$ 减半："),
+            [
+              `y(t) = ${poly([half, `e^{-${kk}(t - T)}`])}, \\qquad y(${n}T) = ${half.toLatex()} \\cdot \\frac{1}{${2 ** (n - 1)}} = ${answer.toLatex()}`,
+            ],
+          ],
+        ],
+        t(
+          `By the delay theorem, $y = ${poly([level, `\\left(${expOf(-k, "(t - T)")} - ${expOf(-k)}\\right)`])}$ for $t > T$; at $t = ${n}T$ this is $${poly([level, `\\left(\\frac{1}{${2 ** (n - 1)}} - \\frac{1}{${2 ** n}}\\right)`])} = ${answer.toLatex()}$.`,
+          `由时滞定理，当 $t > T$ 时 $y = ${poly([level, `\\left(${expOf(-k, "(t - T)")} - ${expOf(-k)}\\right)`])}$；在 $t = ${n}T$ 处为 $${poly([level, `\\left(\\frac{1}{${2 ** (n - 1)}} - \\frac{1}{${2 ** n}}\\right)`])} = ${answer.toLatex()}$。`,
+        ),
+      ),
+    });
   },
 );
 
@@ -842,8 +959,8 @@ const pulseAmplitude = point(
   "the-amplitude-left-by-a-pulse",
   ["The amplitude left by a pulse", "脉冲留下的振幅"],
   [
-    "When a constant force on an oscillator is switched off, the two delayed responses add. Their phases decide the outcome: a pulse lasting an odd number of half periods doubles the amplitude, and one lasting a whole number of periods leaves the oscillator at rest.",
-    "作用在振子上的常力关闭时，两个延迟响应相加。它们的相位决定结果：持续奇数个半周期的脉冲使振幅加倍，持续整数个周期的脉冲使振子静止。",
+    "When a constant force on an oscillator is switched off, the two delayed responses add. Their phases decide the outcome: a pulse lasting an odd number of half periods doubles the amplitude, and one lasting a whole number of periods leaves the oscillator at rest.\n\n> **Watch out.** A pulse of a whole period cancels itself. For $y'' + y = 3\\left(1 - u(t - T)\\right)$ from rest, $T = \\pi$ leaves the amplitude $6$, but $T = 2\\pi$ leaves the oscillator at rest, with amplitude $0$.",
+    "作用在振子上的常力关闭时，两个延迟响应相加。它们的相位决定结果：持续奇数个半周期的脉冲使振幅加倍，持续整数个周期的脉冲使振子静止。\n\n> **注意。** 持续整整一个周期的脉冲会自我抵消。对从静止出发的 $y'' + y = 3\\left(1 - u(t - T)\\right)$，$T = \\pi$ 时振幅为 $6$，而 $T = 2\\pi$ 时振子静止，振幅为 $0$。",
   ],
   (rng) => {
     const w = rng.int(1, 6);
@@ -858,18 +975,56 @@ const pulseAmplitude = point(
     const answer = odd ? full : Q.of(0);
     const left = poly([1, "y''"], [w * w, "y"]);
     const c = w === 1 ? "" : w;
-    return ask(
-      [
+    const level = Q.of(F, w * w);
+    return numberProblem({
+      prompt: t(
         `$${left} = ${F}\\left(1 - u(t - T)\\right)$ with $y(0) = y'(0) = 0$ and $T = ${T}$. Find the amplitude of the motion for $t > T$, or $0$ if the oscillator is at rest.`,
         `$${left} = ${F}\\left(1 - u(t - T)\\right)$，$y(0) = y'(0) = 0$，$T = ${T}$。求 $t > T$ 时运动的振幅；如果振子静止，填 $0$。`,
-      ],
+      ),
       answer,
-      [odd ? 0 : full, Q.of(F, w * w), Q.of(2 * F, w)],
-      [
-        `For $t > T$, $y = ${Q.of(F, w * w).toLatex()}\\left(\\cos ${c === "" ? "" : c}(t - T) - \\cos ${c}t\\right)$, and shifting by $T$ changes the angle by $${piPart}$. ${odd ? `So the first cosine is the negative of the second, and the amplitude is $${full.toLatex()}$.` : "So the two cosines are equal, they cancel, and the amplitude is $0$."}`,
-        `当 $t > T$ 时，$y = ${Q.of(F, w * w).toLatex()}\\left(\\cos ${c === "" ? "" : c}(t - T) - \\cos ${c}t\\right)$，平移 $T$ 使角度改变 $${piPart}$。${odd ? `所以第一个余弦是第二个的相反数，振幅是 $${full.toLatex()}$。` : "所以两个余弦相等并抵消，振幅是 $0$。"}`,
-      ],
-    );
+      mistakes: apart(answer, [
+        why(
+          odd ? 0 : full,
+          odd
+            ? `That treats the two cosines as cancelling; a shift by $${piPart}$ flips the sign of the cosine.`
+            : `That treats the two cosines as reinforcing; a shift by $${piPart}$ leaves the cosine unchanged.`,
+          odd ? `这把两个余弦当成相互抵消；平移 $${piPart}$ 使余弦变号。` : `这把两个余弦当成相互加强；平移 $${piPart}$ 不改变余弦。`,
+        ),
+        why(
+          level,
+          "That is the amplitude while the force is on; switching it off adds a second response.",
+          "这是外力作用期间的振幅；关闭外力会叠加第二个响应。",
+        ),
+        why(
+          Q.of(2 * F, w),
+          `That divides by $\\omega = ${w}$; the response from rest has $\\frac{F}{\\omega^{2}}$.`,
+          `这除以了 $\\omega = ${w}$；从静止出发的响应带有 $\\frac{F}{\\omega^{2}}$。`,
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Subtract the delayed response", "减去延迟的响应"],
+            t("The response from rest to the step is delayed by $T$ and subtracted:", "阶跃从静止出发的响应延迟 $T$ 后相减："),
+            [`y = ${poly([level, `\\left(\\cos ${c}(t - T) - \\cos ${c}t\\right)`])}, \\qquad t > T`],
+          ],
+          [
+            ["Use the phase", "利用相位"],
+            t(`The shift changes the angle by $${c}T = ${piPart}$.`, `平移使角度改变 $${c}T = ${piPart}$。`),
+            [`\\cos ${c}(t - T) = ${odd ? "-" : ""}\\cos ${c}t`, odd ? `y = ${poly([full.neg(), `\\cos ${c}t`])}` : "y = 0"],
+          ],
+        ],
+        odd
+          ? t(
+              `At $t = T$, $y = ${poly([level, `\\left(1 - \\cos ${piPart}\\right)`])} = ${full.toLatex()}$ and $y' = 0$, so the oscillator starts its free motion at the top of a swing of amplitude $${full.toLatex()}$.`,
+              `在 $t = T$ 处 $y = ${poly([level, `\\left(1 - \\cos ${piPart}\\right)`])} = ${full.toLatex()}$，$y' = 0$，所以振子从振幅为 $${full.toLatex()}$ 的摆动顶点开始自由运动。`,
+            )
+          : t(
+              `At $t = T$, $y = ${poly([level, `\\left(1 - \\cos ${piPart}\\right)`])} = 0$ and $y' = 0$, so with the force off the oscillator stays at rest.`,
+              `在 $t = T$ 处 $y = ${poly([level, `\\left(1 - \\cos ${piPart}\\right)`])} = 0$，$y' = 0$，外力关闭后振子保持静止。`,
+            ),
+      ),
+    });
   },
 );
 
@@ -877,8 +1032,8 @@ const coupledTransform = point(
   "cramers-rule-for-a-coupled-transform",
   ["Cramer's rule for a coupled transform", "耦合变换的克拉默法则"],
   [
-    "Transforming $\\mathbf{x}' = A\\mathbf{x}$ gives $(sI - A)\\mathbf{X} = \\mathbf{x}(0)$. In a coupled system neither transform can be found alone, so use Cramer's rule, and remember that the off-diagonal entries of $sI - A$ have the opposite sign to those of $A$.",
-    "变换 $\\mathbf{x}' = A\\mathbf{x}$ 得 $(sI - A)\\mathbf{X} = \\mathbf{x}(0)$。在耦合方程组中，两个变换都不能单独求出，所以要用克拉默法则，并记住 $sI - A$ 的非对角元素与 $A$ 的符号相反。",
+    "Transforming $\\mathbf{x}' = A\\mathbf{x}$ gives $(sI - A)\\mathbf{X} = \\mathbf{x}(0)$. In a coupled system neither transform can be found alone, so use Cramer's rule, and remember that the off-diagonal entries of $sI - A$ have the opposite sign to those of $A$.\n\n> **Watch out.** For $X_{1}$, replace the first column of $sI - A$ by $\\mathbf{x}(0)$; the entry $-b$ then meets $x_{2}(0)$ with a minus sign that cancels. For $x_{1}' = -x_{1} + 2x_{2}$, $x_{2}' = -x_{1} - 2x_{2}$ with $x_{1}(0) = x_{2}(0) = 1$ at $s = 1$, the determinant is $8$ and the numerator is $3 + 2 = 5$, so $X_{1}(1) = \\frac{5}{8}$, not $\\frac{1}{8}$.",
+    "变换 $\\mathbf{x}' = A\\mathbf{x}$ 得 $(sI - A)\\mathbf{X} = \\mathbf{x}(0)$。在耦合方程组中，两个变换都不能单独求出，所以要用克拉默法则，并记住 $sI - A$ 的非对角元素与 $A$ 的符号相反。\n\n> **注意。** 求 $X_{1}$ 时用 $\\mathbf{x}(0)$ 替换 $sI - A$ 的第一列；这时元素 $-b$ 与 $x_{2}(0)$ 相乘时的负号会抵消。对 $x_{1}' = -x_{1} + 2x_{2}$，$x_{2}' = -x_{1} - 2x_{2}$，$x_{1}(0) = x_{2}(0) = 1$，在 $s = 1$ 处行列式为 $8$，分子为 $3 + 2 = 5$，所以 $X_{1}(1) = \\frac{5}{8}$，不是 $\\frac{1}{8}$。",
   ],
   (rng) => {
     const a = -rng.int(1, 5);
@@ -891,18 +1046,52 @@ const coupledTransform = point(
     const det = (s - a) * (s - d) - b * c;
     const top = (s - d) * p + b * r;
     const answer = Q.of(top, det);
-    return ask(
-      [
+    const second = Q.of((s - a) * r + c * p, det);
+    return numberProblem({
+      prompt: t(
         `For $x_{1}' = ${poly([a, "x_{1}"], [b, "x_{2}"])}$, $x_{2}' = ${poly([c, "x_{1}"], [d, "x_{2}"])}$ with $x_{1}(0) = ${p}$ and $x_{2}(0) = ${r}$, find $X_{1}(${s})$, where $X_{1} = \\mathcal{L}\\{x_{1}\\}$.`,
         `对 $x_{1}' = ${poly([a, "x_{1}"], [b, "x_{2}"])}$，$x_{2}' = ${poly([c, "x_{1}"], [d, "x_{2}"])}$，$x_{1}(0) = ${p}$，$x_{2}(0) = ${r}$，求 $X_{1}(${s})$，其中 $X_{1} = \\mathcal{L}\\{x_{1}\\}$。`,
-      ],
+      ),
       answer,
-      [Q.of(p, s - a), Q.of((s - a) * p + b * r, det), Q.of((s - d) * p - b * r, det)],
-      [
-        `At $s = ${s}$, $sI - A = ${mat(s - a, -b, -c, s - d)}$, with determinant $${det}$. Cramer's rule gives the numerator $${s - d} \\cdot ${paren(p)} + ${b} \\cdot ${paren(r)} = ${top}$, so $X_{1}(${s}) = ${answer.toLatex()}$.`,
-        `在 $s = ${s}$ 处，$sI - A = ${mat(s - a, -b, -c, s - d)}$，行列式是 $${det}$。克拉默法则给出分子 $${s - d} \\cdot ${paren(p)} + ${b} \\cdot ${paren(r)} = ${top}$，所以 $X_{1}(${s}) = ${answer.toLatex()}$。`,
-      ],
-    );
+      mistakes: apart(answer, [
+        why(
+          Q.of(p, s - a),
+          "That ignores the coupling, as if $x_{2}$ had no effect on $x_{1}$.",
+          "这忽略了耦合，好像 $x_{2}$ 对 $x_{1}$ 没有影响。",
+        ),
+        why(
+          Q.of((s - a) * p + b * r, det),
+          "That multiplies $x_{1}(0)$ by the wrong diagonal entry; replacing the first column leaves $s - d$ beside it.",
+          "这让 $x_{1}(0)$ 乘了错误的对角元；替换第一列后与它相乘的是 $s - d$。",
+        ),
+        why(
+          Q.of((s - d) * p - b * r, det),
+          "That keeps the sign of $b$ from $A$; in $sI - A$ the entry is $-b$, and the determinant subtracts it once more.",
+          "这沿用了 $A$ 中 $b$ 的符号；$sI - A$ 中该元素是 $-b$，行列式又再减一次。",
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Form sI - A", "写出 sI - A"],
+            t(`At $s = ${s}$:`, `在 $s = ${s}$ 处：`),
+            [`sI - A = ${mat(s - a, -b, -c, s - d)}, \\qquad \\det = ${s - a} \\cdot ${s - d} - ${paren(-b)} \\cdot ${paren(-c)} = ${det}`],
+          ],
+          [
+            ["Apply Cramer's rule", "用克拉默法则"],
+            t("Replace the first column by $\\mathbf{x}(0)$:", "用 $\\mathbf{x}(0)$ 替换第一列："),
+            [
+              `\\det${mat(p, -b, r, s - d)} = ${paren(p)} \\cdot ${s - d} - ${paren(-b)} \\cdot ${paren(r)} = ${top}`,
+              `X_{1}(${s}) = \\frac{${top}}{${det}}${top % det === 0 || Q.of(top, det).toLatex() !== `\\frac{${top}}{${det}}` ? ` = ${answer.toLatex()}` : ""}`,
+            ],
+          ],
+        ],
+        t(
+          `Cramer's rule also gives $X_{2}(${s}) = ${second.toLatex()}$, and the first row checks: $${s - a} \\cdot ${paren(answer)} - ${b} \\cdot ${paren(second)} = ${p}$, which is $x_{1}(0)$.`,
+          `克拉默法则还给出 $X_{2}(${s}) = ${second.toLatex()}$，代入第一行检验：$${s - a} \\cdot ${paren(answer)} - ${b} \\cdot ${paren(second)} = ${p}$，正是 $x_{1}(0)$。`,
+        ),
+      ),
+    });
   },
 );
 
@@ -910,8 +1099,8 @@ const cascadeTransform = point(
   "the-transform-of-a-forced-cascade",
   ["The transform of a forced cascade", "受迫级联系统的变换"],
   [
-    "In a cascade the forcing reaches the first variable only through the second, so the transforms multiply along the chain. A constant force contributes $\\frac{f}{s}$, not $f$, and this factor of $\\frac{1}{s}$ is the part most often forgotten.",
-    "在级联系统中，强迫项只通过第二个变量作用于第一个变量，所以变换沿着链条相乘。常力贡献的是 $\\frac{f}{s}$，而不是 $f$，这个 $\\frac{1}{s}$ 因子最容易被遗忘。",
+    "In a cascade the forcing reaches the first variable only through the second, so the transforms multiply along the chain. A constant force contributes $\\frac{f}{s}$, not $f$, and this factor of $\\frac{1}{s}$ is the part most often forgotten.\n\n> **Watch out.** For $x_{1}' = -x_{1} + x_{2}$, $x_{2}' = -x_{2} + 4$ from rest at $s = 2$: $X_{2}(2) = \\frac{4}{2 \\cdot 3} = \\frac{2}{3}$ and $X_{1}(2) = \\frac{2}{3} \\div 3 = \\frac{2}{9}$. Leaving out the $\\frac{1}{s}$ gives $\\frac{4}{9}$.",
+    "在级联系统中，强迫项只通过第二个变量作用于第一个变量，所以变换沿着链条相乘。常力贡献的是 $\\frac{f}{s}$，而不是 $f$，这个 $\\frac{1}{s}$ 因子最容易被遗忘。\n\n> **注意。** 对从静止出发的 $x_{1}' = -x_{1} + x_{2}$，$x_{2}' = -x_{2} + 4$，在 $s = 2$ 处：$X_{2}(2) = \\frac{4}{2 \\cdot 3} = \\frac{2}{3}$，$X_{1}(2) = \\frac{2}{3} \\div 3 = \\frac{2}{9}$。漏掉 $\\frac{1}{s}$ 会得到 $\\frac{4}{9}$。",
   ],
   (rng) => {
     const a = rng.int(1, 5);
@@ -920,18 +1109,46 @@ const cascadeTransform = point(
     const f = nz(rng, 12);
     const s = rng.int(1, 4);
     const answer = Q.of(b * f, s * (s + a) * (s + c));
-    return ask(
-      [
+    const X2 = Q.of(f, s * (s + c));
+    const bb = b === 1 ? "" : b === -1 ? "-" : `${b}`;
+    return numberProblem({
+      prompt: t(
         `For $x_{1}' = ${poly([-a, "x_{1}"], [b, "x_{2}"])}$, $x_{2}' = ${poly([-c, "x_{2}"], [f, ""])}$ with $x_{1}(0) = x_{2}(0) = 0$, find $X_{1}(${s})$, where $X_{1} = \\mathcal{L}\\{x_{1}\\}$.`,
         `对 $x_{1}' = ${poly([-a, "x_{1}"], [b, "x_{2}"])}$，$x_{2}' = ${poly([-c, "x_{2}"], [f, ""])}$，$x_{1}(0) = x_{2}(0) = 0$，求 $X_{1}(${s})$，其中 $X_{1} = \\mathcal{L}\\{x_{1}\\}$。`,
-      ],
+      ),
       answer,
-      [Q.of(b * f, (s + a) * (s + c)), Q.of(f, s * (s + c)), Q.of(b * f, s * (s + a))],
-      [
-        `$X_{2}(s) = \\frac{${f}}{s(s + ${c})}$, and then $X_{1}(s) = \\frac{${b}X_{2}(s)}{s + ${a}}$. At $s = ${s}$, the denominator is $${s} \\cdot ${s + c} \\cdot ${s + a}$, so $X_{1}(${s}) = ${answer.toLatex()}$.`,
-        `$X_{2}(s) = \\frac{${f}}{s(s + ${c})}$，于是 $X_{1}(s) = \\frac{${b}X_{2}(s)}{s + ${a}}$。在 $s = ${s}$ 处，分母是 $${s} \\cdot ${s + c} \\cdot ${s + a}$，所以 $X_{1}(${s}) = ${answer.toLatex()}$。`,
-      ],
-    );
+      mistakes: apart(answer, [
+        why(
+          Q.of(b * f, (s + a) * (s + c)),
+          `That transforms the constant $${f}$ as $${f}$; its transform is $\\frac{${f}}{s}$.`,
+          `这把常数 $${f}$ 的变换当成了 $${f}$；它的变换是 $\\frac{${f}}{s}$。`,
+        ),
+        why(X2, "That is $X_{2}$; the question asks for $X_{1}$.", "这是 $X_{2}$；题目问的是 $X_{1}$。"),
+        why(
+          Q.of(b * f, s * (s + a)),
+          `That leaves out the factor $\\frac{1}{s + ${c}}$ from the second equation.`,
+          `这漏掉了第二个方程带来的因子 $\\frac{1}{s + ${c}}$。`,
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Transform the second equation", "变换第二个方程"],
+            t("", ""),
+            [`(s + ${c})X_{2} = \\frac{${f}}{s}, \\qquad X_{2}(${s}) = \\frac{${f}}{${s} \\cdot ${s + c}} = ${X2.toLatex()}`],
+          ],
+          [
+            ["Transform the first equation", "变换第一个方程"],
+            t("", ""),
+            [`(s + ${a})X_{1} = ${bb}X_{2}, \\qquad X_{1}(${s}) = \\frac{${b} \\cdot ${paren(X2)}}{${s + a}} = ${answer.toLatex()}`],
+          ],
+        ],
+        t(
+          `In one fraction, $X_{1}(s) = \\frac{${b * f}}{s(s + ${a})(s + ${c})}$, and at $s = ${s}$ the denominator is $${s} \\cdot ${s + a} \\cdot ${s + c} = ${s * (s + a) * (s + c)}$, which again gives $${answer.toLatex()}$.`,
+          `合成一个分式，$X_{1}(s) = \\frac{${b * f}}{s(s + ${a})(s + ${c})}$，在 $s = ${s}$ 处分母为 $${s} \\cdot ${s + a} \\cdot ${s + c} = ${s * (s + a) * (s + c)}$，同样得 $${answer.toLatex()}$。`,
+        ),
+      ),
+    });
   },
 );
 

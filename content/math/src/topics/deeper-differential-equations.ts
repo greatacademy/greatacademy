@@ -1187,8 +1187,8 @@ const slopeFromTransform: KnowledgePointDef = {
   id: "initial-values-from-a-transform",
   title: t("Initial values from a transform", "由变换求初始值"),
   explanation: t(
-    "A transform shows the initial behaviour of a function without inverting it. Since $\\mathcal{L}\\{f'\\} = sF(s) - f(0)$ tends to zero as $s$ grows, $f(0) = \\lim_{s \\to \\infty} sF(s)$. Applying the same limit to $f'$ gives $f'(0)$ from $sF(s) - f(0)$.",
-    "不用求逆变换，也能从变换看出函数的初始行为。由于 $s$ 增大时 $\\mathcal{L}\\{f'\\} = sF(s) - f(0)$ 趋于零，所以 $f(0) = \\lim_{s \\to \\infty} sF(s)$。对 $f'$ 用同样的极限，就能由 $sF(s) - f(0)$ 得到 $f'(0)$。",
+    "A transform shows the initial behaviour of a function without inverting it. Since $\\mathcal{L}\\{f'\\} = sF(s) - f(0)$ tends to zero as $s$ grows, $f(0) = \\lim_{s \\to \\infty} sF(s)$. Applying the same limit to $f'$ gives $f'(0) = \\lim_{s \\to \\infty} s\\left(sF(s) - f(0)\\right)$.\n\n> **Watch out.** Subtract $f(0)$ before multiplying by $s$ again; the denominator then contributes too. For $F(s) = \\frac{2s + 7}{s^{2} + 3s + 5}$, $f(0) = 2$ and $f'(0) = 7 - 2 \\cdot 3 = 1$, not the constant $7$ of the numerator.",
+    "不用求逆变换，也能从变换看出函数的初始行为。由于 $s$ 增大时 $\\mathcal{L}\\{f'\\} = sF(s) - f(0)$ 趋于零，所以 $f(0) = \\lim_{s \\to \\infty} sF(s)$。对 $f'$ 用同样的极限，得 $f'(0) = \\lim_{s \\to \\infty} s\\left(sF(s) - f(0)\\right)$。\n\n> **注意。** 要先减去 $f(0)$ 再乘以 $s$，这时分母也会起作用。对 $F(s) = \\frac{2s + 7}{s^{2} + 3s + 5}$，$f(0) = 2$，$f'(0) = 7 - 2 \\cdot 3 = 1$，不是分子的常数 $7$。",
   ),
   generate(rng) {
     const a = nonzero(rng, 6);
@@ -1196,20 +1196,43 @@ const slopeFromTransform: KnowledgePointDef = {
     const c = rng.int(1, 6);
     const d = rng.int(1, 12);
     const answer = b - a * c;
-    const F = `\\frac{${poly([a, "s"], [b, ""])}}{${poly([1, "s^2"], [c, "s"], [d, ""])}}`;
-    return numberProblem({
-      prompt: t(
-        `The function $f$ has Laplace transform $F(s) = ${F}$. Find $f'(0)$.`,
-        `函数 $f$ 的拉普拉斯变换是 $F(s) = ${F}$。求 $f'(0)$。`,
-      ),
+    const den = poly([1, "s^2"], [c, "s"], [d, ""]);
+    const F = `\\frac{${poly([a, "s"], [b, ""])}}{${den}}`;
+    const next = answer === 0 ? "" : ` ${answer < 0 ? "-" : "+"} \\frac{${Math.abs(answer)}}{s^2}`;
+    const series = `${a < 0 ? "-" : ""}\\frac{${Math.abs(a)}}{s}${next}`;
+    return explainedNumber(
+      [`The function $f$ has Laplace transform $F(s) = ${F}$. Find $f'(0)$.`, `函数 $f$ 的拉普拉斯变换是 $F(s) = ${F}$。求 $f'(0)$。`],
       answer,
-      form: "integer",
-      wrong: [b, a, b + a * c],
-      solution: t(
-        `First, $f(0) = \\lim sF(s) = ${a}$. Then $${poly([1, "sF(s)"], [-a, ""])}$ has numerator $${poly([answer, "s"], [-a * d, ""])}$ over the same denominator, and multiplying by $s$ and taking the limit gives $f'(0) = ${answer}$.`,
-        `首先，$f(0) = \\lim sF(s) = ${a}$。然后 $${poly([1, "sF(s)"], [-a, ""])}$ 的分子是 $${poly([answer, "s"], [-a * d, ""])}$，分母不变，乘以 $s$ 再取极限得 $f'(0) = ${answer}$。`,
-      ),
-    });
+      [
+        labelled(
+          ["Find f(0)", "求 f(0)"],
+          "As $s \\to \\infty$ only the leading terms count:",
+          "当 $s \\to \\infty$ 时只有最高次项起作用：",
+          `f(0) = \\lim_{s \\to \\infty} \\frac{${poly([a, "s^2"], [b, "s"])}}{${den}} = ${a}`,
+        ),
+        labelled(
+          ["Subtract f(0) and multiply by s", "减去 f(0) 再乘以 s"],
+          "",
+          "",
+          `sF(s) ${a < 0 ? "+" : "-"} ${Math.abs(a)} = \\frac{${poly([answer, "s"], [-a * d, ""])}}{${den}}`,
+          `f'(0) = \\lim_{s \\to \\infty} \\frac{${poly([answer, "s^2"], [-a * d, "s"])}}{${den}} = ${answer}`,
+        ),
+      ],
+      [
+        `Long division gives $F(s) = ${series} + \\cdots$, and since $\\mathcal{L}\\{1\\} = \\frac{1}{s}$ and $\\mathcal{L}\\{t\\} = \\frac{1}{s^2}$, near $t = 0$ we have $f(t) \\approx ${poly([a, ""], [answer, "t"])}$.`,
+        `长除法给出 $F(s) = ${series} + \\cdots$，由于 $\\mathcal{L}\\{1\\} = \\frac{1}{s}$，$\\mathcal{L}\\{t\\} = \\frac{1}{s^2}$，在 $t = 0$ 附近 $f(t) \\approx ${poly([a, ""], [answer, "t"])}$。`,
+      ],
+      [
+        [
+          b,
+          `That is the constant of the numerator; subtracting $f(0)$ also brings in $-${inParens(a)} \\cdot ${c}$ from the $${c === 1 ? "" : c}s$ of the denominator.`,
+          `这是分子的常数；减去 $f(0)$ 时还会从分母的 $${c === 1 ? "" : c}s$ 带来 $-${inParens(a)} \\cdot ${c}$。`,
+        ],
+        [a, "That is $f(0)$, the first limit; $f'(0)$ needs a second one.", "这是第一个极限 $f(0)$；求 $f'(0)$ 还要再取一次极限。"],
+        [b + a * c, "That adds the $f(0)$ term instead of subtracting it.", "这把 $f(0)$ 那一项加上了，应当减去。"],
+      ],
+      "integer",
+    );
   },
 };
 
@@ -1217,26 +1240,58 @@ const convolutionOfPowers: KnowledgePointDef = {
   id: "a-convolution-through-the-transform",
   title: t("A convolution through the transform", "通过变换求卷积"),
   explanation: t(
-    "The convolution $(f * g)(t) = \\int_0^t f(\\tau)g(t - \\tau)\\,d\\tau$ has the transform $F(s)G(s)$. So a convolution can be found by multiplying transforms and inverting the product. This is usually quicker than the integral, and it is also why a product of transforms is not the transform of a product.",
-    "卷积 $(f * g)(t) = \\int_0^t f(\\tau)g(t - \\tau)\\,d\\tau$ 的变换是 $F(s)G(s)$。所以可以把变换相乘，再求逆变换，得到卷积。这通常比直接积分快，这也说明变换之积并不是乘积的变换。",
+    "The convolution $(f * g)(t) = \\int_0^t f(\\tau)g(t - \\tau)\\,d\\tau$ has the transform $F(s)G(s)$. So a convolution can be found by multiplying transforms and inverting the product. This is usually quicker than the integral, and it is also why a product of transforms is not the transform of a product.\n\n> **Watch out.** Inverting $\\frac{1}{s^{n + 1}}$ gives $\\frac{t^{n}}{n!}$, so the factorial must be divided out. For $t * t$, the product $\\frac{1}{s^{4}}$ inverts to $\\frac{t^{3}}{6}$, not $t^{3}$; the integral $\\int_0^t \\tau(t - \\tau)\\,d\\tau = \\frac{t^{3}}{6}$ agrees.",
+    "卷积 $(f * g)(t) = \\int_0^t f(\\tau)g(t - \\tau)\\,d\\tau$ 的变换是 $F(s)G(s)$。所以可以把变换相乘，再求逆变换，得到卷积。这通常比直接积分快，这也说明变换之积并不是乘积的变换。\n\n> **注意。** $\\frac{1}{s^{n + 1}}$ 的逆变换是 $\\frac{t^{n}}{n!}$，阶乘必须除掉。对 $t * t$，乘积 $\\frac{1}{s^{4}}$ 的逆变换是 $\\frac{t^{3}}{6}$，不是 $t^{3}$；积分 $\\int_0^t \\tau(t - \\tau)\\,d\\tau = \\frac{t^{3}}{6}$ 也给出同样结果。",
   ),
   generate(rng) {
     const a = rng.int(1, 6);
     const b = rng.int(1, 6);
     const T = rng.int(1, 4);
     const answer = Q.of(a * b * T ** 4, 12);
-    return numberProblem({
-      prompt: t(
+    const coef = Q.of(a * b, 12);
+    return explainedNumber(
+      [
         `Let $f(t) = ${poly([a, "t"])}$ and $g(t) = ${poly([b, "t^2"])}$. Find the convolution $(f * g)(${T})$.`,
         `设 $f(t) = ${poly([a, "t"])}$，$g(t) = ${poly([b, "t^2"])}$。求卷积 $(f * g)(${T})$。`,
-      ),
+      ],
       answer,
-      wrong: [Q.of(a * b * T ** 3), Q.of(a * b * T ** 4, 24), Q.of(a * b * T ** 4, 4)],
-      solution: t(
-        `The transforms are $\\frac{${a}}{s^2}$ and $\\frac{${2 * b}}{s^3}$, with product $\\frac{${2 * a * b}}{s^5}$. Since $t^4$ has transform $\\frac{24}{s^5}$, the convolution is $\\frac{${2 * a * b}}{24}t^4$, which at $t = ${T}$ is $${answer.toLatex()}$.`,
-        `两个变换是 $\\frac{${a}}{s^2}$ 和 $\\frac{${2 * b}}{s^3}$，乘积是 $\\frac{${2 * a * b}}{s^5}$。由于 $t^4$ 的变换是 $\\frac{24}{s^5}$，卷积是 $\\frac{${2 * a * b}}{24}t^4$，在 $t = ${T}$ 处等于 $${answer.toLatex()}$。`,
-      ),
-    });
+      [
+        labelled(
+          ["Multiply the transforms", "把变换相乘"],
+          "",
+          "",
+          `F(s)G(s) = \\frac{${a}}{s^2} \\cdot \\frac{${2 * b}}{s^3} = \\frac{${2 * a * b}}{s^5}`,
+        ),
+        labelled(
+          ["Invert the product", "求乘积的逆变换"],
+          "Since $\\mathcal{L}\\{t^4\\} = \\frac{24}{s^5}$, divide by $4! = 24$:",
+          "由于 $\\mathcal{L}\\{t^4\\} = \\frac{24}{s^5}$，要除以 $4! = 24$：",
+          `(f * g)(t) = \\frac{${2 * a * b}}{24}t^4${coef.toLatex() === `\\frac{${2 * a * b}}{24}` ? "" : ` = ${poly([coef, "t^4"])}`}`,
+          `(f * g)(${T}) = ${coef.toLatex()} \\cdot ${T ** 4} = ${answer.toLatex()}`,
+        ),
+      ],
+      [
+        `The integral agrees: $\\int_0^t ${a === 1 ? "" : a}\\tau \\cdot ${b === 1 ? "" : b}(t - \\tau)^2\\,d\\tau = ${a * b === 1 ? "" : a * b}\\left(\\frac{t^4}{2} - \\frac{2t^4}{3} + \\frac{t^4}{4}\\right) = ${poly([coef, "t^4"])}$.`,
+        `直接积分也一致：$\\int_0^t ${a === 1 ? "" : a}\\tau \\cdot ${b === 1 ? "" : b}(t - \\tau)^2\\,d\\tau = ${a * b === 1 ? "" : a * b}\\left(\\frac{t^4}{2} - \\frac{2t^4}{3} + \\frac{t^4}{4}\\right) = ${poly([coef, "t^4"])}$。`,
+      ],
+      [
+        [
+          Q.of(a * b * T ** 3),
+          "That multiplies $f$ and $g$ at the point; a convolution is an integral, not a product.",
+          "这是在该点把 $f$ 与 $g$ 相乘；卷积是积分，不是乘积。",
+        ],
+        [
+          Q.of(a * b * T ** 4, 24),
+          "That inverts $\\frac{1}{s^3}$ for $g$ as $t^2$ without the factor $2$ in $\\mathcal{L}\\{t^2\\} = \\frac{2}{s^3}$.",
+          "这里把 $g$ 的变换写成了 $\\frac{1}{s^3}$，漏掉了 $\\mathcal{L}\\{t^2\\} = \\frac{2}{s^3}$ 中的因子 $2$。",
+        ],
+        [
+          Q.of(a * b * T ** 4, 2),
+          "That divides by $4$ instead of by $4! = 24$ when inverting $\\frac{1}{s^5}$.",
+          "求 $\\frac{1}{s^5}$ 的逆变换时除以了 $4$，应除以 $4! = 24$。",
+        ],
+      ],
+    );
   },
 };
 
@@ -1830,8 +1885,8 @@ const shiftedTransformAtPoint: KnowledgePointDef = {
   id: "a-shifted-transform-at-a-point",
   title: t("A shifted transform at a point", "平移后的变换在一点的值"),
   explanation: t(
-    "The first shifting theorem says $\\mathcal{L}\\{e^{at}f(t)\\}(s) = F(s - a)$. So the transform of the product at $s$ is the transform of $f$ at the shifted point $s - a$. To evaluate it, subtract $a$ first and only then use the formula for $F$. Applying the formula at $s$ itself is the common mistake.",
-    "第一平移定理说 $\\mathcal{L}\\{e^{at}f(t)\\}(s) = F(s - a)$。所以乘积在 $s$ 处的变换，就是 $f$ 的变换在平移后的点 $s - a$ 处的值。计算时先减去 $a$，再用 $F$ 的公式。直接在 $s$ 处套用公式是常见的错误。",
+    "The first shifting theorem says $\\mathcal{L}\\{e^{at}f(t)\\}(s) = F(s - a)$. So the transform of the product at $s$ is the transform of $f$ at the shifted point $s - a$. To evaluate it, subtract $a$ first and only then use the formula for $F$. Applying the formula at $s$ itself is the common mistake.\n\n> **Watch out.** The shift is $s - a$, so a factor $e^{-2t}$ moves the point to $s + 2$. For $\\mathcal{L}\\{e^{-2t}\\cos t\\}$ at $s = 1$, evaluate $\\frac{s}{s^{2} + 1}$ at $3$ to get $\\frac{3}{10}$, not at $-1$.",
+    "第一平移定理说 $\\mathcal{L}\\{e^{at}f(t)\\}(s) = F(s - a)$。所以乘积在 $s$ 处的变换，就是 $f$ 的变换在平移后的点 $s - a$ 处的值。计算时先减去 $a$，再用 $F$ 的公式。直接在 $s$ 处套用公式是常见的错误。\n\n> **注意。** 平移是 $s - a$，所以因子 $e^{-2t}$ 把点移到 $s + 2$。求 $\\mathcal{L}\\{e^{-2t}\\cos t\\}$ 在 $s = 1$ 处的值时，要在 $3$ 处计算 $\\frac{s}{s^{2} + 1}$，得 $\\frac{3}{10}$，而不是在 $-1$ 处。",
   ),
   generate(rng) {
     const a = nonzero(rng, 5);
@@ -1839,18 +1894,43 @@ const shiftedTransformAtPoint: KnowledgePointDef = {
     const d = rng.int(1, 6);
     const s = a + d;
     const answer = Q.of(d, d * d + b * b);
-    return numberProblem({
-      prompt: t(
+    return explainedNumber(
+      [
         `Find $\\mathcal{L}\\{${exponential(a, "t")}\\cos ${multiple(b, "t")}\\}$ at $s = ${s}$.`,
         `求 $\\mathcal{L}\\{${exponential(a, "t")}\\cos ${multiple(b, "t")}\\}$ 在 $s = ${s}$ 处的值。`,
-      ),
+      ],
       answer,
-      wrong: [Q.of(s, s * s + b * b), Q.of(b, d * d + b * b), Q.of(s + a, (s + a) * (s + a) + b * b)],
-      solution: t(
-        `Here $F(s) = \\frac{s}{s^2 + ${b * b}}$, evaluated at $s - a = ${d}$. This gives $\\frac{${d}}{${d * d} + ${b * b}} = ${answer.toLatex()}$.`,
-        `这里 $F(s) = \\frac{s}{s^2 + ${b * b}}$，要在 $s - a = ${d}$ 处取值。得 $\\frac{${d}}{${d * d} + ${b * b}} = ${answer.toLatex()}$。`,
-      ),
-    });
+      [
+        labelled(
+          ["Find the shifted point", "求平移后的点"],
+          `The transform of the cosine is $F(s) = \\frac{s}{s^2 + ${b * b}}$, and the factor $${exponential(a, "t")}$ shifts it by $${a}$:`,
+          `余弦的变换是 $F(s) = \\frac{s}{s^2 + ${b * b}}$，因子 $${exponential(a, "t")}$ 使它平移 $${a}$：`,
+          `s - ${inParens(a)} = ${s} - ${inParens(a)} = ${d}`,
+        ),
+        labelled(["Evaluate F there", "在该点计算 F"], "", "", `F(${d}) = \\frac{${d}}{${d * d} + ${b * b}} = ${answer.toLatex()}`),
+      ],
+      [
+        `In the defining integral at $s = ${s}$ the two exponentials combine into $e^{-(${s} - ${inParens(a)})t} = ${exponential(-d, "t")}$, which is the kernel of the cosine transform at $${d}$.`,
+        `在 $s = ${s}$ 处的定义积分中，两个指数合并为 $e^{-(${s} - ${inParens(a)})t} = ${exponential(-d, "t")}$，正是余弦变换在 $${d}$ 处的积分核。`,
+      ],
+      [
+        [
+          Q.of(s, s * s + b * b),
+          `That evaluates $F$ at $${s}$ itself; the factor $${exponential(a, "t")}$ moves the point first.`,
+          `这是在 $${s}$ 处直接计算 $F$；因子 $${exponential(a, "t")}$ 要先移动这个点。`,
+        ],
+        [
+          Q.of(b, d * d + b * b),
+          "That uses the sine transform, with $b$ on top; the cosine has $s$ on top.",
+          "这用了正弦的变换，分子是 $b$；余弦的分子是 $s$。",
+        ],
+        [
+          Q.of(s + a, (s + a) * (s + a) + b * b),
+          `That shifts the wrong way, to $s + ${inParens(a)}$; the theorem gives $F(s - a)$.`,
+          `这向反方向平移到了 $s + ${inParens(a)}$；定理给出的是 $F(s - a)$。`,
+        ],
+      ],
+    );
   },
 };
 
@@ -1858,28 +1938,56 @@ const stepOnUnshiftedFunction: KnowledgePointDef = {
   id: "a-step-on-an-unshifted-function",
   title: t("A step on an unshifted function", "阶跃函数乘未平移的函数"),
   explanation: t(
-    "The second shifting theorem transforms $g(t - a)u(t - a)$, so the function must be written in powers of $t - a$ first. A function such as $pt + q$ is not yet in that form. Rewrite it as $p(t - a) + (pa + q)$. Then the transform of $(pt + q)u(t - a)$ is $e^{-as}\\left(\\frac{p}{s^2} + \\frac{pa + q}{s}\\right)$.",
-    "第二平移定理变换的是 $g(t - a)u(t - a)$，所以必须先把函数写成 $t - a$ 的幂。像 $pt + q$ 这样的函数还不是这种形式。把它改写成 $p(t - a) + (pa + q)$。于是 $(pt + q)u(t - a)$ 的变换是 $e^{-as}\\left(\\frac{p}{s^2} + \\frac{pa + q}{s}\\right)$。",
+    "The second shifting theorem transforms $g(t - a)u(t - a)$, so the function must be written in powers of $t - a$ first. A function such as $pt + q$ is not yet in that form. Rewrite it as $p(t - a) + (pa + q)$. Then the transform of $(pt + q)u(t - a)$ is $e^{-as}\\left(\\frac{p}{s^2} + \\frac{pa + q}{s}\\right)$.\n\n> **Watch out.** The constant is the value of the function at the switch-on time, not its old constant term. For $(2t + 1)u(t - 3)$, write $2t + 1 = 2(t - 3) + 7$, so the coefficient of $\\frac{1}{s}$ is $7$, not $1$.",
+    "第二平移定理变换的是 $g(t - a)u(t - a)$，所以必须先把函数写成 $t - a$ 的幂。像 $pt + q$ 这样的函数还不是这种形式。把它改写成 $p(t - a) + (pa + q)$。于是 $(pt + q)u(t - a)$ 的变换是 $e^{-as}\\left(\\frac{p}{s^2} + \\frac{pa + q}{s}\\right)$。\n\n> **注意。** 新的常数是函数在接通时刻的值，而不是原来的常数项。对 $(2t + 1)u(t - 3)$，写成 $2t + 1 = 2(t - 3) + 7$，所以 $\\frac{1}{s}$ 的系数是 $7$，不是 $1$。",
   ),
   generate(rng) {
     const p = nonzero(rng, 6);
     const a = rng.int(1, 6);
     const q = rng.pick([-6, -5, -4, -3, -2, -1, 1, 2, 3, 4, 5, 6].filter((n) => n !== -p * a));
     const answer = p * a + q;
-    return numberProblem({
-      prompt: t(
-        `$\\mathcal{L}\\{(${poly([p, "t"], [q, ""])})u(t - ${a})\\} = e^{-${multiple(a, "s")}}\\left(\\frac{A}{s^2} + \\frac{B}{s}\\right)$. Find $B$.`,
-        `$\\mathcal{L}\\{(${poly([p, "t"], [q, ""])})u(t - ${a})\\} = e^{-${multiple(a, "s")}}\\left(\\frac{A}{s^2} + \\frac{B}{s}\\right)$。求 $B$。`,
-      ),
+    const g = poly([p, "t"], [q, ""]);
+    return explainedNumber(
+      [
+        `$\\mathcal{L}\\{(${g})u(t - ${a})\\} = e^{-${multiple(a, "s")}}\\left(\\frac{A}{s^2} + \\frac{B}{s}\\right)$. Find $B$.`,
+        `$\\mathcal{L}\\{(${g})u(t - ${a})\\} = e^{-${multiple(a, "s")}}\\left(\\frac{A}{s^2} + \\frac{B}{s}\\right)$。求 $B$。`,
+      ],
       answer,
-      form: "integer",
-      solveFor: "B",
-      wrong: [q, q - p * a, p, p * a],
-      solution: t(
-        `Rewrite the function in powers of $t - ${a}$: $${poly([p, "t"], [q, ""])} = ${poly([p, `(t - ${a})`], [answer, ""])}$. The constant term becomes the coefficient of $\\frac{1}{s}$, so $B = ${answer}$.`,
-        `把函数写成 $t - ${a}$ 的幂：$${poly([p, "t"], [q, ""])} = ${poly([p, `(t - ${a})`], [answer, ""])}$。常数项就是 $\\frac{1}{s}$ 的系数，所以 $B = ${answer}$。`,
-      ),
-    });
+      [
+        labelled(
+          ["Rewrite in powers of t - a", "写成 t - a 的幂"],
+          `Put $t = (t - ${a}) + ${a}$:`,
+          `令 $t = (t - ${a}) + ${a}$：`,
+          `${g} = ${poly([p, `(t - ${a})`])} + ${inParens(p)} \\cdot ${a} ${q < 0 ? "-" : "+"} ${Math.abs(q)} = ${poly([p, `(t - ${a})`], [answer, ""])}`,
+        ),
+        labelled(
+          ["Apply the second shifting theorem", "应用第二平移定理"],
+          "",
+          "",
+          `\\mathcal{L}\\{(${g})u(t - ${a})\\} = e^{-${multiple(a, "s")}}\\left(${p < 0 ? "-" : ""}\\frac{${Math.abs(p)}}{s^2} ${answer < 0 ? "-" : "+"} \\frac{${Math.abs(answer)}}{s}\\right)`,
+          `B = ${answer}`,
+        ),
+      ],
+      [
+        `$B$ is the value of the function when the step switches on: at $t = ${a}$, $${g} = ${answer}$.`,
+        `$B$ 是阶跃接通时函数的值：在 $t = ${a}$ 处，$${g} = ${answer}$。`,
+      ],
+      [
+        [
+          q,
+          "That keeps the old constant term; rewriting in powers of $t - a$ changes it.",
+          "这保留了原来的常数项；改写成 $t - a$ 的幂会改变它。",
+        ],
+        [
+          q - p * a,
+          `That subtracts $${inParens(p)} \\cdot ${a}$; putting $t = (t - ${a}) + ${a}$ adds it.`,
+          `这减去了 $${inParens(p)} \\cdot ${a}$；令 $t = (t - ${a}) + ${a}$ 应当加上它。`,
+        ],
+        [p, "That is $A$, the coefficient of $\\frac{1}{s^2}$.", "这是 $\\frac{1}{s^2}$ 的系数 $A$。"],
+        [p * a, "That leaves out the constant term of the function.", "这漏掉了函数的常数项。"],
+      ],
+      "integer",
+    );
   },
 };
 
@@ -1888,8 +1996,8 @@ const integralOfSteps: KnowledgePointDef = {
   figure: differentialEquationsDrawings1["the-unit-step-function#integrating-a-sum-of-steps"],
   title: t("Integrating a sum of steps", "对阶跃函数之和积分"),
   explanation: t(
-    "The function $u(t - c)$ is $0$ before $t = c$ and $1$ after it. Over the interval from $0$ to $T$ it therefore encloses the area of a rectangle of width $T - c$. A combination of steps adds these rectangles, each scaled by its coefficient, and a negative coefficient subtracts its area.",
-    "函数 $u(t - c)$ 在 $t = c$ 之前为 $0$，之后为 $1$。所以在 $0$ 到 $T$ 上，它围成一个宽为 $T - c$ 的矩形。阶跃函数的线性组合就是把这些矩形相加，每个矩形乘以自己的系数，负系数表示减去相应的面积。",
+    "The function $u(t - c)$ is $0$ before $t = c$ and $1$ after it. Over the interval from $0$ to $T$ it therefore encloses the area of a rectangle of width $T - c$. A combination of steps adds these rectangles, each scaled by its coefficient, and a negative coefficient subtracts its area.\n\n> **Watch out.** The width is $T - c$, the time the step is on, not $c$. For $\\int_0^{5} 2u(t - 1)\\,dt$ the rectangle has width $4$ and area $8$, not $2 \\cdot 1 = 2$.",
+    "函数 $u(t - c)$ 在 $t = c$ 之前为 $0$，之后为 $1$。所以在 $0$ 到 $T$ 上，它围成一个宽为 $T - c$ 的矩形。阶跃函数的线性组合就是把这些矩形相加，每个矩形乘以自己的系数，负系数表示减去相应的面积。\n\n> **注意。** 宽度是阶跃接通的时间 $T - c$，不是 $c$。对 $\\int_0^{5} 2u(t - 1)\\,dt$，矩形宽 $4$，面积 $8$，不是 $2 \\cdot 1 = 2$。",
   ),
   generate(rng) {
     const a = nonzero(rng, 9);
@@ -1899,16 +2007,47 @@ const integralOfSteps: KnowledgePointDef = {
     const T = rng.int(q + 1, 12);
     const answer = a * (T - p) + b * (T - q);
     const f = poly([a, `u(t - ${p})`], [b, `u(t - ${q})`]);
-    return numberProblem({
-      prompt: t(`Evaluate $\\int_0^{${T}} \\big(${f}\\big)\\,dt$.`, `计算 $\\int_0^{${T}} \\big(${f}\\big)\\,dt$。`),
+    return explainedNumber(
+      [`Evaluate $\\int_0^{${T}} \\big(${f}\\big)\\,dt$.`, `计算 $\\int_0^{${T}} \\big(${f}\\big)\\,dt$。`],
       answer,
-      form: "integer",
-      wrong: [a * T + b * T, a * p + b * q, a * (T - p), a * (T - p) - b * (T - q)],
-      solution: t(
-        `The first step is on for a width of $${T - p}$ and the second for $${T - q}$. The integral is $${a} \\cdot ${T - p} + ${inParens(b)} \\cdot ${T - q} = ${answer}$.`,
-        `第一个阶跃作用的宽度是 $${T - p}$，第二个是 $${T - q}$。积分等于 $${a} \\cdot ${T - p} + ${inParens(b)} \\cdot ${T - q} = ${answer}$。`,
-      ),
-    });
+      [
+        labelled(
+          ["Measure each rectangle", "量出每个矩形"],
+          `$u(t - ${p})$ is on from $${p}$ to $${T}$ and $u(t - ${q})$ from $${q}$ to $${T}$:`,
+          `$u(t - ${p})$ 从 $${p}$ 到 $${T}$ 接通，$u(t - ${q})$ 从 $${q}$ 到 $${T}$ 接通：`,
+          `\\int_0^{${T}} u(t - ${p})\\,dt = ${T - p}, \\qquad \\int_0^{${T}} u(t - ${q})\\,dt = ${T - q}`,
+        ),
+        labelled(
+          ["Add with the coefficients", "乘系数后相加"],
+          "",
+          "",
+          `${a} \\cdot ${T - p} + ${inParens(b)} \\cdot ${T - q} = ${answer}`,
+        ),
+      ],
+      [
+        `Piece by piece: the function is $${a}$ on $(${p}, ${q})$ and $${a + b}$ on $(${q}, ${T})$, so the area is $${a} \\cdot ${q - p} + ${inParens(a + b)} \\cdot ${T - q} = ${answer}$.`,
+        `分段计算：函数在 $(${p}, ${q})$ 上为 $${a}$，在 $(${q}, ${T})$ 上为 $${a + b}$，所以面积为 $${a} \\cdot ${q - p} + ${inParens(a + b)} \\cdot ${T - q} = ${answer}$。`,
+      ],
+      [
+        [
+          a * T + b * T,
+          "That integrates each step over the whole interval; each is zero until it switches on.",
+          "这把每个阶跃都在整个区间上积分；每个阶跃在接通之前都是零。",
+        ],
+        [
+          a * p + b * q,
+          "That uses the switch-on times as the widths; the widths are the times from the switch-on to the end.",
+          "这把接通时刻当成了宽度；宽度是从接通到终点的时间。",
+        ],
+        [a * (T - p), "That leaves out the second step.", "这漏掉了第二个阶跃。"],
+        [
+          a * (T - p) - b * (T - q),
+          "That subtracts the second rectangle; its coefficient already carries its sign.",
+          "这减去了第二个矩形；它的系数本身已经带着符号。",
+        ],
+      ],
+      "integer",
+    );
   },
 };
 
@@ -1916,27 +2055,57 @@ const inverseDividedByS: KnowledgePointDef = {
   id: "inverting-a-transform-divided-by-s",
   title: t("Inverting a transform divided by s", "求除以 s 后的变换的逆"),
   explanation: t(
-    "Dividing a transform by $s$ corresponds to integrating the function: $\\mathcal{L}^{-1}\\left\\{\\frac{F(s)}{s}\\right\\} = \\int_0^t f(\\tau)\\,d\\tau$. This often replaces partial fractions. To invert $\\frac{c}{s(s + a)}$, recognize $\\frac{c}{s + a}$ as the transform of $ce^{-at}$ and integrate that from $0$ to $t$.",
-    "把变换除以 $s$ 相当于对函数积分：$\\mathcal{L}^{-1}\\left\\{\\frac{F(s)}{s}\\right\\} = \\int_0^t f(\\tau)\\,d\\tau$。这常常可以代替部分分式。要求 $\\frac{c}{s(s + a)}$ 的逆变换，先认出 $\\frac{c}{s + a}$ 是 $ce^{-at}$ 的变换，再把它从 $0$ 积分到 $t$。",
+    "Dividing a transform by $s$ corresponds to integrating the function: $\\mathcal{L}^{-1}\\left\\{\\frac{F(s)}{s}\\right\\} = \\int_0^t f(\\tau)\\,d\\tau$. This often replaces partial fractions. To invert $\\frac{c}{s(s + a)}$, recognize $\\frac{c}{s + a}$ as the transform of $ce^{-at}$ and integrate that from $0$ to $t$.\n\n> **Watch out.** Integrating $e^{-at}$ divides by $a$; it does not multiply. For $\\frac{6}{s(s + 3)}$, $\\int_0^t 6e^{-3\\tau}\\,d\\tau = 2\\left(1 - e^{-3t}\\right)$, not $18\\left(1 - e^{-3t}\\right)$.",
+    "把变换除以 $s$ 相当于对函数积分：$\\mathcal{L}^{-1}\\left\\{\\frac{F(s)}{s}\\right\\} = \\int_0^t f(\\tau)\\,d\\tau$。这常常可以代替部分分式。要求 $\\frac{c}{s(s + a)}$ 的逆变换，先认出 $\\frac{c}{s + a}$ 是 $ce^{-at}$ 的变换，再把它从 $0$ 积分到 $t$。\n\n> **注意。** 对 $e^{-at}$ 积分要除以 $a$，而不是乘以 $a$。对 $\\frac{6}{s(s + 3)}$，$\\int_0^t 6e^{-3\\tau}\\,d\\tau = 2\\left(1 - e^{-3t}\\right)$，不是 $18\\left(1 - e^{-3t}\\right)$。",
   ),
   generate(rng) {
     const c = rng.int(1, 12);
-    const a = rng.int(1, 9);
+    const a = rng.int(2, 9);
     const answer = Q.of(c, a);
     const decay = exponential(-a, "t");
-    return numberProblem({
-      prompt: t(
+    const decayTau = exponential(-a, "\\tau");
+    const den = answer.d === 1n ? "" : `${answer.d}`;
+    const split = `\\frac{${answer.n}}{${den}s} - \\frac{${answer.n}}{${den === "" ? `s + ${a}` : `${den}(s + ${a})`}}`;
+    return explainedNumber(
+      [
         `$\\mathcal{L}^{-1}\\left\\{\\frac{${c}}{s(s + ${a})}\\right\\} = K\\left(1 - ${decay}\\right)$. Find $K$.`,
         `$\\mathcal{L}^{-1}\\left\\{\\frac{${c}}{s(s + ${a})}\\right\\} = K\\left(1 - ${decay}\\right)$。求 $K$。`,
-      ),
+      ],
       answer,
-      solveFor: "K",
-      wrong: [c, Q.of(a, c), Q.of(-c, a), c * a],
-      solution: t(
-        `The fraction without the factor $s$ is the transform of $${poly([c, exponential(-a, "t")])}$. Integrating it from $0$ to $t$ divides by the rate $${a}$ and gives the factor $1 - ${decay}$, so $K = ${answer.toLatex()}$.`,
-        `去掉因子 $s$ 后的分式是 $${poly([c, exponential(-a, "t")])}$ 的变换。把它从 $0$ 积分到 $t$，要除以速率 $${a}$，并得到因子 $1 - ${decay}$，所以 $K = ${answer.toLatex()}$。`,
-      ),
-    });
+      [
+        labelled(
+          ["Invert without the factor s", "先不看因子 s 求逆"],
+          "",
+          "",
+          `\\mathcal{L}^{-1}\\left\\{\\frac{${c}}{s + ${a}}\\right\\} = ${poly([c, decay])}`,
+        ),
+        labelled(
+          ["Integrate from 0 to t", "从 0 积分到 t"],
+          "Dividing by $s$ integrates the function:",
+          "除以 $s$ 就是对函数积分：",
+          `\\int_0^t ${poly([c, decayTau])}\\,d\\tau = ${answer.toLatex()}\\left(1 - ${decay}\\right)`,
+          `K = ${answer.toLatex()}`,
+        ),
+      ],
+      [
+        `Partial fractions agree: $\\frac{${c}}{s(s + ${a})} = ${split}$, which inverts to $${poly([answer, ""], [answer.neg(), decay])}$.`,
+        `部分分式也一致：$\\frac{${c}}{s(s + ${a})} = ${split}$，逆变换为 $${poly([answer, ""], [answer.neg(), decay])}$。`,
+      ],
+      [
+        [c, `That leaves out the division by $${a}$ that integrating $${decay}$ brings.`, `这漏掉了对 $${decay}$ 积分带来的除以 $${a}$。`],
+        [
+          Q.of(a, c),
+          `That divides $${a}$ by $${c}$; integrating divides $${c}$ by $${a}$.`,
+          `这用 $${a}$ 除以 $${c}$；积分是用 $${c}$ 除以 $${a}$。`,
+        ],
+        [
+          Q.of(-c, a),
+          `The sign is flipped; the integral of a positive function from $0$ to $t$ is positive.`,
+          "符号反了；正函数从 $0$ 到 $t$ 的积分是正的。",
+        ],
+        [c * a, `That multiplies by $${a}$; integrating $${decay}$ divides by it.`, `这乘以了 $${a}$；对 $${decay}$ 积分要除以它。`],
+      ],
+    );
   },
 };
 
@@ -1944,26 +2113,59 @@ const periodicPulseTrain: KnowledgePointDef = {
   id: "the-transform-of-a-periodic-pulse-train",
   title: t("The transform of a periodic pulse train", "周期脉冲序列的变换"),
   explanation: t(
-    "A function of period $P$ has transform $F(s) = \\frac{1}{1 - e^{-Ps}}\\int_0^P e^{-st}f(t)\\,dt$, because the later periods repeat the first one with growing delays. As $s \\to 0^+$, the first factor behaves like $\\frac{1}{Ps}$ and the integral tends to $\\int_0^P f$. So $sF(s)$ tends to the average of $f$ over a period.",
-    "周期为 $P$ 的函数的变换是 $F(s) = \\frac{1}{1 - e^{-Ps}}\\int_0^P e^{-st}f(t)\\,dt$，因为后面的周期只是第一个周期的延迟重复。当 $s \\to 0^+$ 时，第一个因子接近 $\\frac{1}{Ps}$，积分趋于 $\\int_0^P f$。所以 $sF(s)$ 趋于 $f$ 在一个周期上的平均值。",
+    "A function of period $P$ has transform $F(s) = \\frac{1}{1 - e^{-Ps}}\\int_0^P e^{-st}f(t)\\,dt$, because the later periods repeat the first one with growing delays. As $s \\to 0^+$, the first factor behaves like $\\frac{1}{Ps}$ and the integral tends to $\\int_0^P f$. So $sF(s)$ tends to the average of $f$ over a period.\n\n> **Watch out.** The limit is the average over the whole period, so divide the area of one pulse by the period, not by the width of the pulse. A pulse of height $4$ for $1$ unit in every $4$ has average $1$, not $4$.",
+    "周期为 $P$ 的函数的变换是 $F(s) = \\frac{1}{1 - e^{-Ps}}\\int_0^P e^{-st}f(t)\\,dt$，因为后面的周期只是第一个周期的延迟重复。当 $s \\to 0^+$ 时，第一个因子接近 $\\frac{1}{Ps}$，积分趋于 $\\int_0^P f$。所以 $sF(s)$ 趋于 $f$ 在一个周期上的平均值。\n\n> **注意。** 极限是整个周期上的平均值，所以要用一个脉冲的面积除以周期，而不是除以脉冲的宽度。每 $4$ 个单位中有 $1$ 个单位高度为 $4$ 的脉冲，平均值是 $1$，不是 $4$。",
   ),
   generate(rng) {
     const P = rng.int(2, 12);
     const d = rng.int(1, P - 1);
     const h = rng.int(2, 12);
     const answer = Q.of(h * d, P);
-    return numberProblem({
-      prompt: t(
+    const ds = exponential(-d, "s");
+    const Ps = exponential(-P, "s");
+    return explainedNumber(
+      [
         `$f$ has period $${P}$, with $f(t) = ${h}$ for $0 \\le t < ${d}$ and $f(t) = 0$ for $${d} \\le t < ${P}$. Its transform is $F(s)$. Find $\\lim_{s \\to 0^+} sF(s)$.`,
         `$f$ 的周期为 $${P}$，当 $0 \\le t < ${d}$ 时 $f(t) = ${h}$，当 $${d} \\le t < ${P}$ 时 $f(t) = 0$。它的变换是 $F(s)$。求 $\\lim_{s \\to 0^+} sF(s)$。`,
-      ),
+      ],
       answer,
-      wrong: [h * d, Q.of(h, P), Q.of(h * (P - d), P), h],
-      solution: t(
-        `The period formula gives $sF(s) = \\frac{${h}\\left(1 - ${exponential(-d, "s")}\\right)}{1 - ${exponential(-P, "s")}}$. For small $s$ the numerator is close to $${h} \\cdot ${multiple(d, "s")}$ and the denominator to $${P}s$, so the limit is $\\frac{${h * d}}{${P}}${lowestTerms(h * d, P)}$, the average of $f$.`,
-        `周期公式给出 $sF(s) = \\frac{${h}\\left(1 - ${exponential(-d, "s")}\\right)}{1 - ${exponential(-P, "s")}}$。$s$ 很小时，分子接近 $${h} \\cdot ${multiple(d, "s")}$，分母接近 $${P}s$，所以极限是 $\\frac{${h * d}}{${P}}${lowestTerms(h * d, P)}$，也就是 $f$ 的平均值。`,
-      ),
-    });
+      [
+        labelled(
+          ["Use the period formula", "用周期公式"],
+          "Only the first pulse is integrated:",
+          "只需对第一个脉冲积分：",
+          `\\int_0^${d < 10 ? d : `{${d}}`} ${h}e^{-st}\\,dt = \\frac{${h}\\left(1 - ${ds}\\right)}{s}, \\qquad sF(s) = \\frac{${h}\\left(1 - ${ds}\\right)}{1 - ${Ps}}`,
+        ),
+        labelled(
+          ["Let s tend to 0", "令 s 趋于 0"],
+          `For small $s$, $1 - ${ds} \\approx ${multiple(d, "s")}$ and $1 - ${Ps} \\approx ${P}s$:`,
+          `$s$ 很小时，$1 - ${ds} \\approx ${multiple(d, "s")}$，$1 - ${Ps} \\approx ${P}s$：`,
+          `\\lim_{s \\to 0^+} sF(s) = \\frac{${h} \\cdot ${d}}{${P}}${lowestTerms(h * d, P)}`,
+        ),
+      ],
+      [
+        `This is the average of $f$: one period has area $${h} \\cdot ${d} = ${h * d}$ spread over length $${P}$.`,
+        `这正是 $f$ 的平均值：一个周期的面积 $${h} \\cdot ${d} = ${h * d}$ 分布在长度 $${P}$ 上。`,
+      ],
+      [
+        [
+          h * d,
+          `That is the area of one pulse; the limit spreads it over the period $${P}$.`,
+          `这是一个脉冲的面积；极限要把它分摊到周期 $${P}$ 上。`,
+        ],
+        [Q.of(h, P), `That leaves out the width $${d}$ of the pulse.`, `这漏掉了脉冲的宽度 $${d}$。`],
+        [
+          Q.of(h * (P - d), P),
+          `That uses the time the pulse is off, $${P - d}$, in place of the time it is on.`,
+          `这用了脉冲关断的时间 $${P - d}$，应当用接通的时间。`,
+        ],
+        [
+          h,
+          "That is the height of the pulse, which is the average only if the pulse never switches off.",
+          "这是脉冲的高度；只有脉冲从不关断时它才是平均值。",
+        ],
+      ],
+    );
   },
 };
 
@@ -3563,8 +3765,8 @@ const polynomialTransform: KnowledgePointDef = {
   id: "the-transform-of-a-polynomial-at-a-point",
   title: t("The transform of a polynomial at a point", "多项式的变换在一点的值"),
   explanation: t(
-    "By linearity, a polynomial transforms one term at a time, using $\\mathcal{L}\\{t^n\\} = \\frac{n!}{s^{n + 1}}$. The factorial is the part that is easy to forget, since it does not appear for $1$ or $t$ and first matters at $t^2$. The power of $s$ is one more than the power of $t$. Once the transform is known as a function of $s$, its value at a point follows by substitution.",
-    "由线性性，多项式逐项变换，用 $\\mathcal{L}\\{t^n\\} = \\frac{n!}{s^{n + 1}}$。阶乘这部分容易被忘记，因为对 $1$ 或 $t$ 它不出现，到 $t^2$ 才开始起作用。$s$ 的幂比 $t$ 的幂大一。知道了变换作为 $s$ 的函数之后，代入就得到它在一点的值。",
+    "By linearity, a polynomial transforms one term at a time, using $\\mathcal{L}\\{t^n\\} = \\frac{n!}{s^{n + 1}}$. The factorial is the part that is easy to forget, since it does not appear for $1$ or $t$ and first matters at $t^2$. The power of $s$ is one more than the power of $t$. Once the transform is known as a function of $s$, its value at a point follows by substitution.\n\n> **Watch out.** The transform of $t^{2}$ is $\\frac{2}{s^{3}}$, not $\\frac{1}{s^{3}}$. For $f(t) = 3t^{2}$ at $s = 1$ the value is $6$, not $3$.",
+    "由线性性，多项式逐项变换，用 $\\mathcal{L}\\{t^n\\} = \\frac{n!}{s^{n + 1}}$。阶乘这部分容易被忘记，因为对 $1$ 或 $t$ 它不出现，到 $t^2$ 才开始起作用。$s$ 的幂比 $t$ 的幂大一。知道了变换作为 $s$ 的函数之后，代入就得到它在一点的值。\n\n> **注意。** $t^{2}$ 的变换是 $\\frac{2}{s^{3}}$，不是 $\\frac{1}{s^{3}}$。对 $f(t) = 3t^{2}$，在 $s = 1$ 处的值是 $6$，不是 $3$。",
   ),
   generate(rng) {
     const a = nonzero(rng, 9);
@@ -3578,18 +3780,43 @@ const polynomialTransform: KnowledgePointDef = {
     const fraction = (n: number, den: string) => `${n < 0 ? "-" : "+"} \\frac{${Math.abs(n)}}{${den}}`;
     const transform = `${a < 0 ? "-" : ""}\\frac{${Math.abs(a)}}{s} ${fraction(b, "s^2")} ${fraction(2 * c, "s^3")}`;
     const answer = at(a, b, 2 * c);
-    return numberProblem({
-      prompt: t(
+    const parts = [Q.of(a, s), Q.of(b, s * s), Q.of(2 * c, s ** 3)];
+    const sum = parts.map((v, i) => (i === 0 ? v.toLatex() : v.sign() < 0 ? `- ${v.neg().toLatex()}` : `+ ${v.toLatex()}`)).join(" ");
+    return explainedNumber(
+      [
         `Let $F(s)$ be the Laplace transform of $f(t) = ${poly([a, ""], [b, "t"], [c, "t^2"])}$. Find $F(${s})$.`,
         `设 $F(s)$ 是 $f(t) = ${poly([a, ""], [b, "t"], [c, "t^2"])}$ 的拉普拉斯变换。求 $F(${s})$。`,
-      ),
+      ],
       answer,
-      wrong: [at(a, b, c), Q.of(a + b + c, s), answer.add(Q.of(1)), answer.sub(Q.of(1))],
-      solution: t(
-        `The transform is $${transform}$. At $s = ${s}$, this equals $${answer.toLatex()}$.`,
-        `变换是 $${transform}$。在 $s = ${s}$ 处，它等于 $${answer.toLatex()}$。`,
-      ),
-    });
+      [
+        labelled(
+          ["Transform term by term", "逐项变换"],
+          "Use $\\mathcal{L}\\{1\\} = \\frac{1}{s}$, $\\mathcal{L}\\{t\\} = \\frac{1}{s^2}$ and $\\mathcal{L}\\{t^2\\} = \\frac{2}{s^3}$:",
+          "用 $\\mathcal{L}\\{1\\} = \\frac{1}{s}$，$\\mathcal{L}\\{t\\} = \\frac{1}{s^2}$，$\\mathcal{L}\\{t^2\\} = \\frac{2}{s^3}$：",
+          `F(s) = ${transform}`,
+        ),
+        labelled(["Substitute", "代入"], "", "", `F(${s}) = ${sum} = ${answer.toLatex()}`),
+      ],
+      [
+        `Each term follows the pattern $\\frac{n!}{s^{n + 1}}$: the constant $${a}$ gives $\\frac{${a}}{s}$ with $0! = 1$, and $${poly([c, "t^2"])}$ gives $\\frac{${inParens(c)} \\cdot 2!}{s^3}$, the source of the $${2 * c}$.`,
+        `每一项都符合 $\\frac{n!}{s^{n + 1}}$：常数 $${a}$ 给出 $\\frac{${a}}{s}$（$0! = 1$），$${poly([c, "t^2"])}$ 给出 $\\frac{${inParens(c)} \\cdot 2!}{s^3}$，这就是 $${2 * c}$ 的来源。`,
+      ],
+      [
+        [at(a, b, c), "That leaves out the factorial $2! = 2$ in the transform of $t^2$.", "这漏掉了 $t^2$ 的变换中的阶乘 $2! = 2$。"],
+        [
+          Q.of(a + b + c, s),
+          "That puts every term over $s$; the power of $s$ is one more than the power of $t$.",
+          "这把每一项都放在 $s$ 上；$s$ 的幂应比 $t$ 的幂大一。",
+        ],
+        [
+          Q.of(a)
+            .add(Q.of(b, s))
+            .add(Q.of(2 * c, s * s)),
+          "That uses $s^n$ in place of $s^{n + 1}$ for each $t^n$.",
+          "这对每个 $t^n$ 用了 $s^n$，应当是 $s^{n + 1}$。",
+        ],
+      ],
+    );
   },
 };
 
@@ -3597,8 +3824,8 @@ const powerTimesExponentialTransform: KnowledgePointDef = {
   id: "the-transform-of-a-power-times-an-exponential",
   title: t("The transform of a power times an exponential", "幂乘指数函数的变换"),
   explanation: t(
-    "Multiplying by $t$ corresponds to taking $-\\frac{d}{ds}$ of the transform. Starting with $\\frac{1}{s - a}$ for $e^{at}$ and repeating this gives $\\frac{n!}{(s - a)^{n + 1}}$ for $t^n e^{at}$. Each derivative raises the power in the denominator by one, and brings down a factor that builds the factorial. The minus sign in the rule cancels the minus sign from differentiating, so the result is positive for $s > a$.",
-    "乘以 $t$ 对应于对变换取 $-\\frac{d}{ds}$。从 $e^{at}$ 的 $\\frac{1}{s - a}$ 出发，反复这样做，就得到 $t^n e^{at}$ 的 $\\frac{n!}{(s - a)^{n + 1}}$。每次求导都把分母的幂升高一次，并带下一个构成阶乘的因子。法则中的负号抵消了求导产生的负号，所以当 $s > a$ 时结果为正。",
+    "Multiplying by $t$ corresponds to taking $-\\frac{d}{ds}$ of the transform. Starting with $\\frac{1}{s - a}$ for $e^{at}$ and repeating this gives $\\frac{n!}{(s - a)^{n + 1}}$ for $t^n e^{at}$. Each derivative raises the power in the denominator by one, and brings down a factor that builds the factorial. The minus sign in the rule cancels the minus sign from differentiating, so the result is positive for $s > a$.\n\n> **Watch out.** The power in the denominator is $n + 1$, one more than the power of $t$. For $te^{2t}$ at $s = 4$ the value is $\\frac{1}{(4 - 2)^{2}} = \\frac{1}{4}$, not $\\frac{1}{2}$.",
+    "乘以 $t$ 对应于对变换取 $-\\frac{d}{ds}$。从 $e^{at}$ 的 $\\frac{1}{s - a}$ 出发，反复这样做，就得到 $t^n e^{at}$ 的 $\\frac{n!}{(s - a)^{n + 1}}$。每次求导都把分母的幂升高一次，并带下一个构成阶乘的因子。法则中的负号抵消了求导产生的负号，所以当 $s > a$ 时结果为正。\n\n> **注意。** 分母的幂是 $n + 1$，比 $t$ 的幂大一。对 $te^{2t}$，在 $s = 4$ 处的值是 $\\frac{1}{(4 - 2)^{2}} = \\frac{1}{4}$，不是 $\\frac{1}{2}$。",
   ),
   generate(rng) {
     const n = rng.int(1, 3);
@@ -3607,26 +3834,53 @@ const powerTimesExponentialTransform: KnowledgePointDef = {
     const s = a + gap;
     const factorial = [1, 1, 2, 6][n] ?? 1;
     const answer = Q.of(factorial, gap ** (n + 1));
-    const other = Math.abs(s + a) || 1;
-    return numberProblem({
-      prompt: t(
+    const shift = poly([1, "s"], [-a, ""]);
+    const reasons: [Q, string, string][] = [
+      [Q.of(1, gap ** (n + 1)), `That leaves out the factor $${n}! = ${factorial}$.`, `这漏掉了因子 $${n}! = ${factorial}$。`],
+      [
+        Q.of(factorial, gap ** n),
+        `That uses the power $${n}$; the denominator has the power $${n + 1}$.`,
+        `这用了幂 $${n}$；分母的幂是 $${n + 1}$。`,
+      ],
+    ];
+    if (s + a !== 0)
+      reasons.push([
+        Q.of(factorial, (s + a) ** (n + 1)),
+        `That shifts the wrong way, using $${poly([1, "s"], [a, ""])}$; the factor $e^{${exponentOf(a, "t")}}$ gives $${shift}$.`,
+        `这向反方向平移，用了 $${poly([1, "s"], [a, ""])}$；因子 $e^{${exponentOf(a, "t")}}$ 给出的是 $${shift}$。`,
+      ]);
+    if (s !== 0)
+      reasons.push([
+        Q.of(factorial, s ** (n + 1)),
+        `That leaves out the shift from $e^{${exponentOf(a, "t")}}$ and evaluates at $${s}$ itself.`,
+        `这漏掉了 $e^{${exponentOf(a, "t")}}$ 带来的平移，直接在 $${s}$ 处取值。`,
+      ]);
+    return explainedNumber(
+      [
         `Find the Laplace transform of $${signedPower("t", n)}e^{${exponentOf(a, "t")}}$ at $s = ${s}$.`,
         `求 $${signedPower("t", n)}e^{${exponentOf(a, "t")}}$ 的拉普拉斯变换在 $s = ${s}$ 处的值。`,
-      ),
-      answer,
-      wrong: [
-        Q.of(1, gap ** (n + 1)),
-        Q.of(factorial, gap ** n),
-        Q.of(factorial, other ** (n + 1)),
-        answer.add(Q.of(1)),
-        Q.of(factorial, (gap + 1) ** (n + 1)),
-        Q.of(factorial + 1, gap ** (n + 1)),
       ],
-      solution: t(
-        `The transform is $\\frac{${factorial}}{(${poly([1, "s"], [-a, ""])})^{${n + 1}}}$, and here $${poly([1, "s"], [-a, ""])} = ${gap}$. This gives $${answer.toLatex()}$.`,
-        `变换是 $\\frac{${factorial}}{(${poly([1, "s"], [-a, ""])})^{${n + 1}}}$，这里 $${poly([1, "s"], [-a, ""])} = ${gap}$。于是得 $${answer.toLatex()}$。`,
-      ),
-    });
+      answer,
+      [
+        labelled(
+          ["Write the transform", "写出变换"],
+          `With $n = ${n}$ and $a = ${a}$:`,
+          `其中 $n = ${n}$，$a = ${a}$：`,
+          `\\mathcal{L}\\{${signedPower("t", n)}e^{${exponentOf(a, "t")}}\\} = \\frac{${factorial}}{(${shift})^{${n + 1}}}`,
+        ),
+        labelled(
+          ["Substitute", "代入"],
+          "",
+          "",
+          `${s} - ${inParens(a)} = ${gap}, \\qquad \\frac{${factorial}}{${gap}^{${n + 1}}} = ${answer.toLatex()}`,
+        ),
+      ],
+      [
+        `By the first shifting theorem, $\\mathcal{L}\\{${signedPower("t", n)}\\} = \\frac{${factorial}}{s^{${n + 1}}}$ evaluated at $s - ${inParens(a)} = ${gap}$ gives the same $${answer.toLatex()}$.`,
+        `由第一平移定理，$\\mathcal{L}\\{${signedPower("t", n)}\\} = \\frac{${factorial}}{s^{${n + 1}}}$ 在 $s - ${inParens(a)} = ${gap}$ 处取值，同样得 $${answer.toLatex()}$。`,
+      ],
+      reasons,
+    );
   },
 };
 
@@ -3634,8 +3888,8 @@ const transformedNumerator: KnowledgePointDef = {
   id: "the-numerator-of-a-transformed-equation",
   title: t("The numerator of a transformed equation", "变换后方程的分子"),
   explanation: t(
-    "Transforming $y'' + ay' + by = 0$ uses $\\mathcal{L}\\{y''\\} = s^2Y - sy(0) - y'(0)$ and $\\mathcal{L}\\{y'\\} = sY - y(0)$. Gathering the terms in $Y$ gives the characteristic polynomial as denominator, and the initial values all collect in the numerator. Notice that $y(0)$ appears twice, because the damping term contributes to the constant part. This extra product $ay(0)$ is the part of the numerator that is most often left out.",
-    "变换 $y'' + ay' + by = 0$ 要用 $\\mathcal{L}\\{y''\\} = s^2Y - sy(0) - y'(0)$ 和 $\\mathcal{L}\\{y'\\} = sY - y(0)$。合并 $Y$ 的项后，分母是特征多项式，初值都集中在分子。注意 $y(0)$ 出现两次，因为阻尼项也贡献给常数部分。这个额外的乘积 $ay(0)$ 是分子中最常被遗漏的部分。",
+    "Transforming $y'' + ay' + by = 0$ uses $\\mathcal{L}\\{y''\\} = s^2Y - sy(0) - y'(0)$ and $\\mathcal{L}\\{y'\\} = sY - y(0)$. Gathering the terms in $Y$ gives the characteristic polynomial as denominator, and the initial values all collect in the numerator. Notice that $y(0)$ appears twice, because the damping term contributes to the constant part. This extra product $ay(0)$ is the part of the numerator that is most often left out.\n\n> **Watch out.** For $y'' + 3y' + 2y = 0$ with $y(0) = 1$ and $y'(0) = 4$, the numerator is $s + 4 + 3 \\cdot 1 = s + 7$, so $K = 7$, not $4$.",
+    "变换 $y'' + ay' + by = 0$ 要用 $\\mathcal{L}\\{y''\\} = s^2Y - sy(0) - y'(0)$ 和 $\\mathcal{L}\\{y'\\} = sY - y(0)$。合并 $Y$ 的项后，分母是特征多项式，初值都集中在分子。注意 $y(0)$ 出现两次，因为阻尼项也贡献给常数部分。这个额外的乘积 $ay(0)$ 是分子中最常被遗漏的部分。\n\n> **注意。** 对 $y'' + 3y' + 2y = 0$，$y(0) = 1$，$y'(0) = 4$，分子是 $s + 4 + 3 \\cdot 1 = s + 7$，所以 $K = 7$，不是 $4$。",
   ),
   generate(rng) {
     const a = nonzero(rng, 6);
@@ -3643,19 +3897,43 @@ const transformedNumerator: KnowledgePointDef = {
     const p = nonzero(rng, 6);
     const q = nonzero(rng, 9);
     const answer = q + a * p;
-    return numberProblem({
-      prompt: t(
-        `For $${poly([1, "y''"], [a, "y'"], [b, "y"])} = 0$ with $y(0) = ${p}$ and $y'(0) = ${q}$, the transform has the form $Y(s) = \\frac{As + K}{${poly([1, "s^2"], [a, "s"], [b, ""])}}$. Find $K$.`,
-        `对 $${poly([1, "y''"], [a, "y'"], [b, "y"])} = 0$，$y(0) = ${p}$，$y'(0) = ${q}$，变换的形式是 $Y(s) = \\frac{As + K}{${poly([1, "s^2"], [a, "s"], [b, ""])}}$。求 $K$。`,
-      ),
+    const den = poly([1, "s^2"], [a, "s"], [b, ""]);
+    return explainedNumber(
+      [
+        `For $${poly([1, "y''"], [a, "y'"], [b, "y"])} = 0$ with $y(0) = ${p}$ and $y'(0) = ${q}$, the transform has the form $Y(s) = \\frac{As + K}{${den}}$. Find $K$.`,
+        `对 $${poly([1, "y''"], [a, "y'"], [b, "y"])} = 0$，$y(0) = ${p}$，$y'(0) = ${q}$，变换的形式是 $Y(s) = \\frac{As + K}{${den}}$。求 $K$。`,
+      ],
       answer,
-      form: "integer",
-      wrong: [q, q - a * p, a * p, answer + 1, answer - 1],
-      solution: t(
-        `The numerator is $y(0)s + y'(0) + ay(0)$ with $a = ${a}$, so $K = ${q} + ${inParens(a)} \\cdot ${inParens(p)} = ${answer}$.`,
-        `分子是 $y(0)s + y'(0) + ay(0)$，其中 $a = ${a}$，所以 $K = ${q} + ${inParens(a)} \\cdot ${inParens(p)} = ${answer}$。`,
-      ),
-    });
+      [
+        labelled(
+          ["Transform each term", "逐项变换"],
+          "",
+          "",
+          `${poly([1, `\\left(s^2Y - ${inParens(p)}s - ${inParens(q)}\\right)`], [a, `\\left(sY - ${inParens(p)}\\right)`], [b, "Y"])} = 0`,
+        ),
+        labelled(
+          ["Collect the initial values", "合并初值"],
+          "Everything without $Y$ moves to the right:",
+          "不含 $Y$ 的项移到右边：",
+          `(${den})Y = ${poly([p, "s"])} + ${inParens(q)} + ${inParens(a)} \\cdot ${inParens(p)} = ${poly([p, "s"], [answer, ""])}`,
+          `K = ${answer}`,
+        ),
+      ],
+      [
+        `$K = y'(0) + ay(0) = ${q} + ${inParens(a * p)} = ${answer}$, and $A = y(0) = ${p}$.`,
+        `$K = y'(0) + ay(0) = ${q} + ${inParens(a * p)} = ${answer}$，而 $A = y(0) = ${p}$。`,
+      ],
+      [
+        [
+          q,
+          `That leaves out $ay(0) = ${a * p}$, which the term $${poly([a, "y'"])}$ brings.`,
+          `这漏掉了 $${poly([a, "y'"])}$ 一项带来的 $ay(0) = ${a * p}$。`,
+        ],
+        [q - a * p, "That subtracts $ay(0)$; it moves to the right side with a plus sign.", "这减去了 $ay(0)$；移到右边时它带正号。"],
+        [a * p, "That leaves out $y'(0)$, which the transform of $y''$ brings.", "这漏掉了 $y''$ 的变换带来的 $y'(0)$。"],
+      ],
+      "integer",
+    );
   },
 };
 
