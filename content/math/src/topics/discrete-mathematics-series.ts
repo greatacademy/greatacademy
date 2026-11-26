@@ -643,6 +643,18 @@ const factorsTex = (r: Q, k: number) =>
     .map((i) => `\\left(${r.sub(Q.of(i)).toLatex()}\\right)`)
     .join("");
 
+/** qmul writes the product of two rationals, dropping a factor of 1 or −1 to a sign. */
+const qmul = (a: Q, b: Q) =>
+  a.eq(Q.of(1))
+    ? pq(b)
+    : a.eq(Q.of(-1))
+      ? `-${pq(b)}`
+      : b.eq(Q.of(1))
+        ? a.toLatex()
+        : b.eq(Q.of(-1))
+          ? `-${pq(a)}`
+          : `${pq(a)} \\cdot ${pq(b)}`;
+
 /** theGeneralizedBinomialTheorem expands (1 + x)ʳ for any rational r. */
 export const theGeneralizedBinomialTheorem: TopicDef = {
   id: "the-generalized-binomial-theorem",
@@ -650,6 +662,10 @@ export const theGeneralizedBinomialTheorem: TopicDef = {
   summary: t(
     "For any real r and |x| < 1, (1 + x)ʳ = Σₖ C(r, k) xᵏ, where C(r, k) = r(r − 1)⋯(r − k + 1)/k!. Unless r is a natural number, the series never ends.",
     "对任意实数 r 和 |x| < 1，(1 + x)ʳ = Σₖ C(r, k) xᵏ，其中 C(r, k) = r(r − 1)⋯(r − k + 1)/k!。除非 r 是自然数，否则级数不会终止。",
+  ),
+  intro: t(
+    "With $r = -4$, the coefficients are $\\binom{-4}{1} = -4$, $\\binom{-4}{2} = \\frac{(-4)(-5)}{2!} = 10$ and $\\binom{-4}{3} = \\frac{(-4)(-5)(-6)}{3!} = -20$, so $(1 + x)^{-4} = 1 - 4x + 10x^2 - 20x^3 + \\cdots$, a series that never ends.\n\nCheck: the sizes $1, 4, 10, 20$ are $\\binom{3}{3}, \\binom{4}{3}, \\binom{5}{3}, \\binom{6}{3}$, as the identity $\\binom{-4}{k} = (-1)^k\\binom{k + 3}{3}$ predicts.\n\nIn this lesson we compute generalized binomial coefficients and use them to find coefficients in expansions of $(1 + cx)^r$.",
+    "取 $r = -4$，系数为 $\\binom{-4}{1} = -4$，$\\binom{-4}{2} = \\frac{(-4)(-5)}{2!} = 10$，$\\binom{-4}{3} = \\frac{(-4)(-5)(-6)}{3!} = -20$，所以 $(1 + x)^{-4} = 1 - 4x + 10x^2 - 20x^3 + \\cdots$，这个级数不会终止。\n\n检验：绝对值 $1, 4, 10, 20$ 正是 $\\binom{3}{3}, \\binom{4}{3}, \\binom{5}{3}, \\binom{6}{3}$，与恒等式 $\\binom{-4}{k} = (-1)^k\\binom{k + 3}{3}$ 一致。\n\n本课我们计算广义二项式系数，并用它们求 $(1 + cx)^r$ 展开式中的系数。",
   ),
   prerequisites: ["the-special-case-of-the-binomial-theorem", "convergent-and-divergent-infinite-series"],
   encompasses: [],
@@ -660,30 +676,60 @@ export const theGeneralizedBinomialTheorem: TopicDef = {
       id: "generalized-binomial-coefficients",
       title: t("Generalized binomial coefficients", "广义二项式系数"),
       explanation: t(
-        "The definition by a falling product makes sense for any exponent, including negative numbers and fractions, not just whole numbers. $\\binom{-1/2}{3} = \\frac{(-\\frac{1}{2})(-\\frac{3}{2})(-\\frac{5}{2})}{3!} = \\frac{-15/8}{6} = -\\frac{5}{16}$: multiply $k$ factors, each one less than the last, and divide by $k!$.",
-        "用下降乘积给出的定义对任何指数都有意义，包括负数和分数，而不只是整数。$\\binom{-1/2}{3} = \\frac{(-\\frac{1}{2})(-\\frac{3}{2})(-\\frac{5}{2})}{3!} = \\frac{-15/8}{6} = -\\frac{5}{16}$：把 $k$ 个依次减一的因子相乘，再除以 $k!$。",
+        "The definition by a falling product makes sense for any exponent, including negative numbers and fractions, not just whole numbers. $\\binom{-5/2}{2} = \\frac{(-\\frac{5}{2})(-\\frac{7}{2})}{2!} = \\frac{35/4}{2} = \\frac{35}{8}$: multiply $k$ factors, each one less than the last, and divide by $k!$.\n\n> **Watch out.** Each factor is one less than the one before, so with a negative $r$ the factors move away from zero, not towards it; and do not forget to divide by $k!$.",
+        "用下降乘积给出的定义对任何指数都有意义，包括负数和分数，而不只是整数。$\\binom{-5/2}{2} = \\frac{(-\\frac{5}{2})(-\\frac{7}{2})}{2!} = \\frac{35/4}{2} = \\frac{35}{8}$：把 $k$ 个依次减一的因子相乘，再除以 $k!$。\n\n> **注意。** 每个因子都比前一个小一，所以 $r$ 为负时因子离零越来越远，而不是靠近零；也不要忘了除以 $k!$。",
       ),
       generate(rng) {
         const r = rng.pick(EXPONENTS);
         const k = rng.int(2, 4);
         const value = genChoose(r, k);
+        const prev = genChoose(r, k - 1);
+        const ratio = r.sub(Q.of(k - 1)).div(Q.of(k));
+        const product = value.mul(Q.of(fact(k)));
         return numberProblem({
           prompt: t(
             `Evaluate the generalized binomial coefficient $\\binom{${r.toLatex()}}{${k}}$.`,
             `计算广义二项式系数 $\\binom{${r.toLatex()}}{${k}}$。`,
           ),
           answer: value,
-          wrong: [
-            value.neg(),
-            value.mul(Q.of(fact(k))),
-            genChoose(r, k - 1),
-            range(0, k - 1)
-              .reduce((s, i) => s.mul(r.add(Q.of(i))), Q.of(1))
-              .div(Q.of(fact(k))),
-          ],
-          solution: t(
-            `$\\binom{${r.toLatex()}}{${k}} = \\frac{${factorsTex(r, k)}}{${k}!} = ${value.toLatex()}$.`,
-            `$\\binom{${r.toLatex()}}{${k}} = \\frac{${factorsTex(r, k)}}{${k}!} = ${value.toLatex()}$。`,
+          mistakes: distinct(value, [
+            why(
+              value.neg(),
+              "That has the wrong sign; count the negative factors in the product.",
+              "那是符号错了；数一数乘积中负因子的个数。",
+            ),
+            why(product, `That forgets to divide by $${k}!$.`, `那是忘了除以 $${k}!$。`),
+            why(
+              prev,
+              `That uses only $${k - 1}$ factors; $\\binom{r}{${k}}$ has $${k}$ of them.`,
+              `那是只用了 $${k - 1}$ 个因子；$\\binom{r}{${k}}$ 有 $${k}$ 个。`,
+            ),
+            why(
+              range(0, k - 1)
+                .reduce((s, i) => s.mul(r.add(Q.of(i))), Q.of(1))
+                .div(Q.of(fact(k))),
+              "That increases each factor by one; the factors go down by one.",
+              "那是让每个因子加一；因子应依次减一。",
+            ),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Multiply the factors", "因子相乘"],
+                t(`$${factorsTex(r, k)} = ${product.toLatex()}$.`, `$${factorsTex(r, k)} = ${product.toLatex()}$。`),
+              ],
+              [
+                ["Divide by the factorial", "除以阶乘"],
+                t(
+                  `$\\frac{${product.toLatex()}}{${fact(k)}} = ${value.toLatex()}$.`,
+                  `$\\frac{${product.toLatex()}}{${fact(k)}} = ${value.toLatex()}$。`,
+                ),
+              ],
+            ],
+            t(
+              `$\\binom{${r.toLatex()}}{${k - 1}} = ${prev.toLatex()}$, and multiplying it by $\\frac{r - ${k - 1}}{${k}} = ${ratio.toLatex()}$ gives $${value.toLatex()}$.`,
+              `$\\binom{${r.toLatex()}}{${k - 1}} = ${prev.toLatex()}$，乘以 $\\frac{r - ${k - 1}}{${k}} = ${ratio.toLatex()}$ 得 $${value.toLatex()}$。`,
+            ),
           ),
         });
       },
@@ -692,32 +738,68 @@ export const theGeneralizedBinomialTheorem: TopicDef = {
       id: "coefficients-in-generalized-expansions",
       title: t("Coefficients of (1 + cx)ʳ", "(1 + cx)ʳ 的系数"),
       explanation: t(
-        "Each term of the expansion is a generalized binomial coefficient times a power of the whole term inside, including its coefficient and sign. In $(1 - 2x)^{-3}$, the $x^2$ term is $\\binom{-3}{2}(-2x)^2 = 6 \\cdot 4x^2 = 24x^2$. Raise $c$, sign included, to the power $k$.",
-        "展开式的每一项都是广义二项式系数乘以括号内整个项的幂，包括它的系数和符号。在 $(1 - 2x)^{-3}$ 中，$x^2$ 项为 $\\binom{-3}{2}(-2x)^2 = 6 \\cdot 4x^2 = 24x^2$。要把 $c$ 连同符号一起取 $k$ 次方。",
+        "Each term of the expansion is a generalized binomial coefficient times a power of the whole term inside, including its coefficient and sign. In $(1 - 5x)^{-3}$, the $x^2$ term is $\\binom{-3}{2}(-5x)^2 = 6 \\cdot 25x^2 = 150x^2$.\n\n> **Watch out.** Raise $c$, sign included, to the power $k$, not just to the first power; and the sign of $c$ matters when $k$ is odd.",
+        "展开式的每一项都是广义二项式系数乘以括号内整个项的幂，包括它的系数和符号。在 $(1 - 5x)^{-3}$ 中，$x^2$ 项为 $\\binom{-3}{2}(-5x)^2 = 6 \\cdot 25x^2 = 150x^2$。\n\n> **注意。** 要把 $c$ 连同符号一起取 $k$ 次方，而不只是一次方；$k$ 为奇数时，$c$ 的符号会影响结果。",
       ),
       generate(rng) {
         const r = rng.pick(EXPONENTS);
         const c = rng.pick([-4, -3, -2, -1, 2, 3, 4]);
         const k = rng.int(1, 3);
-        const value = genChoose(r, k).mul(Q.of(c).pow(k));
+        const gc = genChoose(r, k);
+        const ck = Q.of(c).pow(k);
+        const value = gc.mul(ck);
         const inner = `1 ${c < 0 ? "-" : "+"} ${Math.abs(c) === 1 ? "" : Math.abs(c)}x`;
+        const prev = genChoose(r, k - 1).mul(Q.of(c).pow(k - 1));
+        const cpow = k === 1 ? `${c}` : `${pn(c)}^{${k}}`;
+        const ratio = r
+          .sub(Q.of(k - 1))
+          .mul(Q.of(c))
+          .div(Q.of(k));
         return numberProblem({
           prompt: t(
             `Find the coefficient of $${xk(k)}$ in the expansion of $(${inner})^{${rTex(r)}}$.`,
             `求 $(${inner})^{${rTex(r)}}$ 展开式中 $${xk(k)}$ 的系数。`,
           ),
           answer: value,
-          wrong: [
-            genChoose(r, k).mul(Q.of(c)),
-            genChoose(r, k),
-            genChoose(r, k).mul(Q.of(-c).pow(k)),
-            genChoose(r, k)
-              .mul(Q.of(c).pow(k))
-              .mul(Q.of(fact(k))),
-          ],
-          solution: t(
-            `The $${xk(k)}$ term is $\\binom{${r.toLatex()}}{${k}}(${poly([[c, "x"]])})^{${k}} = ${genChoose(r, k).toLatex()} \\cdot ${Q.of(c).pow(k).eq(Q.one) ? "" : pq(Q.of(c).pow(k))}${xk(k)}$, so the coefficient is $${value.toLatex()}$.`,
-            `$${xk(k)}$ 项为 $\\binom{${r.toLatex()}}{${k}}(${poly([[c, "x"]])})^{${k}} = ${genChoose(r, k).toLatex()} \\cdot ${Q.of(c).pow(k).eq(Q.one) ? "" : pq(Q.of(c).pow(k))}${xk(k)}$，所以系数为 $${value.toLatex()}$。`,
+          mistakes: distinct(value, [
+            why(
+              gc.mul(Q.of(c)),
+              `That raises $${c}$ only to the first power; it must be raised to the power $${k}$.`,
+              `那是只把 $${c}$ 取了一次方；应取 $${k}$ 次方。`,
+            ),
+            why(gc, `That leaves out the factor $${cpow}$ from the term inside.`, `那是漏掉了括号内的因子 $${cpow}$。`),
+            why(gc.mul(Q.of(-c).pow(k)), `That drops the sign of $${c}$.`, `那是丢掉了 $${c}$ 的符号。`),
+            why(
+              value.mul(Q.of(fact(k))),
+              `That forgets to divide by $${k}!$ in the binomial coefficient.`,
+              `那是在二项式系数中忘了除以 $${k}!$。`,
+            ),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Find the binomial coefficient", "求二项式系数"],
+                t(`$\\binom{${r.toLatex()}}{${k}} = ${gc.toLatex()}$.`, `$\\binom{${r.toLatex()}}{${k}} = ${gc.toLatex()}$。`),
+              ],
+              ...(k > 1
+                ? [
+                    [
+                      ["Raise the inner coefficient", "内层系数取幂"],
+                      t(`$${pn(c)}^{${k}} = ${ck.toLatex()}$.`, `$${pn(c)}^{${k}} = ${ck.toLatex()}$。`),
+                    ] as const,
+                  ]
+                : []),
+              [["Multiply", "相乘"], t(`$${qmul(gc, ck)} = ${value.toLatex()}$.`, `$${qmul(gc, ck)} = ${value.toLatex()}$。`)],
+            ],
+            k === 1
+              ? t(
+                  `Starting from the constant term $1$, the ratio of the next term is $r \\cdot c = ${ratio.toLatex()}$, which is the coefficient $${value.toLatex()}$.`,
+                  `从常数项 $1$ 开始，下一项与它之比为 $r \\cdot c = ${ratio.toLatex()}$，正是系数 $${value.toLatex()}$。`,
+                )
+              : t(
+                  `The $${xk(k - 1)}$ coefficient is $${prev.toLatex()}$, and multiplying it by the ratio $\\frac{(r - ${k - 1})c}{${k}} = ${ratio.toLatex()}$ gives $${value.toLatex()}$.`,
+                  `$${xk(k - 1)}$ 的系数为 $${prev.toLatex()}$，乘以比值 $\\frac{(r - ${k - 1})c}{${k}} = ${ratio.toLatex()}$ 得 $${value.toLatex()}$。`,
+                ),
           ),
         });
       },
@@ -761,6 +843,10 @@ export const workingWithTheGeneralizedBinomialTheorem: TopicDef = {
     "To expand (a + bx)ʳ, factor out a: (a + bx)ʳ = aʳ(1 + (b/a)x)ʳ. Products like (p + qx)(1 + x)ʳ are expanded term by term.",
     "展开 (a + bx)ʳ 时先提出 a：(a + bx)ʳ = aʳ(1 + (b/a)x)ʳ。像 (p + qx)(1 + x)ʳ 这样的乘积逐项展开。",
   ),
+  intro: t(
+    "To expand $(10 + x)^{-1}$, factor out the $10$: $(10 + x)^{-1} = \\frac{1}{10}\\left(1 + \\frac{x}{10}\\right)^{-1} = \\frac{1}{10}\\left(1 - \\frac{x}{10} + \\frac{x^2}{100} - \\cdots\\right) = \\frac{1}{10} - \\frac{x}{100} + \\frac{x^2}{1000} - \\cdots$\n\nCheck: $(10 + x)\\left(\\frac{1}{10} - \\frac{x}{100} + \\frac{x^2}{1000}\\right) = 1 + \\frac{x^3}{1000}$, which is $1$ up to the first term left out.\n\nIn this lesson we expand $(a + bx)^r$ by factoring out $a^r$, and find coefficients in products such as $(p + qx)(1 + cx)^r$.",
+    "要展开 $(10 + x)^{-1}$，先提出 $10$：$(10 + x)^{-1} = \\frac{1}{10}\\left(1 + \\frac{x}{10}\\right)^{-1} = \\frac{1}{10}\\left(1 - \\frac{x}{10} + \\frac{x^2}{100} - \\cdots\\right) = \\frac{1}{10} - \\frac{x}{100} + \\frac{x^2}{1000} - \\cdots$\n\n检验：$(10 + x)\\left(\\frac{1}{10} - \\frac{x}{100} + \\frac{x^2}{1000}\\right) = 1 + \\frac{x^3}{1000}$，除去被略掉的第一项外正是 $1$。\n\n本课我们通过提出 $a^r$ 来展开 $(a + bx)^r$，并求 $(p + qx)(1 + cx)^r$ 这类乘积中的系数。",
+  ),
   prerequisites: ["the-generalized-binomial-theorem"],
   encompasses: [],
   xp: 10,
@@ -770,31 +856,80 @@ export const workingWithTheGeneralizedBinomialTheorem: TopicDef = {
       id: "expanding-a-plus-bx-to-a-power",
       title: t("Expanding (a + bx)ʳ", "展开 (a + bx)ʳ"),
       explanation: t(
-        "Factor out the constant term so the bracket starts with one, then expand and multiply back by the power of the constant. $\\sqrt{4 + x} = 2\\left(1 + \\frac{x}{4}\\right)^{1/2} = 2\\left(1 + \\frac{x}{8} - \\frac{x^2}{128} + \\cdots\\right)$, so the $x^2$ coefficient is $-\\frac{1}{64}$. Forgetting the factor $a^r$ is the usual slip.",
-        "先提出常数项使括号以 1 开头，再展开，最后乘回常数的幂。$\\sqrt{4 + x} = 2\\left(1 + \\frac{x}{4}\\right)^{1/2} = 2\\left(1 + \\frac{x}{8} - \\frac{x^2}{128} + \\cdots\\right)$，所以 $x^2$ 的系数为 $-\\frac{1}{64}$。常见错误是漏掉因子 $a^r$。",
+        "Factor out the constant term so the bracket starts with one, then expand and multiply back by the power of the constant. $\\sqrt{25 + x} = 5\\left(1 + \\frac{x}{25}\\right)^{1/2} = 5\\left(1 + \\frac{x}{50} - \\frac{x^2}{5000} + \\cdots\\right)$, so the $x^2$ coefficient is $-\\frac{1}{1000}$.\n\n> **Watch out.** Multiply back by $a^r$, not by $a$; and inside the bracket the coefficient of $x$ is $\\frac{b}{a}$, which must be raised to the power $k$ along with $x$.",
+        "先提出常数项使括号以 1 开头，再展开，最后乘回常数的幂。$\\sqrt{25 + x} = 5\\left(1 + \\frac{x}{25}\\right)^{1/2} = 5\\left(1 + \\frac{x}{50} - \\frac{x^2}{5000} + \\cdots\\right)$，所以 $x^2$ 的系数为 $-\\frac{1}{1000}$。\n\n> **注意。** 要乘回 $a^r$，而不是 $a$；括号内 $x$ 的系数是 $\\frac{b}{a}$，它要和 $x$ 一起取 $k$ 次方。",
       ),
       generate(rng) {
         const { a, r, ar } = randomBase(rng);
         const b = rng.pick([-3, -2, -1, 1, 2, 3]);
         const k = rng.int(1, 2);
         const ratio = Q.of(b, a);
-        const value = ar.mul(genChoose(r, k)).mul(ratio.pow(k));
+        const gc = genChoose(r, k);
+        const rk = ratio.pow(k);
+        const bracket = gc.mul(rk);
+        const value = ar.mul(bracket);
         const inner = `${a} ${b < 0 ? "-" : "+"} ${Math.abs(b) === 1 ? "" : Math.abs(b)}x`;
+        const rkTex = k === 1 ? `\\left(${ratio.toLatex()}\\right)` : `\\left(${ratio.toLatex()}\\right)^{${k}}`;
+        const prev = k === 1 ? ar : ar.mul(r).mul(ratio);
+        const step = (k === 1 ? r : r.sub(Q.of(1)).div(Q.of(2))).mul(ratio);
         return numberProblem({
           prompt: t(
             `Find the coefficient of $${xk(k)}$ in the expansion of $(${inner})^{${rTex(r)}}$.`,
             `求 $(${inner})^{${rTex(r)}}$ 展开式中 $${xk(k)}$ 的系数。`,
           ),
           answer: value,
-          wrong: [
-            genChoose(r, k).mul(ratio.pow(k)),
-            ar.mul(genChoose(r, k)).mul(Q.of(b).pow(k)),
-            ar.mul(genChoose(r, k)).mul(ratio),
-            Q.of(a).mul(genChoose(r, k)).mul(ratio.pow(k)),
-          ],
-          solution: t(
-            `$(${inner})^{${rTex(r)}} = ${ar.toLatex()}\\left(1 ${ratio.sign() < 0 ? "-" : "+"} ${qx(ratio.abs())}\\right)^{${rTex(r)}}$, so the coefficient is $${ar.toLatex()} \\cdot ${pq(genChoose(r, k))} \\cdot \\left(${ratio.toLatex()}\\right)^{${k}} = ${value.toLatex()}$.`,
-            `$(${inner})^{${rTex(r)}} = ${ar.toLatex()}\\left(1 ${ratio.sign() < 0 ? "-" : "+"} ${qx(ratio.abs())}\\right)^{${rTex(r)}}$，所以系数为 $${ar.toLatex()} \\cdot ${pq(genChoose(r, k))} \\cdot \\left(${ratio.toLatex()}\\right)^{${k}} = ${value.toLatex()}$。`,
+          mistakes: distinct(value, [
+            why(
+              bracket,
+              `That forgets to multiply back by $${a}^{${rTex(r)}} = ${ar.toLatex()}$.`,
+              `那是忘了乘回 $${a}^{${rTex(r)}} = ${ar.toLatex()}$。`,
+            ),
+            why(
+              ar.mul(gc).mul(Q.of(b).pow(k)),
+              `That uses $${b}$ in place of $\\frac{b}{a} = ${ratio.toLatex()}$ inside the bracket.`,
+              `那是在括号内用 $${b}$ 代替了 $\\frac{b}{a} = ${ratio.toLatex()}$。`,
+            ),
+            why(
+              ar.mul(gc).mul(ratio),
+              `That raises $${ratio.toLatex()}$ only to the first power, not to the power $${k}$.`,
+              `那是只把 $${ratio.toLatex()}$ 取了一次方，而不是 $${k}$ 次方。`,
+            ),
+            why(
+              Q.of(a).mul(bracket),
+              `That multiplies back by $${a}$ instead of $${a}^{${rTex(r)}}$.`,
+              `那是乘回了 $${a}$，而不是 $${a}^{${rTex(r)}}$。`,
+            ),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Factor out the constant", "提出常数"],
+                t(
+                  `$(${inner})^{${rTex(r)}} = ${ar.toLatex()}\\left(1 ${ratio.sign() < 0 ? "-" : "+"} ${qx(ratio.abs())}\\right)^{${rTex(r)}}$.`,
+                  `$(${inner})^{${rTex(r)}} = ${ar.toLatex()}\\left(1 ${ratio.sign() < 0 ? "-" : "+"} ${qx(ratio.abs())}\\right)^{${rTex(r)}}$。`,
+                ),
+              ],
+              [
+                ["Find the coefficient in the bracket", "求括号内的系数"],
+                t(
+                  `$\\binom{${r.toLatex()}}{${k}}${rkTex} = ${qmul(gc, rk)} = ${bracket.toLatex()}$.`,
+                  `$\\binom{${r.toLatex()}}{${k}}${rkTex} = ${qmul(gc, rk)} = ${bracket.toLatex()}$。`,
+                ),
+              ],
+              [
+                ["Multiply back", "乘回常数"],
+                t(`$${qmul(ar, bracket)} = ${value.toLatex()}$.`, `$${qmul(ar, bracket)} = ${value.toLatex()}$。`),
+              ],
+            ],
+            k === 1
+              ? t(
+                  `The constant term is $${ar.toLatex()}$, and multiplying it by the term ratio $r \\cdot \\frac{b}{a} = ${step.toLatex()}$ gives $${value.toLatex()}$.`,
+                  `常数项为 $${ar.toLatex()}$，乘以相邻项之比 $r \\cdot \\frac{b}{a} = ${step.toLatex()}$ 得 $${value.toLatex()}$。`,
+                )
+              : t(
+                  `The $x$ coefficient is $${prev.toLatex()}$, and multiplying it by the term ratio $\\frac{r - 1}{2} \\cdot \\frac{b}{a} = ${step.toLatex()}$ gives $${value.toLatex()}$.`,
+                  `$x$ 的系数为 $${prev.toLatex()}$，乘以相邻项之比 $\\frac{r - 1}{2} \\cdot \\frac{b}{a} = ${step.toLatex()}$ 得 $${value.toLatex()}$。`,
+                ),
           ),
         });
       },
@@ -803,8 +938,8 @@ export const workingWithTheGeneralizedBinomialTheorem: TopicDef = {
       id: "products-with-generalized-expansions",
       title: t("Products with expansions", "与展开式相乘"),
       explanation: t(
-        "To find a coefficient in a product, pair each term of one factor with the term of the other that brings the power up to the one you want. In $(2 + x)(1 - x)^{-1} = (2 + x)(1 + x + x^2 + \\cdots)$, the $x^2$ coefficient is $2 \\cdot 1 + 1 \\cdot 1 = 3$: pair $2$ with the $x^2$ term and $x$ with the $x$ term.",
-        "要求乘积中的某个系数，把一个因子的每一项与另一个因子中能把次数补到所需次数的项配对。在 $(2 + x)(1 - x)^{-1} = (2 + x)(1 + x + x^2 + \\cdots)$ 中，$x^2$ 的系数为 $2 \\cdot 1 + 1 \\cdot 1 = 3$：$2$ 配 $x^2$ 项，$x$ 配 $x$ 项。",
+        "To find a coefficient in a product, pair each term of one factor with the term of the other that brings the power up to the one you want. In $(5 + x)(1 - x)^{-1} = (5 + x)(1 + x + x^2 + \\cdots)$, the $x^2$ coefficient is $5 + 1 = 6$: pair $5$ with the $x^2$ term and $x$ with the $x$ term.\n\n> **Watch out.** The $qx$ term pairs with the $x^{k-1}$ term of the expansion, not the $x^k$ term; and both pairs must be added, not just the one with the constant.",
+        "要求乘积中的某个系数，把一个因子的每一项与另一个因子中能把次数补到所需次数的项配对。在 $(5 + x)(1 - x)^{-1} = (5 + x)(1 + x + x^2 + \\cdots)$ 中，$x^2$ 的系数为 $5 + 1 = 6$：$5$ 配 $x^2$ 项，$x$ 配 $x$ 项。\n\n> **注意。** $qx$ 项要配展开式的 $x^{k-1}$ 项，而不是 $x^k$ 项；两组配对都要相加，不能只算常数那一组。",
       ),
       generate(rng) {
         const r = rng.pick(EXPONENTS);
@@ -821,28 +956,78 @@ export const workingWithTheGeneralizedBinomialTheorem: TopicDef = {
           [p, ""],
           [q, "x"],
         ]);
+        const ratio = r
+          .sub(Q.of(k - 1))
+          .mul(Q.of(c))
+          .div(Q.of(k));
+        const inside = Q.of(p).mul(ratio).add(Q.of(q));
+        const low = term(k - 1);
+        const lowUnit = low.abs().eq(Q.of(1));
+        const lowSign = (lowUnit ? q * low.sign() : q) < 0 ? "-" : "+";
+        const pair = `${qmul(Q.of(p), term(k))} ${lowSign} ${lowUnit ? Math.abs(q) : qmul(Q.of(Math.abs(q)), low)}`;
         return numberProblem({
           prompt: t(
             `Find the coefficient of $${xk(k)}$ in the expansion of $(${lin})(${inner})^{${rTex(r)}}$.`,
             `求 $(${lin})(${inner})^{${rTex(r)}}$ 展开式中 $${xk(k)}$ 的系数。`,
           ),
           answer: value,
-          wrong: [
-            Q.of(p).mul(term(k)),
-            Q.of(q).mul(term(k - 1)),
-            Q.of(p + q).mul(term(k)),
-            Q.of(p)
-              .mul(term(k - 1))
-              .add(Q.of(q).mul(term(k))),
-          ],
-          solution: t(
-            `The expansion has $${xk(k - 1)}$ coefficient $${term(k - 1).toLatex()}$ and $${xk(k)}$ coefficient $${term(k).toLatex()}$, so the answer is $${p} \\cdot ${pq(term(k))} + ${pn(q)} \\cdot ${pq(term(k - 1))} = ${value.toLatex()}$.`,
-            `展开式中 $${xk(k - 1)}$ 的系数为 $${term(k - 1).toLatex()}$，$${xk(k)}$ 的系数为 $${term(k).toLatex()}$，所以答案为 $${p} \\cdot ${pq(term(k))} + ${pn(q)} \\cdot ${pq(term(k - 1))} = ${value.toLatex()}$。`,
+          mistakes: distinct(value, [
+            why(
+              Q.of(p).mul(term(k)),
+              `That keeps only the pair with $${p}$ and forgets the pair with the $x$ term.`,
+              `那是只算了 $${p}$ 那一组，漏掉了 $x$ 项那一组。`,
+            ),
+            why(
+              Q.of(q).mul(term(k - 1)),
+              `That keeps only the pair with the $x$ term and forgets the pair with $${p}$.`,
+              `那是只算了 $x$ 项那一组，漏掉了 $${p}$ 那一组。`,
+            ),
+            why(
+              Q.of(p + q).mul(term(k)),
+              `That pairs both terms with the $${xk(k)}$ term of the expansion.`,
+              `那是把两项都配给了展开式的 $${xk(k)}$ 项。`,
+            ),
+            why(
+              Q.of(p)
+                .mul(term(k - 1))
+                .add(Q.of(q).mul(term(k))),
+              "That swaps the pairs: the constant goes with the higher power.",
+              "那是把配对弄反了：常数应配较高次的项。",
+            ),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Expand the power", "展开幂"],
+                t(
+                  `In $(${inner})^{${rTex(r)}}$ the $${xk(k - 1)}$ coefficient is $${term(k - 1).toLatex()}$ and the $${xk(k)}$ coefficient is $${term(k).toLatex()}$.`,
+                  `$(${inner})^{${rTex(r)}}$ 中 $${xk(k - 1)}$ 的系数为 $${term(k - 1).toLatex()}$，$${xk(k)}$ 的系数为 $${term(k).toLatex()}$。`,
+                ),
+              ],
+              [
+                ["Pair the terms", "配对相加"],
+                t(
+                  `$${p}$ pairs with $${xk(k)}$ and the $x$ term with $${xk(k - 1)}$: $${pair} = ${value.toLatex()}$.`,
+                  `$${p}$ 配 $${xk(k)}$，$x$ 项配 $${xk(k - 1)}$：$${pair} = ${value.toLatex()}$。`,
+                ),
+              ],
+            ],
+            t(
+              `The $${xk(k)}$ coefficient of the expansion is $${ratio.toLatex()}$ times the $${xk(k - 1)}$ one, so the answer is $${term(k - 1).toLatex()}$ times $${qmul(Q.of(p), ratio)} ${q < 0 ? "-" : "+"} ${Math.abs(q)} = ${inside.toLatex()}$, which is $${value.toLatex()}$.`,
+              `展开式中 $${xk(k)}$ 的系数是 $${xk(k - 1)}$ 系数的 $${ratio.toLatex()}$ 倍，所以答案为 $${term(k - 1).toLatex()}$ 乘以 $${qmul(Q.of(p), ratio)} ${q < 0 ? "-" : "+"} ${Math.abs(q)} = ${inside.toLatex()}$，即 $${value.toLatex()}$。`,
+            ),
           ),
         });
       },
     },
   ],
+};
+
+/** rangeTex writes a/|b| and its value, skipping repeats and a denominator of 1. */
+const rangeTex = (a: number, b: number) => {
+  const v = Q.of(a, Math.abs(b)).toLatex();
+  const raw = Math.abs(b) === 1 ? `${a}` : `\\frac{${a}}{${Math.abs(b)}}`;
+  return raw === v ? v : `${raw} = ${v}`;
 };
 
 /** determiningRangesOfValidityForGeneralizedBinomialExpansions finds where expansions converge. */
@@ -853,6 +1038,10 @@ export const determiningRangesOfValidityForGeneralizedBinomialExpansions: TopicD
     "(1 + u)ʳ = Σ C(r, k)uᵏ holds for |u| < 1, so (a + bx)ʳ expands for |bx/a| < 1, that is, |x| < |a/b|. A product of expansions is valid where both are.",
     "(1 + u)ʳ = Σ C(r, k)uᵏ 在 |u| < 1 时成立，所以 (a + bx)ʳ 在 |bx/a| < 1，即 |x| < |a/b| 时可以展开。展开式之积在两者都有效处有效。",
   ),
+  intro: t(
+    "The expansion $(1 + x)^{-1} = 1 - x + x^2 - x^3 + \\cdots$ is a geometric series with ratio $-x$, so it converges exactly when $|x| < 1$. At $x = 2$ the left side is $\\frac{1}{3}$, but the series $1 - 2 + 4 - \\cdots$ grows without bound.\n\nCheck: at $x = \\frac{1}{2}$, inside the range, the series $1 - \\frac{1}{2} + \\frac{1}{4} - \\cdots$ sums to $\\frac{1}{1 + 1/2} = \\frac{2}{3}$, which is $(1 + \\frac{1}{2})^{-1}$.\n\nIn this lesson we find the range of $x$ for which an expansion of $(a + bx)^r$, or of a product of such powers, is valid.",
+    "展开式 $(1 + x)^{-1} = 1 - x + x^2 - x^3 + \\cdots$ 是公比为 $-x$ 的等比级数，所以恰在 $|x| < 1$ 时收敛。在 $x = 2$ 处左边等于 $\\frac{1}{3}$，而级数 $1 - 2 + 4 - \\cdots$ 无限增大。\n\n检验：在范围内的 $x = \\frac{1}{2}$ 处，级数 $1 - \\frac{1}{2} + \\frac{1}{4} - \\cdots$ 的和为 $\\frac{1}{1 + 1/2} = \\frac{2}{3}$，正是 $(1 + \\frac{1}{2})^{-1}$。\n\n本课我们求 $(a + bx)^r$ 或这类幂之积的展开式成立的 $x$ 的范围。",
+  ),
   prerequisites: ["working-with-the-generalized-binomial-theorem"],
   encompasses: [],
   xp: 10,
@@ -862,8 +1051,8 @@ export const determiningRangesOfValidityForGeneralizedBinomialExpansions: TopicD
       id: "range-of-validity-of-one-expansion",
       title: t("One expansion", "单个展开式"),
       explanation: t(
-        "The expansion of one plus a small quantity to a non-integer power converges only when that quantity has absolute value less than one. $(9 - 2x)^{1/2} = 3\\left(1 - \\frac{2x}{9}\\right)^{1/2}$ is valid for $\\left|\\frac{2x}{9}\\right| < 1$, that is, $|x| < \\frac{9}{2}$.",
-        "一加一个小量的非整数次幂的展开式，只有在这个小量的绝对值小于 1 时才收敛。$(9 - 2x)^{1/2} = 3\\left(1 - \\frac{2x}{9}\\right)^{1/2}$ 在 $\\left|\\frac{2x}{9}\\right| < 1$，即 $|x| < \\frac{9}{2}$ 时有效。",
+        "The expansion of one plus a small quantity to a non-integer power converges only when that quantity has absolute value less than one. $(20 - 3x)^{1/2} = \\sqrt{20}\\left(1 - \\frac{3x}{20}\\right)^{1/2}$ is valid for $\\left|\\frac{3x}{20}\\right| < 1$, that is, $|x| < \\frac{20}{3}$.\n\n> **Watch out.** The bound is $\\frac{a}{|b|}$, not $\\frac{|b|}{a}$; and it is not always $|x| < 1$, because the bracket must start with $1$ before the rule $|u| < 1$ applies.",
+        "一加一个小量的非整数次幂的展开式，只有在这个小量的绝对值小于 1 时才收敛。$(20 - 3x)^{1/2} = \\sqrt{20}\\left(1 - \\frac{3x}{20}\\right)^{1/2}$ 在 $\\left|\\frac{3x}{20}\\right| < 1$，即 $|x| < \\frac{20}{3}$ 时有效。\n\n> **注意。** 界是 $\\frac{a}{|b|}$，而不是 $\\frac{|b|}{a}$；它也不总是 $|x| < 1$，因为括号必须先化成以 $1$ 开头，才能用 $|u| < 1$ 的规则。",
       ),
       generate(rng) {
         const a = rng.int(1, 12);
@@ -874,32 +1063,94 @@ export const determiningRangesOfValidityForGeneralizedBinomialExpansions: TopicD
         const xs = square ? "x^2" : "x";
         const answer = square ? undefined : value;
         const inner = `${a} ${b < 0 ? "-" : "+"} ${Math.abs(b)}${xs}`;
+        const sg = b < 0 ? "-" : "+";
         if (answer === undefined) {
           const s = Q.of(a * a, Math.abs(b));
-          const inner2 = `${a * a} ${b < 0 ? "-" : "+"} ${Math.abs(b)}x^2`;
+          const inner2 = `${a * a} ${sg} ${Math.abs(b)}x^2`;
+          const u = a === 1 ? `${Math.abs(b)}x^2` : `\\frac{${Math.abs(b)}x^2}{${a * a}}`;
           return numberProblem({
             prompt: t(
               `The expansion of $(${inner2})^{${rTex(r)}}$ in powers of $x$ is valid for $x^2 < c$. Find $c$.`,
               `$(${inner2})^{${rTex(r)}}$ 按 $x$ 的幂展开，在 $x^2 < c$ 时有效。求 $c$。`,
             ),
             answer: s,
-            wrong: [Q.of(Math.abs(b), a * a), Q.of(a, Math.abs(b)), Q.of(1)],
-            solution: t(
-              `We need $\\left|\\frac{${Math.abs(b)}x^2}{${a * a}}\\right| < 1$, so $x^2 < ${s.toLatex()}$.`,
-              `需要 $\\left|\\frac{${Math.abs(b)}x^2}{${a * a}}\\right| < 1$，所以 $x^2 < ${s.toLatex()}$。`,
+            mistakes: distinct(s, [
+              why(
+                Q.of(Math.abs(b), a * a),
+                "That inverts the bound; solve the inequality for $x^2$.",
+                "那是把界颠倒了；应对 $x^2$ 解不等式。",
+              ),
+              why(
+                Q.of(a, Math.abs(b)),
+                `That divides $${a}$ rather than the constant term $${a * a}$ by $${Math.abs(b)}$.`,
+                `那是用 $${a}$ 而不是常数项 $${a * a}$ 除以 $${Math.abs(b)}$。`,
+              ),
+              why(
+                Q.of(1),
+                "That uses $x^2 < 1$ without first making the bracket start with $1$.",
+                "那是没有先把括号化成以 $1$ 开头，就用了 $x^2 < 1$。",
+              ),
+            ]),
+            solution: walked(
+              [
+                ...(a === 1
+                  ? []
+                  : [
+                      [
+                        ["Factor out the constant", "提出常数"],
+                        t(
+                          `$(${inner2})^{${rTex(r)}} = ${a * a}^{${rTex(r)}}\\left(1 ${sg} ${u}\\right)^{${rTex(r)}}$.`,
+                          `$(${inner2})^{${rTex(r)}} = ${a * a}^{${rTex(r)}}\\left(1 ${sg} ${u}\\right)^{${rTex(r)}}$。`,
+                        ),
+                      ] as const,
+                    ]),
+                [["Require the small quantity below 1", "要求小量小于 1"], t(`$\\left|${u}\\right| < 1$.`, `$\\left|${u}\\right| < 1$。`)],
+                [["Solve for $x^2$", "解出 $x^2$"], t(`$x^2 < ${rangeTex(a * a, b)}$.`, `$x^2 < ${rangeTex(a * a, b)}$。`)],
+              ],
+              t(
+                `At $x^2 = ${s.toLatex()}$ the quantity $${Math.abs(b)}x^2$ equals the constant term $${a * a}$, so the bracket's small term reaches $1$ there, the edge of convergence.`,
+                `在 $x^2 = ${s.toLatex()}$ 处，$${Math.abs(b)}x^2$ 正好等于常数项 $${a * a}$，括号内的小量在那里达到 $1$，正是收敛的边界。`,
+              ),
             ),
           });
         }
+        const u = a === 1 ? `${Math.abs(b)}x` : `\\frac{${Math.abs(b)}x}{${a}}`;
         return numberProblem({
           prompt: t(
             `The expansion of $(${inner})^{${rTex(r)}}$ in powers of $x$ is valid for $|x| < c$. Find $c$.`,
             `$(${inner})^{${rTex(r)}}$ 按 $x$ 的幂展开，在 $|x| < c$ 时有效。求 $c$。`,
           ),
           answer,
-          wrong: [Q.of(Math.abs(b), a), Q.of(1), Q.of(a), Q.of(1, Math.abs(b))],
-          solution: t(
-            `$(${inner})^{${rTex(r)}} = ${a}^{${rTex(r)}}\\left(1 ${b < 0 ? "-" : "+"} ${qx(Q.of(Math.abs(b), a))}\\right)^{${rTex(r)}}$ is valid for $\\left|\\frac{${Math.abs(b)}x}{${a}}\\right| < 1$, that is, $|x| < ${value.toLatex()}$.`,
-            `$(${inner})^{${rTex(r)}} = ${a}^{${rTex(r)}}\\left(1 ${b < 0 ? "-" : "+"} ${qx(Q.of(Math.abs(b), a))}\\right)^{${rTex(r)}}$ 在 $\\left|\\frac{${Math.abs(b)}x}{${a}}\\right| < 1$，即 $|x| < ${value.toLatex()}$ 时有效。`,
+          mistakes: distinct(answer, [
+            why(Q.of(Math.abs(b), a), "That inverts the bound; solve the inequality for $|x|$.", "那是把界颠倒了；应对 $|x|$ 解不等式。"),
+            why(
+              Q.of(1),
+              "That uses $|x| < 1$ without first making the bracket start with $1$.",
+              "那是没有先把括号化成以 $1$ 开头，就用了 $|x| < 1$。",
+            ),
+            why(Q.of(a), `That ignores the coefficient $${Math.abs(b)}$ of $x$.`, `那是忽略了 $x$ 的系数 $${Math.abs(b)}$。`),
+            why(Q.of(1, Math.abs(b)), `That ignores the constant term $${a}$.`, `那是忽略了常数项 $${a}$。`),
+          ]),
+          solution: walked(
+            [
+              ...(a === 1
+                ? []
+                : [
+                    [
+                      ["Factor out the constant", "提出常数"],
+                      t(
+                        `$(${inner})^{${rTex(r)}} = ${a}^{${rTex(r)}}\\left(1 ${sg} ${u}\\right)^{${rTex(r)}}$.`,
+                        `$(${inner})^{${rTex(r)}} = ${a}^{${rTex(r)}}\\left(1 ${sg} ${u}\\right)^{${rTex(r)}}$。`,
+                      ),
+                    ] as const,
+                  ]),
+              [["Require the small quantity below 1", "要求小量小于 1"], t(`$\\left|${u}\\right| < 1$.`, `$\\left|${u}\\right| < 1$。`)],
+              [["Solve for $|x|$", "解出 $|x|$"], t(`$|x| < ${rangeTex(a, b)}$.`, `$|x| < ${rangeTex(a, b)}$。`)],
+            ],
+            t(
+              `At $|x| = ${value.toLatex()}$ the quantity $${Math.abs(b)}|x|$ equals the constant term $${a}$, so the bracket's small term reaches $1$ there, the edge of convergence.`,
+              `在 $|x| = ${value.toLatex()}$ 处，$${Math.abs(b)}|x|$ 正好等于常数项 $${a}$，括号内的小量在那里达到 $1$，正是收敛的边界。`,
+            ),
           ),
         });
       },
@@ -908,8 +1159,8 @@ export const determiningRangesOfValidityForGeneralizedBinomialExpansions: TopicD
       id: "range-of-validity-of-a-product",
       title: t("Products of expansions", "展开式之积"),
       explanation: t(
-        "A product of expansions is valid only where every factor's expansion is valid, so take the narrowest of their ranges. $(1 + 2x)^{-1}$ needs $|x| < \\frac{1}{2}$ and $(3 - x)^{1/2}$ needs $|x| < 3$. Their product's expansion needs both: $|x| < \\frac{1}{2}$.",
-        "展开式的乘积只在每个因子的展开式都成立的地方成立，所以取它们范围中最窄的一个。$(1 + 2x)^{-1}$ 需要 $|x| < \\frac{1}{2}$，$(3 - x)^{1/2}$ 需要 $|x| < 3$。乘积的展开需要两者同时成立：$|x| < \\frac{1}{2}$。",
+        "A product of expansions is valid only where every factor's expansion is valid, so take the narrowest of their ranges. $(1 + 5x)^{-1}$ needs $|x| < \\frac{1}{5}$ and $(3 - x)^{1/2}$ needs $|x| < 3$. Their product's expansion needs both: $|x| < \\frac{1}{5}$.\n\n> **Watch out.** Take the smaller range, not the larger one; and do not multiply or add the two bounds, since each is a separate condition that must hold at once.",
+        "展开式的乘积只在每个因子的展开式都成立的地方成立，所以取它们范围中最窄的一个。$(1 + 5x)^{-1}$ 需要 $|x| < \\frac{1}{5}$，$(3 - x)^{1/2}$ 需要 $|x| < 3$。乘积的展开需要两者同时成立：$|x| < \\frac{1}{5}$。\n\n> **注意。** 要取较小的范围，而不是较大的；也不要把两个界相乘或相加，它们是必须同时成立的两个独立条件。",
       ),
       generate(rng) {
         const [a1, a2] = [rng.int(1, 9), rng.int(1, 9)];
@@ -919,6 +1170,7 @@ export const determiningRangesOfValidityForGeneralizedBinomialExpansions: TopicD
         const c2 = Q.of(a2, Math.abs(b2));
         if (c1.eq(c2)) return determiningRangesOfValidityForGeneralizedBinomialExpansions.knowledgePoints[1]!.generate(rng);
         const value = c1.cmp(c2) < 0 ? c1 : c2;
+        const wider = c1.cmp(c2) < 0 ? c2 : c1;
         const f = (a: number, b: number) => `${a} ${b < 0 ? "-" : "+"} ${Math.abs(b) === 1 ? "" : Math.abs(b)}x`;
         return numberProblem({
           prompt: t(
@@ -926,10 +1178,49 @@ export const determiningRangesOfValidityForGeneralizedBinomialExpansions: TopicD
             `$(${f(a1, b1)})^{${rTex(r1!)}}(${f(a2, b2)})^{${rTex(r2!)}}$ 按 $x$ 的幂展开，在 $|x| < c$ 时有效。求最大的 $c$。`,
           ),
           answer: value,
-          wrong: [c1.cmp(c2) < 0 ? c2 : c1, c1.mul(c2), Q.of(1)],
-          solution: t(
-            `The factors need $|x| < ${c1.toLatex()}$ and $|x| < ${c2.toLatex()}$; both hold for $|x| < ${value.toLatex()}$.`,
-            `两个因子分别需要 $|x| < ${c1.toLatex()}$ 和 $|x| < ${c2.toLatex()}$；两者同时成立需 $|x| < ${value.toLatex()}$。`,
+          mistakes: distinct(value, [
+            why(
+              wider,
+              "That takes the wider range; the narrower factor's expansion fails beyond its own bound.",
+              "那是取了较宽的范围；较窄那个因子的展开式在它的界外不成立。",
+            ),
+            why(
+              c1.mul(c2),
+              "That multiplies the two bounds; each bound is a separate condition.",
+              "那是把两个界相乘；每个界都是独立的条件。",
+            ),
+            why(c1.add(c2), "That adds the two bounds; each bound is a separate condition.", "那是把两个界相加；每个界都是独立的条件。"),
+            why(
+              Q.of(1),
+              "That uses $|x| < 1$ without making each bracket start with $1$.",
+              "那是没有把每个括号化成以 $1$ 开头，就用了 $|x| < 1$。",
+            ),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Range of the first factor", "第一个因子的范围"],
+                t(
+                  `$(${f(a1, b1)})^{${rTex(r1!)}}$ needs $|x| < ${rangeTex(a1, b1)}$.`,
+                  `$(${f(a1, b1)})^{${rTex(r1!)}}$ 需要 $|x| < ${rangeTex(a1, b1)}$。`,
+                ),
+              ],
+              [
+                ["Range of the second factor", "第二个因子的范围"],
+                t(
+                  `$(${f(a2, b2)})^{${rTex(r2!)}}$ needs $|x| < ${rangeTex(a2, b2)}$.`,
+                  `$(${f(a2, b2)})^{${rTex(r2!)}}$ 需要 $|x| < ${rangeTex(a2, b2)}$。`,
+                ),
+              ],
+              [
+                ["Take the narrower range", "取较窄的范围"],
+                t(`Both hold when $|x| < ${value.toLatex()}$.`, `两者在 $|x| < ${value.toLatex()}$ 时同时成立。`),
+              ],
+            ],
+            t(
+              `Since $${value.toLatex()} < ${wider.toLatex()}$, every $x$ with $|x| < ${value.toLatex()}$ meets both conditions, while just beyond $${value.toLatex()}$ the narrower factor's expansion diverges.`,
+              `因为 $${value.toLatex()} < ${wider.toLatex()}$，满足 $|x| < ${value.toLatex()}$ 的每个 $x$ 都同时满足两个条件，而稍超过 $${value.toLatex()}$ 时，较窄那个因子的展开式就发散了。`,
+            ),
           ),
         });
       },
@@ -940,6 +1231,15 @@ export const determiningRangesOfValidityForGeneralizedBinomialExpansions: TopicD
 /** APPROX are exponents whose coefficients have power-of-two denominators, so approximations terminate. */
 const APPROX: readonly Q[] = [Q.of(1, 2), Q.of(-1, 2), Q.of(-1), Q.of(-2), Q.of(3, 2), Q.of(1, 4)];
 
+/** pd writes a decimal, in parentheses when negative. */
+const pd = (q: Q) => (q.sign() < 0 ? `(${dec(q)})` : dec(q));
+
+/** dmul writes a rational times a decimal factor, dropping a coefficient of 1 or −1 to a sign. */
+const dmul = (a: Q, x: string) => (a.eq(Q.of(1)) ? x : a.eq(Q.of(-1)) ? `-${x}` : `${a.toLatex()} \\cdot ${x}`);
+
+/** sumDec writes 1 ± |t₁| ± |t₂| from signed decimal terms. */
+const sumDec = (ts: readonly Q[]) => `1${ts.map((x) => ` ${x.sign() < 0 ? "-" : "+"} ${dec(x.abs())}`).join("")}`;
+
 /** approximatingValuesUsingTheGeneralizedBinomialTheorem truncates generalized expansions. */
 export const approximatingValuesUsingTheGeneralizedBinomialTheorem: TopicDef = {
   id: "approximating-values-using-the-generalized-binomial-theorem",
@@ -947,6 +1247,10 @@ export const approximatingValuesUsingTheGeneralizedBinomialTheorem: TopicDef = {
   summary: t(
     "For small $u$, $(1 + u)^r \\approx 1 + ru + \\binom{r}{2}u^2$; numbers like $\\sqrt{102} = 10(1 + 0.02)^{1/2}$ can be approximated this way.",
     "当 $u$ 很小时，$(1 + u)^r \\approx 1 + ru + \\binom{r}{2}u^2$；像 $\\sqrt{102} = 10(1 + 0.02)^{1/2}$ 这样的数可以这样近似。",
+  ),
+  intro: t(
+    "$1.03^{-1} = (1 + 0.03)^{-1} \\approx 1 - 0.03 + 0.03^2 = 1 - 0.03 + 0.0009 = 0.9709$, using the first three terms $1 - x + x^2$ of the expansion of $(1 + x)^{-1}$.\n\nCheck: $1.03 \\cdot 0.9709 = 1.000027$, which is $1$ to four decimal places, so $0.9709$ is very close to $\\frac{1}{1.03}$.\n\nIn this lesson we approximate powers of numbers near $1$, and roots of numbers near a perfect square, with the first terms of a generalized binomial expansion.",
+    "$1.03^{-1} = (1 + 0.03)^{-1} \\approx 1 - 0.03 + 0.03^2 = 1 - 0.03 + 0.0009 = 0.9709$，这里用了 $(1 + x)^{-1}$ 展开式的前三项 $1 - x + x^2$。\n\n检验：$1.03 \\cdot 0.9709 = 1.000027$，精确到四位小数就是 $1$，所以 $0.9709$ 与 $\\frac{1}{1.03}$ 非常接近。\n\n本课我们用广义二项式展开的前几项，近似计算接近 $1$ 的数的乘方，以及接近完全平方数的数的方根。",
   ),
   prerequisites: ["working-with-the-generalized-binomial-theorem"],
   encompasses: [],
@@ -957,16 +1261,18 @@ export const approximatingValuesUsingTheGeneralizedBinomialTheorem: TopicDef = {
       id: "approximating-powers-near-one",
       title: t("Powers near 1", "接近 1 的数的乘方"),
       explanation: t(
-        "When the quantity added to one is small, its higher powers are tiny, so the first few terms of the expansion give an accurate value. $\\sqrt{1.04} = (1 + 0.04)^{1/2} \\approx 1 + \\frac{1}{2}(0.04) - \\frac{1}{8}(0.04)^2 = 1.0198$; the true value is $1.01980\\ldots$",
-        "当加到 1 上的量很小时，它的高次幂非常小，所以展开式的前几项就能给出准确的值。$\\sqrt{1.04} = (1 + 0.04)^{1/2} \\approx 1 + \\frac{1}{2}(0.04) - \\frac{1}{8}(0.04)^2 = 1.0198$；真实值为 $1.01980\\ldots$",
+        "When the quantity added to one is small, its higher powers are tiny, so the first few terms of the expansion give an accurate value. $\\sqrt{1.01} = (1 + 0.01)^{1/2} \\approx 1 + \\frac{1}{2}(0.01) - \\frac{1}{8}(0.01)^2 = 1.0049875$; the true value is $1.00498756\\ldots$\n\n> **Watch out.** The third coefficient is $\\binom{r}{2} = \\frac{r(r - 1)}{2}$, not $r(r - 1)$; and its sign comes from $r(r - 1)$, so for $0 < r < 1$ the third term is subtracted.",
+        "当加到 1 上的量很小时，它的高次幂非常小，所以展开式的前几项就能给出准确的值。$\\sqrt{1.01} = (1 + 0.01)^{1/2} \\approx 1 + \\frac{1}{2}(0.01) - \\frac{1}{8}(0.01)^2 = 1.0049875$；真实值为 $1.00498756\\ldots$\n\n> **注意。** 第三个系数是 $\\binom{r}{2} = \\frac{r(r - 1)}{2}$，而不是 $r(r - 1)$；它的符号由 $r(r - 1)$ 决定，所以 $0 < r < 1$ 时第三项是减去的。",
       ),
       generate(rng) {
         const r = rng.pick(APPROX);
         const u = Q.of(rng.nonZero(-5, 5) * 2, 100);
-        const value = Q.of(1)
-          .add(r.mul(u))
-          .add(genChoose(r, 2).mul(u.pow(2)));
+        const g2 = genChoose(r, 2);
+        const t1 = r.mul(u);
+        const t2 = g2.mul(u.pow(2));
+        const value = Q.of(1).add(t1).add(t2);
         const base = Q.of(1).add(u);
+        const t3 = genChoose(r, 3).mul(u.pow(3));
         return numberProblem({
           prompt: t(
             `Use the first three terms of the expansion of $(1 + x)^{${rTex(r)}}$ to approximate $${dec(base)}^{${rTex(r)}}$.`,
@@ -974,18 +1280,43 @@ export const approximatingValuesUsingTheGeneralizedBinomialTheorem: TopicDef = {
           ),
           answer: value,
           form: "decimal",
-          wrong: [
-            Q.of(1).add(r.mul(u)),
-            Q.of(1)
-              .add(r.mul(u))
-              .sub(genChoose(r, 2).mul(u.pow(2))),
-            Q.of(1)
-              .add(r.mul(u))
-              .add(r.mul(r.sub(Q.of(1))).mul(u.pow(2))),
-          ],
-          solution: t(
-            `With $x = ${dec(u)}$: $1 + ${pq(r)}(${dec(u)}) + ${pq(genChoose(r, 2))}(${dec(u)})^2 = ${dec(value)}$.`,
-            `取 $x = ${dec(u)}$：$1 + ${pq(r)}(${dec(u)}) + ${pq(genChoose(r, 2))}(${dec(u)})^2 = ${dec(value)}$。`,
+          mistakes: distinct(value, [
+            why(Q.of(1).add(t1), "That stops after two terms; the question asks for three.", "那是只用了两项；题目要求用三项。"),
+            why(
+              Q.of(1).add(t1).sub(t2),
+              `That flips the sign of the third term; $\\binom{${r.toLatex()}}{2} = ${g2.toLatex()}$.`,
+              `那是把第三项的符号弄反了；$\\binom{${r.toLatex()}}{2} = ${g2.toLatex()}$。`,
+            ),
+            why(
+              Q.of(1)
+                .add(t1)
+                .add(r.mul(r.sub(Q.of(1))).mul(u.pow(2))),
+              "That uses $r(r - 1)$ for the third coefficient without dividing by $2$.",
+              "那是第三个系数用了 $r(r - 1)$，没有除以 $2$。",
+            ),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Identify x and the coefficients", "确定 x 和系数"],
+                t(
+                  `$x = ${dec(u)}$, $r = ${r.toLatex()}$ and $\\binom{${r.toLatex()}}{2} = ${g2.toLatex()}$.`,
+                  `$x = ${dec(u)}$，$r = ${r.toLatex()}$，$\\binom{${r.toLatex()}}{2} = ${g2.toLatex()}$。`,
+                ),
+              ],
+              [
+                ["Evaluate the terms", "计算各项"],
+                t(
+                  `$${dmul(r, pd(u))} = ${dec(t1)}$ and $${dmul(g2, `${pd(u)}^2`)} = ${dec(t2)}$.`,
+                  `$${dmul(r, pd(u))} = ${dec(t1)}$，$${dmul(g2, `${pd(u)}^2`)} = ${dec(t2)}$。`,
+                ),
+              ],
+              [["Add", "相加"], t(`$${sumDec([t1, t2])} = ${dec(value)}$.`, `$${sumDec([t1, t2])} = ${dec(value)}$。`)],
+            ],
+            t(
+              `The next term, $\\binom{${r.toLatex()}}{3}x^3 = ${dec(t3)}$, is far smaller than the third term $${dec(t2)}$, so the three-term value is accurate.`,
+              `下一项 $\\binom{${r.toLatex()}}{3}x^3 = ${dec(t3)}$ 远小于第三项 $${dec(t2)}$，所以三项的结果是准确的。`,
+            ),
           ),
         });
       },
@@ -994,8 +1325,8 @@ export const approximatingValuesUsingTheGeneralizedBinomialTheorem: TopicDef = {
       id: "approximating-roots-by-factoring",
       title: t("Approximating roots", "近似计算方根"),
       explanation: t(
-        "Factoring out the nearest perfect power leaves a bracket close to one, so the expansion converges fast and a few terms suffice. $\\sqrt{102} = 10\\left(1 + 0.02\\right)^{1/2} \\approx 10\\left(1 + 0.01 - 0.00005\\right) = 10.0995$. Factor out the nearest perfect square so that $u$ is small.",
-        "提出最接近的完全幂之后，括号里剩下的数接近 1，所以展开式收敛很快，几项就够了。$\\sqrt{102} = 10\\left(1 + 0.02\\right)^{1/2} \\approx 10\\left(1 + 0.01 - 0.00005\\right) = 10.0995$。提出最接近的完全平方数，使 $u$ 很小。",
+        "Factoring out the nearest perfect power leaves a bracket close to one, so the expansion converges fast and a few terms suffice. $\\sqrt{2501} = 50\\left(1 + 0.0004\\right)^{1/2} \\approx 50\\left(1 + 0.0002 - 0.00000002\\right) = 50.009999$.\n\n> **Watch out.** Multiply the bracket back by the square root $50$ that was factored out; and the third term of $(1 + x)^{1/2}$ is $-\\frac{1}{8}x^2$, which is subtracted.",
+        "提出最接近的完全幂之后，括号里剩下的数接近 1，所以展开式收敛很快，几项就够了。$\\sqrt{2501} = 50\\left(1 + 0.0004\\right)^{1/2} \\approx 50\\left(1 + 0.0002 - 0.00000002\\right) = 50.009999$。\n\n> **注意。** 要把括号乘回提出来的平方根 $50$；$(1 + x)^{1/2}$ 的第三项是 $-\\frac{1}{8}x^2$，是减去的。",
       ),
       generate(rng) {
         const s = rng.pick([5, 10, 20, 30]);
@@ -1003,11 +1334,11 @@ export const approximatingValuesUsingTheGeneralizedBinomialTheorem: TopicDef = {
         const N = s * s + d;
         const u = Q.of(d, s * s);
         const r = Q.of(1, 2);
-        const value = Q.of(s).mul(
-          Q.of(1)
-            .add(r.mul(u))
-            .add(genChoose(r, 2).mul(u.pow(2))),
-        );
+        const t1 = r.mul(u);
+        const t2 = genChoose(r, 2).mul(u.pow(2));
+        const bracket = Q.of(1).add(t1).add(t2);
+        const value = Q.of(s).mul(bracket);
+        const v = value.toNumber();
         return numberProblem({
           prompt: t(
             `Write $\\sqrt{${N}} = ${s}\\left(1 + x\\right)^{1/2}$ and use the first three terms of the binomial expansion to approximate $\\sqrt{${N}}$.`,
@@ -1015,20 +1346,44 @@ export const approximatingValuesUsingTheGeneralizedBinomialTheorem: TopicDef = {
           ),
           answer: value,
           form: "decimal",
-          wrong: [
-            Q.of(s).mul(Q.of(1).add(r.mul(u))),
-            Q.of(1)
-              .add(r.mul(u))
-              .add(genChoose(r, 2).mul(u.pow(2))),
-            Q.of(s).mul(
-              Q.of(1)
-                .add(r.mul(u))
-                .sub(genChoose(r, 2).mul(u.pow(2))),
+          mistakes: distinct(value, [
+            why(
+              Q.of(s).mul(Q.of(1).add(t1)),
+              "That stops after two terms; the question asks for three.",
+              "那是只用了两项；题目要求用三项。",
             ),
-          ],
-          solution: t(
-            `$x = ${u.toLatex()} = ${dec(u)}$, so $\\sqrt{${N}} \\approx ${s}\\left(1 + \\frac{1}{2}(${dec(u)}) - \\frac{1}{8}(${dec(u)})^2\\right) = ${dec(value)}$.`,
-            `$x = ${u.toLatex()} = ${dec(u)}$，所以 $\\sqrt{${N}} \\approx ${s}\\left(1 + \\frac{1}{2}(${dec(u)}) - \\frac{1}{8}(${dec(u)})^2\\right) = ${dec(value)}$。`,
+            why(bracket, `That forgets to multiply the bracket by $${s}$.`, `那是忘了把括号乘以 $${s}$。`),
+            why(
+              Q.of(s).mul(Q.of(1).add(t1).sub(t2)),
+              "That adds the third term; for the exponent $\\frac{1}{2}$ it is $-\\frac{1}{8}x^2$.",
+              "那是把第三项加上了；指数为 $\\frac{1}{2}$ 时它是 $-\\frac{1}{8}x^2$。",
+            ),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Factor out the square", "提出平方数"],
+                t(
+                  `$${N} = ${s * s}\\left(1 + x\\right)$ with $x = ${u.toLatex()} = ${dec(u)}$.`,
+                  `$${N} = ${s * s}\\left(1 + x\\right)$，其中 $x = ${u.toLatex()} = ${dec(u)}$。`,
+                ),
+              ],
+              [
+                ["Expand the bracket", "展开括号"],
+                t(
+                  `$1 + \\frac{1}{2}x - \\frac{1}{8}x^2 = ${sumDec([t1, t2])} = ${dec(bracket)}$.`,
+                  `$1 + \\frac{1}{2}x - \\frac{1}{8}x^2 = ${sumDec([t1, t2])} = ${dec(bracket)}$。`,
+                ),
+              ],
+              [
+                ["Multiply back", "乘回"],
+                t(`$${s} \\cdot ${dec(bracket)} = ${dec(value)}$.`, `$${s} \\cdot ${dec(bracket)} = ${dec(value)}$。`),
+              ],
+            ],
+            t(
+              `Squaring, $${dec(value)}^2 \\approx ${(v * v).toFixed(4)}$, which is very close to $${N}$.`,
+              `平方得 $${dec(value)}^2 \\approx ${(v * v).toFixed(4)}$，与 $${N}$ 非常接近。`,
+            ),
           ),
         });
       },
@@ -1053,6 +1408,10 @@ export const theMultinomialTheorem: TopicDef = {
     "$(x_1 + \\cdots + x_m)^n = \\sum \\frac{n!}{k_1! \\cdots k_m!} x_1^{k_1} \\cdots x_m^{k_m}$ over all $k_1 + \\cdots + k_m = n$: the coefficient counts arrangements of the factors.",
     "$(x_1 + \\cdots + x_m)^n = \\sum \\frac{n!}{k_1! \\cdots k_m!} x_1^{k_1} \\cdots x_m^{k_m}$，对所有 $k_1 + \\cdots + k_m = n$ 求和：系数计数各因子的排列方式。",
   ),
+  intro: t(
+    "In $(x + y + z)^3$, each term picks one variable from each of the three factors. The coefficient of $xyz$ is $\\frac{3!}{1! \\, 1! \\, 1!} = 6$, of $x^2y$ is $\\frac{3!}{2! \\, 1! \\, 0!} = 3$, and of $x^3$ is $1$.\n\nCheck: setting $x = y = z = 1$ gives $3^3 = 27$, and the coefficients add up to that: three cubes with $1$ each, six terms like $x^2y$ with $3$ each, and $xyz$ with $6$, so $3 + 18 + 6 = 27$.\n\nIn this lesson we compute multinomial coefficients, first in sums of plain variables and then in sums whose terms carry constants.",
+    "在 $(x + y + z)^3$ 中，每一项从三个因子中各取一个变量。$xyz$ 的系数为 $\\frac{3!}{1! \\, 1! \\, 1!} = 6$，$x^2y$ 的系数为 $\\frac{3!}{2! \\, 1! \\, 0!} = 3$，$x^3$ 的系数为 $1$。\n\n检验：令 $x = y = z = 1$ 得 $3^3 = 27$，系数之和正是它：三个立方项各为 $1$，六个形如 $x^2y$ 的项各为 $3$，$xyz$ 为 $6$，所以 $3 + 18 + 6 = 27$。\n\n本课我们计算多项式系数，先在纯变量之和中，再在各项带常数的和中。",
+  ),
   prerequisites: ["expanding-a-binomial-using-binomial-coefficients", "permutations-with-repetition"],
   encompasses: [],
   xp: 10,
@@ -1062,8 +1421,8 @@ export const theMultinomialTheorem: TopicDef = {
       id: "multinomial-coefficients",
       title: t("Multinomial coefficients", "多项式系数"),
       explanation: t(
-        "In $(x + y + z)^6$, the coefficient of $x^3y^2z$ is the number of ways to choose which of the $6$ factors give $x$, $y$ or $z$: $\\frac{6!}{3! \\, 2! \\, 1!} = 60$.",
-        "在 $(x + y + z)^6$ 中，$x^3y^2z$ 的系数是选择 $6$ 个因子中哪些给出 $x$、$y$、$z$ 的方法数：$\\frac{6!}{3! \\, 2! \\, 1!} = 60$。",
+        "In $(x + y + z)^{10}$, the coefficient of $x^5y^3z^2$ is the number of ways to choose which of the $10$ factors give $x$, $y$ or $z$: $\\frac{10!}{5! \\, 3! \\, 2!} = \\frac{3628800}{1440} = 2520$.\n\n> **Watch out.** Divide by the factorial of every exponent, not just the largest; a variable with exponent $0$ contributes $0! = 1$.",
+        "在 $(x + y + z)^{10}$ 中，$x^5y^3z^2$ 的系数是选择 $10$ 个因子中哪些给出 $x$、$y$、$z$ 的方法数：$\\frac{10!}{5! \\, 3! \\, 2!} = \\frac{3628800}{1440} = 2520$。\n\n> **注意。** 要除以每个指数的阶乘，而不只是最大的那个；指数为 $0$ 的变量贡献 $0! = 1$。",
       ),
       generate(rng) {
         const m = rng.int(3, 4);
@@ -1074,16 +1433,51 @@ export const theMultinomialTheorem: TopicDef = {
         const ks = [...cuts, n].map((c, i) => c - (i === 0 ? 0 : cuts[i - 1]!));
         const value = multinomial(ks);
         const sum = VARS.slice(0, m).join(" + ");
+        const den = ks.reduce((s, k) => s * fact(k), 1);
+        const tops = ks.slice(0, -1).map((k, i) => [n - ks.slice(0, i).reduce((a, b) => a + b, 0), k] as const);
+        const largest = Math.max(...ks);
         return numberProblem({
           prompt: t(
             `Find the coefficient of $${monoTex(ks)}$ in the expansion of $(${sum})^{${n}}$.`,
             `求 $(${sum})^{${n}}$ 展开式中 $${monoTex(ks)}$ 的系数。`,
           ),
           answer: value,
-          wrong: [fact(n), choose(n, Math.max(...ks)), ks.reduce((a, b) => a * (b || 1), 1), Math.round(value / Math.max(...ks))],
-          solution: t(
-            `$\\frac{${n}!}{${ks.map((k) => `${k}!`).join(" \\, ")}} = ${value}$.`,
-            `$\\frac{${n}!}{${ks.map((k) => `${k}!`).join(" \\, ")}} = ${value}$。`,
+          mistakes: distinct(value, [
+            why(fact(n), `That forgets to divide by the factorials of the exponents.`, `那是忘了除以各指数的阶乘。`),
+            why(
+              choose(n, largest),
+              `That only chooses the places of the variable with exponent $${largest}$, then stops.`,
+              `那是只选了指数为 $${largest}$ 的变量的位置，就停下了。`,
+            ),
+            why(
+              ks.reduce((a, b) => a * (b || 1), 1),
+              "That multiplies the exponents; the coefficient counts arrangements of the factors.",
+              "那是把指数相乘；系数计数的是因子的排列方式。",
+            ),
+            why(
+              m ** n,
+              `That counts all $${m}^{${n}}$ products together, not just those giving $${monoTex(ks)}$.`,
+              `那是把全部 $${m}^{${n}}$ 个乘积一起计数了，而不只是给出 $${monoTex(ks)}$ 的那些。`,
+            ),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Read off the exponents", "读出指数"],
+                t(`The exponents are $${ks.join(", ")}$, which add up to $${n}$.`, `指数为 $${ks.join(", ")}$，它们的和为 $${n}$。`),
+              ],
+              [
+                ["Apply the formula", "代入公式"],
+                t(
+                  `$\\frac{${n}!}{${ks.map((k) => `${k}!`).join(" \\, ")}} = \\frac{${fact(n)}}{${den}} = ${value}$.`,
+                  `$\\frac{${n}!}{${ks.map((k) => `${k}!`).join(" \\, ")}} = \\frac{${fact(n)}}{${den}} = ${value}$。`,
+                ),
+              ],
+            ],
+            t(
+              `Choosing the places of one variable at a time gives the same count: $${tops.map(([a, k]) => `\\binom{${a}}{${k}}`).join("")} = ${value}$.`,
+              `逐个变量选择位置得到同样的计数：$${tops.map(([a, k]) => `\\binom{${a}}{${k}}`).join("")} = ${value}$。`,
+            ),
           ),
         });
       },
@@ -1092,8 +1486,8 @@ export const theMultinomialTheorem: TopicDef = {
       id: "multinomial-coefficients-with-constants",
       title: t("Terms with coefficients", "带系数的项"),
       explanation: t(
-        "The multinomial coefficient counts the arrangements, and each term inside, with its coefficient and sign, is raised to its own power. In $(2x - y + z)^4$, the $x^2yz$ term is $\\frac{4!}{2! \\, 1! \\, 1!}(2x)^2(-y)(z) = 12 \\cdot 4 \\cdot (-1)x^2yz = -48x^2yz$.",
-        "多项式系数计算排列的方法数，括号内的每一项连同其系数和符号都升到各自的幂。在 $(2x - y + z)^4$ 中，$x^2yz$ 项为 $\\frac{4!}{2! \\, 1! \\, 1!}(2x)^2(-y)(z) = 12 \\cdot 4 \\cdot (-1)x^2yz = -48x^2yz$。",
+        "The multinomial coefficient counts the arrangements, and each term inside, with its coefficient and sign, is raised to its own power. In $(3x + y - 2z)^5$, the $x^2yz^2$ term is $\\frac{5!}{2! \\, 1! \\, 2!}(3x)^2(y)(-2z)^2 = 30 \\cdot 9 \\cdot 4 \\, x^2yz^2 = 1080x^2yz^2$.\n\n> **Watch out.** Raise each constant to its exponent rather than multiplying by the exponent; and keep the signs, since a negative constant to an odd power leaves the coefficient negative.",
+        "多项式系数计算排列的方法数，括号内的每一项连同其系数和符号都升到各自的幂。在 $(3x + y - 2z)^5$ 中，$x^2yz^2$ 项为 $\\frac{5!}{2! \\, 1! \\, 2!}(3x)^2(y)(-2z)^2 = 30 \\cdot 9 \\cdot 4 \\, x^2yz^2 = 1080x^2yz^2$。\n\n> **注意。** 要把每个常数取它的指数次幂，而不是乘以指数；还要保留符号，负常数的奇数次幂会使系数为负。",
       ),
       generate(rng) {
         const n = rng.int(3, 7);
@@ -1104,16 +1498,59 @@ export const theMultinomialTheorem: TopicDef = {
         const m = multinomial(ks);
         const value = ks.reduce((s, k, i) => s * cs[i]! ** k, m);
         const sum = cs.map((c, i) => coef(c, VARS[i]!, i === 0)).join("");
+        const prod = value / m;
+        const powers = cs.flatMap((c, i) => (ks[i]! === 0 || c === 1 ? [] : [ks[i] === 1 ? pn(c) : `${pn(c)}^{${ks[i]}}`]));
+        const negPower = cs.reduce((s, c, i) => (c < 0 ? s + ks[i]! : s), 0);
         return numberProblem({
           prompt: t(
             `Find the coefficient of $${monoTex(ks)}$ in the expansion of $(${sum})^{${n}}$.`,
             `求 $(${sum})^{${n}}$ 展开式中 $${monoTex(ks)}$ 的系数。`,
           ),
           answer: value,
-          wrong: [m, -value, ks.reduce((s, k, i) => s * cs[i]! * (k > 0 ? k : 1), m), ks.reduce((s, k, i) => s * Math.abs(cs[i]!) ** k, m)],
-          solution: t(
-            `$\\frac{${n}!}{${ks.map((k) => `${k}!`).join(" \\, ")}} ${cs.map((c, i) => `(${c})^{${ks[i]}}`).join("")} = ${m} \\cdot ${value / m} = ${value}$.`,
-            `$\\frac{${n}!}{${ks.map((k) => `${k}!`).join(" \\, ")}} ${cs.map((c, i) => `(${c})^{${ks[i]}}`).join("")} = ${m} \\cdot ${value / m} = ${value}$。`,
+          mistakes: distinct(value, [
+            why(m, "That leaves out the constants in front of the variables.", "那是漏掉了变量前面的常数。"),
+            why(
+              -value,
+              "That has the wrong sign; count the negative constants raised to odd powers.",
+              "那是符号错了；数一数取奇数次幂的负常数。",
+            ),
+            why(
+              ks.reduce((s, k, i) => s * cs[i]! * (k > 0 ? k : 1), m),
+              "That multiplies each constant by its exponent instead of raising it to that power.",
+              "那是把每个常数乘以指数，而不是取指数次幂。",
+            ),
+            why(
+              ks.reduce((s, k, i) => s * Math.abs(cs[i]!) ** k, m),
+              "That drops the signs of the constants.",
+              "那是丢掉了常数的符号。",
+            ),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Find the multinomial coefficient", "求多项式系数"],
+                t(
+                  `$\\frac{${n}!}{${ks.map((k) => `${k}!`).join(" \\, ")}} = ${m}$.`,
+                  `$\\frac{${n}!}{${ks.map((k) => `${k}!`).join(" \\, ")}} = ${m}$。`,
+                ),
+              ],
+              [
+                ["Raise the constants", "常数取幂"],
+                powers.length === 0
+                  ? t(
+                      "Every variable that appears has coefficient $1$, so the constants contribute $1$.",
+                      "出现的每个变量的系数都是 $1$，所以常数部分为 $1$。",
+                    )
+                  : t(`$${powers.join(" \\cdot ")} = ${prod}$.`, `$${powers.join(" \\cdot ")} = ${prod}$。`),
+              ],
+              ...(m === 1 || prod === 1
+                ? []
+                : [[["Multiply", "相乘"], t(`$${m} \\cdot ${pn(prod)} = ${value}$.`, `$${m} \\cdot ${pn(prod)} = ${value}$。`)] as const]),
+            ],
+            t(
+              `The negative constants are raised to a total power of $${negPower}$, which is ${negPower % 2 === 0 ? "even" : "odd"}, so the coefficient is ${value > 0 ? "positive" : "negative"}, as $${value}$ is.`,
+              `负常数的指数之和为 $${negPower}$，是${negPower % 2 === 0 ? "偶数" : "奇数"}，所以系数为${value > 0 ? "正" : "负"}，与 $${value}$ 一致。`,
+            ),
           ),
         });
       },
@@ -1129,6 +1566,10 @@ export const countingTermsInMultinomialExpansions: TopicDef = {
     "After collecting like terms, (x₁ + ⋯ + xₘ)ⁿ has one term for each solution of k₁ + ⋯ + kₘ = n in nonnegative integers: C(n + m − 1, m − 1) terms.",
     "合并同类项后，(x₁ + ⋯ + xₘ)ⁿ 对 k₁ + ⋯ + kₘ = n 的每组非负整数解有一项：共 C(n + m − 1, m − 1) 项。",
   ),
+  intro: t(
+    "After collecting like terms, $(x + y)^5$ has the terms $x^5, x^4y, x^3y^2, x^2y^3, xy^4, y^5$: one for each way to split the exponent $5$ between $x$ and $y$, so $6$ terms, which is $\\binom{5 + 1}{1}$.\n\nCheck: the binomial theorem gives exactly the powers $x^{5-k}y^k$ for $k = 0, 1, \\ldots, 5$, which is $6$ values of $k$.\n\nIn this lesson we count the terms of $(x_1 + \\cdots + x_m)^n$ with stars and bars, and count the terms that contain a given variable.",
+    "合并同类项后，$(x + y)^5$ 的项为 $x^5, x^4y, x^3y^2, x^2y^3, xy^4, y^5$：每一种把指数 $5$ 分给 $x$ 和 $y$ 的方式对应一项，共 $6$ 项，即 $\\binom{5 + 1}{1}$。\n\n检验：二项式定理恰好给出 $k = 0, 1, \\ldots, 5$ 时的幂 $x^{5-k}y^k$，共 $6$ 个 $k$ 值。\n\n本课我们用隔板法计数 $(x_1 + \\cdots + x_m)^n$ 的项数，并计数含某个变量的项。",
+  ),
   prerequisites: ["the-multinomial-theorem", "counting-integer-solutions-of-a-constrained-equation"],
   encompasses: [],
   xp: 10,
@@ -1138,8 +1579,8 @@ export const countingTermsInMultinomialExpansions: TopicDef = {
       id: "number-of-terms-in-an-expansion",
       title: t("The number of terms", "项数"),
       explanation: t(
-        "Each term corresponds to a way of splitting the exponent among the variables, which is counted by stars and bars. The terms of $(x + y + z)^4$ are $x^ay^bz^c$ with $a + b + c = 4$: $\\binom{4 + 2}{2} = 15$ terms.",
-        "每一项对应把指数分配给各个变量的一种方式，可以用隔板法计数。$(x + y + z)^4$ 的项是满足 $a + b + c = 4$ 的 $x^ay^bz^c$：共 $\\binom{4 + 2}{2} = 15$ 项。",
+        "Each term corresponds to a way of splitting the exponent among the variables, which is counted by stars and bars. The terms of $(x + y + z)^{15}$ are $x^ay^bz^c$ with $a + b + c = 15$: $\\binom{15 + 2}{2} = 136$ terms.\n\n> **Watch out.** Use $m - 1$ bars for $m$ variables, not $m$; and do not count $m^n$, which counts the products before like terms are collected.",
+        "每一项对应把指数分配给各个变量的一种方式，可以用隔板法计数。$(x + y + z)^{15}$ 的项是满足 $a + b + c = 15$ 的 $x^ay^bz^c$：共 $\\binom{15 + 2}{2} = 136$ 项。\n\n> **注意。** $m$ 个变量要用 $m - 1$ 个隔板，而不是 $m$ 个；也不要算 $m^n$，那是合并同类项之前的乘积个数。",
       ),
       generate(rng) {
         const m = rng.int(3, 6);
@@ -1157,10 +1598,45 @@ export const countingTermsInMultinomialExpansions: TopicDef = {
             `合并同类项后，$(${sum})^{${n}}$ 的展开式有多少项？`,
           ),
           answer: value,
-          wrong: [m ** n, n + 1, choose(n + m, m - 1), choose(n + m - 1, m)],
-          solution: t(
-            `Count the exponent lists $k_1 + \\cdots + k_{${m}} = ${n}$: $\\binom{${n} + ${m - 1}}{${m - 1}} = ${value}$.`,
-            `计数满足 $k_1 + \\cdots + k_{${m}} = ${n}$ 的指数组：$\\binom{${n} + ${m - 1}}{${m - 1}} = ${value}$。`,
+          mistakes: distinct(value, [
+            why(
+              m ** n,
+              `That counts all $${m}^{${n}}$ products before like terms are collected.`,
+              `那是合并同类项之前全部 $${m}^{${n}}$ 个乘积的个数。`,
+            ),
+            why(n + 1, "That is the count for two variables.", "那是两个变量时的项数。"),
+            why(
+              choose(n + m, m - 1),
+              `That uses $${n + m}$ positions; $${n}$ stars and $${m - 1}$ bars fill $${n + m - 1}$.`,
+              `那是用了 $${n + m}$ 个位置；$${n}$ 颗星和 $${m - 1}$ 个隔板只占 $${n + m - 1}$ 个。`,
+            ),
+            why(
+              choose(n + m - 1, m),
+              `That uses $${m}$ bars; $${m}$ variables need $${m - 1}$.`,
+              `那是用了 $${m}$ 个隔板；$${m}$ 个变量只需 $${m - 1}$ 个。`,
+            ),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Describe the terms", "描述各项"],
+                t(
+                  `Each term is fixed by its exponents $k_1 + \\cdots + k_{${m}} = ${n}$ in nonnegative integers.`,
+                  `每一项由满足 $k_1 + \\cdots + k_{${m}} = ${n}$ 的非负整数指数确定。`,
+                ),
+              ],
+              [
+                ["Count with stars and bars", "用隔板法计数"],
+                t(
+                  `$${n}$ stars and $${m - 1}$ bars: $\\binom{${n} + ${m - 1}}{${m - 1}} = \\binom{${n + m - 1}}{${m - 1}} = ${value}$.`,
+                  `$${n}$ 颗星和 $${m - 1}$ 个隔板：$\\binom{${n} + ${m - 1}}{${m - 1}} = \\binom{${n + m - 1}}{${m - 1}} = ${value}$。`,
+                ),
+              ],
+            ],
+            t(
+              `Grouping the terms by the exponent $j$ of the first variable gives $\\sum_{j=0}^{${n}} \\binom{${n} - j + ${m - 2}}{${m - 2}}$, which the hockey-stick identity turns back into $\\binom{${n + m - 1}}{${m - 1}} = ${value}$.`,
+              `按第一个变量的指数 $j$ 分组得 $\\sum_{j=0}^{${n}} \\binom{${n} - j + ${m - 2}}{${m - 2}}$，由曲棍球棒恒等式它又等于 $\\binom{${n + m - 1}}{${m - 1}} = ${value}$。`,
+            ),
           ),
         });
       },
@@ -1169,8 +1645,8 @@ export const countingTermsInMultinomialExpansions: TopicDef = {
       id: "terms-containing-a-given-variable",
       title: t("Terms containing a variable", "含某变量的项"),
       explanation: t(
-        "Count the terms that leave the variable out, which form a smaller expansion, and subtract them from the total number of terms. Of the $15$ terms of $(x + y + z)^4$, those without $x$ are the $5$ terms of $(y + z)^4$, so $10$ terms contain $x$.",
-        "数出不含这个变量的项，它们构成一个较小的展开式，再从总项数中减去。在 $(x + y + z)^4$ 的 $15$ 项中，不含 $x$ 的是 $(y + z)^4$ 的 $5$ 项，所以含 $x$ 的有 $10$ 项。",
+        "Count the terms that leave the variable out, which form a smaller expansion, and subtract them from the total number of terms. Of the $120$ terms of $(x + y + z)^{14}$, those without $x$ are the $15$ terms of $(y + z)^{14}$, so $105$ terms contain $x$.\n\n> **Watch out.** Subtract the terms without the variable from all the terms; neither count alone is the answer, and the terms are not shared equally among the variables.",
+        "数出不含这个变量的项，它们构成一个较小的展开式，再从总项数中减去。在 $(x + y + z)^{14}$ 的 $120$ 项中，不含 $x$ 的是 $(y + z)^{14}$ 的 $15$ 项，所以含 $x$ 的有 $105$ 项。\n\n> **注意。** 要从全部项数中减去不含该变量的项数；两个数单独都不是答案，各项也不是在变量之间平均分配的。",
       ),
       generate(rng) {
         const m = rng.int(3, 4);
@@ -1186,10 +1662,35 @@ export const countingTermsInMultinomialExpansions: TopicDef = {
             `合并同类项后，$(${sum})^{${n}}$ 的展开式中有多少项含 $${v}$？`,
           ),
           answer: value,
-          wrong: [all, without, Math.round(all / m), n],
-          solution: t(
-            `All terms: $\\binom{${n + m - 1}}{${m - 1}} = ${all}$. Terms without $${v}$ come from a sum of $${m - 1}$ variables: $\\binom{${n + m - 2}}{${m - 2}} = ${without}$. So $${all} - ${without} = ${value}$.`,
-            `全部项：$\\binom{${n + m - 1}}{${m - 1}} = ${all}$。不含 $${v}$ 的项来自 $${m - 1}$ 个变量之和：$\\binom{${n + m - 2}}{${m - 2}} = ${without}$。所以 $${all} - ${without} = ${value}$。`,
+          mistakes: distinct(value, [
+            why(all, `That counts every term, including those without $${v}$.`, `那是数了全部项，包括不含 $${v}$ 的项。`),
+            why(without, `That counts the terms without $${v}$.`, `那是数了不含 $${v}$ 的项。`),
+            why(Math.round(all / m), "That assumes the terms are shared equally among the variables.", "那是假设各项在变量之间平均分配。"),
+            why(
+              n,
+              `That counts only the powers of $${v}$ from $${v}$ to $${v}^{${n}}$, ignoring the other variables.`,
+              `那是只数了 $${v}$ 到 $${v}^{${n}}$ 的幂，忽略了其他变量。`,
+            ),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Count all terms", "数全部项"],
+                t(`$\\binom{${n + m - 1}}{${m - 1}} = ${all}$.`, `$\\binom{${n + m - 1}}{${m - 1}} = ${all}$。`),
+              ],
+              [
+                ["Count the terms without the variable", "数不含该变量的项"],
+                t(
+                  `They come from a sum of $${m - 1}$ variables: $\\binom{${n + m - 2}}{${m - 2}} = ${without}$.`,
+                  `它们来自 $${m - 1}$ 个变量之和：$\\binom{${n + m - 2}}{${m - 2}} = ${without}$。`,
+                ),
+              ],
+              [["Subtract", "相减"], t(`$${all} - ${without} = ${value}$.`, `$${all} - ${without} = ${value}$。`)],
+            ],
+            t(
+              `A term containing $${v}$ is $${v}$ times a term of degree $${n - 1}$ in all $${m}$ variables, and there are $\\binom{${n - 1 + m - 1}}{${m - 1}} = ${value}$ of those.`,
+              `含 $${v}$ 的项等于 $${v}$ 乘以 $${m}$ 个变量的一个 $${n - 1}$ 次项，这样的项有 $\\binom{${n - 1 + m - 1}}{${m - 1}} = ${value}$ 个。`,
+            ),
           ),
         });
       },

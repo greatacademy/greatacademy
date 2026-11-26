@@ -104,4 +104,10 @@ export const taughtTopics: readonly string[] = [
   "solving-inhomogeneous-systems-of-odes",
   "phase-planes-and-phase-portraits",
   "equilibrium-points-and-stability-for-systems-of-odes",
+  "the-generalized-binomial-theorem",
+  "working-with-the-generalized-binomial-theorem",
+  "determining-ranges-of-validity-for-generalized-binomial-expansions",
+  "approximating-values-using-the-generalized-binomial-theorem",
+  "the-multinomial-theorem",
+  "counting-terms-in-multinomial-expansions",
 ];

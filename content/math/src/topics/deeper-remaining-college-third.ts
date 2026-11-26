@@ -8,7 +8,7 @@ import { discreteDrawings2 } from "../explanation-drawings-discrete-mathematics-
 import { numberProblem, why } from "../problems.ts";
 import { walked } from "./calculus-i-differentiation.ts";
 import { whole } from "./early-grades-more-kit.ts";
-import { chooseFilled, decimal, frac, fraction, integer, signed, skill } from "./third-kit.ts";
+import { chooseFilled, frac, fraction, integer, signed, skill } from "./third-kit.ts";
 
 /** Rng is the random source a generator receives. */
 type Rng = Parameters<KnowledgePointDef["generate"]>[0];
@@ -190,22 +190,43 @@ export const deeperRemainingCollegeThirdPoints: Readonly<Record<string, readonly
       "validity-with-a-squared-variable",
       ["Validity with a squared variable", "含平方变量时的有效范围"],
       [
-        "The expansion of $(1 + u)^{r}$ needs $|u| < 1$, whatever $u$ stands for. So with $u = m^{2}x^{2}$ the condition becomes $|mx| < 1$, and the square root changes the answer compared with a plain $x$.",
-        "$(1 + u)^{r}$ 的展开要求 $|u| < 1$，不管 $u$ 代表什么。所以 $u = m^{2}x^{2}$ 时条件变成 $|mx| < 1$，与单独的 $x$ 相比，开平方改变了结果。",
+        "The expansion of $(1 + u)^{r}$ needs $|u| < 1$, whatever $u$ stands for. So with $u = m^{2}x^{2}$ the condition becomes $|mx| < 1$, and the square root changes the answer compared with a plain $x$. For $(1 + 225x^{2})^{-1}$, $225x^{2} < 1$ means $x^{2} < \\frac{1}{225}$, that is, $|x| < \\frac{1}{15}$.\n\n> **Watch out.** The question asks about $|x|$, so take the square root of the bound on $x^{2}$; halving it, or stopping at $\\frac{1}{m^{2}}$, gives the wrong range.",
+        "$(1 + u)^{r}$ 的展开要求 $|u| < 1$，不管 $u$ 代表什么。所以 $u = m^{2}x^{2}$ 时条件变成 $|mx| < 1$，与单独的 $x$ 相比，开平方改变了结果。对 $(1 + 225x^{2})^{-1}$，$225x^{2} < 1$ 即 $x^{2} < \\frac{1}{225}$，也就是 $|x| < \\frac{1}{15}$。\n\n> **注意。** 题目问的是 $|x|$，所以要对 $x^{2}$ 的界开平方；把它减半，或停在 $\\frac{1}{m^{2}}$，都会得到错误的范围。",
       ],
       (rng) => {
         const m = rng.int(2, 12);
         const sign = rng.bool() ? "+" : "-";
         const r = rng.pick(["-1", "-2", "-3", "\\frac{1}{2}", "-\\frac{1}{2}", "\\frac{1}{3}"]);
-        return fraction(
-          [
+        const answer = Q.of(1, m);
+        return numberProblem({
+          prompt: t(
             `The expansion of $(1 ${sign} ${m * m}x^{2})^{${r}}$ in powers of $x$ is valid for $|x| < c$. Find $c$.`,
             `$(1 ${sign} ${m * m}x^{2})^{${r}}$ 按 $x$ 的幂展开，在 $|x| < c$ 时有效。求 $c$。`,
+          ),
+          answer,
+          mistakes: [
+            why(
+              Q.of(1, m * m),
+              "That is the bound on $x^{2}$; take its square root to bound $|x|$.",
+              "那是 $x^{2}$ 的界；要开平方才得到 $|x|$ 的界。",
+            ),
+            why(Q.of(m), "That inverts the bound; solve the inequality for $|x|$.", "那是把界颠倒了；应对 $|x|$ 解不等式。"),
+            why(Q.of(1, 2 * m), "That halves instead of taking the square root.", "那是减半，而不是开平方。"),
           ],
-          Q.of(1, m),
-          [Q.of(1, m * m), Q.of(m), Q.of(1, 2 * m)],
-          [`$${m * m}x^{2} < 1$ gives $|x| < ${frac(1, m)}$.`, `$${m * m}x^{2} < 1$ 得 $|x| < ${frac(1, m)}$。`],
-        );
+          solution: walked(
+            [
+              [
+                ["Require the small quantity below 1", "要求小量小于 1"],
+                t(`$${m * m}x^{2} < 1$, so $x^{2} < ${frac(1, m * m)}$.`, `$${m * m}x^{2} < 1$，所以 $x^{2} < ${frac(1, m * m)}$。`),
+              ],
+              [["Take the square root", "开平方"], t(`$|x| < ${frac(1, m)}$.`, `$|x| < ${frac(1, m)}$。`)],
+            ],
+            t(
+              `At $|x| = ${frac(1, m)}$, $${m * m}x^{2} = ${m * m} \\cdot ${frac(1, m * m)} = 1$, exactly the edge where the expansion stops converging.`,
+              `在 $|x| = ${frac(1, m)}$ 处，$${m * m}x^{2} = ${m * m} \\cdot ${frac(1, m * m)} = 1$，正是展开式停止收敛的边界。`,
+            ),
+          ),
+        });
       },
     ),
   ],
@@ -1085,8 +1106,8 @@ export const deeperRemainingCollegeThirdPoints: Readonly<Record<string, readonly
       "a-first-order-approximation",
       ["A first-order approximation", "一阶近似"],
       [
-        "For small $x$, $(1 + x)^{r}$ is close to $1 + rx$, whatever the real power $r$ is. This gives quick estimates of roots and reciprocals by keeping the first two terms of the expansion.",
-        "$x$ 很小时，不管实数 $r$ 是多少，$(1 + x)^{r}$ 都接近 $1 + rx$。所以保留展开式的前两项，就能快速估计根和倒数。",
+        "For small $x$, $(1 + x)^{r}$ is close to $1 + rx$, whatever the real power $r$ is. This gives quick estimates of roots and reciprocals by keeping the first two terms of the expansion. For $1.06^{1/3}$, $x = 0.06$ and $1 + \\frac{1}{3}(0.06) = 1.02$; the true value is $1.0196\\ldots$\n\n> **Watch out.** Multiply $x$ by $r$ with its sign, and keep the leading $1$; the estimate is $1 + rx$, not $1 + x$ or $rx$.",
+        "$x$ 很小时，不管实数 $r$ 是多少，$(1 + x)^{r}$ 都接近 $1 + rx$。所以保留展开式的前两项，就能快速估计根和倒数。对 $1.06^{1/3}$，$x = 0.06$，$1 + \\frac{1}{3}(0.06) = 1.02$；真实值为 $1.0196\\ldots$\n\n> **注意。** 要用带符号的 $r$ 乘以 $x$，并保留开头的 $1$；估计值是 $1 + rx$，不是 $1 + x$ 或 $rx$。",
       ],
       (rng) => {
         const row = rng.pick<[string, number, number]>([
@@ -1103,18 +1124,44 @@ export const deeperRemainingCollegeThirdPoints: Readonly<Record<string, readonly
         const x = Q.of(k, 100);
         const answer = Q.of(1).add(Q.of(row[1], row[2]).mul(x));
         const shown = ((100 + k) / 100).toFixed(2);
-        return decimal(
-          [
+        const rq = Q.of(row[1], row[2]);
+        const rx = rq.mul(x);
+        const xs = k < 0 ? `(${dec(x)})` : dec(x);
+        const product = rq.eq(Q.of(-1)) ? `-${xs}` : `${rq.toLatex()} \\cdot ${xs}`;
+        const next = rq
+          .mul(rq.sub(Q.of(1)))
+          .div(Q.of(2))
+          .mul(x.pow(2));
+        return numberProblem({
+          prompt: t(
             `Use the first two terms of the binomial expansion to approximate $${shown}^{${row[0]}}$.`,
             `用二项展开式的前两项近似 $${shown}^{${row[0]}}$。`,
-          ],
+          ),
           answer,
-          [Q.of(1).add(x), Q.of(1).add(Q.of(-row[1], row[2]).mul(x)), Q.of(row[1], row[2]).mul(x)],
-          [
-            `With $x = ${(k / 100).toFixed(2)}$ and $r = ${row[0]}$, the estimate is $1 + rx = 1 + ${row[1] < 0 ? `\\left(${row[0]}\\right)` : row[0]} \\cdot ${k < 0 ? `(${(k / 100).toFixed(2)})` : (k / 100).toFixed(2)} = ${dec(answer)}$.`,
-            `$x = ${(k / 100).toFixed(2)}$，$r = ${row[0]}$，估计值是 $1 + rx = 1 + ${row[1] < 0 ? `\\left(${row[0]}\\right)` : row[0]} \\cdot ${k < 0 ? `(${(k / 100).toFixed(2)})` : (k / 100).toFixed(2)} = ${dec(answer)}$。`,
-          ],
-        );
+          form: "decimal",
+          mistakes: [
+            why(Q.of(1).add(x), "That leaves out the power $r$; the second term is $rx$.", "那是漏掉了幂 $r$；第二项是 $rx$。"),
+            why(Q.of(1).sub(rx), "That flips the sign of $rx$.", "那是把 $rx$ 的符号弄反了。"),
+            why(rx, "That forgets the leading term $1$.", "那是忘了开头的 $1$。"),
+          ].filter((m, i, all) => !(m.value as Q).eq(answer) && all.findIndex((o) => (o.value as Q).eq(m.value as Q)) === i),
+          solution: walked(
+            [
+              [["Identify x and r", "确定 x 和 r"], t(`$x = ${dec(x)}$ and $r = ${row[0]}$.`, `$x = ${dec(x)}$，$r = ${row[0]}$。`)],
+              [["Find rx", "求 rx"], t(`$${product} = ${dec(rx)}$.`, `$${product} = ${dec(rx)}$。`)],
+              [
+                ["Add 1", "加 1"],
+                t(
+                  `$1 ${rx.sign() < 0 ? "-" : "+"} ${dec(rx.abs())} = ${dec(answer)}$.`,
+                  `$1 ${rx.sign() < 0 ? "-" : "+"} ${dec(rx.abs())} = ${dec(answer)}$。`,
+                ),
+              ],
+            ],
+            t(
+              `The next term, $\\binom{r}{2}x^2 = ${dec(next)}$, is far smaller than $rx$, so the estimate is off by only about that much.`,
+              `下一项 $\\binom{r}{2}x^2 = ${dec(next)}$ 远小于 $rx$，所以估计值的误差大约只有这么多。`,
+            ),
+          ),
+        });
       },
     ),
   ],

@@ -1508,8 +1508,8 @@ const coefficientSum: KnowledgePointDef = {
   id: "the-sum-of-the-coefficients-of-a-multinomial-expansion",
   title: t("The sum of the coefficients of a multinomial expansion", "多项式展开的系数和"),
   explanation: t(
-    "Setting every variable equal to 1 turns each term of an expansion into its coefficient alone, so the expression's value at that point is the sum of all the coefficients. There is no need to find any single term. This works for negative coefficients as well, where signs inside the bracket simply combine first, and the power is taken afterwards.",
-    "令每个变量都等于 1，展开式的每一项就只剩下它的系数，所以这一点上的表达式的值就是所有系数之和。根本不需要求出任何单独的项。对负系数也同样成立，括号内的符号先合并，然后再求幂。",
+    "Setting every variable equal to 1 turns each term of an expansion into its coefficient alone, so the expression's value at that point is the sum of all the coefficients. For $(2x - 3y + 6z)^3$, the bracket at $x = y = z = 1$ is $2 - 3 + 6 = 5$, so the coefficients add up to $5^3 = 125$, with no single term worked out.\n\n> **Watch out.** Combine the coefficients inside the bracket, signs included, before taking the power; raising each coefficient separately, or dropping the minus signs, gives a different number.",
+    "令每个变量都等于 1，展开式的每一项就只剩下它的系数，所以这一点上的表达式的值就是所有系数之和。对 $(2x - 3y + 6z)^3$，在 $x = y = z = 1$ 处括号的值为 $2 - 3 + 6 = 5$，所以系数之和为 $5^3 = 125$，不必求出任何单独的项。\n\n> **注意。** 要先把括号内的系数连同符号合并，再求幂；把每个系数分别求幂，或者丢掉负号，都会得到别的数。",
   ),
   generate(rng) {
     const a = rng.pick([-3, -2, -1, 1, 2, 3, 4, 5]);
@@ -1519,6 +1519,7 @@ const coefficientSum: KnowledgePointDef = {
     const sum = a + b + c;
     const answer = sum ** n;
     const size = Math.abs(a) + Math.abs(b) + Math.abs(c);
+    const added = `${a} ${b < 0 ? "-" : "+"} ${Math.abs(b)} ${c < 0 ? "-" : "+"} ${Math.abs(c)}`;
     return numberProblem({
       prompt: t(
         `Find the sum of all the coefficients in the expansion of $(${poly([a, "x"], [b, "y"], [c, "z"])})^{${n}}$.`,
@@ -1526,10 +1527,33 @@ const coefficientSum: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong: [size ** n, sum * n, a ** n + b ** n + c ** n, 3 ** n, answer + 1],
-      solution: t(
-        `Put $x = y = z = 1$. The bracket equals $${sum}$, so the sum is $${inParens(sum)}^{${n}} = ${answer}$.`,
-        `令 $x = y = z = 1$。括号的值是 $${sum}$，所以和是 $${inParens(sum)}^{${n}} = ${answer}$。`,
+      mistakes: [
+        why(size ** n, "That drops the minus signs of the coefficients.", "那是丢掉了系数的负号。"),
+        why(sum * n, `That multiplies by $${n}$ instead of raising to the power $${n}$.`, `那是乘以 $${n}$，而不是取 $${n}$ 次方。`),
+        why(
+          a ** n + b ** n + c ** n,
+          "That raises each coefficient separately; the bracket must be combined first.",
+          "那是把每个系数分别求幂；应先合并括号。",
+        ),
+        why(3 ** n, "That treats every coefficient in the bracket as $1$.", "那是把括号内每个系数都当成了 $1$。"),
+      ].filter((m, i, all) => m.value !== answer && all.findIndex((o) => o.value === m.value) === i),
+      solution: walked(
+        [
+          [
+            ["Set every variable to 1", "令每个变量为 1"],
+            t(`At $x = y = z = 1$ the bracket is $${added} = ${sum}$.`, `在 $x = y = z = 1$ 处，括号的值为 $${added} = ${sum}$。`),
+          ],
+          [["Raise to the power", "求幂"], t(`$${inParens(sum)}^{${n}} = ${answer}$.`, `$${inParens(sum)}^{${n}} = ${answer}$。`)],
+        ],
+        Math.abs(sum) <= 1
+          ? t(
+              `Each of the $${n}$ factors equals $${sum}$ at that point, so their product is $${answer}$.`,
+              `在该点 $${n}$ 个因子都等于 $${sum}$，所以乘积为 $${answer}$。`,
+            )
+          : t(
+              `Each of the $${n}$ factors equals $${sum}$ at that point, and $${Array(n).fill(inParens(sum)).join(" \\cdot ")} = ${answer}$.`,
+              `在该点 $${n}$ 个因子都等于 $${sum}$，而 $${Array(n).fill(inParens(sum)).join(" \\cdot ")} = ${answer}$。`,
+            ),
       ),
     });
   },
@@ -1539,8 +1563,8 @@ const termsWithAllVariables: KnowledgePointDef = {
   id: "the-terms-of-a-multinomial-expansion-that-contain-every-variable",
   title: t("The terms of a multinomial expansion that contain every variable", "多项式展开中含所有变量的项"),
   explanation: t(
-    "A term of $(x_1 + \\dots + x_k)^n$ is decided by its exponents, which are whole numbers adding to $n$. A term that contains every variable has all its exponents at least 1. Giving each variable one copy first leaves $n - k$ to share out freely among $k$ variables, and stars and bars then gives $\\binom{n - 1}{k - 1}$ such terms, fewer than the full count.",
-    "$(x_1 + \\dots + x_k)^n$ 的一项由它的指数决定，这些指数是和为 $n$ 的整数。含所有变量的项，所有指数都至少是 1。先给每个变量一份，剩下 $n - k$ 份在 $k$ 个变量中自由分配，于是隔板法给出 $\\binom{n - 1}{k - 1}$ 个这样的项，比全部项数少。",
+    "A term of $(x_1 + \\dots + x_k)^n$ is decided by its exponents, which are whole numbers adding to $n$. A term that contains every variable has all its exponents at least 1, so give each variable one copy first and share out the rest freely. In $(x_1 + \\dots + x_7)^{10}$, that leaves $3$ copies for $7$ variables: $\\binom{3 + 6}{6} = \\binom{9}{6} = 84$ terms.\n\n> **Watch out.** Hand out the $k$ required copies before using stars and bars; counting all $\\binom{n + k - 1}{k - 1}$ terms includes those with a missing variable.",
+    "$(x_1 + \\dots + x_k)^n$ 的一项由它的指数决定，这些指数是和为 $n$ 的整数。含所有变量的项，所有指数都至少是 1，所以先给每个变量一份，再自由分配剩下的。在 $(x_1 + \\dots + x_7)^{10}$ 中，剩下 $3$ 份分给 $7$ 个变量：共 $\\binom{3 + 6}{6} = \\binom{9}{6} = 84$ 项。\n\n> **注意。** 用隔板法之前要先分掉必需的 $k$ 份；直接数全部 $\\binom{n + k - 1}{k - 1}$ 项会把缺少某个变量的项也算进去。",
   ),
   generate(rng) {
     const k = rng.int(3, 6);
@@ -1556,10 +1580,48 @@ const termsWithAllVariables: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong: [binom(n + k - 1, k - 1), binom(n, k - 1), answer + 1, n],
-      solution: t(
-        `The exponents are all at least 1 and add to ${n}, so there are $\\binom{${n - 1}}{${k - 1}} = ${answer}$ such terms.`,
-        `指数都至少是 1，且和为 ${n}，所以有 $\\binom{${n - 1}}{${k - 1}} = ${answer}$ 个这样的项。`,
+      mistakes: [
+        why(
+          binom(n + k - 1, k - 1),
+          "That counts every term, including those with a missing variable.",
+          "那是数了全部项，包括缺少某个变量的项。",
+        ),
+        why(
+          binom(n, k - 1),
+          `That shares out one copy too many; after giving each variable one, $${n - k}$ remain.`,
+          `那是多分了一份；给每个变量一份之后剩下 $${n - k}$ 份。`,
+        ),
+        ...(n - k >= k - 1
+          ? [
+              why(
+                binom(n - k, k - 1),
+                "That chooses the bars among the stars only; the bars take positions of their own.",
+                "那是只在星之间选隔板；隔板自己也占位置。",
+              ),
+            ]
+          : []),
+      ].filter((m, i, all) => m.value !== answer && all.findIndex((o) => o.value === m.value) === i),
+      solution: walked(
+        [
+          [
+            ["Give each variable one copy", "每个变量先分一份"],
+            t(
+              `That uses $${k}$ of the $${n}$, leaving $${n - k}$ to share freely.`,
+              `这用掉 $${n}$ 中的 $${k}$ 份，剩下 $${n - k}$ 份自由分配。`,
+            ),
+          ],
+          [
+            ["Count with stars and bars", "用隔板法计数"],
+            t(
+              `$${n - k}$ stars and $${k - 1}$ bars: $\\binom{${n - k} + ${k - 1}}{${k - 1}} = \\binom{${n - 1}}{${k - 1}} = ${answer}$.`,
+              `$${n - k}$ 颗星和 $${k - 1}$ 个隔板：$\\binom{${n - k} + ${k - 1}}{${k - 1}} = \\binom{${n - 1}}{${k - 1}} = ${answer}$。`,
+            ),
+          ],
+        ],
+        t(
+          `Equivalently, lay out $${n}$ objects in a row and cut it at $${k - 1}$ of the $${n - 1}$ gaps, so every part is nonempty: $\\binom{${n - 1}}{${k - 1}} = ${answer}$ again.`,
+          `等价地，把 $${n}$ 个物体排成一行，在 $${n - 1}$ 个空隙中选 $${k - 1}$ 个切开，使每段都非空：同样得 $\\binom{${n - 1}}{${k - 1}} = ${answer}$。`,
+        ),
       ),
     });
   },
@@ -3364,8 +3426,8 @@ const exponentFromCoefficients: KnowledgePointDef = {
   id: "the-exponent-from-two-coefficients-of-a-binomial-expansion",
   title: t("The exponent from two coefficients of a binomial expansion", "由二项展开式的两个系数求指数"),
   explanation: t(
-    "The first coefficients of a generalized binomial expansion can be read backward. They give two equations in the exponent and the scale of the variable, and the scale appears to the first power in one equation and squared in the other. Squaring the first coefficient and dividing by the second therefore removes the scale and leaves an equation in the exponent.",
-    "广义二项展开式的前几个系数可以反过来用。它们给出关于指数和变量比例的两个方程，比例在一个方程中是一次，在另一个中是平方。所以把第一个系数平方再除以第二个，就消去了比例，留下关于指数的方程。",
+    "The first coefficients of a generalized binomial expansion can be read backward: $\\alpha k = A$ and $\\frac{\\alpha(\\alpha - 1)}{2}k^2 = B$. Then $A^2 - 2B = \\alpha k^2$, so $\\alpha = \\frac{A^2}{A^2 - 2B}$. If $(1 + kx)^{\\alpha}$ begins $1 + 3x - \\frac{3}{2}x^2$, then $A^2 - 2B = 9 + 3 = 12$ and $\\alpha = \\frac{9}{12} = \\frac{3}{4}$, with $k = 4$.\n\n> **Watch out.** The $x^2$ coefficient carries $k^2$ and a factor $\\frac{1}{2}$, so divide $A^2$ by $A^2 - 2B$, not by $B$; and the first coefficient is $\\alpha k$, not $\\alpha$ itself.",
+    "广义二项展开式的前几个系数可以反过来用：$\\alpha k = A$，$\\frac{\\alpha(\\alpha - 1)}{2}k^2 = B$。于是 $A^2 - 2B = \\alpha k^2$，所以 $\\alpha = \\frac{A^2}{A^2 - 2B}$。若 $(1 + kx)^{\\alpha}$ 的开头是 $1 + 3x - \\frac{3}{2}x^2$，则 $A^2 - 2B = 9 + 3 = 12$，$\\alpha = \\frac{9}{12} = \\frac{3}{4}$，且 $k = 4$。\n\n> **注意。** $x^2$ 的系数含 $k^2$ 和因子 $\\frac{1}{2}$，所以应以 $A^2 - 2B$ 而不是 $B$ 去除 $A^2$；第一个系数是 $\\alpha k$，不是 $\\alpha$ 本身。",
   ),
   generate(rng) {
     const scales: readonly (readonly [Q, readonly number[]])[] = [
@@ -3397,10 +3459,49 @@ const exponentFromCoefficients: KnowledgePointDef = {
         `对非零常数 $k$ 和指数 $\\alpha$，$(1 + kx)^{\\alpha}$ 的展开式开头是 $${expansion}$。求 $\\alpha$。`,
       ),
       answer: alpha,
-      wrong: [alpha.neg(), alpha.add(Q.of(1)), alpha.sub(Q.of(1)), Q.of(1).div(alpha), A],
-      solution: t(
-        `Matching coefficients gives $\\alpha k = ${A.toLatex()}$ and $\\frac{\\alpha(\\alpha - 1)}{2} k^2 = ${B.toLatex()}$. Hence $(\\alpha k)^2 - 2 \\cdot \\frac{\\alpha(\\alpha - 1)}{2} k^2 = \\alpha k^2$, which is $${denominator.toLatex()}$. Dividing $(\\alpha k)^2 = ${square.toLatex()}$ by $\\alpha k^2$ leaves $\\alpha = ${alpha.toLatex()}$.`,
-        `比较系数得 $\\alpha k = ${A.toLatex()}$，$\\frac{\\alpha(\\alpha - 1)}{2} k^2 = ${B.toLatex()}$。于是 $(\\alpha k)^2 - 2 \\cdot \\frac{\\alpha(\\alpha - 1)}{2} k^2 = \\alpha k^2$，其值为 $${denominator.toLatex()}$。用 $(\\alpha k)^2 = ${square.toLatex()}$ 除以 $\\alpha k^2$，得 $\\alpha = ${alpha.toLatex()}$。`,
+      mistakes: [
+        why(
+          alpha.neg(),
+          "That has the wrong sign; $\\alpha$ has the same sign as $A^2 - 2B$.",
+          "那是符号错了；$\\alpha$ 与 $A^2 - 2B$ 同号。",
+        ),
+        why(
+          square.div(B),
+          "That divides $A^2$ by $B$; the scale only cancels against $A^2 - 2B$.",
+          "那是用 $B$ 去除 $A^2$；只有除以 $A^2 - 2B$ 才能消去比例。",
+        ),
+        why(A, "That is $\\alpha k$, the first coefficient, not $\\alpha$.", "那是第一个系数 $\\alpha k$，不是 $\\alpha$。"),
+        why(Q.of(k), "That is the scale $k$, not the exponent.", "那是比例 $k$，不是指数。"),
+        why(Q.of(1).div(alpha), "That inverts the fraction $\\frac{A^2}{A^2 - 2B}$.", "那是把分数 $\\frac{A^2}{A^2 - 2B}$ 颠倒了。"),
+      ].filter((m, i, all) => !(m.value as Q).eq(alpha) && all.findIndex((x) => (x.value as Q).eq(m.value as Q)) === i),
+      solution: walked(
+        [
+          [
+            ["Match the coefficients", "比较系数"],
+            t(
+              `$\\alpha k = ${A.toLatex()}$ and $\\frac{\\alpha(\\alpha - 1)}{2} k^2 = ${B.toLatex()}$.`,
+              `$\\alpha k = ${A.toLatex()}$，$\\frac{\\alpha(\\alpha - 1)}{2} k^2 = ${B.toLatex()}$。`,
+            ),
+          ],
+          [
+            ["Remove the scale", "消去比例"],
+            t(
+              `$(\\alpha k)^2 - 2 \\cdot \\frac{\\alpha(\\alpha - 1)}{2} k^2 = \\alpha k^2$, so $\\alpha k^2 = ${square.toLatex()} - 2 \\cdot ${bracketPow(B, 1)} = ${denominator.toLatex()}$.`,
+              `$(\\alpha k)^2 - 2 \\cdot \\frac{\\alpha(\\alpha - 1)}{2} k^2 = \\alpha k^2$，所以 $\\alpha k^2 = ${square.toLatex()} - 2 \\cdot ${bracketPow(B, 1)} = ${denominator.toLatex()}$。`,
+            ),
+          ],
+          [
+            ["Divide", "相除"],
+            t(
+              `$\\alpha = \\frac{(\\alpha k)^2}{\\alpha k^2} = \\frac{${square.toLatex()}}{${denominator.toLatex()}} = ${alpha.toLatex()}$.`,
+              `$\\alpha = \\frac{(\\alpha k)^2}{\\alpha k^2} = \\frac{${square.toLatex()}}{${denominator.toLatex()}} = ${alpha.toLatex()}$。`,
+            ),
+          ],
+        ],
+        t(
+          `With $\\alpha = ${alpha.toLatex()}$ the scale is $k = ${k}$, and $\\frac{\\alpha(\\alpha - 1)}{2}k^2 = \\frac{${bracketPow(alpha, 1)}${bracketPow(alpha.sub(Q.of(1)), 1)}}{2} \\cdot ${k * k} = ${B.toLatex()}$, the given $x^2$ coefficient.`,
+          `取 $\\alpha = ${alpha.toLatex()}$，比例为 $k = ${k}$，且 $\\frac{\\alpha(\\alpha - 1)}{2}k^2 = \\frac{${bracketPow(alpha, 1)}${bracketPow(alpha.sub(Q.of(1)), 1)}}{2} \\cdot ${k * k} = ${B.toLatex()}$，正是给出的 $x^2$ 系数。`,
+        ),
       ),
     });
   },
@@ -3410,8 +3511,8 @@ const firstOmittedTerm: KnowledgePointDef = {
   id: "the-first-term-left-out-of-a-binomial-approximation",
   title: t("The first term left out of a binomial approximation", "二项近似中第一个被舍去的项"),
   explanation: t(
-    "A truncated binomial expansion is only useful if we know roughly how far off it is. When the small quantity is well below one, each term is much smaller than the one before, so the error is close to the first term left out. Its sign also shows whether the approximation is too large or too small.",
-    "截断的二项展开式只有在知道大致误差时才有用。当小量远小于一时，每一项都比前一项小得多，所以误差接近第一个被舍去的项。它的符号还说明近似值偏大还是偏小。",
+    "A truncated binomial expansion is only useful if we know roughly how far off it is. When the small quantity is well below one, each term is much smaller than the one before, so the error is close to the first term left out. Approximating $1.02^{1/2}$ by $1 + \\frac{1}{2}x - \\frac{1}{8}x^2$ with $x = \\frac{1}{50}$ leaves out $\\frac{1}{16}x^3 = \\frac{1}{2000000}$, so the approximation is too small by about that much.\n\n> **Watch out.** The $x^3$ coefficient is $\\frac{\\alpha(\\alpha - 1)(\\alpha - 2)}{6}$, divided by $3! = 6$; and keep its sign, which tells whether the approximation is too large or too small.",
+    "截断的二项展开式只有在知道大致误差时才有用。当小量远小于一时，每一项都比前一项小得多，所以误差接近第一个被舍去的项。用 $1 + \\frac{1}{2}x - \\frac{1}{8}x^2$ 以 $x = \\frac{1}{50}$ 近似 $1.02^{1/2}$，舍去的是 $\\frac{1}{16}x^3 = \\frac{1}{2000000}$，所以近似值大约偏小这么多。\n\n> **注意。** $x^3$ 的系数是 $\\frac{\\alpha(\\alpha - 1)(\\alpha - 2)}{6}$，要除以 $3! = 6$；还要保留它的符号，它说明近似值偏大还是偏小。",
   ),
   generate(rng) {
     const alpha = rng.pick([Q.of(1, 2), Q.of(-1, 2), Q.of(1, 3), Q.of(-1), Q.of(-2), Q.of(3, 2), Q.of(-3, 2)]);
@@ -3430,6 +3531,7 @@ const firstOmittedTerm: KnowledgePointDef = {
       .mul(alpha.sub(Q.of(2)))
       .div(Q.of(6));
     const answer = c3.mul(x.pow(3));
+    const lead = c3.eq(Q.of(-1)) ? "-" : `${c3.toLatex()} \\cdot `;
     const second = alpha
       .mul(alpha.sub(Q.of(1)))
       .div(Q.of(2))
@@ -3441,10 +3543,49 @@ const firstOmittedTerm: KnowledgePointDef = {
       ),
       answer,
       form: "fraction",
-      wrong: [answer.neg(), second, answer.mul(Q.of(6)), x.pow(3), c3],
-      solution: t(
-        `Here $x = ${x.toLatex()}$, and the first three terms stop at $x^2$. The next is $\\frac{\\alpha(\\alpha - 1)(\\alpha - 2)}{6} x^3$ with $\\alpha = ${alpha.toLatex()}$, whose coefficient is $${c3.toLatex()}$. Multiplying by $x^3 = ${x.pow(3).toLatex()}$ gives $${answer.toLatex()}$, which is roughly the error of the approximation.`,
-        `这里 $x = ${x.toLatex()}$，前三项到 $x^2$ 为止。下一项是 $\\frac{\\alpha(\\alpha - 1)(\\alpha - 2)}{6} x^3$，其中 $\\alpha = ${alpha.toLatex()}$，系数为 $${c3.toLatex()}$。乘以 $x^3 = ${x.pow(3).toLatex()}$ 得 $${answer.toLatex()}$，它大致就是近似的误差。`,
+      mistakes: [
+        why(
+          answer.neg(),
+          "That has the wrong sign; keep the signs of the factors and of $x$.",
+          "那是符号错了；要保留各因子和 $x$ 的符号。",
+        ),
+        why(
+          second,
+          "That is the $x^2$ term, the last one kept, not the first one left out.",
+          "那是 $x^2$ 项，即保留的最后一项，不是第一个被舍去的项。",
+        ),
+        why(answer.mul(Q.of(6)), "That forgets to divide by $3! = 6$.", "那是忘了除以 $3! = 6$。"),
+        why(x.pow(3), "That leaves out the coefficient of $x^3$.", "那是漏掉了 $x^3$ 的系数。"),
+        why(c3, "That gives the coefficient without multiplying by $x^3$.", "那是只给出系数，没有乘以 $x^3$。"),
+      ].filter((m, i, all) => !(m.value as Q).eq(answer) && all.findIndex((o) => (o.value as Q).eq(m.value as Q)) === i),
+      solution: walked(
+        [
+          [
+            ["Identify the omitted term", "确定被舍去的项"],
+            t(
+              `Here $x = ${x.toLatex()}$, and the first three terms stop at $x^2$, so the first term left out is the $x^3$ term.`,
+              `这里 $x = ${x.toLatex()}$，前三项到 $x^2$ 为止，所以第一个被舍去的是 $x^3$ 项。`,
+            ),
+          ],
+          [
+            ["Find its coefficient", "求它的系数"],
+            t(
+              `$\\frac{${bracketPow(alpha, 1)}${bracketPow(alpha.sub(Q.of(1)), 1)}${bracketPow(alpha.sub(Q.of(2)), 1)}}{6} = ${c3.toLatex()}$.`,
+              `$\\frac{${bracketPow(alpha, 1)}${bracketPow(alpha.sub(Q.of(1)), 1)}${bracketPow(alpha.sub(Q.of(2)), 1)}}{6} = ${c3.toLatex()}$。`,
+            ),
+          ],
+          [
+            ["Multiply by the cube", "乘以立方"],
+            t(
+              `$${lead}${bracketPow(x, 3)} = ${lead}${bracketPow(x.pow(3), 1)} = ${answer.toLatex()}$.`,
+              `$${lead}${bracketPow(x, 3)} = ${lead}${bracketPow(x.pow(3), 1)} = ${answer.toLatex()}$。`,
+            ),
+          ],
+        ],
+        t(
+          `The term after it is $\\frac{\\alpha - 3}{4}x$ times this one, that is $${bracketPow(alpha.sub(Q.of(3)).mul(x).div(Q.of(4)), 1)}$ times it, which is much smaller, so the error is close to $${answer.toLatex()}$.`,
+          `再下一项是这一项的 $\\frac{\\alpha - 3}{4}x$ 倍，即 $${bracketPow(alpha.sub(Q.of(3)).mul(x).div(Q.of(4)), 1)}$ 倍，小得多，所以误差接近 $${answer.toLatex()}$。`,
+        ),
       ),
     });
   },
