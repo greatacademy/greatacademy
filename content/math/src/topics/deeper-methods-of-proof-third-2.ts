@@ -41,12 +41,18 @@ const baseCaseMatters = point(
   },
 );
 
+/** sayApart keeps the mistakes whose responses differ from the answer and from each other. */
+function sayApart(answer: string, list: readonly ReturnType<typeof say>[]): ReturnType<typeof say>[] {
+  const seen = new Set([answer]);
+  return list.filter((m) => !seen.has(m.response) && Boolean(seen.add(m.response)));
+}
+
 const smallestNForNull = point(
   "the-exact-n-for-a-null-sequence",
   ["The exact N for a null sequence", "零序列的精确 N"],
   [
-    "For a decreasing sequence, the definition of the limit can be solved exactly. The inequality $|a_{n}| < \\varepsilon$ is strict, so when the boundary value is a whole number, $N$ must be one more than it, since the boundary term only equals $\\varepsilon$.",
-    "对于递减序列，极限的定义可以精确求解。不等式 $|a_{n}| < \\varepsilon$ 是严格的，所以当边界值是整数时，$N$ 必须比它大一，因为边界项只是等于 $\\varepsilon$。",
+    "For a decreasing sequence, the definition of the limit can be solved exactly. The inequality $|a_{n}| < \\varepsilon$ is strict, so when the boundary value is a whole number, $N$ must be one more than it, since the boundary term only equals $\\varepsilon$. For $a_{n} = \\dfrac{3}{n + 2}$ and $\\varepsilon = \\dfrac{1}{10}$: $n + 2 > 30$, so $n > 28$ and $N = 29$.\n\n> **Watch out.** Keep the shift in the denominator: $n + 2 > 30$ gives $n > 28$, not $n > 30$. And the boundary index $28$, where the term equals $\\varepsilon$ exactly, is still too early.",
+    "对于递减序列，极限的定义可以精确求解。不等式 $|a_{n}| < \\varepsilon$ 是严格的，所以当边界值是整数时，$N$ 必须比它大一，因为边界项只是等于 $\\varepsilon$。对 $a_{n} = \\dfrac{3}{n + 2}$ 与 $\\varepsilon = \\dfrac{1}{10}$：$n + 2 > 30$，所以 $n > 28$，$N = 29$。\n\n> **注意。** 别丢掉分母中的平移：$n + 2 > 30$ 给出 $n > 28$，而不是 $n > 30$。边界下标 $28$ 处的项恰好等于 $\\varepsilon$，仍然太早。",
   ],
   (rng) => {
     const c = rng.int(2, 9);
@@ -54,17 +60,28 @@ const smallestNForNull = point(
     const m = rng.pick([10, 20, 50, 100, 200]);
     const edge = c * m - b;
     const answer = edge + 1;
-    return ask(
-      [
-        `Let $a_{n} = \\dfrac{${c}}{n + ${b}}$ and $\\varepsilon = \\dfrac{1}{${m}}$. Find the smallest positive integer $N$ with $|a_{n}| < \\varepsilon$ for all $n \\ge N$.`,
-        `设 $a_{n} = \\dfrac{${c}}{n + ${b}}$，$\\varepsilon = \\dfrac{1}{${m}}$。求最小的正整数 $N$，使 $|a_{n}| < \\varepsilon$ 对所有 $n \\ge N$ 成立。`,
-      ],
-      answer,
-      [edge, c * m + 1, c * m],
-      [
-        `The inequality means $n + ${b} > ${c * m}$, so $n > ${edge}$. At $n = ${edge}$ the term equals $\\varepsilon$, so the smallest $N$ is $${answer}$.`,
-        `不等式相当于 $n + ${b} > ${c * m}$，所以 $n > ${edge}$。当 $n = ${edge}$ 时，这一项等于 $\\varepsilon$，所以最小的 $N$ 是 $${answer}$。`,
-      ],
+    return withMistakes(
+      ask(
+        [
+          `Let $a_{n} = \\dfrac{${c}}{n + ${b}}$ and $\\varepsilon = \\dfrac{1}{${m}}$. Find the smallest positive integer $N$ with $|a_{n}| < \\varepsilon$ for all $n \\ge N$.`,
+          `设 $a_{n} = \\dfrac{${c}}{n + ${b}}$，$\\varepsilon = \\dfrac{1}{${m}}$。求最小的正整数 $N$，使 $|a_{n}| < \\varepsilon$ 对所有 $n \\ge N$ 成立。`,
+        ],
+        answer,
+        [edge, c * m + 1, c * m],
+        [
+          `**Step 1: Solve the inequality.** $\\dfrac{${c}}{n + ${b}} < \\dfrac{1}{${m}}$ means $n + ${b} > ${c * m}$, so $n > ${edge}$.\n\n**Step 2: Take the first index past it.** At $n = ${edge}$ the term equals $\\varepsilon$, and the terms keep decreasing, so the smallest $N$ is $${answer}$.\n\n**Check.** $a_{${answer}} = \\dfrac{${c}}{${c * m + 1}}$ is less than $\\dfrac{${c}}{${c * m}} = \\dfrac{1}{${m}}$, while $a_{${edge}} = \\dfrac{${c}}{${c * m}}$ equals it.`,
+          `**第一步：解不等式。** $\\dfrac{${c}}{n + ${b}} < \\dfrac{1}{${m}}$ 即 $n + ${b} > ${c * m}$，所以 $n > ${edge}$。\n\n**第二步：取越过它的第一个下标。** 当 $n = ${edge}$ 时这一项等于 $\\varepsilon$，而各项继续减小，所以最小的 $N$ 是 $${answer}$。\n\n**检验。** $a_{${answer}} = \\dfrac{${c}}{${c * m + 1}}$ 小于 $\\dfrac{${c}}{${c * m}} = \\dfrac{1}{${m}}$，而 $a_{${edge}} = \\dfrac{${c}}{${c * m}}$ 恰好等于它。`,
+        ],
+      ),
+      sayApart(String(answer), [
+        say(
+          String(edge),
+          "At that index the term equals $\\varepsilon$ exactly, and the inequality is strict.",
+          "在这个下标处，这一项恰好等于 $\\varepsilon$，而不等式是严格的。",
+        ),
+        say(String(c * m + 1), `That drops the $+ ${b}$ in the denominator.`, `这丢掉了分母中的 $+ ${b}$。`),
+        say(String(c * m), `That drops the $+ ${b}$ in the denominator.`, `这丢掉了分母中的 $+ ${b}$。`),
+      ]),
     );
   },
 );
@@ -73,8 +90,8 @@ const quadraticLimit = point(
   "the-n-for-a-quadratic-ratio",
   ["The N for a quadratic ratio", "二次比值的 N"],
   [
-    "With squares on top and bottom, the distance to the limit is a constant over $n^{2} + c$. So the inequality gives a bound on $n^{2}$, and a square root appears in the answer for $N$. This is a harder case of the same procedure as for linear ratios.",
-    "分子分母都有平方时，到极限的距离是一个常数除以 $n^{2} + c$。所以不等式给出 $n^{2}$ 的界，$N$ 的答案中出现平方根。这是与线性比值相同步骤的更难情形。",
+    "With squares on top and bottom, the distance to the limit is a constant over $n^{2} + c$. So the inequality gives a bound on $n^{2}$, and a square root appears in the answer for $N$. For $a_{n} = \\dfrac{2n^{2} + 7}{n^{2} + 1}$, which tends to $2$, the distance is $\\dfrac{5}{n^{2} + 1}$; with $\\varepsilon = \\dfrac{1}{10}$ we need $n^{2} > 49$, so $N = 8$.\n\n> **Watch out.** Solving gives a bound on $n^{2}$, not on $n$: take the square root, and since $n^{2}$ must exceed the bound strictly, a perfect square such as $49$ still needs the next integer.",
+    "分子分母都有平方时，到极限的距离是一个常数除以 $n^{2} + c$。所以不等式给出 $n^{2}$ 的界，$N$ 的答案中出现平方根。对趋于 $2$ 的 $a_{n} = \\dfrac{2n^{2} + 7}{n^{2} + 1}$，距离是 $\\dfrac{5}{n^{2} + 1}$；取 $\\varepsilon = \\dfrac{1}{10}$，需要 $n^{2} > 49$，所以 $N = 8$。\n\n> **注意。** 解出来的是 $n^{2}$ 的界，而不是 $n$ 的界：要开平方。又因为 $n^{2}$ 必须严格大于这个界，像 $49$ 这样的完全平方数仍要取下一个整数。",
   ],
   (rng) => {
     const a = rng.int(2, 5);
@@ -85,17 +102,23 @@ const quadraticLimit = point(
     const K = Math.abs(b - a * c);
     const bound = K * m - c;
     const answer = Math.floor(Math.sqrt(bound)) + 1;
-    return ask(
-      [
-        `Let $a_{n} = \\dfrac{${a}n^{2} + ${b}}{n^{2} + ${c}}$, which tends to $${a}$, and $\\varepsilon = \\dfrac{1}{${m}}$. Find the smallest positive integer $N$ with $|a_{n} - ${a}| < \\varepsilon$ for all $n \\ge N$.`,
-        `设 $a_{n} = \\dfrac{${a}n^{2} + ${b}}{n^{2} + ${c}}$，它趋于 $${a}$，$\\varepsilon = \\dfrac{1}{${m}}$。求最小的正整数 $N$，使 $|a_{n} - ${a}| < \\varepsilon$ 对所有 $n \\ge N$ 成立。`,
-      ],
-      answer,
-      [answer + 1, bound + 1, Math.floor(Math.sqrt(K * m)) + 2],
-      [
-        `The distance is $\\dfrac{${K}}{n^{2} + ${c}}$. The inequality becomes $n^{2} > ${bound}$, and the smallest such positive integer is $${answer}$, after which the distance keeps decreasing.`,
-        `距离是 $\\dfrac{${K}}{n^{2} + ${c}}$。不等式变为 $n^{2} > ${bound}$，满足它的最小正整数是 $${answer}$，此后距离继续减小。`,
-      ],
+    return withMistakes(
+      ask(
+        [
+          `Let $a_{n} = \\dfrac{${a}n^{2} + ${b}}{n^{2} + ${c}}$, which tends to $${a}$, and $\\varepsilon = \\dfrac{1}{${m}}$. Find the smallest positive integer $N$ with $|a_{n} - ${a}| < \\varepsilon$ for all $n \\ge N$.`,
+          `设 $a_{n} = \\dfrac{${a}n^{2} + ${b}}{n^{2} + ${c}}$，它趋于 $${a}$，$\\varepsilon = \\dfrac{1}{${m}}$。求最小的正整数 $N$，使 $|a_{n} - ${a}| < \\varepsilon$ 对所有 $n \\ge N$ 成立。`,
+        ],
+        answer,
+        [answer + 1, bound + 1, Math.floor(Math.sqrt(K * m)) + 1],
+        [
+          `**Step 1: Write the distance.** $a_{n} - ${a} = \\dfrac{${b} - ${a * c}}{n^{2} + ${c}}$, so $|a_{n} - ${a}| = \\dfrac{${K}}{n^{2} + ${c}}$.\n\n**Step 2: Solve for $n^{2}$.** $\\dfrac{${K}}{n^{2} + ${c}} < \\dfrac{1}{${m}}$ means $n^{2} + ${c} > ${K * m}$, so $n^{2} > ${bound}$.\n\n**Step 3: Take the square root.** The smallest positive integer with $n^{2} > ${bound}$ is $${answer}$, and the distance keeps decreasing after it.\n\n**Check.** $${answer}^{2} = ${answer * answer} > ${bound}$, while $${answer - 1}^{2} = ${(answer - 1) ** 2} \\le ${bound}$.`,
+          `**第一步：写出距离。** $a_{n} - ${a} = \\dfrac{${b} - ${a * c}}{n^{2} + ${c}}$，所以 $|a_{n} - ${a}| = \\dfrac{${K}}{n^{2} + ${c}}$。\n\n**第二步：解出 $n^{2}$。** $\\dfrac{${K}}{n^{2} + ${c}} < \\dfrac{1}{${m}}$ 即 $n^{2} + ${c} > ${K * m}$，所以 $n^{2} > ${bound}$。\n\n**第三步：开平方。** 满足 $n^{2} > ${bound}$ 的最小正整数是 $${answer}$，此后距离继续减小。\n\n**检验。** $${answer}^{2} = ${answer * answer} > ${bound}$，而 $${answer - 1}^{2} = ${(answer - 1) ** 2} \\le ${bound}$。`,
+        ],
+      ),
+      sayApart(String(answer), [
+        say(String(bound + 1), "That is a bound on $n^{2}$; take the square root to find $N$.", "这是 $n^{2}$ 的界；开平方才得到 $N$。"),
+        say(String(Math.floor(Math.sqrt(K * m)) + 1), `That drops the $+ ${c}$ in the denominator.`, `这丢掉了分母中的 $+ ${c}$。`),
+      ]),
     );
   },
 );
@@ -104,8 +127,8 @@ const quadraticInfinite = point(
   "the-n-for-a-sequence-that-dips-first",
   ["The N for a sequence that dips first", "先下降的序列的 N"],
   [
-    "A sequence with an infinite limit need not increase from the start. For $n^{2} - bn$, the early terms fall before growing, and solving the quadratic inequality still gives the threshold, with the positive root marking where the terms stay above $M$.",
-    "极限为无穷的序列不一定从一开始就递增。对于 $n^{2} - bn$，前面的项会先下降再增长，解二次不等式仍能得到阈值，正根标出了此后各项一直高于 $M$ 的位置。",
+    "A sequence with an infinite limit need not increase from the start. For $n^{2} - bn$, the early terms fall before growing, and solving the quadratic inequality still gives the threshold, with the positive root marking where the terms stay above $M$. For $n^{2} - 4n > 60$: the roots of $n^{2} - 4n - 60$ are $-6$ and $10$, so $N = 11$.\n\n> **Watch out.** Solve the whole quadratic, not just $n^{2} > M$: the term $-bn$ pushes the threshold later. Only the positive root matters, since the indices are positive.",
+    "极限为无穷的序列不一定从一开始就递增。对于 $n^{2} - bn$，前面的项会先下降再增长，解二次不等式仍能得到阈值，正根标出了此后各项一直高于 $M$ 的位置。对 $n^{2} - 4n > 60$：$n^{2} - 4n - 60$ 的根是 $-6$ 与 $10$，所以 $N = 11$。\n\n> **注意。** 要解整个二次不等式，而不只是 $n^{2} > M$：$-bn$ 这一项会把阈值推后。只有正根有用，因为下标是正的。",
   ],
   (rng) => {
     const b = rng.int(1, 12);
@@ -115,17 +138,28 @@ const quadraticInfinite = point(
     while (N > 1 && f(N - 1) > M) N--;
     const root = ((b + Math.sqrt(b * b + 4 * M)) / 2).toFixed(2);
     const expr = poly([1, "n^{2}"], [-b, "n"]);
-    return ask(
-      [
-        `Let $a_{n} = ${expr}$ and $M = ${M}$. Find the smallest positive integer $N$ such that $a_{n} > M$ for all $n \\ge N$.`,
-        `设 $a_{n} = ${expr}$，$M = ${M}$。求最小的正整数 $N$，使 $a_{n} > M$ 对所有 $n \\ge N$ 成立。`,
-      ],
-      N,
-      [N + 1, N - 1, Math.ceil(Math.sqrt(M)) === N ? N + 2 : Math.ceil(Math.sqrt(M))],
-      [
-        `The inequality $${expr} - ${M} > 0$ has positive root about $${root}$. So it holds for $n$ above this root, and the smallest such integer is $${N}$.`,
-        `不等式 $${expr} - ${M} > 0$ 的正根约为 $${root}$。所以当 $n$ 大于这个根时成立，满足条件的最小整数是 $${N}$。`,
-      ],
+    const plain = Math.floor(Math.sqrt(M)) + 1;
+    return withMistakes(
+      ask(
+        [
+          `Let $a_{n} = ${expr}$ and $M = ${M}$. Find the smallest positive integer $N$ such that $a_{n} > M$ for all $n \\ge N$.`,
+          `设 $a_{n} = ${expr}$，$M = ${M}$。求最小的正整数 $N$，使 $a_{n} > M$ 对所有 $n \\ge N$ 成立。`,
+        ],
+        N,
+        [N + 1, N - 1, plain],
+        [
+          `**Step 1: Find the positive root.** $${expr} - ${M} = 0$ has roots $\\dfrac{${b} \\pm \\sqrt{${b * b + 4 * M}}}{2}$, and the positive one is about $${root}$.\n\n**Step 2: Take the first integer past it.** Beyond the positive root the quadratic is positive and the terms keep growing, so the smallest $N$ is $${N}$.\n\n**Check.** $a_{${N}} = ${f(N)} > ${M}$, while $a_{${N - 1}} = ${f(N - 1)} \\le ${M}$.`,
+          `**第一步：求正根。** $${expr} - ${M} = 0$ 的根是 $\\dfrac{${b} \\pm \\sqrt{${b * b + 4 * M}}}{2}$，正根约为 $${root}$。\n\n**第二步：取越过它的第一个整数。** 正根之后二次式为正，各项继续增大，所以最小的 $N$ 是 $${N}$。\n\n**检验。** $a_{${N}} = ${f(N)} > ${M}$，而 $a_{${N - 1}} = ${f(N - 1)} \\le ${M}$。`,
+        ],
+      ),
+      sayApart(String(N), [
+        say(String(N - 1), `There the term is $${f(N - 1)}$, which is not above $${M}$.`, `那里的项是 $${f(N - 1)}$，并不大于 $${M}$。`),
+        say(
+          String(plain),
+          `That solves $n^{2} > ${M}$ and ignores the $-${b}n$ term.`,
+          `这解的是 $n^{2} > ${M}$，忽略了 $-${b}n$ 这一项。`,
+        ),
+      ]),
     );
   },
 );
@@ -134,24 +168,44 @@ const minusInfinity = point(
   "proving-a-limit-of-minus-infinity",
   ["Proving a limit of minus infinity", "证明极限为负无穷"],
   [
-    "For a limit of $-\\infty$, the definition reverses: given any $M$, however negative, the terms must eventually stay below it. Solving the inequality involves dividing by a negative coefficient, which flips the inequality and gives a lower bound on $N$.",
-    "对于极限为 $-\\infty$，定义要反过来：给定任意 $M$，无论多么小，各项最终都必须低于它。解不等式时要除以负系数，不等号会翻转，从而得到 $N$ 的下界。",
+    "For a limit of $-\\infty$, the definition reverses: given any $M$, however negative, the terms must eventually stay below it. Solving the inequality involves dividing by a negative coefficient, which flips the inequality and gives a lower bound on $N$. For $5 - 2n < M$: $-2n < M - 5$, so $n > \\dfrac{5 - M}{2}$.\n\n> **Watch out.** Dividing by $-a$ flips the inequality. The result must be a lower bound on $n$, as for every limit as $n \\to \\infty$; an upper bound on $N$ cannot describe all large $n$.",
+    "对于极限为 $-\\infty$，定义要反过来：给定任意 $M$，无论多么小，各项最终都必须低于它。解不等式时要除以负系数，不等号会翻转，从而得到 $N$ 的下界。对 $5 - 2n < M$：$-2n < M - 5$，所以 $n > \\dfrac{5 - M}{2}$。\n\n> **注意。** 除以 $-a$ 时不等号翻转。结果必须是 $n$ 的下界，对 $n \\to \\infty$ 的每个极限都是如此；$N$ 的上界无法描述所有大的 $n$。",
   ],
   (rng) => {
     const a = rng.int(2, 9);
     const b = rng.int(1, 30);
     const expr = poly([b, ""], [-a, "n"]);
-    return choose(
-      rng,
+    const right = same(`N > \\frac{${b} - M}{${a}}`);
+    const swapped = same(`N > \\frac{M - ${b}}{${a}}`);
+    const upper = same(`N < \\frac{${b} - M}{${a}}`);
+    const plus = same(`N > \\frac{${b} + M}{${a}}`);
+    const M0 = b - 10 * a;
+    return withMistakes(
+      choose(
+        rng,
+        [
+          `To prove $${expr} \\to -\\infty$, given $M < ${b}$, which condition on $N$ ensures $a_{n} < M$ for all $n \\ge N$?`,
+          `要证明 $${expr} \\to -\\infty$，给定 $M < ${b}$，$N$ 满足什么条件能保证 $a_{n} < M$ 对所有 $n \\ge N$ 成立？`,
+        ],
+        right,
+        [swapped, upper, plus],
+        [
+          `**Step 1: Set up the inequality.** We need $${expr} < M$, that is $-${a}n < M - ${b}$.\n\n**Step 2: Divide by $-${a}$.** The inequality flips: $n > \\frac{${b} - M}{${a}}$. Taking $N$ above this value makes it hold for every $n \\ge N$.\n\n**Check.** For $M = ${M0}$ the bound is $\\frac{${b} - (${M0})}{${a}} = 10$, and indeed $a_{11} = ${b - 11 * a} < ${M0}$.`,
+          `**第一步：列出不等式。** 需要 $${expr} < M$，即 $-${a}n < M - ${b}$。\n\n**第二步：除以 $-${a}$。** 不等号翻转：$n > \\frac{${b} - M}{${a}}$。取 $N$ 大于这个值，则对每个 $n \\ge N$ 都成立。\n\n**检验。** 当 $M = ${M0}$ 时，界为 $\\frac{${b} - (${M0})}{${a}} = 10$，而确实 $a_{11} = ${b - 11 * a} < ${M0}$。`,
+        ],
+      ),
       [
-        `To prove $${expr} \\to -\\infty$, given $M < ${b}$, which condition on $N$ ensures $a_{n} < M$ for all $n \\ge N$?`,
-        `要证明 $${expr} \\to -\\infty$，给定 $M < ${b}$，$N$ 满足什么条件能保证 $a_{n} < M$ 对所有 $n \\ge N$ 成立？`,
-      ],
-      same(`N > \\frac{${b} - M}{${a}}`),
-      [same(`N > \\frac{M - ${b}}{${a}}`), same(`N < \\frac{${b} - M}{${a}}`), same(`N > \\frac{${b} + M}{${a}}`)],
-      [
-        `We need $${expr} < M$, so $${a}n > ${b} - M$ and $n > \\frac{${b} - M}{${a}}$. Taking $N$ above this value works for all larger $n$ as well.`,
-        `需要 $${expr} < M$，所以 $${a}n > ${b} - M$，$n > \\frac{${b} - M}{${a}}$。取 $N$ 大于这个值，对所有更大的 $n$ 也成立。`,
+        say(
+          swapped[0],
+          `That has the sign of the numerator reversed: moving $${b}$ across gives $${b} - M$.`,
+          `这里分子的符号反了：把 $${b}$ 移项得到 $${b} - M$。`,
+        ),
+        say(
+          upper[0],
+          "Dividing by the negative coefficient flips the inequality, and the result must be a lower bound on $n$.",
+          "除以负系数时不等号翻转，结果必须是 $n$ 的下界。",
+        ),
+        say(plus[0], "Moving $M$ to the other side changes its sign.", "把 $M$ 移到另一边时要变号。"),
       ],
     );
   },
@@ -161,8 +215,8 @@ const missedResidues = point(
   "how-far-a-map-is-from-surjective",
   ["How far a map is from surjective", "映射离满射有多远"],
   [
-    "A map is surjective when it misses nothing, and counting the missed elements measures the failure. For multiplication by $a$ on residues modulo $m$, the image is exactly the multiples of $\\gcd(a, m)$, so the map is surjective only when this greatest common divisor is one.",
-    "映射不遗漏任何元素时是满射，计算遗漏的元素就能衡量它的不足。对模 $m$ 的剩余类乘以 $a$，像恰好是 $\\gcd(a, m)$ 的倍数，所以只有当这个最大公约数为一时才是满射。",
+    "A map is surjective when it misses nothing, and counting the missed elements measures the failure. For multiplication by $a$ on residues modulo $m$, the image is exactly the multiples of $\\gcd(a, m)$, so the map is surjective only when this greatest common divisor is one. For $f(x) = 4x$ on $\\mathbb{Z}_{6}$: $\\gcd(4, 6) = 2$, the image is $\\{0, 2, 4\\}$, and $3$ residues are missed.\n\n> **Watch out.** The image has $\\dfrac{m}{\\gcd(a, m)}$ elements, not $\\gcd(a, m)$ elements. The missed residues are the rest of the $m$ residues.",
+    "映射不遗漏任何元素时是满射，计算遗漏的元素就能衡量它的不足。对模 $m$ 的剩余类乘以 $a$，像恰好是 $\\gcd(a, m)$ 的倍数，所以只有当这个最大公约数为一时才是满射。对 $\\mathbb{Z}_{6}$ 上的 $f(x) = 4x$：$\\gcd(4, 6) = 2$，像是 $\\{0, 2, 4\\}$，遗漏了 $3$ 个剩余类。\n\n> **注意。** 像有 $\\dfrac{m}{\\gcd(a, m)}$ 个元素，而不是 $\\gcd(a, m)$ 个。遗漏的是 $m$ 个剩余类中剩下的那些。",
   ],
   (rng) => {
     const m = rng.int(6, 40);
@@ -170,17 +224,36 @@ const missedResidues = point(
     const g = gcd(a, m);
     const image = m / g;
     const answer = m - image;
-    return ask(
-      [
-        `Let $f: \\mathbb{Z}_{${m}} \\to \\mathbb{Z}_{${m}}$ be $f(x) = ${a}x$. How many elements of the codomain are not in the image of $f$?`,
-        `设 $f: \\mathbb{Z}_{${m}} \\to \\mathbb{Z}_{${m}}$，$f(x) = ${a}x$。陪域中有多少个元素不在 $f$ 的像中？`,
-      ],
-      answer,
-      [image, g, m - g],
-      [
-        `The image is the set of multiples of $\\gcd(${a}, ${m}) = ${g}$, which has $${image}$ elements. So $${m} - ${image} = ${answer}$ elements are missed.`,
-        `像是 $\\gcd(${a}, ${m}) = ${g}$ 的倍数组成的集合，有 $${image}$ 个元素。所以遗漏了 $${m} - ${image} = ${answer}$ 个元素。`,
-      ],
+    return withMistakes(
+      ask(
+        [
+          `Let $f: \\mathbb{Z}_{${m}} \\to \\mathbb{Z}_{${m}}$ be $f(x) = ${a}x$. How many elements of the codomain are not in the image of $f$?`,
+          `设 $f: \\mathbb{Z}_{${m}} \\to \\mathbb{Z}_{${m}}$，$f(x) = ${a}x$。陪域中有多少个元素不在 $f$ 的像中？`,
+        ],
+        answer,
+        [image, g, m - g],
+        [
+          `**Step 1: Find the image.** $\\gcd(${a}, ${m}) = ${g}$, so the image is the set of multiples of $${g}$ in $\\mathbb{Z}_{${m}}$, which has $\\dfrac{${m}}{${g}} = ${image}$ elements.\n\n**Step 2: Count the rest.** $${m} - ${image} = ${answer}$ elements are missed.\n\n**Check.** Every output $${a}x$ is a multiple of $${g}$ modulo $${m}$, and the multiples $0, ${g}, \\dots, ${m - g}$ number $${image}$, so the other $${answer}$ residues are never reached.`,
+          `**第一步：求像。** $\\gcd(${a}, ${m}) = ${g}$，所以像是 $\\mathbb{Z}_{${m}}$ 中 $${g}$ 的倍数组成的集合，有 $\\dfrac{${m}}{${g}} = ${image}$ 个元素。\n\n**第二步：数剩下的。** 遗漏了 $${m} - ${image} = ${answer}$ 个元素。\n\n**检验。** 每个输出 $${a}x$ 模 $${m}$ 都是 $${g}$ 的倍数，而倍数 $0, ${g}, \\dots, ${m - g}$ 共 $${image}$ 个，所以其余 $${answer}$ 个剩余类永远取不到。`,
+        ],
+      ),
+      sayApart(String(answer), [
+        say(
+          String(image),
+          "That is the size of the image; the question asks how many residues it misses.",
+          "这是像的大小；题目问的是遗漏了多少个剩余类。",
+        ),
+        say(
+          String(g),
+          "The greatest common divisor says which residues are reached, its multiples, not how many are missed.",
+          "最大公约数说明哪些剩余类能取到（它的倍数），而不是遗漏了多少个。",
+        ),
+        say(
+          String(m - g),
+          `The image has $\\frac{${m}}{${g}}$ elements, not $${g}$.`,
+          `像有 $\\frac{${m}}{${g}}$ 个元素，而不是 $${g}$ 个。`,
+        ),
+      ]),
     );
   },
 );
@@ -189,8 +262,8 @@ const cantorPairing = point(
   "the-cantor-pairing-function",
   ["The Cantor pairing function", "康托尔配对函数"],
   [
-    "The formula $\\pi(x, y) = \\frac{(x + y)(x + y + 1)}{2} + y$ numbers the pairs of naturals along diagonals. It is a bijection from $\\mathbb{N} \\times \\mathbb{N}$ onto $\\mathbb{N}$, which shows that a product of two countable sets is countable. The triangular number counts the earlier diagonals.",
-    "公式 $\\pi(x, y) = \\frac{(x + y)(x + y + 1)}{2} + y$ 沿对角线给自然数对编号。它是从 $\\mathbb{N} \\times \\mathbb{N}$ 到 $\\mathbb{N}$ 的双射，说明两个可数集的乘积是可数的。其中的三角形数计算前面各条对角线上的点数。",
+    "The formula $\\pi(x, y) = \\frac{(x + y)(x + y + 1)}{2} + y$ numbers the pairs of naturals along diagonals. It is a bijection from $\\mathbb{N} \\times \\mathbb{N}$ onto $\\mathbb{N}$, which shows that a product of two countable sets is countable. The triangular number counts the earlier diagonals. For $(2, 1)$: $\\frac{3 \\cdot 4}{2} + 1 = 7$.\n\n> **Watch out.** Halve the product $(x + y)(x + y + 1)$, and add $y$, the second entry, for the position along the diagonal, not $x$.",
+    "公式 $\\pi(x, y) = \\frac{(x + y)(x + y + 1)}{2} + y$ 沿对角线给自然数对编号。它是从 $\\mathbb{N} \\times \\mathbb{N}$ 到 $\\mathbb{N}$ 的双射，说明两个可数集的乘积是可数的。其中的三角形数计算前面各条对角线上的点数。对 $(2, 1)$：$\\frac{3 \\cdot 4}{2} + 1 = 7$。\n\n> **注意。** 乘积 $(x + y)(x + y + 1)$ 要除以二，沿对角线的位置加的是第二个分量 $y$，而不是 $x$。",
   ],
   (rng) => {
     const x = rng.int(0, 14);
@@ -198,17 +271,32 @@ const cantorPairing = point(
     const s = x + y;
     const tri = (s * (s + 1)) / 2;
     const answer = tri + y;
-    return ask(
-      [
-        `The bijection $\\pi: \\mathbb{N} \\times \\mathbb{N} \\to \\mathbb{N}$ is $\\pi(x, y) = \\frac{(x + y)(x + y + 1)}{2} + y$. Find $\\pi(${x}, ${y})$.`,
-        `双射 $\\pi: \\mathbb{N} \\times \\mathbb{N} \\to \\mathbb{N}$ 为 $\\pi(x, y) = \\frac{(x + y)(x + y + 1)}{2} + y$。求 $\\pi(${x}, ${y})$。`,
-      ],
-      answer,
-      [tri, tri + x + 1, s * (s + 1) + y],
-      [
-        `Here $x + y = ${s}$, so the earlier diagonals contain $\\frac{${s} \\cdot ${s + 1}}{2} = ${tri}$ pairs. Adding $y = ${y}$ gives $${answer}$.`,
-        `这里 $x + y = ${s}$，所以前面的对角线共有 $\\frac{${s} \\cdot ${s + 1}}{2} = ${tri}$ 个数对。加上 $y = ${y}$，得 $${answer}$。`,
-      ],
+    return withMistakes(
+      ask(
+        [
+          `The bijection $\\pi: \\mathbb{N} \\times \\mathbb{N} \\to \\mathbb{N}$ is $\\pi(x, y) = \\frac{(x + y)(x + y + 1)}{2} + y$. Find $\\pi(${x}, ${y})$.`,
+          `双射 $\\pi: \\mathbb{N} \\times \\mathbb{N} \\to \\mathbb{N}$ 为 $\\pi(x, y) = \\frac{(x + y)(x + y + 1)}{2} + y$。求 $\\pi(${x}, ${y})$。`,
+        ],
+        answer,
+        [tri, tri + x, s * (s + 1) + y],
+        [
+          `**Step 1: Count the earlier diagonals.** $x + y = ${s}$, so the earlier diagonals contain $\\frac{${s} \\cdot ${s + 1}}{2} = ${tri}$ pairs.\n\n**Step 2: Move along the diagonal.** Adding $y = ${y}$ gives $${answer}$.\n\n**Check.** The diagonal $x + y = ${s}$ runs from position $${tri}$ at $(${s}, 0)$ to position $${tri + s}$ at $(0, ${s})$, and $${answer}$ lies in that range.`,
+          `**第一步：数前面的对角线。** $x + y = ${s}$，所以前面的对角线共有 $\\frac{${s} \\cdot ${s + 1}}{2} = ${tri}$ 个数对。\n\n**第二步：沿对角线移动。** 加上 $y = ${y}$，得 $${answer}$。\n\n**检验。** 对角线 $x + y = ${s}$ 从位置 $${tri}$ 的 $(${s}, 0)$ 到位置 $${tri + s}$ 的 $(0, ${s})$，而 $${answer}$ 在这个范围内。`,
+        ],
+      ),
+      sayApart(String(answer), [
+        say(
+          String(tri),
+          "That is where the diagonal starts; add $y$ for the position along it.",
+          "这是对角线的起点；还要加上 $y$ 才是沿对角线的位置。",
+        ),
+        say(String(tri + x), "That adds $x$; the position along the diagonal grows with $y$.", "这加的是 $x$；沿对角线的位置随 $y$ 增大。"),
+        say(
+          String(s * (s + 1) + y),
+          "That forgets to halve the product $(x + y)(x + y + 1)$.",
+          "这忘了把乘积 $(x + y)(x + y + 1)$ 除以二。",
+        ),
+      ]),
     );
   },
 );
@@ -217,26 +305,45 @@ const intervalRayInverse = point(
   "inverting-a-bijection-onto-a-ray",
   ["Inverting a bijection onto a ray", "求到射线的双射的逆"],
   [
-    "The map $f(x) = \\frac{x - a}{b - x}$ sends $(a, b)$ onto $(0, \\infty)$. Finding the input for a given output proves surjectivity, and solving the equation gives $x = \\frac{a + by}{1 + y}$, which always lies between $a$ and $b$ when $y$ is positive.",
-    "映射 $f(x) = \\frac{x - a}{b - x}$ 把 $(a, b)$ 映到 $(0, \\infty)$ 上。求给定输出对应的输入就能证明满射性，解方程得 $x = \\frac{a + by}{1 + y}$，当 $y$ 为正时它总在 $a$ 与 $b$ 之间。",
+    "The map $f(x) = \\frac{x - a}{b - x}$ sends $(a, b)$ onto $(0, \\infty)$. Finding the input for a given output proves surjectivity, and solving the equation gives $x = \\frac{a + by}{1 + y}$, which always lies between $a$ and $b$ when $y$ is positive. For $(0, 2)$ and $y = 3$: $x = \\frac{6}{4} = \\frac{3}{2}$.\n\n> **Watch out.** Multiply out $y(b - x)$ before collecting the $x$ terms. Both $x$ and $yx$ end up on one side, which gives the factor $1 + y$, not $y$.",
+    "映射 $f(x) = \\frac{x - a}{b - x}$ 把 $(a, b)$ 映到 $(0, \\infty)$ 上。求给定输出对应的输入就能证明满射性，解方程得 $x = \\frac{a + by}{1 + y}$，当 $y$ 为正时它总在 $a$ 与 $b$ 之间。对 $(0, 2)$ 与 $y = 3$：$x = \\frac{6}{4} = \\frac{3}{2}$。\n\n> **注意。** 先把 $y(b - x)$ 展开，再合并含 $x$ 的项。$x$ 与 $yx$ 都移到同一边，得到因子 $1 + y$，而不是 $y$。",
   ],
   (rng) => {
     const a = rng.int(-9, 9);
     const b = a + rng.int(1, 9);
     const y = rng.int(1, 12);
     const answer = Q.of(a + b * y, 1 + y);
-    const fx = `\\dfrac{${poly([1, "x"], [-a, ""])}}{${poly([b, ""], [-1, "x"])}}`;
-    return ask(
-      [
-        `The function $f(x) = ${fx}$ is a bijection from $(${a}, ${b})$ onto $(0, \\infty)$. Find the $x$ with $f(x) = ${y}$.`,
-        `函数 $f(x) = ${fx}$ 是从 $(${a}, ${b})$ 到 $(0, \\infty)$ 的双射。求满足 $f(x) = ${y}$ 的 $x$。`,
-      ],
-      answer,
-      [Q.of(b + a * y, 1 + y), Q.of(a + b * y, y), Q.of(a + y, 1 + y)],
-      [
-        `The equation gives $${poly([1, "x"], [-a, ""])} = ${y}(${poly([b, ""], [-1, "x"])})$, so $${1 + y}x = ${a + b * y}$ and $x = ${answer.toLatex()}$. This value lies inside the interval.`,
-        `方程给出 $${poly([1, "x"], [-a, ""])} = ${y}(${poly([b, ""], [-1, "x"])})$，所以 $${1 + y}x = ${a + b * y}$，$x = ${answer.toLatex()}$。这个值在区间内。`,
-      ],
+    const top = poly([1, "x"], [-a, ""]);
+    const bottom = poly([b, ""], [-1, "x"]);
+    const fx = `\\dfrac{${top}}{${bottom}}`;
+    const swapped = Q.of(b + a * y, 1 + y);
+    const rhs = `${a} ${b * y < 0 ? "-" : "+"} ${Math.abs(b * y)}`;
+    const noOne = Q.of(a + b * y, y);
+    return withMistakes(
+      ask(
+        [
+          `The function $f(x) = ${fx}$ is a bijection from $(${a}, ${b})$ onto $(0, \\infty)$. Find the $x$ with $f(x) = ${y}$.`,
+          `函数 $f(x) = ${fx}$ 是从 $(${a}, ${b})$ 到 $(0, \\infty)$ 的双射。求满足 $f(x) = ${y}$ 的 $x$。`,
+        ],
+        answer,
+        [swapped, noOne, Q.of(a + y, 1 + y)],
+        [
+          `**Step 1: Clear the fraction.** $f(x) = ${y}$ gives $${top} = ${y}(${bottom})$.\n\n**Step 2: Collect the $x$ terms.** $x + ${y}x = ${rhs}$, so $${1 + y}x = ${a + b * y}$ and $x = ${answer.toLatex()}$, which lies inside the interval.\n\n**Check.** $${top} = \\dfrac{${y * (b - a)}}{${1 + y}}$ and $${b} - x = \\dfrac{${b - a}}{${1 + y}}$, whose ratio is $${y}$.`,
+          `**第一步：去分母。** $f(x) = ${y}$ 给出 $${top} = ${y}(${bottom})$。\n\n**第二步：合并含 $x$ 的项。** $x + ${y}x = ${rhs}$，所以 $${1 + y}x = ${a + b * y}$，$x = ${answer.toLatex()}$，它在区间内。\n\n**检验。** $${top} = \\dfrac{${y * (b - a)}}{${1 + y}}$，$${b} - x = \\dfrac{${b - a}}{${1 + y}}$，两者之比为 $${y}$。`,
+        ],
+      ),
+      sayApart(answer.toLatex(), [
+        say(
+          swapped.toLatex(),
+          "That swaps the roles of the two endpoints; the output $y$ multiplies the right endpoint.",
+          "这把两个端点的作用弄反了；输出 $y$ 乘的是右端点。",
+        ),
+        say(
+          noOne.toLatex(),
+          "That loses the $x$ on the left: the $x$ terms give $(1 + y)x$.",
+          "这丢了左边的 $x$：含 $x$ 的项合起来是 $(1 + y)x$。",
+        ),
+      ]),
     );
   },
 );
@@ -245,27 +352,42 @@ const diagonalDistance = point(
   "how-the-diagonal-sequence-differs-from-a-row",
   ["How the diagonal sequence differs from a row", "对角序列与某一行的差异"],
   [
-    "The diagonal sequence is built to differ from the $k$-th row at position $k$. It may differ at other positions too, but this one guaranteed position is all that the argument uses, and it works for every row in the list at once.",
-    "对角序列的构造保证它与第 $k$ 行在第 $k$ 位不同。它也可能在其他位置不同，但论证只用到这个有保证的位置，并且它同时对列表中的每一行都有效。",
+    "The diagonal sequence is built to differ from the $k$-th row at position $k$. It may differ at other positions too, but this one guaranteed position is all that the argument uses, and it works for every row in the list at once. For rows $s_{1} = 01$, $s_{2} = 11$: the diagonal is $0, 1$, flipped $d = 10$, which differs from $s_{1}$ in both positions.\n\n> **Watch out.** Flip the diagonal digits before comparing. Position $k$ always differs from $s_{k}$, but other positions may differ too, so compare every digit.",
+    "对角序列的构造保证它与第 $k$ 行在第 $k$ 位不同。它也可能在其他位置不同，但论证只用到这个有保证的位置，并且它同时对列表中的每一行都有效。对 $s_{1} = 01$，$s_{2} = 11$：对角线是 $0, 1$，翻转后 $d = 10$，它与 $s_{1}$ 两位都不同。\n\n> **注意。** 先翻转对角线数字再比较。第 $k$ 位一定与 $s_{k}$ 不同，但其他位置也可能不同，所以要逐位比较。",
   ],
   (rng) => {
     const rows = [0, 1, 2, 3, 4].map(() => [0, 1, 2, 3, 4].map(() => rng.int(0, 1)));
     const diagonal = rows.map((r, i) => 1 - (r[i] as number));
     const k = rng.int(0, 4);
     const row = rows[k] as number[];
-    const answer = diagonal.filter((v, i) => v !== row[i]).length;
+    const differ = [0, 1, 2, 3, 4].filter((i) => diagonal[i] !== row[i]).map((i) => i + 1);
+    const answer = differ.length;
     const list = rows.map((r, i) => `s_{${i + 1}} = ${r.join("")}`).join(",\\ ");
-    return ask(
-      [
-        `Let $${list}$. Let $d$ be the sequence obtained by flipping the diagonal digits. In how many of the $5$ positions does $d$ differ from $s_{${k + 1}}$?`,
-        `设 $${list}$。令 $d$ 为翻转对角线上的数字得到的序列。$d$ 与 $s_{${k + 1}}$ 在 $5$ 个位置中有多少个不同？`,
-      ],
-      answer,
-      [(answer + 1) % 6, (answer + 2) % 6, (answer + 3) % 6],
-      [
-        `Flipping the diagonal gives $d = ${diagonal.join("")}$. Comparing it digit by digit with $s_{${k + 1}} = ${row.join("")}$ gives $${answer}$ differences, including position $${k + 1}$.`,
-        `翻转对角线得 $d = ${diagonal.join("")}$。与 $s_{${k + 1}} = ${row.join("")}$ 逐位比较，有 $${answer}$ 处不同，其中包括第 $${k + 1}$ 位。`,
-      ],
+    return withMistakes(
+      ask(
+        [
+          `Let $${list}$. Let $d$ be the sequence obtained by flipping the diagonal digits. In how many of the $5$ positions does $d$ differ from $s_{${k + 1}}$?`,
+          `设 $${list}$。令 $d$ 为翻转对角线上的数字得到的序列。$d$ 与 $s_{${k + 1}}$ 在 $5$ 个位置中有多少个不同？`,
+        ],
+        answer,
+        [(answer + 1) % 6, (answer + 2) % 6, (answer + 3) % 6],
+        [
+          `**Step 1: Flip the diagonal.** The diagonal digits are $${rows.map((r, i) => r[i]).join("")}$, so $d = ${diagonal.join("")}$.\n\n**Step 2: Compare with $s_{${k + 1}} = ${row.join("")}$.** They differ in positions $${differ.join(", ")}$: $${answer}$ positions.\n\n**Check.** Position $${k + 1}$ is among them, as the construction guarantees: $s_{${k + 1}}$ has $${row[k]}$ there and $d$ has $${diagonal[k]}$.`,
+          `**第一步：翻转对角线。** 对角线数字是 $${rows.map((r, i) => r[i]).join("")}$，所以 $d = ${diagonal.join("")}$。\n\n**第二步：与 $s_{${k + 1}} = ${row.join("")}$ 比较。** 它们在第 $${differ.join(", ")}$ 位不同：共 $${answer}$ 处。\n\n**检验。** 第 $${k + 1}$ 位在其中，这是构造所保证的：$s_{${k + 1}}$ 在那里是 $${row[k]}$，$d$ 是 $${diagonal[k]}$。`,
+        ],
+      ),
+      sayApart(String(answer), [
+        say(
+          String(5 - answer),
+          "That compares the diagonal before flipping it; flip each diagonal digit first.",
+          "这是用翻转前的对角线比较的；要先翻转每个对角线数字。",
+        ),
+        say(
+          "1",
+          "Only position $k$ is guaranteed to differ, but other positions may differ too: compare every digit.",
+          "只有第 $k$ 位保证不同，但其他位置也可能不同：要逐位比较。",
+        ),
+      ]),
     );
   },
 );
@@ -274,24 +396,39 @@ const injectionScale = point(
   "scaling-an-injection-into-an-open-interval",
   ["Scaling an injection into an open interval", "把单射缩放到开区间内"],
   [
-    "To apply the Cantor-Bernstein-Schroder theorem, an injection often has to fit a closed interval into an open one. Shifting away from an endpoint and dividing by a large enough number does this, since a linear map with nonzero slope is injective.",
-    "应用康托尔-伯恩斯坦-施罗德定理时，常常要把闭区间单射到开区间内。先从端点移开，再除以足够大的数就能做到，因为斜率不为零的线性映射是单射。",
+    "To apply the Cantor-Bernstein-Schroder theorem, an injection often has to fit a closed interval into an open one. Shifting away from an endpoint and dividing by a large enough number does this, since a linear map with nonzero slope is injective. For $[0, 3]$ and $x \\mapsto \\frac{x + 1}{q}$: the largest output is $\\frac{4}{q}$, so $q = 5$ is the smallest that fits.\n\n> **Watch out.** The largest input gives the largest output, and it must be strictly below $1$. With $q$ equal to the largest numerator, the endpoint lands on $1$, which the open interval does not contain.",
+    "应用康托尔-伯恩斯坦-施罗德定理时，常常要把闭区间单射到开区间内。先从端点移开，再除以足够大的数就能做到，因为斜率不为零的线性映射是单射。对 $[0, 3]$ 与 $x \\mapsto \\frac{x + 1}{q}$：最大输出是 $\\frac{4}{q}$，所以最小可行的是 $q = 5$。\n\n> **注意。** 最大的输入给出最大的输出，它必须严格小于 $1$。若 $q$ 等于最大的分子，端点就落在 $1$ 上，而开区间不包含 $1$。",
   ],
   (rng) => {
     const c = rng.int(1, 20);
     const p = rng.int(1, 20);
     const answer = c + p + 1;
-    return ask(
-      [
-        `For which smallest positive integer $q$ does $x \\mapsto \\dfrac{x + ${p}}{q}$ map $[0, ${c}]$ injectively into $(0, 1)$?`,
-        `当最小的正整数 $q$ 取何值时，$x \\mapsto \\dfrac{x + ${p}}{q}$ 把 $[0, ${c}]$ 单射到 $(0, 1)$ 内？`,
-      ],
-      answer,
-      [c + p, p + 1, c + 1],
-      [
-        `The largest output is $\\frac{${c + p}}{q}$, and it must be strictly below $1$, so $q > ${c + p}$. The smallest output $\\frac{${p}}{q}$ is positive, so $q = ${answer}$ works.`,
-        `最大的输出是 $\\frac{${c + p}}{q}$，它必须严格小于 $1$，所以 $q > ${c + p}$。最小的输出 $\\frac{${p}}{q}$ 为正，所以 $q = ${answer}$ 满足条件。`,
-      ],
+    return withMistakes(
+      ask(
+        [
+          `For which smallest positive integer $q$ does $x \\mapsto \\dfrac{x + ${p}}{q}$ map $[0, ${c}]$ injectively into $(0, 1)$?`,
+          `当最小的正整数 $q$ 取何值时，$x \\mapsto \\dfrac{x + ${p}}{q}$ 把 $[0, ${c}]$ 单射到 $(0, 1)$ 内？`,
+        ],
+        answer,
+        [c + p, p + 1, c + 1],
+        [
+          `**Step 1: Check injectivity.** The map is linear with slope $\\frac{1}{q} > 0$, so it is injective for every $q$.\n\n**Step 2: Fit the outputs.** The outputs run from $\\frac{${p}}{q} > 0$ up to $\\frac{${c + p}}{q}$, which must be below $1$, so $q > ${c + p}$ and the smallest choice is $${answer}$.\n\n**Check.** $\\frac{${c + p}}{${answer}} < 1$, while $q = ${c + p}$ would send $${c}$ to $\\frac{${c + p}}{${c + p}} = 1$, outside $(0, 1)$.`,
+          `**第一步：检验单射。** 这个映射是斜率为 $\\frac{1}{q} > 0$ 的线性映射，所以对每个 $q$ 都是单射。\n\n**第二步：让输出落进去。** 输出从 $\\frac{${p}}{q} > 0$ 到 $\\frac{${c + p}}{q}$，后者必须小于 $1$，所以 $q > ${c + p}$，最小取 $${answer}$。\n\n**检验。** $\\frac{${c + p}}{${answer}} < 1$，而 $q = ${c + p}$ 会把 $${c}$ 映到 $\\frac{${c + p}}{${c + p}} = 1$，不在 $(0, 1)$ 中。`,
+        ],
+      ),
+      sayApart(String(answer), [
+        say(
+          String(c + p),
+          `Then $${c}$ goes to exactly $1$, which the open interval does not contain.`,
+          `那样 $${c}$ 恰好映到 $1$，而开区间不包含 $1$。`,
+        ),
+        say(
+          String(p + 1),
+          `That ignores the length of the interval: the input $${c}$ gives the numerator $${c + p}$.`,
+          `这忽略了区间的长度：输入 $${c}$ 给出分子 $${c + p}$。`,
+        ),
+        say(String(c + 1), `That ignores the shift $${p}$ in the numerator.`, `这忽略了分子中的平移 $${p}$。`),
+      ]),
     );
   },
 );
@@ -300,24 +437,39 @@ const missedSubsets = point(
   "how-many-subsets-a-map-must-miss",
   ["How many subsets a map must miss", "映射必定遗漏多少子集"],
   [
-    "Cantor's theorem says that no map from a set to its power set is surjective. For a finite set, this can be counted: an $n$-element set has $2^{n}$ subsets, and a map hits only as many subsets as it has distinct values, which is at most $n$.",
-    "康托尔定理说，从一个集合到它的幂集不存在满射。对有限集可以具体计数：$n$ 元集有 $2^{n}$ 个子集，而映射能取到的子集数等于它的不同值的个数，至多为 $n$。",
+    "Cantor's theorem says that no map from a set to its power set is surjective. For a finite set, this can be counted: an $n$-element set has $2^{n}$ subsets, and a map hits only as many subsets as it has distinct values, which is at most $n$. For $n = 3$ and a map with $2$ values: $8 - 2 = 6$ subsets are missed.\n\n> **Watch out.** The power set has $2^{n}$ elements, not $2n$. The image has as many subsets as the map has different values, which can be fewer than $n$.",
+    "康托尔定理说，从一个集合到它的幂集不存在满射。对有限集可以具体计数：$n$ 元集有 $2^{n}$ 个子集，而映射能取到的子集数等于它的不同值的个数，至多为 $n$。对 $n = 3$ 且映射取 $2$ 个值：遗漏 $8 - 2 = 6$ 个子集。\n\n> **注意。** 幂集有 $2^{n}$ 个元素，而不是 $2n$ 个。像中的子集个数等于映射不同值的个数，可能少于 $n$。",
   ],
   (rng) => {
     const n = rng.int(3, 9);
     const j = rng.int(1, n);
     const answer = 2 ** n - j;
-    return ask(
-      [
-        `A map $f: A \\to \\mathcal{P}(A)$ on a set with $${n}$ elements takes exactly $${j}$ different values. How many subsets of $A$ are not in its image?`,
-        `$${n}$ 元集 $A$ 上的映射 $f: A \\to \\mathcal{P}(A)$ 恰好取 $${j}$ 个不同的值。$A$ 有多少个子集不在它的像中？`,
-      ],
-      answer,
-      [2 ** n - n === answer ? 2 ** n : 2 ** n - n, n - j, 2 * n - j],
-      [
-        `The set has $2^{${n}} = ${2 ** n}$ subsets, and the image contains $${j}$ of them. So $${2 ** n} - ${j} = ${answer}$ are missed, which is at least one for every map.`,
-        `这个集合有 $2^{${n}} = ${2 ** n}$ 个子集，像包含其中 $${j}$ 个。所以遗漏了 $${2 ** n} - ${j} = ${answer}$ 个，对每个映射至少遗漏一个。`,
-      ],
+    return withMistakes(
+      ask(
+        [
+          `A map $f: A \\to \\mathcal{P}(A)$ on a set with $${n}$ elements takes exactly $${j}$ different values. How many subsets of $A$ are not in its image?`,
+          `$${n}$ 元集 $A$ 上的映射 $f: A \\to \\mathcal{P}(A)$ 恰好取 $${j}$ 个不同的值。$A$ 有多少个子集不在它的像中？`,
+        ],
+        answer,
+        [2 ** n - n, n - j, 2 * n - j],
+        [
+          `**Step 1: Count the subsets.** A set with $${n}$ elements has $2^{${n}} = ${2 ** n}$ subsets.\n\n**Step 2: Remove the image.** The image contains $${j}$ of them, so $${2 ** n} - ${j} = ${answer}$ are missed.\n\n**Check.** $${j} \\le ${n} < ${2 ** n}$, so at least one subset is missed, as Cantor's theorem requires.`,
+          `**第一步：数子集。** $${n}$ 元集有 $2^{${n}} = ${2 ** n}$ 个子集。\n\n**第二步：去掉像。** 像包含其中 $${j}$ 个，所以遗漏了 $${2 ** n} - ${j} = ${answer}$ 个。\n\n**检验。** $${j} \\le ${n} < ${2 ** n}$，所以至少遗漏一个子集，正如康托尔定理所要求的。`,
+        ],
+      ),
+      sayApart(String(answer), [
+        say(
+          String(2 ** n - n),
+          `The map takes $${j}$ different values, so its image has $${j}$ subsets, not $${n}$.`,
+          `映射取 $${j}$ 个不同的值，所以像中有 $${j}$ 个子集，而不是 $${n}$ 个。`,
+        ),
+        say(String(2 * n - j), "The power set has $2^{n}$ elements, not $2n$.", "幂集有 $2^{n}$ 个元素，而不是 $2n$ 个。"),
+        say(
+          String(n - j),
+          "Subtract from the number of subsets, $2^{n}$, not from the number of elements.",
+          "要从子集个数 $2^{n}$ 中减，而不是从元素个数中减。",
+        ),
+      ]),
     );
   },
 );

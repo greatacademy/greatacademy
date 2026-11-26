@@ -1170,8 +1170,8 @@ const functionsMissingValues: KnowledgePointDef = {
   id: "functions-whose-range-misses-given-values",
   title: t("Functions whose range misses given values", "值域不含给定值的函数"),
   explanation: t(
-    "A function whose range avoids certain values of the codomain is simply a function into the smaller set that remains. So counting such functions needs no new idea: remove the values that must be missed, and count the functions into what is left. Each input now has fewer outputs to choose from.",
-    "值域避开陪域中某些值的函数，其实就是到剩余较小集合的函数。所以数这样的函数不需要新想法：去掉必须避开的值，再数到剩余集合的函数。现在每个输入可选的输出更少了。",
+    "A function whose range avoids certain values of the codomain is simply a function into the smaller set that remains. So counting such functions needs no new idea: remove the values that must be missed, and count the functions into what is left. Each input now has fewer outputs to choose from. From a $3$-element set to a $5$-element set, avoiding one given value: $4^{3} = 64$ functions.\n\n> **Watch out.** Remove the forbidden values from the codomain, not from the domain. Every input still needs an output, so the exponent stays at the number of inputs.",
+    "值域避开陪域中某些值的函数，其实就是到剩余较小集合的函数。所以数这样的函数不需要新想法：去掉必须避开的值，再数到剩余集合的函数。现在每个输入可选的输出更少了。从 $3$ 元集合到 $5$ 元集合、避开一个给定值的函数有 $4^{3} = 64$ 个。\n\n> **注意。** 要从陪域中去掉禁止的值，而不是从定义域中去掉。每个输入仍然需要一个输出，所以指数仍是输入的个数。",
   ),
   generate(rng) {
     const n = rng.int(3, 8);
@@ -1186,10 +1186,42 @@ const functionsMissingValues: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong: [n ** m, n ** m - answer, left ** (m - 1)],
-      solution: t(
-        `Each of the ${m} inputs may go to any of the other ${left} elements, so there are $${left}^{${m}} = ${answer}$ functions.`,
-        `${m} 个输入都可以映到其余 ${left} 个元素中的任何一个，所以有 $${left}^{${m}} = ${answer}$ 个函数。`,
+      wrong: [answer + 1],
+      mistakes: firstOf([
+        why(n ** m, "That counts every function, ignoring the values that must be missed.", "这数的是全部函数，忽略了必须避开的值。"),
+        why(n ** m - answer, "That counts the functions that do reach a forbidden value.", "这数的是确实取到禁止值的函数。"),
+        why(
+          left ** (m - 1),
+          "The exponent is the number of inputs; every input still needs an output.",
+          "指数是输入的个数；每个输入仍然需要一个输出。",
+        ),
+        why(
+          m ** left,
+          "Base and exponent are swapped: each input picks one of the allowed outputs.",
+          "底数与指数弄反了：每个输入从允许的输出中选一个。",
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Remove the forbidden values", "去掉禁止的值"],
+            t(
+              `$${k}$ of the $${n}$ outputs are off limits, leaving $${left}$ allowed outputs.`,
+              `$${n}$ 个输出中有 $${k}$ 个不能用，剩下 $${left}$ 个允许的输出。`,
+            ),
+          ],
+          [
+            ["Count the functions", "数函数"],
+            t(
+              `Each of the $${m}$ inputs picks one of the $${left}$, independently: $${left}^{${m}} = ${answer}$.`,
+              `$${m}$ 个输入各自独立地从这 $${left}$ 个中选一个：$${left}^{${m}} = ${answer}$。`,
+            ),
+          ],
+        ],
+        t(
+          `With one input there would be $${left}$ functions, one per allowed output, and each further input multiplies the count by $${left}$ again: $${Array(m).fill(left).join(" \\cdot ")} = ${answer}$.`,
+          `只有一个输入时有 $${left}$ 个函数，每个允许的输出对应一个；每多一个输入，个数就再乘以 $${left}$：$${Array(m).fill(left).join(" \\cdot ")} = ${answer}$。`,
+        ),
       ),
     });
   },
@@ -1199,8 +1231,8 @@ const floorSum: KnowledgePointDef = {
   id: "the-sum-of-a-run-of-floors",
   title: t("The sum of a run of floors", "一串取整值的和"),
   explanation: t(
-    "The values of $\\lfloor \\frac{k}{m} \\rfloor$ form long runs: the value stays the same for $m$ consecutive $k$ before going up by one. So a sum of floors is best done by grouping equal values, not term by term. Be careful at the two ends, where a run may be shorter than $m$.",
-    "$\\lfloor \\frac{k}{m} \\rfloor$ 的值成段出现：连续 $m$ 个 $k$ 的值相同，然后增加一。所以取整值的和最好把相同的值分为一组来算，而不是逐项相加。要注意两端，那里的一段可能不足 $m$ 项。",
+    "The values of $\\lfloor \\frac{k}{m} \\rfloor$ form long runs: the value stays the same for $m$ consecutive $k$ before going up by one. So a sum of floors is best done by grouping equal values, not term by term. Be careful at the two ends, where a run may be shorter than $m$. For $\\sum_{k=1}^{7} \\lfloor \\frac{k}{3} \\rfloor$: the values are $0, 0, 1, 1, 1, 2, 2$, so the sum is $3 \\cdot 1 + 2 \\cdot 2 = 7$.\n\n> **Watch out.** The last run is cut short: the top value $q = \\lfloor \\frac{N}{m} \\rfloor$ appears only for $k = qm, \\dots, N$, that is $N - qm + 1$ times, not $m$ times.",
+    "$\\lfloor \\frac{k}{m} \\rfloor$ 的值成段出现：连续 $m$ 个 $k$ 的值相同，然后增加一。所以取整值的和最好把相同的值分为一组来算，而不是逐项相加。要注意两端，那里的一段可能不足 $m$ 项。对 $\\sum_{k=1}^{7} \\lfloor \\frac{k}{3} \\rfloor$：各值为 $0, 0, 1, 1, 1, 2, 2$，所以和为 $3 \\cdot 1 + 2 \\cdot 2 = 7$。\n\n> **注意。** 最后一段被截短：最大值 $q = \\lfloor \\frac{N}{m} \\rfloor$ 只在 $k = qm, \\dots, N$ 时出现，即 $N - qm + 1$ 次，而不是 $m$ 次。",
   ),
   generate(rng) {
     const m = rng.int(2, 9);
@@ -1209,6 +1241,28 @@ const floorSum: KnowledgePointDef = {
     const r = N % m;
     const full = (m * q * (q - 1)) / 2;
     const answer = full + q * (r + 1);
+    const span = (a: number, b: number) => (a === b ? `k = ${a}` : `k = ${a}, \\dots, ${b}`);
+    const zeros = span(1, m - 1);
+    const last = span(q * m, N);
+    const upTo = q <= 4 ? [...Array(q - 1).keys()].map((i) => i + 1).join(", ") : `1, \\dots, ${q - 1}`;
+    const middle =
+      q === 1
+        ? { en: "and ", zh: "" }
+        : q === 2
+          ? { en: `the value $1$ fills a run of $${m}$ terms, and `, zh: `值 $1$ 占连续 $${m}$ 项，` }
+          : { en: `each value $${upTo}$ fills a run of $${m}$ terms, and `, zh: `值 $${upTo}$ 各占连续 $${m}$ 项，` };
+    const fullStep: [[string, string], ReturnType<typeof t>][] =
+      q === 1
+        ? []
+        : [
+            [
+              ["Add the full runs", "加上完整的段"],
+              t(
+                `$${m}(${upTo.replaceAll(",", " +")}) = ${m} \\cdot \\frac{${q} \\cdot ${q - 1}}{2} = ${full}$.`,
+                `$${m}(${upTo.replaceAll(",", " +")}) = ${m} \\cdot \\frac{${q} \\cdot ${q - 1}}{2} = ${full}$。`,
+              ),
+            ],
+          ];
     return numberProblem({
       prompt: t(
         `Find $\\sum_{k=1}^{${N}} \\left\\lfloor \\frac{k}{${m}} \\right\\rfloor$.`,
@@ -1216,10 +1270,42 @@ const floorSum: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong: [Math.floor((N * (N + 1)) / (2 * m)), full, (m * q * (q + 1)) / 2],
-      solution: t(
-        `Each value below ${q} occurs ${m} times, and these add to $${m} \\cdot \\frac{${q} \\cdot ${q - 1}}{2} = ${full}$. The value ${q} occurs ${r + 1} ${r === 0 ? "time" : "times"} at the end, which adds ${q * (r + 1)}. The sum is $${answer}$.`,
-        `小于 ${q} 的每个值出现 ${m} 次，它们的和是 $${m} \\cdot \\frac{${q} \\cdot ${q - 1}}{2} = ${full}$。值 ${q} 在末尾出现 ${r + 1} 次，再加 ${q * (r + 1)}。总和是 $${answer}$。`,
+      wrong: [answer + q],
+      mistakes: firstOf([
+        why(
+          Math.floor((N * (N + 1)) / (2 * m)),
+          "That divides the whole sum by the divisor, but each term is rounded down on its own.",
+          "这是把整个和除以除数，但每一项都是单独向下取整的。",
+        ),
+        why(full, `That leaves out the last run, where the value $${q}$ appears.`, `这漏掉了最后一段，即值 $${q}$ 出现的那些项。`),
+        why(
+          (m * q * (q + 1)) / 2,
+          `That counts the value $${q}$ a full $${m}$ times, but the sum stops at $k = ${N}$.`,
+          `这把值 $${q}$ 算了整整 $${m}$ 次，但求和止于 $k = ${N}$。`,
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Find the runs", "找出各段"],
+            t(
+              `The value $0$ fills $${zeros}$, ${middle.en}the value $${q}$ fills $${last}$: ${count(r + 1, "term", "terms")}.`,
+              `值 $0$ 占 $${zeros}$，${middle.zh}值 $${q}$ 占 $${last}$：共 $${r + 1}$ 项。`,
+            ),
+          ],
+          ...fullStep,
+          [
+            ["Add the last run", "加上最后一段"],
+            t(
+              `$${q} \\cdot ${r + 1} = ${q * (r + 1)}$, so the sum is $${full} + ${q * (r + 1)} = ${answer}$.`,
+              `$${q} \\cdot ${r + 1} = ${q * (r + 1)}$，所以和为 $${full} + ${q * (r + 1)} = ${answer}$。`,
+            ),
+          ],
+        ],
+        t(
+          `The runs hold $${m - 1} + ${m} \\cdot ${q - 1} + ${r + 1} = ${N}$ terms, one for each $k$ from $1$ to $${N}$.`,
+          `各段共有 $${m - 1} + ${m} \\cdot ${q - 1} + ${r + 1} = ${N}$ 项，正好对应 $k = 1$ 到 $${N}$。`,
+        ),
       ),
     });
   },
@@ -1229,8 +1315,8 @@ const decodingAFiniteSet: KnowledgePointDef = {
   id: "decoding-a-finite-set-from-its-number",
   title: t("Decoding a finite set from its number", "由编号还原有限集"),
   explanation: t(
-    "Sending a finite set $S$ of natural numbers to $\\sum_{s \\in S} 2^s$ is a bijection onto the natural numbers, because binary digits are unique. This is one way to see that the finite subsets of the naturals are countable. To decode a number, write it in binary: the positions of the ones, counted from zero, are the elements.",
-    "把有限自然数集 $S$ 映到 $\\sum_{s \\in S} 2^s$，是到自然数的双射，因为二进制表示是唯一的。这是说明自然数的有限子集可数的一种方式。要还原一个数，把它写成二进制：一所在的位置（从零数起）就是集合的元素。",
+    "Sending a finite set $S$ of natural numbers to $\\sum_{s \\in S} 2^s$ is a bijection onto the natural numbers, because binary digits are unique. This is one way to see that the finite subsets of the naturals are countable. To decode a number, write it in binary: the positions of the ones, counted from zero, are the elements. For $13 = 1101_2 = 2^{3} + 2^{2} + 2^{0}$, the set is $\\{0, 2, 3\\}$.\n\n> **Watch out.** Places are counted from $0$ at the right: the units digit stands for the element $0$. Counting from $1$ shifts every element up by one.",
+    "把有限自然数集 $S$ 映到 $\\sum_{s \\in S} 2^s$，是到自然数的双射，因为二进制表示是唯一的。这是说明自然数的有限子集可数的一种方式。要还原一个数，把它写成二进制：一所在的位置（从零数起）就是集合的元素。对 $13 = 1101_2 = 2^{3} + 2^{2} + 2^{0}$，集合是 $\\{0, 2, 3\\}$。\n\n> **注意。** 位置从右边的 $0$ 开始数：个位代表元素 $0$。从 $1$ 开始数会使每个元素都大一。",
   ),
   generate(rng) {
     const size = rng.int(3, 5);
@@ -1243,6 +1329,10 @@ const decodingAFiniteSet: KnowledgePointDef = {
     elements.sort((x, y) => x - y);
     const N = elements.reduce((sum, s) => sum + 2 ** s, 0);
     const answer = elements.reduce((sum, s) => sum + s, 0);
+    const powers = [...elements]
+      .reverse()
+      .map((s) => `2^{${s}}`)
+      .join(" + ");
     return numberProblem({
       prompt: t(
         `Each finite set $S$ of natural numbers, starting from 0, is numbered by $\\sum_{s \\in S} 2^s$. Find the sum of the elements of the set numbered ${N}.`,
@@ -1250,10 +1340,36 @@ const decodingAFiniteSet: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong: [answer + size, size, elements[elements.length - 1] ?? 0],
-      solution: t(
-        `In binary, ${N} is $${N.toString(2)}$, so the set is $\\{${elements.join(", ")}\\}$. Its elements add to $${answer}$.`,
-        `${N} 的二进制是 $${N.toString(2)}$，所以集合是 $\\{${elements.join(", ")}\\}$，元素之和是 $${answer}$。`,
+      wrong: [answer - 1],
+      mistakes: firstOf([
+        why(
+          answer + size,
+          "That counts the places from $1$; the units place stands for the element $0$.",
+          "这是从 $1$ 开始数位置；个位代表元素 $0$。",
+        ),
+        why(size, "That is the number of elements, not their sum.", "这是元素的个数，而不是它们的和。"),
+        why(
+          elements[elements.length - 1] ?? 0,
+          "That is only the largest element; add all of them.",
+          "这只是最大的元素；要把所有元素相加。",
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Write it in binary", "写成二进制"],
+            t(`$${N} = ${N.toString(2)}_2 = ${powers}$.`, `$${N} = ${N.toString(2)}_2 = ${powers}$。`),
+          ],
+          [
+            ["Read off the elements", "读出元素"],
+            t(`The exponents are the elements: $S = \\{${elements.join(", ")}\\}$.`, `指数就是元素：$S = \\{${elements.join(", ")}\\}$。`),
+          ],
+          [["Add them", "相加"], t(`$${elements.join(" + ")} = ${answer}$.`, `$${elements.join(" + ")} = ${answer}$。`)],
+        ],
+        t(
+          `$${elements.map((s) => 2 ** s).join(" + ")} = ${N}$, so this set has the given number.`,
+          `$${elements.map((s) => 2 ** s).join(" + ")} = ${N}$，所以这个集合的编号正是所给的数。`,
+        ),
       ),
     });
   },
@@ -3161,8 +3277,8 @@ const termsOutsideABand: KnowledgePointDef = {
   id: "counting-the-terms-outside-an-epsilon-band",
   title: t("Counting the terms outside an epsilon band", "数 $\\varepsilon$ 带之外的项"),
   explanation: t(
-    "A null sequence is one that, for every positive tolerance, has only finitely many terms outside the band around zero. Saying that all terms from some index on are inside is the same as saying that only a finite number stay out. For a decreasing sequence, these outside terms are exactly the first ones, so they can be counted by solving one inequality.",
-    "零序列是指，对每个正的容许误差，零附近的带之外只有有限多项。说从某一项起所有项都在带内，和说只有有限项留在带外，是一回事。对递减序列，带外的项恰好是最前面的那些，所以解一个不等式就能数出它们。",
+    "A null sequence is one that, for every positive tolerance, has only finitely many terms outside the band around zero. Saying that all terms from some index on are inside is the same as saying that only a finite number stay out. For a decreasing sequence, these outside terms are exactly the first ones, so they can be counted by solving one inequality. For $a_n = \\frac{2}{n + 1}$ and $\\varepsilon = \\frac{1}{5}$: $\\frac{2}{n + 1} \\ge \\frac{1}{5}$ means $n + 1 \\le 10$, so $n \\le 9$, and $9$ terms stay out.\n\n> **Watch out.** Solve for $n$ itself, not for $n$ plus the shift in the denominator, and keep the boundary: a term exactly equal to $\\varepsilon$ is not inside the open band.",
+    "零序列是指，对每个正的容许误差，零附近的带之外只有有限多项。说从某一项起所有项都在带内，和说只有有限项留在带外，是一回事。对递减序列，带外的项恰好是最前面的那些，所以解一个不等式就能数出它们。对 $a_n = \\frac{2}{n + 1}$ 和 $\\varepsilon = \\frac{1}{5}$：$\\frac{2}{n + 1} \\ge \\frac{1}{5}$ 即 $n + 1 \\le 10$，所以 $n \\le 9$，有 $9$ 项留在带外。\n\n> **注意。** 要解出 $n$ 本身，而不是 $n$ 加上分母中的平移量；还要保留边界：恰好等于 $\\varepsilon$ 的项不在开带之内。",
   ),
   generate(rng) {
     const a = rng.int(2, 9);
@@ -3178,10 +3294,36 @@ const termsOutsideABand: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong: [reach, answer + 1, answer - 1],
-      solution: t(
-        `The condition $${term} \\ge \\dfrac{1}{${k}}$ means $n + ${s} \\le ${a} \\cdot ${k} = ${reach}$, so $n \\le ${answer}$. That is ${answer === 1 ? "1 positive integer" : `${answer} positive integers`}.`,
-        `条件 $${term} \\ge \\dfrac{1}{${k}}$ 就是 $n + ${s} \\le ${a} \\cdot ${k} = ${reach}$，所以 $n \\le ${answer}$。共 ${answer} 个正整数。`,
+      wrong: [answer + 1],
+      mistakes: firstOf([
+        why(reach, `That is the bound on $n + ${s}$, not on $n$.`, `这是 $n + ${s}$ 的上界，而不是 $n$ 的上界。`),
+        why(
+          answer - 1,
+          "That drops the term exactly equal to $\\varepsilon$; the inequality allows equality.",
+          "这去掉了恰好等于 $\\varepsilon$ 的那一项；不等式允许取等号。",
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Write the inequality", "写出不等式"],
+            t(
+              `Every term is positive, so the condition is $${term} \\ge \\dfrac{1}{${k}}$, that is $n + ${s} \\le ${a} \\cdot ${k} = ${reach}$.`,
+              `每一项都是正的，所以条件是 $${term} \\ge \\dfrac{1}{${k}}$，即 $n + ${s} \\le ${a} \\cdot ${k} = ${reach}$。`,
+            ),
+          ],
+          [
+            ["Solve for n", "解出 n"],
+            t(
+              `$n \\le ${reach} - ${s} = ${answer}$, so $n = 1, \\dots, ${answer}$: ${count(answer, "integer", "integers")}.`,
+              `$n \\le ${reach} - ${s} = ${answer}$，所以 $n = 1, \\dots, ${answer}$：共 ${answer} 个。`,
+            ),
+          ],
+        ],
+        t(
+          `$a_{${answer}} = \\dfrac{${a}}{${reach}} = \\dfrac{1}{${k}}$ is still out, while $a_{${answer + 1}} = \\dfrac{${a}}{${reach + 1}} < \\dfrac{1}{${k}}$ is in.`,
+          `$a_{${answer}} = \\dfrac{${a}}{${reach}} = \\dfrac{1}{${k}}$ 仍在带外，而 $a_{${answer + 1}} = \\dfrac{${a}}{${reach + 1}} < \\dfrac{1}{${k}}$ 在带内。`,
+        ),
       ),
     });
   },
@@ -3191,8 +3333,8 @@ const increasingFunctions: KnowledgePointDef = {
   id: "counting-strictly-increasing-functions",
   title: t("Counting strictly increasing functions", "数严格递增函数"),
   explanation: t(
-    "A strictly increasing function between sets of integers is automatically injective, because different inputs have different outputs. It is also fixed by its range, since the outputs must appear in increasing order, leaving just one way to assign them. So choosing such a function is the same as choosing its set of outputs, which is a subset rather than an arrangement.",
-    "整数集之间的严格递增函数自动是单射，因为不同的输入有不同的输出。它也由值域决定，因为输出必须按递增顺序排列，只有一种分配方式。所以选这样的函数就等于选它的输出集合，这是一个子集，而不是一种排列。",
+    "A strictly increasing function between sets of integers is automatically injective, because different inputs have different outputs. It is also fixed by its range, since the outputs must appear in increasing order, leaving just one way to assign them. So choosing such a function is the same as choosing its set of outputs, which is a subset rather than an arrangement. From $\\{1, 2\\}$ to $\\{1, 2, 3, 4\\}$ there are $\\binom{4}{2} = 6$: the range $\\{2, 4\\}$, for instance, gives only $f(1) = 2$, $f(2) = 4$.\n\n> **Watch out.** Do not multiply by the orders of the outputs: only the increasing order is allowed, so each set of outputs gives exactly one function.",
+    "整数集之间的严格递增函数自动是单射，因为不同的输入有不同的输出。它也由值域决定，因为输出必须按递增顺序排列，只有一种分配方式。所以选这样的函数就等于选它的输出集合，这是一个子集，而不是一种排列。从 $\\{1, 2\\}$ 到 $\\{1, 2, 3, 4\\}$ 共有 $\\binom{4}{2} = 6$ 个：例如值域 $\\{2, 4\\}$ 只给出 $f(1) = 2$，$f(2) = 4$。\n\n> **注意。** 不要再乘以输出的排列数：只允许递增的顺序，所以每个输出集合恰好给出一个函数。",
   ),
   generate(rng) {
     const m = rng.int(2, 6);
@@ -3206,10 +3348,41 @@ const increasingFunctions: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong: [arrangements, n ** m, binom(n + m - 1, m)],
-      solution: t(
-        `Such a function is fixed by its ${m} outputs, which must then be assigned in increasing order. So the count is $\\binom{${n}}{${m}} = ${answer}$.`,
-        `这样的函数由它的 ${m} 个输出决定，这些输出只能按递增顺序分配。所以个数是 $\\binom{${n}}{${m}} = ${answer}$。`,
+      wrong: [answer + 1],
+      mistakes: firstOf([
+        why(
+          arrangements,
+          "That counts every order of the outputs, but only the increasing order is allowed.",
+          "这数的是输出的所有顺序，但只允许递增的顺序。",
+        ),
+        why(n ** m, "That counts every function, including ones that repeat or go down.", "这数的是所有函数，包括有重复值或会下降的函数。"),
+        why(
+          binom(n + m - 1, m),
+          "That counts functions that never go down, which may repeat a value.",
+          "这数的是从不下降的函数，它们可能重复取值。",
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Reduce to the range", "归结为值域"],
+            t(
+              `The ${m} outputs are different, and once the set of them is chosen they must go to $1, \\dots, ${m}$ in increasing order: one function per set.`,
+              `${m} 个输出互不相同；一旦选定它们的集合，就必须按递增顺序分给 $1, \\dots, ${m}$：每个集合对应一个函数。`,
+            ),
+          ],
+          [
+            ["Count the ranges", "数值域"],
+            t(
+              `A set of ${m} outputs out of ${n} can be chosen in $\\binom{${n}}{${m}} = ${answer}$ ways.`,
+              `从 ${n} 个中选 ${m} 个输出，有 $\\binom{${n}}{${m}} = ${answer}$ 种方式。`,
+            ),
+          ],
+        ],
+        t(
+          `The $${m}! = ${factorial(m)}$ orders of each set give all $${arrangements}$ injections, and $${arrangements} \\div ${factorial(m)} = ${answer}$: exactly one order per set is increasing.`,
+          `每个集合的 $${m}! = ${factorial(m)}$ 种顺序给出全部 $${arrangements}$ 个单射，而 $${arrangements} \\div ${factorial(m)} = ${answer}$：每个集合恰有一种顺序是递增的。`,
+        ),
       ),
     });
   },
@@ -3219,8 +3392,8 @@ const fixedPointBijections: KnowledgePointDef = {
   id: "bijections-with-exactly-k-fixed-points",
   title: t("Bijections with a given number of fixed points", "恰有给定个数不动点的双射"),
   explanation: t(
-    "A fixed point of a bijection is an input sent to itself. To count bijections with a given number of them, choose the fixed points, and then rearrange the rest so that nothing stays put. The bijections with no fixed point at all satisfy $D_m = (m - 1)(D_{m-1} + D_{m-2})$, with $D_0 = 1$ and $D_1 = 0$, which are found by following where one element goes.",
-    "双射的不动点是映到自身的输入。要数恰有给定个数不动点的双射，先选出不动点，再重排其余元素，使它们都不留在原位。完全没有不动点的双射满足 $D_m = (m - 1)(D_{m-1} + D_{m-2})$，其中 $D_0 = 1$，$D_1 = 0$，这是通过追踪一个元素的去向得到的。",
+    "A fixed point of a bijection is an input sent to itself. To count bijections with a given number of them, choose the fixed points, and then rearrange the rest so that nothing stays put. The bijections with no fixed point at all satisfy $D_m = (m - 1)(D_{m-1} + D_{m-2})$, with $D_0 = 1$ and $D_1 = 0$, which are found by following where one element goes. On $\\{1, 2, 3, 4\\}$ with exactly one fixed point: choose it in $4$ ways, then move the other three in $D_3 = 2$ ways, for $8$ bijections.\n\n> **Watch out.** The elements that are not chosen as fixed points must all move. Letting them be rearranged freely, with $(n - k)!$ ways, lets more fixed points in.",
+    "双射的不动点是映到自身的输入。要数恰有给定个数不动点的双射，先选出不动点，再重排其余元素，使它们都不留在原位。完全没有不动点的双射满足 $D_m = (m - 1)(D_{m-1} + D_{m-2})$，其中 $D_0 = 1$，$D_1 = 0$，这是通过追踪一个元素的去向得到的。在 $\\{1, 2, 3, 4\\}$ 上恰有一个不动点：选它有 $4$ 种方式，再让其余三个都移动有 $D_3 = 2$ 种方式，共 $8$ 个双射。\n\n> **注意。** 没被选为不动点的元素必须全部移动。若让它们任意重排，即 $(n - k)!$ 种方式，就会混进更多的不动点。",
   ),
   generate(rng) {
     const n = rng.int(3, 9);
@@ -3228,7 +3401,20 @@ const fixedPointBijections: KnowledgePointDef = {
     const left = n - k;
     const moved = derangements(left);
     const answer = binom(n, k) * moved;
-    const ways = moved === 1 ? "1 way" : `${moved} ways`;
+    const table = [...Array(left + 1).keys()].map((i) => `D_{${i}} = ${derangements(i)}`).join(",\\ ");
+    const approx = (factorial(left) / Math.E).toFixed(2);
+    const choose: [[string, string], ReturnType<typeof t>][] =
+      k === 0
+        ? []
+        : [
+            [
+              ["Choose the fixed points", "选出不动点"],
+              t(
+                `Choose the $${k}$ fixed ${k === 1 ? "point" : "points"}: $\\binom{${n}}{${k}} = ${binom(n, k)}$ ways.`,
+                `选出 $${k}$ 个不动点：$\\binom{${n}}{${k}} = ${binom(n, k)}$ 种方式。`,
+              ),
+            ],
+          ];
     return numberProblem({
       prompt:
         k === 0
@@ -3242,17 +3428,44 @@ const fixedPointBijections: KnowledgePointDef = {
             ),
       answer,
       form: "integer",
-      wrong: [factorial(n), binom(n, k) * factorial(left), moved, factorial(left), answer + 1],
-      solution:
-        k === 0
-          ? t(
-              `All ${n} values must move. The recurrence $D_m = (m - 1)(D_{m-1} + D_{m-2})$ gives $D_{${n}} = ${answer}$.`,
-              `${n} 个值都必须移动。由递推式 $D_m = (m - 1)(D_{m-1} + D_{m-2})$ 得 $D_{${n}} = ${answer}$。`,
-            )
-          : t(
-              `Choose the fixed points in $\\binom{${n}}{${k}} = ${binom(n, k)}$ ways. The other ${left} values must all move, which can be done in ${ways}. The product is ${answer}.`,
-              `选出不动点有 $\\binom{${n}}{${k}} = ${binom(n, k)}$ 种方式。其余 ${left} 个值都必须移动，有 ${moved} 种方式。乘积是 ${answer}。`,
+      wrong: [answer + 1],
+      mistakes: firstOf([
+        why(factorial(n), "That counts every bijection, whatever its fixed points.", "这数的是所有双射，不管它们有几个不动点。"),
+        why(
+          binom(n, k) * factorial(left),
+          "That lets the other values be rearranged freely, so some of them may stay put.",
+          "这让其余的值任意重排，于是其中一些可能留在原位。",
+        ),
+        why(
+          moved,
+          "That counts only the ways to move the rest; the fixed points must be chosen too.",
+          "这只数了移动其余元素的方式；还要选出不动点。",
+        ),
+        why(
+          factorial(left),
+          "That rearranges the rest freely and forgets to choose the fixed points.",
+          "这让其余元素任意重排，又忘了选出不动点。",
+        ),
+      ]),
+      solution: walked(
+        [
+          ...choose,
+          [
+            ["Move the rest", "移动其余元素"],
+            t(
+              `${k === 0 ? `All $${n}$ values` : `The other $${left}$ values`} must move. From the recurrence: $${table}$.`,
+              `${k === 0 ? `$${n}$ 个值都` : `其余 $${left}$ 个值都`}必须移动。由递推式：$${table}$。`,
             ),
+          ],
+          k === 0
+            ? [["Read off the count", "读出个数"], t(`$D_{${n}} = ${answer}$.`, `$D_{${n}} = ${answer}$。`)]
+            : [["Multiply", "相乘"], t(`$${binom(n, k)} \\cdot ${moved} = ${answer}$.`, `$${binom(n, k)} \\cdot ${moved} = ${answer}$。`)],
+        ],
+        t(
+          `$D_m$ is the whole number nearest to $\\frac{m!}{e}$, and $\\frac{${left}!}{e} \\approx ${approx}$, which rounds to $${moved}$.`,
+          `$D_m$ 是最接近 $\\frac{m!}{e}$ 的整数，而 $\\frac{${left}!}{e} \\approx ${approx}$，四舍五入正是 $${moved}$。`,
+        ),
+      ),
     });
   },
 };
@@ -3261,14 +3474,15 @@ const reducedFractions: KnowledgePointDef = {
   id: "counting-reduced-fractions-by-denominator",
   title: t("Counting reduced fractions by denominator", "按分母数既约分数"),
   explanation: t(
-    "The rationals are countable because they can be listed by denominator, and each denominator contributes only finitely many fractions to a bounded interval. Each rational has exactly one form in lowest terms, so nothing is counted twice. In a unit interval, the number of reduced fractions with a given denominator is the number of numerators coprime to it, which is Euler's totient of that denominator.",
-    "有理数可数，是因为可以按分母把它们列出来，而每个分母在有界区间内只贡献有限多个分数。每个有理数恰有一种既约形式，所以不会重复计算。在单位区间内，给定分母的既约分数个数，等于与分母互素的分子个数，也就是该分母的欧拉函数值。",
+    "The rationals are countable because they can be listed by denominator, and each denominator contributes only finitely many fractions to a bounded interval. Each rational has exactly one form in lowest terms, so nothing is counted twice. In a unit interval, the number of reduced fractions with a given denominator is the number of numerators coprime to it, which is Euler's totient of that denominator. In $(0, 1]$ with denominator $6$: only $\\frac{1}{6}$ and $\\frac{5}{6}$, so $\\varphi(6) = 2$.\n\n> **Watch out.** Count only numerators coprime to the denominator: $\\frac{2}{6}$ is $\\frac{1}{3}$, which belongs to the denominator $3$.",
+    "有理数可数，是因为可以按分母把它们列出来，而每个分母在有界区间内只贡献有限多个分数。每个有理数恰有一种既约形式，所以不会重复计算。在单位区间内，给定分母的既约分数个数，等于与分母互素的分子个数，也就是该分母的欧拉函数值。在 $(0, 1]$ 中分母为 $6$ 的：只有 $\\frac{1}{6}$ 和 $\\frac{5}{6}$，所以 $\\varphi(6) = 2$。\n\n> **注意。** 只数与分母互素的分子：$\\frac{2}{6}$ 就是 $\\frac{1}{3}$，它属于分母 $3$。",
   ),
   generate(rng) {
     if (rng.pick([true, false])) {
       const top = rng.int(4, 25);
       const parts = [...Array(top).keys()].map((i) => totient(i + 1));
       const answer = parts.reduce((sum, v) => sum + v, 0);
+      const lastNumerators = [...Array(top).keys()].map((i) => i + 1).filter((i) => gcd(i, top) === 1);
       return numberProblem({
         prompt: t(
           `How many rational numbers in $(0, 1]$ have a denominator of at most ${top} in lowest terms?`,
@@ -3276,10 +3490,41 @@ const reducedFractions: KnowledgePointDef = {
         ),
         answer,
         form: "integer",
-        wrong: [(top * (top + 1)) / 2, answer - 1, top],
-        solution: t(
-          `Denominator $q$ gives one fraction for each numerator coprime to $q$, so it contributes $\\varphi(q)$ fractions. Adding from $q = 1$ to $q = ${top}$ gives $${parts.join(" + ")} = ${answer}$.`,
-          `分母 $q$ 对每个与 $q$ 互素的分子给出一个分数，所以贡献 $\\varphi(q)$ 个分数。从 $q = 1$ 加到 $q = ${top}$，得 $${parts.join(" + ")} = ${answer}$。`,
+        wrong: [answer + 1],
+        mistakes: firstOf([
+          why(
+            (top * (top + 1)) / 2,
+            "That counts fractions that are not in lowest terms, so some numbers are counted twice.",
+            "这数进了不是既约形式的分数，所以有些数被重复计算。",
+          ),
+          why(
+            answer - 1,
+            "$1 = \\frac{1}{1}$ is in $(0, 1]$ and counts for the denominator $1$.",
+            "$1 = \\frac{1}{1}$ 在 $(0, 1]$ 中，算作分母 $1$ 的分数。",
+          ),
+          why(top, "Each denominator can give more than one fraction.", "每个分母可以给出不止一个分数。"),
+        ]),
+        solution: walked(
+          [
+            [
+              ["Count by denominator", "按分母计数"],
+              t(
+                `Denominator $q$ gives one reduced fraction for each numerator from $1$ to $q$ coprime to $q$: $\\varphi(q)$ fractions.`,
+                `分母 $q$ 对 $1$ 到 $q$ 中每个与 $q$ 互素的分子给出一个既约分数：共 $\\varphi(q)$ 个。`,
+              ),
+            ],
+            [
+              ["Add them", "相加"],
+              t(
+                `From $q = 1$ to $q = ${top}$: $${parts.join(" + ")} = ${answer}$.`,
+                `从 $q = 1$ 到 $q = ${top}$：$${parts.join(" + ")} = ${answer}$。`,
+              ),
+            ],
+          ],
+          t(
+            `The last term: the numerators coprime to $${top}$ are $${lastNumerators.join(", ")}$, which is $${lastNumerators.length}$ of them, matching $\\varphi(${top}) = ${parts[top - 1]}$.`,
+            `最后一项：与 $${top}$ 互素的分子是 $${lastNumerators.join(", ")}$，共 $${lastNumerators.length}$ 个，与 $\\varphi(${top}) = ${parts[top - 1]}$ 一致。`,
+          ),
         ),
       });
     }
@@ -3287,6 +3532,7 @@ const reducedFractions: KnowledgePointDef = {
     const width = rng.int(1, 5);
     const phi = totient(q);
     const answer = width * phi;
+    const numerators = [...Array(q).keys()].map((i) => i + 1).filter((i) => gcd(i, q) === 1);
     return numberProblem({
       prompt: t(
         `How many rational numbers in $(0, ${width}]$ have denominator exactly ${q} in lowest terms?`,
@@ -3294,17 +3540,40 @@ const reducedFractions: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong: [width * q, width * (q - 1), width * phi + 1, ...(width === 1 ? [] : [phi])],
-      solution:
-        width === 1
-          ? t(
-              `A fraction with this denominator is reduced exactly when its numerator is coprime to ${q}, and there are $\\varphi(${q}) = ${phi}$ such numerators up to ${q}.`,
-              `分母为 ${q} 的分数是既约的，当且仅当分子与 ${q} 互素，而不超过 ${q} 的这样的分子有 $\\varphi(${q}) = ${phi}$ 个。`,
-            )
-          : t(
-              `Each unit interval holds $\\varphi(${q}) = ${phi}$ reduced fractions with this denominator, because the numerators coprime to ${q} repeat with period ${q}. Over ${width} unit intervals, that gives $${width} \\cdot ${phi} = ${answer}$.`,
-              `每个单位区间内有 $\\varphi(${q}) = ${phi}$ 个分母为 ${q} 的既约分数，因为与 ${q} 互素的分子以 ${q} 为周期重复。${width} 个单位区间共有 $${width} \\cdot ${phi} = ${answer}$ 个。`,
+      wrong: [width * phi + 1],
+      mistakes: firstOf([
+        why(
+          width * q,
+          "That counts every numerator, but a numerator sharing a factor with the denominator gives a smaller denominator.",
+          "这数了所有分子，但与分母有公因数的分子会给出更小的分母。",
+        ),
+        why(width * (q - 1), `Not every numerator below $${q}$ is coprime to $${q}$.`, `并非小于 $${q}$ 的每个分子都与 $${q}$ 互素。`),
+        ...(width === 1 ? [] : [why(phi, "That counts only the first unit interval.", "这只数了第一个单位区间。")]),
+      ]),
+      solution: walked(
+        [
+          [
+            ["One unit interval", "一个单位区间"],
+            t(
+              `In $(0, 1]$, $\\frac{p}{${q}}$ is in lowest terms exactly when $p$ is coprime to $${q}$: $p = ${numerators.join(", ")}$, so $\\varphi(${q}) = ${phi}$ fractions.`,
+              `在 $(0, 1]$ 中，$\\frac{p}{${q}}$ 是既约的当且仅当 $p$ 与 $${q}$ 互素：$p = ${numerators.join(", ")}$，所以有 $\\varphi(${q}) = ${phi}$ 个分数。`,
             ),
+          ],
+          [
+            ["All the unit intervals", "所有单位区间"],
+            width === 1
+              ? t(`The interval is $(0, 1]$ itself, so the count is $${answer}$.`, `区间就是 $(0, 1]$ 本身，所以个数是 $${answer}$。`)
+              : t(
+                  `Adding $${q}$ to a numerator keeps it coprime to $${q}$, so each of the $${width}$ unit intervals holds $${phi}$: $${width} \\cdot ${phi} = ${answer}$.`,
+                  `分子加上 $${q}$ 仍与 $${q}$ 互素，所以 $${width}$ 个单位区间各有 $${phi}$ 个：$${width} \\cdot ${phi} = ${answer}$。`,
+                ),
+          ],
+        ],
+        t(
+          `$\\frac{1}{${q}}$ is counted and $\\frac{${q}}{${q}} = 1$ is not, since in lowest terms it has denominator $1$.`,
+          `$\\frac{1}{${q}}$ 被计入，而 $\\frac{${q}}{${q}} = 1$ 不计入，因为它的既约形式分母是 $1$。`,
+        ),
+      ),
     });
   },
 };
@@ -3998,8 +4267,8 @@ const floorPreimage: KnowledgePointDef = {
   id: "the-size-of-a-preimage-under-a-floor-function",
   title: t("The size of a preimage under a floor function", "取整函数下原像的大小"),
   explanation: t(
-    "Proving surjectivity means finding a preimage for each value, and it can be useful to find all of them. The numbers with $\\lfloor \\frac{n}{k} \\rfloor = v$ are exactly the block $kv \\le n < k(v + 1)$, which has $k$ integers. On a finite domain, though, the first and last blocks can be cut short. If the domain starts at 1, the block for 0 loses the number 0, and the last block stops at the end of the domain.",
-    "证明满射就是为每个值找一个原像，有时找出全部原像很有用。满足 $\\lfloor \\frac{n}{k} \\rfloor = v$ 的数恰好是一段 $kv \\le n < k(v + 1)$，有 $k$ 个整数。不过在有限论域上，第一段和最后一段可能被截短。如果论域从 1 开始，0 对应的一段就少了数 0，最后一段则停在论域的末尾。",
+    "Proving surjectivity means finding a preimage for each value, and it can be useful to find all of them. The numbers with $\\lfloor \\frac{n}{k} \\rfloor = v$ are exactly the block $kv \\le n < k(v + 1)$, which has $k$ integers. On a finite domain, though, the first and last blocks can be cut short. If the domain starts at 1, the block for 0 loses the number 0, and the last block stops at the end of the domain. On $\\{1, \\dots, 10\\}$ with $\\lfloor \\frac{x}{4} \\rfloor$: the value $0$ has preimage $\\{1, 2, 3\\}$, the value $1$ has $\\{4, 5, 6, 7\\}$, and the value $2$ has only $\\{8, 9, 10\\}$.\n\n> **Watch out.** The block stops just before $k(v + 1)$, which already has quotient $v + 1$. And at the two ends, intersect the block with the domain before counting.",
+    "证明满射就是为每个值找一个原像，有时找出全部原像很有用。满足 $\\lfloor \\frac{n}{k} \\rfloor = v$ 的数恰好是一段 $kv \\le n < k(v + 1)$，有 $k$ 个整数。不过在有限论域上，第一段和最后一段可能被截短。如果论域从 1 开始，0 对应的一段就少了数 0，最后一段则停在论域的末尾。在 $\\{1, \\dots, 10\\}$ 上取 $\\lfloor \\frac{x}{4} \\rfloor$：值 $0$ 的原像是 $\\{1, 2, 3\\}$，值 $1$ 的原像是 $\\{4, 5, 6, 7\\}$，值 $2$ 的原像只有 $\\{8, 9, 10\\}$。\n\n> **注意。** 这一段止于 $k(v + 1)$ 之前，因为 $k(v + 1)$ 的商已经是 $v + 1$。在两端，要先把这一段与论域取交集再数。",
   ),
   generate(rng) {
     const k = rng.int(2, 9);
@@ -4010,6 +4279,23 @@ const floorPreimage: KnowledgePointDef = {
     const v = rng.pick([0, m, rng.int(1, m - 1)]);
     const preimage = oneTo(n).filter((x) => Math.floor(x / k) === v);
     const answer = preimage.length;
+    const low = k * v;
+    const high = k * (v + 1) - 1;
+    const first = preimage[0] ?? 0;
+    const end = preimage[preimage.length - 1] ?? 0;
+    const cut =
+      v === 0
+        ? t("The domain starts at $1$, so $0$ is left out.", "论域从 $1$ 开始，所以 $0$ 被去掉。")
+        : v === m && high > n
+          ? t(`The domain stops at $${n}$, so the block is cut there.`, `论域止于 $${n}$，所以这一段在那里被截断。`)
+          : t("The whole block lies in the domain.", "整段都在论域之内。");
+    const after =
+      end === n
+        ? t(`$${end}$ is the last element of the domain.`, `$${end}$ 是论域的最后一个元素。`)
+        : t(
+            `the next number, $${end + 1}$, has $\\lfloor \\frac{${end + 1}}{${k}} \\rfloor = ${v + 1}$.`,
+            `下一个数 $${end + 1}$ 满足 $\\lfloor \\frac{${end + 1}}{${k}} \\rfloor = ${v + 1}$。`,
+          );
     return numberProblem({
       prompt: t(
         `Let $f : \\{1, 2, \\dots, ${n}\\} \\to \\mathbb{Z}$ with $f(x) = \\lfloor \\frac{x}{${k}} \\rfloor$. How many elements does the preimage $f^{-1}(\\{${v}\\})$ have?`,
@@ -4017,10 +4303,45 @@ const floorPreimage: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong: [k, k - 1, r + 1, k + 1, answer + 1, answer + 2],
-      solution: t(
-        `In the domain, the numbers with quotient ${v} on division by ${k} are $${preimage.join(", ")}$. So the size of the preimage is $${answer}$.`,
-        `论域中除以 ${k} 的商为 ${v} 的数是 $${preimage.join(", ")}$。所以原像的大小是 $${answer}$。`,
+      wrong: [k - 1, r + 1, answer + 2],
+      mistakes: firstOf([
+        why(
+          k,
+          "A full block has that many numbers, but this block is cut short by the domain.",
+          "完整的一段有这么多个数，但这一段被论域截短了。",
+        ),
+        why(
+          answer + 1,
+          `That includes a number outside the preimage: check both ends of the block against the domain and against $${k * (v + 1)}$.`,
+          `这多算了一个不在原像中的数：要用论域和 $${k * (v + 1)}$ 检查这一段的两端。`,
+        ),
+        why(
+          k + 1,
+          `The block stops before $${k * (v + 1)}$, whose quotient is already $${v + 1}$.`,
+          `这一段止于 $${k * (v + 1)}$ 之前，它的商已经是 $${v + 1}$。`,
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Find the block", "找出这一段"],
+            t(
+              `$\\lfloor \\frac{x}{${k}} \\rfloor = ${v}$ means $${low} \\le x < ${k * (v + 1)}$, that is $x = ${low}, \\dots, ${high}$.`,
+              `$\\lfloor \\frac{x}{${k}} \\rfloor = ${v}$ 即 $${low} \\le x < ${k * (v + 1)}$，也就是 $x = ${low}, \\dots, ${high}$。`,
+            ),
+          ],
+          [
+            ["Keep the domain", "限制在论域内"],
+            t(
+              `${cut.en} The preimage is $\\{${preimage.join(", ")}\\}$: ${count(answer, "element", "elements")}.`,
+              `${cut["zh-CN"]}原像是 $\\{${preimage.join(", ")}\\}$：共 ${answer} 个元素。`,
+            ),
+          ],
+        ],
+        t(
+          `$\\lfloor \\frac{${first}}{${k}} \\rfloor = ${v}$ and $\\lfloor \\frac{${end}}{${k}} \\rfloor = ${v}$, while ${after.en}`,
+          `$\\lfloor \\frac{${first}}{${k}} \\rfloor = ${v}$，$\\lfloor \\frac{${end}}{${k}} \\rfloor = ${v}$，而${after["zh-CN"]}`,
+        ),
       ),
     });
   },
@@ -4444,12 +4765,15 @@ const injectiveMultiplications: KnowledgePointDef = {
   id: "counting-the-injective-multiplications-modulo-n",
   title: t("Counting the injective multiplications modulo n", "计算模 n 的单射乘法"),
   explanation: t(
-    "The function $f(x) = ax$ on the residues modulo $n$ is injective exactly when $\\gcd(a, n) = 1$. If $ax \\equiv ay$, then $n$ divides $a(x - y)$, and when $a$ and $n$ share no factor, $n$ must divide $x - y$. If they do share a factor $d > 1$, then $f(\\frac{n}{d}) = f(0)$ gives two inputs with the same image. A function from a finite set to itself that is injective is also surjective.",
-    "模 $n$ 剩余上的函数 $f(x) = ax$ 是单射，当且仅当 $\\gcd(a, n) = 1$。如果 $ax \\equiv ay$，那么 $n$ 整除 $a(x - y)$，当 $a$ 与 $n$ 没有公因数时，$n$ 必须整除 $x - y$。如果它们有公因数 $d > 1$，那么 $f(\\frac{n}{d}) = f(0)$，两个输入有相同的像。有限集到自身的单射也是满射。",
+    "The function $f(x) = ax$ on the residues modulo $n$ is injective exactly when $\\gcd(a, n) = 1$. If $ax \\equiv ay$, then $n$ divides $a(x - y)$, and when $a$ and $n$ share no factor, $n$ must divide $x - y$. If they do share a factor $d > 1$, then $f(\\frac{n}{d}) = f(0)$ gives two inputs with the same image. A function from a finite set to itself that is injective is also surjective. Modulo $8$, $a = 3$ gives the outputs $0, 3, 6, 1, 4, 7, 2, 5$, all different, while $a = 2$ gives $f(4) = 0 = f(0)$.\n\n> **Watch out.** Being nonzero is not enough: $a$ must share no factor with $n$. And $a = n$ acts as $0$, sending everything to $0$.",
+    "模 $n$ 剩余上的函数 $f(x) = ax$ 是单射，当且仅当 $\\gcd(a, n) = 1$。如果 $ax \\equiv ay$，那么 $n$ 整除 $a(x - y)$，当 $a$ 与 $n$ 没有公因数时，$n$ 必须整除 $x - y$。如果它们有公因数 $d > 1$，那么 $f(\\frac{n}{d}) = f(0)$，两个输入有相同的像。有限集到自身的单射也是满射。模 $8$ 时，$a = 3$ 给出输出 $0, 3, 6, 1, 4, 7, 2, 5$，互不相同；而 $a = 2$ 给出 $f(4) = 0 = f(0)$。\n\n> **注意。** 不为零还不够：$a$ 必须与 $n$ 没有公因数。而 $a = n$ 相当于 $0$，把一切都映到 $0$。",
   ),
   generate(rng) {
     const n = rng.int(4, 60);
     const answer = totient(n);
+    const primes = divisorsOf(n).filter((d) => d > 1 && divisorsOf(d).length === 2);
+    const product = primes.map((p) => `\\left(1 - \\frac{1}{${p}}\\right)`).join("");
+    const p = primes[0] ?? 2;
     return numberProblem({
       prompt: t(
         `For how many values of $a$ in $\\{1, 2, \\dots, ${n}\\}$ is the function $f(x) = ax$ on the residues modulo ${n} injective?`,
@@ -4457,10 +4781,42 @@ const injectiveMultiplications: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong: [n - 1, n, Math.floor(n / 2), answer + 1],
-      solution: t(
-        `The function is injective exactly when $\\gcd(a, ${n}) = 1$. There are $${answer}$ such values of $a$ up to ${n}.`,
-        `函数是单射当且仅当 $\\gcd(a, ${n}) = 1$。不超过 ${n} 的这样的 $a$ 有 $${answer}$ 个。`,
+      wrong: [answer + 1],
+      mistakes: firstOf([
+        why(
+          n - 1,
+          `A nonzero $a$ that shares a factor with $${n}$ still sends two inputs to the same place.`,
+          `与 $${n}$ 有公因数的非零 $a$ 仍会把两个输入映到同一处。`,
+        ),
+        why(
+          n,
+          `$a = ${n}$ acts as $0$, and an $a$ sharing a factor with $${n}$ is not injective.`,
+          `$a = ${n}$ 相当于 $0$，而与 $${n}$ 有公因数的 $a$ 不是单射。`,
+        ),
+        why(
+          Math.floor(n / 2),
+          "Being odd is not the test; $a$ must share no prime factor with the modulus.",
+          "判断标准不是奇数；$a$ 必须与模数没有公共素因数。",
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["State the test", "写出判别条件"],
+            t(`$f(x) = ax$ is injective exactly when $\\gcd(a, ${n}) = 1$.`, `$f(x) = ax$ 是单射当且仅当 $\\gcd(a, ${n}) = 1$。`),
+          ],
+          [
+            ["Count those a", "数这样的 a"],
+            t(
+              `The primes dividing $${n}$ are $${primes.join(", ")}$, so $\\varphi(${n}) = ${n}${product} = ${answer}$.`,
+              `整除 $${n}$ 的素数是 $${primes.join(", ")}$，所以 $\\varphi(${n}) = ${n}${product} = ${answer}$。`,
+            ),
+          ],
+        ],
+        t(
+          `$a = ${p}$ shares the factor $${p}$ and is left out: indeed $f(${n / p}) = ${p} \\cdot ${n / p} = ${n} \\equiv 0 = f(0)$.`,
+          `$a = ${p}$ 有公因数 $${p}$，所以不计入：确实 $f(${n / p}) = ${p} \\cdot ${n / p} = ${n} \\equiv 0 = f(0)$。`,
+        ),
       ),
     });
   },

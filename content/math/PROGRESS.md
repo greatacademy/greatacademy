@@ -216,6 +216,7 @@ Stages 4 and 5 were reopened on 2026-11-25 and are written by whoever coordinate
 | `methods-of-proof-sets.ts` | 13 | done | coordinator | third points in `deeper-methods-of-proof.ts`, `deeper-methods-of-proof-third.ts`, `deeper-figures-proofs-algebra-numbers.ts`, `deeper-figures-methods-of-proof.ts` and `figure-reading-more.ts` too |
 | `methods-of-proof-proofs.ts` | 15 | done | coordinator | third points in `deeper-methods-of-proof.ts` and `deeper-methods-of-proof-third.ts` too |
 | `methods-of-proof-relations.ts` | 15 | done | coordinator | third points in `deeper-methods-of-proof.ts`, `deeper-methods-of-proof-third-2.ts`, `deeper-figures-proofs-algebra-numbers.ts`, `deeper-figures-methods-of-proof.ts` and `figure-reading-more.ts` too |
+| `methods-of-proof-functions.ts` | 19 | done | coordinator | third points in `deeper-methods-of-proof.ts`, `deeper-methods-of-proof-third-2.ts`, `deeper-figures-proofs-algebra-numbers.ts`, `deeper-figures-methods-of-proof.ts` and `figure-reading-more.ts` too |
 
 ## Open Gaps
 

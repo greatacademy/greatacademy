@@ -2357,8 +2357,8 @@ const mapFromDrawing: KnowledgePointDef = {
   id: "the-kind-of-function-from-an-arrow-diagram",
   title: t("The kind of function from an arrow diagram", "由箭头图判断函数的类型"),
   explanation: t(
-    "An arrow diagram shows the definitions directly. A function is injective when no element on the right receives two arrows, and surjective when every element on the right receives at least one. A function that is both is bijective. Counting helps as well: with more elements on the left than on the right, a function cannot be injective, and with fewer it cannot be surjective.",
-    "箭头图直接显示了定义。右边没有元素收到两个箭头时，函数是单射；右边每个元素至少收到一个箭头时，函数是满射。两者都是就是双射。数数也有帮助：左边的元素比右边多时，函数不可能是单射；比右边少时，不可能是满射。",
+    "An arrow diagram shows the definitions directly. A function is injective when no element on the right receives two arrows, and surjective when every element on the right receives at least one. A function that is both is bijective. Counting helps as well: with more elements on the left than on the right, a function cannot be injective, and with fewer it cannot be surjective. With arrows $a \\to 1$, $b \\to 1$, $c \\to 3$ into $\\{1, 2, 3\\}$: $1$ receives two arrows, so it is not injective, and $2$ receives none, so it is not surjective.\n\n> **Watch out.** Look at the right side for both questions. Every element on the left always sends exactly one arrow, since it is a function; injectivity and surjectivity are about how many arrows each element on the right receives.",
+    "箭头图直接显示了定义。右边没有元素收到两个箭头时，函数是单射；右边每个元素至少收到一个箭头时，函数是满射。两者都是就是双射。数数也有帮助：左边的元素比右边多时，函数不可能是单射；比右边少时，不可能是满射。箭头为 $a \\to 1$、$b \\to 1$、$c \\to 3$，映到 $\\{1, 2, 3\\}$ 时：$1$ 收到两个箭头，所以不是单射；$2$ 没收到箭头，所以不是满射。\n\n> **注意。** 两个问题都要看右边。左边每个元素总是恰好发出一个箭头，因为这是函数；单射和满射看的是右边每个元素收到多少个箭头。",
   ),
   generate(rng) {
     const shape = rng.pick(mapKinds);
@@ -2375,29 +2375,93 @@ const mapFromDrawing: KnowledgePointDef = {
     const hit = new Set(arrows);
     const twice = hit.size < arrows.length;
     const missed = hit.size < shape.right;
-    return pickChoice(
-      rng,
-      t(
-        "The arrows show a function from the left set to the right set. What kind is it?",
-        "这些箭头表示从左边集合到右边集合的函数。它是什么类型？",
-      ),
-      words[shape.key],
-      Object.entries(words)
-        .filter(([key]) => key !== shape.key)
-        .map(([, value]) => value),
-      t(
-        `${twice ? "An element on the right receives two arrows, so it is not injective" : "No element on the right receives two arrows, so it is injective"}. ${missed ? "An element on the right receives none, so it is not surjective" : "Every element on the right receives an arrow, so it is surjective"}.`,
-        `${twice ? "右边有元素收到两个箭头，所以不是单射" : "右边没有元素收到两个箭头，所以是单射"}。${missed ? "右边有元素没收到箭头，所以不是满射" : "右边每个元素都收到箭头，所以是满射"}。`,
-      ),
-      mapFigure(
-        leftNames,
-        rightNames,
-        arrows,
+    const received = rightNames.map((_, j) => leftNames.filter((_, i) => arrows[i] === j));
+    const crowded = received.findIndex((from) => from.length >= 2);
+    const empty = received.findIndex((from) => from.length === 0);
+    const counts = received.map((from) => from.length).join(", ");
+    const injectiveStep = twice
+      ? t(
+          `$${crowded + 1}$ receives arrows from $${(received[crowded] ?? []).join("$ and $")}$, so the function is not injective.`,
+          `$${crowded + 1}$ 收到来自 $${(received[crowded] ?? []).join("$ 和 $")}$ 的箭头，所以不是单射。`,
+        )
+      : t("No element on the right receives two arrows, so the function is injective.", "右边没有元素收到两个箭头，所以是单射。");
+    const surjectiveStep = missed
+      ? t(`$${empty + 1}$ receives no arrow, so the function is not surjective.`, `$${empty + 1}$ 没收到箭头，所以不是满射。`)
+      : t(
+          "Every element on the right receives at least one arrow, so the function is surjective.",
+          "右边每个元素至少收到一个箭头，所以是满射。",
+        );
+    const { left, right } = shape;
+    const sizes =
+      left > right
+        ? t(
+            `There are $${left}$ elements on the left and only $${right}$ on the right, so two arrows must share an end and the function cannot be injective, as found.`,
+            `左边有 $${left}$ 个元素，右边只有 $${right}$ 个，所以必有两个箭头终点相同，函数不可能是单射，与所得一致。`,
+          )
+        : left < right
+          ? t(
+              `There are only $${left}$ arrows for $${right}$ elements on the right, so some element must be missed and the function cannot be surjective, as found.`,
+              `只有 $${left}$ 个箭头，而右边有 $${right}$ 个元素，所以必有元素没被到达，函数不可能是满射，与所得一致。`,
+            )
+          : t(
+              `Both sides have $${left}$ elements, so the function is injective exactly when it is surjective, and the two steps agree.`,
+              `两边都有 $${left}$ 个元素，所以函数是单射当且仅当它是满射，两步的结论一致。`,
+            );
+    const solution = walked(
+      [
+        [
+          ["Check injectivity", "判断单射"],
+          t(
+            `The elements $${rightNames.join(", ")}$ on the right receive $${counts}$ arrows. ${injectiveStep.en}`,
+            `右边的元素 $${rightNames.join(", ")}$ 分别收到 $${counts}$ 个箭头。${injectiveStep["zh-CN"]}`,
+          ),
+        ],
+        [["Check surjectivity", "判断满射"], surjectiveStep],
+      ],
+      sizes,
+    );
+    const claims = { bijective: [true, true], injective: [true, false], surjective: [false, true], neither: [false, false] } as const;
+    const reasons = (Object.keys(words) as (keyof typeof words)[])
+      .filter((key) => key !== shape.key)
+      .map((key): [string, string, string] => {
+        const [inj, sur] = claims[key];
+        if (inj && twice) return [words[key].en, "Some element on the right receives two arrows.", "右边有元素收到两个箭头。"];
+        if (sur && missed) return [words[key].en, "Some element on the right receives no arrow.", "右边有元素没收到箭头。"];
+        if (!inj && !twice)
+          return [
+            words[key].en,
+            "Not injective needs two arrows ending at the same element; look again at the right side.",
+            "不是单射需要两个箭头终于同一元素；再看看右边。",
+          ];
+        return [
+          words[key].en,
+          "Not surjective needs an element on the right with no arrow; look again at the right side.",
+          "不是满射需要右边有元素没收到箭头；再看看右边。",
+        ];
+      });
+    return reasoned(
+      pickChoice(
+        rng,
         t(
-          `An arrow diagram: ${leftNames.map((n, i) => `${n} to ${(arrows[i] as number) + 1}`).join(", ")}.`,
-          `箭头图：${leftNames.map((n, i) => `${n} 到 ${(arrows[i] as number) + 1}`).join("，")}。`,
+          "The arrows show a function from the left set to the right set. What kind is it?",
+          "这些箭头表示从左边集合到右边集合的函数。它是什么类型？",
+        ),
+        words[shape.key],
+        Object.entries(words)
+          .filter(([key]) => key !== shape.key)
+          .map(([, value]) => value),
+        solution,
+        mapFigure(
+          leftNames,
+          rightNames,
+          arrows,
+          t(
+            `An arrow diagram: ${leftNames.map((n, i) => `${n} to ${(arrows[i] as number) + 1}`).join(", ")}.`,
+            `箭头图：${leftNames.map((n, i) => `${n} 到 ${(arrows[i] as number) + 1}`).join("，")}。`,
+          ),
         ),
       ),
+      reasons,
     );
   },
 };
@@ -2590,8 +2654,8 @@ const floorFromGraph: KnowledgePointDef = {
   figure: differentialEquationsDrawings1["the-floor-and-ceiling-functions#reading-a-floor-graph"],
   title: t("Reading a floor graph", "读取整函数的图"),
   explanation: t(
-    "The floor function gives the largest integer that does not exceed its input. Its graph is a staircase, with a filled dot at the left end of each step and an open dot at the right end. So reading it at a whole number means taking the height of the step that begins there, and this is the point most often misread from a drawing.",
-    "取整函数给出不超过输入的最大整数。它的图像是一段段台阶，每段左端是实心点，右端是空心点。所以在整数处读图，要取从那里开始的台阶的高度，这是最容易读错的地方。",
+    "The floor function gives the largest integer that does not exceed its input. Its graph is a staircase, with a filled dot at the left end of each step and an open dot at the right end. So reading it at a whole number means taking the height of the step that begins there, and this is the point most often misread from a drawing. For $y = \\lfloor x \\rfloor$: at $x = 2.5$ the value is $2$, and at $x = 3$ it is $3$, the filled dot, not the open dot at height $2$.\n\n> **Watch out.** At a whole number, two dots sit one above the other. Only the filled one is on the graph; the open dot is the end of the step to the left.",
+    "取整函数给出不超过输入的最大整数。它的图像是一段段台阶，每段左端是实心点，右端是空心点。所以在整数处读图，要取从那里开始的台阶的高度，这是最容易读错的地方。对 $y = \\lfloor x \\rfloor$：在 $x = 2.5$ 处值为 $2$，在 $x = 3$ 处值为 $3$，即实心点，而不是高度为 $2$ 的空心点。\n\n> **注意。** 在整数处，两个点上下排列。只有实心点在图像上；空心点是左边那段台阶的端点。",
   ),
   generate(rng) {
     const c = rng.int(-2, 2);
@@ -2605,25 +2669,79 @@ const floorFromGraph: KnowledgePointDef = {
       );
     }
     const x = rng.int(-6, 6) / 2;
-    const answer = Math.floor(x) + c;
-    const height = answer < 0 ? `$${answer}$` : `${answer}`;
+    const start = Math.floor(x);
+    const answer = start + c;
     const whole = Number.isInteger(x);
-    return numeric(
-      t(
-        `The graph is the floor function moved up or down. What is its value at $x = ${x}$?`,
-        `这个图像是取整函数上下平移的结果。它在 $x = ${x}$ 处的值是多少？`,
-      ),
-      answer,
-      [answer - 1, answer + 1, answer + 2, answer - 2],
-      t(
-        whole
-          ? `At $x = ${x}$ the filled dot is at height ${height}. The open dot there, one step lower, is not part of the graph.`
-          : `The point $x = ${x}$ lies inside the step that begins at $x = ${Math.floor(x)}$, and that step has height ${height}.`,
-        whole
-          ? `在 $x = ${x}$ 处实心点的高度是 ${height}。那里低一格的空心点不在图像上。`
-          : `$x = ${x}$ 在从 $x = ${Math.floor(x)}$ 开始的台阶内部，这段台阶的高度是 ${height}。`,
-      ),
-      drawn(
+    const formula = c === 0 ? "\\lfloor x \\rfloor" : `\\lfloor x \\rfloor ${c > 0 ? "+" : "-"} ${Math.abs(c)}`;
+    const added = c === 0 ? "" : ` ${c > 0 ? "+" : "-"} ${Math.abs(c)}`;
+    const worked = c === 0 ? `\\lfloor ${x} \\rfloor = ${answer}` : `\\lfloor ${x} \\rfloor${added} = ${start}${added} = ${answer}`;
+    const shift =
+      c === 0
+        ? t(
+            "The step that begins at $x = 0$ has height $0$, so the graph is $y = \\lfloor x \\rfloor$ itself",
+            "从 $x = 0$ 开始的台阶高度为 $0$，所以图像就是 $y = \\lfloor x \\rfloor$",
+          )
+        : t(
+            `The step that begins at $x = 0$ has height $${c}$, so the graph is $y = ${formula}$`,
+            `从 $x = 0$ 开始的台阶高度为 $${c}$，所以图像是 $y = ${formula}$`,
+          );
+    return {
+      ...numberProblem({
+        prompt: t(
+          `The graph is the floor function moved up or down. What is its value at $x = ${x}$?`,
+          `这个图像是取整函数上下平移的结果。它在 $x = ${x}$ 处的值是多少？`,
+        ),
+        answer,
+        form: "integer",
+        wrong: [answer - 1, answer + 1, answer + 2, answer - 2],
+        mistakes: [
+          whole
+            ? {
+                value: answer - 1,
+                why: t(
+                  "That is the open dot, the end of the step to the left; at a whole number the filled dot gives the value.",
+                  "这是空心点，即左边那段台阶的端点；在整数处要取实心点的值。",
+                ),
+              }
+            : {
+                value: answer + 1,
+                why: t(
+                  "That is the next step up, which starts at the next whole number; the floor never rounds up.",
+                  "这是上一级台阶，它从下一个整数开始；取整从不向上取。",
+                ),
+              },
+          ...(c === 0 || start === answer + (whole ? -1 : 1)
+            ? []
+            : [
+                {
+                  value: start,
+                  why: t(
+                    "That is the floor of $x$ itself; this graph is moved, so read the height of the step.",
+                    "这是 $x$ 本身的取整；这个图像平移过，要读台阶的高度。",
+                  ),
+                },
+              ]),
+        ],
+        solution: walked(
+          [
+            [
+              ["Find the step", "找出台阶"],
+              whole
+                ? t(
+                    `At $x = ${x}$ a step begins, with its filled dot; the open dot there ends the step to the left and is not on the graph.`,
+                    `在 $x = ${x}$ 处有一段台阶开始，那里是它的实心点；那里的空心点是左边台阶的终点，不在图像上。`,
+                  )
+                : t(
+                    `$x = ${x}$ lies inside the step that runs from $x = ${start}$ to $x = ${start + 1}$.`,
+                    `$x = ${x}$ 在从 $x = ${start}$ 到 $x = ${start + 1}$ 的台阶内部。`,
+                  ),
+            ],
+            [["Read its height", "读出高度"], t(`That step has height $${answer}$.`, `这段台阶的高度是 $${answer}$。`)],
+          ],
+          t(`${shift.en}, and $${worked}$.`, `${shift["zh-CN"]}，而 $${worked}$。`),
+        ),
+      }),
+      figure: drawn(
         { xMin: -5, xMax: 5, yMin: -7, yMax: 7 },
         marks,
         t(
@@ -2631,8 +2749,7 @@ const floorFromGraph: KnowledgePointDef = {
           `一段台阶图，每段左端是实心点，右端是空心点。从 x = 0 开始的台阶高度是 ${c}。`,
         ),
       ),
-      "integer",
-    );
+    };
   },
 };
 

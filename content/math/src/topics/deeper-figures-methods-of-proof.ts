@@ -238,8 +238,8 @@ const missedElements = point(
   "elements-a-drawn-function-misses",
   ["Elements a drawn function misses", "图中函数没有到达的元素"],
   [
-    "A function is surjective when every element of the codomain is hit by at least one arrow. In an arrow diagram, look at the right column and find the points that no arrow reaches. If there are none, the function is onto. A function can hit a point many times and still miss others, so count the column on the right, not the arrows.",
-    "函数是满射，当且仅当陪域的每个元素都至少被一个箭头到达。在箭头图中，看右列，找没有箭头到达的点。如果没有这样的点，函数就是满射。函数可以多次到达一个点，同时错过其他点，所以要数右列，而不是数箭头。",
+    "A function is surjective when every element of the codomain is hit by at least one arrow. In an arrow diagram, look at the right column and find the points that no arrow reaches. If there are none, the function is onto. A function can hit a point many times and still miss others, so count the column on the right, not the arrows. With arrows $1 \\to a$, $2 \\to a$, $3 \\to c$ into $\\{a, b, c, d\\}$, the points $b$ and $d$ are missed: $2$ elements.\n\n> **Watch out.** A point hit by two arrows still counts once. Count the points reached, then subtract from the size of the right column; the number of arrows does not settle it.",
+    "函数是满射，当且仅当陪域的每个元素都至少被一个箭头到达。在箭头图中，看右列，找没有箭头到达的点。如果没有这样的点，函数就是满射。函数可以多次到达一个点，同时错过其他点，所以要数右列，而不是数箭头。箭头为 $1 \\to a$、$2 \\to a$、$3 \\to c$，映到 $\\{a, b, c, d\\}$ 时，$b$ 和 $d$ 没被到达：共 $2$ 个元素。\n\n> **注意。** 被两个箭头到达的点仍只算一次。先数被到达的点，再用右列的大小去减；箭头的数量决定不了答案。",
   ],
   (rng) => {
     const m = rng.int(3, 6);
@@ -248,28 +248,43 @@ const missedElements = point(
     const letters = LETTERS.slice(0, n);
     const hit = new Set(map);
     const missed = n - hit.size;
-    return ask(
+    const reached = letters.filter((_, i) => hit.has(i));
+    const left = letters.filter((_, i) => !hit.has(i));
+    const leftEn = left.length === 0 ? "none" : `$${left.join(", ")}$`;
+    const leftZh = left.length === 0 ? "没有" : `$${left.join(", ")}$`;
+    return withMistakes(
+      ask(
+        [
+          "The arrows show a function from the left column to the right column. How many elements of the codomain are not in the image?",
+          "箭头表示从左列到右列的函数。陪域中有多少个元素不在像中？",
+        ],
+        missed,
+        [...new Set([missed + 1, hit.size, Math.abs(m - n), m])].filter((w) => w !== missed),
+        [
+          `**Step 1: Mark the points reached.** Following the arrows ${functionAlt(map, letters)}, the points reached are $${reached.join(", ")}$: $${hit.size}$ of them.\n\n**Step 2: Count the rest.** The right column has $${n}$ points, so $${n} - ${hit.size} = ${missed}$ ${missed === 1 ? "is" : "are"} missed: ${leftEn}.\n\n**Check.** Reached and missed points together make the whole column: $${hit.size} + ${missed} = ${n}$.`,
+          `**第一步：标出被到达的点。** 沿箭头 ${functionAltZh(map, letters)}，被到达的点是 $${reached.join(", ")}$：共 $${hit.size}$ 个。\n\n**第二步：数其余的点。** 右列有 $${n}$ 个点，所以有 $${n} - ${hit.size} = ${missed}$ 个没被到达：${leftZh}。\n\n**检验。** 被到达的与没被到达的点合起来是整列：$${hit.size} + ${missed} = ${n}$。`,
+        ],
+        {
+          svg: arrowFunction(map, letters),
+          alt: t(
+            `A function from ${m} points to ${n} points, sending ${functionAlt(map, letters)}.`,
+            `从 ${m} 个点到 ${n} 个点的函数，把 ${functionAltZh(map, letters)}。`,
+          ),
+        },
+      ),
       [
-        "The arrows show a function from the left column to the right column. How many elements of the codomain are not in the image?",
-        "箭头表示从左列到右列的函数。陪域中有多少个元素不在像中？",
-      ],
-      missed,
-      [
-        hit.size === missed ? missed + 1 : hit.size,
-        Math.abs(m - n) === missed ? missed + 2 : Math.abs(m - n),
-        m === missed ? missed + 3 : m,
-      ],
-      [
-        `The arrows reach $${hit.size}$ of the $${n}$ points on the right, so $${missed}$ are left out, whatever the number of arrows.`,
-        `箭头到达右边 $${n}$ 个点中的 $${hit.size}$ 个，所以有 $${missed}$ 个没被到达，与箭头的数量无关。`,
-      ],
-      {
-        svg: arrowFunction(map, letters),
-        alt: t(
-          `A function from ${m} points to ${n} points, sending ${functionAlt(map, letters)}.`,
-          `从 ${m} 个点到 ${n} 个点的函数，把 ${functionAltZh(map, letters)}。`,
+        say(
+          String(hit.size),
+          "That counts the points that are reached; the question asks for the ones left out.",
+          "这数的是被到达的点；题目问的是没被到达的点。",
         ),
-      },
+        say(
+          String(Math.abs(m - n)),
+          "Comparing the column sizes ignores points hit by more than one arrow.",
+          "比较两列的大小，忽略了被多个箭头到达的点。",
+        ),
+        say(String(m), "That counts the arrows, not the points on the right.", "这数的是箭头，而不是右边的点。"),
+      ].filter((mistake, i, all) => all.findIndex((x) => x.response === mistake.response) === i),
     );
   },
 );
@@ -278,8 +293,8 @@ const collisions = point(
   "pairs-that-break-injectivity",
   ["Pairs that break injectivity", "破坏单射的元素对"],
   [
-    "A function is injective when different inputs have different outputs. In an arrow diagram, two arrows ending at the same point form a collision, and a function with any collision is not injective. Three arrows ending at one point give three colliding pairs, because each pair of inputs among them shares an output.",
-    "函数是单射，当且仅当不同的输入有不同的输出。在箭头图中，两个箭头终点相同就构成一次碰撞，有碰撞的函数不是单射。三个箭头终于同一点时给出三个碰撞对，因为其中每一对输入都共享一个输出。",
+    "A function is injective when different inputs have different outputs. In an arrow diagram, two arrows ending at the same point form a collision, and a function with any collision is not injective. Three arrows ending at one point give three colliding pairs, because each pair of inputs among them shares an output. With arrows $1, 2, 3 \\to a$ and $4, 5 \\to b$: $\\frac{3 \\cdot 2}{2} + \\frac{2 \\cdot 1}{2} = 3 + 1 = 4$ pairs.\n\n> **Watch out.** A point reached by $k$ arrows gives $\\frac{k(k - 1)}{2}$ pairs, not $k - 1$: every two of its inputs form a pair.",
+    "函数是单射，当且仅当不同的输入有不同的输出。在箭头图中，两个箭头终点相同就构成一次碰撞，有碰撞的函数不是单射。三个箭头终于同一点时给出三个碰撞对，因为其中每一对输入都共享一个输出。箭头为 $1, 2, 3 \\to a$ 和 $4, 5 \\to b$ 时：$\\frac{3 \\cdot 2}{2} + \\frac{2 \\cdot 1}{2} = 3 + 1 = 4$ 对。\n\n> **注意。** 被 $k$ 个箭头到达的点给出 $\\frac{k(k - 1)}{2}$ 对，而不是 $k - 1$ 对：它的任意两个输入都构成一对。",
   ],
   (rng) => {
     const m = rng.int(3, 6);
@@ -289,24 +304,43 @@ const collisions = point(
     const counts = letters.map((_, y) => map.filter((v) => v === y).length);
     const pairs = counts.reduce((sum, c) => sum + (c * (c - 1)) / 2, 0);
     const distinct = new Set(map).size;
-    return ask(
+    const shared = letters.map((letter, y) => ({ letter, c: counts[y] ?? 0 })).filter(({ c }) => c >= 2);
+    const termsEn = shared.map(({ letter, c }) => `$${letter}$: $\\frac{${c} \\cdot ${c - 1}}{2} = ${(c * (c - 1)) / 2}$`).join("; ");
+    const termsZh = shared.map(({ letter, c }) => `$${letter}$：$\\frac{${c} \\cdot ${c - 1}}{2} = ${(c * (c - 1)) / 2}$`).join("；");
+    const sum = shared.map(({ c }) => (c * (c - 1)) / 2).join(" + ");
+    const firstShared = shared[0];
+    const inputs = firstShared ? map.map((v, i) => (letters[v] === firstShared.letter ? i + 1 : 0)).filter((i) => i > 0) : [];
+    const listed = inputs.flatMap((x, i) => inputs.slice(i + 1).map((y) => `(${x}, ${y})`)).join(", ");
+    const listedCount =
+      (inputs.length * (inputs.length - 1)) / 2 === 1 ? "$1$ pair" : `$${(inputs.length * (inputs.length - 1)) / 2}$ pairs`;
+    return withMistakes(
+      ask(
+        [
+          "The arrows show a function from the left column to the right column. How many pairs of different inputs have the same output?",
+          "箭头表示从左列到右列的函数。有多少对不同的输入具有相同的输出？",
+        ],
+        pairs,
+        [...new Set([pairs + 1, pairs + 2, m - distinct, m])].filter((w) => w !== pairs),
+        [
+          `**Step 1: Count the arrows at each point.** Reading the arrows ${functionAlt(map, letters)}, the points $${letters.join(", ")}$ are reached by $${counts.join(", ")}$ arrows.\n\n**Step 2: Count the pairs.** ${shared.length === 0 ? "No point is reached twice, so there are no such pairs: $0$." : `A point reached by $k$ arrows gives $\\frac{k(k - 1)}{2}$ pairs. ${termsEn}.${shared.length > 1 ? ` In all, $${sum} = ${pairs}$.` : ""}`}\n\n**Check.** ${firstShared ? `At $${firstShared.letter}$ the inputs are $${inputs.join(", ")}$, and the pairs among them are $${listed}$: ${listedCount}.` : `The $${m}$ arrows end at $${m}$ different points, so no output is shared.`}`,
+          `**第一步：数每个点上的箭头。** 读箭头 ${functionAltZh(map, letters)}，点 $${letters.join(", ")}$ 分别被 $${counts.join(", ")}$ 个箭头到达。\n\n**第二步：数对数。** ${shared.length === 0 ? "没有点被到达两次，所以没有这样的对：$0$。" : `被 $k$ 个箭头到达的点给出 $\\frac{k(k - 1)}{2}$ 对。${termsZh}。${shared.length > 1 ? `共 $${sum} = ${pairs}$。` : ""}`}\n\n**检验。** ${firstShared ? `在 $${firstShared.letter}$ 处，输入是 $${inputs.join(", ")}$，其中的对是 $${listed}$：共 $${(inputs.length * (inputs.length - 1)) / 2}$ 对。` : `$${m}$ 个箭头终于 $${m}$ 个不同的点，所以没有输出被共享。`}`,
+        ],
+        {
+          svg: arrowFunction(map, letters),
+          alt: t(
+            `A function from ${m} points to ${n} points, sending ${functionAlt(map, letters)}.`,
+            `从 ${m} 个点到 ${n} 个点的函数，把 ${functionAltZh(map, letters)}。`,
+          ),
+        },
+      ),
       [
-        "The arrows show a function from the left column to the right column. How many pairs of different inputs have the same output?",
-        "箭头表示从左列到右列的函数。有多少对不同的输入具有相同的输出？",
-      ],
-      pairs,
-      [m - distinct === pairs ? pairs + 1 : m - distinct, pairs + 2, m === pairs ? pairs + 3 : m],
-      [
-        `The outputs are reached by $${counts.join(", ")}$ arrows, and a point reached by $k$ arrows gives $\\frac{k(k-1)}{2}$ pairs. Adding these gives $${pairs}$.`,
-        `各输出分别被 $${counts.join(", ")}$ 个箭头到达，被 $k$ 个箭头到达的点给出 $\\frac{k(k-1)}{2}$ 对。相加得 $${pairs}$。`,
-      ],
-      {
-        svg: arrowFunction(map, letters),
-        alt: t(
-          `A function from ${m} points to ${n} points, sending ${functionAlt(map, letters)}.`,
-          `从 ${m} 个点到 ${n} 个点的函数，把 ${functionAltZh(map, letters)}。`,
+        say(
+          String(m - distinct),
+          "That counts each extra arrow once; three arrows at one point give three pairs, not two.",
+          "这把每个多余的箭头只算一次；三个箭头到同一点给出三对，而不是两对。",
         ),
-      },
+        say(String(m), "That counts the arrows; count the pairs of inputs that share an output.", "这数的是箭头；要数共享输出的输入对。"),
+      ].filter((mistake, i, all) => all.findIndex((x) => x.response === mistake.response) === i),
     );
   },
 );

@@ -434,8 +434,8 @@ const nullBand = point(
   "where-a-null-sequence-enters-a-drawn-band",
   ["Where a null sequence enters a drawn band", "零数列何时进入所画的带"],
   [
-    "A sequence tends to zero when, for every $\\varepsilon > 0$, there is an $N$ with $|a_n| < \\varepsilon$ for all $n \\ge N$. On a plot, that says all the dots from $N$ on lie inside the band between $-\\varepsilon$ and $\\varepsilon$. Earlier dots may wander in and out.",
-    "数列趋于零是指：对每个 $\\varepsilon > 0$，存在 $N$，使所有 $n \\ge N$ 都有 $|a_n| < \\varepsilon$。在图上，就是从 $N$ 开始的所有点都在 $-\\varepsilon$ 与 $\\varepsilon$ 之间的带内。更早的点可以进进出出。",
+    "A sequence tends to zero when, for every $\\varepsilon > 0$, there is an $N$ with $|a_n| < \\varepsilon$ for all $n \\ge N$. On a plot, that says all the dots from $N$ on lie inside the band between $-\\varepsilon$ and $\\varepsilon$. Earlier dots may wander in and out. For $a_n = \\frac{3}{n}$ and $\\varepsilon = 0.4$: $\\frac{3}{n} < 0.4$ means $n > 7.5$, so the dot $n = 7$ is the last one outside and $N = 8$.\n\n> **Watch out.** $N$ is the first index from which every dot is inside, not the index of the last dot outside: if the last dot outside is $n = 7$, then $N = 8$.",
+    "数列趋于零是指：对每个 $\\varepsilon > 0$，存在 $N$，使所有 $n \\ge N$ 都有 $|a_n| < \\varepsilon$。在图上，就是从 $N$ 开始的所有点都在 $-\\varepsilon$ 与 $\\varepsilon$ 之间的带内。更早的点可以进进出出。对 $a_n = \\frac{3}{n}$ 和 $\\varepsilon = 0.4$：$\\frac{3}{n} < 0.4$ 即 $n > 7.5$，所以 $n = 7$ 是带外的最后一个点，$N = 8$。\n\n> **注意。** $N$ 是从它起每个点都在带内的第一个下标，而不是带外最后一个点的下标：如果带外最后一个点是 $n = 7$，那么 $N = 8$。",
   ],
   (rng) => {
     const c = rng.int(2, 6);
@@ -449,21 +449,45 @@ const nullBand = point(
       for (let n = 1; n <= 14; n++) s += `<circle cx="${x(n)}" cy="${y(a(n))}" r="3" fill="currentColor" stroke="none"/>`;
       return s;
     });
-    return ask(
+    const formula = signs ? `\\frac{(-1)^n \\cdot ${c}}{n}` : `\\frac{${c}}{n}`;
+    return withMistakes(
+      ask(
+        [
+          `The dots show $a_n = ${formula}$, and the dashed lines are at $\\pm\\varepsilon$. Find the smallest $N$ such that $|a_n| < \\varepsilon$ for every $n \\ge N$.`,
+          `这些点表示 $a_n = ${formula}$，虚线位于 $\\pm\\varepsilon$。求最小的 $N$，使每个 $n \\ge N$ 都有 $|a_n| < \\varepsilon$。`,
+        ],
+        m + 1,
+        [m, m + 2, m - 1, c, 2 * m + 1],
+        [
+          `**Step 1: Find the last dot outside.** ${signs ? "Ignoring the sign, the" : "The"} dot $n = ${m}$, at $|a_{${m}}| = \\frac{${c}}{${m}}$, lies beyond the dashed line, while the dot $n = ${m + 1}$ lies inside.\n\n**Step 2: Make sure the later dots stay in.** $|a_n| = \\frac{${c}}{n}$ shrinks as $n$ grows, so every dot after $n = ${m + 1}$ is inside too. So $N = ${m + 1}$.\n\n**Check.** $N = ${m}$ would fail, because the dot $n = ${m}$ is outside the band; from $n = ${m + 1}$ on, $|a_n| \\le \\frac{${c}}{${m + 1}}$, below the dashed line.`,
+          `**第一步：找带外的最后一个点。** ${signs ? "不计符号，" : ""}点 $n = ${m}$ 的 $|a_{${m}}| = \\frac{${c}}{${m}}$ 在虚线之外，而点 $n = ${m + 1}$ 在带内。\n\n**第二步：确认之后的点都在带内。** $|a_n| = \\frac{${c}}{n}$ 随 $n$ 增大而减小，所以 $n = ${m + 1}$ 之后的点也都在带内。所以 $N = ${m + 1}$。\n\n**检验。** $N = ${m}$ 不行，因为点 $n = ${m}$ 在带外；从 $n = ${m + 1}$ 起，$|a_n| \\le \\frac{${c}}{${m + 1}}$，在虚线以内。`,
+        ],
+        figureOf(svg, [
+          `Dots for n from 1 to 14, and a dashed band in which the dots stay from n = ${m + 1} on.`,
+          `n 从 1 到 14 的点，以及一条虚线带，从 n = ${m + 1} 起点都留在带内。`,
+        ]),
+      ),
       [
-        `The dots show $a_n = ${signs ? "\\frac{(-1)^n" : `\\frac{`}${signs ? ` \\cdot ${c}}` : `${c}}`}{n}$, and the dashed lines are at $\\pm\\varepsilon$. Find the smallest $N$ such that $|a_n| < \\varepsilon$ for every $n \\ge N$.`,
-        `这些点表示 $a_n = ${signs ? "\\frac{(-1)^n" : `\\frac{`}${signs ? ` \\cdot ${c}}` : `${c}}`}{n}$，虚线位于 $\\pm\\varepsilon$。求最小的 $N$，使每个 $n \\ge N$ 都有 $|a_n| < \\varepsilon$。`,
+        say(
+          String(m),
+          "That is the last dot outside the band; $N$ is where the dots start to stay inside.",
+          "这是带外的最后一个点；$N$ 是点开始一直留在带内的位置。",
+        ),
+        say(
+          String(m + 2),
+          "A smaller $N$ already works: check the dot just before this one.",
+          "更小的 $N$ 已经可以：检查这个点前面的那个点。",
+        ),
+        ...(c < m
+          ? [
+              say(
+                String(c),
+                "That is the numerator of the sequence, not an index read from the band.",
+                "这是数列的分子，而不是从带中读出的下标。",
+              ),
+            ]
+          : []),
       ],
-      m + 1,
-      [m, m + 2, m - 1, c, 2 * m + 1],
-      [
-        `The term $n = ${m}$ is the last dot outside the band, and all later dots stay inside, since $\\frac{${c}}{n}$ keeps shrinking. So $N = ${m + 1}$.`,
-        `$n = ${m}$ 是带外的最后一个点，之后的点都在带内，因为 $\\frac{${c}}{n}$ 不断变小。所以 $N = ${m + 1}$。`,
-      ],
-      figureOf(svg, [
-        `Dots for n from 1 to 14, and a dashed band in which the dots stay from n = ${m + 1} on.`,
-        `n 从 1 到 14 的点，以及一条虚线带，从 n = ${m + 1} 起点都留在带内。`,
-      ]),
     );
   },
 );
@@ -630,8 +654,8 @@ const injectiveGraph = {
     "injectivity-from-a-drawn-graph",
     ["Injectivity from a drawn graph", "由图判断单射"],
     [
-      "A function is injective when different inputs always give different outputs. On a graph, that fails exactly when some horizontal line meets the graph more than once, and two such crossings are a counterexample.",
-      "当不同的输入总给出不同的输出时，函数是单射。在图上，它不成立当且仅当某条水平线与图像相交不止一次，这样的两个交点就是反例。",
+      "A function is injective when different inputs always give different outputs. On a graph, that fails exactly when some horizontal line meets the graph more than once, and two such crossings are a counterexample. The parabola $y = x^2$ is not injective: the line $y = 4$ meets it at $x = -2$ and $x = 2$. The line $y = 2x + 1$ is: each height is reached once.\n\n> **Watch out.** The vertical line test checks that a graph is a function at all. Injectivity is the horizontal line test.",
+      "当不同的输入总给出不同的输出时，函数是单射。在图上，它不成立当且仅当某条水平线与图像相交不止一次，这样的两个交点就是反例。抛物线 $y = x^2$ 不是单射：直线 $y = 4$ 与它交于 $x = -2$ 和 $x = 2$。直线 $y = 2x + 1$ 是单射：每个高度只被达到一次。\n\n> **注意。** 竖直线检验判断的是图像是否为函数。单射用的是水平线检验。",
     ],
     (rng) => {
       const shape = rng.pick(["line", "cubic", "parabola", "vee", "wave"] as const);
@@ -650,43 +674,90 @@ const injectiveGraph = {
       const no: Pair = ["Not injective: some horizontal line meets the graph twice", "不是单射：某条水平线与图像相交两次"];
       const yes2: Pair = ["Injective: every vertical line meets the graph at most once", "单射：每条竖直线与图像至多相交一次"];
       const no2: Pair = ["Not injective: some vertical line meets the graph twice", "不是单射：某条竖直线与图像相交两次"];
-      return choose(
-        rng,
-        [
-          "The curve is the graph of a function on the whole real line, and it continues in the same way past the drawing. Which statement is true?",
-          "曲线是定义在整个实数轴上的函数的图像，并按同样的方式延伸到图外。哪个说法正确？",
-        ],
-        injective ? yes : no,
-        [injective ? no : yes, yes2, no2],
-        injective
-          ? [
-              "The graph always moves in one direction, so no height is reached twice.",
-              "图像始终朝一个方向走，所以没有哪个高度被达到两次。",
-            ]
-          : [
-              "The graph turns back, so a horizontal line near the turn crosses it on both sides.",
-              "图像会折返，所以折返点附近的水平线在两侧都与它相交。",
-            ],
-        drawn(
-          { xMin: -7, xMax: 7, yMin: -7, yMax: 7 },
-          [{ kind: "curve", f, accent: true }],
-          t(
-            {
-              line: "A straight line that is not horizontal.",
-              cubic: "A cubic curve that always moves in one direction.",
-              parabola: "A parabola.",
-              vee: "A V-shaped graph.",
-              wave: "A wave that goes up and down.",
-            }[shape],
-            {
-              line: "一条不水平的直线。",
-              cubic: "始终朝一个方向走的三次曲线。",
-              parabola: "一条抛物线。",
-              vee: "V 形的图像。",
-              wave: "上下起伏的波。",
-            }[shape],
+      const up = s > 0;
+      const pair: Record<"parabola" | "vee" | "wave", [string, string, string]> = {
+        parabola: [String(h - 2), String(h + 2), String(k + 2 * s)],
+        vee: [String(h - 2), String(h + 2), String(k + 2 * s)],
+        wave: [String(h), h === 0 ? "\\pi" : `${h} + \\pi`, String(k)],
+      };
+      const check: Pair = injective
+        ? [
+            `The graph ${up ? "rises" : "falls"} all the way, so a larger input always gives a ${up ? "larger" : "smaller"} output, and two different inputs never share an output.`,
+            `图像一路${up ? "上升" : "下降"}，所以较大的输入总给出${up ? "较大" : "较小"}的输出，两个不同的输入不会有相同的输出。`,
+          ]
+        : (() => {
+            const [x1, x2, v] = pair[shape as "parabola" | "vee" | "wave"];
+            return [
+              `The inputs $${x1}$ and $${x2}$ both give the output $${v}$: two different inputs, one output.`,
+              `输入 $${x1}$ 和 $${x2}$ 都给出输出 $${v}$：两个不同的输入，同一个输出。`,
+            ];
+          })();
+      const shapeNote: Pair = injective
+        ? [
+            `The graph always ${up ? "rises" : "falls"} and never turns back, so no height is reached twice.`,
+            `图像始终${up ? "上升" : "下降"}，从不折返，所以没有哪个高度被达到两次。`,
+          ]
+        : [
+            "The graph turns back, so a horizontal line just past the turn crosses it on both sides.",
+            "图像会折返，所以折返点附近稍远一点的水平线在两侧都与它相交。",
+          ];
+      return withMistakes(
+        choose(
+          rng,
+          [
+            "The curve is the graph of a function on the whole real line, and it continues in the same way past the drawing. Which statement is true?",
+            "曲线是定义在整个实数轴上的函数的图像，并按同样的方式延伸到图外。哪个说法正确？",
+          ],
+          injective ? yes : no,
+          [injective ? no : yes, yes2, no2],
+          [
+            `**Step 1: Use horizontal lines.** Injectivity asks whether two inputs share an output, that is, whether some horizontal line meets the graph twice.\n\n**Step 2: Read the shape.** ${shapeNote[0]}\n\n**Check.** ${check[0]}`,
+            `**第一步：用水平线。** 单射问的是两个输入是否有相同的输出，也就是某条水平线是否与图像相交两次。\n\n**第二步：读形状。** ${shapeNote[1]}\n\n**检验。** ${check[1]}`,
+          ],
+          drawn(
+            { xMin: -7, xMax: 7, yMin: -7, yMax: 7 },
+            [{ kind: "curve", f, accent: true }],
+            t(
+              {
+                line: "A straight line that is not horizontal.",
+                cubic: "A cubic curve that always moves in one direction.",
+                parabola: "A parabola.",
+                vee: "A V-shaped graph.",
+                wave: "A wave that goes up and down.",
+              }[shape],
+              {
+                line: "一条不水平的直线。",
+                cubic: "始终朝一个方向走的三次曲线。",
+                parabola: "一条抛物线。",
+                vee: "V 形的图像。",
+                wave: "上下起伏的波。",
+              }[shape],
+            ),
           ),
         ),
+        [
+          say(
+            yes2[0],
+            "Vertical lines test whether the graph is a function; injectivity needs horizontal lines.",
+            "竖直线检验的是图像是否为函数；单射要用水平线。",
+          ),
+          say(
+            no2[0],
+            "No graph of a function meets a vertical line twice; injectivity needs horizontal lines.",
+            "函数的图像不会与竖直线相交两次；单射要用水平线。",
+          ),
+          injective
+            ? say(
+                no[0],
+                "Look for a turn: a horizontal line can meet this graph twice only if it goes back.",
+                "找折返处：只有图像折返，水平线才可能与它相交两次。",
+              )
+            : say(
+                yes[0],
+                "Look for a turn: where the graph goes back, one height is reached twice.",
+                "找折返处：图像折返的地方，同一高度会被达到两次。",
+              ),
+        ],
       );
     },
   ),
