@@ -12,7 +12,7 @@ import { linearAlgebraDrawings2 } from "../explanation-drawings-linear-algebra-2
 import { numberProblem, why } from "../problems.ts";
 import { ask, choose, type Pair, point, same } from "../university-kit.ts";
 import { reasoned } from "../wrong-reasons.ts";
-import { walked } from "./calculus-i-differentiation.ts";
+import { type Step, walked } from "./calculus-i-differentiation.ts";
 import { arrowLine, drawn, label } from "./figure-reading-more.ts";
 
 /** fig wraps marks in a figure over the plane from -r to r, with its description in both languages. */
@@ -1936,15 +1936,38 @@ const formClass = {
             "An indefinite form takes both signs, so its level curves are hyperbolas; this curve shows one sign only.",
             "不定二次型取两种符号，所以等值线是双曲线；这条曲线只表现出一种符号。",
           ];
-        if (shape === "hyperbola")
-          return [
-            "A hyperbola shows that $Q$ takes opposite signs along its two axes, which no definite or semidefinite form does.",
-            "双曲线表明 $Q$ 在两个轴上符号相反，定或半定二次型都不会这样。",
-          ];
         const wrongDefinite = wrong === "pos" || wrong === "neg";
-        const wrongSign = (wrong === "pos" || wrong === "psd") !== level > 0;
-        if (wrongSign)
-          return [`The level is $${level}$, so $Q$ is ${sign[0]} on the curve.`, `水平是 $${level}$，所以 $Q$ 在曲线上为${sign[1]}。`];
+        const wrongPositive = wrong === "pos" || wrong === "psd";
+        const its: Pair = wrongPositive ? ["positive", "正"] : ["negative", "负"];
+        if (shape === "hyperbola")
+          return wrongDefinite
+            ? [
+                `A ${its[0]} definite form is ${its[0]} away from the origin, so each level curve is an ellipse or empty; a hyperbola means $Q$ takes both signs.`,
+                `${its[1]}定二次型在原点外都为${its[1]}，所以每条等值线是椭圆或空集；双曲线表示 $Q$ 取两种符号。`,
+              ]
+            : [
+                `A ${its[0]} semidefinite form is never ${wrongPositive ? "negative" : "positive"}, so each level curve is a pair of parallel lines or empty; a hyperbola means $Q$ takes both signs.`,
+                `半${its[1]}定二次型从不为${wrongPositive ? "负" : "正"}，所以每条等值线是一对平行线或空集；双曲线表示 $Q$ 取两种符号。`,
+              ];
+        const wrongSign = wrongPositive !== level > 0;
+        if (wrongSign) {
+          if (wrongDefinite)
+            return shape === "ellipse"
+              ? [`The level is $${level}$, so $Q$ is ${sign[0]} on the curve.`, `水平是 $${level}$，所以 $Q$ 在曲线上为${sign[1]}。`]
+              : [
+                  `Parallel lines mean $Q$ is zero along their direction, so it is not definite; the level $${level}$ also makes it ${sign[0]}, not ${its[0]}.`,
+                  `平行线表示 $Q$ 沿它们的方向为零，所以不是定的；而且水平 $${level}$ 说明它为${sign[1]}，不是${its[1]}。`,
+                ];
+          return shape === "ellipse"
+            ? [
+                `A closed ellipse means $Q$ is zero only at the origin, so the form is definite, not merely semidefinite; and the level $${level}$ makes it ${sign[0]}.`,
+                `闭合的椭圆表示 $Q$ 只在原点为零，所以是定的，而不只是半定；而且水平 $${level}$ 说明它为${sign[1]}。`,
+              ]
+            : [
+                `The lines do show a semidefinite form, but $Q = ${level}$ on them, so its nonzero values are ${sign[0]}.`,
+                `这些直线确实表明二次型是半定的，但在它们上面 $Q = ${level}$，所以它的非零值为${sign[1]}。`,
+              ];
+        }
         return wrongDefinite
           ? [
               "A definite form is zero only at the origin, so its level curves are closed ellipses; parallel lines mean $Q$ is zero along their direction.",
@@ -1995,28 +2018,70 @@ const constrainedMax = {
     "an-extreme-value-on-the-unit-circle-from-a-level-curve",
     ["An extreme value on the unit circle from a level curve", "由等值线求单位圆上的极值"],
     [
-      "For $Q = \\frac{x^2}{p^2} + \\frac{y^2}{q^2}$, the level curve $Q = 1$ is an ellipse with semi-axes $p$ and $q$. The eigenvalues are $\\frac{1}{p^2}$ and $\\frac{1}{q^2}$, and they are the extreme values of $Q$ on the unit circle.",
-      "对 $Q = \\frac{x^2}{p^2} + \\frac{y^2}{q^2}$，等值线 $Q = 1$ 是半轴为 $p$ 和 $q$ 的椭圆。特征值是 $\\frac{1}{p^2}$ 和 $\\frac{1}{q^2}$，它们就是 $Q$ 在单位圆上的极值。",
+      "For $Q = \\frac{x^2}{p^2} + \\frac{y^2}{q^2}$, the level curve $Q = 1$ is an ellipse with semi-axes $p$ and $q$. The eigenvalues are $\\frac{1}{p^2}$ and $\\frac{1}{q^2}$, and they are the extreme values of $Q$ on the unit circle. For example, if the ellipse meets the axes at $\\pm 2$ and $\\pm 4$, then $Q = \\frac{x^2}{4} + \\frac{y^2}{16}$, and on the unit circle its maximum is $\\frac{1}{4}$ and its minimum is $\\frac{1}{16}$.\n\n> **Watch out.** The shorter semi-axis gives the larger value: $Q$ reaches $1$ soonest in that direction. And the eigenvalue is $\\frac{1}{p^2}$, not $\\frac{1}{p}$.",
+      "对 $Q = \\frac{x^2}{p^2} + \\frac{y^2}{q^2}$，等值线 $Q = 1$ 是半轴为 $p$ 和 $q$ 的椭圆。特征值是 $\\frac{1}{p^2}$ 和 $\\frac{1}{q^2}$，它们就是 $Q$ 在单位圆上的极值。例如椭圆与坐标轴交于 $\\pm 2$ 和 $\\pm 4$ 时，$Q = \\frac{x^2}{4} + \\frac{y^2}{16}$，它在单位圆上的最大值为 $\\frac{1}{4}$，最小值为 $\\frac{1}{16}$。\n\n> **注意。** 较短的半轴给出较大的值：沿这个方向 $Q$ 最快达到 $1$。而且特征值是 $\\frac{1}{p^2}$，不是 $\\frac{1}{p}$。",
     ],
     (rng) => {
       const p = rng.int(1, 6);
-      const q = rng.pick([1, 2, 3, 4, 5, 6].filter((v) => v !== p));
+      // One semi-axis is never twice the other, so reading a whole axis is a distinct slip.
+      const q = rng.pick([1, 2, 3, 4, 5, 6].filter((v) => v !== p && v !== 2 * p && 2 * v !== p));
       const f = (x: number, y: number) => (x * x) / (p * p) + (y * y) / (q * q);
       const askMax = rng.bool();
       const semi = askMax ? Math.min(p, q) : Math.max(p, q);
+      const otherSemi = p + q - semi;
       const answer = Q.of(1, semi * semi);
-      return ask(
-        [
-          `The drawn ellipse is the level curve $Q(x, y) = 1$ of a quadratic form $Q$ whose principal axes are the coordinate axes. Find the ${askMax ? "maximum" : "minimum"} of $Q$ on the unit circle $x^2 + y^2 = 1$.`,
-          `所画的椭圆是二次型 $Q$ 的等值线 $Q(x, y) = 1$，$Q$ 的主轴是坐标轴。求 $Q$ 在单位圆 $x^2 + y^2 = 1$ 上的${askMax ? "最大值" : "最小值"}。`,
-        ],
-        answer,
-        [Q.of(1, semi), Q.of(semi * semi, 1), Q.of(1, (p + q - semi) * (p + q - semi)), Q.of(1, 2 * semi)],
-        [
-          `The semi-axes are $${p}$ and $${q}$, so the eigenvalues are $${Q.of(1, p * p).toLatex()}$ and $${Q.of(1, q * q).toLatex()}$. The ${askMax ? "larger" : "smaller"} one is $${answer.toLatex()}$, from the ${askMax ? "shorter" : "longer"} axis.`,
-          `半轴为 $${p}$ 和 $${q}$，所以特征值为 $${Q.of(1, p * p).toLatex()}$ 和 $${Q.of(1, q * q).toLatex()}$。${askMax ? "较大" : "较小"}的是 $${answer.toLatex()}$，来自${askMax ? "较短" : "较长"}的轴。`,
-        ],
-        fig(
+      return {
+        ...numberProblem({
+          prompt: t(
+            `The drawn ellipse is the level curve $Q(x, y) = 1$ of a quadratic form $Q$ whose principal axes are the coordinate axes. Find the ${askMax ? "maximum" : "minimum"} of $Q$ on the unit circle $x^2 + y^2 = 1$.`,
+            `所画的椭圆是二次型 $Q$ 的等值线 $Q(x, y) = 1$，$Q$ 的主轴是坐标轴。求 $Q$ 在单位圆 $x^2 + y^2 = 1$ 上的${askMax ? "最大值" : "最小值"}。`,
+          ),
+          answer,
+          mistakes: [
+            why(
+              Q.of(1, semi),
+              `The eigenvalue is $\\frac{1}{${semi}^2}$; the semi-axis must be squared.`,
+              `特征值是 $\\frac{1}{${semi}^2}$；半轴要平方。`,
+            ),
+            why(
+              Q.of(semi * semi, 1),
+              "That is the squared semi-axis itself; the value of $Q$ is its reciprocal.",
+              "这是半轴的平方本身；$Q$ 的值是它的倒数。",
+            ),
+            why(
+              Q.of(1, otherSemi * otherSemi),
+              `That comes from the ${askMax ? "longer" : "shorter"} semi-axis $${otherSemi}$, which gives the ${askMax ? "minimum" : "maximum"}.`,
+              `这来自${askMax ? "较长" : "较短"}的半轴 $${otherSemi}$，给出的是${askMax ? "最小值" : "最大值"}。`,
+            ),
+            why(
+              Q.of(1, 4 * semi * semi),
+              `That uses the whole axis $${2 * semi}$; the coefficient comes from the semi-axis $${semi}$.`,
+              `这用了整条轴 $${2 * semi}$；系数来自半轴 $${semi}$。`,
+            ),
+          ].filter((w, i, all) => String(w.value) !== String(answer) && all.findIndex((o) => String(o.value) === String(w.value)) === i),
+          solution: walked(
+            [
+              [
+                ["Read the semi-axes", "读出半轴"],
+                t(`The ellipse meets the axes at $\\pm ${p}$ and $\\pm ${q}$, so`, `椭圆与坐标轴交于 $\\pm ${p}$ 和 $\\pm ${q}$，所以`),
+                [`Q = \\frac{x^2}{${p * p}} + \\frac{y^2}{${q * q}}`],
+              ],
+              [
+                [askMax ? "Take the shorter axis" : "Take the longer axis", askMax ? "取较短的轴" : "取较长的轴"],
+                t(
+                  `On the unit circle $Q$ lies between its two coefficients, and the ${askMax ? "larger" : "smaller"} one comes from the semi-axis $${semi}$:`,
+                  `在单位圆上 $Q$ 介于两个系数之间，${askMax ? "较大" : "较小"}的那个来自半轴 $${semi}$：`,
+                ),
+                [`\\frac{1}{${semi}^2} = ${answer.toLatex()}`],
+              ],
+            ],
+            t(
+              `At the unit vector along that axis, $Q = \\frac{1^2}{${semi * semi}} = ${answer.toLatex()}$, and along the other axis $Q = ${Q.of(1, otherSemi * otherSemi).toLatex()}$, which is ${askMax ? "smaller" : "larger"}.`,
+              `在沿这条轴的单位向量处 $Q = \\frac{1^2}{${semi * semi}} = ${answer.toLatex()}$，沿另一条轴 $Q = ${Q.of(1, otherSemi * otherSemi).toLatex()}$，${askMax ? "更小" : "更大"}。`,
+            ),
+          ),
+        }),
+        figure: fig(
           7,
           [{ kind: "contour", f, level: 1, accent: true }],
           [
@@ -2024,7 +2089,7 @@ const constrainedMax = {
             `中心在原点的椭圆，与 x 轴交于 ±${p}，与 y 轴交于 ±${q}。`,
           ],
         ),
-      );
+      };
     },
   ),
   figure: linearAlgebraDrawings2["constrained-optimization-of-quadratic-forms#an-extreme-value-on-the-unit-circle-from-a-level-curve"],
@@ -2035,12 +2100,13 @@ const singularFromEllipse = {
     "singular-values-from-the-image-of-the-unit-circle",
     ["Singular values from the image of the unit circle", "由单位圆的像读奇异值"],
     [
-      "A $2 \\times 2$ invertible matrix sends the unit circle to an ellipse whose semi-axes are its singular values. Their product is $\\lvert \\det A \\rvert$, and their ratio is the condition number.",
-      "$2 \\times 2$ 可逆矩阵把单位圆映成椭圆，椭圆的半轴就是奇异值。它们的积是 $\\lvert \\det A \\rvert$，比值是条件数。",
+      "A $2 \\times 2$ invertible matrix sends the unit circle to an ellipse whose semi-axes are its singular values. Their product is $\\lvert \\det A \\rvert$, and their ratio is the condition number. For example, an image ellipse that meets the axes at $\\pm 2$ and $\\pm 5$ gives $\\sigma_1 = 5$ and $\\sigma_2 = 2$, so $\\lvert \\det A \\rvert = 10$ and the condition number is $\\frac{5}{2}$.\n\n> **Watch out.** Read the semi-axes, from the center to the ellipse, not the full widths. $\\sigma_1$ is the longer one, and the condition number divides the longer by the shorter, so it is never below $1$.",
+      "$2 \\times 2$ 可逆矩阵把单位圆映成椭圆，椭圆的半轴就是奇异值。它们的积是 $\\lvert \\det A \\rvert$，比值是条件数。例如像椭圆与坐标轴交于 $\\pm 2$ 和 $\\pm 5$，则 $\\sigma_1 = 5$，$\\sigma_2 = 2$，所以 $\\lvert \\det A \\rvert = 10$，条件数为 $\\frac{5}{2}$。\n\n> **注意。** 要读半轴，即从中心到椭圆的距离，而不是整个宽度。$\\sigma_1$ 是较长的那个，条件数是长的除以短的，所以绝不小于 $1$。",
     ],
     (rng) => {
-      const p = rng.int(1, 6);
-      const q = rng.pick([1, 2, 3, 4, 5, 6].filter((v) => v !== p));
+      // Semi-axes of at least 2, so that a squared semi-axis is never the semi-axis itself.
+      const p = rng.int(2, 6);
+      const q = rng.pick([2, 3, 4, 5, 6].filter((v) => v !== p));
       const [big, small] = [Math.max(p, q), Math.min(p, q)];
       const f = (x: number, y: number) => (x * x) / (p * p) + (y * y) / (q * q);
       const kind = rng.pick(["largest", "smallest", "det", "ratio"] as const);
@@ -2054,18 +2120,124 @@ const singularFromEllipse = {
             : kind === "det"
               ? ["$\\lvert \\det A \\rvert$", "$\\lvert \\det A \\rvert$"]
               : ["the condition number $\\frac{\\sigma_1}{\\sigma_2}$ of $A$", "$A$ 的条件数 $\\frac{\\sigma_1}{\\sigma_2}$"];
-      return ask(
-        [
-          `A matrix $A$ sends the dashed unit circle to the solid ellipse. Find ${asked[0]}.`,
-          `矩阵 $A$ 把虚线单位圆映成实线椭圆。求${asked[1]}。`,
-        ],
-        answer,
-        [Q.of(small, big), Q.of(big + small, 1), Q.of(big * big, 1), Q.of(small * small, 1), Q.of(2 * big, 1)],
-        [
-          `The semi-axes of the ellipse are the singular values, $\\sigma_1 = ${big}$ and $\\sigma_2 = ${small}$, which gives $${answer.toLatex()}$.`,
-          `椭圆的半轴就是奇异值，$\\sigma_1 = ${big}$，$\\sigma_2 = ${small}$，于是得 $${answer.toLatex()}$。`,
-        ],
-        fig(
+      const n = (v: number) => Q.of(v, 1);
+      const mistakes =
+        kind === "largest"
+          ? [
+              why(
+                n(small),
+                `$${small}$ is the shorter semi-axis, the smallest singular value $\\sigma_2$.`,
+                `$${small}$ 是较短的半轴，即最小奇异值 $\\sigma_2$。`,
+              ),
+              why(
+                n(big * big),
+                `$${big * big}$ is $\\sigma_1^2$, an eigenvalue of $A^TA$; the semi-axis itself is $${big}$.`,
+                `$${big * big}$ 是 $\\sigma_1^2$，即 $A^TA$ 的特征值；半轴本身是 $${big}$。`,
+              ),
+              why(
+                n(2 * big),
+                `$${2 * big}$ is the full width of the ellipse; the semi-axis is half of it.`,
+                `$${2 * big}$ 是椭圆的整个宽度；半轴是它的一半。`,
+              ),
+            ]
+          : kind === "smallest"
+            ? [
+                why(
+                  n(big),
+                  `$${big}$ is the longer semi-axis, the largest singular value $\\sigma_1$.`,
+                  `$${big}$ 是较长的半轴，即最大奇异值 $\\sigma_1$。`,
+                ),
+                why(
+                  n(small * small),
+                  `$${small * small}$ is $\\sigma_2^2$, an eigenvalue of $A^TA$; the semi-axis itself is $${small}$.`,
+                  `$${small * small}$ 是 $\\sigma_2^2$，即 $A^TA$ 的特征值；半轴本身是 $${small}$。`,
+                ),
+                why(
+                  n(2 * small),
+                  `$${2 * small}$ is the full width of the ellipse across its short axis; the semi-axis is half of it.`,
+                  `$${2 * small}$ 是椭圆沿短轴的整个宽度；半轴是它的一半。`,
+                ),
+                why(
+                  n(1),
+                  "$1$ is the radius of the dashed unit circle, the input; read the semi-axes of the solid image ellipse.",
+                  "$1$ 是虚线单位圆的半径，那是输入；要读实线像椭圆的半轴。",
+                ),
+              ]
+            : kind === "det"
+              ? [
+                  why(
+                    n(big + small),
+                    "The determinant multiplies the singular values; it does not add them.",
+                    "行列式是奇异值相乘，而不是相加。",
+                  ),
+                  why(
+                    n(big * big * small * small),
+                    `$${big * big * small * small}$ is $\\det(A^TA) = (\\det A)^2$; take its square root.`,
+                    `$${big * big * small * small}$ 是 $\\det(A^TA) = (\\det A)^2$；要开平方。`,
+                  ),
+                  why(
+                    n(4 * big * small),
+                    `That multiplies the full widths $${2 * big}$ and $${2 * small}$; use the semi-axes.`,
+                    `这是把整个宽度 $${2 * big}$ 和 $${2 * small}$ 相乘了；应该用半轴。`,
+                  ),
+                ]
+              : [
+                  why(
+                    Q.of(small, big),
+                    "That is upside down: the condition number is $\\frac{\\sigma_1}{\\sigma_2}$, the longer semi-axis over the shorter.",
+                    "上下颠倒了：条件数是 $\\frac{\\sigma_1}{\\sigma_2}$，长半轴除以短半轴。",
+                  ),
+                  why(
+                    n(big - small),
+                    "The condition number is a ratio; it divides the semi-axes rather than subtracting them.",
+                    "条件数是比值；要把两个半轴相除，而不是相减。",
+                  ),
+                  why(
+                    n(big * small),
+                    `$${big * small}$ is the product $\\sigma_1\\sigma_2 = \\lvert \\det A \\rvert$, not the ratio.`,
+                    `$${big * small}$ 是乘积 $\\sigma_1\\sigma_2 = \\lvert \\det A \\rvert$，不是比值。`,
+                  ),
+                ];
+      const finish =
+        kind === "det"
+          ? `\\lvert \\det A \\rvert = \\sigma_1\\sigma_2 = ${big} \\cdot ${small} = ${big * small}`
+          : `\\frac{\\sigma_1}{\\sigma_2} = \\frac{${big}}{${small}}${answer.toLatex() === `\\frac{${big}}{${small}}` ? "" : ` = ${answer.toLatex()}`}`;
+      return {
+        ...numberProblem({
+          prompt: t(
+            `A matrix $A$ sends the dashed unit circle to the solid ellipse. Find ${asked[0]}.`,
+            `矩阵 $A$ 把虚线单位圆映成实线椭圆。求${asked[1]}。`,
+          ),
+          answer,
+          mistakes: mistakes.filter(
+            (w, i, all) => String(w.value) !== String(answer) && all.findIndex((o) => String(o.value) === String(w.value)) === i,
+          ),
+          solution: walked(
+            [
+              [
+                ["Read the semi-axes", "读出半轴"],
+                t(
+                  `The ellipse meets the x-axis at $\\pm ${p}$ and the y-axis at $\\pm ${q}$, so its semi-axes are $${p}$ and $${q}$.`,
+                  `椭圆与 x 轴交于 $\\pm ${p}$，与 y 轴交于 $\\pm ${q}$，所以它的半轴是 $${p}$ 和 $${q}$。`,
+                ),
+              ],
+              [
+                ["Name the singular values", "确定奇异值"],
+                t(
+                  "The longer semi-axis is $\\sigma_1$ and the shorter is $\\sigma_2$:",
+                  "较长的半轴是 $\\sigma_1$，较短的是 $\\sigma_2$：",
+                ),
+                [`\\sigma_1 = ${big}, \\quad \\sigma_2 = ${small}`],
+              ],
+              ...(kind === "largest" || kind === "smallest" ? [] : [[["Combine them", "组合起来"], t("", ""), [finish]] as Step]),
+            ],
+            t(
+              `$A$ scales areas by $\\lvert \\det A \\rvert = \\sigma_1\\sigma_2 = ${big * small}$, and indeed the ellipse has area $${big * small}\\pi$ while the unit circle has area $\\pi$.`,
+              `$A$ 把面积放大 $\\lvert \\det A \\rvert = \\sigma_1\\sigma_2 = ${big * small}$ 倍；椭圆面积确实是 $${big * small}\\pi$，而单位圆面积是 $\\pi$。`,
+            ),
+          ),
+        }),
+        figure: fig(
           7,
           [
             { kind: "circle", center: [0, 0], r: 1, dashed: true },
@@ -2076,7 +2248,7 @@ const singularFromEllipse = {
             `虚线单位圆，以及中心在原点的实线椭圆，与 x 轴交于 ±${p}，与 y 轴交于 ±${q}。`,
           ],
         ),
-      );
+      };
     },
   ),
   figure: linearAlgebraDrawings2["singular-values-of-a-matrix#singular-values-from-the-image-of-the-unit-circle"],

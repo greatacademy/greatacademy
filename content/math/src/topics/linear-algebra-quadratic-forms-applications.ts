@@ -643,6 +643,16 @@ export const diagonalizationOf3x3SymmetricMatrices: TopicDef = {
               `From $(${m} - \\lambda)^2 = ${k}^2$ the shift is $\\pm ${k}$, not $\\pm ${2 * k}$.`,
               `由 $(${m} - \\lambda)^2 = ${k}^2$ 得偏移为 $\\pm ${k}$，不是 $\\pm ${2 * k}$。`,
             ),
+            whySet(
+              [k - m, k + m, c].sort((x, y) => x - y).map(String),
+              `The roles of $${m}$ and $${k}$ are swapped: $(${m} - \\lambda)^2 = ${k}^2$ gives $\\lambda = ${m} \\pm ${k}$.`,
+              `$${m}$ 与 $${k}$ 的作用弄反了：$(${m} - \\lambda)^2 = ${k}^2$ 给出 $\\lambda = ${m} \\pm ${k}$。`,
+            ),
+            whySet(
+              [l1, l2].map(String),
+              `The factor $${c} - \\lambda$ was dropped: a $3 \\times 3$ matrix has three eigenvalues, and the lone entry gives $\\lambda = ${c}$.`,
+              `漏掉了因子 $${c} - \\lambda$：$3 \\times 3$ 矩阵有三个特征值，单独的那个元素给出 $\\lambda = ${c}$。`,
+            ),
           ].filter(
             (w, i, all) =>
               new Set(w.values).size === w.values.length &&
@@ -1114,12 +1124,13 @@ export const bilinearForms: TopicDef = {
         "$\\mathbb{R}^2$ 上矩阵为 $A$ 的双线性型为 $B(\\mathbf{x}, \\mathbf{y}) = \\mathbf{x}^T A\\mathbf{y} = \\sum_{i, j} a_{ij}x_iy_j$。计算时先求 $A\\mathbf{y}$，再与 $\\mathbf{x}$ 作点积。当 $A$ 不对称时，交换两个自变量可能改变值，因为 $B(\\mathbf{y}, \\mathbf{x}) = \\mathbf{x}^T A^T\\mathbf{y}$。例如 $A = \\begin{pmatrix} 1 & 2 \\\\ 0 & 3 \\end{pmatrix}$，$\\mathbf{x} = (1, 2)$，$\\mathbf{y} = (2, 1)$ 时，$A\\mathbf{y} = (4, 3)$，$B(\\mathbf{x}, \\mathbf{y}) = 4 + 6 = 10$，而 $B(\\mathbf{y}, \\mathbf{x}) = 16$。\n\n> **注意。** $A$ 乘的是 $\\mathbf{y}$，结果再与 $\\mathbf{x}$ 作点积；先算 $A\\mathbf{x}$ 再与 $\\mathbf{y}$ 作点积得到的是 $B(\\mathbf{y}, \\mathbf{x})$。答案是这个数，而不是 $A\\mathbf{y}$ 各分量之和。",
       ),
       generate(rng: Rng): Problem {
-        const A: Mat2 = [
-          [rng.int(-4, 4), rng.int(-4, 4)],
-          [rng.int(-4, 4), rng.int(-4, 4)],
-        ];
-        const x = [rng.nonZero(-3, 3), rng.int(-3, 3)] as const;
-        const y = [rng.int(-3, 3), rng.nonZero(-3, 3)] as const;
+        const top = [rng.nonZero(-4, 4), rng.nonZero(-4, 4)] as const;
+        const bottom = [rng.nonZero(-4, 4), rng.nonZero(-4, 4)] as const;
+        // B(x, y) − B(y, x) = (a12 − a21)(x1y2 − x2y1), so A is kept nonsymmetric and x, y not parallel: swapping matters.
+        const A: Mat2 = [top, [bottom[0] === top[1] ? -top[1] : bottom[0], bottom[1]]];
+        const x = [rng.nonZero(-3, 3), rng.nonZero(-3, 3)] as const;
+        const y0 = [rng.nonZero(-3, 3), rng.nonZero(-3, 3)] as const;
+        const y = (x[0] * y0[1] === x[1] * y0[0] ? [y0[0], -y0[1]] : y0) as readonly [number, number];
         const Ay = [A[0][0] * y[0] + A[0][1] * y[1], A[1][0] * y[0] + A[1][1] * y[1]] as const;
         const ans = x[0] * Ay[0] + x[1] * Ay[1];
         const swapped = y[0] * (A[0][0] * x[0] + A[0][1] * x[1]) + y[1] * (A[1][0] * x[0] + A[1][1] * x[1]);
@@ -1146,6 +1157,21 @@ export const bilinearForms: TopicDef = {
                 x[0] * y[0] + x[1] * y[1],
                 "That is $\\mathbf{x} \\cdot \\mathbf{y}$, which leaves out $A$.",
                 "这是 $\\mathbf{x} \\cdot \\mathbf{y}$，漏掉了 $A$。",
+              ),
+              why(
+                A[0][0] * x[0] * y[0] + A[1][1] * x[1] * y[1],
+                "That keeps only the diagonal entries; $a_{12}x_1y_2$ and $a_{21}x_2y_1$ contribute too.",
+                "这只保留了对角元；$a_{12}x_1y_2$ 和 $a_{21}x_2y_1$ 也有贡献。",
+              ),
+              why(
+                y[0] * Ay[0] + y[1] * Ay[1],
+                "That dots $A\\mathbf{y}$ with $\\mathbf{y}$, giving $B(\\mathbf{y}, \\mathbf{y})$; the first argument is $\\mathbf{x}$.",
+                "这是把 $A\\mathbf{y}$ 与 $\\mathbf{y}$ 作点积，得到 $B(\\mathbf{y}, \\mathbf{y})$；第一个自变量是 $\\mathbf{x}$。",
+              ),
+              why(
+                x[0] * (A[0][0] * x[0] + A[0][1] * x[1]) + x[1] * (A[1][0] * x[0] + A[1][1] * x[1]),
+                "That is $B(\\mathbf{x}, \\mathbf{x}) = \\mathbf{x}^TA\\mathbf{x}$; $A$ multiplies the second argument $\\mathbf{y}$.",
+                "这是 $B(\\mathbf{x}, \\mathbf{x}) = \\mathbf{x}^TA\\mathbf{x}$；$A$ 乘的是第二个自变量 $\\mathbf{y}$。",
               ),
             ],
             ans,
@@ -1352,6 +1378,16 @@ export const quadraticForms: TopicDef = {
                   ),
                   why(d[0]!, "That is $a_{11}$, the coefficient of $x_1^2$.", "这是 $a_{11}$，即 $x_1^2$ 的系数。"),
                   why(d[2]!, "That is $a_{33}$, the coefficient of $x_3^2$.", "这是 $a_{33}$，即 $x_3^2$ 的系数。"),
+                  why(
+                    o[0]!,
+                    "That is $a_{12}$, which is off the diagonal; the coefficient of $x_2^2$ is $a_{22}$.",
+                    "这是非对角元 $a_{12}$；$x_2^2$ 的系数是 $a_{22}$。",
+                  ),
+                  why(
+                    o[2]!,
+                    "That is $a_{23}$, which is off the diagonal; the coefficient of $x_2^2$ is $a_{22}$.",
+                    "这是非对角元 $a_{23}$；$x_2^2$ 的系数是 $a_{22}$。",
+                  ),
                 ],
             term.v,
           ),
@@ -1419,11 +1455,12 @@ export const changeOfVariablesInQuadraticForms: TopicDef = {
         const d1 = rng.nonZero(-4, 4);
         const d2 = rng.nonZero(-4, 4);
         const p11 = rng.nonZero(-2, 2);
-        const p12 = rng.int(-2, 2);
-        const p21 = rng.int(-2, 2);
-        let p22 = rng.nonZero(-2, 2);
-        // The change of variables must be invertible.
-        if (p11 * p22 === p12 * p21) p22 = p22 === 2 ? 1 : p22 + 1 || 1;
+        const p12 = rng.nonZero(-2, 2);
+        let p21 = rng.int(-2, 2);
+        const p22 = rng.nonZero(-2, 2);
+        // The change of variables must be invertible, and B must keep a cross term. With p21 = 0 the determinant is
+        // p11·p22 and b12 is d1·p11·p12, both nonzero.
+        if (p11 * p22 === p12 * p21 || d1 * p11 * p12 + d2 * p21 * p22 === 0) p21 = 0;
 
         const b11 = d1 * p11 * p11 + d2 * p21 * p21;
         const b12 = d1 * p11 * p12 + d2 * p21 * p22;
@@ -1440,6 +1477,12 @@ export const changeOfVariablesInQuadraticForms: TopicDef = {
         const B: Mat2 = [
           [b11, b12],
           [b12, b22],
+        ];
+        // PAPᵀ: the transpose put on the wrong side.
+        const c12 = d1 * p11 * p21 + d2 * p12 * p22;
+        const flipped: Mat2 = [
+          [d1 * p11 * p11 + d2 * p12 * p12, c12],
+          [c12, d1 * p21 * p21 + d2 * p22 * p22],
         ];
 
         const prompt = t(
@@ -1489,6 +1532,7 @@ export const changeOfVariablesInQuadraticForms: TopicDef = {
               [0, b22],
             ])}$`,
           ),
+          t(`$${mat2Latex(flipped)}$`, `$${mat2Latex(flipped)}$`),
         ];
 
         const solution = walked(
@@ -1530,6 +1574,11 @@ export const changeOfVariablesInQuadraticForms: TopicDef = {
             wrong[3]!.en,
             `The off-diagonal entries were dropped; $P^TAP$ is symmetric but not diagonal here, with $b_{12} = ${b12}$.`,
             `漏掉了非对角元；这里 $P^TAP$ 是对称的，但不是对角的，$b_{12} = ${b12}$。`,
+          ],
+          [
+            wrong[4]!.en,
+            "That is $PAP^T$: the transpose went on the wrong side. Substituting $x = Py$ gives $y^TP^TAPy$, so $P^T$ is on the left.",
+            "这是 $PAP^T$：转置放错了边。代入 $x = Py$ 得 $y^TP^TAPy$，所以 $P^T$ 在左边。",
           ],
         ]);
       },
@@ -1584,13 +1633,18 @@ export const changeOfVariablesInQuadraticForms: TopicDef = {
                   ),
                   why(
                     a * k + b * k + c,
-                    `$k$ was not squared: $(y_1 ${formatAddVar(k, "y_2")})^2$ contains $${k * k}y_2^2$.`,
-                    `$k$ 没有平方：$(y_1 ${formatAddVar(k, "y_2")})^2$ 含有 $${k * k}y_2^2$。`,
+                    `$k$ was not squared: $(y_1 ${formatAddVar(k, "y_2")})^2$ contains $${lead(k * k, "y_2^2")}$.`,
+                    `$k$ 没有平方：$(y_1 ${formatAddVar(k, "y_2")})^2$ 含有 $${lead(k * k, "y_2^2")}$。`,
                   ),
                   why(
                     c,
                     "That is the old $x_2^2$ coefficient; the substitution adds $ak^2 + bk$ to it.",
                     "这是原来 $x_2^2$ 的系数；代换还会给它加上 $ak^2 + bk$。",
+                  ),
+                  why(
+                    -a * k * k + b * k + c,
+                    `The sign of $${lead(a, "k^2")}$ was flipped: $(${lead(k, "y_2")})^2 = ${lead(k * k, "y_2^2")}$ is positive, so $${lead(a, "x_1^2")}$ adds $${a * k * k}$.`,
+                    `$${lead(a, "k^2")}$ 的符号弄反了：$(${lead(k, "y_2")})^2 = ${lead(k * k, "y_2^2")}$ 是正的，所以 $${lead(a, "x_1^2")}$ 加上的是 $${a * k * k}$。`,
                   ),
                 ],
             askCross ? cross : sq,
@@ -1899,6 +1953,16 @@ export const canonicalFormOfAQuadraticFormUsingOrthogonalTransformations: TopicD
                     "这是 $\\det A$，即乘积 $\\lambda_1\\lambda_2$，不是和。",
                   ),
                   why(a - c, "The trace adds the diagonal entries; it does not subtract them.", "迹是把对角元相加，而不是相减。"),
+                  why(
+                    -(a + c),
+                    "That is the coefficient of $\\lambda$ in $\\det(A - \\lambda I)$; the sum of the roots is its negative.",
+                    "这是 $\\det(A - \\lambda I)$ 中 $\\lambda$ 的系数；两根之和是它的相反数。",
+                  ),
+                  why(
+                    a + c + h,
+                    `$a_{12} = ${h}$ is off the diagonal; the trace adds only $a_{11} = ${a}$ and $a_{22} = ${c}$.`,
+                    `$a_{12} = ${h}$ 不在对角线上；迹只把 $a_{11} = ${a}$ 和 $a_{22} = ${c}$ 相加。`,
+                  ),
                 ]
               : [
                   why(
@@ -1915,6 +1979,11 @@ export const canonicalFormOfAQuadraticFormUsingOrthogonalTransformations: TopicD
                     a + c,
                     "That is the trace, the sum $\\lambda_1 + \\lambda_2$, not the product.",
                     "这是迹，即和 $\\lambda_1 + \\lambda_2$，不是积。",
+                  ),
+                  why(
+                    a * c,
+                    `The off-diagonal entries were left out: $\\det A$ also subtracts $a_{12}^2 = ${h * h}$.`,
+                    `漏掉了非对角元：$\\det A$ 还要减去 $a_{12}^2 = ${h * h}$。`,
                   ),
                 ],
             ans,
@@ -2216,6 +2285,10 @@ export const reducingAQuadraticCurveToItsPrincipalAxes: TopicDef = {
     "Eliminate the cross-product term in a quadratic curve equation by rotating coordinate axes to the principal axes.",
     "通过旋转坐标轴至主轴方向，消除二次曲线方程中的交叉项。",
   ),
+  intro: t(
+    "The curve $3x_1^2 + 2x_1x_2 + 3x_2^2 = 8$ has the matrix $A = \\begin{pmatrix} 3 & 1 \\\\ 1 & 3 \\end{pmatrix}$, with eigenvalues $2$ and $4$ and unit eigenvectors $\\frac{1}{\\sqrt{2}}(1, -1)$ and $\\frac{1}{\\sqrt{2}}(1, 1)$. Turning the axes onto these eigenvectors removes the cross term: the curve is $2y_1^2 + 4y_2^2 = 8$, an ellipse with semi-axes $2$ and $\\sqrt{2}$.\n\nCheck: the eigenvalues add up to the trace, $2 + 4 = 3 + 3$, and multiply to the determinant, $2 \\cdot 4 = 9 - 1$.\n\nIn this lesson we rotate a quadratic curve onto its principal axes and read off its semi-axes and area from the eigenvalues.",
+    "曲线 $3x_1^2 + 2x_1x_2 + 3x_2^2 = 8$ 的矩阵为 $A = \\begin{pmatrix} 3 & 1 \\\\ 1 & 3 \\end{pmatrix}$，特征值为 $2$ 和 $4$，单位特征向量为 $\\frac{1}{\\sqrt{2}}(1, -1)$ 和 $\\frac{1}{\\sqrt{2}}(1, 1)$。把坐标轴转到这两个特征向量上，交叉项就消失了：曲线变为 $2y_1^2 + 4y_2^2 = 8$，是半轴为 $2$ 和 $\\sqrt{2}$ 的椭圆。\n\n检验：特征值之和等于迹，$2 + 4 = 3 + 3$；特征值之积等于行列式，$2 \\cdot 4 = 9 - 1$。\n\n本课我们把二次曲线转到主轴上，并由特征值读出它的半轴和面积。",
+  ),
   prerequisites: ["positive-definite-and-negative-definite-quadratic-forms"],
   encompasses: [],
   xp: 15,
@@ -2225,8 +2298,8 @@ export const reducingAQuadraticCurveToItsPrincipalAxes: TopicDef = {
       figure: linearAlgebraDrawings2["reducing-a-quadratic-curve-to-its-principal-axes#principal-axes-reduction"],
       title: t("Principal Axes Equation of a Conic", "二次曲线的主轴方程"),
       explanation: t(
-        "For a quadratic curve $a x_1^2 + 2b x_1 x_2 + c x_2^2 = d$, rotating coordinates via an orthogonal matrix $P$ to the principal axes eliminates the cross term, yielding $\\lambda_1 y_1^2 + \\lambda_2 y_2^2 = d$, where $\\lambda_1, \\lambda_2$ are the eigenvalues of $\\begin{pmatrix} a & b \\\\ b & c \\end{pmatrix}$.",
-        "对于二次曲线 $a x_1^2 + 2b x_1 x_2 + c x_2^2 = d$，通过正交矩阵 $P$ 旋转至主轴坐标系可消除交叉项，化为主轴方程 $\\lambda_1 y_1^2 + \\lambda_2 y_2^2 = d$，其中 $\\lambda_1, \\lambda_2$ 为矩阵 $\\begin{pmatrix} a & b \\\\ b & c \\end{pmatrix}$ 的特征值。",
+        "For a quadratic curve $a x_1^2 + 2b x_1 x_2 + c x_2^2 = d$, rotating coordinates via an orthogonal matrix $P$ to the principal axes eliminates the cross term, yielding $\\lambda_1 y_1^2 + \\lambda_2 y_2^2 = d$, where $\\lambda_1, \\lambda_2$ are the eigenvalues of $\\begin{pmatrix} a & b \\\\ b & c \\end{pmatrix}$. For example, $5x_1^2 + 6x_1x_2 + 5x_2^2 = 16$ has the matrix $\\begin{pmatrix} 5 & 3 \\\\ 3 & 5 \\end{pmatrix}$ with eigenvalues $5 \\pm 3$, so it becomes $2y_1^2 + 8y_2^2 = 16$.\n\n> **Watch out.** The new coefficients are the eigenvalues, not the entries of the matrix, and the off-diagonal entry is half the coefficient of $x_1x_2$. The right-hand side $d$ does not change.",
+        "对于二次曲线 $a x_1^2 + 2b x_1 x_2 + c x_2^2 = d$，通过正交矩阵 $P$ 旋转至主轴坐标系可消除交叉项，化为主轴方程 $\\lambda_1 y_1^2 + \\lambda_2 y_2^2 = d$，其中 $\\lambda_1, \\lambda_2$ 为矩阵 $\\begin{pmatrix} a & b \\\\ b & c \\end{pmatrix}$ 的特征值。例如 $5x_1^2 + 6x_1x_2 + 5x_2^2 = 16$ 的矩阵为 $\\begin{pmatrix} 5 & 3 \\\\ 3 & 5 \\end{pmatrix}$，特征值为 $5 \\pm 3$，所以它化为 $2y_1^2 + 8y_2^2 = 16$。\n\n> **注意。** 新的系数是特征值，而不是矩阵的元素；非对角元素是 $x_1x_2$ 系数的一半。右端的 $d$ 不变。",
       ),
       generate: (rng: Rng): Problem => {
         const m = rng.int(2, 7);
@@ -2252,18 +2325,57 @@ export const reducingAQuadraticCurveToItsPrincipalAxes: TopicDef = {
           t(`$${formatDiagonalForm(l1, -l2)} = ${d}$`, `$${formatDiagonalForm(l1, -l2)} = ${d}$`),
         ];
 
-        const solution = t(
-          `The matrix of the quadratic part is $A = ${mat2Latex([
-            [m, k],
-            [k, m],
-          ])}$. Its eigenvalues are the roots of $(${m} - \\lambda)^2 - ${k}^2 = 0$, giving $\\lambda_1 = ${l1}$ and $\\lambda_2 = ${l2}$. In the principal axes coordinate system $(y_1, y_2)$, the equation is $${rightStr}$.`,
-          `二次项矩阵为 $A = ${mat2Latex([
-            [m, k],
-            [k, m],
-          ])}$。特征方程为 $(${m} - \\lambda)^2 - ${k}^2 = 0$，解得特征值 $\\lambda_1 = ${l1}$，$\\lambda_2 = ${l2}$。在主轴坐标系 $(y_1, y_2)$ 下，方程为 $${rightStr}$。`,
+        const solution = walked(
+          [
+            [
+              ["Write the matrix", "写出矩阵"],
+              t(`Half of $${twoK}$ goes off the diagonal:`, `$${twoK}$ 的一半放在非对角位置：`),
+              [
+                `A = ${mat2Latex([
+                  [m, k],
+                  [k, m],
+                ])}`,
+              ],
+            ],
+            [
+              ["Find the eigenvalues", "求特征值"],
+              t("", ""),
+              [`(${m} - \\lambda)^2 - ${k}^2 = 0`, `\\lambda = ${m} \\pm ${k} = ${l1}, ${l2}`],
+            ],
+            [
+              ["Write the principal axes form", "写出主轴方程"],
+              t("The eigenvalues become the coefficients, smaller first:", "特征值成为系数，较小的在前："),
+              [rightStr],
+            ],
+          ],
+          t(
+            `$${l1} + ${paren(l2)} = ${l1 + l2} = ${m} + ${m}$, the trace, and $${paren(l1)} \\cdot ${paren(l2)} = ${l1 * l2} = ${m}^2 - ${k}^2$, the determinant.`,
+            `$${l1} + ${paren(l2)} = ${l1 + l2} = ${m} + ${m}$，等于迹；$${paren(l1)} \\cdot ${paren(l2)} = ${l1 * l2} = ${m}^2 - ${k}^2$，等于行列式。`,
+          ),
         );
 
-        return oneOf(rng, prompt, right, wrong, solution);
+        return reasoned(oneOf(rng, prompt, right, wrong, solution), [
+          [
+            wrong[0]!.en,
+            "The coefficients are in the wrong order: the smaller eigenvalue goes with $y_1$.",
+            "系数顺序反了：较小的特征值对应 $y_1$。",
+          ],
+          [
+            wrong[1]!.en,
+            `$${m}$ and $${twoK}$ are coefficients of the original equation, not eigenvalues of $A$.`,
+            `$${m}$ 和 $${twoK}$ 是原方程的系数，不是 $A$ 的特征值。`,
+          ],
+          [
+            wrong[2]!.en,
+            `That uses the whole cross coefficient $${twoK}$ as the off-diagonal entry; the entry is $${k}$, so the eigenvalues are $${m} \\pm ${k}$.`,
+            `这把整个交叉项系数 $${twoK}$ 当作了非对角元素；元素是 $${k}$，所以特征值是 $${m} \\pm ${k}$。`,
+          ],
+          [
+            wrong[3]!.en,
+            `Both eigenvalues are $${m} \\pm ${k}$; the larger one, $${l2}$, keeps its sign.`,
+            `两个特征值都是 $${m} \\pm ${k}$；较大的 $${l2}$ 符号不变。`,
+          ],
+        ]);
       },
     },
     {
@@ -2271,8 +2383,8 @@ export const reducingAQuadraticCurveToItsPrincipalAxes: TopicDef = {
       figure: linearAlgebraDrawings2["reducing-a-quadratic-curve-to-its-principal-axes#semi-axes-of-an-ellipse-from-its-principal-axes"],
       title: t("Semi-axes of an ellipse from its principal axes", "由主轴形式求椭圆的半轴"),
       explanation: t(
-        "Rotating to principal axes turns $ax^2 + 2hxy + cy^2 = d$ into $\\lambda_1y_1^2 + \\lambda_2y_2^2 = d$, where $\\lambda_1, \\lambda_2$ are the eigenvalues of $\\begin{pmatrix} a & h \\\\ h & c \\end{pmatrix}$. When both eigenvalues and $d$ are positive, this is an ellipse with semi-axes $\\sqrt{d/\\lambda_1}$ and $\\sqrt{d/\\lambda_2}$. The smaller eigenvalue gives the longer, major semi-axis.",
-        "旋转到主轴把 $ax^2 + 2hxy + cy^2 = d$ 化为 $\\lambda_1y_1^2 + \\lambda_2y_2^2 = d$，其中 $\\lambda_1, \\lambda_2$ 是 $\\begin{pmatrix} a & h \\\\ h & c \\end{pmatrix}$ 的特征值。当两个特征值与 $d$ 都为正时，这是半轴为 $\\sqrt{d/\\lambda_1}$ 与 $\\sqrt{d/\\lambda_2}$ 的椭圆。较小的特征值给出较长的半长轴。",
+        "Rotating to principal axes turns $ax^2 + 2hxy + cy^2 = d$ into $\\lambda_1y_1^2 + \\lambda_2y_2^2 = d$, where $\\lambda_1, \\lambda_2$ are the eigenvalues of $\\begin{pmatrix} a & h \\\\ h & c \\end{pmatrix}$. When both eigenvalues and $d$ are positive, this is an ellipse with semi-axes $\\sqrt{d/\\lambda_1}$ and $\\sqrt{d/\\lambda_2}$. The smaller eigenvalue gives the longer, major semi-axis. For example, $y_1^2 + 4y_2^2 = 16$ has semi-axes $\\sqrt{16/1} = 4$ and $\\sqrt{16/4} = 2$, so the major semi-axis is $4$.\n\n> **Watch out.** Divide $d$ by the smaller eigenvalue and take the square root. Dividing by the larger one gives the minor semi-axis, and forgetting the root gives the square of the semi-axis.",
+        "旋转到主轴把 $ax^2 + 2hxy + cy^2 = d$ 化为 $\\lambda_1y_1^2 + \\lambda_2y_2^2 = d$，其中 $\\lambda_1, \\lambda_2$ 是 $\\begin{pmatrix} a & h \\\\ h & c \\end{pmatrix}$ 的特征值。当两个特征值与 $d$ 都为正时，这是半轴为 $\\sqrt{d/\\lambda_1}$ 与 $\\sqrt{d/\\lambda_2}$ 的椭圆。较小的特征值给出较长的半长轴。例如 $y_1^2 + 4y_2^2 = 16$ 的半轴为 $\\sqrt{16/1} = 4$ 和 $\\sqrt{16/4} = 2$，所以半长轴为 $4$。\n\n> **注意。** 用 $d$ 除以较小的特征值，再开平方。除以较大的特征值得到的是半短轴，忘记开方得到的是半轴的平方。",
       ),
       generate(rng: Rng): Problem {
         const [r1, r2, k] = rng.pick([
@@ -2301,9 +2413,51 @@ export const reducingAQuadraticCurveToItsPrincipalAxes: TopicDef = {
           ),
           answer: major,
           wrong: [minor, Q.of(d, r1 * r1), r2, 2 * major],
-          solution: t(
-            `In principal axes the curve is $${formatDiagonalForm(l1, l2)} = ${d}$. The semi-axes are $\\sqrt{${d}/${l1}} = ${Math.sqrt(d / l1)}$ and $\\sqrt{${d}/${l2}} = ${Math.sqrt(d / l2)}$, so the major semi-axis is $${major}$.`,
-            `在主轴下曲线为 $${formatDiagonalForm(l1, l2)} = ${d}$。半轴为 $\\sqrt{${d}/${l1}} = ${Math.sqrt(d / l1)}$ 与 $\\sqrt{${d}/${l2}} = ${Math.sqrt(d / l2)}$，所以半长轴为 $${major}$。`,
+          mistakes: distinct(
+            [
+              why(
+                minor,
+                "That divides by the larger eigenvalue, which gives the minor semi-axis.",
+                "这是除以较大的特征值，得到的是半短轴。",
+              ),
+              why(
+                Q.of(d, r1 * r1),
+                `$${d}/${r1 * r1} = ${d / (r1 * r1)}$ is the square of the semi-axis; take its square root.`,
+                `$${d}/${r1 * r1} = ${d / (r1 * r1)}$ 是半轴的平方；还要开平方。`,
+              ),
+              why(
+                r2,
+                `$${r2}$ is the square root of the eigenvalue $${r2 * r2}$; the semi-axis is $\\sqrt{d/\\lambda}$.`,
+                `$${r2}$ 是特征值 $${r2 * r2}$ 的平方根；半轴是 $\\sqrt{d/\\lambda}$。`,
+              ),
+              why(2 * major, "That is the whole major axis; the semi-axis is half of it.", "这是整条长轴；半长轴是它的一半。"),
+            ],
+            major,
+          ),
+          solution: walked(
+            [
+              [
+                ["Write the principal axes form", "写出主轴方程"],
+                t("The eigenvalues become the coefficients:", "特征值成为系数："),
+                [`${formatDiagonalForm(l1, l2)} = ${d}`],
+              ],
+              [
+                ["Find both semi-axes", "求两个半轴"],
+                t("", ""),
+                [`\\sqrt{${d}/${l1}} = ${Math.sqrt(d / l1)}`, `\\sqrt{${d}/${l2}} = ${Math.sqrt(d / l2)}`],
+              ],
+              [
+                ["Take the longer one", "取较长的一个"],
+                t(
+                  `The smaller eigenvalue $${r1 * r1}$ gives the major semi-axis $${major}$.`,
+                  `较小的特征值 $${r1 * r1}$ 给出半长轴 $${major}$。`,
+                ),
+              ],
+            ],
+            t(
+              `$${r1 * r1} \\cdot ${major}^2 = ${d}$, so the point at distance $${major}$ along the axis of the eigenvalue $${r1 * r1}$ lies on the curve.`,
+              `$${r1 * r1} \\cdot ${major}^2 = ${d}$，所以沿特征值 $${r1 * r1}$ 的轴、距离为 $${major}$ 的点在曲线上。`,
+            ),
           ),
         });
       },
@@ -2319,6 +2473,10 @@ export const classifyingQuadraticCurves: TopicDef = {
     "Classify quadratic curves as ellipses, hyperbolas, or parabolas using the determinant and eigenvalues of the quadratic matrix.",
     "利用二次项矩阵的行列式及特征值将二次曲线分类为椭圆、双曲线或抛物线。",
   ),
+  intro: t(
+    "The curve $2x^2 + 6xy + y^2 = 4$ has the matrix $A = \\begin{pmatrix} 2 & 3 \\\\ 3 & 1 \\end{pmatrix}$, with $\\det A = 2 - 9 = -7 < 0$. The two eigenvalues multiply to $-7$, so they have opposite signs, and in principal axes the curve is $\\lambda_1y_1^2 + \\lambda_2y_2^2 = 4$ with $\\lambda_1 < 0 < \\lambda_2$: a hyperbola.\n\nCheck: the form takes both signs, since $Q(1, 0) = 2 > 0$ while $Q(1, -1) = 2 - 6 + 1 = -3 < 0$.\n\nIn this lesson we tell ellipses, hyperbolas and parabolas apart from the determinant of the quadratic part, or from the discriminant $b^2 - 4ac$, and find the axes of a rotated ellipse.",
+    "曲线 $2x^2 + 6xy + y^2 = 4$ 的矩阵为 $A = \\begin{pmatrix} 2 & 3 \\\\ 3 & 1 \\end{pmatrix}$，$\\det A = 2 - 9 = -7 < 0$。两个特征值之积为 $-7$，所以它们异号；在主轴下曲线为 $\\lambda_1y_1^2 + \\lambda_2y_2^2 = 4$，其中 $\\lambda_1 < 0 < \\lambda_2$：这是双曲线。\n\n检验：二次型取两种符号，因为 $Q(1, 0) = 2 > 0$，而 $Q(1, -1) = 2 - 6 + 1 = -3 < 0$。\n\n本课我们由二次部分的行列式或判别式 $b^2 - 4ac$ 区分椭圆、双曲线和抛物线，并求旋转椭圆的轴。",
+  ),
   prerequisites: ["reducing-a-quadratic-curve-to-its-principal-axes"],
   encompasses: [],
   xp: 15,
@@ -2328,8 +2486,8 @@ export const classifyingQuadraticCurves: TopicDef = {
       figure: linearAlgebraDrawings2["classifying-quadratic-curves#quadratic-curve-classification"],
       title: t("Classification of Conics by the Discriminant", "利用判别式对二次曲线分类"),
       explanation: t(
-        "For a quadratic curve $a x^2 + 2b xy + c y^2 + d x + e y = f$, let $A = \\begin{pmatrix} a & b \\\\ b & c \\end{pmatrix}$. The nature of the conic is determined by $\\det(A) = ac - b^2$:\n- $\\det(A) > 0$ (eigenvalues same sign): **Ellipse** (or circle/empty set/point);\n- $\\det(A) < 0$ (eigenvalues opposite signs): **Hyperbola**;\n- $\\det(A) = 0$ (one zero eigenvalue): **Parabola**.",
-        "对于二次曲线 $a x^2 + 2b xy + c y^2 + d x + e y = f$，设 $A = \\begin{pmatrix} a & b \\\\ b & c \\end{pmatrix}$。由 $\\det(A) = ac - b^2$ 判定曲线类型：\n- $\\det(A) > 0$（特征值同号）：**椭圆**；\n- $\\det(A) < 0$（特征值异号）：**双曲线**；\n- $\\det(A) = 0$（存在零特征值）：**抛物线**。",
+        "For a quadratic curve $a x^2 + 2b xy + c y^2 + d x + e y = f$, let $A = \\begin{pmatrix} a & b \\\\ b & c \\end{pmatrix}$. The nature of the conic is determined by $\\det(A) = ac - b^2$:\n- $\\det(A) > 0$ (eigenvalues same sign): **Ellipse** (or circle/empty set/point);\n- $\\det(A) < 0$ (eigenvalues opposite signs): **Hyperbola**;\n- $\\det(A) = 0$ (one zero eigenvalue): **Parabola** (or a pair of parallel lines when no linear term survives).\n\nFor example, $x^2 + 4xy + y^2 = 3$ has $\\det A = 1 \\cdot 1 - 2^2 = -3 < 0$, so it is a hyperbola, even though both squared terms are positive.\n\n> **Watch out.** Use half the coefficient of $xy$ in $A$. The signs of $a$ and $c$ alone do not decide the type; the determinant does.",
+        "对于二次曲线 $a x^2 + 2b xy + c y^2 + d x + e y = f$，设 $A = \\begin{pmatrix} a & b \\\\ b & c \\end{pmatrix}$。由 $\\det(A) = ac - b^2$ 判定曲线类型：\n- $\\det(A) > 0$（特征值同号）：**椭圆**；\n- $\\det(A) < 0$（特征值异号）：**双曲线**；\n- $\\det(A) = 0$（存在零特征值）：**抛物线**（没有起作用的一次项时为一对平行线）。\n\n例如 $x^2 + 4xy + y^2 = 3$ 的 $\\det A = 1 \\cdot 1 - 2^2 = -3 < 0$，所以它是双曲线，尽管两个平方项都是正的。\n\n> **注意。** $A$ 中用的是 $xy$ 系数的一半。只看 $a$ 和 $c$ 的符号不能确定类型，要看行列式。",
       ),
       generate: (rng: Rng): Problem => {
         const type = rng.int(0, 2);
@@ -2363,7 +2521,9 @@ export const classifyingQuadraticCurves: TopicDef = {
         const twoB = 2 * b;
         const detA = a * c - b * b;
         const rhs = rng.int(5, 30);
-        const lhsStr = formatQuadratic(a, twoB, c, "x", "y");
+        // A parabola needs a linear term across the direction of the square; without it the curve is two parallel lines.
+        const linear = type === 2 ? -(Math.sqrt(a) + 2) : 0;
+        const lhsStr = `${formatQuadratic(a, twoB, c, "x", "y")}${linear ? ` ${formatSignedTerm(linear, "y")}` : ""}`;
 
         const prompt = t(
           `Classify the quadratic curve given by\n\n$$${lhsStr} = ${rhs}.$$`,
@@ -2378,41 +2538,76 @@ export const classifyingQuadraticCurves: TopicDef = {
           t("Pair of intersecting lines", "两条相交直线"),
         ].filter((opt) => opt.en !== conicEn);
 
-        const solEn =
+        const s = Math.sqrt(a);
+        const solution = walked(
+          [
+            [
+              ["Write the matrix of the quadratic part", "写出二次部分的矩阵"],
+              t(`Half of $${twoB}$ goes off the diagonal:`, `$${twoB}$ 的一半放在非对角位置：`),
+              [
+                `A = ${mat2Latex([
+                  [a, b],
+                  [b, c],
+                ])}`,
+              ],
+            ],
+            [["Find its determinant", "求行列式"], t("", ""), [`\\det A = ${a} \\cdot ${paren(c)} - ${b}^2 = ${detA}`]],
+            [
+              ["Read the type", "判断类型"],
+              type === 0
+                ? t(
+                    "The determinant is positive and $a > 0$, so both eigenvalues are positive and the curve is an ellipse.",
+                    "行列式为正且 $a > 0$，所以两个特征值都为正，曲线是椭圆。",
+                  )
+                : type === 1
+                  ? t(
+                      "The determinant is negative, so the eigenvalues have opposite signs and the curve is a hyperbola.",
+                      "行列式为负，所以两个特征值异号，曲线是双曲线。",
+                    )
+                  : t(
+                      "The determinant is zero, so one eigenvalue is zero, and the term in $y$ is not along the square, so the curve is a parabola.",
+                      "行列式为零，所以有一个特征值为零；而 $y$ 的一次项不沿平方项的方向，所以曲线是抛物线。",
+                    ),
+            ],
+          ],
           type === 0
-            ? `The matrix of quadratic terms is $A = ${mat2Latex([
-                [a, b],
-                [b, c],
-              ])}$. Its determinant is $\\det(A) = ac - b^2 = (${a})(${c}) - ${b}^2 = ${detA} > 0$. Since $a > 0$ and $\\det(A) > 0$, both eigenvalues are positive, so the curve is an ellipse.`
+            ? t(
+                `On the axes, $x = 0$ gives $${c}y^2 = ${rhs}$ and $y = 0$ gives $${a}x^2 = ${rhs}$: both have solutions, as an ellipse around the origin needs.`,
+                `在坐标轴上，$x = 0$ 给出 $${c}y^2 = ${rhs}$，$y = 0$ 给出 $${a}x^2 = ${rhs}$：都有解，符合绕原点的椭圆。`,
+              )
             : type === 1
-              ? `The matrix of quadratic terms is $A = ${mat2Latex([
-                  [a, b],
-                  [b, c],
-                ])}$. Its determinant is $\\det(A) = ac - b^2 = (${a})(${c}) - ${b}^2 = ${detA} < 0$. The eigenvalues have opposite signs, so the curve is a hyperbola.`
-              : `The matrix of quadratic terms is $A = ${mat2Latex([
-                  [a, b],
-                  [b, c],
-                ])}$. Its determinant is $\\det(A) = ac - b^2 = (${a})(${c}) - ${b}^2 = ${detA} = 0$. Exactly one eigenvalue is zero, so the curve is a parabola.`;
+              ? t(
+                  `On the axes, $y = 0$ gives $${a === 1 ? "" : a}x^2 = ${rhs}$, which has solutions, while $x = 0$ gives $${c}y^2 = ${rhs}$, which has none: the curve meets one axis and misses the other.`,
+                  `在坐标轴上，$y = 0$ 给出 $${a === 1 ? "" : a}x^2 = ${rhs}$，有解；而 $x = 0$ 给出 $${c}y^2 = ${rhs}$，无解：曲线与一条轴相交，与另一条不相交。`,
+                )
+              : t(
+                  `The quadratic part is the perfect square $(${s === 1 ? "" : s}x + 2y)^2$, which confirms $\\det A = 0$.`,
+                  `二次部分是完全平方 $(${s === 1 ? "" : s}x + 2y)^2$，印证了 $\\det A = 0$。`,
+                ),
+        );
 
-        const solZh =
-          type === 0
-            ? `二次项矩阵为 $A = ${mat2Latex([
-                [a, b],
-                [b, c],
-              ])}$。其行列式为 $\\det(A) = ac - b^2 = (${a})(${c}) - ${b}^2 = ${detA} > 0$。两特征值同号且为正，故该曲线为椭圆。`
-            : type === 1
-              ? `二次项矩阵为 $A = ${mat2Latex([
-                  [a, b],
-                  [b, c],
-                ])}$。其行列式为 $\\det(A) = ac - b^2 = (${a})(${c}) - ${b}^2 = ${detA} < 0$。两特征值异号，故该曲线为双曲线。`
-              : `二次项矩阵为 $A = ${mat2Latex([
-                  [a, b],
-                  [b, c],
-                ])}$。其行列式为 $\\det(A) = ac - b^2 = (${a})(${c}) - ${b}^2 = ${detA} = 0$。恰有一个特征值为 0，故该曲线为抛物线。`;
-
-        const solution = t(solEn, solZh);
-
-        return oneOf(rng, prompt, right, wrong, solution);
+        const reasons: Record<string, [string, string]> = {
+          Ellipse: [
+            `An ellipse needs $\\det A > 0$, and here $\\det A = ${detA}$.`,
+            `椭圆要求 $\\det A > 0$，而这里 $\\det A = ${detA}$。`,
+          ],
+          Hyperbola: [
+            `A hyperbola needs $\\det A < 0$, and here $\\det A = ${detA}$.`,
+            `双曲线要求 $\\det A < 0$，而这里 $\\det A = ${detA}$。`,
+          ],
+          Parabola: [
+            `A parabola needs $\\det A = 0$, and here $\\det A = ${detA}$.`,
+            `抛物线要求 $\\det A = 0$，而这里 $\\det A = ${detA}$。`,
+          ],
+          "Pair of intersecting lines": [
+            `Two intersecting lines need $\\det A < 0$ and a right-hand side of $0$; here the right-hand side is $${rhs}$${detA < 0 ? "" : ` and $\\det A = ${detA}$`}.`,
+            `两条相交直线要求 $\\det A < 0$ 且右端为 $0$；这里右端是 $${rhs}$${detA < 0 ? "" : `，且 $\\det A = ${detA}$`}。`,
+          ],
+        };
+        return reasoned(
+          oneOf(rng, prompt, right, wrong, solution),
+          wrong.map((w) => [w.en, ...reasons[w.en]!] as const),
+        );
       },
     },
     {
@@ -2420,8 +2615,8 @@ export const classifyingQuadraticCurves: TopicDef = {
       figure: linearAlgebraDrawings2["classifying-quadratic-curves#classifying-a-conic-by-its-discriminant"],
       title: t("Classifying a conic by its discriminant", "用判别式分类二次曲线"),
       explanation: t(
-        "For a non-degenerate curve $ax^2 + bxy + cy^2 + dx + ey + f = 0$, only the quadratic part decides the type. Its matrix $\\begin{pmatrix} a & b/2 \\\\ b/2 & c \\end{pmatrix}$ has determinant $ac - \\frac{b^2}{4}$, so the sign of $b^2 - 4ac$ tells whether the eigenvalues have the same sign:\n- $b^2 - 4ac < 0$: an ellipse,\n- $b^2 - 4ac > 0$: a hyperbola,\n- $b^2 - 4ac = 0$: a parabola.\n\nThe linear terms only shift the curve.",
-        "对非退化曲线 $ax^2 + bxy + cy^2 + dx + ey + f = 0$，只有二次部分决定类型。其矩阵 $\\begin{pmatrix} a & b/2 \\\\ b/2 & c \\end{pmatrix}$ 的行列式为 $ac - \\frac{b^2}{4}$，所以 $b^2 - 4ac$ 的符号说明特征值是否同号：\n- $b^2 - 4ac < 0$：椭圆，\n- $b^2 - 4ac > 0$：双曲线，\n- $b^2 - 4ac = 0$：抛物线。\n\n一次项只是平移曲线。",
+        "For a non-degenerate curve $ax^2 + bxy + cy^2 + dx + ey + f = 0$, only the quadratic part decides the type. Its matrix $\\begin{pmatrix} a & b/2 \\\\ b/2 & c \\end{pmatrix}$ has determinant $ac - \\frac{b^2}{4}$, so the sign of $b^2 - 4ac$ tells whether the eigenvalues have the same sign:\n- $b^2 - 4ac < 0$: an ellipse,\n- $b^2 - 4ac > 0$: a hyperbola,\n- $b^2 - 4ac = 0$: a parabola.\n\nThe linear terms only shift the curve. For example, $2x^2 + 3xy + y^2 - x + 4y = 5$ has $b^2 - 4ac = 9 - 8 = 1 > 0$, so it is a hyperbola.\n\n> **Watch out.** Here $b$ is the whole coefficient of $xy$, so the test is $b^2 - 4ac$; with the matrix entry $\\frac{b}{2}$ the same test reads $ac - \\left(\\frac{b}{2}\\right)^2$, with the opposite sign.",
+        "对非退化曲线 $ax^2 + bxy + cy^2 + dx + ey + f = 0$，只有二次部分决定类型。其矩阵 $\\begin{pmatrix} a & b/2 \\\\ b/2 & c \\end{pmatrix}$ 的行列式为 $ac - \\frac{b^2}{4}$，所以 $b^2 - 4ac$ 的符号说明特征值是否同号：\n- $b^2 - 4ac < 0$：椭圆，\n- $b^2 - 4ac > 0$：双曲线，\n- $b^2 - 4ac = 0$：抛物线。\n\n一次项只是平移曲线。例如 $2x^2 + 3xy + y^2 - x + 4y = 5$ 的 $b^2 - 4ac = 9 - 8 = 1 > 0$，所以它是双曲线。\n\n> **注意。** 这里 $b$ 是 $xy$ 的整个系数，所以判别式是 $b^2 - 4ac$；若用矩阵元素 $\\frac{b}{2}$，同一判据写成 $ac - \\left(\\frac{b}{2}\\right)^2$，符号相反。",
       ),
       generate(rng: Rng): Problem {
         const kind = rng.int(0, 2);
@@ -2446,15 +2641,33 @@ export const classifyingQuadraticCurves: TopicDef = {
         const right = disc < 0 ? E : disc > 0 ? H : Pa;
         const lhs = `${formatQuadratic(a, b, c, "x", "y")} ${formatSignedTerm(d, "x")} ${formatSignedTerm(e, "y")}`;
         const rhs = rng.int(1, 9);
+        const half = b % 2 === 0 && b > 0 ? `${b / 2}` : `\\left(${Q.of(b, 2).toLatex()}\\right)`;
         return reasoned(
           oneOf(
             rng,
             t(`Assuming it is non-degenerate, what kind of curve is $${lhs} = ${rhs}$?`, `假设曲线非退化，$${lhs} = ${rhs}$ 是哪种曲线？`),
             right,
             [E, H, Pa].filter((o) => o !== right),
-            t(
-              `$b^2 - 4ac = ${b * b} - ${4 * a * c} = ${disc}$, which is ${disc < 0 ? "negative, so it is an ellipse" : disc > 0 ? "positive, so it is a hyperbola" : "zero, so it is a parabola"}.`,
-              `$b^2 - 4ac = ${b * b} - ${4 * a * c} = ${disc}$，${disc < 0 ? "为负，所以是椭圆" : disc > 0 ? "为正，所以是双曲线" : "为零，所以是抛物线"}。`,
+            walked(
+              [
+                [
+                  ["Read the quadratic coefficients", "读出二次项系数"],
+                  t("The linear terms do not affect the type, so only these matter:", "一次项不影响类型，所以只看这些："),
+                  [`a = ${a}, \\quad b = ${b}, \\quad c = ${c}`],
+                ],
+                [["Compute the discriminant", "计算判别式"], t("", ""), [`b^2 - 4ac = ${b * b} - ${4 * a * c} = ${disc}`]],
+                [
+                  ["Read the sign", "看符号"],
+                  t(
+                    `The discriminant is ${disc < 0 ? "negative, so the curve is an ellipse" : disc > 0 ? "positive, so the curve is a hyperbola" : "zero, so the curve is a parabola"}.`,
+                    `判别式${disc < 0 ? "为负，所以曲线是椭圆" : disc > 0 ? "为正，所以曲线是双曲线" : "为零，所以曲线是抛物线"}。`,
+                  ),
+                ],
+              ],
+              t(
+                `The matrix of the quadratic part has determinant $${a} \\cdot ${c} - ${half}^2 = ${Q.of(-disc, 4).toLatex()}$, which is $-\\frac{1}{4}$ of the discriminant, so it gives the same answer.`,
+                `二次部分矩阵的行列式为 $${a} \\cdot ${c} - ${half}^2 = ${Q.of(-disc, 4).toLatex()}$，是判别式的 $-\\frac{1}{4}$，结论相同。`,
+              ),
             ),
           ),
           [
@@ -2492,6 +2705,10 @@ export const constrainedOptimizationOfQuadraticForms: TopicDef = {
     "Use eigenvalues to find the maximum and minimum of a quadratic form $\\mathbf{x}^T A \\mathbf{x}$ subject to $\\|\\mathbf{x}\\| = 1$.",
     "利用特征值求二次型 $\\mathbf{x}^T A \\mathbf{x}$ 在约束 $\\|\\mathbf{x}\\| = 1$ 下的最大值和最小值。",
   ),
+  intro: t(
+    "On the unit circle, $Q = 3x_1^2 + 4x_1x_2 + 3x_2^2$ has the matrix $A = \\begin{pmatrix} 3 & 2 \\\\ 2 & 3 \\end{pmatrix}$ with eigenvalues $3 \\pm 2$. In principal axes $Q = y_1^2 + 5y_2^2$ with $y_1^2 + y_2^2 = 1$, a weighted average of $1$ and $5$, so the maximum is $5$ and the minimum is $1$.\n\nCheck: at the unit eigenvector $\\frac{1}{\\sqrt{2}}(1, 1)$, $Q = \\frac{3 + 4 + 3}{2} = 5$.\n\nIn this lesson we find the largest and smallest values of a quadratic form on the unit circle, and on a circle of any radius, from the eigenvalues of its matrix.",
+    "在单位圆上，$Q = 3x_1^2 + 4x_1x_2 + 3x_2^2$ 的矩阵 $A = \\begin{pmatrix} 3 & 2 \\\\ 2 & 3 \\end{pmatrix}$ 的特征值为 $3 \\pm 2$。在主轴下 $Q = y_1^2 + 5y_2^2$，且 $y_1^2 + y_2^2 = 1$，它是 $1$ 与 $5$ 的加权平均，所以最大值为 $5$，最小值为 $1$。\n\n检验：在单位特征向量 $\\frac{1}{\\sqrt{2}}(1, 1)$ 处，$Q = \\frac{3 + 4 + 3}{2} = 5$。\n\n本课我们由矩阵的特征值求二次型在单位圆上以及任意半径的圆上的最大值与最小值。",
+  ),
   prerequisites: ["classifying-quadratic-curves"],
   encompasses: [],
   xp: 15,
@@ -2501,8 +2718,8 @@ export const constrainedOptimizationOfQuadraticForms: TopicDef = {
       figure: linearAlgebraDrawings2["constrained-optimization-of-quadratic-forms#constrained-extrema-unit-sphere"],
       title: t("Maximum and Minimum on the Unit Sphere", "单位球面上的最大值与最小值"),
       explanation: t(
-        "By the Rayleigh quotient theorem, for any real symmetric matrix $A$, the maximum value of $x^T A x$ subject to $\\|x\\| = 1$ is $\\lambda_{\\max}(A)$, and the minimum value is $\\lambda_{\\min}(A)$.",
-        "根据瑞利商定理，对于实对称矩阵 $A$，在 $\\|x\\| = 1$ 的约束下，$x^T A x$ 的最大值为最大特征值 $\\lambda_{\\max}(A)$，最小值为最小特征值 $\\lambda_{\\min}(A)$。",
+        "By the Rayleigh quotient theorem, for any real symmetric matrix $A$, the maximum value of $x^T A x$ subject to $\\|x\\| = 1$ is $\\lambda_{\\max}(A)$, and the minimum value is $\\lambda_{\\min}(A)$. For example, $Q = x_1^2 + 6x_1x_2 + x_2^2$ has the matrix $\\begin{pmatrix} 1 & 3 \\\\ 3 & 1 \\end{pmatrix}$ with eigenvalues $1 \\pm 3$, so on the unit circle its maximum is $4$ and its minimum is $-2$.\n\n> **Watch out.** The extremes are eigenvalues, not entries: the diagonal entry is only the value at $\\mathbf{e}_1$, and the cross coefficient $2k$ is twice the matrix entry $k$.",
+        "根据瑞利商定理，对于实对称矩阵 $A$，在 $\\|x\\| = 1$ 的约束下，$x^T A x$ 的最大值为最大特征值 $\\lambda_{\\max}(A)$，最小值为最小特征值 $\\lambda_{\\min}(A)$。例如 $Q = x_1^2 + 6x_1x_2 + x_2^2$ 的矩阵 $\\begin{pmatrix} 1 & 3 \\\\ 3 & 1 \\end{pmatrix}$ 的特征值为 $1 \\pm 3$，所以它在单位圆上的最大值为 $4$，最小值为 $-2$。\n\n> **注意。** 最值是特征值，而不是矩阵元素：对角元只是 $\\mathbf{e}_1$ 处的值，交叉项系数 $2k$ 是矩阵元素 $k$ 的两倍。",
       ),
       generate: (rng: Rng): Problem => {
         const m = rng.int(-5, 6);
@@ -2523,17 +2740,49 @@ export const constrainedOptimizationOfQuadraticForms: TopicDef = {
         return numberProblem({
           prompt,
           answer: targetValue,
-          solution: t(
-            `The symmetric matrix is $A = ${mat2Latex([
-              [m, k],
-              [k, m],
-            ])}$. Its eigenvalues are $\\lambda_1 = ${lMin}$ and $\\lambda_2 = ${lMax}$. The ${extremaWordEn} value subject to $\\|x\\| = 1$ is $\\lambda = ${targetValue}$.`,
-            `对称矩阵为 $A = ${mat2Latex([
-              [m, k],
-              [k, m],
-            ])}$。其特征值为 $\\lambda_1 = ${lMin}$ 和 $\\lambda_2 = ${lMax}$。在 $\\|x\\| = 1$ 约束下的${extremaWordZh}为 $\\lambda = ${targetValue}$。`,
+          solution: walked(
+            [
+              [
+                ["Write the matrix", "写出矩阵"],
+                t(`Half of $${2 * k}$ goes off the diagonal:`, `$${2 * k}$ 的一半放在非对角位置：`),
+                [
+                  `A = ${mat2Latex([
+                    [m, k],
+                    [k, m],
+                  ])}`,
+                ],
+              ],
+              [["Find the eigenvalues", "求特征值"], t("", ""), [`\\lambda = ${m} \\pm ${k} = ${lMin}, ${lMax}`]],
+              [
+                [findMax ? "Take the largest" : "Take the smallest", findMax ? "取最大的" : "取最小的"],
+                t(
+                  `On the unit circle the ${extremaWordEn} of $Q$ is the ${findMax ? "largest" : "smallest"} eigenvalue, $${targetValue}$.`,
+                  `在单位圆上 $Q$ 的${extremaWordZh}是${findMax ? "最大" : "最小"}特征值 $${targetValue}$。`,
+                ),
+              ],
+            ],
+            t(
+              `At the unit vector $\\frac{1}{\\sqrt{2}}(1, ${findMax ? 1 : -1})$, $Q = \\frac{${m} ${findMax ? "+" : "-"} ${2 * k} + ${paren(m)}}{2} = ${targetValue}$.`,
+              `在单位向量 $\\frac{1}{\\sqrt{2}}(1, ${findMax ? 1 : -1})$ 处，$Q = \\frac{${m} ${findMax ? "+" : "-"} ${2 * k} + ${paren(m)}}{2} = ${targetValue}$。`,
+            ),
           ),
           wrong: [findMax ? lMin : lMax, m, 2 * k],
+          mistakes: distinct(
+            [
+              why(
+                findMax ? lMin : lMax,
+                `That is the ${findMax ? "smallest" : "largest"} eigenvalue, which gives the ${findMax ? "minimum" : "maximum"}.`,
+                `这是${findMax ? "最小" : "最大"}特征值，给出的是${findMax ? "最小值" : "最大值"}。`,
+              ),
+              why(
+                m,
+                `$${m}$ is only the value at $(1, 0)$; the extreme is an eigenvalue of $A$.`,
+                `$${m}$ 只是 $(1, 0)$ 处的值；最值是 $A$ 的特征值。`,
+              ),
+              why(2 * k, `$${2 * k}$ is the cross coefficient, not an eigenvalue.`, `$${2 * k}$ 是交叉项系数，不是特征值。`),
+            ],
+            targetValue,
+          ),
         });
       },
     },
@@ -2542,8 +2791,8 @@ export const constrainedOptimizationOfQuadraticForms: TopicDef = {
       figure: linearAlgebraDrawings2["constrained-optimization-of-quadratic-forms#extrema-of-a-quadratic-form-on-a-circle-of-radius-r"],
       title: t("Extrema of a quadratic form on a circle of radius $r$", "二次型在半径为 $r$ 的圆上的最值"),
       explanation: t(
-        "On the unit circle the maximum and minimum of $Q(\\mathbf{x}) = \\mathbf{x}^T A\\mathbf{x}$ are the largest and smallest eigenvalues of $A$. A quadratic form is homogeneous of degree 2, so $Q(r\\mathbf{u}) = r^2Q(\\mathbf{u})$. On the circle $\\|\\mathbf{x}\\| = r$ the extremes are therefore $r^2\\lambda_{\\max}$ and $r^2\\lambda_{\\min}$.",
-        "在单位圆上，$Q(\\mathbf{x}) = \\mathbf{x}^T A\\mathbf{x}$ 的最大值与最小值是 $A$ 的最大与最小特征值。二次型是 2 次齐次的，所以 $Q(r\\mathbf{u}) = r^2Q(\\mathbf{u})$。因此在圆 $\\|\\mathbf{x}\\| = r$ 上，最值为 $r^2\\lambda_{\\max}$ 与 $r^2\\lambda_{\\min}$。",
+        "On the unit circle the maximum and minimum of $Q(\\mathbf{x}) = \\mathbf{x}^T A\\mathbf{x}$ are the largest and smallest eigenvalues of $A$. A quadratic form is homogeneous of degree 2, so $Q(r\\mathbf{u}) = r^2Q(\\mathbf{u})$. On the circle $\\|\\mathbf{x}\\| = r$ the extremes are therefore $r^2\\lambda_{\\max}$ and $r^2\\lambda_{\\min}$. For example, if the eigenvalues are $-1$ and $3$, then on $x_1^2 + x_2^2 = 4$ the maximum is $4 \\cdot 3 = 12$ and the minimum is $4 \\cdot (-1) = -4$.\n\n> **Watch out.** The constraint $x_1^2 + x_2^2 = c$ gives the radius $r = \\sqrt{c}$, so the factor is $r^2 = c$, not $r$.",
+        "在单位圆上，$Q(\\mathbf{x}) = \\mathbf{x}^T A\\mathbf{x}$ 的最大值与最小值是 $A$ 的最大与最小特征值。二次型是 2 次齐次的，所以 $Q(r\\mathbf{u}) = r^2Q(\\mathbf{u})$。因此在圆 $\\|\\mathbf{x}\\| = r$ 上，最值为 $r^2\\lambda_{\\max}$ 与 $r^2\\lambda_{\\min}$。例如特征值为 $-1$ 和 $3$ 时，在 $x_1^2 + x_2^2 = 4$ 上最大值为 $4 \\cdot 3 = 12$，最小值为 $4 \\cdot (-1) = -4$。\n\n> **注意。** 约束 $x_1^2 + x_2^2 = c$ 给出半径 $r = \\sqrt{c}$，所以因子是 $r^2 = c$，而不是 $r$。",
       ),
       generate(rng: Rng): Problem {
         const [l1, l2, k] = pickEigenPair(rng, -4, 6);
@@ -2560,9 +2809,54 @@ export const constrainedOptimizationOfQuadraticForms: TopicDef = {
           ),
           answer: ans,
           wrong: [lam, r * lam, r * r * other, other],
-          solution: t(
-            `The matrix $${mat2Latex(A)}$ has eigenvalues $${l1}$ and $${l2}$. On the unit circle the ${findMax ? "maximum" : "minimum"} is $${lam}$, and scaling to radius $${r}$ multiplies it by $${r * r}$: $${ans}$.`,
-            `矩阵 $${mat2Latex(A)}$ 的特征值为 $${l1}$ 与 $${l2}$。在单位圆上${findMax ? "最大值" : "最小值"}为 $${lam}$，缩放到半径 $${r}$ 乘以 $${r * r}$：$${ans}$。`,
+          mistakes: distinct(
+            [
+              why(
+                lam,
+                `$${lam}$ is the ${findMax ? "maximum" : "minimum"} on the unit circle; on radius $${r}$ multiply by $${r * r}$.`,
+                `$${lam}$ 是单位圆上的${findMax ? "最大值" : "最小值"}；半径为 $${r}$ 时要乘以 $${r * r}$。`,
+              ),
+              why(
+                r * lam,
+                `That scales by $r = ${r}$; a quadratic form scales by $r^2 = ${r * r}$.`,
+                `这是乘以 $r = ${r}$；二次型按 $r^2 = ${r * r}$ 缩放。`,
+              ),
+              why(
+                r * r * other,
+                `That uses the ${findMax ? "smallest" : "largest"} eigenvalue $${other}$, which gives the ${findMax ? "minimum" : "maximum"}.`,
+                `这用了${findMax ? "最小" : "最大"}特征值 $${other}$，给出的是${findMax ? "最小值" : "最大值"}。`,
+              ),
+              why(
+                r * r * A[0][0],
+                `That is $Q(${r}, 0)$, the value on the $x_1$-axis; the ${findMax ? "maximum" : "minimum"} is reached along an eigenvector.`,
+                `这是 $Q(${r}, 0)$，即 $x_1$ 轴上的值；${findMax ? "最大值" : "最小值"}在特征向量方向取到。`,
+              ),
+            ],
+            ans,
+          ),
+          solution: walked(
+            [
+              [
+                ["Find the eigenvalues", "求特征值"],
+                t(
+                  `The matrix $${mat2Latex(A)}$ has trace $${l1 + l2}$ and determinant $${l1 * l2}$, so its eigenvalues are`,
+                  `矩阵 $${mat2Latex(A)}$ 的迹为 $${l1 + l2}$，行列式为 $${l1 * l2}$，所以特征值为`,
+                ),
+                [`\\lambda = ${Math.min(l1, l2)}, ${Math.max(l1, l2)}`],
+              ],
+              [
+                ["Scale to the circle", "缩放到圆上"],
+                t(
+                  `The circle has radius $${r}$, and $Q(r\\mathbf{u}) = r^2Q(\\mathbf{u})$:`,
+                  `圆的半径为 $${r}$，且 $Q(r\\mathbf{u}) = r^2Q(\\mathbf{u})$：`,
+                ),
+                [`${r * r} \\cdot ${paren(lam)} = ${ans}`],
+              ],
+            ],
+            t(
+              `$\\lambda^2 - ${paren(l1 + l2)}\\lambda + ${paren(l1 * l2)}$ vanishes at $\\lambda = ${lam}$: $${lam * lam} - ${paren((l1 + l2) * lam)} + ${paren(l1 * l2)} = 0$.`,
+              `$\\lambda^2 - ${paren(l1 + l2)}\\lambda + ${paren(l1 * l2)}$ 在 $\\lambda = ${lam}$ 处为零：$${lam * lam} - ${paren((l1 + l2) * lam)} + ${paren(l1 * l2)} = 0$。`,
+            ),
           ),
         });
       },
@@ -2578,6 +2872,10 @@ export const constrainedOptimizationOfQuadraticFormsDeterminingWhereExtremaAreAt
     "Determine the unit eigenvectors at which constrained extrema of a quadratic form are attained.",
     "确定二次型在单位约束下达到极大值或极小值的单位特征向量。",
   ),
+  intro: t(
+    "The form $Q = 3x_1^2 + 4x_1x_2 + 3x_2^2$ has $A = \\begin{pmatrix} 3 & 2 \\\\ 2 & 3 \\end{pmatrix}$, with $A(1, 1) = 5(1, 1)$ and $A(1, -1) = 1(1, -1)$. On the unit circle its maximum $5$ is attained at $\\pm\\frac{1}{\\sqrt{2}}(1, 1)$ and its minimum $1$ at $\\pm\\frac{1}{\\sqrt{2}}(1, -1)$.\n\nCheck: at $\\frac{1}{\\sqrt{2}}(1, 1)$, $Q = \\frac{3 + 4 + 3}{2} = 5$, while at $(1, 0)$, $Q = 3$ lies in between.\n\nIn this lesson we find the unit vectors at which a quadratic form attains its constrained maximum and minimum, and count how many there are.",
+    "二次型 $Q = 3x_1^2 + 4x_1x_2 + 3x_2^2$ 的矩阵为 $A = \\begin{pmatrix} 3 & 2 \\\\ 2 & 3 \\end{pmatrix}$，$A(1, 1) = 5(1, 1)$，$A(1, -1) = 1(1, -1)$。在单位圆上，它的最大值 $5$ 在 $\\pm\\frac{1}{\\sqrt{2}}(1, 1)$ 处取得，最小值 $1$ 在 $\\pm\\frac{1}{\\sqrt{2}}(1, -1)$ 处取得。\n\n检验：在 $\\frac{1}{\\sqrt{2}}(1, 1)$ 处 $Q = \\frac{3 + 4 + 3}{2} = 5$，而在 $(1, 0)$ 处 $Q = 3$，介于两者之间。\n\n本课我们求二次型在单位约束下取得最大值和最小值的单位向量，并数出有多少个。",
+  ),
   prerequisites: ["constrained-optimization-of-quadratic-forms"],
   encompasses: [],
   xp: 15,
@@ -2590,8 +2888,8 @@ export const constrainedOptimizationOfQuadraticFormsDeterminingWhereExtremaAreAt
         ],
       title: t("Unit Vectors for Constrained Extrema", "取条件极值的单位向量"),
       explanation: t(
-        "On the unit sphere the quadratic form is largest in the direction of the eigenvector for the largest eigenvalue and smallest for the smallest one. The maximum (minimum) of $x^T A x$ subject to $\\|x\\| = 1$ is attained at normalized eigenvectors corresponding to $\\lambda_{\\max}$ (respectively $\\lambda_{\\min}$).",
-        "在单位球面上，二次型在最大特征值对应的特征向量方向上最大，在最小特征值对应的方向上最小。二次型 $x^T A x$ 在 $\\|x\\| = 1$ 约束下的最大值（或最小值）在对应于最大特征值 $\\lambda_{\\max}$（或最小特征值 $\\lambda_{\\min}$）的单位特征向量处取得。",
+        "On the unit sphere the quadratic form is largest in the direction of the eigenvector for the largest eigenvalue and smallest for the smallest one. The maximum (minimum) of $x^T A x$ subject to $\\|x\\| = 1$ is attained at normalized eigenvectors corresponding to $\\lambda_{\\max}$ (respectively $\\lambda_{\\min}$). For example, $Q = x_1^2 + 6x_1x_2 + x_2^2$ has $A(1, 1) = 4(1, 1)$ and $A(1, -1) = -2(1, -1)$, so its minimum $-2$ is attained at $\\pm\\frac{1}{\\sqrt{2}}(1, -1)$: there $Q = \\frac{1 - 6 + 1}{2} = -2$.\n\n> **Watch out.** The extremes sit on the eigenvectors, not on the coordinate axes: at $(1, 0)$ the form only gives $a_{11}$. Match each eigenvector to its own eigenvalue before choosing; for $\\begin{pmatrix} m & k \\\\ k & m \\end{pmatrix}$ with $k > 0$, the larger eigenvalue $m + k$ belongs to $(1, 1)$.",
+        "在单位球面上，二次型在最大特征值对应的特征向量方向上最大，在最小特征值对应的方向上最小。二次型 $x^T A x$ 在 $\\|x\\| = 1$ 约束下的最大值（或最小值）在对应于最大特征值 $\\lambda_{\\max}$（或最小特征值 $\\lambda_{\\min}$）的单位特征向量处取得。例如 $Q = x_1^2 + 6x_1x_2 + x_2^2$ 有 $A(1, 1) = 4(1, 1)$，$A(1, -1) = -2(1, -1)$，所以它的最小值 $-2$ 在 $\\pm\\frac{1}{\\sqrt{2}}(1, -1)$ 处取得：那里 $Q = \\frac{1 - 6 + 1}{2} = -2$。\n\n> **注意。** 极值在特征向量上取得，而不在坐标轴上：在 $(1, 0)$ 处二次型只给出 $a_{11}$。先把每个特征向量与它自己的特征值对应好再选；对 $\\begin{pmatrix} m & k \\\\ k & m \\end{pmatrix}$，$k > 0$ 时较大的特征值 $m + k$ 属于 $(1, 1)$。",
       ),
       generate: (rng: Rng): Problem => {
         const m = rng.int(-4, 5);
@@ -2615,36 +2913,62 @@ export const constrainedOptimizationOfQuadraticFormsDeterminingWhereExtremaAreAt
           t(`$\\frac{1}{\\sqrt{5}} ${vec2Latex([1, 2])}$`, `$\\frac{1}{\\sqrt{5}} ${vec2Latex([1, 2])}$`),
         ];
 
-        const solution = t(
-          `The symmetric matrix is $A = ${mat2Latex([
-            [m, k],
-            [k, m],
-          ])}$. Its eigenvalues are $\\lambda_1 = ${m - k}$ (eigenvector $\\begin{pmatrix} 1 \\\\ -1 \\end{pmatrix}$) and $\\lambda_2 = ${m + k}$ (eigenvector $\\begin{pmatrix} 1 \\\\ 1 \\end{pmatrix}$). The ${findMax ? "maximum" : "minimum"} corresponds to $\\lambda = ${findMax ? m + k : m - k}$, which is attained at the unit eigenvector $\\frac{1}{\\sqrt{2}} ${vec2Latex(rightVec)}$.`,
-          `对称矩阵为 $A = ${mat2Latex([
-            [m, k],
-            [k, m],
-          ])}$。其特征值为 $\\lambda_1 = ${m - k}$（对应特征向量 $\\begin{pmatrix} 1 \\\\ -1 \\end{pmatrix}$）与 $\\lambda_2 = ${m + k}$（对应特征向量 $\\begin{pmatrix} 1 \\\\ 1 \\end{pmatrix}$）。${findMax ? "最大值" : "最小值"}对应特征值 $\\lambda = ${findMax ? m + k : m - k}$，在单位特征向量 $\\frac{1}{\\sqrt{2}} ${vec2Latex(rightVec)}$ 处取得。`,
+        const value = findMax ? m + k : m - k;
+        // A scalar in front of a vector: none for 1, a bare minus for −1, parentheses for other negatives.
+        const scale = (s: number) => (s === 1 ? "" : s === -1 ? "-" : paren(s));
+        const solution = walked(
+          [
+            [
+              ["Write the matrix", "写出矩阵"],
+              t(`Half of the cross coefficient $${2 * k}$ goes off the diagonal:`, `交叉项系数 $${2 * k}$ 的一半放在非对角位置：`),
+              [
+                `A = ${mat2Latex([
+                  [m, k],
+                  [k, m],
+                ])}`,
+              ],
+            ],
+            [
+              ["Pair each eigenvector with its eigenvalue", "把特征向量与特征值配对"],
+              t("", ""),
+              [
+                `A${vec2Latex([1, 1])} = ${scale(m + k)}${vec2Latex([1, 1])}`,
+                `A${vec2Latex([1, -1])} = ${scale(m - k)}${vec2Latex([1, -1])}`,
+              ],
+            ],
+            [
+              [findMax ? "Take the larger eigenvalue" : "Take the smaller eigenvalue", findMax ? "取较大的特征值" : "取较小的特征值"],
+              t(
+                `The ${findMax ? "maximum" : "minimum"} is $${value}$, attained at the unit eigenvectors $\\pm\\frac{1}{\\sqrt{2}}(1, ${rightVec[1]})$.`,
+                `${findMax ? "最大值" : "最小值"}是 $${value}$，在单位特征向量 $\\pm\\frac{1}{\\sqrt{2}}(1, ${rightVec[1]})$ 处取得。`,
+              ),
+            ],
+          ],
+          t(
+            `At $\\frac{1}{\\sqrt{2}}(1, ${rightVec[1]})$, $Q = \\frac{${m} ${findMax ? "+" : "-"} ${2 * k} + ${paren(m)}}{2} = ${value}$.`,
+            `在 $\\frac{1}{\\sqrt{2}}(1, ${rightVec[1]})$ 处，$Q = \\frac{${m} ${findMax ? "+" : "-"} ${2 * k} + ${paren(m)}}{2} = ${value}$。`,
+          ),
         );
         return reasoned(oneOf(rng, prompt, right, wrong, solution), [
           [
             wrong[0]!.en,
-            `This is the eigenvector of the other eigenvalue, so it gives the ${findMax ? "minimum" : "maximum"}.`,
-            `这是另一个特征值的特征向量，所以它给出${findMax ? "最小值" : "最大值"}。`,
+            `This is the eigenvector of the other eigenvalue, $${findMax ? m - k : m + k}$, so it gives the ${findMax ? "minimum" : "maximum"}.`,
+            `这是另一个特征值 $${findMax ? m - k : m + k}$ 的特征向量，所以它给出${findMax ? "最小值" : "最大值"}。`,
           ],
           [
             wrong[1]!.en,
-            `Here $Q = ${m}$, which lies strictly between the minimum $${m - k}$ and the maximum $${m + k}$.`,
-            `这里 $Q = ${m}$，严格介于最小值 $${m - k}$ 和最大值 $${m + k}$ 之间。`,
+            `At $\\mathbf{e}_1$ the form is $a_{11} = ${m}$, strictly between the minimum $${m - k}$ and the maximum $${m + k}$: $\\mathbf{e}_1$ is not an eigenvector.`,
+            `在 $\\mathbf{e}_1$ 处二次型等于 $a_{11} = ${m}$，严格介于最小值 $${m - k}$ 和最大值 $${m + k}$ 之间：$\\mathbf{e}_1$ 不是特征向量。`,
           ],
           [
             wrong[2]!.en,
-            `Here $Q = ${m}$, which lies strictly between the minimum $${m - k}$ and the maximum $${m + k}$.`,
-            `这里 $Q = ${m}$，严格介于最小值 $${m - k}$ 和最大值 $${m + k}$ 之间。`,
+            `At $\\mathbf{e}_2$ the form is $a_{22} = ${m}$, the same middle value; the cross term $${2 * k}x_1x_2$ vanishes on the axes, so they miss the extremes.`,
+            `在 $\\mathbf{e}_2$ 处二次型等于 $a_{22} = ${m}$，同样是中间值；交叉项 $${2 * k}x_1x_2$ 在坐标轴上为零，所以坐标轴上取不到极值。`,
           ],
           [
             wrong[3]!.en,
-            "This is not an eigenvector of the symmetric matrix, and the extreme values occur at eigenvectors.",
-            "这不是对称矩阵的特征向量，而极值在特征向量处取得。",
+            `Here $Q = \\frac{${m} + ${4 * k} + ${paren(4 * m)}}{5} = ${Q.of(5 * m + 4 * k, 5).toLatex()}$, between the extremes: $(1, 2)$ is not an eigenvector of $A$.`,
+            `这里 $Q = \\frac{${m} + ${4 * k} + ${paren(4 * m)}}{5} = ${Q.of(5 * m + 4 * k, 5).toLatex()}$，介于两个极值之间：$(1, 2)$ 不是 $A$ 的特征向量。`,
           ],
         ]);
       },
@@ -2657,8 +2981,8 @@ export const constrainedOptimizationOfQuadraticFormsDeterminingWhereExtremaAreAt
         ],
       title: t("Where a diagonal form in three variables is extreme", "三元对角二次型在何处取最值"),
       explanation: t(
-        "For a diagonal form $Q = d_1x_1^2 + d_2x_2^2 + d_3x_3^2$ on the unit sphere, $Q$ is a weighted average of the $d_i$ with weights $x_i^2$ that sum to $1$. It is largest when all the weight sits on the largest coefficient, that is, at $\\pm\\mathbf{e}_i$ for that $i$, and smallest at $\\pm\\mathbf{e}_j$ for the smallest coefficient. Any vector that spreads the weight gives a value in between.",
-        "对单位球面上的对角二次型 $Q = d_1x_1^2 + d_2x_2^2 + d_3x_3^2$，$Q$ 是各 $d_i$ 以 $x_i^2$ 为权（和为 $1$）的加权平均。当全部权重落在最大系数上，即在该 $i$ 的 $\\pm\\mathbf{e}_i$ 处，$Q$ 最大；在最小系数的 $\\pm\\mathbf{e}_j$ 处最小。任何分散权重的向量给出介于其间的值。",
+        "For a diagonal form $Q = d_1x_1^2 + d_2x_2^2 + d_3x_3^2$ on the unit sphere, $Q$ is a weighted average of the $d_i$ with weights $x_i^2$ that sum to $1$. It is largest when all the weight sits on the largest coefficient, that is, at $\\pm\\mathbf{e}_i$ for that $i$, and smallest at $\\pm\\mathbf{e}_j$ for the smallest coefficient. Any vector that spreads the weight gives a value in between. For example, $Q = -2x_1^2 + x_2^2 + 5x_3^2$ has its maximum $5$ at $\\pm\\mathbf{e}_3$ and its minimum $-2$ at $\\pm\\mathbf{e}_1$, while $\\frac{1}{\\sqrt{3}}(1, 1, 1)$ gives only the average $\\frac{-2 + 1 + 5}{3} = \\frac{4}{3}$.\n\n> **Watch out.** Compare the coefficients with their signs: the minimum belongs to the most negative one, not to the one nearest $0$. Spreading the weight evenly gives the average, never an extreme.",
+        "对单位球面上的对角二次型 $Q = d_1x_1^2 + d_2x_2^2 + d_3x_3^2$，$Q$ 是各 $d_i$ 以 $x_i^2$ 为权（和为 $1$）的加权平均。当全部权重落在最大系数上，即在该 $i$ 的 $\\pm\\mathbf{e}_i$ 处，$Q$ 最大；在最小系数的 $\\pm\\mathbf{e}_j$ 处最小。任何分散权重的向量给出介于其间的值。例如 $Q = -2x_1^2 + x_2^2 + 5x_3^2$ 的最大值 $5$ 在 $\\pm\\mathbf{e}_3$ 处取得，最小值 $-2$ 在 $\\pm\\mathbf{e}_1$ 处取得，而 $\\frac{1}{\\sqrt{3}}(1, 1, 1)$ 只给出平均值 $\\frac{-2 + 1 + 5}{3} = \\frac{4}{3}$。\n\n> **注意。** 比较系数时要带着符号：最小值属于最负的系数，而不是最接近 $0$ 的那个。把权重平均分开只得到平均值，永远不是极值。",
       ),
       generate(rng: Rng): Problem {
         const d = rng.shuffle([rng.int(-6, -1), rng.int(0, 3), rng.int(4, 9)]);
@@ -2671,18 +2995,63 @@ export const constrainedOptimizationOfQuadraticFormsDeterminingWhereExtremaAreAt
           /\s+/g,
           " ",
         );
-        return oneOf(
-          rng,
+        const otherIdx = [0, 1, 2].filter((i) => i !== target);
+        const wrongOpts = [
+          ...others.map((o) => t(`$\\pm${o.en.slice(1)}`, `$\\pm${o["zh-CN"].slice(1)}`)),
+          opt("\\frac{1}{\\sqrt{3}}(1, 1, 1)"),
+        ];
+        const sum = d[0]! + d[1]! + d[2]!;
+        const average = Q.of(sum, 3).toLatex();
+        const ranked = [...d].sort((x, y) => x - y);
+        const solution = walked(
+          [
+            [
+              ["Read Q as a weighted average", "把 Q 看作加权平均"],
+              t(
+                "On the unit sphere the weights $x_1^2, x_2^2, x_3^2$ are nonnegative and add to $1$:",
+                "在单位球面上，权重 $x_1^2, x_2^2, x_3^2$ 非负且和为 $1$：",
+              ),
+              [`Q = ${q}, \\quad x_1^2 + x_2^2 + x_3^2 = 1`],
+            ],
+            [
+              [
+                findMax ? "Put all the weight on the largest coefficient" : "Put all the weight on the smallest coefficient",
+                findMax ? "把全部权重放在最大系数上" : "把全部权重放在最小系数上",
+              ],
+              t(
+                `Ordered, the coefficients are $${ranked.join(" < ")}$. The ${findMax ? "largest" : "smallest"} is $${d[target]}$, on $x_{${target + 1}}^2$, so the ${findMax ? "maximum" : "minimum"} $${d[target]}$ is attained at $\\pm${e(target)}$.`,
+                `按大小排列，系数为 $${ranked.join(" < ")}$。${findMax ? "最大" : "最小"}的是 $x_{${target + 1}}^2$ 的 $${d[target]}$，所以${findMax ? "最大值" : "最小值"} $${d[target]}$ 在 $\\pm${e(target)}$ 处取得。`,
+              ),
+            ],
+          ],
           t(
-            `On the unit sphere, where does $Q = ${q}$ attain its ${findMax ? "maximum" : "minimum"}?`,
-            `在单位球面上，$Q = ${q}$ 在何处取得${findMax ? "最大值" : "最小值"}？`,
+            `At $${e(target)}$, $Q = ${d[target]}$, while the other axes give $${d[otherIdx[0]!]}$ and $${d[otherIdx[1]!]}$ and $\\frac{1}{\\sqrt{3}}(1, 1, 1)$ gives $${average}$, all ${findMax ? "smaller" : "larger"}.`,
+            `在 $${e(target)}$ 处 $Q = ${d[target]}$，而另两个坐标轴给出 $${d[otherIdx[0]!]}$ 和 $${d[otherIdx[1]!]}$，$\\frac{1}{\\sqrt{3}}(1, 1, 1)$ 给出 $${average}$，都${findMax ? "更小" : "更大"}。`,
           ),
-          opt(`\\pm${e(target)}`),
-          [...others.map((o) => t(`$\\pm${o.en.slice(1)}`, `$\\pm${o["zh-CN"].slice(1)}`)), opt("\\frac{1}{\\sqrt{3}}(1, 1, 1)")],
-          t(
-            `The ${findMax ? "largest" : "smallest"} coefficient is $${d[target]}$, on $x_{${target + 1}}^2$, so the ${findMax ? "maximum" : "minimum"} $${d[target]}$ is attained at $\\pm${e(target)}$.`,
-            `${findMax ? "最大" : "最小"}系数为 $x_{${target + 1}}^2$ 的 $${d[target]}$，所以${findMax ? "最大值" : "最小值"} $${d[target]}$ 在 $\\pm${e(target)}$ 处取得。`,
+        );
+        return reasoned(
+          oneOf(
+            rng,
+            t(
+              `On the unit sphere, where does $Q = ${q}$ attain its ${findMax ? "maximum" : "minimum"}?`,
+              `在单位球面上，$Q = ${q}$ 在何处取得${findMax ? "最大值" : "最小值"}？`,
+            ),
+            opt(`\\pm${e(target)}`),
+            wrongOpts,
+            solution,
           ),
+          [
+            ...otherIdx.map((i, n): readonly [string, string, string] => [
+              wrongOpts[n]!.en,
+              `At $\\pm${e(i)}$, $Q = ${d[i]}$, the coefficient of $x_{${i + 1}}^2$; $${d[target]}$ is ${findMax ? "larger" : "smaller"}.`,
+              `在 $\\pm${e(i)}$ 处 $Q = ${d[i]}$，即 $x_{${i + 1}}^2$ 的系数；$${d[target]}$ ${findMax ? "更大" : "更小"}。`,
+            ]),
+            [
+              wrongOpts[2]!.en,
+              `Equal weights give the average of the coefficients, $${average}$, which lies strictly between the extremes.`,
+              `平均分配权重得到系数的平均值 $${average}$，它严格介于两个极值之间。`,
+            ],
+          ],
         );
       },
     },
@@ -2697,6 +3066,10 @@ export const singularValuesOfAMatrix: TopicDef = {
     "Define the singular values of an $m \\times n$ matrix as the square roots of the eigenvalues of $A^T A$, and examine their key properties.",
     "将 $m \\times n$ 矩阵的奇异值定义为 $A^T A$ 特征值的平方根，并掌握其关键性质。",
   ),
+  intro: t(
+    "The matrix $A = \\begin{pmatrix} 3 & -8 \\\\ 4 & 6 \\end{pmatrix}$ has orthogonal columns of lengths $5$ and $10$, so $A^TA = \\begin{pmatrix} 25 & 0 \\\\ 0 & 100 \\end{pmatrix}$. Its singular values are the square roots of these eigenvalues: $\\sigma_1 = 10$ and $\\sigma_2 = 5$.\n\nCheck: $|\\det A| = |18 + 32| = 50 = \\sigma_1\\sigma_2$, as it must be.\n\nIn this lesson we define the singular values of a matrix through $A^TA$, count the positive ones from the rank, and read the largest stretch and $|\\det A|$ from them.",
+    "矩阵 $A = \\begin{pmatrix} 3 & -8 \\\\ 4 & 6 \\end{pmatrix}$ 的两列正交，长度分别为 $5$ 和 $10$，所以 $A^TA = \\begin{pmatrix} 25 & 0 \\\\ 0 & 100 \\end{pmatrix}$。它的奇异值是这两个特征值的平方根：$\\sigma_1 = 10$，$\\sigma_2 = 5$。\n\n检验：$|\\det A| = |18 + 32| = 50 = \\sigma_1\\sigma_2$，理应如此。\n\n本课我们通过 $A^TA$ 定义矩阵的奇异值，由秩数出正奇异值的个数，并由奇异值读出最大伸缩和 $|\\det A|$。",
+  ),
   prerequisites: ["constrained-optimization-of-quadratic-forms-determining-where-extrema-are-attained"],
   encompasses: [],
   xp: 15,
@@ -2705,13 +3078,15 @@ export const singularValuesOfAMatrix: TopicDef = {
       id: "singular-values-definition-properties",
       title: t("Definition and Properties of Singular Values", "奇异值的定义与性质"),
       explanation: t(
-        "For any $m \\times n$ real matrix $A$, the singular values $\\sigma_1 \\ge \\sigma_2 \\ge \\dots \\ge \\sigma_n \\ge 0$ are the square roots of the eigenvalues of the positive semidefinite matrix $A^T A$: $\\sigma_i = \\sqrt{\\lambda_i(A^T A)}$. The number of non-zero singular values equals the rank of $A$.",
-        "对于任意 $m \\times n$ 实矩阵 $A$，其奇异值 $\\sigma_1 \\ge \\sigma_2 \\ge \\dots \\ge \\sigma_n \\ge 0$ 定义为半正定矩阵 $A^T A$ 的特征值的算术平方根：$\\sigma_i = \\sqrt{\\lambda_i(A^T A)}$。非零奇异值的个数等于矩阵 $A$ 的秩。",
+        "For any $m \\times n$ real matrix $A$, the singular values $\\sigma_1 \\ge \\sigma_2 \\ge \\dots \\ge \\sigma_n \\ge 0$ are the square roots of the eigenvalues of the positive semidefinite matrix $A^T A$: $\\sigma_i = \\sqrt{\\lambda_i(A^T A)}$. The number of non-zero singular values equals the rank of $A$. For example, a $4 \\times 3$ matrix of rank $2$ has three singular values $\\sigma_1 \\ge \\sigma_2 > 0 = \\sigma_3$, so exactly two of them are positive.\n\n> **Watch out.** Count the positive singular values by the rank, not by the number of rows $m$ or columns $n$: there are $n$ singular values in all, and the other $n - \\operatorname{rank}(A)$ of them are $0$.",
+        "对于任意 $m \\times n$ 实矩阵 $A$，其奇异值 $\\sigma_1 \\ge \\sigma_2 \\ge \\dots \\ge \\sigma_n \\ge 0$ 定义为半正定矩阵 $A^T A$ 的特征值的算术平方根：$\\sigma_i = \\sqrt{\\lambda_i(A^T A)}$。非零奇异值的个数等于矩阵 $A$ 的秩。例如秩为 $2$ 的 $4 \\times 3$ 矩阵有三个奇异值 $\\sigma_1 \\ge \\sigma_2 > 0 = \\sigma_3$，所以恰好两个是正的。\n\n> **注意。** 正奇异值的个数由秩决定，而不是行数 $m$ 或列数 $n$：奇异值共有 $n$ 个，其余 $n - \\operatorname{rank}(A)$ 个都是 $0$。",
       ),
       generate: (rng: Rng): Problem => {
-        const m = rng.int(3, 9);
         const n = rng.int(3, 9);
-        const rank = rng.int(1, Math.min(m, n));
+        const rows = rng.int(3, 9);
+        // A non-square matrix of less than full rank, so that neither m, n nor min(m, n) is the answer.
+        const m = rows === n ? n + 1 : rows;
+        const rank = rng.int(1, Math.min(m, n) - 1);
 
         const prompt = t(
           `Let $A$ be ${article(m)} $${m} \\times ${n}$ real matrix with $\\operatorname{rank}(A) = ${rank}$. How many strictly positive singular values does $A$ have?`,
@@ -2721,11 +3096,50 @@ export const singularValuesOfAMatrix: TopicDef = {
         return numberProblem({
           prompt,
           answer: rank,
-          solution: t(
-            `The number of strictly positive (non-zero) singular values of any matrix $A$ is precisely equal to its rank, $\\operatorname{rank}(A)$. Therefore, $A$ has ${rank} positive singular values.`,
-            `任意矩阵 $A$ 的严格大于零（非零）的奇异值个数恰好等于其矩阵的秩 $\\operatorname{rank}(A)$。因此，$A$ 拥有 $${rank}$ 个正奇异值。`,
+          solution: walked(
+            [
+              [
+                ["Count all the singular values", "数出全部奇异值"],
+                t(
+                  `$A^TA$ is $${n} \\times ${n}$ and positive semidefinite, so it has $${n}$ eigenvalues $\\lambda_i \\ge 0$ and $A$ has $${n}$ singular values $\\sigma_i = \\sqrt{\\lambda_i}$.`,
+                  `$A^TA$ 是 $${n} \\times ${n}$ 半正定矩阵，有 $${n}$ 个特征值 $\\lambda_i \\ge 0$，所以 $A$ 有 $${n}$ 个奇异值 $\\sigma_i = \\sqrt{\\lambda_i}$。`,
+                ),
+              ],
+              [
+                ["Count the positive ones", "数出正的"],
+                t(
+                  `$\\operatorname{rank}(A^TA) = \\operatorname{rank}(A) = ${rank}$, so exactly $${rank}$ of the eigenvalues, and of the singular values, are positive.`,
+                  `$\\operatorname{rank}(A^TA) = \\operatorname{rank}(A) = ${rank}$，所以恰好 $${rank}$ 个特征值为正，奇异值也是如此。`,
+                ),
+              ],
+            ],
+            t(
+              `The singular values that are left, $${n} - ${rank} = ${n - rank}$ of them, are $0$, and $${rank} + ${n - rank} = ${n}$ accounts for all of them.`,
+              `其余 $${n} - ${rank} = ${n - rank}$ 个奇异值为 $0$，$${rank} + ${n - rank} = ${n}$ 正好是全部。`,
+            ),
           ),
-          wrong: [m, n, Math.min(m, n), Math.max(0, rank - 1)],
+          wrong: [m, n, Math.min(m, n), n - rank],
+          mistakes: distinct(
+            [
+              why(
+                m,
+                `$${m}$ is the number of rows; the positive singular values are counted by the rank.`,
+                `$${m}$ 是行数；正奇异值的个数由秩决定。`,
+              ),
+              why(n, `$${n}$ counts all the singular values, the zero ones included.`, `$${n}$ 是全部奇异值的个数，连为 $0$ 的也算在内。`),
+              why(
+                Math.min(m, n),
+                `$${Math.min(m, n)}$ is the largest rank a $${m} \\times ${n}$ matrix can have; this one has rank $${rank}$.`,
+                `$${Math.min(m, n)}$ 是 $${m} \\times ${n}$ 矩阵可能的最大秩；这个矩阵的秩是 $${rank}$。`,
+              ),
+              why(
+                n - rank,
+                `$${n} - ${rank} = ${n - rank}$ counts the singular values that are $0$, not the positive ones.`,
+                `$${n} - ${rank} = ${n - rank}$ 数的是为 $0$ 的奇异值，而不是正的。`,
+              ),
+            ],
+            rank,
+          ),
         });
       },
     },
@@ -2733,8 +3147,8 @@ export const singularValuesOfAMatrix: TopicDef = {
       id: "singular-values-from-the-eigenvalues-of-ata",
       title: t("Singular values from the eigenvalues of $A^TA$", "由 $A^TA$ 的特征值求奇异值"),
       explanation: t(
-        "The singular values of $A$ are the square roots of the eigenvalues of $A^TA$, listed as $\\sigma_1 \\ge \\sigma_2 \\ge \\cdots \\ge 0$. They connect to familiar quantities: $\\sigma_1 = \\max_{\\|\\mathbf{x}\\| = 1}\\|A\\mathbf{x}\\|$, and for a square matrix $\\sigma_1\\sigma_2\\cdots\\sigma_n = |\\det A|$, because $\\det(A^TA) = (\\det A)^2$.",
-        "$A$ 的奇异值是 $A^TA$ 特征值的平方根，按 $\\sigma_1 \\ge \\sigma_2 \\ge \\cdots \\ge 0$ 排列。它们与熟悉的量相联系：$\\sigma_1 = \\max_{\\|\\mathbf{x}\\| = 1}\\|A\\mathbf{x}\\|$；对方阵有 $\\sigma_1\\sigma_2\\cdots\\sigma_n = |\\det A|$，因为 $\\det(A^TA) = (\\det A)^2$。",
+        "The singular values of $A$ are the square roots of the eigenvalues of $A^TA$, listed as $\\sigma_1 \\ge \\sigma_2 \\ge \\cdots \\ge 0$. They connect to familiar quantities: $\\sigma_1 = \\max_{\\|\\mathbf{x}\\| = 1}\\|A\\mathbf{x}\\|$, and for a square matrix $\\sigma_1\\sigma_2\\cdots\\sigma_n = |\\det A|$, because $\\det(A^TA) = (\\det A)^2$. For example, if $A^TA$ has eigenvalues $36$ and $4$, then $\\sigma_1 = 6$ and $\\sigma_2 = 2$, the longest stretch of a unit vector is $6$, and $|\\det A| = 12$.\n\n> **Watch out.** The eigenvalues of $A^TA$ are the squares $\\sigma_i^2$: take square roots before answering about $A$, and do not take them for $A^TA$ itself, whose determinant is $(\\sigma_1\\sigma_2)^2$.",
+        "$A$ 的奇异值是 $A^TA$ 特征值的平方根，按 $\\sigma_1 \\ge \\sigma_2 \\ge \\cdots \\ge 0$ 排列。它们与熟悉的量相联系：$\\sigma_1 = \\max_{\\|\\mathbf{x}\\| = 1}\\|A\\mathbf{x}\\|$；对方阵有 $\\sigma_1\\sigma_2\\cdots\\sigma_n = |\\det A|$，因为 $\\det(A^TA) = (\\det A)^2$。例如 $A^TA$ 的特征值为 $36$ 和 $4$ 时，$\\sigma_1 = 6$，$\\sigma_2 = 2$，单位向量的最大伸缩是 $6$，$|\\det A| = 12$。\n\n> **注意。** $A^TA$ 的特征值是平方 $\\sigma_i^2$：回答关于 $A$ 的问题前要先开平方；而 $A^TA$ 本身的行列式是 $(\\sigma_1\\sigma_2)^2$，不要开方。",
       ),
       generate(rng: Rng): Problem {
         const s1 = rng.int(3, 9);
@@ -2750,9 +3164,39 @@ export const singularValuesOfAMatrix: TopicDef = {
             ),
             answer: s1,
             wrong: [e1, s2, s1 + s2, e2],
-            solution: t(
-              `The largest singular value is $\\sigma_1 = \\sqrt{${e1}} = ${s1}$, and that is the maximum stretch $\\|A\\mathbf{x}\\|$.`,
-              `最大奇异值为 $\\sigma_1 = \\sqrt{${e1}} = ${s1}$，这就是最大伸缩 $\\|A\\mathbf{x}\\|$。`,
+            mistakes: [
+              why(
+                e1,
+                `$${e1}$ is $\\sigma_1^2$, the largest value of $\\|A\\mathbf{x}\\|^2$; take its square root.`,
+                `$${e1}$ 是 $\\sigma_1^2$，即 $\\|A\\mathbf{x}\\|^2$ 的最大值；要开平方。`,
+              ),
+              why(
+                s2,
+                `$${s2}$ is $\\sigma_2$, the smallest stretch of a unit vector, not the largest.`,
+                `$${s2}$ 是 $\\sigma_2$，单位向量的最小伸缩，不是最大的。`,
+              ),
+              why(
+                s1 + s2,
+                "The singular values are not added: the longest stretch is $\\sigma_1$ alone, along its own right singular vector.",
+                "奇异值不相加：最大伸缩只是 $\\sigma_1$，沿它自己的右奇异向量取到。",
+              ),
+            ],
+            solution: walked(
+              [
+                [
+                  ["Take square roots", "开平方"],
+                  t("", ""),
+                  [`\\sigma_1 = \\sqrt{${e1}} = ${s1}, \\quad \\sigma_2 = \\sqrt{${e2}} = ${s2}`],
+                ],
+                [
+                  ["Use the largest", "取最大的"],
+                  t(`The largest stretch of a unit vector is $\\sigma_1 = ${s1}$.`, `单位向量的最大伸缩是 $\\sigma_1 = ${s1}$。`),
+                ],
+              ],
+              t(
+                `$\\|A\\mathbf{x}\\|^2 = \\mathbf{x}^TA^TA\\mathbf{x}$, a quadratic form whose largest value on unit vectors is its largest eigenvalue $${e1}$, so $\\|A\\mathbf{x}\\| \\le \\sqrt{${e1}} = ${s1}$.`,
+                `$\\|A\\mathbf{x}\\|^2 = \\mathbf{x}^TA^TA\\mathbf{x}$ 是一个二次型，它在单位向量上的最大值是最大特征值 $${e1}$，所以 $\\|A\\mathbf{x}\\| \\le \\sqrt{${e1}} = ${s1}$。`,
+              ),
             ),
           });
         }
@@ -2763,10 +3207,33 @@ export const singularValuesOfAMatrix: TopicDef = {
               `对 $2 \\times 2$ 矩阵 $A$，$A^TA$ 的特征值为 $${e1}$ 与 $${e2}$。求 $|\\det A|$。`,
             ),
             answer: s1 * s2,
-            wrong: [e1 * e2, s1 + s2, e1 + e2, s1 * s1 - s2 * s2],
-            solution: t(
-              `The singular values are $${s1}$ and $${s2}$, and $|\\det A| = \\sigma_1\\sigma_2 = ${s1 * s2}$.`,
-              `奇异值为 $${s1}$ 与 $${s2}$，$|\\det A| = \\sigma_1\\sigma_2 = ${s1 * s2}$。`,
+            wrong: [e1 * e2, s1 + s2, e1 + e2],
+            mistakes: [
+              why(
+                e1 * e2,
+                `$${e1 * e2}$ is $\\det(A^TA) = (\\det A)^2$; its square root is $|\\det A|$.`,
+                `$${e1 * e2}$ 是 $\\det(A^TA) = (\\det A)^2$；它的平方根才是 $|\\det A|$。`,
+              ),
+              why(s1 + s2, "The determinant multiplies the singular values; it does not add them.", "行列式是奇异值相乘，而不是相加。"),
+              why(
+                e1 + e2,
+                `$${e1 + e2}$ is the trace of $A^TA$, the sum of the squared singular values.`,
+                `$${e1 + e2}$ 是 $A^TA$ 的迹，即奇异值的平方和。`,
+              ),
+            ],
+            solution: walked(
+              [
+                [
+                  ["Take square roots", "开平方"],
+                  t("", ""),
+                  [`\\sigma_1 = \\sqrt{${e1}} = ${s1}, \\quad \\sigma_2 = \\sqrt{${e2}} = ${s2}`],
+                ],
+                [["Multiply them", "相乘"], t("", ""), [`|\\det A| = \\sigma_1\\sigma_2 = ${s1} \\cdot ${s2} = ${s1 * s2}`]],
+              ],
+              t(
+                `$(\\det A)^2 = \\det(A^TA) = ${e1} \\cdot ${e2} = ${e1 * e2} = ${s1 * s2}^2$.`,
+                `$(\\det A)^2 = \\det(A^TA) = ${e1} \\cdot ${e2} = ${e1 * e2} = ${s1 * s2}^2$。`,
+              ),
             ),
           });
         }
@@ -2776,10 +3243,40 @@ export const singularValuesOfAMatrix: TopicDef = {
             `$2 \\times 2$ 矩阵 $A$ 的奇异值为 $${s1}$ 与 $${s2}$。求 $\\det(A^TA)$。`,
           ),
           answer: e1 * e2,
-          wrong: [s1 * s2, e1 + e2, 2 * s1 * s2],
-          solution: t(
-            `$A^TA$ has eigenvalues $\\sigma_1^2 = ${e1}$ and $\\sigma_2^2 = ${e2}$, so its determinant is $${e1 * e2}$.`,
-            `$A^TA$ 的特征值为 $\\sigma_1^2 = ${e1}$ 与 $\\sigma_2^2 = ${e2}$，所以其行列式为 $${e1 * e2}$。`,
+          wrong: [s1 * s2, e1 + e2, e1],
+          mistakes: distinct(
+            [
+              why(
+                s1 * s2,
+                `$${s1 * s2}$ is $|\\det A|$; $\\det(A^TA) = (\\det A)^2$ squares it.`,
+                `$${s1 * s2}$ 是 $|\\det A|$；$\\det(A^TA) = (\\det A)^2$ 还要平方。`,
+              ),
+              why(
+                e1 + e2,
+                `$${e1 + e2}$ is the trace of $A^TA$; the determinant multiplies the eigenvalues $${e1}$ and $${e2}$.`,
+                `$${e1 + e2}$ 是 $A^TA$ 的迹；行列式是特征值 $${e1}$ 与 $${e2}$ 相乘。`,
+              ),
+              why(
+                e1,
+                `$${e1}$ is only $\\sigma_1^2$; the determinant also multiplies by $\\sigma_2^2 = ${e2}$.`,
+                `$${e1}$ 只是 $\\sigma_1^2$；行列式还要乘以 $\\sigma_2^2 = ${e2}$。`,
+              ),
+            ],
+            e1 * e2,
+          ),
+          solution: walked(
+            [
+              [
+                ["Square the singular values", "把奇异值平方"],
+                t("The eigenvalues of $A^TA$ are the squares of the singular values:", "$A^TA$ 的特征值是奇异值的平方："),
+                [`\\sigma_1^2 = ${e1}, \\quad \\sigma_2^2 = ${e2}`],
+              ],
+              [["Multiply the eigenvalues", "特征值相乘"], t("", ""), [`\\det(A^TA) = ${e1} \\cdot ${e2} = ${e1 * e2}`]],
+            ],
+            t(
+              `$|\\det A| = \\sigma_1\\sigma_2 = ${s1 * s2}$, and $\\det(A^TA) = (\\det A)^2 = ${s1 * s2}^2 = ${e1 * e2}$.`,
+              `$|\\det A| = \\sigma_1\\sigma_2 = ${s1 * s2}$，而 $\\det(A^TA) = (\\det A)^2 = ${s1 * s2}^2 = ${e1 * e2}$。`,
+            ),
           ),
         });
       },
@@ -2795,6 +3292,10 @@ export const computingTheSingularValuesOfAMatrix: TopicDef = {
     "Compute the singular values of $2 \\times 2$ and rectangular matrices from the eigenvalues of $A^T A$.",
     "通过求 $A^T A$ 的特征值来计算 $2 \\times 2$ 矩阵及矩形矩阵的奇异值。",
   ),
+  intro: t(
+    "For $A = \\begin{pmatrix} 3 & 4 \\\\ 0 & 0 \\end{pmatrix}$, $A^TA = \\begin{pmatrix} 9 & 12 \\\\ 12 & 16 \\end{pmatrix}$, with trace $25$ and determinant $144 - 144 = 0$. Its eigenvalues are $25$ and $0$, so the singular values of $A$ are $\\sigma_1 = 5$ and $\\sigma_2 = 0$.\n\nCheck: $A$ sends $\\frac{1}{5}(3, 4)$ to $(5, 0)$, a stretch by $5$, and sends $(-4, 3)$ to $\\mathbf{0}$.\n\nIn this lesson we compute singular values from the eigenvalues of $A^TA$, for rotations, rank-one matrices and others, and use them to find the condition number.",
+    "对 $A = \\begin{pmatrix} 3 & 4 \\\\ 0 & 0 \\end{pmatrix}$，$A^TA = \\begin{pmatrix} 9 & 12 \\\\ 12 & 16 \\end{pmatrix}$，迹为 $25$，行列式为 $144 - 144 = 0$。它的特征值是 $25$ 和 $0$，所以 $A$ 的奇异值是 $\\sigma_1 = 5$，$\\sigma_2 = 0$。\n\n检验：$A$ 把 $\\frac{1}{5}(3, 4)$ 映到 $(5, 0)$，伸长为 $5$ 倍，并把 $(-4, 3)$ 映到 $\\mathbf{0}$。\n\n本课我们由 $A^TA$ 的特征值计算奇异值，包括旋转、秩一矩阵等情形，并用它们求条件数。",
+  ),
   prerequisites: ["singular-values-of-a-matrix"],
   encompasses: [],
   xp: 15,
@@ -2803,8 +3304,8 @@ export const computingTheSingularValuesOfAMatrix: TopicDef = {
       id: "compute-singular-values",
       title: t("Computing Singular Values from A^T A", "由 A^T A 计算奇异值"),
       explanation: t(
-        "To find the singular values of $A$, compute the $n \\times n$ symmetric matrix $A^T A$, find its eigenvalues $\\lambda_1 \\ge \\lambda_2 \\ge \\dots \\ge 0$, and take the positive square roots $\\sigma_i = \\sqrt{\\lambda_i}$.",
-        "计算 $A$ 的奇异值时，先求 $n \\times n$ 对称矩阵 $A^T A$，求其降序特征值 $\\lambda_1 \\ge \\lambda_2 \\ge \\dots \\ge 0$，再取平方根 $\\sigma_i = \\sqrt{\\lambda_i}$。",
+        "To find the singular values of $A$, compute the $n \\times n$ symmetric matrix $A^T A$, find its eigenvalues $\\lambda_1 \\ge \\lambda_2 \\ge \\dots \\ge 0$, and take the positive square roots $\\sigma_i = \\sqrt{\\lambda_i}$. For example, $A = \\begin{pmatrix} 6 & -4 \\\\ 8 & 3 \\end{pmatrix}$ has $A^TA = \\begin{pmatrix} 100 & 0 \\\\ 0 & 25 \\end{pmatrix}$, so $\\sigma_1 = 10$ and $\\sigma_2 = 5$.\n\n> **Watch out.** Take square roots of the eigenvalues of $A^TA$, not of the entries of $A$ or of its own eigenvalues, and list every one of them: a $2 \\times 2$ matrix has two singular values.",
+        "计算 $A$ 的奇异值时，先求 $n \\times n$ 对称矩阵 $A^T A$，求其降序特征值 $\\lambda_1 \\ge \\lambda_2 \\ge \\dots \\ge 0$，再取平方根 $\\sigma_i = \\sqrt{\\lambda_i}$。例如 $A = \\begin{pmatrix} 6 & -4 \\\\ 8 & 3 \\end{pmatrix}$ 有 $A^TA = \\begin{pmatrix} 100 & 0 \\\\ 0 & 25 \\end{pmatrix}$，所以 $\\sigma_1 = 10$，$\\sigma_2 = 5$。\n\n> **注意。** 要对 $A^TA$ 的特征值开平方，而不是对 $A$ 的元素或 $A$ 自己的特征值；并且要全部列出：$2 \\times 2$ 矩阵有两个奇异值。",
       ),
       generate: (rng: Rng): Problem => {
         // The columns are orthogonal multiples of a rotation, so that the values are not read off the entries.
@@ -2833,22 +3334,61 @@ export const computingTheSingularValuesOfAMatrix: TopicDef = {
           `计算矩阵 $A = ${mat2Latex(shown)}$ 的所有奇异值。多个奇异值用逗号隔开。`,
         );
 
-        const solution = t(
-          `Compute $A^T A = ${mat2Latex([
-            [a11 * a11, 0],
-            [0, a22 * a22],
-          ])}$. The eigenvalues of $A^T A$ are $${c * c}$ and $${d * d}$. Taking the positive square roots gives the singular values $\\sigma_1 = \\sqrt{${c * c}} = ${c}$ and $\\sigma_2 = \\sqrt{${d * d}} = ${d}$.`,
-          `计算 $A^T A = ${mat2Latex([
-            [a11 * a11, 0],
-            [0, a22 * a22],
-          ])}$。$A^T A$ 的特征值为 $${c * c}$ 和 $${d * d}$。取算术平方根得到奇异值为 $\\sigma_1 = \\sqrt{${c * c}} = ${c}$ 与 $\\sigma_2 = \\sqrt{${d * d}} = ${d}$。`,
+        const solution = walked(
+          [
+            [
+              ["Form the product", "构造乘积"],
+              t(
+                "The columns of $A$ are orthogonal, so the off-diagonal entries of $A^TA$ vanish and the diagonal holds the squared column lengths:",
+                "$A$ 的各列正交，所以 $A^TA$ 的非对角元为零，对角线上是各列长度的平方：",
+              ),
+              [
+                `A^T A = ${mat2Latex([
+                  [a11 * a11, 0],
+                  [0, a22 * a22],
+                ])}`,
+              ],
+            ],
+            [
+              ["Read the eigenvalues", "读出特征值"],
+              t(
+                `A diagonal matrix has its diagonal entries as eigenvalues: $${c * c}$ and $${d * d}$.`,
+                `对角矩阵的特征值就是对角元：$${c * c}$ 和 $${d * d}$。`,
+              ),
+            ],
+            [
+              ["Take square roots", "开平方"],
+              t("", ""),
+              [`\\sigma_1 = \\sqrt{${c * c}} = ${c}, \\quad \\sigma_2 = \\sqrt{${d * d}} = ${d}`],
+            ],
+          ],
+          t(
+            `$|\\det A| = |${p * left} \\cdot ${p * right} + ${q * right} \\cdot ${q * left}| = ${c * d} = ${c} \\cdot ${d} = \\sigma_1\\sigma_2$.`,
+            `$|\\det A| = |${p * left} \\cdot ${p * right} + ${q * right} \\cdot ${q * left}| = ${c * d} = ${c} \\cdot ${d} = \\sigma_1\\sigma_2$。`,
+          ),
         );
 
         return solutionsProblem({
           prompt,
           values: [String(c), String(d)],
           solution,
-          wrong: [[String(c * c), String(d * d)], [String(c), String(c + d)], [String(p * left), String(p * right)], [String(c)]],
+          mistakes: [
+            whySet(
+              [String(c * c), String(d * d)],
+              `$${c * c}$ and $${d * d}$ are the eigenvalues of $A^TA$, the squares $\\sigma_i^2$; take their square roots.`,
+              `$${c * c}$ 和 $${d * d}$ 是 $A^TA$ 的特征值，即平方 $\\sigma_i^2$；要开平方。`,
+            ),
+            whySet(
+              [String(p * left), String(p * right)],
+              `$${p * left}$ and $${p * right}$ are the diagonal entries of $A$; a singular value is the length of a whole column.`,
+              `$${p * left}$ 和 $${p * right}$ 是 $A$ 的对角元；奇异值是整列的长度。`,
+            ),
+            whySet(
+              [String(c)],
+              `A $2 \\times 2$ matrix has two singular values, one from each column here: $${a11}$ and $${a22}$.`,
+              `$2 \\times 2$ 矩阵有两个奇异值，这里每列给出一个：$${a11}$ 和 $${a22}$。`,
+            ),
+          ],
         });
       },
     },
@@ -2858,8 +3398,8 @@ export const computingTheSingularValuesOfAMatrix: TopicDef = {
         linearAlgebraDrawings2["computing-the-singular-values-of-a-matrix#singular-values-of-a-scaled-rotation-and-a-rank-one-matrix"],
       title: t("Singular values through $A^TA$", "通过 $A^TA$ 计算奇异值"),
       explanation: t(
-        "To compute singular values, form $A^TA$, find its eigenvalues and take square roots. For $A = \\begin{pmatrix} a & -b \\\\ b & a \\end{pmatrix}$, $A^TA = (a^2 + b^2)I$, so both singular values equal $\\sqrt{a^2 + b^2}$: the matrix rotates and scales uniformly. For a matrix whose second row is zero, $A^TA = \\mathbf{r}\\mathbf{r}^T$ for the first row $\\mathbf{r}$, which has eigenvalues $\\|\\mathbf{r}\\|^2$ and $0$.",
-        "计算奇异值时，构造 $A^TA$，求其特征值再开平方。对 $A = \\begin{pmatrix} a & -b \\\\ b & a \\end{pmatrix}$，$A^TA = (a^2 + b^2)I$，所以两个奇异值都等于 $\\sqrt{a^2 + b^2}$：矩阵作旋转并均匀缩放。对第二行为零的矩阵，$A^TA = \\mathbf{r}\\mathbf{r}^T$（$\\mathbf{r}$ 为第一行），特征值为 $\\|\\mathbf{r}\\|^2$ 与 $0$。",
+        "To compute singular values, form $A^TA$, find its eigenvalues and take square roots. For $A = \\begin{pmatrix} a & -b \\\\ b & a \\end{pmatrix}$, $A^TA = (a^2 + b^2)I$, so both singular values equal $\\sqrt{a^2 + b^2}$: the matrix rotates and scales uniformly. For a matrix whose second row is zero, $A^TA = \\mathbf{r}\\mathbf{r}^T$ for the first row $\\mathbf{r}$, which has eigenvalues $\\|\\mathbf{r}\\|^2$ and $0$. For example, $\\begin{pmatrix} 6 & -8 \\\\ 8 & 6 \\end{pmatrix}$ has both singular values $\\sqrt{36 + 64} = 10$, while $\\begin{pmatrix} 6 & 8 \\\\ 0 & 0 \\end{pmatrix}$ has singular values $10$ and $0$.\n\n> **Watch out.** The answer is a length $\\sqrt{a^2 + b^2}$, not an entry, not $a + b$, and not the eigenvalue $a^2 + b^2$ of $A^TA$. A scaled rotation is invertible, so neither of its singular values is $0$.",
+        "计算奇异值时，构造 $A^TA$，求其特征值再开平方。对 $A = \\begin{pmatrix} a & -b \\\\ b & a \\end{pmatrix}$，$A^TA = (a^2 + b^2)I$，所以两个奇异值都等于 $\\sqrt{a^2 + b^2}$：矩阵作旋转并均匀缩放。对第二行为零的矩阵，$A^TA = \\mathbf{r}\\mathbf{r}^T$（$\\mathbf{r}$ 为第一行），特征值为 $\\|\\mathbf{r}\\|^2$ 与 $0$。例如 $\\begin{pmatrix} 6 & -8 \\\\ 8 & 6 \\end{pmatrix}$ 的两个奇异值都是 $\\sqrt{36 + 64} = 10$，而 $\\begin{pmatrix} 6 & 8 \\\\ 0 & 0 \\end{pmatrix}$ 的奇异值是 $10$ 和 $0$。\n\n> **注意。** 答案是长度 $\\sqrt{a^2 + b^2}$，不是某个元素，不是 $a + b$，也不是 $A^TA$ 的特征值 $a^2 + b^2$。伸缩旋转矩阵可逆，所以它的奇异值都不是 $0$。",
       ),
       generate(rng: Rng): Problem {
         const [p, q, c] = rng.pick([
@@ -2892,14 +3432,100 @@ export const computingTheSingularValuesOfAMatrix: TopicDef = {
           ),
           answer: c,
           wrong: rot ? [0, c * c, p, q] : [c * c, p + q, p, 0],
+          mistakes: rot
+            ? [
+                why(
+                  0,
+                  `$\\det A = ${p * p} + ${q * q} = ${c * c} \\ne 0$, so $A$ is invertible and no singular value is $0$.`,
+                  `$\\det A = ${p * p} + ${q * q} = ${c * c} \\ne 0$，所以 $A$ 可逆，没有奇异值为 $0$。`,
+                ),
+                why(
+                  c * c,
+                  `$${c * c}$ is the eigenvalue of $A^TA$, $\\sigma^2$; take its square root.`,
+                  `$${c * c}$ 是 $A^TA$ 的特征值，即 $\\sigma^2$；要开平方。`,
+                ),
+                why(
+                  p,
+                  `$${p}$ is an entry of $A$; the singular value is the length of a column, $\\sqrt{${p * p} + ${q * q}}$.`,
+                  `$${p}$ 是 $A$ 的元素；奇异值是列的长度 $\\sqrt{${p * p} + ${q * q}}$。`,
+                ),
+                why(
+                  q,
+                  `$${q}$ is the size of an off-diagonal entry; the singular value is the length of a column, $\\sqrt{${p * p} + ${q * q}}$.`,
+                  `$${q}$ 是非对角元的大小；奇异值是列的长度 $\\sqrt{${p * p} + ${q * q}}$。`,
+                ),
+              ]
+            : [
+                why(
+                  c * c,
+                  `$${c * c}$ is the eigenvalue $\\|\\mathbf{r}\\|^2$ of $A^TA$; take its square root.`,
+                  `$${c * c}$ 是 $A^TA$ 的特征值 $\\|\\mathbf{r}\\|^2$；要开平方。`,
+                ),
+                why(
+                  p + q,
+                  `That adds the sizes of the entries; the length of the row is $\\sqrt{${p * p} + ${q * q}} = ${c}$.`,
+                  `这是把元素的大小相加了；行的长度是 $\\sqrt{${p * p} + ${q * q}} = ${c}$。`,
+                ),
+                why(
+                  0,
+                  "$0$ is the smaller singular value, from the zero row; the question asks for the larger.",
+                  "$0$ 是较小的奇异值，来自零行；题目问的是较大的。",
+                ),
+              ],
           solution: rot
-            ? t(
-                `$A^TA = ${c * c}I$, so both eigenvalues are $${c * c}$ and both singular values are $${c}$; the smallest is $${c}$.`,
-                `$A^TA = ${c * c}I$，两个特征值都是 $${c * c}$，两个奇异值都是 $${c}$；最小的为 $${c}$。`,
+            ? walked(
+                [
+                  [
+                    ["Form the product", "构造乘积"],
+                    t("", ""),
+                    [
+                      `A^TA = ${mat2Latex([
+                        [c * c, 0],
+                        [0, c * c],
+                      ])} = ${c * c}I`,
+                    ],
+                  ],
+                  [
+                    ["Take square roots", "开平方"],
+                    t(
+                      `Both eigenvalues are $${c * c}$, so both singular values are $\\sqrt{${c * c}} = ${c}$, and the smallest is $${c}$.`,
+                      `两个特征值都是 $${c * c}$，所以两个奇异值都是 $\\sqrt{${c * c}} = ${c}$，最小的是 $${c}$。`,
+                    ),
+                  ],
+                ],
+                t(
+                  `Both columns of $A$ have length $\\sqrt{${p * p} + ${q * q}} = ${c}$ and are orthogonal, so $A$ is $${c}$ times a rotation and stretches every vector by $${c}$.`,
+                  `$A$ 的两列长度都是 $\\sqrt{${p * p} + ${q * q}} = ${c}$ 且正交，所以 $A$ 是旋转的 $${c}$ 倍，把每个向量都伸长 $${c}$ 倍。`,
+                ),
               )
-            : t(
-                `$A^TA$ has eigenvalues $${p * p} + ${q * q} = ${c * c}$ and $0$, so the singular values are $${c}$ and $0$; the largest is $${c}$.`,
-                `$A^TA$ 的特征值为 $${p * p} + ${q * q} = ${c * c}$ 与 $0$，所以奇异值为 $${c}$ 与 $0$；最大的为 $${c}$。`,
+            : walked(
+                [
+                  [
+                    ["Form the product", "构造乘积"],
+                    t(`With the first row $\\mathbf{r} = (${p}, ${sp * q})$:`, `第一行 $\\mathbf{r} = (${p}, ${sp * q})$，于是`),
+                    [
+                      `A^TA = \\mathbf{r}\\mathbf{r}^T = ${mat2Latex([
+                        [p * p, sp * p * q],
+                        [sp * p * q, q * q],
+                      ])}`,
+                    ],
+                  ],
+                  [
+                    ["Find the eigenvalues", "求特征值"],
+                    t(
+                      `The trace is $${p * p} + ${q * q} = ${c * c}$ and the determinant is $0$, so the eigenvalues are $${c * c}$ and $0$.`,
+                      `迹为 $${p * p} + ${q * q} = ${c * c}$，行列式为 $0$，所以特征值为 $${c * c}$ 和 $0$。`,
+                    ),
+                  ],
+                  [
+                    ["Take square roots", "开平方"],
+                    t(`The singular values are $${c}$ and $0$; the largest is $${c}$.`, `奇异值为 $${c}$ 和 $0$；最大的是 $${c}$。`),
+                  ],
+                ],
+                t(
+                  `$A$ sends the unit vector $\\frac{1}{${c}}(${p}, ${sp * q})$ to $(${c}, 0)$, a stretch by $${c}$.`,
+                  `$A$ 把单位向量 $\\frac{1}{${c}}(${p}, ${sp * q})$ 映到 $(${c}, 0)$，伸长为 $${c}$ 倍。`,
+                ),
               ),
         });
       },

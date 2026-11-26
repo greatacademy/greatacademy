@@ -2424,16 +2424,18 @@ const perpendicularEigenvectors: KnowledgePointDef = {
   ),
   generate(rng) {
     const p = nonzero(rng, 4);
-    const q = nonzero(rng, 4);
+    // |q| differs from |p|, so pairing the components the wrong way gives a different number.
+    const q = rng.pick([-4, -3, -2, -1, 1, 2, 3, 4].filter((v) => Math.abs(v) !== Math.abs(p)));
     const w = nonzero(rng, 5);
     const l1 = nonzero(rng, 5);
     const l2 = l1 > 0 ? l1 + rng.int(1, 4) : l1 - rng.int(1, 4);
     const answer = Q.of(-w * q, p);
     const pk = p === 1 ? "k" : p === -1 ? "-k" : `${p}k`;
+    const times = (s: number) => (s === 1 ? "" : s === -1 ? "-" : `${s}`);
     return numberProblem({
       prompt: t(
-        `A symmetric matrix $A$ has $A${col(p, q)} = ${l1}${col(p, q)}$ and $A${col("k", w)} = ${l2}${col("k", w)}$. Find $k$.`,
-        `对称矩阵 $A$ 满足 $A${col(p, q)} = ${l1}${col(p, q)}$，$A${col("k", w)} = ${l2}${col("k", w)}$。求 $k$。`,
+        `A symmetric matrix $A$ has $A${col(p, q)} = ${times(l1)}${col(p, q)}$ and $A${col("k", w)} = ${l2}${col("k", w)}$. Find $k$.`,
+        `对称矩阵 $A$ 满足 $A${col(p, q)} = ${times(l1)}${col(p, q)}$，$A${col("k", w)} = ${l2}${col("k", w)}$。求 $k$。`,
       ),
       answer,
       solveFor: "k",
@@ -2449,7 +2451,11 @@ const perpendicularEigenvectors: KnowledgePointDef = {
           `The components are paired the wrong way: $k$ multiplies $${p}$, and $${w}$ multiplies $${q}$.`,
           `分量配对错了：$k$ 乘的是 $${p}$，$${w}$ 乘的是 $${q}$。`,
         ),
-        why(Q.of(w * p, q), "The components are paired the wrong way and the sign is lost as well.", "分量配对错了，符号也丢了。"),
+        why(
+          Q.of(w * p, q),
+          `That makes $${col("k", w)}$ parallel to $${col(p, q)}$; eigenvectors for different eigenvalues are perpendicular.`,
+          `这使 $${col("k", w)}$ 与 $${col(p, q)}$ 平行；属于不同特征值的特征向量是垂直的。`,
+        ),
       ].filter((m, i, all) => String(m.value) !== String(answer) && all.findIndex((o) => String(o.value) === String(m.value)) === i),
       solution: walked(
         [
@@ -2478,13 +2484,15 @@ const evaluatingAQuadraticForm: KnowledgePointDef = {
   ),
   generate(rng) {
     const [a, b, c] = [rng.int(-3, 4), rng.int(-3, 4), rng.int(-3, 4)];
-    const [d, e, f] = [nonzero(rng, 3), nonzero(rng, 3), nonzero(rng, 3)];
+    const [d, e, f0] = [nonzero(rng, 3), nonzero(rng, 3), nonzero(rng, 3)];
+    const x = [nonzero(rng, 2), nonzero(rng, 2), nonzero(rng, 2)];
+    // The cross terms must not cancel, or the diagonal part alone would already be the answer.
+    const f = d * x[0]! * x[1]! + e * x[0]! * x[2]! + f0 * x[1]! * x[2]! === 0 ? -f0 : f0;
     const A = [
       [a, d, e],
       [d, b, f],
       [e, f, c],
     ];
-    const x = [nonzero(rng, 2), nonzero(rng, 2), nonzero(rng, 2)];
     const Ax = A.map((r) => dot(r, x));
     const answer = dot(x, Ax);
     const diagonal = a * x[0]! ** 2 + b * x[1]! ** 2 + c * x[2]! ** 2;
@@ -2511,6 +2519,11 @@ const evaluatingAQuadraticForm: KnowledgePointDef = {
           dot(Ax, [1, 1, 1]),
           "That adds the entries of $A\\mathbf{x}$; dot them with $\\mathbf{x}$ instead.",
           "这是把 $A\\mathbf{x}$ 的分量相加；应与 $\\mathbf{x}$ 作数量积。",
+        ),
+        why(
+          answer - diagonal,
+          "That keeps only the cross terms; each diagonal entry adds $a_{ii}x_i^2$ as well.",
+          "这只保留了交叉项；每个对角元还要加上 $a_{ii}x_i^2$。",
         ),
       ].filter((m, i, all) => m.value !== answer && all.findIndex((o) => o.value === m.value) === i),
       solution: walked(
@@ -2542,7 +2555,8 @@ const definiteRange: KnowledgePointDef = {
   ),
   generate(rng) {
     const a = rng.int(1, 6);
-    const b = rng.int(2, 9);
+    // ab is at least 6, so the bound on k^2 and the bound on k are different numbers.
+    const b = rng.int(Math.max(2, Math.ceil(6 / a)), 9);
     const ab = a * b;
     let answer = Math.floor(Math.sqrt(ab));
     if (answer * answer === ab) answer -= 1;
@@ -2599,8 +2613,8 @@ const conditionNumber: KnowledgePointDef = {
   id: "the-condition-number-from-singular-values",
   title: t("The condition number from singular values", "由奇异值求条件数"),
   explanation: t(
-    "The condition number of an invertible matrix is the largest singular value divided by the smallest. It measures how much the matrix can magnify relative errors. When the columns are orthogonal, the singular values are simply the lengths of the columns.",
-    "可逆矩阵的条件数是最大奇异值除以最小奇异值，它衡量矩阵会把相对误差放大多少。各列正交时，奇异值就是各列的长度。",
+    "The condition number of an invertible matrix is the largest singular value divided by the smallest. It measures how much the matrix can magnify relative errors. When the columns are orthogonal, the singular values are simply the lengths of the columns. For example, the orthogonal columns $(3, 4)$ and $(-12, 9)$ have lengths $5$ and $15$, so the condition number is $\\frac{15}{5} = 3$.\n\n> **Watch out.** Divide the largest singular value by the smallest, so the condition number is at least $1$. Use the singular values themselves: the eigenvalues of $A^TA$ are their squares, and their ratio is the square of the condition number.",
+    "可逆矩阵的条件数是最大奇异值除以最小奇异值，它衡量矩阵会把相对误差放大多少。各列正交时，奇异值就是各列的长度。例如正交的列 $(3, 4)$ 与 $(-12, 9)$ 长度为 $5$ 和 $15$，所以条件数是 $\\frac{15}{5} = 3$。\n\n> **注意。** 要用最大奇异值除以最小奇异值，所以条件数至少是 $1$。要用奇异值本身：$A^TA$ 的特征值是它们的平方，特征值之比是条件数的平方。",
   ),
   generate(rng) {
     const [p, q, r] = rng.pick(triples);
@@ -2620,9 +2634,40 @@ const conditionNumber: KnowledgePointDef = {
       ),
       answer: Q.of(big, small),
       wrong: [Q.of(small, big), r * big, Q.of(big * big, small * small)],
-      solution: t(
-        `The singular values are the column lengths, $${r * s}$ and $${r * u}$. The ratio of the larger to the smaller is $${frac(big, small)}$.`,
-        `奇异值是各列的长度，$${r * s}$ 和 $${r * u}$。较大者与较小者之比是 $${frac(big, small)}$。`,
+      mistakes: [
+        why(
+          Q.of(small, big),
+          "That is upside down: the largest singular value goes on top, so the condition number is at least $1$.",
+          "上下颠倒了：最大奇异值在分子上，所以条件数至少是 $1$。",
+        ),
+        why(
+          r * big,
+          `$${r * big}$ is the largest singular value alone; it still has to be divided by the smallest, $${r * small}$.`,
+          `$${r * big}$ 只是最大奇异值；还要除以最小奇异值 $${r * small}$。`,
+        ),
+        why(
+          Q.of(big * big, small * small),
+          `That is the ratio of the eigenvalues $${r * r * big * big}$ and $${r * r * small * small}$ of $A^TA$, the square of the condition number.`,
+          `这是 $A^TA$ 的特征值 $${r * r * big * big}$ 与 $${r * r * small * small}$ 之比，即条件数的平方。`,
+        ),
+      ],
+      solution: walked(
+        [
+          [
+            ["Find the column lengths", "求各列长度"],
+            t("For orthogonal columns these are the singular values:", "各列正交时，它们就是奇异值："),
+            [`\\sqrt{${p * s}^2 + ${q * s}^2} = ${r * s}, \\quad \\sqrt{${inParens(-q * u)}^2 + ${p * u}^2} = ${r * u}`],
+          ],
+          [
+            ["Divide the larger by the smaller", "较大者除以较小者"],
+            t("", ""),
+            [`\\frac{${r * big}}{${r * small}}${frac(big, small) === `\\frac{${r * big}}{${r * small}}` ? "" : ` = ${frac(big, small)}`}`],
+          ],
+        ],
+        t(
+          `$A^TA$ is diagonal with entries $${r * r * s * s}$ and $${r * r * u * u}$; the square root of their ratio is $\\sqrt{${frac(big * big, small * small)}} = ${frac(big, small)}$.`,
+          `$A^TA$ 是对角矩阵，对角元为 $${r * r * s * s}$ 和 $${r * r * u * u}$；它们之比的平方根是 $\\sqrt{${frac(big * big, small * small)}} = ${frac(big, small)}$。`,
+        ),
       ),
     });
   },
@@ -5732,6 +5777,11 @@ const squareRootOfSymmetric: KnowledgePointDef = {
           "That averages the two roots; the projections weight them by the eigenvector directions.",
           "这是两个平方根的平均；投影要按特征向量的方向给它们加权。",
         ),
+        why(
+          diagonal ? Q.of(s * p * p + u * q * q) : Q.of((s - u) * p * q),
+          `Each projection is $\\frac{\\mathbf{v}\\mathbf{v}^T}{\\mathbf{v}^T\\mathbf{v}}$; the division by $\\mathbf{v}^T\\mathbf{v} = ${norm}$ was left out.`,
+          `每个投影是 $\\frac{\\mathbf{v}\\mathbf{v}^T}{\\mathbf{v}^T\\mathbf{v}}$；漏掉了除以 $\\mathbf{v}^T\\mathbf{v} = ${norm}$。`,
+        ),
       ].filter((m, i, all) => String(m.value) !== String(answer) && all.findIndex((o) => String(o.value) === String(m.value)) === i),
       solution: walked(
         [
@@ -5834,8 +5884,9 @@ const indexAfterCompletingSquare: KnowledgePointDef = {
     "拉格朗日方法把二次型化为平方项的倍数之和。系数取决于过程中的选择，但西尔维斯特惯性定律指出，正系数和负系数的个数不变。所以这两个个数是二次型本身的性质。微妙之处在于交叉项，因为配方把系数的一部分移进平方，这可能改变它的符号。例如 $x^2 + 4xy + y^2 - 3z^2 = (x + 2y)^2 - 3y^2 - 3z^2$：$y^2$ 的系数原来是 $1$，变成 $1 - 2^2 = -3$，所以这个二次型有一个正系数、两个负系数。\n\n> **注意。** 不要在原来的二次型里数符号。先配方：$y^2$ 的系数要减去 $xy$ 系数一半的平方。",
   ),
   generate(rng) {
-    const a = nonzero(rng, 4);
-    const b = rng.pick([...Array(31).keys()].map((i) => i - 10).filter((v) => v !== a * a));
+    // b lies strictly between 0 and a^2, so completing the square flips the sign of the y^2 coefficient.
+    const a = rng.pick([-4, -3, -2, 2, 3, 4]);
+    const b = rng.pick([...Array(a * a - 1).keys()].map((i) => i + 1));
     const c = nonzero(rng, 9);
     const left = b - a * a;
     const coefficients = [1, left, c];
@@ -5857,15 +5908,22 @@ const indexAfterCompletingSquare: KnowledgePointDef = {
           `That counts the signs in the original form. Completing the square turns the coefficient $${b}$ of $y^2$ into $${b} - ${inParens(a)}^2 = ${left}$.`,
           `这数的是原二次型中的符号。配方把 $y^2$ 的系数 $${b}$ 变成 $${b} - ${inParens(a)}^2 = ${left}$。`,
         ),
-        ...(asksPositive
-          ? [
-              why(
-                answer - 1,
-                "The square $(x + \\dots)^2$ has coefficient $1$, which is positive too.",
-                "平方 $(x + \\dots)^2$ 的系数是 $1$，它也是正的。",
-              ),
-            ]
-          : []),
+        why(
+          3 - answer,
+          `That counts the ${asksPositive ? "negative" : "positive"} coefficients; the question asks for the ${asksPositive ? "positive" : "negative"} ones.`,
+          `这数的是${asksPositive ? "负" : "正"}系数；题目问的是${asksPositive ? "正" : "负"}系数。`,
+        ),
+        asksPositive
+          ? why(
+              answer - 1,
+              `The square $(${poly([1, "x"], [a, "y"])})^2$ has coefficient $1$, which is positive too.`,
+              `平方 $(${poly([1, "x"], [a, "y"])})^2$ 的系数是 $1$，它也是正的。`,
+            )
+          : why(
+              answer + 1,
+              `The square $(${poly([1, "x"], [a, "y"])})^2$ has coefficient $+1$, whatever the signs inside the bracket, so it is not one of the negative coefficients.`,
+              `平方 $(${poly([1, "x"], [a, "y"])})^2$ 的系数是 $+1$，不论括号里的符号如何，所以它不是负系数。`,
+            ),
       ].filter((m, i, all) => m.value !== answer && all.findIndex((o) => o.value === m.value) === i),
       solution: walked(
         [
@@ -5910,12 +5968,13 @@ const ellipseAreaFromForm: KnowledgePointDef = {
   figure: linearAlgebraDrawings2["reducing-a-quadratic-curve-to-its-principal-axes#the-area-of-an-ellipse-from-its-quadratic-form"],
   title: t("The area of an ellipse from its quadratic form", "由二次型求椭圆的面积"),
   explanation: t(
-    "After rotating to principal axes, a positive definite form becomes $\\lambda_1u^2 + \\lambda_2v^2 = d$, an ellipse with semi-axes $\\sqrt{\\frac{d}{\\lambda_1}}$ and $\\sqrt{\\frac{d}{\\lambda_2}}$. Its area is $\\pi$ times their product, $\\frac{\\pi d}{\\sqrt{\\lambda_1\\lambda_2}}$. Since the product of the eigenvalues is the determinant of the matrix, the eigenvalues never need to be found. For $ax^2 + 2bxy + cy^2$, the determinant is $ac - b^2$, and the rotation does not change the area.",
-    "旋转到主轴后，正定二次型变成 $\\lambda_1u^2 + \\lambda_2v^2 = d$，这是半轴为 $\\sqrt{\\frac{d}{\\lambda_1}}$、$\\sqrt{\\frac{d}{\\lambda_2}}$ 的椭圆。它的面积是 $\\pi$ 乘以它们的积，即 $\\frac{\\pi d}{\\sqrt{\\lambda_1\\lambda_2}}$。由于特征值之积是矩阵的行列式，不必求出特征值。对 $ax^2 + 2bxy + cy^2$，行列式是 $ac - b^2$，旋转不改变面积。",
+    "After rotating to principal axes, a positive definite form becomes $\\lambda_1u^2 + \\lambda_2v^2 = d$, an ellipse with semi-axes $\\sqrt{\\frac{d}{\\lambda_1}}$ and $\\sqrt{\\frac{d}{\\lambda_2}}$. Its area is $\\pi$ times their product, $\\frac{\\pi d}{\\sqrt{\\lambda_1\\lambda_2}}$. Since the product of the eigenvalues is the determinant of the matrix, the eigenvalues never need to be found. For $ax^2 + 2bxy + cy^2$, the determinant is $ac - b^2$, and the rotation does not change the area. For example, $5x^2 + 4xy + 2y^2 = 3$ has determinant $5 \\cdot 2 - 2^2 = 6$, so its area is $\\frac{3\\pi}{\\sqrt{6}}$.\n\n> **Watch out.** The area is $\\frac{\\pi d}{\\sqrt{\\det A}}$: keep the factor $d$, and take the square root of the determinant.",
+    "旋转到主轴后，正定二次型变成 $\\lambda_1u^2 + \\lambda_2v^2 = d$，这是半轴为 $\\sqrt{\\frac{d}{\\lambda_1}}$、$\\sqrt{\\frac{d}{\\lambda_2}}$ 的椭圆。它的面积是 $\\pi$ 乘以它们的积，即 $\\frac{\\pi d}{\\sqrt{\\lambda_1\\lambda_2}}$。由于特征值之积是矩阵的行列式，不必求出特征值。对 $ax^2 + 2bxy + cy^2$，行列式是 $ac - b^2$，旋转不改变面积。例如 $5x^2 + 4xy + 2y^2 = 3$ 的行列式是 $5 \\cdot 2 - 2^2 = 6$，所以面积是 $\\frac{3\\pi}{\\sqrt{6}}$。\n\n> **注意。** 面积是 $\\frac{\\pi d}{\\sqrt{\\det A}}$：不要漏掉因子 $d$，并且要对行列式开平方。",
   ),
   generate(rng) {
     const [a, b, c, root] = rng.pick(ellipseForms);
-    const d = rng.int(1, 9);
+    // With root = 1 and d = 1 most slips give the right number, so d starts at 2 there.
+    const d = rng.int(root === 1 ? 2 : 1, 9);
     const answer = Q.of(d, root);
     const value = a * c - b * b;
     return numberProblem({
@@ -5924,10 +5983,52 @@ const ellipseAreaFromForm: KnowledgePointDef = {
         `椭圆 $${poly([a, "x^2"], [2 * b, "xy"], [c, "y^2"])} = ${d}$ 围成的面积是 $k\\pi$。求 $k$。`,
       ),
       answer,
-      wrong: [Q.of(d, value), Q.of(1, root), Q.of(d * root), Q.of(2 * d, root), answer.add(Q.of(1)), Q.of(root, d), answer.add(Q.of(2))],
-      solution: t(
-        `The matrix has determinant $${a} \\cdot ${c} - ${b * b} = ${value}$, which is the product of the eigenvalues. So the area is $\\frac{${d === 1 ? "" : d}\\pi}{\\sqrt{${value}}}$, and $k = ${answer.toLatex()}$.`,
-        `矩阵的行列式是 $${a} \\cdot ${c} - ${b * b} = ${value}$，它是特征值之积。所以面积是 $\\frac{${d === 1 ? "" : d}\\pi}{\\sqrt{${value}}}$，$k = ${answer.toLatex()}$。`,
+      wrong: [Q.of(d, value), Q.of(1, root), Q.of(d * root), Q.of(2 * d, root), Q.of(root, d)],
+      mistakes: [
+        why(
+          Q.of(d, value),
+          `That divides by the determinant $${value}$; divide by its square root $${root}$.`,
+          `这是除以行列式 $${value}$；应除以它的平方根 $${root}$。`,
+        ),
+        why(
+          Q.of(1, root),
+          `The level $${d}$ is missing; the area is $\\frac{\\pi d}{\\sqrt{\\det A}}$.`,
+          `漏掉了水平 $${d}$；面积是 $\\frac{\\pi d}{\\sqrt{\\det A}}$。`,
+        ),
+        why(
+          Q.of(d * root),
+          `$\\sqrt{${value}}$ belongs in the denominator, not the numerator.`,
+          `$\\sqrt{${value}}$ 应在分母里，而不是分子里。`,
+        ),
+        why(
+          Q.of(2 * d, root),
+          "The area of an ellipse is $\\pi$ times the product of the semi-axes, with no factor $2$.",
+          "椭圆面积是 $\\pi$ 乘以两个半轴之积，没有因子 $2$。",
+        ),
+        why(Q.of(root, d), "The fraction is upside down: $d$ goes on top.", "分数倒过来了：$d$ 在分子上。"),
+      ].filter((m, i, all) => String(m.value) !== String(answer) && all.findIndex((o) => String(o.value) === String(m.value)) === i),
+      solution: walked(
+        [
+          [
+            ["Find the determinant", "求行列式"],
+            t(
+              `Half of $${2 * b}$ goes off the diagonal, and the determinant is the product of the eigenvalues:`,
+              `$${2 * b}$ 的一半放在非对角位置，行列式是特征值之积：`,
+            ),
+            [`\\lambda_1\\lambda_2 = ${a} \\cdot ${c} - ${inParens(b)}^2 = ${value}`],
+          ],
+          [
+            ["Multiply the semi-axes", "把半轴相乘"],
+            t("", ""),
+            [
+              `\\pi\\sqrt{\\frac{${d}}{\\lambda_1}}\\sqrt{\\frac{${d}}{\\lambda_2}} = \\frac{${d === 1 ? "" : d}\\pi}{\\sqrt{${value}}} = ${answer.isInteger() && answer.toNumber() === 1 ? "" : answer.toLatex()}\\pi`,
+            ],
+          ],
+        ],
+        t(
+          `The determinant $${value} = ${root}^2$ is positive and so is $a = ${a}$, so the curve really is an ellipse; $k = ${answer.toLatex()}$.`,
+          `行列式 $${value} = ${root}^2$ 为正，$a = ${a}$ 也为正，所以这条曲线确实是椭圆；$k = ${answer.toLatex()}$。`,
+        ),
       ),
     });
   },

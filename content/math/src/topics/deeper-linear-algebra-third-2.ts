@@ -8,6 +8,7 @@ import { poly, Q } from "@ga/subject-math";
 import { linearAlgebraDrawings2 } from "../explanation-drawings-linear-algebra-2.ts";
 import { numberProblem, why } from "../problems.ts";
 import { ask, choose, type Pair, point } from "../university-kit.ts";
+import { reasoned } from "../wrong-reasons.ts";
 import { walked } from "./calculus-i-differentiation.ts";
 
 /** text turns a pair of strings into a Text. */
@@ -1298,7 +1299,7 @@ const symmetricAction = point(
     const p = nz(rng, 3);
     const q = nz(rng, 3);
     const l1 = nz(rng, 5);
-    const l2 = l1 + rng.pick([-3, -2, -1, 1, 2, 3]);
+    const l2 = l1 + rng.pick([-3, -2, -1, 1, 2, 3].filter((d) => l1 + d !== 0));
     const s = nz(rng, 3);
     const t = nz(rng, 3);
     const x1 = s * p - t * q;
@@ -1327,6 +1328,16 @@ const symmetricAction = point(
           s * l1 * p + t * l2 * q,
           `The first entry of the other eigenvector is $${-q}$, not $${q}$.`,
           `另一个特征向量的第一个元素是 $${-q}$，不是 $${q}$。`,
+        ),
+        why(
+          second,
+          `$${second}$ is the second entry of $A${vec(x1, x2)}$; the question asks for the first.`,
+          `$${second}$ 是 $A${vec(x1, x2)}$ 的第二个元素；题目问的是第一个。`,
+        ),
+        why(
+          s * l2 * p - t * l1 * q,
+          `The eigenvalues were swapped: the part along $${vec(p, q)}$ is scaled by $${l1}$, and the part along $${vec(-q, p)}$ by $${l2}$.`,
+          `两个特征值用反了：沿 $${vec(p, q)}$ 的部分乘以 $${l1}$，沿 $${vec(-q, p)}$ 的部分乘以 $${l2}$。`,
         ),
       ].filter((w, i, all) => w.value !== answer && all.findIndex((o) => o.value === w.value) === i),
       solution: walked(
@@ -1366,7 +1377,7 @@ const repeatedSymmetric = point(
     "矩阵的迹等于按重数计算的特征值之和。所以当对称 $3 \\times 3$ 矩阵有一个重数为 $2$ 的特征值时，剩下的特征值由对角线就能求出，不需要展开特征多项式。例如对角线为 $3, 2, 4$，且 $1$ 是重数为 $2$ 的特征值，则迹是 $9$，另一个特征值是 $9 - 2 \\cdot 1 = 7$。\n\n> **注意。** 重数为 $2$ 的特征值在迹中算两次，所以要减两次。",
   ],
   (rng) => {
-    const c = rng.int(-5, 5);
+    const c = nz(rng, 5);
     const k = nz(rng, 2);
     const v = [nz(rng, 2), nz(rng, 2), nz(rng, 2)] as const;
     const rows = v.map((vi, i) => v.map((vj, j) => k * vi * vj + (i === j ? c : 0)));
@@ -1501,7 +1512,12 @@ const singleSquare = point(
           "That adds the sizes of the diagonal entries; one square term needs the determinant to be zero.",
           "这是把对角元的绝对值相加；单个平方项要求行列式为零。",
         ),
-      ].filter((w, i, all) => w.value !== answer && all.findIndex((o) => o.value === w.value) === i),
+        why(
+          Q.of(answer, 2),
+          `That takes $2k$ as the matrix entry; the entry is $k$, so $k^{2} = ${a * c}$.`,
+          `这把 $2k$ 当成了矩阵元素；元素是 $k$，所以 $k^{2} = ${a * c}$。`,
+        ),
+      ].filter((w, i, all) => String(w.value) !== String(answer) && all.findIndex((o) => String(o.value) === String(w.value)) === i),
       solution: walked(
         [
           [
@@ -1533,8 +1549,8 @@ const semiAxis = {
     "the-semi-major-axis-of-a-rotated-ellipse",
     ["The semi-major axis of a rotated ellipse", "旋转椭圆的半长轴"],
     [
-      "After an orthogonal change of variables, an ellipse is $\\lambda_{1}y_{1}^{2} + \\lambda_{2}y_{2}^{2} = d$, and its squared semi-axes are $\\frac{d}{\\lambda_{1}}$ and $\\frac{d}{\\lambda_{2}}$. The longer axis belongs to the smaller eigenvalue, which is the opposite of what one might first guess.",
-      "经过正交变量替换后，椭圆为 $\\lambda_{1}y_{1}^{2} + \\lambda_{2}y_{2}^{2} = d$，其半轴的平方是 $\\frac{d}{\\lambda_{1}}$ 和 $\\frac{d}{\\lambda_{2}}$。较长的轴对应较小的特征值，这与直觉相反。",
+      "After an orthogonal change of variables, an ellipse is $\\lambda_{1}y_{1}^{2} + \\lambda_{2}y_{2}^{2} = d$, and its squared semi-axes are $\\frac{d}{\\lambda_{1}}$ and $\\frac{d}{\\lambda_{2}}$. The longer axis belongs to the smaller eigenvalue, which is the opposite of what one might first guess. For example, $5x^{2} + 4xy + 5y^{2} = 6$ has eigenvalues $5 \\pm 2$, that is $3$ and $7$, so the squared semi-major axis is $\\frac{6}{3} = 2$.\n\n> **Watch out.** For $ax^{2} + 2bxy + ay^{2}$ the eigenvalues are $a \\pm b$, not the diagonal entry $a$; divide $d$ by the smaller one.",
+      "经过正交变量替换后，椭圆为 $\\lambda_{1}y_{1}^{2} + \\lambda_{2}y_{2}^{2} = d$，其半轴的平方是 $\\frac{d}{\\lambda_{1}}$ 和 $\\frac{d}{\\lambda_{2}}$。较长的轴对应较小的特征值，这与直觉相反。例如 $5x^{2} + 4xy + 5y^{2} = 6$ 的特征值是 $5 \\pm 2$，即 $3$ 和 $7$，所以半长轴的平方是 $\\frac{6}{3} = 2$。\n\n> **注意。** 对 $ax^{2} + 2bxy + ay^{2}$，特征值是 $a \\pm b$，而不是对角元 $a$；用 $d$ 除以较小的那个。",
     ],
     (rng) => {
       const a = rng.int(2, 9);
@@ -1544,15 +1560,53 @@ const semiAxis = {
       const big = a + Math.abs(b);
       const answer = Q.of(d, small);
       const curve = poly([a, "x^{2}"], [2 * b, "xy"], [a, "y^{2}"]);
-      return ask(
-        [`Find the square of the semi-major axis of the ellipse $${curve} = ${d}$.`, `求椭圆 $${curve} = ${d}$ 的半长轴的平方。`],
+      return numberProblem({
+        prompt: text([
+          `Find the square of the semi-major axis of the ellipse $${curve} = ${d}$.`,
+          `求椭圆 $${curve} = ${d}$ 的半长轴的平方。`,
+        ]),
         answer,
-        [Q.of(d, big), Q.of(d, a), d],
-        [
-          `The matrix has eigenvalues $${a} \\pm ${Math.abs(b)}$, that is $${small}$ and $${big}$. The longer axis belongs to the smaller eigenvalue, so its square is $${answer.toLatex()}$.`,
-          `矩阵的特征值是 $${a} \\pm ${Math.abs(b)}$，即 $${small}$ 和 $${big}$。较长的轴对应较小的特征值，所以它的平方是 $${answer.toLatex()}$。`,
-        ],
-      );
+        mistakes: [
+          why(
+            Q.of(d, big),
+            `That divides by the larger eigenvalue $${big}$, which gives the semi-minor axis.`,
+            `这是除以较大的特征值 $${big}$，得到的是半短轴。`,
+          ),
+          why(
+            Q.of(d, a),
+            `$${a}$ is a diagonal entry, not an eigenvalue; the eigenvalues are $${a} \\pm ${Math.abs(b)}$.`,
+            `$${a}$ 是对角元，不是特征值；特征值是 $${a} \\pm ${Math.abs(b)}$。`,
+          ),
+          why(d, `$${d}$ must still be divided by the smaller eigenvalue $${small}$.`, `$${d}$ 还要除以较小的特征值 $${small}$。`),
+        ].filter((w, i, all) => String(w.value) !== String(answer) && all.findIndex((o) => String(o.value) === String(w.value)) === i),
+        solution: walked(
+          [
+            [
+              ["Find the eigenvalues", "求特征值"],
+              text([
+                `The matrix is $${mat([
+                  [a, b],
+                  [b, a],
+                ])}$, so`,
+                `矩阵是 $${mat([
+                  [a, b],
+                  [b, a],
+                ])}$，所以`,
+              ]),
+              [`\\lambda = ${a} \\pm ${Math.abs(b)} = ${small}, ${big}`],
+            ],
+            [
+              ["Use the smaller eigenvalue", "用较小的特征值"],
+              text(["The longer axis belongs to the smaller eigenvalue:", "较长的轴对应较小的特征值："]),
+              [`\\frac{${d}}{${small}}${answer.toLatex() === `\\frac{${d}}{${small}}` ? "" : ` = ${answer.toLatex()}`}`],
+            ],
+          ],
+          text([
+            `The other squared semi-axis is $${Q.of(d, big).toLatex()}$, which is smaller, as it should be.`,
+            `另一个半轴的平方是 $${Q.of(d, big).toLatex()}$，更小，理应如此。`,
+          ]),
+        ),
+      });
     },
   ),
   figure: linearAlgebraDrawings2["classifying-quadratic-curves#the-semi-major-axis-of-a-rotated-ellipse"],
@@ -1562,8 +1616,8 @@ const planeConstraint = point(
   "a-constraint-that-excludes-the-extreme-eigenvalue",
   ["A constraint that excludes the extreme eigenvalue", "排除极端特征值的约束"],
   [
-    "An added linear constraint can exclude the eigenvector of the largest or smallest eigenvalue. If the extra constraint removes that direction, the extreme value of the form comes from the remaining block alone, so the eigenvalue of the full matrix is no longer the answer.",
-    "增加一个线性约束可能排除最大或最小特征值的特征向量。如果这个约束去掉了那个方向，二次型的极值就只来自剩下的块，所以整个矩阵的那个特征值不再是答案。",
+    "An added linear constraint can exclude the eigenvector of the largest or smallest eigenvalue. If the extra constraint removes that direction, the extreme value of the form comes from the remaining block alone, so the eigenvalue of the full matrix is no longer the answer. For example, $Q = 3x_{1}^{2} + 2x_{1}x_{2} + 3x_{2}^{2} + 9x_{3}^{2}$ has the largest eigenvalue $9$ along $\\mathbf{e}_{3}$, but with $x_{3} = 0$ the maximum is the larger eigenvalue $3 + 1 = 4$ of the remaining block.\n\n> **Watch out.** Once $x_{3} = 0$, the coefficient of $x_{3}^{2}$ plays no part. Take the eigenvalues of the $2 \\times 2$ block, not its diagonal entries.",
+    "增加一个线性约束可能排除最大或最小特征值的特征向量。如果这个约束去掉了那个方向，二次型的极值就只来自剩下的块，所以整个矩阵的那个特征值不再是答案。例如 $Q = 3x_{1}^{2} + 2x_{1}x_{2} + 3x_{2}^{2} + 9x_{3}^{2}$ 的最大特征值 $9$ 沿 $\\mathbf{e}_{3}$ 方向，但在 $x_{3} = 0$ 下，最大值是剩下的块的较大特征值 $3 + 1 = 4$。\n\n> **注意。** 一旦 $x_{3} = 0$，$x_{3}^{2}$ 的系数就不起作用。要取 $2 \\times 2$ 块的特征值，而不是它的对角元。",
   ],
   (rng) => {
     const a = rng.int(2, 6);
@@ -1573,18 +1627,61 @@ const planeConstraint = point(
     const answer = max ? a + Math.abs(b) : a - Math.abs(b);
     const form = poly([a, "x_{1}^{2}"], [2 * b, "x_{1}x_{2}"], [a, "x_{2}^{2}"], [c, "x_{3}^{2}"]);
     const word: Pair = max ? ["maximum", "最大值"] : ["minimum", "最小值"];
-    return ask(
-      [
+    const otherEnd = max ? a - Math.abs(b) : a + Math.abs(b);
+    return numberProblem({
+      prompt: text([
         `Find the ${word[0]} of $Q = ${form}$ subject to $x_{1}^{2} + x_{2}^{2} + x_{3}^{2} = 1$ and $x_{3} = 0$.`,
         `求 $Q = ${form}$ 在 $x_{1}^{2} + x_{2}^{2} + x_{3}^{2} = 1$ 且 $x_{3} = 0$ 下的${word[1]}。`,
-      ],
+      ]),
       answer,
-      [c, a, max ? a - Math.abs(b) : a + Math.abs(b)],
-      [
-        `With $x_{3} = 0$, the $x_{3}^{2}$ term plays no part and $x_{1}^{2} + x_{2}^{2} = 1$. The remaining block has eigenvalues $${a} \\pm ${Math.abs(b)}$, so the ${word[0]} is $${answer}$.`,
-        `$x_{3} = 0$ 时，$x_{3}^{2}$ 项不起作用，且 $x_{1}^{2} + x_{2}^{2} = 1$。剩下的块的特征值是 $${a} \\pm ${Math.abs(b)}$，所以${word[1]}是 $${answer}$。`,
-      ],
-    );
+      mistakes: [
+        why(
+          c,
+          `$${c}$ is attained only along $\\mathbf{e}_{3}$, which the constraint $x_{3} = 0$ excludes.`,
+          `$${c}$ 只在 $\\mathbf{e}_{3}$ 方向取到，而约束 $x_{3} = 0$ 排除了这个方向。`,
+        ),
+        why(
+          a,
+          `$${a}$ is a diagonal entry of the block; its eigenvalues are $${a} \\pm ${Math.abs(b)}$.`,
+          `$${a}$ 是块的对角元；块的特征值是 $${a} \\pm ${Math.abs(b)}$。`,
+        ),
+        why(
+          otherEnd,
+          `That is the ${max ? "smaller" : "larger"} eigenvalue of the block, which gives the ${max ? "minimum" : "maximum"}.`,
+          `这是块的${max ? "较小" : "较大"}特征值，给出的是${max ? "最小值" : "最大值"}。`,
+        ),
+      ].filter((w, i, all) => w.value !== answer && all.findIndex((o) => o.value === w.value) === i),
+      solution: walked(
+        [
+          [
+            ["Drop the excluded direction", "去掉被排除的方向"],
+            text([
+              `With $x_{3} = 0$, the term $${c}x_{3}^{2}$ vanishes and $x_{1}^{2} + x_{2}^{2} = 1$, so only the block is left:`,
+              `$x_{3} = 0$ 时，$${c}x_{3}^{2}$ 项为零，且 $x_{1}^{2} + x_{2}^{2} = 1$，只剩下这个块：`,
+            ]),
+            [
+              `${mat([
+                [a, b],
+                [b, a],
+              ])}`,
+            ],
+          ],
+          [
+            ["Find its eigenvalues", "求它的特征值"],
+            text(["", ""]),
+            [`\\lambda = ${a} \\pm ${Math.abs(b)} = ${a - Math.abs(b)}, ${a + Math.abs(b)}`],
+          ],
+          [
+            [max ? "Take the larger" : "Take the smaller", max ? "取较大的" : "取较小的"],
+            text([`The ${word[0]} is $${answer}$.`, `${word[1]}是 $${answer}$。`]),
+          ],
+        ],
+        text([
+          `At $\\frac{1}{\\sqrt{2}}(1, ${b > 0 === max ? 1 : -1}, 0)$, $Q = \\frac{${a} ${b > 0 === max ? "+" : "-"} ${2 * Math.abs(b)} + ${a}}{2} = ${answer}$.`,
+          `在 $\\frac{1}{\\sqrt{2}}(1, ${b > 0 === max ? 1 : -1}, 0)$ 处，$Q = \\frac{${a} ${b > 0 === max ? "+" : "-"} ${2 * Math.abs(b)} + ${a}}{2} = ${answer}$。`,
+        ]),
+      ),
+    });
   },
 );
 
@@ -1593,8 +1690,8 @@ const howManyAttain = {
     "how-many-unit-vectors-attain-an-extreme-value",
     ["How many unit vectors attain an extreme value", "有多少单位向量取到极值"],
     [
-      "The extreme value of a quadratic form on the unit sphere is attained on the unit vectors of its eigenspace. A one-dimensional eigenspace gives two unit vectors, opposite each other, and an eigenspace of dimension at least two gives a whole circle or more of them.",
-      "二次型在单位球面上的极值在相应特征空间的单位向量处取到。一维特征空间给出两个互为相反的单位向量，维数至少为二的特征空间则给出一整个圆或更多的单位向量。",
+      "The extreme value of a quadratic form on the unit sphere is attained on the unit vectors of its eigenspace. A one-dimensional eigenspace gives two unit vectors, opposite each other, and an eigenspace of dimension at least two gives a whole circle or more of them. For example, $Q = 2x_{1}^{2} + 2x_{2}^{2} + 5x_{3}^{2}$ has its maximum $5$ only at $\\pm\\mathbf{e}_{3}$, exactly two unit vectors, but its minimum $2$ at every $(\\cos\\theta, \\sin\\theta, 0)$, infinitely many.\n\n> **Watch out.** $Q(-\\mathbf{u}) = Q(\\mathbf{u})$, so the unit vectors come in opposite pairs and the count is never exactly one. A coefficient that appears twice gives a whole plane of eigenvectors, not two separate directions.",
+      "二次型在单位球面上的极值在相应特征空间的单位向量处取到。一维特征空间给出两个互为相反的单位向量，维数至少为二的特征空间则给出一整个圆或更多的单位向量。例如 $Q = 2x_{1}^{2} + 2x_{2}^{2} + 5x_{3}^{2}$ 的最大值 $5$ 只在 $\\pm\\mathbf{e}_{3}$ 处取到，恰好两个单位向量；而最小值 $2$ 在每个 $(\\cos\\theta, \\sin\\theta, 0)$ 处都取到，有无穷多个。\n\n> **注意。** $Q(-\\mathbf{u}) = Q(\\mathbf{u})$，所以单位向量成对出现，个数绝不会恰好是一个。出现两次的系数给出一整个平面的特征向量，而不是两个分开的方向。",
     ],
     (rng) => {
       const a = nz(rng, 9);
@@ -1606,23 +1703,88 @@ const howManyAttain = {
       const word: Pair = max ? ["maximum", "最大值"] : ["minimum", "最小值"];
       const two: Pair = ["Exactly two", "恰好两个"];
       const many: Pair = ["Infinitely many", "无穷多个"];
-      return choose(
-        rng,
+      const one: Pair = ["Exactly one", "恰好一个"];
+      const three: Pair = ["Exactly three", "恰好三个"];
+      const extreme = single ? c : a;
+      const [p, q] = [0, 1, 2].filter((i) => i !== j) as [number, number];
+      const solution = walked(
         [
-          `How many unit vectors in $\\mathbb{R}^{3}$ attain the ${word[0]} of $Q = ${form}$?`,
-          `$\\mathbb{R}^{3}$ 中有多少个单位向量取到 $Q = ${form}$ 的${word[1]}？`,
+          [
+            ["Read off the eigenvalues", "读出特征值"],
+            text([
+              `The form is diagonal, so its eigenvalues are its coefficients: $${a}$ on $x_{${p + 1}}^{2}$ and $x_{${q + 1}}^{2}$, and $${c}$ on $x_{${j + 1}}^{2}$.`,
+              `二次型是对角的，所以特征值就是系数：$x_{${p + 1}}^{2}$ 和 $x_{${q + 1}}^{2}$ 上的 $${a}$，以及 $x_{${j + 1}}^{2}$ 上的 $${c}$。`,
+            ]),
+          ],
+          [
+            ["Find the eigenspace of the extreme one", "求极端特征值的特征空间"],
+            single
+              ? text([
+                  `The ${word[0]} is $${c}$, which appears once, so its eigenspace is the $x_{${j + 1}}$ axis, a line.`,
+                  `${word[1]}是 $${c}$，只出现一次，所以它的特征空间是 $x_{${j + 1}}$ 轴，一条直线。`,
+                ])
+              : text([
+                  `The ${word[0]} is $${a}$, which appears twice, so its eigenspace is the plane $x_{${j + 1}} = 0$.`,
+                  `${word[1]}是 $${a}$，出现两次，所以它的特征空间是平面 $x_{${j + 1}} = 0$。`,
+                ]),
+          ],
+          [
+            ["Count the unit vectors in it", "数出其中的单位向量"],
+            single
+              ? text([
+                  `A line through $\\mathbf{0}$ meets the unit sphere in two opposite points, $\\pm\\mathbf{e}_{${j + 1}}$.`,
+                  `过 $\\mathbf{0}$ 的直线与单位球面交于两个相反的点 $\\pm\\mathbf{e}_{${j + 1}}$。`,
+                ])
+              : text([
+                  "A plane through $\\mathbf{0}$ meets the unit sphere in a whole circle, which has infinitely many points.",
+                  "过 $\\mathbf{0}$ 的平面与单位球面交于一整个圆，其上有无穷多个点。",
+                ]),
+          ],
         ],
-        single ? two : many,
-        [single ? many : two, ["Exactly one", "恰好一个"], ["Exactly three", "恰好三个"]],
         single
-          ? [
-              `The extreme eigenvalue $${c}$ has a one-dimensional eigenspace, the $x_{${j + 1}}$ axis. It holds two unit vectors, which are opposite each other.`,
-              `极端特征值 $${c}$ 的特征空间是一维的，即 $x_{${j + 1}}$ 轴。其中有两个互为相反的单位向量。`,
-            ]
-          : [
-              `The extreme eigenvalue $${a}$ has a two-dimensional eigenspace, the plane $x_{${j + 1}} = 0$. Every point of the unit circle in this plane attains the value.`,
-              `极端特征值 $${a}$ 的特征空间是二维的，即平面 $x_{${j + 1}} = 0$。这个平面上单位圆的每一点都取到该值。`,
-            ],
+          ? text([
+              `Any unit vector off the $x_{${j + 1}}$ axis puts some weight on $${a}$, so $Q$ is strictly ${max ? "below" : "above"} $${c}$ there.`,
+              `任何不在 $x_{${j + 1}}$ 轴上的单位向量都有一部分权重落在 $${a}$ 上，所以那里 $Q$ 严格${max ? "小于" : "大于"} $${c}$。`,
+            ])
+          : text([
+              `For every $\\theta$, the unit vector with $x_{${p + 1}} = \\cos\\theta$, $x_{${q + 1}} = \\sin\\theta$, $x_{${j + 1}} = 0$ gives $Q = ${a}(\\cos^{2}\\theta + \\sin^{2}\\theta) = ${extreme}$.`,
+              `对每个 $\\theta$，取 $x_{${p + 1}} = \\cos\\theta$，$x_{${q + 1}} = \\sin\\theta$，$x_{${j + 1}} = 0$ 的单位向量，都有 $Q = ${a}(\\cos^{2}\\theta + \\sin^{2}\\theta) = ${extreme}$。`,
+            ]),
+      );
+      return reasoned(
+        choose(
+          rng,
+          [
+            `How many unit vectors in $\\mathbb{R}^{3}$ attain the ${word[0]} of $Q = ${form}$?`,
+            `$\\mathbb{R}^{3}$ 中有多少个单位向量取到 $Q = ${form}$ 的${word[1]}？`,
+          ],
+          single ? two : many,
+          [single ? many : two, one, three],
+          [solution.en, solution["zh-CN"]],
+        ),
+        [
+          single
+            ? [
+                many[0],
+                `$${c}$ appears only once among the coefficients, so its eigenspace is a line, not a plane; only $${a}$ is repeated.`,
+                `$${c}$ 在系数中只出现一次，所以它的特征空间是直线而不是平面；重复的只有 $${a}$。`,
+              ]
+            : [
+                two[0],
+                `$${a}$ is the coefficient of both $x_{${p + 1}}^{2}$ and $x_{${q + 1}}^{2}$, so every unit vector in that plane attains it, not just $\\pm\\mathbf{e}_{${p + 1}}$.`,
+                `$${a}$ 同时是 $x_{${p + 1}}^{2}$ 和 $x_{${q + 1}}^{2}$ 的系数，所以这个平面上每个单位向量都取到它，不只是 $\\pm\\mathbf{e}_{${p + 1}}$。`,
+              ],
+          [
+            one[0],
+            "Since $Q(-\\mathbf{u}) = Q(\\mathbf{u})$, the opposite of any such vector attains the value too.",
+            "因为 $Q(-\\mathbf{u}) = Q(\\mathbf{u})$，任何这样的向量的相反向量也取到该值。",
+          ],
+          [
+            three[0],
+            "Three counts the coordinate axes, but the value is attained only along the eigenspace of the extreme eigenvalue, and each direction gives a pair $\\pm\\mathbf{u}$.",
+            "三是坐标轴的个数，但极值只在极端特征值的特征空间上取到，而且每个方向给出一对 $\\pm\\mathbf{u}$。",
+          ],
+        ],
       );
     },
   ),
@@ -1636,8 +1798,8 @@ const orthogonalColumns = point(
   "singular-values-from-orthogonal-columns",
   ["Singular values from orthogonal columns", "由正交列求奇异值"],
   [
-    "When the columns of a matrix are orthogonal, $A^{T}A$ is diagonal with the squared column lengths on its diagonal. So the singular values are simply the lengths of the columns, and neither the entries nor the eigenvalues of $A$ need to be involved.",
-    "当矩阵的各列正交时，$A^{T}A$ 是对角矩阵，对角线上是列长度的平方。所以奇异值就是各列的长度，既不需要 $A$ 的元素，也不需要它的特征值。",
+    "When the columns of a matrix are orthogonal, $A^{T}A$ is diagonal with the squared column lengths on its diagonal. So the singular values are simply the lengths of the columns, and neither the entries nor the eigenvalues of $A$ need to be involved. For example, the columns $(3, 4)$ and $(-8, 6)$ have dot product $-24 + 24 = 0$ and lengths $5$ and $10$, so the singular values are $10$ and $5$.\n\n> **Watch out.** A singular value is the length of a whole column, $\\sqrt{a^{2} + b^{2}}$, not its largest entry, and the lengths are not added. Check first that the columns really are orthogonal.",
+    "当矩阵的各列正交时，$A^{T}A$ 是对角矩阵，对角线上是列长度的平方。所以奇异值就是各列的长度，既不需要 $A$ 的元素，也不需要它的特征值。例如列 $(3, 4)$ 与 $(-8, 6)$ 的点积为 $-24 + 24 = 0$，长度为 $5$ 和 $10$，所以奇异值是 $10$ 和 $5$。\n\n> **注意。** 奇异值是整列的长度 $\\sqrt{a^{2} + b^{2}}$，不是列中最大的元素，各列长度也不相加。先确认各列确实正交。",
   ],
   (rng) => {
     const [p, q, c] = rng.pick(triples);
@@ -1645,24 +1807,55 @@ const orthogonalColumns = point(
     const k = nz(rng, 4);
     const big = Math.max(Math.abs(m), Math.abs(k));
     const answer = big * c;
-    return ask(
-      [
-        `Find the largest singular value of $${mat([
-          [m * p, -k * q],
-          [m * q, k * p],
-        ])}$.`,
-        `求 $${mat([
-          [m * p, -k * q],
-          [m * q, k * p],
-        ])}$ 的最大奇异值。`,
-      ],
+    const A = [
+      [m * p, -k * q],
+      [m * q, k * p],
+    ];
+    return numberProblem({
+      prompt: text([`Find the largest singular value of $${mat(A)}$.`, `求 $${mat(A)}$ 的最大奇异值。`]),
       answer,
-      [big, (Math.abs(m) + Math.abs(k)) * c, big * Math.max(p, q)],
-      [
-        `The columns are orthogonal, with lengths $${Math.abs(m) * c}$ and $${Math.abs(k) * c}$. These are the singular values, and the larger is $${answer}$.`,
-        `各列正交，长度分别为 $${Math.abs(m) * c}$ 和 $${Math.abs(k) * c}$。这些就是奇异值，较大的是 $${answer}$。`,
+      mistakes: [
+        why(
+          big,
+          `$${big}$ is the factor in front of the triple; the column it scales has length $${big} \\cdot ${c} = ${answer}$.`,
+          `$${big}$ 只是勾股数前的倍数；它所乘的那一列长度为 $${big} \\cdot ${c} = ${answer}$。`,
+        ),
+        why(
+          (Math.abs(m) + Math.abs(k)) * c,
+          `That adds the two column lengths; each length is a singular value on its own, and the larger is $${answer}$.`,
+          `这是把两列的长度相加了；每个长度各自是一个奇异值，较大的是 $${answer}$。`,
+        ),
+        why(
+          big * Math.max(p, q),
+          `$${big * Math.max(p, q)}$ is the largest entry in absolute value, not the length of its column.`,
+          `$${big * Math.max(p, q)}$ 是绝对值最大的元素，不是所在列的长度。`,
+        ),
       ],
-    );
+      solution: walked(
+        [
+          [
+            ["Check that the columns are orthogonal", "确认各列正交"],
+            text(["", ""]),
+            [`${wrap(m * p)} \\cdot ${wrap(-k * q)} + ${wrap(m * q)} \\cdot ${wrap(k * p)} = 0`],
+          ],
+          [
+            ["Find the column lengths", "求各列长度"],
+            text(["", ""]),
+            [
+              `\\sqrt{${wrap(m * p)}^{2} + ${wrap(m * q)}^{2}} = ${Math.abs(m) * c}, \\quad \\sqrt{${wrap(-k * q)}^{2} + ${wrap(k * p)}^{2}} = ${Math.abs(k) * c}`,
+            ],
+          ],
+          [
+            ["Take the larger", "取较大的"],
+            text([`The lengths are the singular values, and the larger is $${answer}$.`, `这些长度就是奇异值，较大的是 $${answer}$。`]),
+          ],
+        ],
+        text([
+          `$A^{T}A$ is diagonal with entries $${m * m * c * c}$ and $${k * k * c * c}$, and the square root of the larger, $${big * big * c * c}$, is $${answer}$.`,
+          `$A^{T}A$ 是对角矩阵，对角元为 $${m * m * c * c}$ 和 $${k * k * c * c}$，较大者 $${big * big * c * c}$ 的平方根是 $${answer}$。`,
+        ]),
+      ),
+    });
   },
 );
 
