@@ -15,7 +15,7 @@ import { multivariableDrawings6 } from "../explanation-drawings-multivariable-6.
 import { multivariableDrawings8 } from "../explanation-drawings-multivariable-8.ts";
 
 import { explainedChoice, numberProblem, why } from "../problems.ts";
-import { ask, type Pair, point, same } from "../university-kit.ts";
+import { type Pair, point, same } from "../university-kit.ts";
 import { type Step, walked } from "./calculus-i-differentiation.ts";
 import { drawn } from "./figure-reading-more.ts";
 
@@ -2238,8 +2238,8 @@ const inertia = {
     "a-moment-of-inertia-of-a-drawn-rectangle",
     ["A moment of inertia of a drawn rectangle", "所画矩形的转动惯量"],
     [
-      "The moment of inertia about the $x$-axis weighs each piece by the square of its distance from that axis: $I_x = \\iint y^2 \\delta\\,dA$. For a rectangle $[0, a] \\times [0, b]$ of constant density this is $\\delta \\frac{a b^3}{3}$, and $I_y = \\delta \\frac{b a^3}{3}$.",
-      "绕 $x$ 轴的转动惯量按到该轴距离的平方加权：$I_x = \\iint y^2 \\delta\\,dA$。对常密度矩形 $[0, a] \\times [0, b]$，它等于 $\\delta \\frac{a b^3}{3}$，而 $I_y = \\delta \\frac{b a^3}{3}$。",
+      "The moment of inertia about the $x$-axis weighs each piece by the square of its distance from that axis: $I_x = \\iint y^2 \\delta\\,dA$. For a rectangle $[0, a] \\times [0, b]$ of constant density this is $\\delta \\frac{a b^3}{3}$, and $I_y = \\delta \\frac{b a^3}{3}$. For $[0, 7] \\times [0, 2]$ with $\\delta = 3$, $I_x = \\frac{3 \\cdot 7 \\cdot 8}{3} = 56$, while $I_y = \\frac{3 \\cdot 2 \\cdot 343}{3} = 686$.\n\n> **Watch out.** Cube the side that runs across the axis: for $I_x$ that is the height $b$, the distance from the $x$-axis. Squaring it gives the first moment instead, and the density multiplies everything.",
+      "绕 $x$ 轴的转动惯量按到该轴距离的平方加权：$I_x = \\iint y^2 \\delta\\,dA$。对常密度矩形 $[0, a] \\times [0, b]$，它等于 $\\delta \\frac{a b^3}{3}$，而 $I_y = \\delta \\frac{b a^3}{3}$。对 $\\delta = 3$ 的 $[0, 7] \\times [0, 2]$，$I_x = \\frac{3 \\cdot 7 \\cdot 8}{3} = 56$，而 $I_y = \\frac{3 \\cdot 2 \\cdot 343}{3} = 686$。\n\n> **注意。** 要把垂直于轴方向的边取三次方：对 $I_x$ 是高 $b$，即到 $x$ 轴的距离。只平方得到的是一阶矩，而且密度要乘到整个结果上。",
     ],
     (rng) => {
       const a = rng.int(1, 6);
@@ -2248,27 +2248,67 @@ const inertia = {
       const aboutX = rng.bool();
       const answer = Q.of(aboutX ? delta * a * b ** 3 : delta * b * a ** 3, 3);
       const other = Q.of(aboutX ? delta * b * a ** 3 : delta * a * b ** 3, 3);
-      return ask(
-        [
-          `The drawn rectangular lamina has constant density $\\delta = ${delta}$. Find its moment of inertia about the $${aboutX ? "x" : "y"}$-axis.`,
-          `所画矩形薄片的密度为常数 $\\delta = ${delta}$。求它绕 $${aboutX ? "x" : "y"}$ 轴的转动惯量。`,
-        ],
-        answer,
-        [other, Q.of(aboutX ? delta * a * b * b : delta * b * a * a, 2), delta * a * b, Q.of(aboutX ? a * b ** 3 : b * a ** 3, 3)],
-        [
-          aboutX
-            ? `$I_x = ${delta} \\int_0^{${a}} \\int_0^{${b}} y^2\\,dy\\,dx = ${delta} \\cdot ${a} \\cdot \\frac{${b ** 3}}{3} = ${answer.toLatex()}$.`
-            : `$I_y = ${delta} \\int_0^{${b}} \\int_0^{${a}} x^2\\,dx\\,dy = ${delta} \\cdot ${b} \\cdot \\frac{${a ** 3}}{3} = ${answer.toLatex()}$.`,
-          aboutX
-            ? `$I_x = ${delta} \\int_0^{${a}} \\int_0^{${b}} y^2\\,dy\\,dx = ${delta} \\cdot ${a} \\cdot \\frac{${b ** 3}}{3} = ${answer.toLatex()}$。`
-            : `$I_y = ${delta} \\int_0^{${b}} \\int_0^{${a}} x^2\\,dx\\,dy = ${delta} \\cdot ${b} \\cdot \\frac{${a ** 3}}{3} = ${answer.toLatex()}$。`,
-        ],
-        fig(
+      const across = aboutX ? b : a;
+      const along = aboutX ? a : b;
+      const mass = delta * a * b;
+      const v = aboutX ? "y" : "x";
+      return {
+        ...numberProblem({
+          prompt: t(
+            `The drawn rectangular lamina has constant density $\\delta = ${delta}$. Find its moment of inertia about the $${aboutX ? "x" : "y"}$-axis.`,
+            `所画矩形薄片的密度为常数 $\\delta = ${delta}$。求它绕 $${aboutX ? "x" : "y"}$ 轴的转动惯量。`,
+          ),
+          answer,
+          mistakes: apart(answer, [
+            why(
+              other,
+              `That is the moment about the other axis; the distance from the $${aboutX ? "x" : "y"}$-axis is $${v}$.`,
+              `那是绕另一条轴的转动惯量；到 $${aboutX ? "x" : "y"}$ 轴的距离是 $${v}$。`,
+            ),
+            why(
+              Q.of(mass * across, 2),
+              `That is the first moment $\\iint ${v}\\delta\\,dA$; the moment of inertia squares the distance.`,
+              `那是一阶矩 $\\iint ${v}\\delta\\,dA$；转动惯量要把距离平方。`,
+            ),
+            why(mass, "That is the mass; each piece must be weighted by its squared distance.", "那是质量；每一小块都要用距离的平方加权。"),
+            why(Q.of(a * b * across * across, 3), "That leaves out the density $\\delta$.", "那是漏掉了密度 $\\delta$。"),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Read the rectangle", "读出矩形"],
+                t(
+                  `The drawing shows $[0, ${a}] \\times [0, ${b}]$, so the side across the axis is $${across}$ and the side along it is $${along}$.`,
+                  `图中是 $[0, ${a}] \\times [0, ${b}]$，所以垂直于轴的边长为 $${across}$，沿轴的边长为 $${along}$。`,
+                ),
+              ],
+              [
+                ["Integrate the squared distance", "对距离平方积分"],
+                t(
+                  `$\\int_0^{${across}} ${v}^2\\,d${v} = ${Q.of(across ** 3, 3).toLatex()}$.`,
+                  `$\\int_0^{${across}} ${v}^2\\,d${v} = ${Q.of(across ** 3, 3).toLatex()}$。`,
+                ),
+              ],
+              [
+                ["Multiply", "相乘"],
+                t(
+                  `Multiplying by the other side $${along}$ and the density $${delta}$ gives $I_${aboutX ? "x" : "y"} = ${answer.toLatex()}$.`,
+                  `乘以另一边长 $${along}$ 和密度 $${delta}$，得 $I_${aboutX ? "x" : "y"} = ${answer.toLatex()}$。`,
+                ),
+              ],
+            ],
+            t(
+              `The mass is $M = ${mass}$, and the rule $\\frac{M s^2}{3}$ for a side of length $s$ across the axis gives $\\frac{${mass} \\cdot ${across * across}}{3} = ${answer.toLatex()}$.`,
+              `质量为 $M = ${mass}$，垂直于轴的边长为 $s$ 时的规则 $\\frac{M s^2}{3}$ 给出 $\\frac{${mass} \\cdot ${across * across}}{3} = ${answer.toLatex()}$。`,
+            ),
+          ),
+        }),
+        figure: fig(
           { xMin: -1, xMax: 7, yMin: -1, yMax: 7 },
           [{ kind: "polygon", points: rectangle(0, 0, a, b) }],
           [`A shaded rectangle from (0, 0) to (${a}, ${b}).`, `从 (0, 0) 到 (${a}, ${b}) 的阴影矩形。`],
         ),
-      );
+      };
     },
   ),
   figure: multivariableDrawings8["moments-of-inertia-of-laminas-about-the-coordinate-axes#a-moment-of-inertia-of-a-drawn-rectangle"],
@@ -2279,8 +2319,8 @@ const parallelAxis = {
     "the-parallel-axis-theorem-with-a-drawn-distance",
     ["The parallel axis theorem with a drawn distance", "用所画距离应用平行轴定理"],
     [
-      "If $I_c$ is the moment about an axis through the center of mass, then about a parallel axis at distance $d$ the moment is $I = I_c + M d^2$. The distance is measured between the axes, and the theorem only starts from the axis through the center of mass.",
-      "若 $I_c$ 是绕过质心轴的转动惯量，则绕距离为 $d$ 的平行轴的转动惯量为 $I = I_c + M d^2$。距离在两轴之间度量，定理必须从过质心的轴出发。",
+      "If $I_c$ is the moment about an axis through the center of mass, then about a parallel axis at distance $d$ the moment is $I = I_c + M d^2$. The distance is measured between the axes, and the theorem only starts from the axis through the center of mass. For mass $10$ with $I_c = 7$ about a dashed axis at $x = 1$, the solid axis at $x = 5$ is $4$ away, so $I = 7 + 10 \\cdot 16 = 167$.\n\n> **Watch out.** Read the distance as the gap between the two lines, square it, and multiply by the mass. Going toward the center of mass subtracts $Md^2$; going away from it adds.",
+      "若 $I_c$ 是绕过质心轴的转动惯量，则绕距离为 $d$ 的平行轴的转动惯量为 $I = I_c + M d^2$。距离在两轴之间度量，定理必须从过质心的轴出发。对质量 $10$、关于 $x = 1$ 处虚线轴的 $I_c = 7$，$x = 5$ 处的实线轴相距 $4$，所以 $I = 7 + 10 \\cdot 16 = 167$。\n\n> **注意。** 距离要读成两条线之间的间隔，再平方并乘以质量。移向质心时减去 $Md^2$，远离质心时加上。",
     ],
     (rng) => {
       const M = rng.int(2, 9);
@@ -2291,24 +2331,74 @@ const parallelAxis = {
       const up = rng.bool();
       const whole = Ic + M * size * size;
       const answer = up ? whole : Ic;
-      return ask(
-        [
-          up
-            ? `A lamina of mass $${M}$ has moment of inertia $${Ic}$ about the dashed axis through its center of mass. Find its moment about the solid parallel axis.`
-            : `A lamina of mass $${M}$ has moment of inertia $${whole}$ about the solid axis. The dashed parallel axis passes through its center of mass. Find its moment about the dashed axis.`,
-          up
-            ? `质量为 $${M}$ 的薄片绕过质心的虚线轴的转动惯量为 $${Ic}$。求它绕平行的实线轴的转动惯量。`
-            : `质量为 $${M}$ 的薄片绕实线轴的转动惯量为 $${whole}$。平行的虚线轴过它的质心。求它绕虚线轴的转动惯量。`,
-        ],
-        answer,
-        up
-          ? [Ic + M * size, Ic + size * size, Ic * size * size, M * size * size]
-          : [whole + M * size * size, whole - M * size, whole - size * size, M * size * size],
-        [
-          `The axes are $${size}$ apart, so $M d^2 = ${M} \\cdot ${size * size} = ${M * size * size}$, and ${up ? `$I = ${Ic} + ${M * size * size} = ${whole}$` : `$I_c = ${whole} - ${M * size * size} = ${Ic}$`}.`,
-          `两轴相距 $${size}$，所以 $M d^2 = ${M} \\cdot ${size * size} = ${M * size * size}$，${up ? `$I = ${Ic} + ${M * size * size} = ${whole}$` : `$I_c = ${whole} - ${M * size * size} = ${Ic}$`}。`,
-        ],
-        fig(
+      const shift = M * size * size;
+      return {
+        ...numberProblem({
+          prompt: up
+            ? t(
+                `A lamina of mass $${M}$ has moment of inertia $${Ic}$ about the dashed axis through its center of mass. Find its moment about the solid parallel axis.`,
+                `质量为 $${M}$ 的薄片绕过质心的虚线轴的转动惯量为 $${Ic}$。求它绕平行的实线轴的转动惯量。`,
+              )
+            : t(
+                `A lamina of mass $${M}$ has moment of inertia $${whole}$ about the solid axis. The dashed parallel axis passes through its center of mass. Find its moment about the dashed axis.`,
+                `质量为 $${M}$ 的薄片绕实线轴的转动惯量为 $${whole}$。平行的虚线轴过它的质心。求它绕虚线轴的转动惯量。`,
+              ),
+          answer,
+          mistakes: apart(
+            answer,
+            up
+              ? [
+                  why(Ic + M * size, "That forgets to square the distance; the shift is $Md^2$.", "那是忘了把距离平方；平移项是 $Md^2$。"),
+                  why(Ic + size * size, "That leaves out the mass in $Md^2$.", "那是漏掉了 $Md^2$ 中的质量。"),
+                  why(shift, "That is only the shift $Md^2$; add it to $I_c$.", "那只是平移项 $Md^2$；还要加上 $I_c$。"),
+                ]
+              : [
+                  why(
+                    whole + shift,
+                    "That adds $Md^2$; moving to the axis through the center of mass subtracts it.",
+                    "那是加上了 $Md^2$；移到过质心的轴要减去它。",
+                  ),
+                  why(
+                    whole - M * size,
+                    "That forgets to square the distance; the shift is $Md^2$.",
+                    "那是忘了把距离平方；平移项是 $Md^2$。",
+                  ),
+                  why(
+                    shift,
+                    "That is the shift $Md^2$, not the moment about the center of mass.",
+                    "那是平移项 $Md^2$，不是关于质心的转动惯量。",
+                  ),
+                ],
+          ),
+          solution: walked(
+            [
+              [
+                ["Read the distance", "读出距离"],
+                t(
+                  `The dashed axis is at $x = ${xc}$ and the solid axis at $x = ${xc + d}$, so they are $d = ${size}$ apart.`,
+                  `虚线轴在 $x = ${xc}$，实线轴在 $x = ${xc + d}$，所以两轴相距 $d = ${size}$。`,
+                ),
+              ],
+              [
+                ["Find the shift", "求平移项"],
+                t(`$Md^2 = ${M} \\cdot ${size * size} = ${shift}$.`, `$Md^2 = ${M} \\cdot ${size * size} = ${shift}$。`),
+              ],
+              up
+                ? [["Add", "相加"], t(`$I = ${Ic} + ${shift} = ${whole}$.`, `$I = ${Ic} + ${shift} = ${whole}$。`)]
+                : [["Subtract", "相减"], t(`$I_c = ${whole} - ${shift} = ${Ic}$.`, `$I_c = ${whole} - ${shift} = ${Ic}$。`)],
+            ],
+            up
+              ? t(
+                  `$${whole}$ is larger than $I_c = ${Ic}$, as it must be: the axis through the center of mass has the smallest moment.`,
+                  `$${whole}$ 大于 $I_c = ${Ic}$，理应如此：过质心的轴转动惯量最小。`,
+                )
+              : t(
+                  `$${Ic}$ is smaller than $${whole}$, as it must be, and adding $${shift}$ back gives $${whole}$.`,
+                  `$${Ic}$ 小于 $${whole}$，理应如此；再加回 $${shift}$ 又得 $${whole}$。`,
+                ),
+          ),
+        }),
+        figure: fig(
           7,
           [
             { kind: "line", a: [xc, 0], b: [xc, 1], dashed: true },
@@ -2319,7 +2409,7 @@ const parallelAxis = {
             `两条竖直线：虚线轴在 x = ${xc}，实线轴在 x = ${xc + d}。`,
           ],
         ),
-      );
+      };
     },
   ),
   figure: multivariableDrawings8["the-parallel-axis-theorem#the-parallel-axis-theorem-with-a-drawn-distance"],
@@ -2330,33 +2420,86 @@ const circularMotion = {
     "acceleration-on-a-drawn-circle",
     ["Acceleration on a drawn circle", "所画圆上的加速度"],
     [
-      "A particle moving around a circle of radius $R$ at constant speed $v$ has acceleration of size $\\frac{v^2}{R}$ pointing to the center. Its angular speed is $\\frac{v}{R}$.",
-      "沿半径 $R$ 的圆以恒定速率 $v$ 运动的质点，加速度大小为 $\\frac{v^2}{R}$，指向圆心。角速度为 $\\frac{v}{R}$。",
+      "A particle moving around a circle of radius $R$ at constant speed $v$ has acceleration of size $\\frac{v^2}{R}$ pointing to the center. Its angular speed is $\\frac{v}{R}$. On a circle of radius $8$ at speed $4$, the acceleration is $\\frac{16}{8} = 2$ and the angular speed is $\\frac{1}{2}$.\n\n> **Watch out.** The acceleration squares the speed but not the radius, and the angular speed is $\\frac{v}{R}$, not $\\frac{R}{v}$; read the radius from where the circle crosses an axis.",
+      "沿半径 $R$ 的圆以恒定速率 $v$ 运动的质点，加速度大小为 $\\frac{v^2}{R}$，指向圆心。角速度为 $\\frac{v}{R}$。在半径为 $8$ 的圆上以速率 $4$ 运动，加速度为 $\\frac{16}{8} = 2$，角速度为 $\\frac{1}{2}$。\n\n> **注意。** 加速度要把速率平方，但半径不平方；角速度是 $\\frac{v}{R}$ 而不是 $\\frac{R}{v}$；半径从圆与坐标轴的交点读出。",
     ],
     (rng) => {
       const R = rng.int(1, 6);
       const v = rng.int(2, 12);
       const kind = rng.pick(["acceleration", "angular"] as const);
-      const answer = kind === "acceleration" ? Q.of(v * v, R) : Q.of(v, R);
-      const asked: Pair =
-        kind === "acceleration" ? ["the size of its acceleration", "它的加速度大小"] : ["its angular speed", "它的角速度"];
-      return ask(
-        [
-          `A particle moves around the drawn circle about the origin at constant speed $v = ${v}$. Find ${asked[0]}.`,
-          `质点以恒定速率 $v = ${v}$ 沿所画的绕原点的圆运动。求${asked[1]}。`,
-        ],
-        answer,
-        [Q.of(v, R), Q.of(v * v, R), Q.of(v * v, R * R), v * R, Q.of(R, v)].filter((x) => !(x instanceof Q) || !x.eq(answer)),
-        [
-          `The radius is $${R}$, so the answer is $${kind === "acceleration" ? `\\frac{${v}^2}{${R}}` : `\\frac{${v}}{${R}}`} = ${answer.toLatex()}$.`,
-          `半径为 $${R}$，所以答案为 $${kind === "acceleration" ? `\\frac{${v}^2}{${R}}` : `\\frac{${v}}{${R}}`} = ${answer.toLatex()}$。`,
-        ],
-        fig(
+      const accel = kind === "acceleration";
+      const answer = accel ? Q.of(v * v, R) : Q.of(v, R);
+      const omega = Q.of(v, R);
+      const formula = accel ? (R === 1 ? `${v}^2` : `\\frac{${v}^2}{${R}}`) : R === 1 ? `${v}` : `\\frac{${v}}{${R}}`;
+      return {
+        ...numberProblem({
+          prompt: t(
+            `A particle moves around the drawn circle about the origin at constant speed $v = ${v}$. Find ${accel ? "the size of its acceleration" : "its angular speed"}.`,
+            `质点以恒定速率 $v = ${v}$ 沿所画的绕原点的圆运动。求${accel ? "它的加速度大小" : "它的角速度"}。`,
+          ),
+          answer,
+          mistakes: apart(
+            answer,
+            accel
+              ? [
+                  why(
+                    Q.of(v, R),
+                    "That is the angular speed $\\frac{v}{R}$; the acceleration squares the speed.",
+                    "那是角速度 $\\frac{v}{R}$；加速度要把速率平方。",
+                  ),
+                  why(
+                    Q.of(v * v, R * R),
+                    "That divides by the radius twice; the acceleration is $\\frac{v^2}{R}$.",
+                    "那是除了两次半径；加速度是 $\\frac{v^2}{R}$。",
+                  ),
+                  why(v * R, "That multiplies by the radius; the acceleration divides by it.", "那是乘以了半径；加速度要除以半径。"),
+                ]
+              : [
+                  why(
+                    Q.of(v * v, R),
+                    "That is the acceleration $\\frac{v^2}{R}$; the angular speed is $\\frac{v}{R}$.",
+                    "那是加速度 $\\frac{v^2}{R}$；角速度是 $\\frac{v}{R}$。",
+                  ),
+                  why(Q.of(R, v), "That is upside down; the angular speed is $\\frac{v}{R}$.", "那是颠倒了；角速度是 $\\frac{v}{R}$。"),
+                  why(v * R, "That multiplies by the radius; the angular speed divides by it.", "那是乘以了半径；角速度要除以半径。"),
+                ],
+          ),
+          solution: walked(
+            [
+              [
+                ["Read the radius", "读出半径"],
+                t(
+                  `The circle crosses the axes at distance $${R}$ from the origin, so $R = ${R}$.`,
+                  `圆与坐标轴交于距原点 $${R}$ 处，所以 $R = ${R}$。`,
+                ),
+              ],
+              [
+                ["Use the formula", "用公式"],
+                accel
+                  ? t(`$\\frac{v^2}{R} = ${formula} = ${answer.toLatex()}$.`, `$\\frac{v^2}{R} = ${formula} = ${answer.toLatex()}$。`)
+                  : t(
+                      `$\\omega = \\frac{v}{R} = ${formula} = ${answer.toLatex()}$.`,
+                      `$\\omega = \\frac{v}{R} = ${formula} = ${answer.toLatex()}$。`,
+                    ),
+              ],
+            ],
+            accel
+              ? t(
+                  `The angular speed is $\\omega = ${omega.toLatex()}$, and $\\omega^2R = ${Q.of(v * v, R * R).toLatex()}$ times the radius $${R}$, which is $${answer.toLatex()}$, the same.`,
+                  `角速度为 $\\omega = ${omega.toLatex()}$，$\\omega^2R$ 是 $${Q.of(v * v, R * R).toLatex()}$ 乘以半径 $${R}$，即 $${answer.toLatex()}$，结果相同。`,
+                )
+              : t(
+                  `Multiplying $\\omega = ${answer.toLatex()}$ by the radius $${R}$ gives back the speed $${v}$.`,
+                  `用 $\\omega = ${answer.toLatex()}$ 乘以半径 $${R}$，得回速率 $${v}$。`,
+                ),
+          ),
+        }),
+        figure: fig(
           7,
           [{ kind: "circle", center: [0, 0], r: R, accent: true }],
           [`A circle about the origin with radius ${R}.`, `以原点为圆心、半径为 ${R} 的圆。`],
         ),
-      );
+      };
     },
   ),
   figure: multivariableDrawings8["circular-motion-about-the-origin#acceleration-on-a-drawn-circle"],
@@ -2366,8 +2509,8 @@ const accelerationComponent = point(
   "the-tangential-acceleration-from-drawn-arrows",
   ["The tangential acceleration from drawn arrows", "由所画箭头求切向加速度"],
   [
-    "The tangential component of acceleration is the projection of $a$ onto the direction of $v$: $a_T = \\frac{a \\cdot v}{\\lVert v \\rVert}$. The normal component is what remains: $a_N = \\frac{\\lvert a \\times v \\rvert}{\\lVert v \\rVert}$.",
-    "加速度的切向分量是 $a$ 在 $v$ 方向上的投影：$a_T = \\frac{a \\cdot v}{\\lVert v \\rVert}$。法向分量是其余部分：$a_N = \\frac{\\lvert a \\times v \\rvert}{\\lVert v \\rVert}$。",
+    "The tangential component of acceleration is the projection of $a$ onto the direction of $v$: $a_T = \\frac{a \\cdot v}{\\lVert v \\rVert}$. The normal component is what remains: $a_N = \\frac{\\lvert a \\times v \\rvert}{\\lVert v \\rVert}$. For $v = (6, 8)$ and $a = (1, 2)$, $\\lVert v \\rVert = 10$, $a \\cdot v = 6 + 16 = 22$ and $a \\times v = 8 - 12 = -4$, so $a_T = \\frac{22}{10} = \\frac{11}{5}$ and $a_N = \\frac{4}{10} = \\frac{2}{5}$. As a check, $a_T^2 + a_N^2 = \\frac{484 + 16}{100} = 5 = \\lVert a \\rVert^2$.\n\n> **Watch out.** Divide by the length of $v$ once, not by its square; $a_T$ keeps its sign (negative means slowing down), while $a_N$ is a size and is never negative.",
+    "加速度的切向分量是 $a$ 在 $v$ 方向上的投影：$a_T = \\frac{a \\cdot v}{\\lVert v \\rVert}$。法向分量是其余部分：$a_N = \\frac{\\lvert a \\times v \\rvert}{\\lVert v \\rVert}$。对 $v = (6, 8)$、$a = (1, 2)$，$\\lVert v \\rVert = 10$，$a \\cdot v = 6 + 16 = 22$，$a \\times v = 8 - 12 = -4$，所以 $a_T = \\frac{22}{10} = \\frac{11}{5}$，$a_N = \\frac{4}{10} = \\frac{2}{5}$。检验：$a_T^2 + a_N^2 = \\frac{484 + 16}{100} = 5 = \\lVert a \\rVert^2$。\n\n> **注意。** 只除一次 $v$ 的长度，不要除以它的平方；$a_T$ 保留符号（为负表示在减速），而 $a_N$ 是大小，永不为负。",
   ],
   (rng) => {
     const [p, q, L] = rng.pick<[number, number, number]>([
@@ -2381,22 +2524,69 @@ const accelerationComponent = point(
     const tangent = rng.bool();
     const top = tangent ? dot(a, v) : Math.abs(cross(a, v));
     const answer = Q.of(top, L);
-    return ask(
-      [
-        `At one instant the arrows show the velocity $v$ and the acceleration $a$ of a particle. Find the ${tangent ? "tangential" : "normal"} component of acceleration${tangent ? ", with its sign" : ""}.`,
-        `在某一瞬间，箭头表示质点的速度 $v$ 和加速度 $a$。求加速度的${tangent ? "切向分量（带符号）" : "法向分量"}。`,
-      ],
-      answer,
-      [top, Q.of(top, L * L), Q.of(tangent ? Math.abs(cross(a, v)) : dot(a, v), L), Q.of(-top, L)],
-      [
-        tangent
-          ? `$v = ${at(v)}$ and $a = ${at(a)}$, so $a_T = \\frac{a \\cdot v}{${L}} = \\frac{${top}}{${L}} = ${answer.toLatex()}$.`
-          : `$v = ${at(v)}$ and $a = ${at(a)}$, so $a_N = \\frac{\\lvert a \\times v \\rvert}{${L}} = \\frac{${top}}{${L}} = ${answer.toLatex()}$.`,
-        tangent
-          ? `$v = ${at(v)}$，$a = ${at(a)}$，所以 $a_T = \\frac{a \\cdot v}{${L}} = \\frac{${top}}{${L}} = ${answer.toLatex()}$。`
-          : `$v = ${at(v)}$，$a = ${at(a)}$，所以 $a_N = \\frac{\\lvert a \\times v \\rvert}{${L}} = \\frac{${top}}{${L}} = ${answer.toLatex()}$。`,
-      ],
-      fig(
+    const d = dot(a, v);
+    const c = cross(a, v);
+    const other = tangent ? Math.abs(c) : d;
+    const plus = (x: number, y: number): string => (y < 0 ? `${x} - ${-y}` : `${x} + ${y}`);
+    const work = tangent
+      ? `a \\cdot v = ${plus(a[0] * v[0], a[1] * v[1])} = ${d}`
+      : `a \\times v = ${plus(a[0] * v[1], -(a[1] * v[0]))} = ${c}`;
+    return {
+      ...numberProblem({
+        prompt: t(
+          `At one instant the arrows show the velocity $v$ and the acceleration $a$ of a particle. Find the ${tangent ? "tangential" : "normal"} component of acceleration${tangent ? ", with its sign" : ""}.`,
+          `在某一瞬间，箭头表示质点的速度 $v$ 和加速度 $a$。求加速度的${tangent ? "切向分量（带符号）" : "法向分量"}。`,
+        ),
+        answer,
+        mistakes: apart(answer, [
+          why(top, `That forgets to divide by $\\lVert v \\rVert = ${L}$.`, `那是忘了除以 $\\lVert v \\rVert = ${L}$。`),
+          why(
+            Q.of(top, L * L),
+            `That divides by $\\lVert v \\rVert^2 = ${L * L}$; the component divides by the length once.`,
+            `那是除以了 $\\lVert v \\rVert^2 = ${L * L}$；分量只除一次长度。`,
+          ),
+          why(
+            Q.of(other, L),
+            tangent
+              ? "That is the normal component, from the cross product; the tangential one uses the dot product."
+              : "That is the tangential component, from the dot product; the normal one uses the cross product.",
+            tangent ? "那是由叉积得到的法向分量；切向分量用点积。" : "那是由点积得到的切向分量；法向分量用叉积。",
+          ),
+          why(
+            Q.of(-top, L),
+            tangent
+              ? "That flips the sign; the sign of $a \\cdot v$ says whether the particle speeds up or slows down."
+              : "The normal component is a size, so it is never negative.",
+            tangent ? "那是把符号弄反了；$a \\cdot v$ 的符号说明质点是在加速还是减速。" : "法向分量是大小，永不为负。",
+          ),
+        ]),
+        solution: walked(
+          [
+            [
+              ["Read the arrows", "读出箭头"],
+              t(
+                `$v = ${at(v)}$ with $\\lVert v \\rVert = ${L}$, and $a = ${at(a)}$.`,
+                `$v = ${at(v)}$，$\\lVert v \\rVert = ${L}$；$a = ${at(a)}$。`,
+              ),
+            ],
+            [[tangent ? "Take the dot product" : "Take the cross product", tangent ? "求点积" : "求叉积"], t(`$${work}$.`, `$${work}$。`)],
+            [
+              ["Divide by the speed", "除以速率"],
+              tangent
+                ? t(`$a_T = \\frac{${d}}{${L}} = ${answer.toLatex()}$.`, `$a_T = \\frac{${d}}{${L}} = ${answer.toLatex()}$。`)
+                : t(
+                    `$a_N = \\frac{\\lvert ${c} \\rvert}{${L}} = ${answer.toLatex()}$.`,
+                    `$a_N = \\frac{\\lvert ${c} \\rvert}{${L}} = ${answer.toLatex()}$。`,
+                  ),
+            ],
+          ],
+          t(
+            `$a_T^2 + a_N^2 = \\frac{${d * d} + ${c * c}}{${L * L}} = ${a[0] * a[0] + a[1] * a[1]}$, which is $\\lVert a \\rVert^2 = ${a[0] * a[0]} + ${a[1] * a[1]}$.`,
+            `$a_T^2 + a_N^2 = \\frac{${d * d} + ${c * c}}{${L * L}} = ${a[0] * a[0] + a[1] * a[1]}$，正是 $\\lVert a \\rVert^2 = ${a[0] * a[0]} + ${a[1] * a[1]}$。`,
+          ),
+        ),
+      }),
+      figure: fig(
         6,
         [
           { kind: "arrow", from: [0, 0], to: v, accent: true },
@@ -2409,7 +2599,7 @@ const accelerationComponent = point(
           `从同一点出发的箭头：v 的坐标为 ${at(v)}，a 的坐标为 ${at(a)}。`,
         ],
       ),
-    );
+    };
   },
 );
 

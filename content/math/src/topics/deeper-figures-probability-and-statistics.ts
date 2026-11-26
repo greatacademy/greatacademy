@@ -1,27 +1,34 @@
 // Knowledge points of Probability and Statistics that ask the learner to read a drawing: density curves, shaded normal
 // areas, scatter plots and histograms. See `deeperFiguresProbabilityCalculusPoints` and `deeperFiguresProbabilityCollegePoints`.
 
-import type { KnowledgePointDef, Rng } from "@ga/content";
+import type { KnowledgePointDef, Rng, Text } from "@ga/content";
 import { t } from "@ga/content";
 import type { PlaneMark, Point } from "@ga/subject-math";
 import { Q } from "@ga/subject-math";
 import { multivariableDrawings8 } from "../explanation-drawings-multivariable-8.ts";
 import { precalculusDrawings4 } from "../explanation-drawings-precalculus-4.ts";
 import { probabilityDrawings1 } from "../explanation-drawings-probability-and-statistics-1.ts";
-import { withMistakes } from "../problems.ts";
+import { numberProblem, why, withMistakes } from "../problems.ts";
 
 import { ask, choose, type Pair, point, same } from "../university-kit.ts";
 import { type Reason, reasoned } from "../wrong-reasons.ts";
+import { walked } from "./calculus-i-differentiation.ts";
 import { bars, chart, curvePath, intTicks, normal, shadeUnder, tenthTicks } from "./figure-charts.ts";
 import { drawn, label } from "./figure-reading-more.ts";
+
+/** apart drops explained mistakes that equal the answer or repeat an earlier one. */
+const apart = (answer: Q, mistakes: readonly { readonly value: number | Q; readonly why: Text }[]) => {
+  const key = (v: number | Q) => (typeof v === "number" ? Q.of(v) : v).toLatex();
+  return mistakes.filter((m, i, all) => key(m.value) !== key(answer) && all.findIndex((x) => key(x.value) === key(m.value)) === i);
+};
 
 const densityHeight = {
   ...point(
     "the-height-that-makes-a-density",
     ["The height that makes a density", "使密度成立的高度"],
     [
-      "A probability density must enclose a total area of one. So when a graph has a single unknown height $k$, the area under the drawn shape gives an equation for it. A rectangle has area base times height, a triangle has half of that, and a trapezoid has the average of its parallel sides times its height.",
-      "概率密度围成的总面积必须为一。所以当图只有一个未知高度 $k$ 时，所画形状下的面积给出它的方程。矩形面积是底乘高，三角形是它的一半，梯形是两条平行边的平均乘以高。",
+      "A probability density must enclose a total area of one. So when a graph has a single unknown height $k$, the area under the drawn shape gives an equation for it. A rectangle has area base times height, a triangle has half of that, and a trapezoid has the average of its parallel sides times its height. A triangle on $[1, 9]$ has area $\\frac{1}{2} \\cdot 8 \\cdot k = 4k$, so $k = \\frac{1}{4}$.\n\n> **Watch out.** $k$ is the reciprocal of the area of the shape with height one, not that area itself; and a triangle's area has the factor $\\frac{1}{2}$, which a rectangle's does not.",
+      "概率密度围成的总面积必须为一。所以当图只有一个未知高度 $k$ 时，所画形状下的面积给出它的方程。矩形面积是底乘高，三角形是它的一半，梯形是两条平行边的平均乘以高。$[1, 9]$ 上的三角形面积为 $\\frac{1}{2} \\cdot 8 \\cdot k = 4k$，所以 $k = \\frac{1}{4}$。\n\n> **注意。** $k$ 是高度为一时形状面积的倒数，不是这个面积本身；三角形面积有因子 $\\frac{1}{2}$，矩形没有。",
     ],
     (rng) => {
       const a = rng.int(0, 3);
@@ -61,30 +68,97 @@ const densityHeight = {
         (x, y) =>
           `<polygon class="accent" stroke="currentColor" fill-opacity="0.2" fill="currentColor" points="${pts.map(([u, v]) => `${x(u)},${y(v)}`).join(" ")}"/>`,
       );
-      return ask(
-        [
-          "The graph shows the density of a random variable, which is zero outside the shape drawn. What is the height $k$?",
-          "图中是某随机变量的密度，在所画形状之外为零。高度 $k$ 是多少？",
-        ],
-        k,
-        [
-          Q.of(1, width + 1),
-          Q.of(2, width + (shape === "triangle" ? 1 : 0)),
-          Q.of(1, 1).eq(k) ? Q.of(1, 3) : Q.of(1, 1),
-          Q.of(width, 2).eq(k) ? Q.of(3, 1) : Q.of(width, 2),
-        ],
-        [
-          `The shape is ${name[0]} with base $${width}$. Its area, written in terms of $k$, must equal one, which gives $k = ${k.toLatex()}$.`,
-          `这个形状是底为 $${width}$ 的${name[1]}。用 $k$ 表示的面积必须等于一，于是 $k = ${k.toLatex()}$。`,
-        ],
-        {
+      const kl = k.toLatex();
+      const areaK = area.eq(Q.one) ? "k" : `${area.toLatex()}k`;
+      const formula =
+        shape === "rectangle"
+          ? `${width}k`
+          : shape === "triangle"
+            ? `\\frac{1}{2} \\cdot ${width} \\cdot k = ${areaK}`
+            : `\\frac{${width} + ${width - 2}}{2} \\cdot k = ${areaK}`;
+      const check =
+        shape === "rectangle"
+          ? `${width} \\cdot ${kl}`
+          : shape === "triangle"
+            ? `\\frac{1}{2} \\cdot ${width} \\cdot ${kl}`
+            : `\\frac{${width} + ${width - 2}}{2} \\cdot ${kl}`;
+      const mistakes =
+        shape === "rectangle"
+          ? [
+              why(
+                Q.of(2, width),
+                "That uses the triangle formula; a rectangle's area is base times height.",
+                "那是用了三角形公式；矩形面积是底乘高。",
+              ),
+              why(
+                Q.of(1, width + 1),
+                "That takes the base one too long; it runs from $a$ to $b$, a length of $b - a$.",
+                "那是把底多算了一；它从 $a$ 到 $b$，长度为 $b - a$。",
+              ),
+              why(
+                Q.of(width, 1),
+                "That is the area of the shape with height one; $k$ is its reciprocal.",
+                "那是高度为一时的面积；$k$ 是它的倒数。",
+              ),
+            ]
+          : shape === "triangle"
+            ? [
+                why(
+                  Q.of(1, width),
+                  "That leaves out the $\\frac{1}{2}$ in a triangle's area.",
+                  "那是漏掉了三角形面积中的 $\\frac{1}{2}$。",
+                ),
+                why(
+                  Q.of(1, 2 * width),
+                  "That divides by two instead of solving $\\frac{1}{2} \\cdot b \\cdot k = 1$.",
+                  "那是除以二，而不是解 $\\frac{1}{2} \\cdot b \\cdot k = 1$。",
+                ),
+                why(
+                  Q.of(width, 2),
+                  "That is the area of the shape with height one; $k$ is its reciprocal.",
+                  "那是高度为一时的面积；$k$ 是它的倒数。",
+                ),
+              ]
+            : [
+                why(Q.of(1, width), "That treats the trapezoid as a rectangle on the whole base.", "那是把梯形当成了整个底上的矩形。"),
+                why(Q.of(2, width), "That treats the trapezoid as a triangle on the base.", "那是把梯形当成了底上的三角形。"),
+                why(
+                  Q.of(1, width - 2),
+                  "That uses only the top side; average the two parallel sides.",
+                  "那是只用了上底；要取两条平行边的平均。",
+                ),
+              ];
+      return {
+        ...numberProblem({
+          prompt: t(
+            "The graph shows the density of a random variable, which is zero outside the shape drawn. What is the height $k$?",
+            "图中是某随机变量的密度，在所画形状之外为零。高度 $k$ 是多少？",
+          ),
+          answer: k,
+          mistakes: apart(k, mistakes),
+          solution: walked(
+            [
+              [
+                ["Read the shape", "读出形状"],
+                t(
+                  `The shape is ${name[0]} on $[${a}, ${b}]$, with base $${width}$.`,
+                  `这个形状是 $[${a}, ${b}]$ 上的${name[1]}，底为 $${width}$。`,
+                ),
+              ],
+              [["Write its area", "写出面积"], t(`Its area is $${formula}$.`, `它的面积为 $${formula}$。`)],
+              [["Set the area to one", "令面积为一"], t(`$${areaK} = 1$, so $k = ${kl}$.`, `$${areaK} = 1$，所以 $k = ${kl}$。`)],
+            ],
+            t(`With $k = ${kl}$, the area is $${check} = 1$.`, `取 $k = ${kl}$，面积为 $${check} = 1$。`),
+          ),
+        }),
+        figure: {
           svg,
           alt: t(
             `A density shaped as ${name[0]} on the interval from ${a} to ${b}, with height k.`,
             `从 ${a} 到 ${b} 的区间上形状为${name[1]}的密度，高度为 k。`,
           ),
         },
-      );
+      };
     },
   ),
   figure: multivariableDrawings8["probability-density-functions-of-continuous-random-variables#the-height-that-makes-a-density"],
@@ -105,8 +179,8 @@ const shadedStepProbability = {
     "a-probability-shaded-under-a-step-density",
     ["A probability shaded under a step density", "阶梯密度下阴影表示的概率"],
     [
-      "For a continuous random variable, the probability of an interval is the area under the density over that interval. When the density is a set of steps, this area is a sum of rectangles, each with its height read from the vertical axis. The height alone is not a probability, so it must be multiplied by the width.",
-      "对连续随机变量，一个区间的概率是密度在该区间上的面积。当密度是一些阶梯时，这个面积是若干矩形之和，每个矩形的高度从纵轴读出。高度本身不是概率，必须乘以宽度。",
+      "For a continuous random variable, the probability of an interval is the area under the density over that interval. When the density is a set of steps, this area is a sum of rectangles, each with its height read from the vertical axis. The height alone is not a probability, so it must be multiplied by the width. With steps of width $2$ and heights $0.15$, $0.25$, $0.1$ on $[0, 6]$, $P(2 \\le X \\le 6) = 2(0.25) + 2(0.1) = 0.7$.\n\n> **Watch out.** Add the areas of all the shaded steps, not just the tallest, and do not average the heights; the unshaded area is the probability of the complement.",
+      "对连续随机变量，一个区间的概率是密度在该区间上的面积。当密度是一些阶梯时，这个面积是若干矩形之和，每个矩形的高度从纵轴读出。高度本身不是概率，必须乘以宽度。若阶梯宽为 $2$，在 $[0, 6]$ 上高度为 $0.15$、$0.25$、$0.1$，则 $P(2 \\le X \\le 6) = 2(0.25) + 2(0.1) = 0.7$。\n\n> **注意。** 要把所有阴影阶梯的面积相加，不能只取最高的，也不能把高度取平均；未加阴影的面积是对立事件的概率。",
     ],
     (rng) => {
       const n = rng.int(3, 6);
@@ -126,26 +200,68 @@ const shadedStepProbability = {
           shade += `<rect class="accent" fill="currentColor" fill-opacity="0.3" stroke="none" x="${x(i)}" y="${y(heights[i] as number)}" width="${x(1) - x(0)}" height="${y(0) - y(heights[i] as number)}"/>`;
         return shade + bars(cuts, heights, x, y);
       });
-      return ask(
-        ["The graph shows a step density. What is the probability of the shaded event?", "图中是一个阶梯密度。阴影事件的概率是多少？"],
-        P,
-        [
-          Q.of(other === sum ? other + 1 : other, 10),
-          Q.of(Math.max(...parts), 10).eq(P) ? P.add(Q.of(1, 10)) : Q.of(Math.max(...parts), 10),
-          Q.of(sum, 5).eq(P) ? Q.of(1, 5) : Q.of(sum, 5),
-        ],
-        [
-          `Each shaded rectangle has width $1$, so the shaded area is the sum of the heights, in tenths: $${parts.join(" + ")}$ tenths, which is $${P.toLatex()}$.`,
-          `每个阴影矩形宽度为 $1$，所以阴影面积是高度之和，以十分之一为单位：$${parts.join(" + ")}$，即 $${P.toLatex()}$。`,
-        ],
-        {
+      const shaded = parts.map((v) => (v / 10).toString()).join(" + ");
+      return {
+        ...numberProblem({
+          prompt: t(
+            "The graph shows a step density. What is the probability of the shaded event?",
+            "图中是一个阶梯密度。阴影事件的概率是多少？",
+          ),
+          answer: P,
+          mistakes: apart(P, [
+            why(
+              Q.of(other, 10),
+              "That is the unshaded area, the probability of the other values.",
+              "那是未加阴影的面积，即其余取值的概率。",
+            ),
+            why(
+              Q.of(Math.max(...parts), 10),
+              "That reads only the tallest shaded step; add the areas of all the shaded steps.",
+              "那是只读了最高的阴影阶梯；要把所有阴影阶梯的面积相加。",
+            ),
+            why(
+              Q.of(sum, 10 * (d - c)),
+              "That averages the heights; a probability adds the areas of the steps.",
+              "那是把高度取平均；概率要把各阶梯的面积相加。",
+            ),
+            why(Q.of(sum, 5), "That doubles the area; each step is one unit wide.", "那是把面积加倍了；每个阶梯宽一个单位。"),
+            why(
+              Q.of(d - c, n),
+              "That counts the share of steps shaded, as if the density were flat.",
+              "那是数阴影阶梯所占的比例，好像密度是常数。",
+            ),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Read the heights", "读出高度"],
+                t(
+                  `The shaded steps run from $${c}$ to $${d}$, with heights $${parts.map((v) => (v / 10).toString()).join(", ")}$.`,
+                  `阴影阶梯从 $${c}$ 到 $${d}$，高度为 $${parts.map((v) => (v / 10).toString()).join(", ")}$。`,
+                ),
+              ],
+              [
+                ["Add the areas", "面积相加"],
+                t(
+                  `Each step has width one, so its area equals its height: $P = ${shaded} = ${P.toLatex()}$.`,
+                  `每个阶梯宽为一，面积等于高度：$P = ${shaded} = ${P.toLatex()}$。`,
+                ),
+              ],
+            ],
+            t(
+              `The unshaded steps have area $${Q.of(other, 10).toLatex()}$, and $${P.toLatex()} + ${Q.of(other, 10).toLatex()} = 1$, the total area of a density.`,
+              `未加阴影的阶梯面积为 $${Q.of(other, 10).toLatex()}$，而 $${P.toLatex()} + ${Q.of(other, 10).toLatex()} = 1$，正是密度的总面积。`,
+            ),
+          ),
+        }),
+        figure: {
           svg,
           alt: t(
             `A step density with heights ${heights.join(", ")} on unit intervals from 0, shaded from ${c} to ${d}.`,
             `从 0 开始的单位区间上的阶梯密度，高度为 ${heights.join("，")}，从 ${c} 到 ${d} 有阴影。`,
           ),
         },
-      );
+      };
     },
   ),
   figure: multivariableDrawings8["calculating-probabilities-with-continuous-random-variables#a-probability-shaded-under-a-step-density"],
@@ -745,8 +861,8 @@ const jointRectangle = {
     "a-joint-probability-from-a-shaded-rectangle",
     ["A joint probability from a shaded rectangle", "由阴影矩形读联合概率"],
     [
-      "A pair uniform on a rectangle has a joint density equal to one divided by the area of the rectangle. So the probability of an event is its area divided by the area of the rectangle. A drawing shows the event directly, and a region like a corner triangle is handled by the same ratio of areas.",
-      "在矩形上均匀分布的一对变量，联合密度等于一除以矩形的面积。所以事件的概率是它的面积除以矩形的面积。图直接显示事件，像角上的三角形这样的区域也用同样的面积比处理。",
+      "A pair uniform on a rectangle has a joint density equal to one divided by the area of the rectangle. So the probability of an event is its area divided by the area of the rectangle. A drawing shows the event directly, and a region like a corner triangle is handled by the same ratio of areas. On a $10 \\times 4$ rectangle, a corner triangle with legs $5$ and $2$ has area $5$, so its probability is $\\frac{5}{40} = \\frac{1}{8}$.\n\n> **Watch out.** Divide areas, not lengths along one side; and a corner triangle has half the area of the rectangle with the same legs.",
+      "在矩形上均匀分布的一对变量，联合密度等于一除以矩形的面积。所以事件的概率是它的面积除以矩形的面积。图直接显示事件，像角上的三角形这样的区域也用同样的面积比处理。在 $10 \\times 4$ 的矩形上，两直角边为 $5$ 与 $2$ 的角上三角形面积为 $5$，所以概率为 $\\frac{5}{40} = \\frac{1}{8}$。\n\n> **注意。** 要比较面积，而不是某一边上的长度；角上的三角形面积是同样两边矩形的一半。",
     ],
     (rng) => {
       const a = rng.int(3, 8);
@@ -768,23 +884,83 @@ const jointRectangle = {
             [p, q],
             [0, q],
           ];
-      return ask(
-        [
-          "The pair $(X, Y)$ is uniform on the outlined rectangle. What is the probability that it lands in the shaded region?",
-          "$(X, Y)$ 在画出的矩形上均匀分布。它落在阴影区域内的概率是多少？",
-        ],
-        P,
-        [
-          Q.of(areaDoubled, 2 * (a + b)),
-          Q.of(p, a),
-          Q.of(q, b).eq(P) ? P.add(Q.of(1, a * b)) : Q.of(q, b),
-          Q.of(p * q, a * b).eq(P) ? Q.of(p * q, 2 * a * b) : Q.of(p * q, a * b),
-        ],
-        [
-          `The rectangle has area $${a * b}$ and the shaded ${triangle ? "triangle" : "rectangle"} has area $${Q.of(areaDoubled, 2).toLatex()}$. The density is constant, so the probability is the ratio of the areas, $${P.toLatex()}$.`,
-          `矩形面积是 $${a * b}$，阴影${triangle ? "三角形" : "矩形"}面积是 $${Q.of(areaDoubled, 2).toLatex()}$。密度为常数，所以概率是面积之比 $${P.toLatex()}$。`,
-        ],
-        drawn(
+      const shadedArea = Q.of(areaDoubled, 2);
+      return {
+        ...numberProblem({
+          prompt: t(
+            "The pair $(X, Y)$ is uniform on the outlined rectangle. What is the probability that it lands in the shaded region?",
+            "$(X, Y)$ 在画出的矩形上均匀分布。它落在阴影区域内的概率是多少？",
+          ),
+          answer: P,
+          mistakes: apart(P, [
+            why(
+              Q.of(areaDoubled, 2 * (a + b)),
+              "That divides by the sum of the sides; divide by the area of the rectangle.",
+              "那是除以两边之和；要除以矩形的面积。",
+            ),
+            why(
+              Q.of(p, a),
+              "That compares only the lengths along $x$; a probability here is a ratio of areas.",
+              "那是只比较了沿 $x$ 的长度；这里的概率是面积之比。",
+            ),
+            why(
+              Q.of(q, b),
+              "That compares only the lengths along $y$; a probability here is a ratio of areas.",
+              "那是只比较了沿 $y$ 的长度；这里的概率是面积之比。",
+            ),
+            triangle
+              ? why(
+                  Q.of(p * q, a * b),
+                  "That uses the rectangle with the same legs; the triangle has half its area.",
+                  "那是用了同样两边的矩形；三角形面积只有它的一半。",
+                )
+              : why(
+                  Q.of(p * q, 2 * a * b),
+                  "That halves the area as for a triangle; the shaded region is a rectangle.",
+                  "那是像三角形一样把面积减半；阴影区域是矩形。",
+                ),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Find the density", "求密度"],
+                t(
+                  `The rectangle has area $${a} \\cdot ${b} = ${a * b}$, so the joint density is $\\frac{1}{${a * b}}$.`,
+                  `矩形面积为 $${a} \\cdot ${b} = ${a * b}$，所以联合密度为 $\\frac{1}{${a * b}}$。`,
+                ),
+              ],
+              [
+                ["Find the shaded area", "求阴影面积"],
+                triangle
+                  ? t(
+                      `The shaded triangle has legs $${p}$ and $${q}$, so its area is $\\frac{${p * q}}{2} = ${shadedArea.toLatex()}$.`,
+                      `阴影三角形两直角边为 $${p}$ 与 $${q}$，面积为 $\\frac{${p * q}}{2} = ${shadedArea.toLatex()}$。`,
+                    )
+                  : t(
+                      `The shaded rectangle has sides $${p}$ and $${q}$, so its area is $${shadedArea.toLatex()}$.`,
+                      `阴影矩形两边为 $${p}$ 与 $${q}$，面积为 $${shadedArea.toLatex()}$。`,
+                    ),
+              ],
+              [
+                ["Divide", "相除"],
+                t(
+                  `$P = \\frac{${shadedArea.toLatex()}}{${a * b}} = ${P.toLatex()}$.`,
+                  `$P = \\frac{${shadedArea.toLatex()}}{${a * b}} = ${P.toLatex()}$。`,
+                ),
+              ],
+            ],
+            triangle
+              ? t(
+                  `The rectangle with the same legs would give $${Q.of(p, a).toLatex()} \\cdot ${Q.of(q, b).toLatex()} = ${Q.of(p * q, a * b).toLatex()}$, and the triangle is half of it, $${P.toLatex()}$.`,
+                  `同样两边的矩形给出 $${Q.of(p, a).toLatex()} \\cdot ${Q.of(q, b).toLatex()} = ${Q.of(p * q, a * b).toLatex()}$，三角形是它的一半，即 $${P.toLatex()}$。`,
+                )
+              : t(
+                  `$X$ and $Y$ are independent here, and $P(X \\le ${p})P(Y \\le ${q}) = ${Q.of(p, a).toLatex()} \\cdot ${Q.of(q, b).toLatex()} = ${P.toLatex()}$.`,
+                  `这里 $X$ 与 $Y$ 独立，而 $P(X \\le ${p})P(Y \\le ${q}) = ${Q.of(p, a).toLatex()} \\cdot ${Q.of(q, b).toLatex()} = ${P.toLatex()}$。`,
+                ),
+          ),
+        }),
+        figure: drawn(
           { xMin: -1, xMax: 9, yMin: -1, yMax: 9, xName: "x", yName: "y" },
           [
             { kind: "polygon", points: region },
@@ -798,7 +974,7 @@ const jointRectangle = {
             `到 x = ${a} 和 y = ${b} 的矩形，原点处有阴影${triangle ? "三角形" : "矩形"}，沿 x 到 ${p}，沿 y 到 ${q}。`,
           ),
         ),
-      );
+      };
     },
   ),
   figure: multivariableDrawings8["joint-distributions-for-continuous-random-variables#a-joint-probability-from-a-shaded-rectangle"],

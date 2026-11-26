@@ -11,7 +11,7 @@ import { multivariableDrawings4 } from "../explanation-drawings-multivariable-4.
 import { multivariableDrawings6 } from "../explanation-drawings-multivariable-6.ts";
 import { multivariableDrawings8 } from "../explanation-drawings-multivariable-8.ts";
 import { explainedChoice, numberProblem, why } from "../problems.ts";
-import { ask, observed, type Pair, point, same } from "../university-kit.ts";
+import { observed, type Pair, point, same } from "../university-kit.ts";
 import { walked } from "./calculus-i-differentiation.ts";
 import { drawn } from "./figure-reading-more.ts";
 
@@ -1592,8 +1592,8 @@ const centroidOfEll = {
     "the-center-of-mass-of-a-drawn-l-shape",
     ["The center of mass of a drawn L-shape", "图中 L 形的质心"],
     [
-      "A lamina of constant density made of two rectangles has its center of mass at the average of the two rectangle centers, weighted by their areas. The larger piece pulls the result toward itself. Taking the plain average of the two centers, or the middle of the overall width, ignores the weights and gives the wrong point.",
-      "由两个矩形组成的等密度薄片，其质心是两个矩形中心按面积加权的平均。较大的部分把结果拉向自己。直接平均两个中心，或取总宽度的中点，都忽略了权重，得到错误的点。",
+      "A lamina of constant density made of two rectangles has its center of mass at the average of the two rectangle centers, weighted by their areas. The larger piece pulls the result toward itself. Taking the plain average of the two centers, or the middle of the overall width, ignores the weights and gives the wrong point. An L made of a $4 \\times 6$ block (area $24$, center $(2, 3)$) and a $2 \\times 2$ block to its right (area $4$, center $(5, 1)$) has $\\bar{x} = \\frac{48 + 20}{28} = \\frac{17}{7}$ and $\\bar{y} = \\frac{72 + 4}{28} = \\frac{19}{7}$.\n\n> **Watch out.** Read each block's width and height from the drawing, weight each center by its own area, and do not confuse the $x$- and $y$-coordinates.",
+      "由两个矩形组成的等密度薄片，其质心是两个矩形中心按面积加权的平均。较大的部分把结果拉向自己。直接平均两个中心，或取总宽度的中点，都忽略了权重，得到错误的点。由 $4 \\times 6$ 的块（面积 $24$，中心 $(2, 3)$）和其右侧 $2 \\times 2$ 的块（面积 $4$，中心 $(5, 1)$）组成的 L 形，$\\bar{x} = \\frac{48 + 20}{28} = \\frac{17}{7}$，$\\bar{y} = \\frac{72 + 4}{28} = \\frac{19}{7}$。\n\n> **注意。** 要从图中读出每块的宽和高，用每块自己的面积给它的中心加权，也不要把 $x$ 坐标和 $y$ 坐标弄混。",
     ],
     (rng) => {
       const a = rng.int(1, 3);
@@ -1606,23 +1606,73 @@ const centroidOfEll = {
       const yBar = Q.of(A1 * b + A2 * d, 2 * (A1 + A2));
       const answer = asksX ? xBar : yBar;
       const plain = asksX ? Q.of(a + 2 * a + c, 4) : Q.of(b + d, 4);
-      return ask(
-        asksX
-          ? [
-              "The L-shaped lamina has constant density. What is the $x$-coordinate of its center of mass?",
-              "L 形薄片密度为常数。它的质心的 $x$ 坐标是多少？",
-            ]
-          : [
-              "The L-shaped lamina has constant density. What is the $y$-coordinate of its center of mass?",
-              "L 形薄片密度为常数。它的质心的 $y$ 坐标是多少？",
+      const c1 = asksX ? Q.of(a, 2) : Q.of(b, 2);
+      const c2 = asksX ? Q.of(2 * a + c, 2) : Q.of(d, 2);
+      const moment = c1.mul(Q.of(A1)).add(c2.mul(Q.of(A2)));
+      const axis = asksX ? "$x$" : "$y$";
+      return {
+        ...numberProblem({
+          prompt: asksX
+            ? t(
+                "The L-shaped lamina has constant density. What is the $x$-coordinate of its center of mass?",
+                "L 形薄片密度为常数。它的质心的 $x$ 坐标是多少？",
+              )
+            : t(
+                "The L-shaped lamina has constant density. What is the $y$-coordinate of its center of mass?",
+                "L 形薄片密度为常数。它的质心的 $y$ 坐标是多少？",
+              ),
+          answer,
+          mistakes: apart(answer, [
+            why(plain, "That averages the two centers without weighting them by area.", "那是没有按面积加权，直接平均了两个中心。"),
+            why(
+              asksX ? yBar : xBar,
+              `That is the other coordinate of the center of mass, not the ${asksX ? "$x$" : "$y$"}-coordinate.`,
+              `那是质心的另一个坐标，不是${asksX ? " $x$ " : " $y$ "}坐标。`,
+            ),
+            why(
+              asksX ? Q.of(a + c, 2) : Q.of(b, 2),
+              asksX
+                ? "That is the middle of the overall width, as if the shape were a full rectangle."
+                : "That is the middle of the overall height, as if the shape were a full rectangle.",
+              asksX ? "那是总宽度的中点，好像图形是完整的矩形。" : "那是总高度的中点，好像图形是完整的矩形。",
+            ),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Split the shape", "分割图形"],
+                t(
+                  `The drawing gives a block $${a}$ wide and $${b}$ tall, area $${A1}$, and a block $${c}$ wide and $${d}$ tall, area $${A2}$. Their centers have ${axis}-coordinates $${c1.toLatex()}$ and $${c2.toLatex()}$.`,
+                  `由图得一块宽 $${a}$、高 $${b}$，面积 $${A1}$；另一块宽 $${c}$、高 $${d}$，面积 $${A2}$。它们中心的 ${axis} 坐标是 $${c1.toLatex()}$ 和 $${c2.toLatex()}$。`,
+                ),
+              ],
+              [
+                ["Add the moments", "把矩相加"],
+                t(
+                  `$${A1} \\cdot ${c1.toLatex()} + ${A2 === 1 ? c2.toLatex() : `${A2} \\cdot ${c2.toLatex()}`} = ${moment.toLatex()}$.`,
+                  `$${A1} \\cdot ${c1.toLatex()} + ${A2 === 1 ? c2.toLatex() : `${A2} \\cdot ${c2.toLatex()}`} = ${moment.toLatex()}$。`,
+                ),
+              ],
+              [
+                ["Divide by the area", "除以面积"],
+                t(
+                  `$\\frac{${moment.toLatex()}}{${A1 + A2}} = ${answer.toLatex()}$.`,
+                  `$\\frac{${moment.toLatex()}}{${A1 + A2}} = ${answer.toLatex()}$。`,
+                ),
+              ],
             ],
-        answer,
-        [plain, asksX ? yBar : xBar, asksX ? Q.of(a + c, 2) : Q.of(b, 2)],
-        [
-          `Split the shape into rectangles of areas $${A1}$ and $${A2}$, whose centers have ${asksX ? "$x$" : "$y$"}-coordinates $${(asksX ? Q.of(a, 2) : Q.of(b, 2)).toLatex()}$ and $${(asksX ? Q.of(2 * a + c, 2) : Q.of(d, 2)).toLatex()}$. Their average weighted by area is $${answer.toLatex()}$.`,
-          `把图形分成面积为 $${A1}$ 和 $${A2}$ 的两个矩形，它们中心的 ${asksX ? "$x$" : "$y$"} 坐标是 $${(asksX ? Q.of(a, 2) : Q.of(b, 2)).toLatex()}$ 和 $${(asksX ? Q.of(2 * a + c, 2) : Q.of(d, 2)).toLatex()}$。按面积加权的平均是 $${answer.toLatex()}$。`,
-        ],
-        fig(
+            A1 === A2
+              ? t(
+                  `The blocks have equal areas, so the answer is the midpoint $${plain.toLatex()}$ of their centers.`,
+                  `两块面积相等，所以答案是两中心的中点 $${plain.toLatex()}$。`,
+                )
+              : t(
+                  `$${answer.toLatex()}$ lies between $${c1.toLatex()}$ and $${c2.toLatex()}$, closer to $${(A1 > A2 ? c1 : c2).toLatex()}$, the center of the larger block.`,
+                  `$${answer.toLatex()}$ 介于 $${c1.toLatex()}$ 与 $${c2.toLatex()}$ 之间，更靠近较大块的中心 $${(A1 > A2 ? c1 : c2).toLatex()}$。`,
+                ),
+          ),
+        }),
+        figure: fig(
           { xMin: -1, xMax: 8, yMin: -1, yMax: 8 },
           [
             {
@@ -1655,7 +1705,7 @@ const centroidOfEll = {
             `L 形：原点处宽 ${a}、高 ${b} 的矩形，其右侧连着宽 ${c}、高 ${d} 的矩形。`,
           ],
         ),
-      );
+      };
     },
   ),
   figure: multivariableDrawings8["moments-and-centers-of-mass-of-plane-laminas#the-center-of-mass-of-a-drawn-l-shape"],

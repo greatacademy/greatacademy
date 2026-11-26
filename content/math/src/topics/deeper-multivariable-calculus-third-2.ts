@@ -12,7 +12,7 @@ import { multivariableDrawings7 } from "../explanation-drawings-multivariable-7.
 import { multivariableDrawings8 } from "../explanation-drawings-multivariable-8.ts";
 
 import { explainedChoice, numberProblem, why } from "../problems.ts";
-import { ask, type Pair, point } from "../university-kit.ts";
+import { type Pair, point } from "../university-kit.ts";
 import { walked } from "./calculus-i-differentiation.ts";
 
 /** apart drops the mistakes whose value is the answer or repeats an earlier one. */
@@ -3049,26 +3049,58 @@ const stoppingDistance = point(
   "a-stopping-distance-from-work-and-energy",
   ["A stopping distance from work and energy", "由功和能求制动距离"],
   [
-    "A constant force opposing the motion does negative work equal to the force times the distance. Stopping means that this work removes all the kinetic energy, so the distance is proportional to the square of the speed: twice the speed needs four times the distance.",
-    "与运动方向相反的恒力做负功，大小等于力乘以距离。停下来意味着这个功消耗了全部动能，所以距离与速度的平方成正比：速度加倍，需要四倍的距离。",
+    "A constant force opposing the motion does negative work equal to the force times the distance. Stopping means that this work removes all the kinetic energy, so the distance is proportional to the square of the speed: twice the speed needs four times the distance. A $10$ kg object at $30$ m/s has $4500$ J of kinetic energy, so a $15$ N force stops it in $\\frac{4500}{15} = 300$ m.\n\n> **Watch out.** The force must remove the kinetic energy $\\frac{1}{2}mv^{2}$, with the speed squared and the factor $\\frac{1}{2}$; dividing the momentum $mv$ by the force gives a time, not a distance.",
+    "与运动方向相反的恒力做负功，大小等于力乘以距离。停下来意味着这个功消耗了全部动能，所以距离与速度的平方成正比：速度加倍，需要四倍的距离。一个 $10$ kg、速度为 $30$ m/s 的物体有 $4500$ J 的动能，所以 $15$ N 的力在 $\\frac{4500}{15} = 300$ m 内使它停下。\n\n> **注意。** 力要消耗的是动能 $\\frac{1}{2}mv^{2}$，速度要平方，还有因子 $\\frac{1}{2}$；用动量 $mv$ 除以力得到的是时间，不是距离。",
   ],
   (rng) => {
     const m = rng.int(1, 9);
     const v = rng.int(2, 20);
     const F = rng.int(1, 12);
     const answer = Q.of(m * v * v, 2 * F);
-    return ask(
-      [
+    const K = Q.of(m * v * v, 2);
+    return numberProblem({
+      prompt: t(
         `An object of mass $${m}$ kg moving at $${v}$ m/s is brought to rest by a constant opposing force of $${F}$ N. Find the distance it travels, in meters.`,
         `质量为 $${m}$ kg、速度为 $${v}$ m/s 的物体，在 $${F}$ N 的恒定阻力作用下停止。求它经过的距离（单位：米）。`,
-      ],
+      ),
       answer,
-      [Q.of(m * v, F), Q.of(m * v * v, F), Q.of(v * v, 2 * F)],
-      [
-        `The kinetic energy is $\\frac{1}{2} \\cdot ${m} \\cdot ${v}^{2} = ${Q.of(m * v * v, 2).toLatex()}$ J, and the force removes $${F}d$ J. Setting them equal gives $d = ${answer.toLatex()}$.`,
-        `动能是 $\\frac{1}{2} \\cdot ${m} \\cdot ${v}^{2} = ${Q.of(m * v * v, 2).toLatex()}$ J，阻力消耗 $${F}d$ J。令二者相等，得 $d = ${answer.toLatex()}$。`,
-      ],
-    );
+      mistakes: apart(answer, [
+        why(
+          Q.of(m * v, F),
+          "That divides the momentum $mv$ by the force, which gives the stopping time; the distance comes from the kinetic energy.",
+          "那是用动量 $mv$ 除以力，得到的是停止所用的时间；距离要由动能求出。",
+        ),
+        why(
+          Q.of(m * v * v, F),
+          "That leaves out the $\\frac{1}{2}$ in the kinetic energy $\\frac{1}{2}mv^{2}$.",
+          "那是漏了动能 $\\frac{1}{2}mv^{2}$ 中的 $\\frac{1}{2}$。",
+        ),
+        why(
+          Q.of(v * v, 2 * F),
+          "That leaves out the mass; the kinetic energy is $\\frac{1}{2}mv^{2}$.",
+          "那是漏了质量；动能是 $\\frac{1}{2}mv^{2}$。",
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Find the kinetic energy", "求动能"],
+            t(`$\\frac{1}{2}mv^{2} = ${K.toLatex()}$ J.`, `$\\frac{1}{2}mv^{2} = ${K.toLatex()}$ J。`),
+          ],
+          [
+            ["Match the work", "令功相等"],
+            t(
+              `The force removes $${F}d$ J, so $${F}d = ${K.toLatex()}$ and $d = ${answer.toLatex()}$ m.`,
+              `阻力消耗 $${F}d$ J，所以 $${F}d = ${K.toLatex()}$，$d = ${answer.toLatex()}$ m。`,
+            ),
+          ],
+        ],
+        t(
+          `The deceleration is $\\frac{F}{m} = ${Q.of(F, m).toLatex()}$ m/s², and $v^{2} = 2 \\cdot \\frac{F}{m} \\cdot d$ gives $d = \\frac{${m * v * v}}{${2 * F}} = ${answer.toLatex()}$, the same.`,
+          `减速度为 $\\frac{F}{m} = ${Q.of(F, m).toLatex()}$ m/s²，由 $v^{2} = 2 \\cdot \\frac{F}{m} \\cdot d$ 得 $d = \\frac{${m * v * v}}{${2 * F}} = ${answer.toLatex()}$，结果相同。`,
+        ),
+      ),
+    });
   },
 );
 
@@ -3077,8 +3109,8 @@ const maxSpeedOnCircle = {
     "the-greatest-speed-a-force-can-hold-on-a-circle",
     ["The greatest speed a force can hold on a circle", "力能维持圆周运动的最大速度"],
     [
-      "Uniform circular motion needs an inward force $mR\\omega^{2}$, equivalently $\\frac{mv^{2}}{R}$. If the inward force has a limit, such as the strength of a string, this limit sets the greatest angular speed, and then the speed follows from $v = R\\omega$.",
-      "匀速圆周运动需要向内的力 $mR\\omega^{2}$，也就是 $\\frac{mv^{2}}{R}$。如果向内的力有上限，例如绳子的强度，这个上限就决定最大角速度，再由 $v = R\\omega$ 得到速度。",
+      "Uniform circular motion needs an inward force $mR\\omega^{2}$, equivalently $\\frac{mv^{2}}{R}$. If the inward force has a limit, such as the strength of a string, this limit sets the greatest angular speed, and then the speed follows from $v = R\\omega$. A string that holds $500$ N keeps a $10$ kg mass on a circle of radius $2$ m at up to $v^{2} = \\frac{500 \\cdot 2}{10} = 100$, so $v = 10$ m/s.\n\n> **Watch out.** Solve $\\frac{mv^{2}}{R} = F$ for $v^{2}$, which multiplies by $R$ and divides by $m$, then take the root; $\\frac{F}{m}$ alone is the acceleration, and $\\omega$ is not the speed.",
+      "匀速圆周运动需要向内的力 $mR\\omega^{2}$，也就是 $\\frac{mv^{2}}{R}$。如果向内的力有上限，例如绳子的强度，这个上限就决定最大角速度，再由 $v = R\\omega$ 得到速度。能承受 $500$ N 的绳子把 $10$ kg 的质量维持在半径 $2$ m 的圆周上，最多有 $v^{2} = \\frac{500 \\cdot 2}{10} = 100$，所以 $v = 10$ m/s。\n\n> **注意。** 由 $\\frac{mv^{2}}{R} = F$ 解出 $v^{2}$，要乘以 $R$ 再除以 $m$，然后开平方；单独的 $\\frac{F}{m}$ 是加速度，$\\omega$ 也不是速度。",
     ],
     (rng) => {
       const m = rng.int(1, 5);
@@ -3086,18 +3118,42 @@ const maxSpeedOnCircle = {
       const w = rng.int(2, 9);
       const F = m * R * w * w;
       const answer = w * R;
-      return ask(
-        [
+      return numberProblem({
+        prompt: t(
           `A string that breaks at a tension of $${F}$ N holds a particle of mass $${m}$ kg on a circle of radius $${R}$ m. Find the greatest speed it can have, in m/s.`,
           `一根在张力 $${F}$ N 时会断的绳子，把质量为 $${m}$ kg 的质点维持在半径 $${R}$ m 的圆周上。求它能达到的最大速度（单位：m/s）。`,
-        ],
+        ),
         answer,
-        [w, Q.of(F, m), F],
-        [
-          `$\\frac{${m}v^{2}}{${R}} = ${F}$ gives $v^{2} = ${answer * answer}$, so $v = ${answer}$. The corresponding angular speed is $${w}$ rad/s.`,
-          `由 $\\frac{${m}v^{2}}{${R}} = ${F}$ 得 $v^{2} = ${answer * answer}$，所以 $v = ${answer}$。相应的角速度是 $${w}$ rad/s。`,
-        ],
-      );
+        mistakes: apart(answer, [
+          why(
+            w,
+            `That is the angular speed $\\omega$; the speed is $v = R\\omega = ${R}\\omega$.`,
+            `那是角速度 $\\omega$；速度是 $v = R\\omega = ${R}\\omega$。`,
+          ),
+          why(
+            Q.of(F, m),
+            "That is $\\frac{F}{m}$, the greatest acceleration; the speed comes from $v^{2} = \\frac{FR}{m}$.",
+            "那是 $\\frac{F}{m}$，即最大加速度；速度由 $v^{2} = \\frac{FR}{m}$ 求出。",
+          ),
+          why(answer * answer, "That is $v^{2}$; take its square root.", "那是 $v^{2}$；还要开平方。"),
+        ]),
+        solution: walked(
+          [
+            [
+              ["Set the force", "令力相等"],
+              t(
+                `$\\frac{mv^{2}}{R} = ${F}$ gives $v^{2} = \\frac{FR}{m} = ${answer * answer}$.`,
+                `由 $\\frac{mv^{2}}{R} = ${F}$ 得 $v^{2} = \\frac{FR}{m} = ${answer * answer}$。`,
+              ),
+            ],
+            [["Take the root", "开平方"], t(`$v = ${answer}$ m/s.`, `$v = ${answer}$ m/s。`)],
+          ],
+          t(
+            `Then $\\omega = \\frac{v}{R} = ${w}$ rad/s, and with $m = ${m}$ and $R = ${R}$, $mR\\omega^{2} = ${F}$ N, the breaking tension.`,
+            `于是 $\\omega = \\frac{v}{R} = ${w}$ rad/s，取 $m = ${m}$、$R = ${R}$，$mR\\omega^{2} = ${F}$ N，正是绳子断裂的张力。`,
+          ),
+        ),
+      });
     },
   ),
   figure: multivariableDrawings8["circular-motion-about-the-origin#the-greatest-speed-a-force-can-hold-on-a-circle"],
@@ -3108,8 +3164,8 @@ const massFromTwoAxes = {
     "the-mass-from-two-parallel-axes",
     ["The mass from two parallel axes", "由两条平行轴求质量"],
     [
-      "Applying the parallel axis theorem to two axes and subtracting removes the unknown moment about the center of mass. What remains is $I_{2} - I_{1} = M(d_{2}^{2} - d_{1}^{2})$, which gives the mass. It is the squares of the distances that are subtracted.",
-      "对两条轴应用平行轴定理再相减，就消去了关于质心的未知转动惯量。剩下 $I_{2} - I_{1} = M(d_{2}^{2} - d_{1}^{2})$，由此得到质量。相减的是距离的平方。",
+      "Applying the parallel axis theorem to two axes and subtracting removes the unknown moment about the center of mass. What remains is $I_{2} - I_{1} = M(d_{2}^{2} - d_{1}^{2})$, which gives the mass. It is the squares of the distances that are subtracted. With $I_{1} = 60$ at $d_{1} = 5$ and $I_{2} = 82$ at $d_{2} = 6$, $22 = M(36 - 25)$, so $M = 2$, and then $I_c = 60 - 50 = 10$.\n\n> **Watch out.** Square each distance before subtracting: $d_{2}^{2} - d_{1}^{2}$, not $(d_{2} - d_{1})^{2}$ or $d_{2} - d_{1}$. Dividing one moment by $d^{2}$ alone ignores the moment about the center.",
+      "对两条轴应用平行轴定理再相减，就消去了关于质心的未知转动惯量。剩下 $I_{2} - I_{1} = M(d_{2}^{2} - d_{1}^{2})$，由此得到质量。相减的是距离的平方。若 $d_{1} = 5$ 时 $I_{1} = 60$，$d_{2} = 6$ 时 $I_{2} = 82$，则 $22 = M(36 - 25)$，所以 $M = 2$，进而 $I_c = 60 - 50 = 10$。\n\n> **注意。** 要先把每个距离平方再相减：是 $d_{2}^{2} - d_{1}^{2}$，不是 $(d_{2} - d_{1})^{2}$ 或 $d_{2} - d_{1}$。只用一个转动惯量除以 $d^{2}$ 会忽略关于质心的转动惯量。",
     ],
     (rng) => {
       const M = rng.int(1, 9);
@@ -3119,18 +3175,49 @@ const massFromTwoAxes = {
       const I1 = Ic + M * d1 * d1;
       const I2 = Ic + M * d2 * d2;
       const diff = I2 - I1;
-      return ask(
-        [
+      return numberProblem({
+        prompt: t(
           `A body has moment of inertia $${I1}$ about an axis at distance $${d1}$ from its center of mass, and $${I2}$ about a parallel axis at distance $${d2}$. Find its mass.`,
           `一个物体关于到质心距离为 $${d1}$ 的轴的转动惯量是 $${I1}$，关于到质心距离为 $${d2}$ 的平行轴的转动惯量是 $${I2}$。求它的质量。`,
-        ],
-        M,
-        [Q.of(diff, d2 - d1), Q.of(diff, d2 * d2), Q.of(I2, d2 * d2)],
-        [
-          `Subtracting the two equations of the theorem removes the moment about the center: $${I2} - ${I1} = M(${d2 * d2} - ${d1 * d1})$. So $M = \\frac{${diff}}{${d2 * d2 - d1 * d1}} = ${M}$.`,
-          `把定理的两个等式相减，消去关于质心的转动惯量：$${I2} - ${I1} = M(${d2 * d2} - ${d1 * d1})$。所以 $M = \\frac{${diff}}{${d2 * d2 - d1 * d1}} = ${M}$。`,
-        ],
-      );
+        ),
+        answer: M,
+        mistakes: apart(M, [
+          why(
+            Q.of(diff, d2 - d1),
+            "That uses the difference of the distances without squaring them; the theorem gives $d_{2}^{2} - d_{1}^{2}$.",
+            "那是直接用距离之差，没有平方；定理给出的是 $d_{2}^{2} - d_{1}^{2}$。",
+          ),
+          why(
+            Q.of(diff, d2 * d2),
+            "That divides by $d_{2}^{2}$ alone; the first axis contributes $-Md_{1}^{2}$.",
+            "那是只除以 $d_{2}^{2}$；第一条轴贡献了 $-Md_{1}^{2}$。",
+          ),
+          why(
+            Q.of(I2, d2 * d2),
+            "That ignores the moment about the center of mass, as if $I_{2}$ were all $Md_{2}^{2}$.",
+            "那是忽略了关于质心的转动惯量，好像 $I_{2}$ 全是 $Md_{2}^{2}$。",
+          ),
+        ]),
+        solution: walked(
+          [
+            [
+              ["Subtract the two equations", "两式相减"],
+              t(
+                `$I_{2} - I_{1} = M(d_{2}^{2} - d_{1}^{2})$ gives $${I2} - ${I1} = M(${d2 * d2} - ${d1 * d1})$, that is, $${diff} = ${d2 * d2 - d1 * d1}M$.`,
+                `$I_{2} - I_{1} = M(d_{2}^{2} - d_{1}^{2})$ 给出 $${I2} - ${I1} = M(${d2 * d2} - ${d1 * d1})$，即 $${diff} = ${d2 * d2 - d1 * d1}M$。`,
+              ),
+            ],
+            [
+              ["Divide", "相除"],
+              t(`$M = \\frac{${diff}}{${d2 * d2 - d1 * d1}} = ${M}$.`, `$M = \\frac{${diff}}{${d2 * d2 - d1 * d1}} = ${M}$。`),
+            ],
+          ],
+          t(
+            `Then $I_c = ${I1} - ${M * d1 * d1} = ${Ic}$, and $${Ic} + ${M * d2 * d2} = ${I2}$ matches the second axis.`,
+            `于是 $I_c = ${I1} - ${M * d1 * d1} = ${Ic}$，而 $${Ic} + ${M * d2 * d2} = ${I2}$ 与第二条轴相符。`,
+          ),
+        ),
+      });
     },
   ),
   figure: multivariableDrawings8["the-parallel-axis-theorem#the-mass-from-two-parallel-axes"],

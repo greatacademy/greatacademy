@@ -2,11 +2,18 @@
 // density curves, joint supports, confidence intervals, rejection regions and likelihoods.
 // See `deeperFiguresProbability2CalculusPoints` and `deeperFiguresProbability2CollegePoints`.
 
-import type { KnowledgePointDef, Rng } from "@ga/content";
+import type { KnowledgePointDef, Rng, Text } from "@ga/content";
 import { t } from "@ga/content";
 import { Q } from "@ga/subject-math";
 import { probabilityDrawings1 } from "../explanation-drawings-probability-and-statistics-1.ts";
-import { withMistakes } from "../problems.ts";
+import { numberProblem, why, withMistakes } from "../problems.ts";
+import { walked } from "./calculus-i-differentiation.ts";
+
+/** apart drops explained mistakes that equal the answer or repeat an earlier one. */
+const apart = (answer: Q, mistakes: readonly { readonly value: number | Q; readonly why: Text }[]) => {
+  const key = (v: number | Q) => (typeof v === "number" ? Q.of(v) : v).toLatex();
+  return mistakes.filter((m, i, all) => key(m.value) !== key(answer) && all.findIndex((x) => key(x.value) === key(m.value)) === i);
+};
 
 import { ask, choose, point, same } from "../university-kit.ts";
 import { bars, chart, curvePath, intTicks, normal, shadeUnder, tenthTicks } from "./figure-charts.ts";
@@ -663,8 +670,8 @@ const jointEvent = point(
   "an-event-on-a-grid-of-probabilities",
   ["An event on a grid of probabilities", "概率网格上的事件"],
   [
-    "A joint distribution can be drawn as a probability at each point $(x, y)$. An event such as $X + Y \\le 3$ picks out a set of grid points, and its probability is the sum of the numbers at those points.",
-    "联合分布可以画成每个点 $(x, y)$ 上的概率。像 $X + Y \\le 3$ 这样的事件选出一组网格点，它的概率就是这些点上的数之和。",
+    "A joint distribution can be drawn as a probability at each point $(x, y)$. An event such as $X + Y \\le 3$ picks out a set of grid points, and its probability is the sum of the numbers at those points. If $(1, 3)$, $(2, 2)$ and $(3, 1)$ carry $\\frac{1}{12}$, $\\frac{1}{6}$ and $\\frac{1}{12}$, then $P(X + Y = 4) = \\frac{1}{3}$.\n\n> **Watch out.** An event with $\\le$ includes the points on the line itself; and the probabilities at the points are added as given, not counted as ninths.",
+    "联合分布可以画成每个点 $(x, y)$ 上的概率。像 $X + Y \\le 3$ 这样的事件选出一组网格点，它的概率就是这些点上的数之和。若 $(1, 3)$、$(2, 2)$、$(3, 1)$ 上的概率为 $\\frac{1}{12}$、$\\frac{1}{6}$、$\\frac{1}{12}$，则 $P(X + Y = 4) = \\frac{1}{3}$。\n\n> **注意。** 带 $\\le$ 的事件包含直线本身上的点；各点上的概率按给定值相加，不是按九分之几来数。",
   ],
   (rng) => {
     const { cells, denominator } = jointCells(rng);
@@ -681,19 +688,63 @@ const jointEvent = point(
         if (i + j + 2 < s) strict += v;
       });
     });
-    return ask(
-      [
-        `The figure shows the joint distribution of $X$ and $Y$. Find $P(X + Y \\le ${s})$.`,
-        `图中是 $X$ 和 $Y$ 的联合分布。求 $P(X + Y \\le ${s})$。`,
-      ],
-      Q.of(sum, denominator),
-      [Q.of(strict, denominator), Q.of(denominator - sum, denominator), Q.of(sum, 9)],
-      [
-        `Add the probabilities at the points with $x + y \\le ${s}$, which come to $\\frac{${sum}}{${denominator}}$.`,
-        `把满足 $x + y \\le ${s}$ 的点上的概率相加，得 $\\frac{${sum}}{${denominator}}$。`,
-      ],
-      { svg: lattice(cells, denominator), alt: jointAlt(cells, denominator) },
-    );
+    const answer = Q.of(sum, denominator);
+    const picked: string[] = [];
+    const values: number[] = [];
+    cells.forEach((row, j) => {
+      row.forEach((v, i) => {
+        if (i + j + 2 <= s) {
+          picked.push(`(${i + 1}, ${j + 1})`);
+          values.push(v);
+        }
+      });
+    });
+    return {
+      ...numberProblem({
+        prompt: t(
+          `The figure shows the joint distribution of $X$ and $Y$. Find $P(X + Y \\le ${s})$.`,
+          `图中是 $X$ 和 $Y$ 的联合分布。求 $P(X + Y \\le ${s})$。`,
+        ),
+        answer,
+        mistakes: apart(answer, [
+          why(
+            Q.of(strict, denominator),
+            `That leaves out the points on the line $x + y = ${s}$; the event includes them.`,
+            `那是漏掉了直线 $x + y = ${s}$ 上的点；事件包含它们。`,
+          ),
+          why(
+            Q.of(denominator - sum, denominator),
+            "That is the probability of the other points, the complement of the event.",
+            "那是其余各点的概率，即事件的对立事件。",
+          ),
+          why(
+            Q.of(sum, 9),
+            "That divides by the nine grid points; the probabilities are given over their own denominator.",
+            "那是除以了九个网格点；概率有它们自己的分母。",
+          ),
+        ]),
+        solution: walked(
+          [
+            [
+              ["Pick the points", "选出各点"],
+              t(`The points with $x + y \\le ${s}$ are $${picked.join(", ")}$.`, `满足 $x + y \\le ${s}$ 的点为 $${picked.join(", ")}$。`),
+            ],
+            [
+              ["Add their probabilities", "概率相加"],
+              t(
+                `$P(X + Y \\le ${s}) = \\frac{${values.join(" + ")}}{${denominator}} = ${answer.toLatex()}$.`,
+                `$P(X + Y \\le ${s}) = \\frac{${values.join(" + ")}}{${denominator}} = ${answer.toLatex()}$。`,
+              ),
+            ],
+          ],
+          t(
+            `The other points carry $\\frac{${denominator - sum}}{${denominator}}$, and $\\frac{${sum}}{${denominator}} + \\frac{${denominator - sum}}{${denominator}} = 1$.`,
+            `其余各点的概率为 $\\frac{${denominator - sum}}{${denominator}}$，而 $\\frac{${sum}}{${denominator}} + \\frac{${denominator - sum}}{${denominator}} = 1$。`,
+          ),
+        ),
+      }),
+      figure: { svg: lattice(cells, denominator), alt: jointAlt(cells, denominator) },
+    };
   },
 );
 

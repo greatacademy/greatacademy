@@ -1469,8 +1469,8 @@ const compositeCentroid: KnowledgePointDef = {
   figure: multivariableDrawings8["moments-and-center-of-mass#the-centroid-of-a-region-made-of-two-rectangles"],
   title: t("The centroid of a region made of two rectangles", "两个矩形组成的区域的形心"),
   explanation: t(
-    "The moment of a region is the sum of the moments of its parts, so there is no need to integrate over a composite shape. Each part acts as if its area were at its own centroid, and the centroid of the whole is the weighted average by area.",
-    "区域的矩等于各部分的矩之和，所以组合图形不必逐个积分。每一部分相当于面积集中在自身的形心，整体的形心就是按面积加权的平均。",
+    "The moment of a region is the sum of the moments of its parts, so there is no need to integrate over a composite shape. Each part acts as if its area were at its own centroid, and the centroid of the whole is the weighted average by area. For $[0, 3] \\times [0, 2]$ (area $6$, center $x = \\frac{3}{2}$) and $[3, 5] \\times [0, 6]$ (area $12$, center $x = 4$), $\\bar{x} = \\frac{6 \\cdot \\frac{3}{2} + 12 \\cdot 4}{18} = \\frac{57}{18} = \\frac{19}{6}$, closer to the larger part.\n\n> **Watch out.** Weight each center by its own part's area; the plain average of the two centers, or the middle of the total width, ignores the areas.",
+    "区域的矩等于各部分的矩之和，所以组合图形不必逐个积分。每一部分相当于面积集中在自身的形心，整体的形心就是按面积加权的平均。对 $[0, 3] \\times [0, 2]$（面积 $6$，中心 $x = \\frac{3}{2}$）与 $[3, 5] \\times [0, 6]$（面积 $12$，中心 $x = 4$），$\\bar{x} = \\frac{6 \\cdot \\frac{3}{2} + 12 \\cdot 4}{18} = \\frac{57}{18} = \\frac{19}{6}$，更靠近较大的部分。\n\n> **注意。** 每个中心要用它自己那部分的面积加权；直接平均两个中心，或取总宽度的中点，都忽略了面积。",
   ),
   generate(rng) {
     const a = 2 * rng.int(1, 3);
@@ -1489,10 +1489,48 @@ const compositeCentroid: KnowledgePointDef = {
         `一个区域由矩形 $[0, ${a}] \\times [0, ${b}]$ 和 $[${a}, ${a + c}] \\times [0, ${d}]$ 组成。求它的形心的 $x$ 坐标。`,
       ),
       answer,
-      wrong: [Q.of(x1 + x2, 2), Q.of(a + c, 2), Q.of(A2 * x1 + A1 * x2, A1 + A2)],
-      solution: t(
-        `The parts have areas $${A1}$ and $${A2}$ with centers at $x = ${x1}$ and $x = ${x2}$. So $\\bar{x} = \\frac{${A1}(${x1}) + ${A2}(${x2})}{${A1} + ${A2}} = ${answer.toLatex()}$.`,
-        `两部分的面积是 $${A1}$ 和 $${A2}$，中心在 $x = ${x1}$ 和 $x = ${x2}$。所以 $\\bar{x} = \\frac{${A1}(${x1}) + ${A2}(${x2})}{${A1} + ${A2}} = ${answer.toLatex()}$。`,
+      mistakes: apart(answer, [
+        why(Q.of(x1 + x2, 2), "That averages the two centers without weighting them by area.", "那是没有按面积加权，直接平均了两个中心。"),
+        why(
+          Q.of(a + c, 2),
+          "That is the middle of the total width, as if the region were one full rectangle.",
+          "那是总宽度的中点，好像区域是一个完整的矩形。",
+        ),
+        why(Q.of(A2 * x1 + A1 * x2, A1 + A2), "That weights each center by the other part's area.", "那是用另一部分的面积给每个中心加权。"),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Describe the parts", "描述各部分"],
+            t(
+              `The parts have areas $${A1}$ and $${A2}$, with centers at $x = ${x1}$ and $x = ${x2}$.`,
+              `两部分的面积是 $${A1}$ 和 $${A2}$，中心在 $x = ${x1}$ 和 $x = ${x2}$。`,
+            ),
+          ],
+          [
+            ["Add the moments", "把矩相加"],
+            t(
+              `$M_y = ${A1} \\cdot ${x1} + ${A2} \\cdot ${x2} = ${A1 * x1 + A2 * x2}$.`,
+              `$M_y = ${A1} \\cdot ${x1} + ${A2} \\cdot ${x2} = ${A1 * x1 + A2 * x2}$。`,
+            ),
+          ],
+          [
+            ["Divide by the area", "除以面积"],
+            t(
+              `$\\bar{x} = \\frac{${A1 * x1 + A2 * x2}}{${A1 + A2}} = ${answer.toLatex()}$.`,
+              `$\\bar{x} = \\frac{${A1 * x1 + A2 * x2}}{${A1 + A2}} = ${answer.toLatex()}$。`,
+            ),
+          ],
+        ],
+        A1 === A2
+          ? t(
+              `The parts have equal areas, so $\\bar{x}$ is the midpoint $${Q.of(x1 + x2, 2).toLatex()}$ of their centers.`,
+              `两部分面积相等，所以 $\\bar{x}$ 是两中心的中点 $${Q.of(x1 + x2, 2).toLatex()}$。`,
+            )
+          : t(
+              `$${answer.toLatex()}$ lies between $${x1}$ and $${x2}$ and closer to $${A1 > A2 ? x1 : x2}$, the center of the larger part.`,
+              `$${answer.toLatex()}$ 介于 $${x1}$ 与 $${x2}$ 之间，并更靠近较大部分的中心 $${A1 > A2 ? x1 : x2}$。`,
+            ),
       ),
     });
   },
@@ -1502,8 +1540,8 @@ const marginalFromIndependence: KnowledgePointDef = {
   id: "a-marginal-probability-from-independent-joint-values",
   title: t("A marginal probability from independent joint values", "由独立变量的联合概率求边缘概率"),
   explanation: t(
-    "If $X$ and $Y$ are independent, then the conditional probability of $Y$ given $X$ is the same as its marginal probability. So the marginal of $Y$ can be found by comparing two joint probabilities in one row of the table: $P(Y=1) = \\frac{P(X=1, Y=1)}{P(X=1, Y=0) + P(X=1, Y=1)}$.",
-    "若 $X$ 和 $Y$ 独立，则 $Y$ 在给定 $X$ 时的条件概率等于它的边缘概率。所以比较表中同一行的两个联合概率，就能求出 $Y$ 的边缘概率：$P(Y=1) = \\frac{P(X=1, Y=1)}{P(X=1, Y=0) + P(X=1, Y=1)}$。",
+    "If $X$ and $Y$ are independent, then the conditional probability of $Y$ given $X$ is the same as its marginal probability. So the marginal of $Y$ can be found by comparing two joint probabilities in one row of the table: $P(Y=1) = \\frac{P(X=1, Y=1)}{P(X=1, Y=0) + P(X=1, Y=1)}$. If $P(X=1, Y=1) = \\frac{1}{12}$ and $P(X=1, Y=0) = \\frac{1}{6}$, then $P(X=1) = \\frac{1}{4}$ and $P(Y=1) = \\frac{1/12}{1/4} = \\frac{1}{3}$.\n\n> **Watch out.** $P(X=1, Y=1)$ is a joint probability, not $P(Y=1)$; divide it by the row sum $P(X=1)$. And the entry with $Y=0$ in the numerator gives $P(Y=0)$ instead.",
+    "若 $X$ 和 $Y$ 独立，则 $Y$ 在给定 $X$ 时的条件概率等于它的边缘概率。所以比较表中同一行的两个联合概率，就能求出 $Y$ 的边缘概率：$P(Y=1) = \\frac{P(X=1, Y=1)}{P(X=1, Y=0) + P(X=1, Y=1)}$。若 $P(X=1, Y=1) = \\frac{1}{12}$，$P(X=1, Y=0) = \\frac{1}{6}$，则 $P(X=1) = \\frac{1}{4}$，$P(Y=1) = \\frac{1/12}{1/4} = \\frac{1}{3}$。\n\n> **注意。** $P(X=1, Y=1)$ 是联合概率，不是 $P(Y=1)$；要把它除以行和 $P(X=1)$。若分子用 $Y=0$ 那一项，得到的是 $P(Y=0)$。",
   ),
   generate(rng) {
     const p = rng.int(1, 9);
@@ -1511,16 +1549,43 @@ const marginalFromIndependence: KnowledgePointDef = {
     const both1 = Q.of(p * q, 100);
     const one0 = Q.of(p * (10 - q), 100);
     const answer = Q.of(q, 10);
+    const row = Q.of(p, 10);
     return numberProblem({
       prompt: t(
         `$X$ and $Y$ are independent and take the values $0$ and $1$, with $P(X=1, Y=1) = ${both1.toLatex()}$ and $P(X=1, Y=0) = ${one0.toLatex()}$. Find $P(Y=1)$.`,
         `$X$ 和 $Y$ 独立，取值为 $0$ 和 $1$，$P(X=1, Y=1) = ${both1.toLatex()}$，$P(X=1, Y=0) = ${one0.toLatex()}$。求 $P(Y=1)$。`,
       ),
       answer,
-      wrong: [both1, Q.of(p, 10), Q.of(10 - q, 10)],
-      solution: t(
-        `Adding the two gives $P(X=1) = ${Q.of(p, 10).toLatex()}$. By independence, $P(Y=1) = \\frac{P(X=1, Y=1)}{P(X=1)} = ${answer.toLatex()}$.`,
-        `两者相加得 $P(X=1) = ${Q.of(p, 10).toLatex()}$。由独立性，$P(Y=1) = \\frac{P(X=1, Y=1)}{P(X=1)} = ${answer.toLatex()}$。`,
+      mistakes: apart(answer, [
+        why(
+          both1,
+          "That is the joint probability $P(X=1, Y=1)$; divide it by $P(X=1)$.",
+          "那是联合概率 $P(X=1, Y=1)$；要把它除以 $P(X=1)$。",
+        ),
+        why(row, "That is $P(X=1)$, the sum of the row.", "那是 $P(X=1)$，即这一行的和。"),
+        why(Q.of(10 - q, 10), "That is $P(Y=0)$, from the entry with $Y=0$.", "那是 $P(Y=0)$，来自 $Y=0$ 的那一项。"),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Add the row", "求行和"],
+            t(
+              `$P(X=1) = ${both1.toLatex()} + ${one0.toLatex()} = ${row.toLatex()}$.`,
+              `$P(X=1) = ${both1.toLatex()} + ${one0.toLatex()} = ${row.toLatex()}$。`,
+            ),
+          ],
+          [
+            ["Use independence", "利用独立性"],
+            t(
+              `$P(Y=1) = P(Y=1 \\mid X=1) = \\frac{${both1.toLatex()}}{${row.toLatex()}} = ${answer.toLatex()}$.`,
+              `$P(Y=1) = P(Y=1 \\mid X=1) = \\frac{${both1.toLatex()}}{${row.toLatex()}} = ${answer.toLatex()}$。`,
+            ),
+          ],
+        ],
+        t(
+          `$P(X=1)P(Y=1) = ${row.toLatex()} \\cdot ${answer.toLatex()} = ${both1.toLatex()}$, the given joint value.`,
+          `$P(X=1)P(Y=1) = ${row.toLatex()} \\cdot ${answer.toLatex()} = ${both1.toLatex()}$，正是给定的联合概率。`,
+        ),
       ),
     });
   },
@@ -2649,8 +2714,8 @@ const normalFromTotal: KnowledgePointDef = {
   figure: multivariableDrawings8["the-components-of-acceleration#the-normal-acceleration-from-the-total-and-tangential"],
   title: t("The normal acceleration from the total and tangential", "由总加速度和切向加速度求法向加速度"),
   explanation: t(
-    "The tangential and normal components of acceleration are perpendicular, so they combine like the legs of a right triangle: $|\\mathbf{a}|^2 = a_T^2 + a_N^2$. So when the total acceleration and the rate of change of speed are known, the normal part follows, with no need for the curvature or the curve itself.",
-    "加速度的切向分量和法向分量互相垂直，所以它们像直角三角形的两条直角边那样合成：$|\\mathbf{a}|^2 = a_T^2 + a_N^2$。所以知道总加速度和速率的变化率，就能得到法向部分，不需要曲率，也不需要曲线本身。",
+    "The tangential and normal components of acceleration are perpendicular, so they combine like the legs of a right triangle: $|\\mathbf{a}|^2 = a_T^2 + a_N^2$. So when the total acceleration and the rate of change of speed are known, the normal part follows, with no need for the curvature or the curve itself. For $|\\mathbf{a}| = 41$ and $a_T = 9$, $a_N = \\sqrt{1681 - 81} = 40$.\n\n> **Watch out.** The components do not subtract directly: $a_N$ is not $|\\mathbf{a}| - a_T$, because the squares add, not the lengths; and after subtracting the squares, take the square root.",
+    "加速度的切向分量和法向分量互相垂直，所以它们像直角三角形的两条直角边那样合成：$|\\mathbf{a}|^2 = a_T^2 + a_N^2$。所以知道总加速度和速率的变化率，就能得到法向部分，不需要曲率，也不需要曲线本身。对 $|\\mathbf{a}| = 41$ 与 $a_T = 9$，$a_N = \\sqrt{1681 - 81} = 40$。\n\n> **注意。** 分量不能直接相减：$a_N$ 不等于 $|\\mathbf{a}| - a_T$，因为相加的是平方而不是长度；平方相减之后还要开平方。",
   ),
   generate(rng) {
     const { a, b, h } = helixShape(rng);
@@ -2665,10 +2730,34 @@ const normalFromTotal: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong: [total - along, total + along, total],
-      solution: t(
-        `Since $a_N^2 = ${total}^2 - ${along}^2 = ${answer * answer}$, we get $a_N = ${answer}$.`,
-        `由于 $a_N^2 = ${total}^2 - ${along}^2 = ${answer * answer}$，得 $a_N = ${answer}$。`,
+      mistakes: apart(answer, [
+        why(
+          total - along,
+          "That subtracts the lengths; the components are perpendicular, so their squares add up to $|\\mathbf{a}|^2$.",
+          "那是把长度相减；两个分量互相垂直，是它们的平方加起来等于 $|\\mathbf{a}|^2$。",
+        ),
+        why(
+          total,
+          "That is the whole acceleration; part of it is tangential and changes the speed.",
+          "那是整个加速度；其中一部分是切向的，用来改变速率。",
+        ),
+        why(answer * answer, "That is $a_N^2$; take its square root.", "那是 $a_N^2$；还要开平方。"),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Use the right triangle", "用直角三角形"],
+            t(
+              `$a_N^2 = |\\mathbf{a}|^2 - a_T^2 = ${total * total} - ${along * along} = ${answer * answer}$.`,
+              `$a_N^2 = |\\mathbf{a}|^2 - a_T^2 = ${total * total} - ${along * along} = ${answer * answer}$。`,
+            ),
+          ],
+          [["Take the root", "开平方"], t(`$a_N = ${answer}$.`, `$a_N = ${answer}$。`)],
+        ],
+        t(
+          `$${along}^2 + ${answer}^2 = ${along * along} + ${answer * answer} = ${total * total} = ${total}^2$.`,
+          `$${along}^2 + ${answer}^2 = ${along * along} + ${answer * answer} = ${total * total} = ${total}^2$。`,
+        ),
       ),
     });
   },
@@ -2679,8 +2768,8 @@ const averageOfProductOnTriangle: KnowledgePointDef = {
   figure: multivariableDrawings8["the-average-value-of-a-multivariable-function#the-average-of-xy-over-a-right-triangle"],
   title: t("The average of $xy$ over a right triangle", "$xy$ 在直角三角形上的平均值"),
   explanation: t(
-    "An average value is an integral over the region divided by the region's area. Over the right triangle with legs $a$ and $b$ on the axes, $\\iint xy\\,dA = \\frac{a^2b^2}{24}$, and the area is $\\frac{ab}{2}$. So the average of $xy$ is $\\frac{ab}{12}$, which is not the product of the separate averages of $x$ and $y$.",
-    "平均值是区域上的积分除以区域的面积。在两直角边 $a$、$b$ 位于坐标轴上的直角三角形上，$\\iint xy\\,dA = \\frac{a^2b^2}{24}$，面积是 $\\frac{ab}{2}$。所以 $xy$ 的平均值是 $\\frac{ab}{12}$，这并不等于 $x$ 和 $y$ 各自平均值的乘积。",
+    "An average value is an integral over the region divided by the region's area. Over the right triangle with legs $a$ and $b$ on the axes, $\\iint xy\\,dA = \\frac{a^2b^2}{24}$, and the area is $\\frac{ab}{2}$. So the average of $xy$ is $\\frac{ab}{12}$, which is not the product of the separate averages of $x$ and $y$. With legs $6$ and $14$, the integral is $\\frac{36 \\cdot 196}{24} = 294$, the area is $42$, and the average is $\\frac{294}{42} = 7$.\n\n> **Watch out.** On a triangle $x$ and $y$ do not vary separately, so the product of the averages $\\frac{a}{3} \\cdot \\frac{b}{3}$ is wrong; divide by the triangle's area $\\frac{ab}{2}$, not by $ab$.",
+    "平均值是区域上的积分除以区域的面积。在两直角边 $a$、$b$ 位于坐标轴上的直角三角形上，$\\iint xy\\,dA = \\frac{a^2b^2}{24}$，面积是 $\\frac{ab}{2}$。所以 $xy$ 的平均值是 $\\frac{ab}{12}$，这并不等于 $x$ 和 $y$ 各自平均值的乘积。两直角边为 $6$ 和 $14$ 时，积分为 $\\frac{36 \\cdot 196}{24} = 294$，面积为 $42$，平均值为 $\\frac{294}{42} = 7$。\n\n> **注意。** 在三角形上 $x$ 与 $y$ 并非各自独立变化，所以平均值的乘积 $\\frac{a}{3} \\cdot \\frac{b}{3}$ 是错的；要除以三角形的面积 $\\frac{ab}{2}$，而不是 $ab$。",
   ),
   generate(rng) {
     const a = rng.int(1, 12);
@@ -2692,10 +2781,45 @@ const averageOfProductOnTriangle: KnowledgePointDef = {
         `求 $f(x, y) = xy$ 在顶点为 $(0, 0)$、$(${a}, 0)$、$(0, ${b})$ 的三角形上的平均值。`,
       ),
       answer,
-      wrong: [Q.of(a * b, 9), Q.of(a * a * b * b, 24), Q.of(a * b, 24)],
-      solution: t(
-        `The integral is $\\frac{${a}^2 \\cdot ${b}^2}{24}$ and the area is $\\frac{${a} \\cdot ${b}}{2}$. Their quotient is $${answer.toLatex()}$.`,
-        `积分是 $\\frac{${a}^2 \\cdot ${b}^2}{24}$，面积是 $\\frac{${a} \\cdot ${b}}{2}$。它们的商是 $${answer.toLatex()}$。`,
+      mistakes: apart(answer, [
+        why(
+          Q.of(a * b, 9),
+          "That multiplies the separate averages $\\frac{a}{3}$ and $\\frac{b}{3}$; on a triangle $x$ and $y$ do not vary separately.",
+          "那是把各自的平均值 $\\frac{a}{3}$ 与 $\\frac{b}{3}$ 相乘；在三角形上 $x$ 与 $y$ 并非独立变化。",
+        ),
+        why(
+          Q.of(a * a * b * b, 24),
+          "That is the integral; divide it by the area to get the average.",
+          "那是积分；还要除以面积才是平均值。",
+        ),
+        why(
+          Q.of(a * b, 24),
+          "That divides by $ab$, the area of the rectangle; the triangle's area is $\\frac{ab}{2}$.",
+          "那是除以了矩形的面积 $ab$；三角形的面积是 $\\frac{ab}{2}$。",
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Integrate", "求积分"],
+            t(
+              `Integrating $y$ from $0$ up to the hypotenuse, then $x$ from $0$ to $${a}$, gives $\\iint xy\\,dA = \\frac{a^2b^2}{24} = ${Q.of(a * a * b * b, 24).toLatex()}$.`,
+              `先把 $y$ 从 $0$ 积到斜边，再把 $x$ 从 $0$ 积到 $${a}$，得 $\\iint xy\\,dA = \\frac{a^2b^2}{24} = ${Q.of(a * a * b * b, 24).toLatex()}$。`,
+            ),
+          ],
+          [
+            ["Find the area", "求面积"],
+            t(`The area is $\\frac{ab}{2} = ${Q.of(a * b, 2).toLatex()}$.`, `面积为 $\\frac{ab}{2} = ${Q.of(a * b, 2).toLatex()}$。`),
+          ],
+          [
+            ["Divide", "相除"],
+            t(`The average is $\\frac{ab}{12} = ${answer.toLatex()}$.`, `平均值为 $\\frac{ab}{12} = ${answer.toLatex()}$。`),
+          ],
+        ],
+        t(
+          `The other half of the rectangle $[0, ${a}] \\times [0, ${b}]$ has integral $\\frac{5a^2b^2}{24}$, and the two halves add to $\\frac{a^2b^2}{4} = ${Q.of(a * a * b * b, 4).toLatex()}$, the rectangle's integral $\\frac{a^2}{2} \\cdot \\frac{b^2}{2}$.`,
+          `矩形 $[0, ${a}] \\times [0, ${b}]$ 的另一半上积分为 $\\frac{5a^2b^2}{24}$，两半之和为 $\\frac{a^2b^2}{4} = ${Q.of(a * a * b * b, 4).toLatex()}$，正是矩形上的积分 $\\frac{a^2}{2} \\cdot \\frac{b^2}{2}$。`,
+        ),
       ),
     });
   },
@@ -2706,8 +2830,8 @@ const chargeOnDisk: KnowledgePointDef = {
   figure: multivariableDrawings8["density-mass-and-charge-of-plane-laminas#the-charge-on-a-disk-with-radial-density"],
   title: t("The charge on a disk with radial density", "径向密度圆盘上的电荷"),
   explanation: t(
-    "When a density depends only on the distance from the centre, polar coordinates reduce the double integral to one variable. The angle contributes a factor of $2\\pi$, and the area element supplies an extra factor of $r$, which is easy to forget. This extra factor is why the outer rings of a disk carry the most charge.",
-    "密度只取决于到中心的距离时，极坐标把二重积分化为单变量积分。角度贡献因子 $2\\pi$，面积元多出一个因子 $r$，这一点容易忘记。正是这个因子，使圆盘外圈带的电荷最多。",
+    "When a density depends only on the distance from the centre, polar coordinates reduce the double integral to one variable. The angle contributes a factor of $2\\pi$, and the area element supplies an extra factor of $r$, which is easy to forget. This extra factor is why the outer rings of a disk carry the most charge. For density $3\\sqrt{x^2 + y^2}$ on a disk of radius $7$, the charge is $2\\pi\\int_0^7 3r \\cdot r\\,dr = 2\\pi \\cdot 343 = 686\\pi$.\n\n> **Watch out.** Keep the factor $r$ in $dA = r\\,dr\\,d\\theta$ and the full $2\\pi$ from the angle; $\\int_0^R r^2\\,dr$ is $\\frac{R^3}{3}$, so do not forget the $3$.",
+    "密度只取决于到中心的距离时，极坐标把二重积分化为单变量积分。角度贡献因子 $2\\pi$，面积元多出一个因子 $r$，这一点容易忘记。正是这个因子，使圆盘外圈带的电荷最多。对半径为 $7$、密度为 $3\\sqrt{x^2 + y^2}$ 的圆盘，电荷为 $2\\pi\\int_0^7 3r \\cdot r\\,dr = 2\\pi \\cdot 343 = 686\\pi$。\n\n> **注意。** 要保留 $dA = r\\,dr\\,d\\theta$ 中的因子 $r$ 和角度给出的完整的 $2\\pi$；$\\int_0^R r^2\\,dr$ 是 $\\frac{R^3}{3}$，别忘了 $3$。",
   ),
   generate(rng) {
     const k = rng.int(1, 9);
@@ -2719,10 +2843,44 @@ const chargeOnDisk: KnowledgePointDef = {
         `半径为 ${R} 的圆盘，电荷密度是 $${coefficient(k)}\\sqrt{x^2 + y^2}$。总电荷是 $c\\pi$。求 $c$。`,
       ),
       answer,
-      wrong: [Q.of(k * R ** 3, 3), Q.of(k * R * R), Q.of(2 * k * R * R, 3)],
-      solution: t(
-        `In polar coordinates the charge is $2\\pi \\int_0^{${R}} ${coefficient(k)}r \\cdot r\\,dr = 2\\pi \\cdot \\frac{${k * R ** 3}}{3}$, so $c = ${answer.toLatex()}$.`,
-        `在极坐标下，电荷是 $2\\pi \\int_0^{${R}} ${coefficient(k)}r \\cdot r\\,dr = 2\\pi \\cdot \\frac{${k * R ** 3}}{3}$，所以 $c = ${answer.toLatex()}$。`,
+      mistakes: apart(answer, [
+        why(
+          Q.of(k * R * R),
+          "That drops the factor $r$ in $dA = r\\,dr\\,d\\theta$.",
+          "那是漏掉了 $dA = r\\,dr\\,d\\theta$ 中的因子 $r$。",
+        ),
+        why(
+          Q.of(k * R ** 3, 3),
+          "That takes the angle over $\\pi$ only; a full turn gives $2\\pi$.",
+          "那是角度只取了 $\\pi$；转一整圈是 $2\\pi$。",
+        ),
+        why(
+          Q.of(2 * k * R ** 3),
+          "That forgets the $3$ in $\\int_0^R r^2\\,dr = \\frac{R^3}{3}$.",
+          "那是忘了 $\\int_0^R r^2\\,dr = \\frac{R^3}{3}$ 中的 $3$。",
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Change to polar", "化为极坐标"],
+            t(
+              `The density is $${coefficient(k)}r$ and $dA = r\\,dr\\,d\\theta$, so the charge is $\\int_0^{2\\pi}\\int_0^{${R}} ${coefficient(k)}r^2\\,dr\\,d\\theta$.`,
+              `密度为 $${coefficient(k)}r$，$dA = r\\,dr\\,d\\theta$，所以电荷为 $\\int_0^{2\\pi}\\int_0^{${R}} ${coefficient(k)}r^2\\,dr\\,d\\theta$。`,
+            ),
+          ],
+          [
+            ["Integrate", "积分"],
+            t(
+              `The inner integral is $${Q.of(k * R ** 3, 3).toLatex()}$, and the angle multiplies it by $2\\pi$, so $c = ${answer.toLatex()}$.`,
+              `内层积分为 $${Q.of(k * R ** 3, 3).toLatex()}$，角度再乘以 $2\\pi$，所以 $c = ${answer.toLatex()}$。`,
+            ),
+          ],
+        ],
+        t(
+          `The average distance from the center over a disk is $\\frac{2R}{3} = ${Q.of(2 * R, 3).toLatex()}$, and the average density $${Q.of(2 * k * R, 3).toLatex()}$ times the area $${R === 1 ? "" : R * R}\\pi$ is $${answer.toLatex()}\\pi$.`,
+          `圆盘上到中心的平均距离为 $\\frac{2R}{3} = ${Q.of(2 * R, 3).toLatex()}$，平均密度 $${Q.of(2 * k * R, 3).toLatex()}$ 乘以面积 $${R === 1 ? "" : R * R}\\pi$ 得 $${answer.toLatex()}\\pi$。`,
+        ),
       ),
     });
   },
@@ -2732,22 +2890,58 @@ const semidiskCentroid: KnowledgePointDef = {
   id: "the-centroid-of-a-half-disk",
   title: t("The centroid of a half disk", "半圆盘的形心"),
   explanation: t(
-    "A half disk is symmetric about its central axis, so only one coordinate of the centroid needs work. The moment $\\iint y\\,dA$ over the half disk is $\\frac{2R^3}{3}$ and the area is $\\frac{\\pi R^2}{2}$, so $\\bar{y} = \\frac{4R}{3\\pi}$. This is a little below halfway up, since the region is wider near its base.",
-    "半圆盘关于中轴对称，所以形心只有一个坐标需要计算。半圆盘上的矩 $\\iint y\\,dA$ 是 $\\frac{2R^3}{3}$，面积是 $\\frac{\\pi R^2}{2}$，所以 $\\bar{y} = \\frac{4R}{3\\pi}$。它略低于高度的一半，因为这个区域靠近底部更宽。",
+    "A half disk is symmetric about its central axis, so only one coordinate of the centroid needs work. The moment $\\iint y\\,dA$ over the half disk is $\\frac{2R^3}{3}$ and the area is $\\frac{\\pi R^2}{2}$, so $\\bar{y} = \\frac{4R}{3\\pi}$. This is a little below halfway up, since the region is wider near its base. For the half disk of radius $\\frac{3}{2}$, $\\bar{y} = \\frac{4 \\cdot 3/2}{3\\pi} = \\frac{2}{\\pi}$.\n\n> **Watch out.** Divide by the half disk's area $\\frac{\\pi R^2}{2}$, not the full disk's $\\pi R^2$ or a quarter disk's; and keep the $3$ from $\\int_0^R r^2\\,dr = \\frac{R^3}{3}$ in the moment.",
+    "半圆盘关于中轴对称，所以形心只有一个坐标需要计算。半圆盘上的矩 $\\iint y\\,dA$ 是 $\\frac{2R^3}{3}$，面积是 $\\frac{\\pi R^2}{2}$，所以 $\\bar{y} = \\frac{4R}{3\\pi}$。它略低于高度的一半，因为这个区域靠近底部更宽。对半径为 $\\frac{3}{2}$ 的半圆盘，$\\bar{y} = \\frac{4 \\cdot 3/2}{3\\pi} = \\frac{2}{\\pi}$。\n\n> **注意。** 要除以半圆盘的面积 $\\frac{\\pi R^2}{2}$，而不是整圆盘的 $\\pi R^2$ 或四分之一圆盘的面积；矩中来自 $\\int_0^R r^2\\,dr = \\frac{R^3}{3}$ 的 $3$ 也要保留。",
   ),
   generate(rng) {
     const R = rng.int(1, 40);
     const answer = Q.of(4 * R, 3);
+    const area = R === 1 ? "\\frac{\\pi}{2}" : `\\frac{${R * R}\\pi}{2}`;
     return numberProblem({
       prompt: t(
         `The centroid of the half disk $x^2 + y^2 \\le ${R * R}$, $y \\ge 0$ has $\\bar{y} = \\frac{c}{\\pi}$. Find $c$.`,
         `半圆盘 $x^2 + y^2 \\le ${R * R}$，$y \\ge 0$ 的形心满足 $\\bar{y} = \\frac{c}{\\pi}$。求 $c$。`,
       ),
       answer,
-      wrong: [Q.of(2 * R, 3), Q.of(4 * R), Q.of(R, 2)],
-      solution: t(
-        `The moment is $\\frac{2 \\cdot ${R}^3}{3}$ and the area is $\\frac{\\pi \\cdot ${R}^2}{2}$. Dividing gives $\\bar{y} = \\frac{4 \\cdot ${R}}{3\\pi}$, so $c = ${answer.toLatex()}$.`,
-        `矩是 $\\frac{2 \\cdot ${R}^3}{3}$，面积是 $\\frac{\\pi \\cdot ${R}^2}{2}$。相除得 $\\bar{y} = \\frac{4 \\cdot ${R}}{3\\pi}$，所以 $c = ${answer.toLatex()}$。`,
+      mistakes: apart(answer, [
+        why(
+          Q.of(2 * R, 3),
+          "That divides by $\\pi R^2$, the area of the full disk; the half disk has area $\\frac{\\pi R^2}{2}$.",
+          "那是除以了整圆盘的面积 $\\pi R^2$；半圆盘的面积是 $\\frac{\\pi R^2}{2}$。",
+        ),
+        why(
+          Q.of(4 * R),
+          "That loses the $3$ from $\\int_0^R r^2\\,dr = \\frac{R^3}{3}$ in the moment.",
+          "那是丢了矩中来自 $\\int_0^R r^2\\,dr = \\frac{R^3}{3}$ 的 $3$。",
+        ),
+        why(
+          Q.of(8 * R, 3),
+          "That divides by the area of a quarter disk; the region is half a disk.",
+          "那是除以了四分之一圆盘的面积；这个区域是半个圆盘。",
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Find the moment", "求矩"],
+            t(
+              `In polar coordinates $\\iint y\\,dA = \\int_0^{\\pi}\\sin\\theta\\,d\\theta\\int_0^{${R}} r^2\\,dr = 2 \\cdot \\frac{${R ** 3}}{3} = ${Q.of(2 * R ** 3, 3).toLatex()}$.`,
+              `用极坐标，$\\iint y\\,dA = \\int_0^{\\pi}\\sin\\theta\\,d\\theta\\int_0^{${R}} r^2\\,dr = 2 \\cdot \\frac{${R ** 3}}{3} = ${Q.of(2 * R ** 3, 3).toLatex()}$。`,
+            ),
+          ],
+          [["Find the area", "求面积"], t(`The half disk has area $${area}$.`, `半圆盘的面积为 $${area}$。`)],
+          [
+            ["Divide", "相除"],
+            t(
+              `$\\bar{y} = \\frac{${4 * R}}{3\\pi}$, so $c = ${answer.toLatex()}$.`,
+              `$\\bar{y} = \\frac{${4 * R}}{3\\pi}$，所以 $c = ${answer.toLatex()}$。`,
+            ),
+          ],
+        ],
+        t(
+          `$\\frac{4}{3\\pi} \\approx 0.42$, so $\\bar{y}$ is a little under half the radius $${R}$, as it must be for a region wider near its base.`,
+          `$\\frac{4}{3\\pi} \\approx 0.42$，所以 $\\bar{y}$ 略小于半径 $${R}$ 的一半，底部更宽的区域理应如此。`,
+        ),
       ),
     });
   },
@@ -2757,8 +2951,8 @@ const rodWithPowerDensity: KnowledgePointDef = {
   id: "the-center-of-mass-of-a-rod-with-power-density",
   title: t("The center of mass of a rod with power density", "幂密度杆的质心"),
   explanation: t(
-    "For a rod on $[0, L]$ with density $\\rho(x) = x^n$, the mass is $\\frac{L^{n+1}}{n+1}$ and the moment is $\\frac{L^{n+2}}{n+2}$. Their quotient is $\\frac{n+1}{n+2}L$. A higher power concentrates the mass at the far end, so the center of mass moves toward that end, and it approaches $L$ as $n$ grows.",
-    "$[0, L]$ 上密度为 $\\rho(x) = x^n$ 的杆，质量是 $\\frac{L^{n+1}}{n+1}$，矩是 $\\frac{L^{n+2}}{n+2}$。它们的商是 $\\frac{n+1}{n+2}L$。幂次越高，质量越集中在远端，所以质心向那一端移动，$n$ 增大时趋于 $L$。",
+    "For a rod on $[0, L]$ with density $\\rho(x) = x^n$, the mass is $\\frac{L^{n+1}}{n+1}$ and the moment is $\\frac{L^{n+2}}{n+2}$. Their quotient is $\\frac{n+1}{n+2}L$. A higher power concentrates the mass at the far end, so the center of mass moves toward that end, and it approaches $L$ as $n$ grows. For $\\rho = \\sqrt{x}$ on $[0, 4]$, $n = \\frac{1}{2}$: the mass is $\\frac{16}{3}$, the moment is $\\frac{64}{5}$, and $\\bar{x} = \\frac{12}{5} = \\frac{3/2}{5/2} \\cdot 4$.\n\n> **Watch out.** Raise the power by one for the mass and by two for the moment; $\\frac{L}{2}$ ignores the density altogether.",
+    "$[0, L]$ 上密度为 $\\rho(x) = x^n$ 的杆，质量是 $\\frac{L^{n+1}}{n+1}$，矩是 $\\frac{L^{n+2}}{n+2}$。它们的商是 $\\frac{n+1}{n+2}L$。幂次越高，质量越集中在远端，所以质心向那一端移动，$n$ 增大时趋于 $L$。对 $[0, 4]$ 上的 $\\rho = \\sqrt{x}$，$n = \\frac{1}{2}$：质量为 $\\frac{16}{3}$，矩为 $\\frac{64}{5}$，$\\bar{x} = \\frac{12}{5} = \\frac{3/2}{5/2} \\cdot 4$。\n\n> **注意。** 求质量时幂次加一，求矩时幂次加二；$\\frac{L}{2}$ 完全忽略了密度。",
   ),
   generate(rng) {
     const n = rng.int(2, 9);
@@ -2770,10 +2964,47 @@ const rodWithPowerDensity: KnowledgePointDef = {
         `$[0, ${L}]$ 上的杆，密度是 $\\rho(x) = x^{${n}}$。求它的质心。`,
       ),
       answer,
-      wrong: [Q.of(L, 2), Q.of(n * L, n + 1), Q.of((n + 2) * L, n + 3)],
-      solution: t(
-        `The moment over the mass is $\\frac{${L}^{${n + 2}}/${n + 2}}{${L}^{${n + 1}}/${n + 1}} = \\frac{${n + 1}}{${n + 2}} \\cdot ${L} = ${answer.toLatex()}$.`,
-        `矩除以质量是 $\\frac{${L}^{${n + 2}}/${n + 2}}{${L}^{${n + 1}}/${n + 1}} = \\frac{${n + 1}}{${n + 2}} \\cdot ${L} = ${answer.toLatex()}$。`,
+      mistakes: apart(answer, [
+        why(Q.of(L, 2), "That is the midpoint, which ignores the density.", "那是中点，忽略了密度。"),
+        why(
+          Q.of(n * L, n + 1),
+          "That raises the powers too little; the mass integrates $x^n$ and the moment integrates $x^{n+1}$.",
+          "那是幂次加少了；质量积分 $x^n$，矩积分 $x^{n+1}$。",
+        ),
+        why(
+          Q.of((n + 2) * L, n + 3),
+          "That raises the powers too much; the moment integrates $x \\cdot x^n = x^{n+1}$.",
+          "那是幂次加多了；矩积分的是 $x \\cdot x^n = x^{n+1}$。",
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Find the mass", "求质量"],
+            t(
+              `$m = \\int_0^{${L}} x^{${n}}\\,dx = \\frac{L^{${n + 1}}}{${n + 1}}$.`,
+              `$m = \\int_0^{${L}} x^{${n}}\\,dx = \\frac{L^{${n + 1}}}{${n + 1}}$。`,
+            ),
+          ],
+          [
+            ["Find the moment", "求矩"],
+            t(
+              `$M_0 = \\int_0^{${L}} x^{${n + 1}}\\,dx = \\frac{L^{${n + 2}}}{${n + 2}}$.`,
+              `$M_0 = \\int_0^{${L}} x^{${n + 1}}\\,dx = \\frac{L^{${n + 2}}}{${n + 2}}$。`,
+            ),
+          ],
+          [
+            ["Divide", "相除"],
+            t(
+              `$\\bar{x} = \\frac{M_0}{m} = \\frac{${n + 1}}{${n + 2}}L = \\frac{${n + 1}}{${n + 2}} \\cdot ${L} = ${answer.toLatex()}$.`,
+              `$\\bar{x} = \\frac{M_0}{m} = \\frac{${n + 1}}{${n + 2}}L = \\frac{${n + 1}}{${n + 2}} \\cdot ${L} = ${answer.toLatex()}$。`,
+            ),
+          ],
+        ],
+        t(
+          `$\\frac{${n + 1}}{${n + 2}}$ is between $\\frac{1}{2}$ and $1$, so $${answer.toLatex()}$ lies past the midpoint $${Q.of(L, 2).toLatex()}$ but inside the rod, toward the heavy end.`,
+          `$\\frac{${n + 1}}{${n + 2}}$ 介于 $\\frac{1}{2}$ 与 $1$ 之间，所以 $${answer.toLatex()}$ 越过中点 $${Q.of(L, 2).toLatex()}$ 但仍在杆内，偏向较重的一端。`,
+        ),
       ),
     });
   },
@@ -2787,8 +3018,8 @@ const probabilityOneBelowOther: KnowledgePointDef = {
     ],
   title: t("The probability that one uniform variable is smaller", "一个均匀变量较小的概率"),
   explanation: t(
-    "Two independent uniform variables spread evenly over a rectangle, so a probability about them is a ratio of areas. To compare them, draw the line $y = x$ across the rectangle. When the ranges differ, it is easiest to find the area of the smaller piece, which is a triangle, and subtract its share from one.",
-    "两个独立的均匀变量在矩形上均匀分布，所以关于它们的概率就是面积之比。要比较它们，就在矩形上画直线 $y = x$。范围不同时，最容易的做法是求较小的那块面积，它是一个三角形，再用一减去它所占的比例。",
+    "Two independent uniform variables spread evenly over a rectangle, so a probability about them is a ratio of areas. To compare them, draw the line $y = x$ across the rectangle. When the ranges differ, it is easiest to find the area of the smaller piece, which is a triangle, and subtract its share from one. For $X$ uniform on $[0, 10]$ and $Y$ on $[0, 15]$, the triangle $y \\le x$ has area $50$ out of $150$, so $P(X < Y) = 1 - \\frac{1}{3} = \\frac{2}{3}$.\n\n> **Watch out.** The triangle is the event $Y \\le X$, so its share must be subtracted from one; and the answer is $\\frac{1}{2}$ only when the two ranges are equal.",
+    "两个独立的均匀变量在矩形上均匀分布，所以关于它们的概率就是面积之比。要比较它们，就在矩形上画直线 $y = x$。范围不同时，最容易的做法是求较小的那块面积，它是一个三角形，再用一减去它所占的比例。对在 $[0, 10]$ 上均匀的 $X$ 与在 $[0, 15]$ 上均匀的 $Y$，三角形 $y \\le x$ 的面积是 $150$ 中的 $50$，所以 $P(X < Y) = 1 - \\frac{1}{3} = \\frac{2}{3}$。\n\n> **注意。** 三角形是事件 $Y \\le X$，所以要用一减去它所占的比例；只有两个范围相等时答案才是 $\\frac{1}{2}$。",
   ),
   generate(rng) {
     const a = rng.int(1, 9);
@@ -2801,10 +3032,44 @@ const probabilityOneBelowOther: KnowledgePointDef = {
         `独立的 $X$、$Y$ 分别在 $[0, ${a}]$ 和 $[0, ${b}]$ 上均匀分布。求 $P(X < Y)$。`,
       ),
       answer,
-      wrong: [part, Q.of(1, 2), Q.of(a, b)],
-      solution: t(
-        `The part with $y \\le x$ is a triangle of area $\\frac{${a}^2}{2}$ in a rectangle of area ${a * b}, which is a share of $${part.toLatex()}$. So $P(X < Y) = ${answer.toLatex()}$.`,
-        `$y \\le x$ 的部分是面积为 $\\frac{${a}^2}{2}$ 的三角形，矩形面积是 ${a * b}，所占比例是 $${part.toLatex()}$。所以 $P(X < Y) = ${answer.toLatex()}$。`,
+      mistakes: apart(answer, [
+        why(
+          part,
+          "That is the share of the triangle, which is $P(Y \\le X)$; subtract it from one.",
+          "那是三角形所占的比例，即 $P(Y \\le X)$；要用一减去它。",
+        ),
+        why(Q.of(1, 2), "That holds only when the two ranges are equal.", "只有两个范围相等时才是这样。"),
+        why(
+          Q.of(a, b),
+          "That divides the lengths of the ranges; a probability here is a ratio of areas.",
+          "那是两个范围长度之比；这里的概率是面积之比。",
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Find the triangle", "求三角形"],
+            t(
+              `Since $${a} < ${b}$, the part with $y \\le x$ is a triangle with legs $${a}$, of area $\\frac{${a * a}}{2}$.`,
+              `由于 $${a} < ${b}$，$y \\le x$ 的部分是两直角边为 $${a}$ 的三角形，面积为 $\\frac{${a * a}}{2}$。`,
+            ),
+          ],
+          [
+            ["Take its share", "求其比例"],
+            t(
+              `The rectangle has area $${a * b}$, so $P(Y \\le X) = \\frac{${a * a}}{2 \\cdot ${a * b}} = ${part.toLatex()}$.`,
+              `矩形面积为 $${a * b}$，所以 $P(Y \\le X) = \\frac{${a * a}}{2 \\cdot ${a * b}} = ${part.toLatex()}$。`,
+            ),
+          ],
+          [
+            ["Subtract from one", "用一减去"],
+            t(`$P(X < Y) = 1 - ${part.toLatex()} = ${answer.toLatex()}$.`, `$P(X < Y) = 1 - ${part.toLatex()} = ${answer.toLatex()}$。`),
+          ],
+        ],
+        t(
+          `$Y$ has the longer range, so it should usually be the larger one, and $${answer.toLatex()}$ is above $\\frac{1}{2}$.`,
+          `$Y$ 的范围更长，通常应是较大的那个，而 $${answer.toLatex()}$ 大于 $\\frac{1}{2}$。`,
+        ),
       ),
     });
   },
@@ -2815,8 +3080,8 @@ const marginalOnTriangle: KnowledgePointDef = {
   figure: multivariableDrawings8["joint-distributions-for-continuous-random-variables#a-marginal-density-of-a-uniform-triangle"],
   title: t("A marginal density of a uniform triangle", "均匀三角形的边缘密度"),
   explanation: t(
-    "A joint density that is uniform on a region equals one over its area there. Its marginal at $x$ is found by integrating out $y$, so it equals the joint density times the length of the vertical slice at $x$. On a triangle these slices shrink, so the marginal is not uniform even though the joint density is.",
-    "在区域上均匀的联合密度，在那里等于面积的倒数。它在 $x$ 处的边缘密度通过对 $y$ 积分得到，等于联合密度乘以 $x$ 处竖直截线的长度。在三角形上这些截线不断缩短，所以即使联合密度均匀，边缘密度也不均匀。",
+    "A joint density that is uniform on a region equals one over its area there. Its marginal at $x$ is found by integrating out $y$, so it equals the joint density times the length of the vertical slice at $x$. On a triangle these slices shrink, so the marginal is not uniform even though the joint density is. On the triangle $x, y \\ge 0$, $x + y \\le 3$ the area is $\\frac{9}{2}$, the joint density is $\\frac{2}{9}$, and the slice at $x = \\frac{1}{2}$ has length $\\frac{5}{2}$, so $f_X\\left(\\frac{1}{2}\\right) = \\frac{5}{9}$.\n\n> **Watch out.** The triangle's area is half the square of its leg, so the joint density is $\\frac{2}{a^2}$, not $\\frac{1}{a^2}$; and the marginal still needs the factor of the slice length.",
+    "在区域上均匀的联合密度，在那里等于面积的倒数。它在 $x$ 处的边缘密度通过对 $y$ 积分得到，等于联合密度乘以 $x$ 处竖直截线的长度。在三角形上这些截线不断缩短，所以即使联合密度均匀，边缘密度也不均匀。在三角形 $x, y \\ge 0$，$x + y \\le 3$ 上，面积为 $\\frac{9}{2}$，联合密度为 $\\frac{2}{9}$，$x = \\frac{1}{2}$ 处的截线长度为 $\\frac{5}{2}$，所以 $f_X\\left(\\frac{1}{2}\\right) = \\frac{5}{9}$。\n\n> **注意。** 三角形面积是直角边平方的一半，所以联合密度是 $\\frac{2}{a^2}$，不是 $\\frac{1}{a^2}$；而边缘密度还要乘以截线长度。",
   ),
   generate(rng) {
     const a = rng.int(2, 12);
@@ -2828,10 +3093,49 @@ const marginalOnTriangle: KnowledgePointDef = {
         `$(X, Y)$ 在三角形 $x \\ge 0$，$y \\ge 0$，$x + y \\le ${a}$ 上均匀分布。求边缘密度 $f_X(${x})$。`,
       ),
       answer,
-      wrong: [Q.of(a - x, a * a), Q.of(2, a * a), Q.of(1, a), Q.of(a - x, a)],
-      solution: t(
-        `The area is $\\frac{${a * a}}{2}$, so the joint density is $\\frac{2}{${a * a}}$. The slice at $x = ${x}$ has length ${a - x}, which gives $${answer.toLatex()}$.`,
-        `面积是 $\\frac{${a * a}}{2}$，所以联合密度是 $\\frac{2}{${a * a}}$。$x = ${x}$ 处的截线长度是 ${a - x}，得 $${answer.toLatex()}$。`,
+      mistakes: apart(answer, [
+        why(
+          Q.of(a - x, a * a),
+          "That uses the area $a^2$ of the square; the triangle has half that area.",
+          "那是用了正方形面积 $a^2$；三角形面积只有它的一半。",
+        ),
+        why(
+          Q.of(2, a * a),
+          "That is the joint density; the marginal multiplies it by the length of the slice.",
+          "那是联合密度；边缘密度要再乘以截线长度。",
+        ),
+        why(
+          Q.of(1, a),
+          "That treats $X$ as uniform; the slices shrink as $x$ grows.",
+          "那是把 $X$ 当成了均匀分布；截线随 $x$ 增大而缩短。",
+        ),
+        why(Q.of(a - x, a), "That is the slice length divided by the leg, not by the area.", "那是截线长度除以直角边，而不是除以面积。"),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Find the joint density", "求联合密度"],
+            t(
+              `The area is $\\frac{${a * a}}{2}$, so the joint density is $\\frac{2}{${a * a}}$.`,
+              `面积是 $\\frac{${a * a}}{2}$，所以联合密度是 $\\frac{2}{${a * a}}$。`,
+            ),
+          ],
+          [
+            ["Measure the slice", "量截线"],
+            t(`At $x = ${x}$, $y$ runs from $0$ to $${a - x}$.`, `在 $x = ${x}$ 处，$y$ 从 $0$ 到 $${a - x}$。`),
+          ],
+          [
+            ["Multiply", "相乘"],
+            t(
+              `$f_X(${x}) = \\frac{2}{${a * a}} \\cdot ${a - x} = ${answer.toLatex()}$.`,
+              `$f_X(${x}) = \\frac{2}{${a * a}} \\cdot ${a - x} = ${answer.toLatex()}$。`,
+            ),
+          ],
+        ],
+        t(
+          `$f_X(x) = \\frac{2(${a} - x)}{${a * a}}$ is a density: $\\int_0^{${a}} \\frac{2(${a} - x)}{${a * a}}\\,dx = \\frac{${a * a}}{${a * a}} = 1$.`,
+          `$f_X(x) = \\frac{2(${a} - x)}{${a * a}}$ 是密度：$\\int_0^{${a}} \\frac{2(${a} - x)}{${a * a}}\\,dx = \\frac{${a * a}}{${a * a}} = 1$。`,
+        ),
       ),
     });
   },
@@ -2841,8 +3145,8 @@ const minimumOfExponentials: KnowledgePointDef = {
   id: "the-expected-minimum-of-two-exponential-variables",
   title: t("The expected minimum of two exponential variables", "两个指数变量最小值的期望"),
   explanation: t(
-    "The smaller of two independent exponential variables exceeds $t$ only when both do, and that probability is $e^{-pt}e^{-qt}$. So the minimum is itself exponential, with rate $p + q$, and its mean is $\\frac{1}{p + q}$. Two competing waiting times therefore end sooner than either alone, and their rates simply add.",
-    "两个独立指数变量中较小的那个超过 $t$，当且仅当二者都超过 $t$，这个概率是 $e^{-pt}e^{-qt}$。所以最小值本身也服从指数分布，速率是 $p + q$，均值是 $\\frac{1}{p + q}$。因此两个相互竞争的等待时间比单独任何一个都结束得早，它们的速率直接相加。",
+    "The smaller of two independent exponential variables exceeds $t$ only when both do, and that probability is $e^{-pt}e^{-qt}$. So the minimum is itself exponential, with rate $p + q$, and its mean is $\\frac{1}{p + q}$. Two competing waiting times therefore end sooner than either alone, and their rates simply add. For rates $12$ and $8$ the minimum has rate $20$ and mean $\\frac{1}{20}$.\n\n> **Watch out.** Add the rates, not the means $\\frac{1}{p} + \\frac{1}{q}$, which would make the minimum longer than either wait; and the mean of an exponential is one over its rate, not one over the product of the rates.",
+    "两个独立指数变量中较小的那个超过 $t$，当且仅当二者都超过 $t$，这个概率是 $e^{-pt}e^{-qt}$。所以最小值本身也服从指数分布，速率是 $p + q$，均值是 $\\frac{1}{p + q}$。因此两个相互竞争的等待时间比单独任何一个都结束得早，它们的速率直接相加。对速率 $12$ 与 $8$，最小值的速率为 $20$，均值为 $\\frac{1}{20}$。\n\n> **注意。** 要相加的是速率，不是均值 $\\frac{1}{p} + \\frac{1}{q}$，那会让最小值比任何一个等待都长；指数分布的均值是速率的倒数，不是速率之积的倒数。",
   ),
   generate(rng) {
     const p = rng.int(1, 9);
@@ -2854,10 +3158,44 @@ const minimumOfExponentials: KnowledgePointDef = {
         `独立的 $X$、$Y$ 在正实数上的密度分别是 $${coefficient(p)}e^{${poly([-p, "x"])}}$ 和 $${coefficient(q)}e^{${poly([-q, "y"])}}$。求 $E[\\min(X, Y)]$。`,
       ),
       answer,
-      wrong: [Q.of(1, p).add(Q.of(1, q)), Q.of(1, p * q), Q.of(1, 2 * (p + q))],
-      solution: t(
-        `Since $P(\\min(X, Y) > t) = e^{-${p + q}t}$, the minimum is exponential with rate ${p + q}. Its mean is $${answer.toLatex()}$.`,
-        `由于 $P(\\min(X, Y) > t) = e^{-${p + q}t}$，最小值服从速率为 ${p + q} 的指数分布。它的均值是 $${answer.toLatex()}$。`,
+      mistakes: apart(answer, [
+        why(
+          Q.of(1, p).add(Q.of(1, q)),
+          "That adds the means; the rates add, and the minimum ends sooner than either.",
+          "那是把均值相加；相加的是速率，最小值比任何一个都结束得早。",
+        ),
+        why(
+          Q.of(1, p * q),
+          "That multiplies the rates; the survival functions multiply, so the rates add.",
+          "那是把速率相乘；生存函数相乘，所以速率相加。",
+        ),
+        why(
+          Q.of(1, 2 * (p + q)),
+          "That halves the mean; an exponential with rate $r$ has mean $\\frac{1}{r}$.",
+          "那是把均值减半了；速率为 $r$ 的指数分布均值为 $\\frac{1}{r}$。",
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Find the survival function", "求生存函数"],
+            t(
+              `$P(\\min(X, Y) > t) = P(X > t)P(Y > t) = e^{-${coefficient(p)}t}e^{-${coefficient(q)}t} = e^{-${p + q}t}$.`,
+              `$P(\\min(X, Y) > t) = P(X > t)P(Y > t) = e^{-${coefficient(p)}t}e^{-${coefficient(q)}t} = e^{-${p + q}t}$。`,
+            ),
+          ],
+          [
+            ["Take the mean", "求均值"],
+            t(
+              `The minimum is exponential with rate $${p + q}$, so $E[\\min(X, Y)] = ${answer.toLatex()}$.`,
+              `最小值服从速率为 $${p + q}$ 的指数分布，所以 $E[\\min(X, Y)] = ${answer.toLatex()}$。`,
+            ),
+          ],
+        ],
+        t(
+          `$${answer.toLatex()}$ is smaller than both means $${Q.of(1, p).toLatex()}$ and $${Q.of(1, q).toLatex()}$, as the first of two waits must be.`,
+          `$${answer.toLatex()}$ 小于两个均值 $${Q.of(1, p).toLatex()}$ 与 $${Q.of(1, q).toLatex()}$，先结束的等待理应如此。`,
+        ),
       ),
     });
   },
@@ -4652,23 +4990,54 @@ const diskMoment: KnowledgePointDef = {
   id: "the-moment-of-inertia-of-a-disk-about-a-diameter",
   title: t("The moment of inertia of a disk about a diameter", "圆盘对直径的转动惯量"),
   explanation: t(
-    "The moment $I_x = \\iint \\rho y^2\\,dA$ of a disk is easy in polar coordinates, but symmetry makes it easier still. A disk centered at the origin has $I_x = I_y$, and these add to the polar moment $I_0 = \\iint \\rho r^2\\,dA = \\frac{\\pi\\rho R^4}{2}$, because $x^2 + y^2 = r^2$. So the moment about a diameter is exactly half of the moment about the center.",
-    "圆盘的转动惯量 $I_x = \\iint \\rho y^2\\,dA$ 用极坐标很容易求，但利用对称性更容易。以原点为心的圆盘有 $I_x = I_y$，它们之和是极惯性矩 $I_0 = \\iint \\rho r^2\\,dA = \\frac{\\pi\\rho R^4}{2}$，因为 $x^2 + y^2 = r^2$。所以对直径的转动惯量恰好是对圆心的转动惯量的一半。",
+    "The moment $I_x = \\iint \\rho y^2\\,dA$ of a disk is easy in polar coordinates, but symmetry makes it easier still. A disk centered at the origin has $I_x = I_y$, and these add to the polar moment $I_0 = \\iint \\rho r^2\\,dA = \\frac{\\pi\\rho R^4}{2}$, because $x^2 + y^2 = r^2$. So the moment about a diameter is exactly half of the moment about the center. For density $3$ on the disk of radius $8$, $I_0 = \\frac{3 \\cdot 4096}{2}\\pi = 6144\\pi$, so $I_x = 3072\\pi$.\n\n> **Watch out.** The polar moment counts both axes, so halve it; and keep the factor $r$ in $dA$, which makes the power $R^4$, not $R^3$.",
+    "圆盘的转动惯量 $I_x = \\iint \\rho y^2\\,dA$ 用极坐标很容易求，但利用对称性更容易。以原点为心的圆盘有 $I_x = I_y$，它们之和是极惯性矩 $I_0 = \\iint \\rho r^2\\,dA = \\frac{\\pi\\rho R^4}{2}$，因为 $x^2 + y^2 = r^2$。所以对直径的转动惯量恰好是对圆心的转动惯量的一半。对半径为 $8$、密度为 $3$ 的圆盘，$I_0 = \\frac{3 \\cdot 4096}{2}\\pi = 6144\\pi$，所以 $I_x = 3072\\pi$。\n\n> **注意。** 极惯性矩包含两条轴的贡献，所以要减半；也要保留 $dA$ 中的因子 $r$，它使幂次为 $R^4$ 而不是 $R^3$。",
   ),
   generate(rng) {
     const density = rng.int(1, 9);
     const r = rng.int(1, 6);
     const answer = Q.of(density * r ** 4, 4);
+    const polar = Q.of(density * r ** 4, 2);
     return numberProblem({
       prompt: t(
         `A disk $x^2 + y^2 \\le ${r * r}$ has constant density $${density}$. Its moment of inertia about the $x$-axis equals $c\\pi$. Find $c$.`,
         `圆盘 $x^2 + y^2 \\le ${r * r}$ 的密度恒为 $${density}$。它对 $x$ 轴的转动惯量等于 $c\\pi$。求 $c$。`,
       ),
       answer,
-      wrong: [Q.of(density * r ** 4, 2), Q.of(density * r ** 4, 8), Q.of(density * r ** 3, 3), Q.of(density * r * r, 2)],
-      solution: t(
-        `The polar moment is $\\frac{${density} \\cdot ${r ** 4}}{2}\\pi$, and $I_x$ is half of it by symmetry. So $c = ${answer.toLatex()}$.`,
-        `极惯性矩是 $\\frac{${density} \\cdot ${r ** 4}}{2}\\pi$，由对称性，$I_x$ 是它的一半。所以 $c = ${answer.toLatex()}$。`,
+      mistakes: apart(answer, [
+        why(
+          polar,
+          "That is the polar moment $I_0$; the moment about a diameter is half of it.",
+          "那是极惯性矩 $I_0$；对直径的转动惯量是它的一半。",
+        ),
+        why(Q.of(density * r ** 4, 8), "That halves the polar moment twice.", "那是把极惯性矩减半了两次。"),
+        why(
+          Q.of(density * r ** 3, 3),
+          "That drops the factor $r$ in $dA = r\\,dr\\,d\\theta$.",
+          "那是漏掉了 $dA = r\\,dr\\,d\\theta$ 中的因子 $r$。",
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Find the polar moment", "求极惯性矩"],
+            t(
+              `$I_0 = \\rho\\int_0^{2\\pi}\\int_0^{${r}} r^3\\,dr\\,d\\theta = \\frac{\\pi\\rho R^4}{2}$, which is $c_0\\pi$ with $c_0 = ${polar.toLatex()}$.`,
+              `$I_0 = \\rho\\int_0^{2\\pi}\\int_0^{${r}} r^3\\,dr\\,d\\theta = \\frac{\\pi\\rho R^4}{2}$，即 $c_0\\pi$，其中 $c_0 = ${polar.toLatex()}$。`,
+            ),
+          ],
+          [
+            ["Use symmetry", "利用对称性"],
+            t(
+              `$I_x = I_y$ and $I_x + I_y = I_0$, so $c = \\frac{c_0}{2} = ${answer.toLatex()}$.`,
+              `$I_x = I_y$ 且 $I_x + I_y = I_0$，所以 $c = \\frac{c_0}{2} = ${answer.toLatex()}$。`,
+            ),
+          ],
+        ],
+        t(
+          `Directly, $I_x = \\rho\\int_0^{2\\pi}\\sin^2\\theta\\,d\\theta\\int_0^{${r}} r^3\\,dr = \\pi \\cdot ${answer.toLatex()}$, the same.`,
+          `直接计算，$I_x = \\rho\\int_0^{2\\pi}\\sin^2\\theta\\,d\\theta\\int_0^{${r}} r^3\\,dr = \\pi \\cdot ${answer.toLatex()}$，结果相同。`,
+        ),
       ),
     });
   },
@@ -4680,8 +5049,8 @@ const rectangleCentralMoment: KnowledgePointDef = {
     multivariableDrawings8["moments-of-inertia-of-laminas-about-other-axes#the-moment-of-inertia-of-a-rectangle-about-a-central-axis"],
   title: t("The moment of inertia of a rectangle about a central axis", "矩形对中心轴的转动惯量"),
   explanation: t(
-    "For an axis through the center of a uniform rectangle, parallel to a side, the distance to the axis runs from $-\\frac{h}{2}$ to $\\frac{h}{2}$. Integrating the squared distance over the rectangle gives $\\frac{\\rho wh^3}{12}$, which is a quarter of the moment about the edge. Only the height across the axis is cubed. This is why a beam is stiffer when set on its narrow side.",
-    "对过均匀矩形中心、平行于一边的轴，到轴的距离从 $-\\frac{h}{2}$ 变到 $\\frac{h}{2}$。距离平方在矩形上积分，得 $\\frac{\\rho wh^3}{12}$，是对边的转动惯量的四分之一。只有垂直于轴的高度取三次方。这就是梁竖放时更坚固的原因。",
+    "For an axis through the center of a uniform rectangle, parallel to a side, the distance to the axis runs from $-\\frac{h}{2}$ to $\\frac{h}{2}$. Integrating the squared distance over the rectangle gives $\\frac{\\rho wh^3}{12}$, which is a quarter of the moment about the edge. Only the height across the axis is cubed. This is why a beam is stiffer when set on its narrow side. For width $4$, height $12$ and density $1$, $I = \\frac{4 \\cdot 1728}{12} = 576$, a quarter of the edge moment $2304$.\n\n> **Watch out.** Cube the height across the axis, not the width along it; and $\\frac{1}{3}$ is for an axis along an edge, while the central axis gives $\\frac{1}{12}$.",
+    "对过均匀矩形中心、平行于一边的轴，到轴的距离从 $-\\frac{h}{2}$ 变到 $\\frac{h}{2}$。距离平方在矩形上积分，得 $\\frac{\\rho wh^3}{12}$，是对边的转动惯量的四分之一。只有垂直于轴的高度取三次方。这就是梁竖放时更坚固的原因。对宽 $4$、高 $12$、密度 $1$ 的矩形，$I = \\frac{4 \\cdot 1728}{12} = 576$，是对边的转动惯量 $2304$ 的四分之一。\n\n> **注意。** 要把垂直于轴的高取三次方，而不是沿轴的宽；$\\frac{1}{3}$ 对应沿边的轴，中心轴给出 $\\frac{1}{12}$。",
   ),
   generate(rng) {
     const density = rng.int(1, 6);
@@ -4694,10 +5063,46 @@ const rectangleCentralMoment: KnowledgePointDef = {
         `一个矩形沿 $x$ 轴宽 ${w}、沿 $y$ 轴高 ${h}，密度恒为 $${density}$。求它对过其中心的水平线的转动惯量。`,
       ),
       answer,
-      wrong: [Q.of(density * w * h ** 3, 3), Q.of(density * h * w ** 3, 12), Q.of(density * w * h * h, 12), answer.add(Q.of(1))],
-      solution: t(
-        `The integral is $${density} \\cdot ${w} \\cdot \\int_{-h/2}^{h/2} y^2\\,dy$ with $h = ${h}$, and it equals $${answer.toLatex()}$.`,
-        `当 $h = ${h}$ 时，积分是 $${density} \\cdot ${w} \\cdot \\int_{-h/2}^{h/2} y^2\\,dy$，它等于 $${answer.toLatex()}$。`,
+      mistakes: apart(answer, [
+        why(
+          Q.of(density * w * h ** 3, 3),
+          "That is the moment about the bottom edge; the central axis gives $\\frac{1}{12}$, not $\\frac{1}{3}$.",
+          "那是对底边的转动惯量；中心轴给出 $\\frac{1}{12}$，不是 $\\frac{1}{3}$。",
+        ),
+        why(
+          Q.of(density * h * w ** 3, 12),
+          "That cubes the width; only the height across the axis is cubed.",
+          "那是把宽取了三次方；只有垂直于轴的高取三次方。",
+        ),
+        why(
+          Q.of(density * w * h * h, 12),
+          "That squares the height instead of cubing it; integrating $y^2$ gives $h^3$.",
+          "那是把高平方而不是取三次方；积分 $y^2$ 得 $h^3$。",
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Integrate across the axis", "对垂直于轴的方向积分"],
+            t(
+              `$\\int_{-${h}/2}^{${h}/2} y^2\\,dy = \\frac{h^3}{12} = ${Q.of(h ** 3, 12).toLatex()}$.`,
+              `$\\int_{-${h}/2}^{${h}/2} y^2\\,dy = \\frac{h^3}{12} = ${Q.of(h ** 3, 12).toLatex()}$。`,
+            ),
+          ],
+          [
+            ["Multiply by the density and width", "乘以密度与宽"],
+            density * w === 1
+              ? t(`With $\\rho w = 1$, $I = ${answer.toLatex()}$.`, `由于 $\\rho w = 1$，$I = ${answer.toLatex()}$。`)
+              : t(
+                  `$I = ${density * w} \\cdot ${Q.of(h ** 3, 12).toLatex()} = ${answer.toLatex()}$.`,
+                  `$I = ${density * w} \\cdot ${Q.of(h ** 3, 12).toLatex()} = ${answer.toLatex()}$。`,
+                ),
+          ],
+        ],
+        t(
+          `Adding $M\\left(\\frac{h}{2}\\right)^2$ with $M = ${density * w * h}$ moves the axis to the bottom edge: $${answer.toLatex()} + ${Q.of(density * w * h ** 3, 4).toLatex()} = ${Q.of(density * w * h ** 3, 3).toLatex()}$, which is $\\frac{\\rho wh^3}{3}$.`,
+          `加上 $M\\left(\\frac{h}{2}\\right)^2$（$M = ${density * w * h}$）把轴移到底边：$${answer.toLatex()} + ${Q.of(density * w * h ** 3, 4).toLatex()} = ${Q.of(density * w * h ** 3, 3).toLatex()}$，正是 $\\frac{\\rho wh^3}{3}$。`,
+        ),
       ),
     });
   },
@@ -4707,8 +5112,8 @@ const annulusGyration: KnowledgePointDef = {
   id: "the-radius-of-gyration-of-an-annulus",
   title: t("The radius of gyration of an annulus", "圆环的回转半径"),
   explanation: t(
-    "The squared radius of gyration is the moment of inertia divided by the mass, so the density cancels. For an annulus about its center, these are integrals in polar coordinates, of $r^3$ and of $r$ respectively. Factoring a difference of squares simplifies the ratio to $\\frac{a^2 + b^2}{2}$. A thin ring has all its mass near one radius, so this agrees with the limit $R^2$.",
-    "回转半径的平方是转动惯量除以质量，所以密度消去了。对圆环关于圆心，这两者是极坐标下分别对 $r^3$ 和 $r$ 的积分。分解平方差后，比值化简为 $\\frac{a^2 + b^2}{2}$。细圆环的质量都集中在一个半径附近，这与极限 $R^2$ 相符。",
+    "The squared radius of gyration is the moment of inertia divided by the mass, so the density cancels. For an annulus about its center, these are integrals in polar coordinates, of $r^3$ and of $r$ respectively. Factoring a difference of squares simplifies the ratio to $\\frac{a^2 + b^2}{2}$. A thin ring has all its mass near one radius, so this agrees with the limit $R^2$. For inner radius $6$ and outer radius $13$, $k^2 = \\frac{36 + 169}{2} = \\frac{205}{2}$, between $6^2$ and $13^2$.\n\n> **Watch out.** $b^4 - a^4 = (b^2 - a^2)(b^2 + a^2)$, so the squares are added, not subtracted; keep the $\\frac{1}{2}$, and do not treat the annulus as a solid disk of radius $b$.",
+    "回转半径的平方是转动惯量除以质量，所以密度消去了。对圆环关于圆心，这两者是极坐标下分别对 $r^3$ 和 $r$ 的积分。分解平方差后，比值化简为 $\\frac{a^2 + b^2}{2}$。细圆环的质量都集中在一个半径附近，这与极限 $R^2$ 相符。对内半径 $6$、外半径 $13$，$k^2 = \\frac{36 + 169}{2} = \\frac{205}{2}$，介于 $6^2$ 与 $13^2$ 之间。\n\n> **注意。** $b^4 - a^4 = (b^2 - a^2)(b^2 + a^2)$，所以两个平方相加而不是相减；要保留 $\\frac{1}{2}$，也不要把圆环当成半径为 $b$ 的实心圆盘。",
   ),
   generate(rng) {
     const a = rng.int(1, 9);
@@ -4720,10 +5125,56 @@ const annulusGyration: KnowledgePointDef = {
         `一个均匀圆环的内半径是 ${a}，外半径是 ${b}。求它关于圆心的回转半径的平方。`,
       ),
       answer,
-      wrong: [Q.of(b * b - a * a, 2), Q.of((a + b) ** 2, 4), Q.of(a * a + b * b), Q.of(b * b, 2)],
-      solution: t(
-        `The ratio of the integrals is $\\frac{(${b}^4 - ${a}^4)/4}{(${b}^2 - ${a}^2)/2} = \\frac{${a}^2 + ${b}^2}{2} = ${answer.toLatex()}$.`,
-        `两个积分之比是 $\\frac{(${b}^4 - ${a}^4)/4}{(${b}^2 - ${a}^2)/2} = \\frac{${a}^2 + ${b}^2}{2} = ${answer.toLatex()}$。`,
+      mistakes: apart(answer, [
+        why(
+          Q.of(b * b - a * a, 2),
+          "That subtracts the squares; $b^4 - a^4 = (b^2 - a^2)(b^2 + a^2)$ leaves their sum.",
+          "那是把平方相减；$b^4 - a^4 = (b^2 - a^2)(b^2 + a^2)$ 留下的是它们的和。",
+        ),
+        why(
+          Q.of((a + b) ** 2, 4),
+          "That squares the middle radius; the radius of gyration weights the outer part more.",
+          "那是把中间半径平方；回转半径给外侧更大的权重。",
+        ),
+        why(
+          Q.of(a * a + b * b),
+          "That drops the $\\frac{1}{2}$ left from dividing $\\frac{1}{4}$ by $\\frac{1}{2}$.",
+          "那是丢掉了 $\\frac{1}{4}$ 除以 $\\frac{1}{2}$ 剩下的 $\\frac{1}{2}$。",
+        ),
+        why(
+          Q.of(b * b, 2),
+          "That is for a solid disk of radius $b$; the hole removes the inner mass.",
+          "那是半径为 $b$ 的实心圆盘的值；中间的孔去掉了内部的质量。",
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Find the moment of inertia", "求转动惯量"],
+            t(
+              `$I = \\rho\\int_0^{2\\pi}\\int_{${a}}^{${b}} r^3\\,dr\\,d\\theta = \\frac{\\pi\\rho}{2}(${b}^4 - ${a}^4) = \\frac{\\pi\\rho}{2} \\cdot ${b ** 4 - a ** 4}$.`,
+              `$I = \\rho\\int_0^{2\\pi}\\int_{${a}}^{${b}} r^3\\,dr\\,d\\theta = \\frac{\\pi\\rho}{2}(${b}^4 - ${a}^4) = \\frac{\\pi\\rho}{2} \\cdot ${b ** 4 - a ** 4}$。`,
+            ),
+          ],
+          [
+            ["Find the mass", "求质量"],
+            t(
+              `$M = \\rho\\int_0^{2\\pi}\\int_{${a}}^{${b}} r\\,dr\\,d\\theta = \\pi\\rho(${b}^2 - ${a}^2) = \\pi\\rho \\cdot ${b * b - a * a}$.`,
+              `$M = \\rho\\int_0^{2\\pi}\\int_{${a}}^{${b}} r\\,dr\\,d\\theta = \\pi\\rho(${b}^2 - ${a}^2) = \\pi\\rho \\cdot ${b * b - a * a}$。`,
+            ),
+          ],
+          [
+            ["Divide", "相除"],
+            t(
+              `$k^2 = \\frac{I}{M} = \\frac{${b ** 4 - a ** 4}}{2 \\cdot ${b * b - a * a}} = \\frac{${a * a} + ${b * b}}{2} = ${answer.toLatex()}$.`,
+              `$k^2 = \\frac{I}{M} = \\frac{${b ** 4 - a ** 4}}{2 \\cdot ${b * b - a * a}} = \\frac{${a * a} + ${b * b}}{2} = ${answer.toLatex()}$。`,
+            ),
+          ],
+        ],
+        t(
+          `$${answer.toLatex()}$ lies between $${a}^2 = ${a * a}$ and $${b}^2 = ${b * b}$, since all the mass lies between the two radii.`,
+          `$${answer.toLatex()}$ 介于 $${a}^2 = ${a * a}$ 与 $${b}^2 = ${b * b}$ 之间，因为全部质量都在两个半径之间。`,
+        ),
       ),
     });
   },
@@ -4735,8 +5186,8 @@ const expectedCoordinate: KnowledgePointDef = {
     multivariableDrawings8["probability-density-functions-of-continuous-random-variables#an-expected-coordinate-from-a-joint-density"],
   title: t("An expected coordinate from a joint density", "由联合密度求坐标的期望"),
   explanation: t(
-    "When a joint density on a rectangle is a product of a function of $x$ and a function of $y$, the two variables are independent. The density of $X$ alone then follows from its own factor, normalized over its own interval, and $y$ plays no further part. For a density proportional to $xy$, this gives $X$ a density proportional to $x$, whose mean is two thirds of the way along.",
-    "当矩形上的联合密度是 $x$ 的函数与 $y$ 的函数之积时，两个变量相互独立。于是 $X$ 的密度由它自己的因子在自己的区间上归一化得到，$y$ 不再起作用。对与 $xy$ 成正比的密度，$X$ 的密度与 $x$ 成正比，它的均值在区间的三分之二处。",
+    "When a joint density on a rectangle is a product of a function of $x$ and a function of $y$, the two variables are independent. The density of $X$ alone then follows from its own factor, normalized over its own interval, and $y$ plays no further part. For a density proportional to $xy$, this gives $X$ a density proportional to $x$, whose mean is two thirds of the way along. On $[0, 15] \\times [0, 2]$, $E(X) = \\frac{2}{3} \\cdot 15 = 10$.\n\n> **Watch out.** The density of $X$ grows with $x$, so its mean is past the midpoint: $\\frac{2a}{3}$, not $\\frac{a}{2}$. And $E(X)$ uses the interval of $x$, not the interval of $y$.",
+    "当矩形上的联合密度是 $x$ 的函数与 $y$ 的函数之积时，两个变量相互独立。于是 $X$ 的密度由它自己的因子在自己的区间上归一化得到，$y$ 不再起作用。对与 $xy$ 成正比的密度，$X$ 的密度与 $x$ 成正比，它的均值在区间的三分之二处。在 $[0, 15] \\times [0, 2]$ 上，$E(X) = \\frac{2}{3} \\cdot 15 = 10$。\n\n> **注意。** $X$ 的密度随 $x$ 增大，所以均值越过中点：是 $\\frac{2a}{3}$，不是 $\\frac{a}{2}$。而且 $E(X)$ 用的是 $x$ 的区间，不是 $y$ 的区间。",
   ),
   generate(rng) {
     const a = rng.int(1, 12);
@@ -4748,10 +5199,49 @@ const expectedCoordinate: KnowledgePointDef = {
         `$f(x, y) = Cxy$ 是 $[0, ${a}] \\times [0, ${b}]$ 上的联合密度。求 $E(X)$。`,
       ),
       answer,
-      wrong: [Q.of(a, 2), Q.of(2 * b, 3), Q.of(a, 3), Q.of(3 * a, 4)],
-      solution: t(
-        `The variable $X$ has density proportional to $x$ on $[0, ${a}]$. So $E(X) = \\frac{\\int_0^{${a}} x^2\\,dx}{\\int_0^{${a}} x\\,dx} = ${answer.toLatex()}$.`,
-        `变量 $X$ 在 $[0, ${a}]$ 上的密度与 $x$ 成正比。所以 $E(X) = \\frac{\\int_0^{${a}} x^2\\,dx}{\\int_0^{${a}} x\\,dx} = ${answer.toLatex()}$。`,
+      mistakes: apart(answer, [
+        why(
+          Q.of(a, 2),
+          "That is the midpoint, the mean of a uniform variable; this density grows with $x$.",
+          "那是中点，即均匀变量的均值；这个密度随 $x$ 增大。",
+        ),
+        why(
+          Q.of(2 * b, 3),
+          "That uses the interval of $y$; $E(X)$ depends only on the interval of $x$.",
+          "那是用了 $y$ 的区间；$E(X)$ 只取决于 $x$ 的区间。",
+        ),
+        why(
+          Q.of(a, 3),
+          "That is one third of the way; the heavier end is at $x = a$, so the mean is two thirds along.",
+          "那是三分之一处；较重的一端在 $x = a$，所以均值在三分之二处。",
+        ),
+        why(
+          Q.of(3 * a, 4),
+          "That integrates $x^3$ over $x^2$, as if the density were proportional to $x^2$.",
+          "那是用 $x^3$ 的积分除以 $x^2$ 的积分，好像密度与 $x^2$ 成正比。",
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Separate the variables", "分离变量"],
+            t(
+              `$Cxy$ is a function of $x$ times a function of $y$, so $X$ has density proportional to $x$ on $[0, ${a}]$.`,
+              `$Cxy$ 是 $x$ 的函数乘以 $y$ 的函数，所以 $X$ 在 $[0, ${a}]$ 上的密度与 $x$ 成正比。`,
+            ),
+          ],
+          [
+            ["Take the mean", "求均值"],
+            t(
+              `$E(X) = \\frac{\\int_0^{${a}} x^2\\,dx}{\\int_0^{${a}} x\\,dx} = \\frac{${Q.of(a * a * a, 3).toLatex()}}{${Q.of(a * a, 2).toLatex()}} = ${answer.toLatex()}$.`,
+              `$E(X) = \\frac{\\int_0^{${a}} x^2\\,dx}{\\int_0^{${a}} x\\,dx} = \\frac{${Q.of(a * a * a, 3).toLatex()}}{${Q.of(a * a, 2).toLatex()}} = ${answer.toLatex()}$。`,
+            ),
+          ],
+        ],
+        t(
+          `$${answer.toLatex()}$ lies between the midpoint $${Q.of(a, 2).toLatex()}$ and the end $${a}$, toward the end where the density is larger.`,
+          `$${answer.toLatex()}$ 介于中点 $${Q.of(a, 2).toLatex()}$ 与端点 $${a}$ 之间，偏向密度较大的一端。`,
+        ),
       ),
     });
   },
