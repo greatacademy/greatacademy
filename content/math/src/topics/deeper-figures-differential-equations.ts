@@ -693,21 +693,79 @@ const classifyRealPortrait = point(
   "classifying-a-drawn-portrait-with-real-eigenvalues",
   ["Classifying a drawn portrait with real eigenvalues", "判断实特征值的相图类型"],
   [
-    "With two real eigenvalues, a phase portrait has straight lines along the eigenvectors. Arrows pointing inward on both lines mean both eigenvalues are negative, which makes a stable node. Arrows outward on both mean an unstable node. Arrows inward on one line and outward on the other mean eigenvalues of opposite sign, which makes a saddle.",
-    "有两个实特征值时，相图沿特征向量有直线。两条直线上的箭头都向内，说明两个特征值都为负，这是稳定结点。都向外是不稳定结点。一条向内一条向外，说明特征值异号，这是鞍点。",
+    "With two real eigenvalues, a phase portrait has straight lines along the eigenvectors. Arrows pointing inward on both lines mean both eigenvalues are negative, which makes a stable node. Arrows outward on both mean an unstable node. Arrows inward on one line and outward on the other mean eigenvalues of opposite sign, which makes a saddle.\n\n> **Watch out.** Read the arrows on both straight lines before deciding. With eigenvalue $1$ along $(1, 1)$ and $-1$ along $(1, -1)$, trajectories come in along $(1, -1)$ and leave along $(1, 1)$: a saddle, even though some trajectories pass close to the origin.",
+    "有两个实特征值时，相图沿特征向量有直线。两条直线上的箭头都向内，说明两个特征值都为负，这是稳定结点。都向外是不稳定结点。一条向内一条向外，说明特征值异号，这是鞍点。\n\n> **注意。** 下结论前要看两条直线上的箭头。对沿 $(1, 1)$ 的特征值 $1$ 与沿 $(1, -1)$ 的特征值 $-1$，轨线沿 $(1, -1)$ 进入、沿 $(1, 1)$ 离开：即使有轨线从原点附近经过，它也是鞍点。",
   ],
   (rng) => {
     const type = rng.pick(realPortraits);
     const [u, w] = rng.pick(eigenDirections);
-    return choose(
+    const saddle = type.l1 * type.l2 < 0;
+    const stable = type.l1 < 0;
+    const lines: Pair = saddle
+      ? ["Arrows point inward on one straight line and outward on the other.", "一条直线上的箭头向内，另一条向外。"]
+      : stable
+        ? ["Arrows point inward on both straight lines.", "两条直线上的箭头都向内。"]
+        : ["Arrows point outward on both straight lines.", "两条直线上的箭头都向外。"];
+    const signs: Pair = saddle
+      ? ["So one eigenvalue is negative and the other positive.", "所以一个特征值为负，另一个为正。"]
+      : stable
+        ? ["So both eigenvalues are negative.", "所以两个特征值都为负。"]
+        : ["So both eigenvalues are positive.", "所以两个特征值都为正。"];
+    const reason = (option: Pair): Because<Pair> => {
+      const [en, zh] = ((): Pair => {
+        if (option === allTypes[0])
+          return [
+            "A saddle has arrows inward on one line and outward on the other, but here both lines point the same way.",
+            "鞍点在一条直线上箭头向内、另一条向外，而这里两条直线方向相同。",
+          ];
+        if (option === allTypes[1])
+          return saddle
+            ? [
+                "A stable node has arrows inward on both lines, but here one line points outward.",
+                "稳定结点两条直线上的箭头都向内，而这里有一条向外。",
+              ]
+            : [
+                "A stable node has arrows inward, but here every arrow points away from the origin.",
+                "稳定结点的箭头向内，而这里所有箭头都背离原点。",
+              ];
+        if (option === allTypes[2])
+          return saddle
+            ? [
+                "An unstable node has arrows outward on both lines, but here one line points inward.",
+                "不稳定结点两条直线上的箭头都向外，而这里有一条向内。",
+              ]
+            : [
+                "An unstable node has arrows outward, but here every arrow points toward the origin.",
+                "不稳定结点的箭头向外，而这里所有箭头都指向原点。",
+              ];
+        if (option === allTypes[3])
+          return [
+            "A spiral turns around the origin, but these trajectories run along straight lines without turning.",
+            "螺旋点的轨线绕原点旋转，而这里的轨线沿直线运动，不旋转。",
+          ];
+        return [
+          "A center has closed loops around the origin, but none of these trajectories closes up.",
+          "中心周围是闭合回路，而这里没有一条轨线闭合。",
+        ];
+      })();
+      return [option, en, zh];
+    };
+    return figureChoice(
       rng,
       [
         "The phase portrait of a linear system is drawn, with arrows for increasing time. What kind of equilibrium is at the origin?",
         "图中是某线性方程组的相图，箭头表示时间增加的方向。原点是哪种平衡点？",
       ],
       type.name,
-      allTypes,
-      [`${type.why[0]}, which makes the origin ${type.name[0]}.`, `${type.why[1]}，所以原点是${type.name[1]}。`],
+      allTypes.filter((o) => o[0] !== type.name[0]).map(reason),
+      [
+        stepOf(["Look at the straight lines", "看两条直线"], lines),
+        stepOf(["Read the signs", "读出符号"], [`${signs[0]} The origin is ${type.name[0]}.`, `${signs[1]}原点是${type.name[1]}。`]),
+      ],
+      [
+        "Along each eigenvector line a solution is $e^{\\lambda t}\\mathbf{v}$, which shrinks toward the origin when $\\lambda < 0$ and grows away from it when $\\lambda > 0$, so the arrows on the two lines give the signs of the two eigenvalues.",
+        "沿每条特征向量直线的解为 $e^{\\lambda t}\\mathbf{v}$，$\\lambda < 0$ 时向原点收缩，$\\lambda > 0$ 时远离原点增长，所以两条直线上的箭头给出两个特征值的符号。",
+      ],
       fig(square(4), portrait(type.l1, type.l2, u, w, [0, 0], 4), [`A phase portrait. ${type.why[0]}.`, `一个相图。${type.why[1]}。`]),
     );
   },
@@ -717,8 +775,8 @@ const classifySpiral = point(
   "classifying-a-drawn-spiral",
   ["Classifying a drawn spiral", "判断图中的螺旋"],
   [
-    "With complex eigenvalues $\\alpha \\pm \\beta i$, trajectories turn around the equilibrium. The real part decides the size: inward spirals mean $\\alpha$ is negative, outward spirals mean it is positive, and closed loops mean it is zero. The direction of turning is a separate fact, which is read from the arrows rather than from the eigenvalues alone.",
-    "特征值为复数 $\\alpha \\pm \\beta i$ 时，轨线绕平衡点旋转。实部决定大小：向内螺旋说明 $\\alpha$ 为负，向外螺旋说明为正，闭合回路说明为零。旋转方向是另一回事，要从箭头读出，不能只看特征值。",
+    "With complex eigenvalues $\\alpha \\pm \\beta i$, trajectories turn around the equilibrium. The real part decides the size: inward spirals mean $\\alpha$ is negative, outward spirals mean it is positive, and closed loops mean it is zero. The direction of turning is a separate fact, which is read from the arrows rather than from the eigenvalues alone.\n\n> **Watch out.** The direction of turning does not decide stability: a clockwise spiral can be stable or unstable. Read the size first, then the arrows; an inward spiral with clockwise arrows is a stable spiral turning clockwise.",
+    "特征值为复数 $\\alpha \\pm \\beta i$ 时，轨线绕平衡点旋转。实部决定大小：向内螺旋说明 $\\alpha$ 为负，向外螺旋说明为正，闭合回路说明为零。旋转方向是另一回事，要从箭头读出，不能只看特征值。\n\n> **注意。** 旋转方向不决定稳定性：顺时针的螺旋点可能稳定也可能不稳定。先看大小，再看箭头；向内螺旋且箭头顺时针，就是顺时针旋转的稳定螺旋点。",
   ],
   (rng) => {
     const alpha = rng.pick([-0.12, 0, 0.12]);
@@ -751,17 +809,45 @@ const classifySpiral = point(
     ];
     const kindIndex = alpha < 0 ? 0 : alpha > 0 ? 2 : 4;
     const correct = all[kindIndex + (ccw ? 0 : 1)] as Pair;
-    return choose(
+    const needs: readonly Pair[] = [
+      ["A stable spiral winds inward", "稳定螺旋点向内盘旋"],
+      ["An unstable spiral winds outward", "不稳定螺旋点向外盘旋"],
+      ["A center is a closed loop", "中心是闭合回路"],
+    ];
+    const reason = (i: number): Because<Pair> => {
+      const option = all[i] as Pair;
+      const kind = Math.floor(i / 2);
+      if (2 * kind !== kindIndex) {
+        const need = needs[kind] as Pair;
+        return [option, `${need[0]}, but this trajectory ${shape[0]}.`, `${need[1]}，而这条轨线${shape[1]}。`];
+      }
+      return [option, `The arrows run ${turn[0]}, not the other way.`, `箭头沿${turn[1]}方向，而不是相反方向。`];
+    };
+    return figureChoice(
       rng,
       [
         "One trajectory of a linear system is drawn, with arrows for increasing time. What is the equilibrium at the origin?",
         "图中是某线性方程组的一条轨线，箭头表示时间增加的方向。原点是什么平衡点？",
       ],
       correct,
-      rng.shuffle(all.filter((o) => o !== correct)),
+      [0, 1, 2, 3, 4, 5].filter((i) => all[i] !== correct).map(reason),
       [
-        `The trajectory ${shape[0]} and its arrows run ${turn[0]}, which describes ${correct[0].replace(", turning", " turning")}.`,
-        `轨线${shape[1]}，箭头沿${turn[1]}方向，所以是${correct[1]}。`,
+        stepOf(
+          ["Read the size", "看大小"],
+          alpha < 0
+            ? ["The trajectory spirals inward, so the real part $\\alpha$ is negative.", "轨线向内螺旋，所以实部 $\\alpha$ 为负。"]
+            : alpha > 0
+              ? ["The trajectory spirals outward, so the real part $\\alpha$ is positive.", "轨线向外螺旋，所以实部 $\\alpha$ 为正。"]
+              : ["The trajectory is a closed loop, so the real part $\\alpha$ is zero.", "轨线是闭合回路，所以实部 $\\alpha$ 为零。"],
+        ),
+        stepOf(
+          ["Read the arrows", "看箭头"],
+          [`The arrows run ${turn[0]}, so the answer is ${correct[0]}.`, `箭头沿${turn[1]}方向，所以答案是${correct[1]}。`],
+        ),
+      ],
+      [
+        "A solution with eigenvalues $\\alpha \\pm \\beta i$ has size proportional to $e^{\\alpha t}$, so each turn multiplies its distance from the origin by $e^{2\\pi\\alpha/\\beta}$: less than $1$ for an inward spiral, more than $1$ for an outward one and exactly $1$ for a closed loop.",
+        "特征值为 $\\alpha \\pm \\beta i$ 的解，其大小与 $e^{\\alpha t}$ 成正比，所以每转一圈到原点的距离乘以 $e^{2\\pi\\alpha/\\beta}$：向内螺旋时小于 $1$，向外螺旋时大于 $1$，闭合回路时恰好为 $1$。",
       ],
       fig(
         square(4),
@@ -776,25 +862,61 @@ const equilibriumOfShifted = point(
   "the-equilibrium-of-a-shifted-system",
   ["The equilibrium of a shifted system", "平移方程组的平衡点"],
   [
-    "A shifted system has the same phase portrait as a linear system, moved so that its center sits at the equilibrium. In the equations, this point appears as a constant term: the system $\\mathbf{x}' = A(\\mathbf{x} - \\mathbf{c})$ has its equilibrium at $\\mathbf{c}$. So the drawing gives the shift by the place where the trajectories meet.",
-    "平移方程组的相图与线性方程组相同，只是移动到以平衡点为中心。在方程中，这个点表现为常数项：方程组 $\\mathbf{x}' = A(\\mathbf{x} - \\mathbf{c})$ 的平衡点是 $\\mathbf{c}$。所以轨线交汇的地方给出平移量。",
+    "A shifted system has the same phase portrait as a linear system, moved so that its center sits at the equilibrium. In the equations, this point appears as a constant term: the system $\\mathbf{x}' = A(\\mathbf{x} - \\mathbf{c})$ has its equilibrium at $\\mathbf{c}$. So the drawing gives the shift by the place where the trajectories meet.\n\n> **Watch out.** The equilibrium is $\\mathbf{c}$ itself, not $-\\mathbf{c}$: a portrait centered at $(2, -1)$ belongs to $\\mathbf{x}' = A\\left(\\mathbf{x} - \\begin{pmatrix} 2 \\\\ -1 \\end{pmatrix}\\right)$.",
+    "平移方程组的相图与线性方程组相同，只是移动到以平衡点为中心。在方程中，这个点表现为常数项：方程组 $\\mathbf{x}' = A(\\mathbf{x} - \\mathbf{c})$ 的平衡点是 $\\mathbf{c}$。所以轨线交汇的地方给出平移量。\n\n> **注意。** 平衡点是 $\\mathbf{c}$ 本身，而不是 $-\\mathbf{c}$：以 $(2, -1)$ 为中心的相图属于 $\\mathbf{x}' = A\\left(\\mathbf{x} - \\begin{pmatrix} 2 \\\\ -1 \\end{pmatrix}\\right)$。",
   ],
   (rng) => {
     const [h, k] = [rng.nonZero(-3, 3), rng.nonZero(-3, 3)];
     const type = rng.pick(realPortraits);
     const [u, w] = rng.pick(eigenDirections);
     const eq = (x: number, y: number) => `\\mathbf{x}' = A\\left(\\mathbf{x} - \\begin{pmatrix} ${x} \\\\ ${y} \\end{pmatrix}\\right)`;
-    return choose(
+    const form = (x: number, y: number): Pair => [`$${eq(x, y)}$`, `$${eq(x, y)}$`];
+    return figureChoice(
       rng,
       [
         "The phase portrait of a system $\\mathbf{x}' = A(\\mathbf{x} - \\mathbf{c})$ is drawn. Which form has the correct $\\mathbf{c}$?",
         "图中是方程组 $\\mathbf{x}' = A(\\mathbf{x} - \\mathbf{c})$ 的相图。哪个形式的 $\\mathbf{c}$ 正确？",
       ],
-      same(eq(h, k)),
-      [same(eq(k, h)), same(eq(-h, -k)), same(eq(h, -k)), same(eq(-h, k))],
+      form(h, k),
       [
-        `All the trajectories meet at $(${h}, ${k})$, so that is the equilibrium, and it is the value of $\\mathbf{c}$ because the right side vanishes exactly at $\\mathbf{x} = \\mathbf{c}$.`,
-        `所有轨线都在 $(${h}, ${k})$ 交汇，所以它是平衡点，也就是 $\\mathbf{c}$ 的值，因为右端恰好在 $\\mathbf{x} = \\mathbf{c}$ 时为零。`,
+        [
+          form(k, h),
+          `That swaps the coordinates: the trajectories meet at $x = ${h}$, $y = ${k}$.`,
+          `这是把坐标交换了：轨线交汇于 $x = ${h}$，$y = ${k}$。`,
+        ],
+        [
+          form(-h, -k),
+          "That flips both signs; the right side vanishes at $\\mathbf{x} = \\mathbf{c}$ itself.",
+          "这是把两个符号都反了；右端恰好在 $\\mathbf{x} = \\mathbf{c}$ 时为零。",
+        ],
+        [
+          form(h, -k),
+          `That flips the sign of the second coordinate; the trajectories meet at $y = ${k}$.`,
+          `这是把第二个坐标的符号反了；轨线交汇于 $y = ${k}$。`,
+        ],
+        [
+          form(-h, k),
+          `That flips the sign of the first coordinate; the trajectories meet at $x = ${h}$.`,
+          `这是把第一个坐标的符号反了；轨线交汇于 $x = ${h}$。`,
+        ],
+      ],
+      [
+        stepOf(
+          ["Find the equilibrium", "找平衡点"],
+          [`All the trajectories meet at $(${h}, ${k})$.`, `所有轨线都在 $(${h}, ${k})$ 交汇。`],
+        ),
+        stepOf(
+          ["Match it with $\\mathbf{c}$", "与 $\\mathbf{c}$ 对应"],
+          [
+            "The right side vanishes exactly at $\\mathbf{x} = \\mathbf{c}$, so $\\mathbf{c}$ is the equilibrium.",
+            "右端恰好在 $\\mathbf{x} = \\mathbf{c}$ 时为零，所以 $\\mathbf{c}$ 就是平衡点。",
+          ],
+          `\\mathbf{c} = \\begin{pmatrix} ${h} \\\\ ${k} \\end{pmatrix}`,
+        ),
+      ],
+      [
+        `At $\\mathbf{x} = (${h}, ${k})$ the right side is $A\\,\\mathbf{0} = \\mathbf{0}$, so the velocity there is zero, as at the meeting point of the drawing.`,
+        `在 $\\mathbf{x} = (${h}, ${k})$ 处右端为 $A\\,\\mathbf{0} = \\mathbf{0}$，速度为零，正如图中轨线的交汇点。`,
       ],
       fig(square(7), portrait(type.l1, type.l2, u, w, [h, k], 7), [
         `A phase portrait centered at (${h}, ${k}).`,
@@ -808,8 +930,8 @@ const decoupledSigns = point(
   "signs-of-a-decoupled-system-from-its-portrait",
   ["Signs of a decoupled system from its portrait", "由相图读解耦方程组的符号"],
   [
-    "In the decoupled system $x' = ax$, $y' = by$, the axes are trajectories. The sign of $a$ shows on the $x$-axis: positive means motion away from the origin along it. The sign of $b$ shows on the $y$-axis in the same way. Reading the two axes separately gives both signs with no calculation.",
-    "在解耦方程组 $x' = ax$，$y' = by$ 中，坐标轴本身就是轨线。$a$ 的符号在 $x$ 轴上表现：为正表示沿它远离原点。$b$ 的符号同样在 $y$ 轴上表现。分别读两条轴，不用计算就得到两个符号。",
+    "In the decoupled system $x' = ax$, $y' = by$, the axes are trajectories. The sign of $a$ shows on the $x$-axis: positive means motion away from the origin along it. The sign of $b$ shows on the $y$-axis in the same way. Reading the two axes separately gives both signs with no calculation.\n\n> **Watch out.** Each axis gives the sign of its own coefficient only. For $x' = -x$, $y' = 2y$ the arrows on the $x$-axis point in and those on the $y$-axis point out.",
+    "在解耦方程组 $x' = ax$，$y' = by$ 中，坐标轴本身就是轨线。$a$ 的符号在 $x$ 轴上表现：为正表示沿它远离原点。$b$ 的符号同样在 $y$ 轴上表现。分别读两条轴，不用计算就得到两个符号。\n\n> **注意。** 每条轴只给出它自己变量的系数符号。对 $x' = -x$，$y' = 2y$，$x$ 轴上的箭头向内，$y$ 轴上的箭头向外。",
   ],
   (rng) => {
     const [sa, sb] = [rng.sign(), rng.sign()];
@@ -820,17 +942,51 @@ const decoupledSigns = point(
       const part = (v: number, n: string) => `${v === 1 ? "" : v === -1 ? "-" : v}${n}`;
       return `x' = ${part(p, "x")},\\; y' = ${part(q, "y")}`;
     };
-    return choose(
+    const xWay: Pair = sa > 0 ? ["away from", "背离"] : ["toward", "指向"];
+    const yWay: Pair = sb > 0 ? ["away from", "背离"] : ["toward", "指向"];
+    const xWrong: Pair = [
+      `Along the $x$-axis the arrows point ${xWay[0]} the origin, so the coefficient of $x$ is ${sa > 0 ? "positive" : "negative"}.`,
+      `沿 $x$ 轴箭头${xWay[1]}原点，所以 $x$ 的系数为${sa > 0 ? "正" : "负"}。`,
+    ];
+    const yWrong: Pair = [
+      `Along the $y$-axis the arrows point ${yWay[0]} the origin, so the coefficient of $y$ is ${sb > 0 ? "positive" : "negative"}.`,
+      `沿 $y$ 轴箭头${yWay[1]}原点，所以 $y$ 的系数为${sb > 0 ? "正" : "负"}。`,
+    ];
+    return figureChoice(
       rng,
       [
         "The phase portrait of a decoupled system is drawn, with arrows for increasing time. Which system could it be?",
         "图中是某解耦方程组的相图，箭头表示时间增加的方向。它可能是哪个方程组？",
       ],
       same(tex(a, b)),
-      [same(tex(-a, b)), same(tex(a, -b)), same(tex(-a, -b))],
       [
-        `Along the $x$-axis the arrows point ${sa > 0 ? "away from" : "toward"} the origin, so $a$ is ${sa > 0 ? "positive" : "negative"}. Along the $y$-axis they point ${sb > 0 ? "away from" : "toward"} it, so $b$ is ${sb > 0 ? "positive" : "negative"}.`,
-        `沿 $x$ 轴箭头${sa > 0 ? "背离" : "指向"}原点，所以 $a$ 为${sa > 0 ? "正" : "负"}。沿 $y$ 轴箭头${sb > 0 ? "背离" : "指向"}原点，所以 $b$ 为${sb > 0 ? "正" : "负"}。`,
+        [same(tex(-a, b)), ...xWrong],
+        [same(tex(a, -b)), ...yWrong],
+        [
+          same(tex(-a, -b)),
+          "Both signs are flipped; read each axis for its own coefficient.",
+          "两个符号都反了；每条轴给出它自己变量的系数。",
+        ],
+      ],
+      [
+        stepOf(
+          ["Read the $x$-axis", "读 $x$ 轴"],
+          [
+            `Along the $x$-axis the arrows point ${xWay[0]} the origin, so $a$ is ${sa > 0 ? "positive" : "negative"}.`,
+            `沿 $x$ 轴箭头${xWay[1]}原点，所以 $a$ 为${sa > 0 ? "正" : "负"}。`,
+          ],
+        ),
+        stepOf(
+          ["Read the $y$-axis", "读 $y$ 轴"],
+          [
+            `Along the $y$-axis they point ${yWay[0]} it, so $b$ is ${sb > 0 ? "positive" : "negative"}.`,
+            `沿 $y$ 轴箭头${yWay[1]}原点，所以 $b$ 为${sb > 0 ? "正" : "负"}。`,
+          ],
+        ),
+      ],
+      [
+        "On the $x$-axis $y = 0$ and $x = x_0e^{at}$, which grows when $a > 0$ and shrinks when $a < 0$; on the $y$-axis $y = y_0e^{bt}$ behaves the same way with $b$.",
+        "在 $x$ 轴上 $y = 0$，$x = x_0e^{at}$，$a > 0$ 时增长，$a < 0$ 时缩小；在 $y$ 轴上 $y = y_0e^{bt}$ 对 $b$ 也是如此。",
       ],
       fig(square(r), portrait(a, b, [1, 0], [0, 1], [0, 0], r), [
         `A phase portrait in which motion along the x-axis is ${sa > 0 ? "away from" : "toward"} the origin and motion along the y-axis is ${sb > 0 ? "away from" : "toward"} it.`,

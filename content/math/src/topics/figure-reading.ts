@@ -2005,8 +2005,8 @@ const decoupledPortrait: KnowledgePointDef = {
   id: "the-type-of-equilibrium-from-a-plot",
   title: t("The type of equilibrium from a plot", "从图判断平衡点的类型"),
   explanation: t(
-    "For $x' = ax$, $y' = by$ the axes are invariant lines and the signs of $a$ and $b$ decide the picture. If arrows point toward the origin along both axes it is a stable node, away along both it is an unstable node, and in along one and out along the other it is a saddle. The plot drawn here has $a = -1$ and $b = 1$: a saddle.",
-    "对 $x' = ax$，$y' = by$，两条坐标轴是不变直线，$a$、$b$ 的符号决定了图形。沿两条轴箭头都指向原点的是稳定结点，都背离原点的是不稳定结点，一条指向、一条背离的是鞍点。这里画出的图 $a = -1$，$b = 1$：是鞍点。",
+    "For $x' = ax$, $y' = by$ the axes are invariant lines and the signs of $a$ and $b$ decide the picture. If arrows point toward the origin along both axes it is a stable node, away along both it is an unstable node, and in along one and out along the other it is a saddle. The plot drawn here has $a = -1$ and $b = 1$: a saddle.\n\n> **Watch out.** Read each axis on its own: in along one axis and out along the other is a saddle, even where most arrows seem to run one way. A decoupled system never has a center, since its eigenvalues $a$ and $b$ are real.",
+    "对 $x' = ax$，$y' = by$，两条坐标轴是不变直线，$a$、$b$ 的符号决定了图形。沿两条轴箭头都指向原点的是稳定结点，都背离原点的是不稳定结点，一条指向、一条背离的是鞍点。这里画出的图 $a = -1$，$b = 1$：是鞍点。\n\n> **注意。** 两条轴要分别看：沿一条轴指向原点、沿另一条轴背离原点就是鞍点，即使大部分箭头看起来朝同一方向。解耦系统不会有中心，因为它的特征值 $a$、$b$ 都是实数。",
   ),
   figure: quiver((x, y) => [-x, y]),
   generate(rng: Rng): Problem {
@@ -2018,19 +2018,54 @@ const decoupledPortrait: KnowledgePointDef = {
     const center = t("A center", "中心");
     const right = a < 0 && b < 0 ? stable : a > 0 && b > 0 ? unstable : saddle;
     const words = (n: number) => (n < 0 ? t("toward the origin", "指向原点") : t("away from the origin", "背离原点"));
+    const sign = (n: number) => (n < 0 ? "a < 0" : "a > 0");
+    const signB = (n: number) => (n < 0 ? "b < 0" : "b > 0");
+    const outAxis = a > 0 ? "x" : "y";
+    const inAxis = a < 0 ? "x" : "y";
+    const both = a < 0 ? t("toward the origin", "指向原点") : t("away from the origin", "背离原点");
+    const verdict =
+      right === stable
+        ? t("both negative", "都是负数")
+        : right === unstable
+          ? t("both positive", "都是正数")
+          : t("of opposite signs", "符号相反");
     return withFigure(
-      pickChoice(
-        rng,
-        t(
-          "The plot shows the direction field of $x' = ax$, $y' = by$ for nonzero constants $a$ and $b$. What kind of equilibrium is the origin?",
-          "图中是 $x' = ax$，$y' = by$ 的方向场，其中 $a$、$b$ 是非零常数。原点是哪种平衡点？",
+      reasoned(
+        pickChoice(
+          rng,
+          t(
+            "The plot shows the direction field of $x' = ax$, $y' = by$ for nonzero constants $a$ and $b$. What kind of equilibrium is the origin?",
+            "图中是 $x' = ax$，$y' = by$ 的方向场，其中 $a$、$b$ 是非零常数。原点是哪种平衡点？",
+          ),
+          right,
+          [stable, unstable, saddle, center].filter((o) => o !== right),
+          t(
+            `**Step 1: Read the $x$-axis.** Along it the arrows point ${words(a).en}, so $${sign(a)}$.\n\n**Step 2: Read the $y$-axis.** Along it the arrows point ${words(b).en}, so $${signB(b)}$.\n\n**Step 3: Name the equilibrium.** ${a < 0 && b < 0 ? "In along both axes" : a > 0 && b > 0 ? "Out along both axes" : "In along one axis and out along the other"}: ${right.en.toLowerCase()}.\n\n**Check.** The eigenvalues of the system are $a$ and $b$, which are ${verdict.en}; real eigenvalues ${verdict.en} give ${right.en.toLowerCase()}.`,
+            `**第一步：看 $x$ 轴。** 沿 $x$ 轴箭头${words(a)["zh-CN"]}，所以 $${sign(a)}$。\n\n**第二步：看 $y$ 轴。** 沿 $y$ 轴箭头${words(b)["zh-CN"]}，所以 $${signB(b)}$。\n\n**第三步：说出平衡点类型。** ${a < 0 && b < 0 ? "两条轴上都指向原点" : a > 0 && b > 0 ? "两条轴上都背离原点" : "一条轴上指向原点，另一条轴上背离原点"}：${right["zh-CN"]}。\n\n**检验。** 系统的特征值是 $a$ 和 $b$，它们${verdict["zh-CN"]}；${verdict["zh-CN"]}的实特征值给出${right["zh-CN"]}。`,
+          ),
         ),
-        right,
-        [stable, unstable, saddle, center].filter((o) => o !== right),
-        t(
-          `Along the $x$-axis the arrows point ${words(a).en}, and along the $y$-axis they point ${words(b).en}. That pattern is ${right.en.toLowerCase()}.`,
-          `沿 $x$ 轴箭头${words(a)["zh-CN"]}，沿 $y$ 轴箭头${words(b)["zh-CN"]}。这种形态是${right["zh-CN"]}。`,
-        ),
+        [
+          [
+            stable.en,
+            `A stable node needs the arrows toward the origin along both axes; along the $${outAxis}$-axis they point away.`,
+            `稳定结点要求两条轴上的箭头都指向原点；沿 $${outAxis}$ 轴箭头背离原点。`,
+          ],
+          [
+            unstable.en,
+            `An unstable node needs the arrows away from the origin along both axes; along the $${inAxis}$-axis they point toward it.`,
+            `不稳定结点要求两条轴上的箭头都背离原点；沿 $${inAxis}$ 轴箭头指向原点。`,
+          ],
+          [
+            saddle.en,
+            `A saddle needs one axis in and the other out; here both axes point ${both.en}.`,
+            `鞍点要求一条轴指向原点、另一条背离原点；这里两条轴都${both["zh-CN"]}。`,
+          ],
+          [
+            center.en,
+            "A center has closed loops and needs complex eigenvalues; this system's eigenvalues $a$ and $b$ are real, so no trajectory closes.",
+            "中心是闭合曲线，需要复特征值；这个系统的特征值 $a$、$b$ 是实数，所以轨线不会闭合。",
+          ],
+        ],
       ),
       quiver((x, y) => [a * x, b * y]),
     );
@@ -2042,8 +2077,8 @@ const complexPortrait: KnowledgePointDef = {
   id: "reading-spirals-and-centers-from-a-plot",
   title: t("Reading spirals and centers from a plot", "从图读取螺旋与中心"),
   explanation: t(
-    "A linear system with eigenvalues $\\alpha \\pm \\beta i$ turns around the origin. The real part sets the distance: $\\alpha > 0$ spirals out, $\\alpha < 0$ spirals in and $\\alpha = 0$ gives closed loops, a center. For $x' = \\alpha x - \\beta y$, $y' = \\beta x + \\alpha y$, a positive $\\beta$ turns counterclockwise. A plot shows both at once, once a trajectory is followed along its arrow.",
-    "特征值为 $\\alpha \\pm \\beta i$ 的线性系统绕原点旋转。实部决定距离：$\\alpha > 0$ 向外螺旋，$\\alpha < 0$ 向内螺旋，$\\alpha = 0$ 给出闭合曲线，即中心。对 $x' = \\alpha x - \\beta y$，$y' = \\beta x + \\alpha y$，正的 $\\beta$ 表示逆时针旋转。沿箭头追踪一条轨线，就能从图上同时看出这两点。",
+    "A linear system with eigenvalues $\\alpha \\pm \\beta i$ turns around the origin. The real part sets the distance: $\\alpha > 0$ spirals out, $\\alpha < 0$ spirals in and $\\alpha = 0$ gives closed loops, a center. For $x' = \\alpha x - \\beta y$, $y' = \\beta x + \\alpha y$, a positive $\\beta$ turns counterclockwise. A plot shows both at once, once a trajectory is followed along its arrow.\n\n> **Watch out.** Judge the turn by following the arrows, not by the shape of the curve: the same spiral run the other way turns the other way. Judge in or out by the distance after a whole turn, not by where the trajectory happens to start.",
+    "特征值为 $\\alpha \\pm \\beta i$ 的线性系统绕原点旋转。实部决定距离：$\\alpha > 0$ 向外螺旋，$\\alpha < 0$ 向内螺旋，$\\alpha = 0$ 给出闭合曲线，即中心。对 $x' = \\alpha x - \\beta y$，$y' = \\beta x + \\alpha y$，正的 $\\beta$ 表示逆时针旋转。沿箭头追踪一条轨线，就能从图上同时看出这两点。\n\n> **注意。** 旋转方向要沿箭头追踪来判断，不能只看曲线的形状：同一条螺旋线反着走，旋转方向就相反。向内还是向外，要比较转过一整圈后的距离，而不是看轨线从哪里开始。",
   ),
   generate(rng: Rng): Problem {
     const alpha = rng.pick([-0.2, -0.1, -0.05, 0, 0.05, 0.1, 0.2]);
@@ -2067,19 +2102,48 @@ const complexPortrait: KnowledgePointDef = {
     const right = shape(alpha, spin);
     const otherAlpha = alpha === 0 ? 1 : -alpha;
     const thirdAlpha = alpha === 0 ? -1 : 0;
+    const seen =
+      alpha > 0
+        ? t("moves farther from the origin with each turn", "每转一圈离原点更远")
+        : alpha < 0
+          ? t("comes closer to the origin with each turn", "每转一圈离原点更近")
+          : t("comes back to the same distance after each turn", "每转一圈回到同样的距离");
+    const needs = (a: number) =>
+      a > 0
+        ? t("A spiral outward moves farther from the origin with each turn", "向外螺旋每转一圈离原点更远")
+        : a < 0
+          ? t("A spiral inward comes closer to the origin with each turn", "向内螺旋每转一圈离原点更近")
+          : t("A center comes back to the same distance after each turn", "中心每转一圈回到同样的距离");
+    const reasonFor = (a: number): [string, string, string] => [
+      shape(a, spin).en,
+      `${needs(a).en}; this trajectory ${seen.en}.`,
+      `${needs(a)["zh-CN"]}；这条轨线${seen["zh-CN"]}。`,
+    ];
+    const realPart = alpha > 0 ? t("positive", "为正") : alpha < 0 ? t("negative", "为负") : t("zero", "为零");
     return withFigure(
-      pickChoice(
-        rng,
-        t(
-          "The plot shows the direction field of a linear system with complex eigenvalues and one trajectory in it. How do solutions behave?",
-          "图中是一个具有复特征值的线性系统的方向场和其中一条轨线。解的行为如何？",
+      reasoned(
+        pickChoice(
+          rng,
+          t(
+            "The plot shows the direction field of a linear system with complex eigenvalues and one trajectory in it. How do solutions behave?",
+            "图中是一个具有复特征值的线性系统的方向场和其中一条轨线。解的行为如何？",
+          ),
+          right,
+          [shape(alpha, otherSpin), shape(otherAlpha, spin), shape(thirdAlpha, spin)],
+          t(
+            `**Step 1: Follow the arrows.** Along its arrows the trajectory turns ${spin.en}.\n\n**Step 2: Compare the distance after a turn.** The trajectory ${seen.en}, so the real part of the eigenvalues is ${realPart.en}: ${right.en.toLowerCase()}.\n\n**Check.** For $x' = \\alpha x - \\beta y$, $y' = \\beta x + \\alpha y$ the distance $r$ from the origin obeys $r' = \\alpha r$, so it ${alpha > 0 ? "grows" : alpha < 0 ? "shrinks" : "stays fixed"} exactly when $\\alpha$ is ${realPart.en}, as the plot shows.`,
+            `**第一步：沿箭头追踪。** 沿箭头，轨线${spin["zh-CN"]}旋转。\n\n**第二步：比较转一圈后的距离。** 这条轨线${seen["zh-CN"]}，所以特征值的实部${realPart["zh-CN"]}：${right["zh-CN"]}。\n\n**检验。** 对 $x' = \\alpha x - \\beta y$，$y' = \\beta x + \\alpha y$，到原点的距离 $r$ 满足 $r' = \\alpha r$，所以 $\\alpha$ ${realPart["zh-CN"]}时它${alpha > 0 ? "增大" : alpha < 0 ? "减小" : "不变"}，与图一致。`,
+          ),
         ),
-        right,
-        [shape(alpha, otherSpin), shape(otherAlpha, spin), shape(thirdAlpha, spin)],
-        t(
-          `Following the arrows, the trajectory turns ${spin.en}. Its distance from the origin ${alpha > 0 ? "grows, so the real part of the eigenvalues is positive" : alpha < 0 ? "shrinks, so the real part of the eigenvalues is negative" : "stays the same, so the real part of the eigenvalues is zero"}.`,
-          `沿箭头追踪，轨线${spin["zh-CN"]}旋转。它到原点的距离${alpha > 0 ? "增大，所以特征值的实部为正" : alpha < 0 ? "减小，所以特征值的实部为负" : "不变，所以特征值的实部为零"}。`,
-        ),
+        [
+          [
+            shape(alpha, otherSpin).en,
+            `The distance is read right, but the turn is not: following the arrows, the trajectory turns ${spin.en}.`,
+            `距离读对了，旋转方向却不对：沿箭头追踪，轨线${spin["zh-CN"]}旋转。`,
+          ],
+          reasonFor(otherAlpha),
+          reasonFor(thirdAlpha),
+        ],
       ),
       drawn(
         square(3),

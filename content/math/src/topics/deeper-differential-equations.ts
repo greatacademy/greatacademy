@@ -990,14 +990,28 @@ const parameterForCenter: KnowledgePointDef = {
   id: "the-parameter-that-makes-a-center",
   title: t("The parameter that makes a center", "使平衡点成为中心的参数"),
   explanation: t(
-    "The eigenvalues of a matrix are purely imaginary exactly when its trace is zero and its determinant is positive. Then trajectories are closed curves around a center. A trace above zero gives an outward spiral, and a trace below zero an inward one, so a center is the boundary between the two.",
-    "矩阵的特征值是纯虚数，当且仅当迹为零且行列式为正。此时轨线是绕中心的闭曲线。迹大于零时是向外的螺线，小于零时是向内的螺线，所以中心是二者的分界。",
+    "The eigenvalues of a matrix are purely imaginary exactly when its trace is zero and its determinant is positive. Then trajectories are closed curves around a center. A trace above zero gives an outward spiral, and a trace below zero an inward one, so a center is the boundary between the two.\n\n> **Watch out.** A zero trace is not enough on its own: check that the determinant is then positive, or the origin is a saddle. For $\\begin{pmatrix} k & 1 \\\\ -5 & 2 \\end{pmatrix}$, $k = -2$ gives $\\det = -4 + 5 = 1 > 0$, so it is a center.",
+    "矩阵的特征值是纯虚数，当且仅当迹为零且行列式为正。此时轨线是绕中心的闭曲线。迹大于零时是向外的螺线，小于零时是向内的螺线，所以中心是二者的分界。\n\n> **注意。** 仅有迹为零还不够：还要检查此时行列式为正，否则原点是鞍点。对 $\\begin{pmatrix} k & 1 \\\\ -5 & 2 \\end{pmatrix}$，$k = -2$ 时 $\\det = -4 + 5 = 1 > 0$，所以是中心。",
   ),
   generate(rng) {
     const d = nonzero(rng, 4);
     const b = rng.int(1, 5);
     const c = d * d + rng.int(1, 5);
     const answer = -d;
+    const det = answer * d + b * c;
+    const reasons = (
+      [
+        [d, `That makes the trace $2 \\cdot ${inParens(d)}$, not zero.`, `这使迹为 $2 \\cdot ${inParens(d)}$，而不是零。`],
+        [
+          0,
+          `That leaves the trace at $${d}$; $k$ must cancel the other diagonal entry.`,
+          `这使迹仍为 $${d}$；$k$ 必须抵消另一个对角元素。`,
+        ],
+        [b, "That uses an off-diagonal entry; the trace adds only the diagonal.", "这用了非对角元素；迹只把对角线相加。"],
+      ] as const
+    )
+      .filter(([v], i, all) => v !== answer && all.findIndex(([w]) => w === v) === i)
+      .map(([v, en, zh]) => why(v, en, zh));
     return numberProblem({
       prompt: t(
         `For which $k$ is the origin a center of $\\mathbf{x}' = ${matrix2("k", b, -c, d)}\\mathbf{x}$?`,
@@ -1005,10 +1019,26 @@ const parameterForCenter: KnowledgePointDef = {
       ),
       answer,
       solveFor: "k",
-      wrong: [d, 0, b],
-      solution: t(
-        `The trace $${poly([1, "k"], [d, ""])}$ must be zero, so $k = ${answer}$. Then the determinant is $${inParens(answer)}(${d}) + ${b * c} = ${answer * d + b * c}$, which is positive, so the origin is a center.`,
-        `迹 $${poly([1, "k"], [d, ""])}$ 必须为零，所以 $k = ${answer}$。此时行列式是 $${inParens(answer)}(${d}) + ${b * c} = ${answer * d + b * c}$，是正数，所以原点是中心。`,
+      mistakes: reasons,
+      solution: walked(
+        [
+          labelled(
+            ["Set the trace to zero", "令迹为零"],
+            "",
+            "",
+            `\\operatorname{tr} = ${poly([1, "k"], [d, ""])} = 0, \\qquad k = ${answer}`,
+          ),
+          labelled(
+            ["Check the determinant", "检查行列式"],
+            "It is positive, so the eigenvalues are purely imaginary and the origin is a center.",
+            "它为正，所以特征值是纯虚数，原点是中心。",
+            `\\det = ${inParens(answer)}(${d}) - (${b})(${-c}) = ${det}`,
+          ),
+        ],
+        t(
+          `With $k = ${answer}$ the characteristic equation is $\\lambda^2 + ${det} = 0$, so $\\lambda = \\pm i\\sqrt{${det}}$, with zero real part.`,
+          `$k = ${answer}$ 时特征方程为 $\\lambda^2 + ${det} = 0$，所以 $\\lambda = \\pm i\\sqrt{${det}}$，实部为零。`,
+        ),
       ),
     });
   },
@@ -1018,8 +1048,8 @@ const parameterForRepeatedEigenvalue: KnowledgePointDef = {
   id: "the-parameter-that-makes-an-eigenvalue-repeated",
   title: t("The parameter that makes an eigenvalue repeated", "使特征值重复的参数"),
   explanation: t(
-    "A two-by-two matrix has a repeated eigenvalue when the discriminant of its characteristic equation is zero. For $\\begin{pmatrix} a & b \\\\ c & d \\end{pmatrix}$ this discriminant is $(a - d)^2 + 4bc$. Setting it to zero gives the boundary between the real and the complex cases in a phase portrait.",
-    "二阶矩阵的特征方程判别式为零时，特征值重复。对 $\\begin{pmatrix} a & b \\\\ c & d \\end{pmatrix}$，判别式是 $(a - d)^2 + 4bc$。令它为零，就得到相图中实根情形与复根情形的分界。",
+    "A two-by-two matrix has a repeated eigenvalue when the discriminant of its characteristic equation is zero. For $\\begin{pmatrix} a & b \\\\ c & d \\end{pmatrix}$ this discriminant is $(a - d)^2 + 4bc$. Setting it to zero gives the boundary between the real and the complex cases in a phase portrait.\n\n> **Watch out.** The discriminant has a plus sign, $(a - d)^2 + 4bc$, because it comes from $(a + d)^2 - 4(ad - bc)$. For $\\begin{pmatrix} 1 & 2 \\\\ k & 3 \\end{pmatrix}$ it is $4 + 8k$, which is zero at $k = -\\frac{1}{2}$.",
+    "二阶矩阵的特征方程判别式为零时，特征值重复。对 $\\begin{pmatrix} a & b \\\\ c & d \\end{pmatrix}$，判别式是 $(a - d)^2 + 4bc$。令它为零，就得到相图中实根情形与复根情形的分界。\n\n> **注意。** 判别式中是加号，$(a - d)^2 + 4bc$，因为它来自 $(a + d)^2 - 4(ad - bc)$。对 $\\begin{pmatrix} 1 & 2 \\\\ k & 3 \\end{pmatrix}$，它是 $4 + 8k$，在 $k = -\\frac{1}{2}$ 时为零。",
   ),
   generate(rng) {
     const a = rng.int(-6, 6);
@@ -1027,18 +1057,28 @@ const parameterForRepeatedEigenvalue: KnowledgePointDef = {
     const b = nonzero(rng, 5);
     const gap = (a - d) ** 2;
     const answer = Q.of(-gap, 4 * b);
-    return numberProblem({
-      prompt: t(
+    const det = Q.of(a * d).sub(Q.of(b).mul(answer));
+    const detIn = det.sign() < 0 ? `\\left(${det.toLatex()}\\right)` : det.toLatex();
+    return explainedNumber(
+      [
         `For which $k$ does $${matrix2(a, b, "k", d)}$ have a repeated eigenvalue?`,
         `$k$ 取何值时 $${matrix2(a, b, "k", d)}$ 有重复的特征值？`,
-      ),
+      ],
       answer,
-      wrong: [answer.neg(), Q.of(-gap, b), Q.of(-(a - d), 4 * b)],
-      solution: t(
-        `The discriminant is $(${a - d})^2 + 4(${b})k = ${poly([gap, ""], [4 * b, "k"])}$. Setting it to zero gives $k = ${answer.toLatex()}$.`,
-        `判别式是 $(${a - d})^2 + 4(${b})k = ${poly([gap, ""], [4 * b, "k"])}$。令它为零，得 $k = ${answer.toLatex()}$。`,
-      ),
-    });
+      [
+        labelled(["Write the discriminant", "写出判别式"], "", "", `(${a - d})^2 + 4(${b})k = ${poly([gap, ""], [4 * b, "k"])}`),
+        labelled(["Set it to zero", "令它为零"], "", "", `k = ${-gap} \\div ${inParens(4 * b)} = ${answer.toLatex()}`),
+      ],
+      [
+        `With this $k$, $\\operatorname{tr}^2 - 4\\det = ${inParens(a + d)}^2 - 4 \\cdot ${detIn} = 0$, so the eigenvalue $${Q.of(a + d, 2).toLatex()}$ is repeated.`,
+        `取这个 $k$，$\\operatorname{tr}^2 - 4\\det = ${inParens(a + d)}^2 - 4 \\cdot ${detIn} = 0$，所以特征值 $${Q.of(a + d, 2).toLatex()}$ 是重根。`,
+      ],
+      [
+        [answer.neg(), "The sign is flipped when $4bk$ is moved across.", "把 $4bk$ 移到另一边时符号弄反了。"],
+        [Q.of(-gap, b), "That forgets the factor $4$ in $4bk$.", "这里忘了 $4bk$ 中的因子 $4$。"],
+        [Q.of(-(a - d), 4 * b), "That forgets to square $a - d$.", "这里忘了把 $a - d$ 平方。"],
+      ],
+    );
   },
 };
 
@@ -1046,8 +1086,8 @@ const determinantOfExponential: KnowledgePointDef = {
   id: "the-determinant-of-a-matrix-exponential",
   title: t("The determinant of a matrix exponential", "矩阵指数的行列式"),
   explanation: t(
-    "The eigenvalues of $e^{tA}$ are $e^{t\\lambda}$ for each eigenvalue $\\lambda$ of $A$, and a determinant is a product of eigenvalues. Multiplying exponentials adds their exponents, so $\\det e^{tA} = e^{t\\operatorname{tr}A}$. This holds without computing the exponential, and it shows that $e^{tA}$ is never singular.",
-    "$e^{tA}$ 的特征值是 $e^{t\\lambda}$，其中 $\\lambda$ 是 $A$ 的特征值，而行列式是特征值之积。指数相乘时指数部分相加，所以 $\\det e^{tA} = e^{t\\operatorname{tr}A}$。这不必算出矩阵指数，也说明 $e^{tA}$ 永远可逆。",
+    "The eigenvalues of $e^{tA}$ are $e^{t\\lambda}$ for each eigenvalue $\\lambda$ of $A$, and a determinant is a product of eigenvalues. Multiplying exponentials adds their exponents, so $\\det e^{tA} = e^{t\\operatorname{tr}A}$. This holds without computing the exponential, and it shows that $e^{tA}$ is never singular.\n\n> **Watch out.** The exponent uses the trace of $A$, not its determinant, and it is multiplied by $t$. For $A = \\begin{pmatrix} 1 & 2 \\\\ 3 & 4 \\end{pmatrix}$, $\\det e^{2A} = e^{2 \\cdot 5} = e^{10}$, not $e^{2 \\cdot (-2)}$ and not $e^{5}$.",
+    "$e^{tA}$ 的特征值是 $e^{t\\lambda}$，其中 $\\lambda$ 是 $A$ 的特征值，而行列式是特征值之积。指数相乘时指数部分相加，所以 $\\det e^{tA} = e^{t\\operatorname{tr}A}$。这不必算出矩阵指数，也说明 $e^{tA}$ 永远可逆。\n\n> **注意。** 指数用的是 $A$ 的迹而不是行列式，并且要乘以 $t$。对 $A = \\begin{pmatrix} 1 & 2 \\\\ 3 & 4 \\end{pmatrix}$，$\\det e^{2A} = e^{2 \\cdot 5} = e^{10}$，不是 $e^{2 \\cdot (-2)}$，也不是 $e^{5}$。",
   ),
   generate(rng) {
     const a = nonzero(rng, 9);
@@ -1057,7 +1097,21 @@ const determinantOfExponential: KnowledgePointDef = {
     if (a + d === 0) d = d === 9 ? 8 : d + 1;
     const s = rng.int(2, 5);
     const trace = a + d;
+    const det = a * d - b * c;
     const answer = s * trace;
+    const mistakes = (
+      [
+        [trace, "That is the trace of $A$; the exponent of $e^{sA}$ is $s$ times it.", "这是 $A$ 的迹；$e^{sA}$ 的指数是它的 $s$ 倍。"],
+        [s * det, "That uses the determinant of $A$; the exponent comes from the trace.", "这用了 $A$ 的行列式；指数来自迹。"],
+        [
+          det,
+          "That is the determinant of $A$ itself; the exponent comes from the trace of $sA$.",
+          "这是 $A$ 本身的行列式；指数来自 $sA$ 的迹。",
+        ],
+      ] as const
+    )
+      .filter(([v], i, all) => v !== answer && all.findIndex(([w]) => w === v) === i)
+      .map(([v, en, zh]) => why(v, en, zh));
     return numberProblem({
       prompt: t(
         `$A = ${matrix2(a, b, c, d)}$, and $\\det e^{${s}A} = e^{k}$. Find $k$.`,
@@ -1065,10 +1119,26 @@ const determinantOfExponential: KnowledgePointDef = {
       ),
       answer,
       solveFor: "k",
-      wrong: [trace, s * (a * d - b * c), a * d - b * c],
-      solution: t(
-        `The trace of $A$ is $${a} + ${inParens(d)} = ${trace}$, so $k = ${s} \\cdot ${inParens(trace)} = ${answer}$.`,
-        `$A$ 的迹是 $${a} + ${inParens(d)} = ${trace}$，所以 $k = ${s} \\cdot ${inParens(trace)} = ${answer}$。`,
+      mistakes,
+      solution: walked(
+        [
+          labelled(
+            ["Take the trace", "求迹"],
+            "Add the diagonal entries only.",
+            "只把对角元素相加。",
+            `\\operatorname{tr}A = ${a} + ${inParens(d)} = ${trace}`,
+          ),
+          labelled(
+            ["Scale by the time", "乘以时间"],
+            `The trace of $${s}A$ is $${s}$ times the trace of $A$.`,
+            `$${s}A$ 的迹是 $A$ 的迹的 $${s}$ 倍。`,
+            `k = ${s} \\cdot ${inParens(trace)} = ${answer}`,
+          ),
+        ],
+        t(
+          `If $\\lambda_1, \\lambda_2$ are the eigenvalues of $A$, then $\\det e^{${s}A} = e^{${s}\\lambda_1}e^{${s}\\lambda_2} = e^{${s}(\\lambda_1 + \\lambda_2)}$, and $\\lambda_1 + \\lambda_2 = ${trace}$, so the exponent is $${answer}$.`,
+          `设 $\\lambda_1, \\lambda_2$ 是 $A$ 的特征值，则 $\\det e^{${s}A} = e^{${s}\\lambda_1}e^{${s}\\lambda_2} = e^{${s}(\\lambda_1 + \\lambda_2)}$，而 $\\lambda_1 + \\lambda_2 = ${trace}$，所以指数为 $${answer}$。`,
+        ),
       ),
     });
   },
@@ -2158,8 +2228,8 @@ const harvestingBothSpecies: KnowledgePointDef = {
   id: "the-effect-of-harvesting-both-species",
   title: t("The effect of harvesting both species", "同时捕捞两个物种的效果"),
   explanation: t(
-    "Suppose both populations of a predator-prey model are removed at the same per capita rate $e$. The prey growth rate $a$ becomes $a - e$ and the predator death rate $c$ becomes $c + e$. So the equilibrium moves to more prey and fewer predators. This is Volterra's principle, and it explains why less fishing can mean fewer prey fish.",
-    "假设捕食模型中的两个种群都按相同的人均比率 $e$ 被移除。猎物的增长率 $a$ 变成 $a - e$，捕食者的死亡率 $c$ 变成 $c + e$。所以平衡点移向更多的猎物和更少的捕食者。这就是沃尔泰拉原理，它解释了为什么减少捕捞反而可能使被捕食的鱼变少。",
+    "Suppose both populations of a predator-prey model are removed at the same per capita rate $e$. The prey growth rate $a$ becomes $a - e$ and the predator death rate $c$ becomes $c + e$. So the equilibrium moves to more prey and fewer predators. This is Volterra's principle, and it explains why less fishing can mean fewer prey fish.\n\n> **Watch out.** Harvesting lowers the prey growth rate to $a - e$ but raises the predator death rate to $c + e$; the two shifts have opposite signs. For $x' = 6x - 2xy - x$, $y' = -3y + xy - y$, the equilibrium is $\\left(4, \\frac{5}{2}\\right)$, not $(3, 3)$ as without harvesting.",
+    "假设捕食模型中的两个种群都按相同的人均比率 $e$ 被移除。猎物的增长率 $a$ 变成 $a - e$，捕食者的死亡率 $c$ 变成 $c + e$。所以平衡点移向更多的猎物和更少的捕食者。这就是沃尔泰拉原理，它解释了为什么减少捕捞反而可能使被捕食的鱼变少。\n\n> **注意。** 捕捞使猎物增长率降为 $a - e$，却使捕食者死亡率升为 $c + e$；两个变化方向相反。对 $x' = 6x - 2xy - x$，$y' = -3y + xy - y$，平衡点是 $\\left(4, \\frac{5}{2}\\right)$，而不是不捕捞时的 $(3, 3)$。",
   ),
   generate(rng) {
     const a = rng.int(4, 12);
@@ -2177,10 +2247,62 @@ const harvestingBothSpecies: KnowledgePointDef = {
         `在模型 $x' = ${poly([a, "x"], [-b, "xy"])} - ${poly([e, "x"])}$，$y' = ${poly([-c, "y"], [d, "xy"])} - ${poly([e, "y"])}$ 中，两个物种都被捕捞，$x$ 是猎物，$y$ 是捕食者。求共存平衡点处${askPrey ? "猎物" : "捕食者"}的数量。`,
       ),
       answer,
-      wrong: askPrey ? [Q.of(c, d), Q.of(c - e, d), predator] : [Q.of(a, b), Q.of(a + e, b), prey],
-      solution: t(
-        `At coexistence, dividing the equations by $x$ and $y$ gives $${a - e} = ${poly([b, "y"])}$ and $${c + e} = ${poly([d, "x"])}$. Solving for $${askPrey ? "x" : "y"}$ gives $${answer.toLatex()}$.`,
-        `共存时，把两个方程分别除以 $x$ 和 $y$，得 $${a - e} = ${poly([b, "y"])}$，$${c + e} = ${poly([d, "x"])}$。解出 $${askPrey ? "x" : "y"}$，得 $${answer.toLatex()}$。`,
+      mistakes: (askPrey
+        ? [
+            why(
+              Q.of(c, d),
+              "That leaves out the harvesting of the predators, which raises their death rate to $c + e$.",
+              "这漏掉了对捕食者的捕捞，它使捕食者死亡率升为 $c + e$。",
+            ),
+            why(
+              Q.of(c - e, d),
+              "Harvesting adds to the predator death rate; it does not subtract from it.",
+              "捕捞是增加捕食者的死亡率，而不是减少它。",
+            ),
+            why(predator, "That is the predator population at the equilibrium.", "这是平衡点处的捕食者数量。"),
+          ]
+        : [
+            why(
+              Q.of(a, b),
+              "That leaves out the harvesting of the prey, which lowers their growth rate to $a - e$.",
+              "这漏掉了对猎物的捕捞，它使猎物增长率降为 $a - e$。",
+            ),
+            why(
+              Q.of(a + e, b),
+              "Harvesting subtracts from the prey growth rate; it does not add to it.",
+              "捕捞是减少猎物的增长率，而不是增加它。",
+            ),
+            why(prey, "That is the prey population at the equilibrium.", "这是平衡点处的猎物数量。"),
+          ]
+      ).filter((m, i, all) => {
+        const q = (v: number | Q) => (typeof v === "number" ? Q.of(v) : v);
+        return !q(m.value).eq(answer) && all.findIndex((n) => q(n.value).eq(q(m.value))) === i;
+      }),
+      solution: walked(
+        [
+          labelled(
+            ["Combine the rates", "合并速率"],
+            "Harvesting subtracts $e$ from each per capita rate.",
+            "捕捞使每个人均速率都减去 $e$。",
+            `x' = ${poly([a - e, "x"], [-b, "xy"])}, \\qquad y' = ${poly([-(c + e), "y"], [d, "xy"])}`,
+          ),
+          labelled(
+            ["Divide by $x$ and $y$", "除以 $x$ 与 $y$"],
+            "At coexistence both populations are nonzero.",
+            "共存时两个种群都不为零。",
+            `${a - e} = ${poly([b, "y"])}, \\qquad ${c + e} = ${poly([d, "x"])}`,
+          ),
+          labelled(
+            ["Solve", "求解"],
+            "",
+            "",
+            askPrey ? `x_* = ${c + e} \\div ${d} = ${prey.toLatex()}` : `y_* = ${a - e} \\div ${b} = ${predator.toLatex()}`,
+          ),
+        ],
+        t(
+          `At $\\left(${prey.toLatex()}, ${predator.toLatex()}\\right)$: $${a - e} - ${b} \\cdot ${predator.toLatex()} = 0$ and $-${c + e} + ${d} \\cdot ${prey.toLatex()} = 0$. Without harvesting the equilibrium would be $\\left(${Q.of(c, d).toLatex()}, ${Q.of(a, b).toLatex()}\\right)$, so the prey rose and the predators fell.`,
+          `在 $\\left(${prey.toLatex()}, ${predator.toLatex()}\\right)$ 处：$${a - e} - ${b} \\cdot ${predator.toLatex()} = 0$，$-${c + e} + ${d} \\cdot ${prey.toLatex()} = 0$。不捕捞时平衡点是 $\\left(${Q.of(c, d).toLatex()}, ${Q.of(a, b).toLatex()}\\right)$，所以猎物增加、捕食者减少。`,
+        ),
       ),
     });
   },
@@ -3497,26 +3619,50 @@ const invariantLineSlope: KnowledgePointDef = {
   id: "the-slope-of-a-straight-line-solution",
   title: t("The slope of a straight-line solution", "直线解的斜率"),
   explanation: t(
-    "A trajectory through the origin that stays on a straight line must have velocity along that line at every point, so its direction is an eigenvector. For an upper triangular matrix, the eigenvalues can be read off the diagonal, and the $x$-axis is one of these lines. The other line comes from solving $(A - dI)\\mathbf{v} = \\mathbf{0}$ for the second eigenvalue $d$, whose first row gives the slope of the line directly.",
-    "过原点且保持在直线上的轨线，在每一点的速度都必须沿这条直线，所以它的方向是特征向量。对上三角矩阵，特征值可以从对角线读出，$x$ 轴是其中一条直线。另一条直线由第二个特征值 $d$ 解 $(A - dI)\\mathbf{v} = \\mathbf{0}$ 得到，它的第一行直接给出直线的斜率。",
+    "A trajectory through the origin that stays on a straight line must have velocity along that line at every point, so its direction is an eigenvector. For an upper triangular matrix, the eigenvalues can be read off the diagonal, and the $x$-axis is one of these lines. The other line comes from solving $(A - dI)\\mathbf{v} = \\mathbf{0}$ for the second eigenvalue $d$, whose first row gives the slope of the line directly.\n\n> **Watch out.** Solve $(a - d)x + by = 0$ for $\\frac{y}{x}$, which is $\\frac{d - a}{b}$. For $\\begin{pmatrix} 1 & 2 \\\\ 0 & 5 \\end{pmatrix}$ the row is $-4x + 2y = 0$, so the slope is $2$, not $-2$ and not $\\frac{1}{2}$.",
+    "过原点且保持在直线上的轨线，在每一点的速度都必须沿这条直线，所以它的方向是特征向量。对上三角矩阵，特征值可以从对角线读出，$x$ 轴是其中一条直线。另一条直线由第二个特征值 $d$ 解 $(A - dI)\\mathbf{v} = \\mathbf{0}$ 得到，它的第一行直接给出直线的斜率。\n\n> **注意。** 由 $(a - d)x + by = 0$ 解出 $\\frac{y}{x}$，结果是 $\\frac{d - a}{b}$。对 $\\begin{pmatrix} 1 & 2 \\\\ 0 & 5 \\end{pmatrix}$，这一行是 $-4x + 2y = 0$，所以斜率为 $2$，不是 $-2$，也不是 $\\frac{1}{2}$。",
   ),
   generate(rng) {
     const a = rng.int(-6, 6);
     const d = different(rng, -6, 6, a);
     const b = nonzero(rng, 6);
     const answer = Q.of(d - a, b);
-    return numberProblem({
-      prompt: t(
+    const times = d === 1 ? "" : d === -1 ? "-" : `${d}`;
+    const v = `\\begin{pmatrix} ${b} \\\\ ${d - a} \\end{pmatrix}`;
+    return explainedNumber(
+      [
         `The system $\\mathbf{x}' = ${matrix2(a, b, 0, d)}\\mathbf{x}$ has solutions that stay on the $x$-axis, and also on one other line through the origin. Find the slope of that line.`,
         `方程组 $\\mathbf{x}' = ${matrix2(a, b, 0, d)}\\mathbf{x}$ 有保持在 $x$ 轴上的解，也有保持在另一条过原点直线上的解。求那条直线的斜率。`,
-      ),
+      ],
       answer,
-      wrong: [Q.of(a - d, b), Q.of(b, d - a), Q.of(d - a), Q.of(d + a, b)],
-      solution: t(
-        `The eigenvalue $${d}$ has an eigenvector with $${poly([a - d, "x"], [b, "y"])} = 0$. This gives $\\frac{y}{x} = ${answer.toLatex()}$.`,
-        `特征值 $${d}$ 的特征向量满足 $${poly([a - d, "x"], [b, "y"])} = 0$。于是 $\\frac{y}{x} = ${answer.toLatex()}$。`,
-      ),
-    });
+      [
+        labelled(
+          ["Read the eigenvalues", "读出特征值"],
+          `The matrix is upper triangular, so the eigenvalues are $${a}$, along the $x$-axis, and $${d}$.`,
+          `矩阵是上三角的，所以特征值是沿 $x$ 轴的 $${a}$ 与 $${d}$。`,
+        ),
+        labelled(
+          ["Solve for the eigenvector", "求特征向量"],
+          `The first row of $(A - ${inParens(d)}I)\\mathbf{v} = \\mathbf{0}$ gives the slope.`,
+          `$(A - ${inParens(d)}I)\\mathbf{v} = \\mathbf{0}$ 的第一行给出斜率。`,
+          `${poly([a - d, "x"], [b, "y"])} = 0, \\qquad \\frac{y}{x} = ${answer.toLatex()}`,
+        ),
+      ],
+      [
+        `The vector $${v}$ lies on that line, and $${matrix2(a, b, 0, d)}${v} = \\begin{pmatrix} ${b * d} \\\\ ${d * (d - a)} \\end{pmatrix} = ${d === 0 ? "\\mathbf{0}" : `${times}${v}`}$.`,
+        `向量 $${v}$ 在这条直线上，并且 $${matrix2(a, b, 0, d)}${v} = \\begin{pmatrix} ${b * d} \\\\ ${d * (d - a)} \\end{pmatrix} = ${d === 0 ? "\\mathbf{0}" : `${times}${v}`}$。`,
+      ],
+      [
+        [Q.of(a - d, b), "The sign is lost when $by$ is left alone on one side.", "把 $by$ 单独留在一边时丢了符号。"],
+        [Q.of(b, d - a), "That is $\\frac{x}{y}$; the slope is $\\frac{y}{x}$.", "这是 $\\frac{x}{y}$；斜率是 $\\frac{y}{x}$。"],
+        [Q.of(d - a), "That forgets to divide by the entry $b$.", "这里忘了除以元素 $b$。"],
+        [
+          Q.of(d + a, b),
+          "That adds the diagonal entries; the eigenvalue is subtracted from $a$.",
+          "这是把对角元素相加；应当从 $a$ 中减去特征值。",
+        ],
+      ],
+    );
   },
 };
 

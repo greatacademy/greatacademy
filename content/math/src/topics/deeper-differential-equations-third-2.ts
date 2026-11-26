@@ -6,7 +6,7 @@ import type { KnowledgePointDef, Rng, Text } from "@ga/content";
 import { t } from "@ga/content";
 import { paren, poly, Q } from "@ga/subject-math";
 import { differentialEquationsDrawings1 } from "../explanation-drawings-differential-equations-1.ts";
-import { numberProblem, why } from "../problems.ts";
+import { explainedChoice, numberProblem, why } from "../problems.ts";
 import { ask, choose, type Pair, point } from "../university-kit.ts";
 import { walked } from "./calculus-i-differentiation.ts";
 
@@ -210,8 +210,8 @@ const limitOnEquilibriumLine = point(
   "where-a-trajectory-lands-on-the-line-of-equilibria",
   ["Where a trajectory lands on the line of equilibria", "轨线落在平衡线上的位置"],
   [
-    "When one eigenvalue is zero and the other is negative, each solution runs along a straight line to a point of the line of equilibria. A conserved combination of the variables tells which point, without solving the system.",
-    "当一个特征值为零、另一个为负时，每个解都沿一条直线走到平衡线上的某一点。变量的一个守恒组合可以告诉我们是哪一点，无需解方程组。",
+    "When one eigenvalue is zero and the other is negative, each solution runs along a straight line to a point of the line of equilibria. A conserved combination of the variables tells which point, without solving the system.\n\n> **Watch out.** The conserved combination weights $x$ by the rate in the $y$ equation and $y$ by the rate in the $x$ equation. For $x' = -x + y$, $y' = 2x - 2y$ it is $2x + y$; from $(0, 3)$ it stays $3$, so the trajectory lands where $3x = 3$, at $x = 1$, not at the average $\\frac{3}{2}$.",
+    "当一个特征值为零、另一个为负时，每个解都沿一条直线走到平衡线上的某一点。变量的一个守恒组合可以告诉我们是哪一点，无需解方程组。\n\n> **注意。** 守恒组合中 $x$ 的权重是 $y$ 方程中的速率，$y$ 的权重是 $x$ 方程中的速率。对 $x' = -x + y$，$y' = 2x - 2y$，它是 $2x + y$；从 $(0, 3)$ 出发它保持为 $3$，所以轨线落在 $3x = 3$ 即 $x = 1$ 处，而不是平均值 $\\frac{3}{2}$。",
   ],
   (rng) => {
     const p = rng.int(1, 6);
@@ -221,18 +221,57 @@ const limitOnEquilibriumLine = point(
     const total = q * x0 + p * y0;
     const answer = Q.of(total, p + q);
     const combo = poly([q, "x"], [p, "y"]);
-    return ask(
-      [
-        `For $x' = ${poly([-p, "x"], [p, "y"])}$, $y' = ${poly([q, "x"], [-q, "y"])}$ with $x(0) = ${x0}$ and $y(0) = ${y0}$, find the limit of $x(t)$ as $t \\to \\infty$.`,
-        `对 $x' = ${poly([-p, "x"], [p, "y"])}$，$y' = ${poly([q, "x"], [-q, "y"])}$，且 $x(0) = ${x0}$，$y(0) = ${y0}$，求 $t \\to \\infty$ 时 $x(t)$ 的极限。`,
-      ],
+    const fx = poly([-p, "x"], [p, "y"]);
+    const fy = poly([q, "x"], [-q, "y"]);
+    return numberProblem({
+      prompt: t(
+        `For $x' = ${fx}$, $y' = ${fy}$ with $x(0) = ${x0}$ and $y(0) = ${y0}$, find the limit of $x(t)$ as $t \\to \\infty$.`,
+        `对 $x' = ${fx}$，$y' = ${fy}$，且 $x(0) = ${x0}$，$y(0) = ${y0}$，求 $t \\to \\infty$ 时 $x(t)$ 的极限。`,
+      ),
       answer,
-      [Q.of(x0 + y0, 2), x0, y0, Q.of(p * x0 + q * y0, p + q)],
-      [
-        `The eigenvalues are $0$ and $${-(p + q)}$, and every point of the line $y = x$ is an equilibrium. The combination $${combo}$ has zero derivative, so it stays at $${total}$. On $y = x$ this gives $${p + q}x = ${total}$, so the limit is $${answer.toLatex()}$.`,
-        `特征值是 $0$ 和 $${-(p + q)}$，直线 $y = x$ 上每一点都是平衡点。组合 $${combo}$ 的导数为零，所以保持为 $${total}$。在 $y = x$ 上，得 $${p + q}x = ${total}$，所以极限是 $${answer.toLatex()}$。`,
-      ],
-    );
+      mistakes: apart(answer, [
+        why(
+          Q.of(x0 + y0, 2),
+          `That averages the starting values; the conserved combination $${combo}$ weights them by its coefficients.`,
+          `这是对初值取平均；守恒组合 $${combo}$ 按其系数加权。`,
+        ),
+        why(
+          x0,
+          "That is where $x$ starts; it keeps moving until the point reaches the line $y = x$.",
+          "这是 $x$ 的初值；点会一直运动到直线 $y = x$ 上。",
+        ),
+        why(y0, "That is the starting value of $y$, not where $x$ ends.", "这是 $y$ 的初值，不是 $x$ 的终点。"),
+        why(
+          Q.of(p * x0 + q * y0, p + q),
+          `That swaps the weights; the conserved combination is $${combo}$.`,
+          `这是把权重交换了；守恒组合是 $${combo}$。`,
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Find the line of equilibria", "求平衡线"],
+            t(
+              `Both rates vanish when $y = x$; the eigenvalues are $0$ and $${-(p + q)}$.`,
+              `当 $y = x$ 时两个变化率都为零；特征值是 $0$ 与 $${-(p + q)}$。`,
+            ),
+            [],
+          ],
+          [
+            ["Find what is conserved", "求守恒量"],
+            t("", ""),
+            [
+              `(${combo})' = ${q === 1 ? "" : q}(${fx}) + ${p === 1 ? "" : p}(${fy}) = 0, \\qquad ${combo} = ${q} \\cdot ${paren(x0)} + ${p} \\cdot ${paren(y0)} = ${total}`,
+            ],
+          ],
+          [["Land on the line", "落到直线上"], t("", ""), [`y = x: \\quad ${p + q}x = ${total}, \\qquad x = ${answer.toLatex()}`]],
+        ],
+        t(
+          `At $(${answer.toLatex()}, ${answer.toLatex()})$ both rates are zero, and $${q} \\cdot ${paren(answer)} + ${p} \\cdot ${paren(answer)} = ${total}$, the value fixed at the start.`,
+          `在 $(${answer.toLatex()}, ${answer.toLatex()})$ 处两个变化率都为零，并且 $${q} \\cdot ${paren(answer)} + ${p} \\cdot ${paren(answer)} = ${total}$，正是起点处确定的值。`,
+        ),
+      ),
+    });
   },
 );
 
@@ -240,8 +279,8 @@ const shiftedInitial = point(
   "the-initial-condition-shifts-too",
   ["The initial condition shifts too", "初始条件也要平移"],
   [
-    "Shifting to $u = x - x_{*}$ removes the constant from the equation, but the initial value changes as well, to $u(0) = x(0) - x_{*}$. So the decay applies to the distance from equilibrium, and the equilibrium is added back at the end.",
-    "平移到 $u = x - x_{*}$ 消去了方程中的常数，但初值也变了，成为 $u(0) = x(0) - x_{*}$。所以衰减作用于到平衡点的距离，最后还要把平衡值加回来。",
+    "Shifting to $u = x - x_{*}$ removes the constant from the equation, but the initial value changes as well, to $u(0) = x(0) - x_{*}$. So the decay applies to the distance from equilibrium, and the equilibrium is added back at the end.\n\n> **Watch out.** Halve the distance from equilibrium, not $x$ itself. For $x' = -2x + 6$ with $x(0) = 7$: $x_{*} = 3$, $u(0) = 4$, and at $t = \\frac{\\ln 2}{2}$, $u = 2$, so $x = 5$, not $3.5$.",
+    "平移到 $u = x - x_{*}$ 消去了方程中的常数，但初值也变了，成为 $u(0) = x(0) - x_{*}$。所以衰减作用于到平衡点的距离，最后还要把平衡值加回来。\n\n> **注意。** 减半的是到平衡点的距离，而不是 $x$ 本身。对 $x' = -2x + 6$，$x(0) = 7$：$x_{*} = 3$，$u(0) = 4$，在 $t = \\frac{\\ln 2}{2}$ 时 $u = 2$，所以 $x = 5$，而不是 $3.5$。",
   ],
   (rng) => {
     const k = rng.int(1, 6);
@@ -250,18 +289,46 @@ const shiftedInitial = point(
     const x0 = xs + d;
     const T = k === 1 ? "\\ln 2" : `\\frac{\\ln 2}{${k}}`;
     const answer = xs + d / 2;
-    return ask(
-      [
-        `Solve $x' = ${poly([-k, "x"], [k * xs, ""])}$ with $x(0) = ${x0}$, and find $x(${T})$.`,
-        `解 $x' = ${poly([-k, "x"], [k * xs, ""])}$，$x(0) = ${x0}$，并求 $x(${T})$。`,
-      ],
+    const rhs = poly([-k, "x"], [k * xs, ""]);
+    return numberProblem({
+      prompt: t(`Solve $x' = ${rhs}$ with $x(0) = ${x0}$, and find $x(${T})$.`, `解 $x' = ${rhs}$，$x(0) = ${x0}$，并求 $x(${T})$。`),
       answer,
-      [Q.of(x0, 2), xs, Q.of(x0, 2).add(Q.of(xs))],
-      [
-        `The equilibrium is $${xs}$, so $u = x - ${paren(xs)}$ has $u(0) = ${d}$ and $u = ${d}${expOf(-k)}$. At this time $u = ${d / 2}$, so $x = ${answer}$.`,
-        `平衡点是 $${xs}$，所以 $u = x - ${paren(xs)}$ 满足 $u(0) = ${d}$，$u = ${d}${expOf(-k)}$。此时 $u = ${d / 2}$，所以 $x = ${answer}$。`,
-      ],
-    );
+      mistakes: apart(answer, [
+        why(
+          Q.of(x0, 2),
+          "That halves $x$ itself; only the distance from the equilibrium halves.",
+          "这是把 $x$ 本身减半；减半的只是到平衡点的距离。",
+        ),
+        why(xs, "That is the long-run limit; at this time the distance has only halved.", "这是长期极限；此时距离只减少了一半。"),
+        why(
+          Q.of(x0, 2).add(Q.of(xs)),
+          "That halves $x(0)$ instead of $u(0) = x(0) - x_{*}$.",
+          "这是把 $x(0)$ 减半，而不是 $u(0) = x(0) - x_{*}$。",
+        ),
+      ]),
+      solution: walked(
+        [
+          [["Find the equilibrium", "求平衡点"], t("", ""), [`${rhs} = 0, \\qquad x_{*} = ${xs}`]],
+          [
+            ["Shift the variable and the start", "平移变量和初值"],
+            t("", ""),
+            [
+              `u = x - ${paren(xs)}, \\qquad u' = -${k === 1 ? "" : k}u, \\qquad u(0) = ${x0} - ${paren(xs)} = ${d}`,
+              `u = ${d}${expOf(-k)}`,
+            ],
+          ],
+          [
+            ["Evaluate", "求值"],
+            t(`At $t = ${T}$ the factor $${expOf(-k)}$ is $\\frac{1}{2}$.`, `在 $t = ${T}$ 时因子 $${expOf(-k)}$ 等于 $\\frac{1}{2}$。`),
+            [`u = ${d / 2}, \\qquad x = ${xs} ${d / 2 < 0 ? "-" : "+"} ${Math.abs(d / 2)} = ${answer}`],
+          ],
+        ],
+        t(
+          `At $t = 0$ the formula gives $x = ${xs} ${d < 0 ? "-" : "+"} ${Math.abs(d)} = ${x0}$, the given start, and as $t \\to \\infty$ it tends to the equilibrium $${xs}$.`,
+          `在 $t = 0$ 时公式给出 $x = ${xs} ${d < 0 ? "-" : "+"} ${Math.abs(d)} = ${x0}$，正是给定的初值；$t \\to \\infty$ 时它趋于平衡点 $${xs}$。`,
+        ),
+      ),
+    });
   },
 );
 
@@ -269,8 +336,8 @@ const classifyEquilibrium = point(
   "classifying-an-equilibrium-by-its-jacobian",
   ["Classifying an equilibrium by its Jacobian", "由雅可比矩阵判断平衡点类型"],
   [
-    "The Jacobian at an equilibrium decides its type when no eigenvalue has zero real part. A negative determinant means a saddle. A positive determinant with a negative trace means that both eigenvalues have negative real part, so the equilibrium is stable.",
-    "当没有特征值的实部为零时，平衡点处的雅可比矩阵决定其类型。行列式为负表示鞍点。行列式为正且迹为负，表示两个特征值的实部都为负，所以平衡点稳定。",
+    "The Jacobian at an equilibrium decides its type when no eigenvalue has zero real part. A negative determinant means a saddle. A positive determinant with a negative trace means that both eigenvalues have negative real part, so the equilibrium is stable.\n\n> **Watch out.** Evaluate the Jacobian at the equilibrium itself: for $x' = y$, $y' = x^2 - 4 - y$ the entry $2x$ is $4$ at $(2, 0)$ and $-4$ at $(-2, 0)$, so the first is a saddle and the second is stable.",
+    "当没有特征值的实部为零时，平衡点处的雅可比矩阵决定其类型。行列式为负表示鞍点。行列式为正且迹为负，表示两个特征值的实部都为负，所以平衡点稳定。\n\n> **注意。** 雅可比矩阵要在平衡点本身处求值：对 $x' = y$，$y' = x^2 - 4 - y$，元素 $2x$ 在 $(2, 0)$ 处为 $4$，在 $(-2, 0)$ 处为 $-4$，所以前者是鞍点，后者稳定。",
   ],
   (rng) => {
     const s = rng.pick([-1, 1]);
@@ -286,16 +353,47 @@ const classifyEquilibrium = point(
     const system = `x' = y$, $y' = ${poly([s, "x^{2}"], [-s * m * m, ""], [-d, "y"])}`;
     const systemZh = `x' = y$，$y' = ${poly([s, "x^{2}"], [-s * m * m, ""], [-d, "y"])}`;
     const J = mat(0, 1, 2 * s * star, -d);
-    return choose(
-      rng,
-      [`What type of equilibrium does $${system}$ have at $(${star}, 0)$?`, `$${systemZh}$ 在 $(${star}, 0)$ 处的平衡点是什么类型？`],
-      correct,
-      [saddle, stable, source, center].filter((o) => o !== correct),
+    const reasons: [Pair, string, string][] = [
+      [saddle, `A saddle needs $\\det J < 0$, but here $\\det J = ${det}$.`, `鞍点要求 $\\det J < 0$，而这里 $\\det J = ${det}$。`],
       [
-        `The Jacobian there is $${J}$, with determinant $${det}$ and trace $${-d}$. ${det < 0 ? "A negative determinant gives real eigenvalues of opposite signs." : "A positive determinant and a negative trace make both real parts negative."}`,
-        `该处的雅可比矩阵是 $${J}$，行列式是 $${det}$，迹是 $${-d}$。${det < 0 ? "行列式为负，特征值是异号实数。" : "行列式为正且迹为负，两个实部都为负。"}`,
+        stable,
+        `$\\det J = ${det} < 0$ gives real eigenvalues of opposite signs, so the equilibrium is not stable.`,
+        `$\\det J = ${det} < 0$ 给出异号实特征值，所以平衡点不稳定。`,
       ],
-    );
+      [
+        source,
+        `Both real parts positive needs a positive trace, but $\\operatorname{tr} J = ${-d}$.`,
+        `两个实部都为正需要迹为正，而 $\\operatorname{tr} J = ${-d}$。`,
+      ],
+      [center, `A center needs a zero trace, but $\\operatorname{tr} J = ${-d}$.`, `中心要求迹为零，而 $\\operatorname{tr} J = ${-d}$。`],
+    ];
+    return explainedChoice(rng, {
+      prompt: t(
+        `What type of equilibrium does $${system}$ have at $(${star}, 0)$?`,
+        `$${systemZh}$ 在 $(${star}, 0)$ 处的平衡点是什么类型？`,
+      ),
+      correct: t(...correct),
+      wrong: reasons.filter((r) => r[0] !== correct).map(([o, en, zh]) => ({ option: t(...o), why: t(en, zh) })),
+      solution: walked(
+        [
+          [["Differentiate", "求偏导"], t("", ""), [`J = ${mat(0, 1, `${s < 0 ? "-" : ""}2x`, -d)}, \\qquad J(${star}, 0) = ${J}`]],
+          [
+            ["Read the trace and determinant", "读出迹与行列式"],
+            det < 0
+              ? t("A negative determinant gives real eigenvalues of opposite signs: a saddle.", "行列式为负，特征值是异号实数：鞍点。")
+              : t(
+                  "A positive determinant and a negative trace make both real parts negative: stable.",
+                  "行列式为正且迹为负，两个实部都为负：稳定。",
+                ),
+            [`\\det J = 0 \\cdot ${paren(-d)} - 1 \\cdot ${paren(2 * s * star)} = ${det}, \\qquad \\operatorname{tr} J = ${-d}`],
+          ],
+        ],
+        t(
+          `The eigenvalues solve $${poly([1, "\\lambda^2"], [d, "\\lambda"], [det, ""])} = 0$: their product is $${det}$ and their sum is $${-d}$, ${det < 0 ? "so one is positive and one negative" : "so both real parts are negative"}.`,
+          `特征值满足 $${poly([1, "\\lambda^2"], [d, "\\lambda"], [det, ""])} = 0$：之积为 $${det}$，之和为 $${-d}$，${det < 0 ? "所以一正一负" : "所以两个实部都为负"}。`,
+        ),
+      ),
+    });
   },
 );
 
@@ -303,8 +401,8 @@ const coefficientsFromFundamental = point(
   "the-coefficients-for-an-initial-condition",
   ["The coefficients for an initial condition", "满足初始条件的系数"],
   [
-    "Every solution is $\\mathbf{x}(t) = \\Phi(t)\\mathbf{c}$, and the initial condition requires $\\Phi(0)\\mathbf{c} = \\mathbf{x}(0)$. This is a linear system for the coefficients. Note that $\\Phi(0)$ need not be the identity, so $\\mathbf{c}$ is usually not $\\mathbf{x}(0)$ itself.",
-    "每个解都是 $\\mathbf{x}(t) = \\Phi(t)\\mathbf{c}$，初始条件要求 $\\Phi(0)\\mathbf{c} = \\mathbf{x}(0)$。这是关于系数的线性方程组。注意 $\\Phi(0)$ 不一定是单位矩阵，所以 $\\mathbf{c}$ 通常不等于 $\\mathbf{x}(0)$。",
+    "Every solution is $\\mathbf{x}(t) = \\Phi(t)\\mathbf{c}$, and the initial condition requires $\\Phi(0)\\mathbf{c} = \\mathbf{x}(0)$. This is a linear system for the coefficients. Note that $\\Phi(0)$ need not be the identity, so $\\mathbf{c}$ is usually not $\\mathbf{x}(0)$ itself.\n\n> **Watch out.** Solve $\\Phi(0)\\mathbf{c} = \\mathbf{x}(0)$ instead of copying $\\mathbf{x}(0)$. For $\\Phi(0) = \\begin{pmatrix} 1 & 1 \\\\ 1 & 2 \\end{pmatrix}$ and $\\mathbf{x}(0) = (5, 7)$, $c_{1} = 3$ and $c_{2} = 2$, not $5$ and $7$.",
+    "每个解都是 $\\mathbf{x}(t) = \\Phi(t)\\mathbf{c}$，初始条件要求 $\\Phi(0)\\mathbf{c} = \\mathbf{x}(0)$。这是关于系数的线性方程组。注意 $\\Phi(0)$ 不一定是单位矩阵，所以 $\\mathbf{c}$ 通常不等于 $\\mathbf{x}(0)$。\n\n> **注意。** 要解 $\\Phi(0)\\mathbf{c} = \\mathbf{x}(0)$，而不是照抄 $\\mathbf{x}(0)$。对 $\\Phi(0) = \\begin{pmatrix} 1 & 1 \\\\ 1 & 2 \\end{pmatrix}$ 与 $\\mathbf{x}(0) = (5, 7)$，$c_{1} = 3$，$c_{2} = 2$，不是 $5$ 和 $7$。",
   ],
   (rng) => {
     const a = nz(rng, 5);
@@ -319,18 +417,48 @@ const coefficientsFromFundamental = point(
     const answer = useFirst ? c1 : c2;
     const phi = mat(expOf(a), expOf(b), poly([p, expOf(a)]), poly([q, expOf(b)]));
     const name = useFirst ? "c_{1}" : "c_{2}";
-    return ask(
-      [
+    const rest = y0 - p * x0;
+    return numberProblem({
+      prompt: t(
         `A fundamental matrix of a system is $\\Phi(t) = ${phi}$. The solution with $\\mathbf{x}(0) = ${vec(x0, y0)}$ is $\\Phi(t)${vec("c_{1}", "c_{2}")}$. Find $${name}$.`,
         `一个方程组的基本矩阵是 $\\Phi(t) = ${phi}$。满足 $\\mathbf{x}(0) = ${vec(x0, y0)}$ 的解是 $\\Phi(t)${vec("c_{1}", "c_{2}")}$。求 $${name}$。`,
-      ],
+      ),
       answer,
-      [useFirst ? c2 : c1, -answer, useFirst ? x0 : y0],
-      [
-        `At $t = 0$ the exponentials are $1$, so $c_{1} + c_{2} = ${x0}$ and $${poly([p, "c_{1}"], [q, "c_{2}"])} = ${y0}$. Solving gives $c_{1} = ${c1}$ and $c_{2} = ${c2}$.`,
-        `在 $t = 0$ 处，指数函数都等于 $1$，所以 $c_{1} + c_{2} = ${x0}$，$${poly([p, "c_{1}"], [q, "c_{2}"])} = ${y0}$。解得 $c_{1} = ${c1}$，$c_{2} = ${c2}$。`,
-      ],
-    );
+      mistakes: apart(answer, [
+        why(useFirst ? c2 : c1, "That is the other coefficient.", "这是另一个系数。"),
+        why(
+          -answer,
+          "The sign is flipped while eliminating; substitute back into both equations to catch it.",
+          "消元时符号弄反了；代回两个方程就能发现。",
+        ),
+        why(
+          useFirst ? x0 : y0,
+          "That copies a component of $\\mathbf{x}(0)$; $\\Phi(0)$ is not the identity, so the coefficients must be solved for.",
+          "这照抄了 $\\mathbf{x}(0)$ 的一个分量；$\\Phi(0)$ 不是单位矩阵，系数必须解出来。",
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Set $t = 0$", "令 $t = 0$"],
+            t("Every exponential equals $1$ there.", "此时每个指数函数都等于 $1$。"),
+            [`\\Phi(0) = ${mat(1, 1, p, q)}`, `c_{1} + c_{2} = ${x0}, \\qquad ${poly([p, "c_{1}"], [q, "c_{2}"])} = ${y0}`],
+          ],
+          [
+            ["Eliminate $c_{1}$", "消去 $c_{1}$"],
+            t(`Subtract $${p}$ times the first equation from the second.`, `用第二个方程减去第一个方程的 $${p}$ 倍。`),
+            [
+              `${poly([q - p, "c_{2}"])} = ${y0} - ${paren(p)} \\cdot ${paren(x0)} = ${rest}`,
+              `c_{2} = ${rest} \\div ${paren(q - p)} = ${c2}, \\qquad c_{1} = ${x0} - ${paren(c2)} = ${c1}`,
+            ],
+          ],
+        ],
+        t(
+          `$${c1} + ${paren(c2)} = ${x0}$ and $${p} \\cdot ${paren(c1)} + ${paren(q)} \\cdot ${paren(c2)} = ${y0}$, so both components of $\\mathbf{x}(0)$ are matched.`,
+          `$${c1} + ${paren(c2)} = ${x0}$，$${p} \\cdot ${paren(c1)} + ${paren(q)} \\cdot ${paren(c2)} = ${y0}$，所以 $\\mathbf{x}(0)$ 的两个分量都吻合。`,
+        ),
+      ),
+    });
   },
 );
 
@@ -338,8 +466,8 @@ const exponentialOfJordan = point(
   "the-matrix-exponential-is-not-taken-entry-by-entry",
   ["The matrix exponential is not taken entry by entry", "矩阵指数不是逐个元素取指数"],
   [
-    "Writing $A = \\lambda I + N$ with $N^{2}$ zero gives $e^{At} = e^{\\lambda t}(I + tN)$, since $\\lambda I$ commutes with $N$. So the upper entry is $bte^{\\lambda t}$. Taking the exponential of each entry would be wrong.",
-    "把 $A$ 写成 $\\lambda I + N$，其中 $N^{2}$ 为零，由于 $\\lambda I$ 与 $N$ 可交换，得 $e^{At} = e^{\\lambda t}(I + tN)$。所以右上元素是 $bte^{\\lambda t}$。对每个元素分别取指数是错误的。",
+    "Writing $A = \\lambda I + N$ with $N^{2}$ zero gives $e^{At} = e^{\\lambda t}(I + tN)$, since $\\lambda I$ commutes with $N$. So the upper entry is $bte^{\\lambda t}$. Taking the exponential of each entry would be wrong.\n\n> **Watch out.** The upper entry keeps both factors, $t$ and $e^{\\lambda t}$. For $A = \\begin{pmatrix} 1 & 3 \\\\ 0 & 1 \\end{pmatrix}$ at $t = \\ln 2$, $e^{t} = 2$, so the entry is $3 \\cdot 2\\ln 2 = 6\\ln 2$, not $3\\ln 2$ and not $e^{3\\ln 2} = 8$.",
+    "把 $A$ 写成 $\\lambda I + N$，其中 $N^{2}$ 为零，由于 $\\lambda I$ 与 $N$ 可交换，得 $e^{At} = e^{\\lambda t}(I + tN)$。所以右上元素是 $bte^{\\lambda t}$。对每个元素分别取指数是错误的。\n\n> **注意。** 右上元素同时保留 $t$ 与 $e^{\\lambda t}$ 两个因子。对 $A = \\begin{pmatrix} 1 & 3 \\\\ 0 & 1 \\end{pmatrix}$，在 $t = \\ln 2$ 处 $e^{t} = 2$，所以该元素是 $3 \\cdot 2\\ln 2 = 6\\ln 2$，不是 $3\\ln 2$，也不是 $e^{3\\ln 2} = 8$。",
   ],
   (rng) => {
     const l = rng.pick([-2, -1, 1, 2, 3]);
@@ -347,18 +475,54 @@ const exponentialOfJordan = point(
     const scale = Q.of(2).pow(l);
     const answer = scale.mul(Q.of(b));
     const A = mat(l, b, 0, l);
-    return ask(
-      [
+    const entry = poly([b, `t${expOf(l)}`]);
+    return numberProblem({
+      prompt: t(
         `For $A = ${A}$, the upper right entry of $e^{At}$ at $t = \\ln 2$ is $k\\ln 2$. Find $k$.`,
         `对 $A = ${A}$，$e^{At}$ 在 $t = \\ln 2$ 处的右上元素是 $k\\ln 2$。求 $k$。`,
-      ],
+      ),
       answer,
-      [b, scale, l * b],
-      [
-        `$e^{At} = ${expOf(l)}${mat(1, "bt", 0, 1)}$ with $b = ${b}$, so the entry is $${poly([b, `t${expOf(l)}`])}$. At $t = \\ln 2$ we have $${expOf(l)} = ${scale.toLatex()}$, so $k = ${answer.toLatex()}$.`,
-        `$e^{At} = ${expOf(l)}${mat(1, "bt", 0, 1)}$，其中 $b = ${b}$，所以该元素是 $${poly([b, `t${expOf(l)}`])}$。在 $t = \\ln 2$ 处，$${expOf(l)} = ${scale.toLatex()}$，所以 $k = ${answer.toLatex()}$。`,
-      ],
-    );
+      mistakes: apart(answer, [
+        why(
+          b,
+          "That drops the factor $e^{\\lambda t}$, which multiplies every entry of $e^{At}$.",
+          "这漏掉了因子 $e^{\\lambda t}$，它乘在 $e^{At}$ 的每个元素上。",
+        ),
+        why(scale, "That drops the factor $b$ that comes from $tN$.", "这漏掉了来自 $tN$ 的因子 $b$。"),
+        why(l * b, "That multiplies by $\\lambda$ instead of by $e^{\\lambda t}$.", "这乘的是 $\\lambda$，而不是 $e^{\\lambda t}$。"),
+        why(
+          Q.of(2).pow(-l).mul(Q.of(b)),
+          "That uses $e^{-\\lambda t}$; the exponent keeps the sign of $\\lambda$.",
+          "这用了 $e^{-\\lambda t}$；指数应保持 $\\lambda$ 的符号。",
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Split $A$", "拆分 $A$"],
+            t("$\\lambda I$ commutes with $N$, so the two exponentials multiply.", "$\\lambda I$ 与 $N$ 可交换，所以两个指数可以相乘。"),
+            [`A = ${l}I + N, \\qquad N = ${mat(0, b, 0, 0)}, \\qquad N^{2} = 0`],
+          ],
+          [
+            ["Exponentiate", "取指数"],
+            t("The series for $e^{Nt}$ stops at $I + tN$.", "$e^{Nt}$ 的级数在 $I + tN$ 处终止。"),
+            [`e^{At} = ${expOf(l)}(I + tN) = ${expOf(l)}${mat(1, poly([b, "t"]), 0, 1)}`],
+          ],
+          [
+            ["Set $t = \\ln 2$", "令 $t = \\ln 2$"],
+            t(`There $${expOf(l)} = ${scale.toLatex()}$.`, `此时 $${expOf(l)} = ${scale.toLatex()}$。`),
+            [
+              `\\left.${entry}\\right|_{t = \\ln 2} = ${b} \\cdot ${scale.toLatex()}\\ln 2 = ${poly([answer, "\\ln 2"])}`,
+              `k = ${answer.toLatex()}`,
+            ],
+          ],
+        ],
+        t(
+          `$\\frac{d}{dt}\\left(${entry}\\right) = ${poly([b, expOf(l)], [l * b, `t${expOf(l)}`])}$, which is $${l}$ times this entry plus $${b}$ times the diagonal entry $${expOf(l)}$: exactly the upper right entry of $Ae^{At}$.`,
+          `$\\frac{d}{dt}\\left(${entry}\\right) = ${poly([b, expOf(l)], [l * b, `t${expOf(l)}`])}$，等于这个元素的 $${l}$ 倍加上对角元素 $${expOf(l)}$ 的 $${b}$ 倍，正是 $Ae^{At}$ 的右上元素。`,
+        ),
+      ),
+    });
   },
 );
 
@@ -366,8 +530,8 @@ const integralOfExponentialMatrix = point(
   "constant-forcing-through-the-matrix-exponential",
   ["Constant forcing through the matrix exponential", "通过矩阵指数处理常数强迫"],
   [
-    "With zero initial state and constant forcing, $\\mathbf{x}(t) = \\int_{0}^{t} e^{As}\\mathbf{g} \\, ds$. For a diagonal $A$ each entry is an ordinary integral, giving $\\frac{g}{a}(e^{at} - 1)$. Both the factor $\\frac{1}{a}$ and the $-1$ from the lower limit are easy to lose.",
-    "零初始状态、常数强迫时，$\\mathbf{x}(t) = \\int_{0}^{t} e^{As}\\mathbf{g} \\, ds$。对角矩阵 $A$ 的每个分量都是普通积分，得 $\\frac{g}{a}(e^{at} - 1)$。因子 $\\frac{1}{a}$ 和下限带来的 $-1$ 都容易丢失。",
+    "With zero initial state and constant forcing, $\\mathbf{x}(t) = \\int_{0}^{t} e^{As}\\mathbf{g} \\, ds$. For a diagonal $A$ each entry is an ordinary integral, giving $\\frac{g}{a}(e^{at} - 1)$. Both the factor $\\frac{1}{a}$ and the $-1$ from the lower limit are easy to lose.\n\n> **Watch out.** Keep both the $\\frac{1}{a}$ and the $-1$. For $x_{1}' = 2x_{1} + 6$ from $x_{1}(0) = 0$, $x_{1}(\\ln 2) = \\frac{6}{2}(4 - 1) = 9$, not $\\frac{6}{2} \\cdot 4 = 12$ and not $6 \\cdot 3 = 18$.",
+    "零初始状态、常数强迫时，$\\mathbf{x}(t) = \\int_{0}^{t} e^{As}\\mathbf{g} \\, ds$。对角矩阵 $A$ 的每个分量都是普通积分，得 $\\frac{g}{a}(e^{at} - 1)$。因子 $\\frac{1}{a}$ 和下限带来的 $-1$ 都容易丢失。\n\n> **注意。** $\\frac{1}{a}$ 与 $-1$ 都要保留。对 $x_{1}' = 2x_{1} + 6$，$x_{1}(0) = 0$，$x_{1}(\\ln 2) = \\frac{6}{2}(4 - 1) = 9$，不是 $\\frac{6}{2} \\cdot 4 = 12$，也不是 $6 \\cdot 3 = 18$。",
   ],
   (rng) => {
     const a = rng.pick([-2, -1, 1, 2, 3]);
@@ -378,18 +542,54 @@ const integralOfExponentialMatrix = point(
     const growth = pow.sub(Q.of(1));
     const answer = Q.of(g, a).mul(growth);
     const A = mat(a, 0, 0, d);
-    return ask(
-      [
+    const formula = poly([Q.of(g, a), `\\left(${expOf(a)} - 1\\right)`]);
+    return numberProblem({
+      prompt: t(
         `Solve $\\mathbf{x}' = ${A}\\mathbf{x} + ${vec(g, h)}$ with $\\mathbf{x}(0) = \\mathbf{0}$, and find $x_{1}(\\ln 2)$.`,
         `解 $\\mathbf{x}' = ${A}\\mathbf{x} + ${vec(g, h)}$，$\\mathbf{x}(0) = \\mathbf{0}$，并求 $x_{1}(\\ln 2)$。`,
-      ],
+      ),
       answer,
-      [Q.of(g).mul(pow), Q.of(g, a).mul(pow), Q.of(g).mul(growth)],
-      [
-        `$x_{1}(t) = \\int_{0}^{t} ${poly([g, expOf(a, "s")])} \\, ds = ${poly([Q.of(g, a), `\\left(${expOf(a)} - 1\\right)`])}$. At $t = \\ln 2$ we have $${expOf(a)} = ${pow.toLatex()}$, so $x_{1} = ${answer.toLatex()}$.`,
-        `$x_{1}(t) = \\int_{0}^{t} ${poly([g, expOf(a, "s")])} \\, ds = ${poly([Q.of(g, a), `\\left(${expOf(a)} - 1\\right)`])}$。在 $t = \\ln 2$ 处，$${expOf(a)} = ${pow.toLatex()}$，所以 $x_{1} = ${answer.toLatex()}$。`,
-      ],
-    );
+      mistakes: apart(answer, [
+        why(
+          Q.of(g).mul(pow),
+          "That drops both the factor $\\frac{1}{a}$ and the $-1$ from the lower limit.",
+          "这同时漏掉了因子 $\\frac{1}{a}$ 和下限带来的 $-1$。",
+        ),
+        why(Q.of(g, a).mul(pow), "That drops the $-1$ that the lower limit $s = 0$ contributes.", "这漏掉了下限 $s = 0$ 带来的 $-1$。"),
+        why(
+          Q.of(g).mul(growth),
+          "That drops the factor $\\frac{1}{a}$ from integrating $e^{as}$.",
+          "这漏掉了对 $e^{as}$ 积分得到的因子 $\\frac{1}{a}$。",
+        ),
+        why(
+          Q.of(g, a).mul(Q.of(2).pow(-a).sub(Q.of(1))),
+          "That integrates $e^{-as}$; the exponent keeps the sign of $a$.",
+          "这是对 $e^{-as}$ 积分；指数应保持 $a$ 的符号。",
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Take the first component", "取第一个分量"],
+            t(
+              "$A$ is diagonal, so $x_{1}$ involves only its own rate and forcing.",
+              "$A$ 是对角矩阵，所以 $x_{1}$ 只与它自己的速率和强迫项有关。",
+            ),
+            [`x_{1}' = ${poly([a, "x_{1}"], [g, ""])}, \\qquad x_{1}(t) = \\int_{0}^{t} ${poly([g, expOf(a, "s")])} \\, ds`],
+          ],
+          [["Integrate", "积分"], t("", ""), [`x_{1}(t) = ${formula}`]],
+          [
+            ["Set $t = \\ln 2$", "令 $t = \\ln 2$"],
+            t(`There $${expOf(a)} = ${pow.toLatex()}$.`, `此时 $${expOf(a)} = ${pow.toLatex()}$。`),
+            [`x_{1}(\\ln 2) = ${Q.of(g, a).toLatex()} \\cdot ${paren(growth)} = ${answer.toLatex()}`],
+          ],
+        ],
+        t(
+          `$x_{1}(0) = 0$, and $${poly([a, "x_{1}"], [g, ""])} = ${poly([g, expOf(a)], [-g, ""], [g, ""])} = ${poly([g, expOf(a)])}$, which is the derivative of $${formula}$.`,
+          `$x_{1}(0) = 0$，并且 $${poly([a, "x_{1}"], [g, ""])} = ${poly([g, expOf(a)], [-g, ""], [g, ""])} = ${poly([g, expOf(a)])}$，正是 $${formula}$ 的导数。`,
+        ),
+      ),
+    });
   },
 );
 
@@ -397,8 +597,8 @@ const vopNonDiagonal = point(
   "variation-of-parameters-with-a-non-diagonal-fundamental-matrix",
   ["Variation of parameters with a non-diagonal fundamental matrix", "基本矩阵非对角时的参数变易"],
   [
-    "When $\\Phi$ is not diagonal, $\\Phi\\mathbf{u}' = \\mathbf{g}$ couples the parameters. With a triangular $\\Phi$, solve the bottom row first. The first parameter then has a term that depends on $t$, and it must be integrated rather than treated as a constant.",
-    "当 $\\Phi$ 不是对角矩阵时，$\\Phi\\mathbf{u}' = \\mathbf{g}$ 使参数耦合。$\\Phi$ 是三角矩阵时，先解最后一行。于是第一个参数含有依赖 $t$ 的项，必须积分，不能当作常数。",
+    "When $\\Phi$ is not diagonal, $\\Phi\\mathbf{u}' = \\mathbf{g}$ couples the parameters. With a triangular $\\Phi$, solve the bottom row first. The first parameter then has a term that depends on $t$, and it must be integrated rather than treated as a constant.\n\n> **Watch out.** The top row reads $u_{1}' + tu_{2}' = f_{1}$, so $u_{1}'$ changes with $t$. For $u_{2}' = 4$ and $f_{1} = 3$, $u_{1}' = 3 - 4t$ and $u_{1}(1) = 3 - 2 = 1$, not $3$.",
+    "当 $\\Phi$ 不是对角矩阵时，$\\Phi\\mathbf{u}' = \\mathbf{g}$ 使参数耦合。$\\Phi$ 是三角矩阵时，先解最后一行。于是第一个参数含有依赖 $t$ 的项，必须积分，不能当作常数。\n\n> **注意。** 第一行是 $u_{1}' + tu_{2}' = f_{1}$，所以 $u_{1}'$ 随 $t$ 变化。对 $u_{2}' = 4$，$f_{1} = 3$，$u_{1}' = 3 - 4t$，$u_{1}(1) = 3 - 2 = 1$，不是 $3$。",
   ],
   (rng) => {
     const a = nz(rng, 4);
@@ -410,18 +610,50 @@ const vopNonDiagonal = point(
     const phi = mat(e, `t${e}`, 0, e);
     const g = vec(poly([f1, e]), poly([f2, e]));
     const uPrime = poly([f1, ""], [-f2, "t"]);
-    return ask(
-      [
+    return numberProblem({
+      prompt: t(
         `$\\Phi(t) = ${phi}$ is a fundamental matrix, and $\\mathbf{g}(t) = ${g}$. Solving $\\Phi\\mathbf{u}' = \\mathbf{g}$ with $\\mathbf{u}(0) = \\mathbf{0}$, find $u_{1}(${T})$.`,
         `$\\Phi(t) = ${phi}$ 是基本矩阵，$\\mathbf{g}(t) = ${g}$。解 $\\Phi\\mathbf{u}' = \\mathbf{g}$，$\\mathbf{u}(0) = \\mathbf{0}$，求 $u_{1}(${T})$。`,
-      ],
+      ),
       answer,
-      [f1 * T, f1 * T + (f2 * T * T) / 2, f1 - f2 * T],
-      [
-        `The bottom row gives $u_{2}' = ${f2}$, and only this derivative is needed. The top row gives $u_{1}' + tu_{2}' = ${f1}$, so $u_{1}' = ${uPrime}$. Integrating from $0$ to $${T}$ gives $${answer}$.`,
-        `最后一行给出 $u_{2}' = ${f2}$。第一行给出 $u_{1}' + tu_{2}' = ${f1}$，所以 $u_{1}' = ${uPrime}$。从 $0$ 积分到 $${T}$，得 $${answer}$。`,
-      ],
-    );
+      mistakes: apart(answer, [
+        why(f1 * T, "That drops the coupling term; the top row also contains $tu_{2}'$.", "这漏掉了耦合项；第一行还含有 $tu_{2}'$。"),
+        why(
+          f1 * T + (f2 * T * T) / 2,
+          "The sign of the coupling term is flipped: $u_{1}' = f_{1} - tu_{2}'$.",
+          "耦合项的符号弄反了：$u_{1}' = f_{1} - tu_{2}'$。",
+        ),
+        why(
+          f1 - f2 * T,
+          "That is the rate $u_{1}'$ at that time; it still has to be integrated.",
+          "这是该时刻的变化率 $u_{1}'$；还要积分。",
+        ),
+        why(f2 * T, "That is $u_{2}$ at that time, the other parameter.", "这是该时刻的 $u_{2}$，即另一个参数。"),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Solve the bottom row", "解最后一行"],
+            t(`Divide by $${e}$.`, `两边除以 $${e}$。`),
+            [`${e}u_{2}' = ${poly([f2, e])}, \\qquad u_{2}' = ${f2}`],
+          ],
+          [
+            ["Solve the top row", "解第一行"],
+            t(`Divide by $${e}$ and put in $u_{2}'$.`, `两边除以 $${e}$，再代入 $u_{2}'$。`),
+            [`u_{1}' + tu_{2}' = ${f1}, \\qquad u_{1}' = ${uPrime}`],
+          ],
+          [
+            ["Integrate", "积分"],
+            t("Start from $u_{1}(0) = 0$.", "从 $u_{1}(0) = 0$ 出发。"),
+            [`u_{1} = ${poly([f1, "t"], [-f2 / 2, "t^{2}"])}, \\qquad u_{1}(${T}) = ${answer}`],
+          ],
+        ],
+        t(
+          `At $t = ${T}$: $u_{1}' + ${T === 1 ? "" : T}u_{2}' =${f1 - f2 * T} + ${T} \\cdot ${paren(f2)} = ${f1}$, the top entry of $\\mathbf{g}$ divided by $${e}$, and $u_{1}(0) = 0$.`,
+          `在 $t = ${T}$ 处：$u_{1}' + ${T === 1 ? "" : T}u_{2}' =${f1 - f2 * T} + ${T} \\cdot ${paren(f2)} = ${f1}$，正是 $\\mathbf{g}$ 的第一个元素除以 $${e}$；并且 $u_{1}(0) = 0$。`,
+        ),
+      ),
+    });
   },
 );
 
@@ -429,8 +661,8 @@ const criticalCapacity = point(
   "the-carrying-capacity-that-predators-need",
   ["The carrying capacity that predators need", "捕食者所需的环境容量"],
   [
-    "With logistic prey, coexistence needs the prey level $x_{*}$ that holds predators steady to be below the carrying capacity $K$. The predator level is $y_{*} = \\frac{r}{a}\\left(1 - \\frac{x_{*}}{K}\\right)$, so it falls to zero when $K$ reaches $x_{*}$, and predators die out below that.",
-    "猎物为逻辑斯谛增长时，共存要求使捕食者保持稳定的猎物水平 $x_{*}$ 低于环境容量 $K$。捕食者水平是 $y_{*} = \\frac{r}{a}\\left(1 - \\frac{x_{*}}{K}\\right)$，所以当 $K$ 降到 $x_{*}$ 时它降为零，低于这个值捕食者就会灭绝。",
+    "With logistic prey, coexistence needs the prey level $x_{*}$ that holds predators steady to be below the carrying capacity $K$. The predator level is $y_{*} = \\frac{r}{a}\\left(1 - \\frac{x_{*}}{K}\\right)$, so it falls to zero when $K$ reaches $x_{*}$, and predators die out below that.\n\n> **Watch out.** The threshold comes from the predator equation alone: $K = x_{*} = \\frac{c}{d}$, and the prey rates $r$ and $a$ do not enter it. For $y' = -6y + 2xy$, predators need $K > 3$, whatever the prey equation is.",
+    "猎物为逻辑斯谛增长时，共存要求使捕食者保持稳定的猎物水平 $x_{*}$ 低于环境容量 $K$。捕食者水平是 $y_{*} = \\frac{r}{a}\\left(1 - \\frac{x_{*}}{K}\\right)$，所以当 $K$ 降到 $x_{*}$ 时它降为零，低于这个值捕食者就会灭绝。\n\n> **注意。** 这个临界值只由捕食者方程决定：$K = x_{*} = \\frac{c}{d}$，猎物的速率 $r$ 与 $a$ 不出现在其中。对 $y' = -6y + 2xy$，无论猎物方程如何，捕食者都需要 $K > 3$。",
   ],
   (rng) => {
     const r = rng.int(2, 9);
@@ -440,18 +672,47 @@ const criticalCapacity = point(
     const answer = Q.of(c, d);
     const first = `x' = ${r}x\\left(1 - \\frac{x}{K}\\right) - ${poly([a, "xy"])}`;
     const second = `y' = ${poly([-c, "y"], [d, "xy"])}`;
-    return ask(
-      [
+    return numberProblem({
+      prompt: t(
         `For $${first}$, $${second}$, the coexistence level of predators falls as $K$ falls. Find the value of $K$ at which it reaches zero.`,
         `对 $${first}$，$${second}$，当 $K$ 减小时，共存时的捕食者水平下降。求它降到零时的 $K$。`,
-      ],
+      ),
       answer,
-      [Q.of(d, c), c, Q.of(r, a)],
-      [
-        `Setting $y' = 0$ with $y > 0$ gives $x_{*} = ${answer.toLatex()}$. The prey equation then gives $y_{*} = ${Q.of(r, a).toLatex()}\\left(1 - \\frac{x_{*}}{K}\\right)$, which is zero exactly at $K = ${answer.toLatex()}$.`,
-        `令 $y' = 0$ 且 $y > 0$，得 $x_{*} = ${answer.toLatex()}$。猎物方程给出 $y_{*} = ${Q.of(r, a).toLatex()}\\left(1 - \\frac{x_{*}}{K}\\right)$，恰好在 $K = ${answer.toLatex()}$ 时为零。`,
-      ],
-    );
+      mistakes: apart(answer, [
+        why(
+          Q.of(d, c),
+          "That divides the wrong way: the predator equation gives $x_{*} = \\frac{c}{d}$.",
+          "除反了：捕食者方程给出 $x_{*} = \\frac{c}{d}$。",
+        ),
+        why(c, "That is the predator death rate; it still has to be divided by $d$.", "这是捕食者的死亡率；还要除以 $d$。"),
+        why(
+          Q.of(r, a),
+          "That is the predator level the prey equation would allow with unlimited prey, not a carrying capacity.",
+          "这是猎物不受限时猎物方程允许的捕食者水平，不是环境容量。",
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Use the predator equation", "用捕食者方程"],
+            t("Coexistence needs $y > 0$, so the bracket vanishes.", "共存要求 $y > 0$，所以括号为零。"),
+            [`y\\left(${poly([-c, ""], [d, "x"])}\\right) = 0, \\qquad x_{*} = ${c} \\div ${d} = ${answer.toLatex()}`],
+          ],
+          [
+            ["Use the prey equation", "用猎物方程"],
+            t("Divide $x' = 0$ by $x$.", "把 $x' = 0$ 除以 $x$。"),
+            [
+              `${r}\\left(1 - \\frac{x_{*}}{K}\\right) - ${poly([a, "y"])} = 0, \\qquad y_{*} = \\left(1 - \\frac{x_{*}}{K}\\right) \\cdot ${Q.of(r, a).toLatex()}`,
+            ],
+          ],
+          [["Set $y_{*} = 0$", "令 $y_{*} = 0$"], t("", ""), [`\\frac{x_{*}}{K} = 1, \\qquad K = x_{*} = ${answer.toLatex()}`]],
+        ],
+        t(
+          `With $K = ${Q.of(2 * c, d).toLatex()}$, twice the threshold, $y_{*} = ${Q.of(r, 2 * a).toLatex()} > 0$; with $K = ${answer.toLatex()}$ the factor $1 - \\frac{x_{*}}{K}$ is exactly $0$.`,
+          `取 $K = ${Q.of(2 * c, d).toLatex()}$，即临界值的两倍，$y_{*} = ${Q.of(r, 2 * a).toLatex()} > 0$；取 $K = ${answer.toLatex()}$ 时因子 $1 - \\frac{x_{*}}{K}$ 恰好为 $0$。`,
+        ),
+      ),
+    });
   },
 );
 
