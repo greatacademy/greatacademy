@@ -4,7 +4,7 @@ import { paren, poly, Q } from "@ga/subject-math";
 import { multivariableDrawings3 } from "../explanation-drawings-multivariable-3.ts";
 import { multivariableDrawings4 } from "../explanation-drawings-multivariable-4.ts";
 import { multivariableDrawings5 } from "../explanation-drawings-multivariable-5.ts";
-import { choiceProblem, explainedChoice, numberProblem, steps, why } from "../problems.ts";
+import { explainedChoice, numberProblem, why } from "../problems.ts";
 import { walked } from "./calculus-i-differentiation.ts";
 
 /** asQ turns a number into a rational number so that values can be compared. */
@@ -29,15 +29,6 @@ const pythagoreanTriples = [
   [12, 16, 20],
   [15, 20, 25],
 ] as const;
-
-/** Helper for multiple-choice problems with shuffled options. */
-function pickChoice(rng: Rng, prompt: Text, right: Text, wrong: readonly Text[], solution: Text): Problem {
-  const all = [right, ...wrong];
-  const perm = rng.shuffle(all.map((_, i) => i));
-  const options = perm.map((i) => all[i]!);
-  const correct = perm.indexOf(0);
-  return choiceProblem({ prompt, options, correct, solution });
-}
 
 // ---------------------------------------------------------------------------
 // 3.13 Riemann Sums
@@ -3877,6 +3868,10 @@ export const doubleIntegralsBetweenPolarCurves: TopicDef = {
     "Double integrals over annular or sector regions are computed by setting variable r limits between two bounding curves.",
     "在环形或扇形区域上的二重积分，通过在两条边界曲线之间设定变动的 r 积分限来计算。",
   ),
+  intro: t(
+    "Find the area between the circles $r = 2\\cos\\theta$ and $r = 4\\cos\\theta$. Both are traced once for $-\\frac{\\pi}{2} \\le \\theta \\le \\frac{\\pi}{2}$, and along each ray $r$ runs from $2\\cos\\theta$ to $4\\cos\\theta$, so the area is $\\int_{-\\pi/2}^{\\pi/2} \\int_{2\\cos\\theta}^{4\\cos\\theta} r\\,dr\\,d\\theta = \\int_{-\\pi/2}^{\\pi/2} 6\\cos^2\\theta\\,d\\theta = 3\\pi$.\n\nCheck: $r = 4\\cos\\theta$ is the circle of radius $2$ centered at $(2, 0)$ and $r = 2\\cos\\theta$ the circle of radius $1$ centered at $(1, 0)$, inside it. So the area is $4\\pi - \\pi = 3\\pi$.\n\nIn this lesson we integrate over regions whose radius runs between two polar curves.",
+    "求圆 $r = 2\\cos\\theta$ 与 $r = 4\\cos\\theta$ 之间的面积。两者都在 $-\\frac{\\pi}{2} \\le \\theta \\le \\frac{\\pi}{2}$ 上描一遍，沿每条射线 $r$ 从 $2\\cos\\theta$ 到 $4\\cos\\theta$，所以面积为 $\\int_{-\\pi/2}^{\\pi/2} \\int_{2\\cos\\theta}^{4\\cos\\theta} r\\,dr\\,d\\theta = \\int_{-\\pi/2}^{\\pi/2} 6\\cos^2\\theta\\,d\\theta = 3\\pi$。\n\n检验：$r = 4\\cos\\theta$ 是圆心 $(2, 0)$、半径 $2$ 的圆，$r = 2\\cos\\theta$ 是其内部圆心 $(1, 0)$、半径 $1$ 的圆。所以面积为 $4\\pi - \\pi = 3\\pi$。\n\n本课我们在半径介于两条极坐标曲线之间的区域上积分。",
+  ),
   prerequisites: ["double-integrals-in-plane-polar-coordinates"],
   encompasses: [{ topic: "double-integrals-in-plane-polar-coordinates", weight: 0.3 }],
   xp: 10,
@@ -3886,41 +3881,61 @@ export const doubleIntegralsBetweenPolarCurves: TopicDef = {
       figure: multivariableDrawings4["double-integrals-between-polar-curves#integrating-over-annular-polar-regions"],
       title: t("Integrating over annular polar regions", "在圆环扇形区域上的极坐标二重积分"),
       explanation: t(
-        "An annular sector is a rectangle in polar coordinates, with the radius between two values and the angle between two values. For an annular sector $r_1 \\le r \\le r_2$ and $0 \\le \\theta \\le \\frac{\\pi}{k}$, the area divided by $\\pi$ is:\n\n$$\\frac{1}{\\pi}\\iint_R 1\\,dA = \\frac{1}{\\pi}\\int_0^{\\pi/k} \\int_{r_1}^{r_2} r\\,dr\\,d\\theta = \\frac{r_2^2 - r_1^2}{2k}.$$",
-        "环形扇区在极坐标中是一个矩形，半径和角度都介于两个值之间。对于圆环扇形区域 $r_1 \\le r \\le r_2$ 且 $0 \\le \\theta \\le \\frac{\\pi}{k}$，其面积除以 $\\pi$ 为：\n\n$$\\frac{1}{\\pi}\\iint_R 1\\,dA = \\frac{1}{\\pi}\\int_0^{\\pi/k} \\int_{r_1}^{r_2} r\\,dr\\,d\\theta = \\frac{r_2^2 - r_1^2}{2k}$$",
+        "An annular sector is a rectangle in polar coordinates, with the radius between two values and the angle between two values. For an annular sector $r_1 \\le r \\le r_2$ and $0 \\le \\theta \\le \\frac{\\pi}{k}$, the area divided by $\\pi$ is:\n\n$$\\frac{1}{\\pi}\\iint_R 1\\,dA = \\frac{1}{\\pi}\\int_0^{\\pi/k} \\int_{r_1}^{r_2} r\\,dr\\,d\\theta = \\frac{r_2^2 - r_1^2}{2k}.$$\n\nFor $1 \\le r \\le 3$ and $0 \\le \\theta \\le \\frac{\\pi}{8}$ this is $\\frac{8}{16} = \\frac{1}{2}$.\n\n> **Watch out.** Subtract the squares, $r_2^2 - r_1^2$, not the square of the width $(r_2 - r_1)^2$; and start $r$ at the inner radius, since the hole is not part of the region.",
+        "环形扇区在极坐标中是一个矩形，半径和角度都介于两个值之间。对于圆环扇形区域 $r_1 \\le r \\le r_2$ 且 $0 \\le \\theta \\le \\frac{\\pi}{k}$，其面积除以 $\\pi$ 为：\n\n$$\\frac{1}{\\pi}\\iint_R 1\\,dA = \\frac{1}{\\pi}\\int_0^{\\pi/k} \\int_{r_1}^{r_2} r\\,dr\\,d\\theta = \\frac{r_2^2 - r_1^2}{2k}$$\n\n对 $1 \\le r \\le 3$ 与 $0 \\le \\theta \\le \\frac{\\pi}{8}$，结果为 $\\frac{8}{16} = \\frac{1}{2}$。\n\n> **注意。** 要用平方之差 $r_2^2 - r_1^2$，而不是宽度的平方 $(r_2 - r_1)^2$；$r$ 从内半径开始，因为空洞不属于区域。",
       ),
       generate(rng: Rng): Problem {
         const r1 = rng.int(1, 5);
         const dr = rng.int(1, 6);
         const r2 = r1 + dr;
         const k = rng.int(2, 6);
-
         const diffSq = r2 * r2 - r1 * r1;
         const ans = Q.of(diffSq, 2 * k);
-
-        const prompt = t(
-          `Find the value of $\\frac{1}{\\pi} \\iint_R 1\\,dA$ over the annular sector $R = \\{(r, \\theta) : ${r1} \\le r \\le ${r2}, 0 \\le \\theta \\le \\frac{\\pi}{${k}}\\}$.`,
-          `计算 $\\frac{1}{\\pi} \\iint_R 1\\,dA$ 的值，其中 $R = \\{(r, \\theta) : ${r1} \\le r \\le ${r2}, 0 \\le \\theta \\le \\frac{\\pi}{${k}}\\}$ 为圆环扇形区域。`,
-        );
-        const solution = t(
-          steps(
-            `Set up the polar integral: $\\iint_R 1\\,dA = \\int_0^{\\pi/${k}} \\int_{${r1}}^{${r2}} r\\,dr\\,d\\theta$.`,
-            `Integrate with respect to $r$:\n\n$$\\int_{${r1}}^{${r2}} r\\,dr = \\left[\\frac{r^2}{2}\\right]_{${r1}}^{${r2}} = \\frac{${r2 * r2} - ${r1 * r1}}{2} = \\frac{${diffSq}}{2}.$$`,
-            `Integrate with respect to $\\theta$:\n\n$$\\int_0^{\\pi/${k}} \\frac{${diffSq}}{2}\\,d\\theta = \\frac{\\pi}{${k}} \\cdot \\frac{${diffSq}}{2} = \\pi \\cdot \\frac{${diffSq}}{${2 * k}} = \\pi \\cdot ${ans.toLatex()}.$$ `,
-            `Dividing by $\\pi$ yields $${ans.toLatex()}$.`,
-          ),
-          steps(
-            `建立极坐标积分：$\\iint_R 1\\,dA = \\int_0^{\\pi/${k}} \\int_{${r1}}^{${r2}} r\\,dr\\,d\\theta$。`,
-            `对 $r$ 积分：\n\n$$\\int_{${r1}}^{${r2}} r\\,dr = \\left[\\frac{r^2}{2}\\right]_{${r1}}^{${r2}} = \\frac{${r2 * r2} - ${r1 * r1}}{2} = \\frac{${diffSq}}{2}$$`,
-            `对 $\\theta$ 积分：\n\n$$\\int_0^{\\pi/${k}} \\frac{${diffSq}}{2}\\,d\\theta = \\frac{\\pi}{${k}} \\cdot \\frac{${diffSq}}{2} = \\pi \\cdot \\frac{${diffSq}}{${2 * k}} = \\pi \\cdot ${ans.toLatex()}$$ `,
-            `除以 $\\pi$ 得到 $${ans.toLatex()}$。`,
-          ),
-        );
         return numberProblem({
-          prompt,
-          solution,
+          prompt: t(
+            `Find the value of $\\frac{1}{\\pi} \\iint_R 1\\,dA$ over the annular sector $R = \\{(r, \\theta) : ${r1} \\le r \\le ${r2}, 0 \\le \\theta \\le \\frac{\\pi}{${k}}\\}$.`,
+            `计算 $\\frac{1}{\\pi} \\iint_R 1\\,dA$ 的值，其中 $R = \\{(r, \\theta) : ${r1} \\le r \\le ${r2}, 0 \\le \\theta \\le \\frac{\\pi}{${k}}\\}$ 为圆环扇形区域。`,
+          ),
           answer: ans,
-          wrong: [Q.of(diffSq, k), Q.of(diffSq, 4 * k), ans.mul(Q.of(2))],
+          mistakes: distinct(ans, [
+            why(
+              Q.of(diffSq, k),
+              "The antiderivative of $r$ is $\\frac{r^2}{2}$; the factor $\\frac{1}{2}$ is missing.",
+              "$r$ 的原函数是 $\\frac{r^2}{2}$；漏了因子 $\\frac{1}{2}$。",
+            ),
+            why(
+              Q.of(dr * dr, 2 * k),
+              `That squares the width $${dr}$; the radial integral gives $${r2}^2 - ${r1}^2$.`,
+              `那是把宽度 $${dr}$ 平方；径向积分给出 $${r2}^2 - ${r1}^2$。`,
+            ),
+            why(
+              Q.of(r2 * r2, 2 * k),
+              `That starts $r$ at $0$; the region starts at $r = ${r1}$.`,
+              `那是让 $r$ 从 $0$ 开始；区域从 $r = ${r1}$ 开始。`,
+            ),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Integrate in r", "对 r 积分"],
+                t(
+                  `$\\int_{${r1}}^{${r2}} r\\,dr = \\frac{${r2 * r2} - ${r1 * r1}}{2} = \\frac{${diffSq}}{2}$.`,
+                  `$\\int_{${r1}}^{${r2}} r\\,dr = \\frac{${r2 * r2} - ${r1 * r1}}{2} = \\frac{${diffSq}}{2}$。`,
+                ),
+              ],
+              [
+                ["Integrate in θ and divide by π", "对 θ 积分并除以 π"],
+                t(
+                  `$\\frac{\\pi}{${k}} \\cdot \\frac{${diffSq}}{2} = ${ans.toLatex()}\\pi$, and dividing by $\\pi$ gives $${ans.toLatex()}$.`,
+                  `$\\frac{\\pi}{${k}} \\cdot \\frac{${diffSq}}{2} = ${ans.toLatex()}\\pi$，除以 $\\pi$ 得 $${ans.toLatex()}$。`,
+                ),
+              ],
+            ],
+            t(
+              `The whole ring has area $\\pi(${r2 * r2} - ${r1 * r1}) = ${diffSq}\\pi$, and the angle $\\frac{\\pi}{${k}}$ is $\\frac{1}{${2 * k}}$ of a turn, so the sector has $\\frac{${diffSq}}{${2 * k}}\\pi = ${ans.toLatex()}\\pi$.`,
+              `整个圆环的面积为 $\\pi(${r2 * r2} - ${r1 * r1}) = ${diffSq}\\pi$，角度 $\\frac{\\pi}{${k}}$ 占一圈的 $\\frac{1}{${2 * k}}$，所以扇形面积为 $\\frac{${diffSq}}{${2 * k}}\\pi = ${ans.toLatex()}\\pi$。`,
+            ),
+          ),
         });
       },
     },
@@ -3929,36 +3944,89 @@ export const doubleIntegralsBetweenPolarCurves: TopicDef = {
       figure: multivariableDrawings4["double-integrals-between-polar-curves#areas-enclosed-by-classic-polar-curves"],
       title: t("Areas enclosed by classic polar curves", "经典极坐标曲线围成的面积"),
       explanation: t(
-        "The area enclosed by $r = f(\\theta)$ is $\\frac{1}{2}\\int f(\\theta)^2\\,d\\theta$ over one full trace of the curve. Three standard results follow:\n\n- The circle $r = 2a\\cos\\theta$ (or $2a\\sin\\theta$) is traced once for $\\theta \\in [0, \\pi]$ and encloses $\\pi a^2$.\n- The cardioid $r = a(1 + \\cos\\theta)$ encloses $\\frac{3}{2}\\pi a^2$.\n- The rose $r = a\\cos(n\\theta)$ encloses $\\frac{\\pi a^2}{4}$ when $n$ is odd ($n$ petals) and $\\frac{\\pi a^2}{2}$ when $n$ is even ($2n$ petals).",
-        "曲线 $r = f(\\theta)$ 围成的面积是在曲线完整描一遍的范围上计算 $\\frac{1}{2}\\int f(\\theta)^2\\,d\\theta$。由此得三个标准结果：\n\n- 圆 $r = 2a\\cos\\theta$（或 $2a\\sin\\theta$）在 $\\theta \\in [0, \\pi]$ 上描一遍，面积为 $\\pi a^2$。\n- 心形线 $r = a(1 + \\cos\\theta)$ 面积为 $\\frac{3}{2}\\pi a^2$。\n- 玫瑰线 $r = a\\cos(n\\theta)$：$n$ 为奇数时（$n$ 瓣）面积为 $\\frac{\\pi a^2}{4}$，$n$ 为偶数时（$2n$ 瓣）面积为 $\\frac{\\pi a^2}{2}$。",
+        "The area enclosed by $r = f(\\theta)$ is $\\frac{1}{2}\\int f(\\theta)^2\\,d\\theta$ over one full trace of the curve. Three standard results follow:\n\n- The circle $r = 2a\\cos\\theta$ (or $2a\\sin\\theta$) is traced once for $\\theta \\in [0, \\pi]$ and encloses $\\pi a^2$.\n- The cardioid $r = a(1 + \\cos\\theta)$ encloses $\\frac{3}{2}\\pi a^2$.\n- The rose $r = a\\cos(n\\theta)$ encloses $\\frac{\\pi a^2}{4}$ when $n$ is odd ($n$ petals) and $\\frac{\\pi a^2}{2}$ when $n$ is even ($2n$ petals).\n\nFor example the cardioid $r = 7(1 + \\cos\\theta)$ encloses $\\frac{147\\pi}{2}$.\n\n> **Watch out.** Integrate over one trace only: a circle $r = 2a\\cos\\theta$ is complete on $[0, \\pi]$, and on $[0, 2\\pi]$ it is traced twice. Its radius is $a$, not $2a$.",
+        "曲线 $r = f(\\theta)$ 围成的面积是在曲线完整描一遍的范围上计算 $\\frac{1}{2}\\int f(\\theta)^2\\,d\\theta$。由此得三个标准结果：\n\n- 圆 $r = 2a\\cos\\theta$（或 $2a\\sin\\theta$）在 $\\theta \\in [0, \\pi]$ 上描一遍，面积为 $\\pi a^2$。\n- 心形线 $r = a(1 + \\cos\\theta)$ 面积为 $\\frac{3}{2}\\pi a^2$。\n- 玫瑰线 $r = a\\cos(n\\theta)$：$n$ 为奇数时（$n$ 瓣）面积为 $\\frac{\\pi a^2}{4}$，$n$ 为偶数时（$2n$ 瓣）面积为 $\\frac{\\pi a^2}{2}$。\n\n例如心形线 $r = 7(1 + \\cos\\theta)$ 围成的面积为 $\\frac{147\\pi}{2}$。\n\n> **注意。** 只在描一遍的范围上积分：圆 $r = 2a\\cos\\theta$ 在 $[0, \\pi]$ 上已经完整，在 $[0, 2\\pi]$ 上会描两遍。它的半径是 $a$，不是 $2a$。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(1, 6);
         const kind = rng.int(1, 3);
         const trig = rng.pick(["\\cos", "\\sin"]);
         const n = rng.int(2, 5);
+        const aa = a * a;
+        const lead = a === 1 ? "" : `${a}`;
         const curve =
-          kind === 1
-            ? `r = ${2 * a}${trig}\\theta`
-            : kind === 2
-              ? `r = ${a === 1 ? "" : a}(1 + ${trig}\\theta)`
-              : `r = ${a === 1 ? "" : a}${trig}(${n}\\theta)`;
-        const ans = kind === 1 ? Q.of(a * a) : kind === 2 ? Q.of(3 * a * a, 2) : Q.of(a * a, n % 2 === 1 ? 4 : 2);
+          kind === 1 ? `r = ${2 * a}${trig}\\theta` : kind === 2 ? `r = ${lead}(1 + ${trig}\\theta)` : `r = ${lead}${trig}(${n}\\theta)`;
+        const odd = n % 2 === 1;
+        const ans = kind === 1 ? Q.of(aa) : kind === 2 ? Q.of(3 * aa, 2) : Q.of(aa, odd ? 4 : 2);
         const name = kind === 1 ? ["circle", "圆"] : kind === 2 ? ["cardioid", "心形线"] : ["rose", "玫瑰线"];
-        const why =
+        const mistakes =
+          kind === 1
+            ? [
+                why(
+                  4 * aa,
+                  `That uses $${2 * a}$ as the radius; $${2 * a}$ is the diameter, so the radius is $${a}$.`,
+                  `那是把 $${2 * a}$ 当作半径；$${2 * a}$ 是直径，半径为 $${a}$。`,
+                ),
+                why(
+                  2 * aa,
+                  "That integrates over $[0, 2\\pi]$, which traces the circle twice.",
+                  "那是在 $[0, 2\\pi]$ 上积分，把圆描了两遍。",
+                ),
+              ]
+            : kind === 2
+              ? [
+                  why(
+                    aa,
+                    `That drops the $${trig}^2\\theta$ term of $(1 + ${trig}\\theta)^2$, which contributes $\\pi$ over a turn.`,
+                    `那是丢掉了 $(1 + ${trig}\\theta)^2$ 中的 $${trig}^2\\theta$ 项，它在一圈上贡献 $\\pi$。`,
+                  ),
+                  why(3 * aa, "The area formula has a factor $\\frac{1}{2}$; it is missing.", "面积公式有因子 $\\frac{1}{2}$；漏了。"),
+                ]
+              : [
+                  why(
+                    Q.of(aa, odd ? 2 : 4),
+                    odd
+                      ? `For odd $n = ${n}$ the curve is traced twice over $[0, 2\\pi]$, so only half of that integral counts.`
+                      : `For even $n = ${n}$ the curve is traced once over $[0, 2\\pi]$, with $${2 * n}$ petals; nothing is counted twice.`,
+                    odd
+                      ? `$n = ${n}$ 为奇数时，曲线在 $[0, 2\\pi]$ 上描两遍，只能取那个积分的一半。`
+                      : `$n = ${n}$ 为偶数时，曲线在 $[0, 2\\pi]$ 上描一遍，共 $${2 * n}$ 瓣，没有重复计算。`,
+                  ),
+                  why(
+                    ans.mul(Q.of(n)),
+                    "The total does not grow with the number of petals; more petals are thinner.",
+                    "总面积不随花瓣数增加；花瓣越多越细。",
+                  ),
+                ];
+        const area =
           kind === 1
             ? t(
-                `$\\frac{1}{2}\\int_0^{\\pi} ${4 * a * a}${trig}^2\\theta\\,d\\theta = ${a * a}\\pi$.`,
-                `$\\frac{1}{2}\\int_0^{\\pi} ${4 * a * a}${trig}^2\\theta\\,d\\theta = ${a * a}\\pi$。`,
+                `$\\frac{1}{2}\\int_0^{\\pi} ${4 * aa}${trig}^2\\theta\\,d\\theta = ${2 * aa} \\cdot \\frac{\\pi}{2} = ${aa === 1 ? "" : aa}\\pi$.`,
+                `$\\frac{1}{2}\\int_0^{\\pi} ${4 * aa}${trig}^2\\theta\\,d\\theta = ${2 * aa} \\cdot \\frac{\\pi}{2} = ${aa === 1 ? "" : aa}\\pi$。`,
               )
             : kind === 2
               ? t(
-                  `$\\frac{1}{2}\\int_0^{2\\pi} ${a * a}(1 + ${trig}\\theta)^2\\,d\\theta = \\frac{${a * a}}{2} \\cdot 3\\pi$.`,
-                  `$\\frac{1}{2}\\int_0^{2\\pi} ${a * a}(1 + ${trig}\\theta)^2\\,d\\theta = \\frac{${a * a}}{2} \\cdot 3\\pi$。`,
+                  `$\\frac{1}{2}\\int_0^{2\\pi} ${aa === 1 ? "" : aa}(1 + ${trig}\\theta)^2\\,d\\theta = \\frac{${aa}}{2}(2\\pi + 0 + \\pi) = ${ans.toLatex()}\\pi$.`,
+                  `$\\frac{1}{2}\\int_0^{2\\pi} ${aa === 1 ? "" : aa}(1 + ${trig}\\theta)^2\\,d\\theta = \\frac{${aa}}{2}(2\\pi + 0 + \\pi) = ${ans.toLatex()}\\pi$。`,
                 )
               : t(
-                  `$n = ${n}$ is ${n % 2 === 1 ? `odd, so there are $${n}$ petals and the area is $\\frac{\\pi a^2}{4}$` : `even, so there are $${2 * n}$ petals and the area is $\\frac{\\pi a^2}{2}$`} with $a = ${a}$.`,
-                  `$n = ${n}$ 为${n % 2 === 1 ? `奇数，共 $${n}$ 瓣，面积为 $\\frac{\\pi a^2}{4}$` : `偶数，共 $${2 * n}$ 瓣，面积为 $\\frac{\\pi a^2}{2}$`}，其中 $a = ${a}$。`,
+                  `$\\frac{1}{2}\\int_0^{2\\pi} ${aa === 1 ? "" : aa}${trig}^2(${n}\\theta)\\,d\\theta = \\frac{${aa}}{2}\\pi$, ${odd ? `and for odd $n$ this traces the ${n} petals twice, so the area is $\\frac{${aa}}{4}\\pi$` : `which traces the ${2 * n} petals once`}.`,
+                  `$\\frac{1}{2}\\int_0^{2\\pi} ${aa === 1 ? "" : aa}${trig}^2(${n}\\theta)\\,d\\theta = \\frac{${aa}}{2}\\pi$，${odd ? `$n$ 为奇数时这把 ${n} 瓣描了两遍，所以面积为 $\\frac{${aa}}{4}\\pi$` : `这正好把 ${2 * n} 瓣描一遍`}。`,
+                );
+        const check =
+          kind === 1
+            ? t(
+                `$r = ${2 * a}${trig}\\theta$ is a circle through the origin of diameter $${2 * a}$, so of radius $${a}$ and area $${aa === 1 ? "" : aa}\\pi$.`,
+                `$r = ${2 * a}${trig}\\theta$ 是过原点、直径为 $${2 * a}$ 的圆，半径为 $${a}$，面积为 $${aa === 1 ? "" : aa}\\pi$。`,
+              )
+            : kind === 2
+              ? t(
+                  `Over a turn $(1 + ${trig}\\theta)^2$ averages $1 + 0 + \\frac{1}{2} = \\frac{3}{2}$, so the area is $\\frac{1}{2} \\cdot 2\\pi \\cdot ${aa} \\cdot \\frac{3}{2} = ${ans.toLatex()}\\pi$.`,
+                  `在一圈上 $(1 + ${trig}\\theta)^2$ 的平均值为 $1 + 0 + \\frac{1}{2} = \\frac{3}{2}$，所以面积为 $\\frac{1}{2} \\cdot 2\\pi \\cdot ${aa} \\cdot \\frac{3}{2} = ${ans.toLatex()}\\pi$。`,
+                )
+              : t(
+                  `Each petal is traced while $${trig}(${n}\\theta)$ keeps one sign, over an angle $\\frac{\\pi}{${n}}$, and has area $\\frac{${aa}}{2} \\cdot \\frac{\\pi}{${2 * n}}$; there are $${odd ? n : 2 * n}$ petals, giving $${ans.toLatex()}\\pi$.`,
+                  `每一瓣在 $${trig}(${n}\\theta)$ 保持同号、角度为 $\\frac{\\pi}{${n}}$ 的范围内描出，面积为 $\\frac{${aa}}{2} \\cdot \\frac{\\pi}{${2 * n}}$；共 $${odd ? n : 2 * n}$ 瓣，得 $${ans.toLatex()}\\pi$。`,
                 );
         return numberProblem({
           prompt: t(
@@ -3966,8 +4034,14 @@ export const doubleIntegralsBetweenPolarCurves: TopicDef = {
             `求${name[1]} $${curve}$ 围成面积的 $\\frac{1}{\\pi}$ 倍。`,
           ),
           answer: ans,
-          wrong: [Q.of(a * a), Q.of(4 * a * a), Q.of(3 * a * a, 2), Q.of(a * a, 2), Q.of(a * a, 4)],
-          solution: t(`${why.en} Dividing by $\\pi$ gives $${ans.toLatex()}$.`, `${why["zh-CN"]}除以 $\\pi$ 得 $${ans.toLatex()}$。`),
+          mistakes: distinct(ans, mistakes),
+          solution: walked(
+            [
+              [["Integrate one trace", "在描一遍的范围上积分"], area],
+              [["Divide by π", "除以 π"], t(`The answer is $${ans.toLatex()}$.`, `答案为 $${ans.toLatex()}$。`)],
+            ],
+            check,
+          ),
         });
       },
     },
@@ -3982,6 +4056,10 @@ export const computingAreasUsingAChangeOfVariables: TopicDef = {
     "By the change of variables formula, $\\operatorname{Area}(R) = \\iint_S |J(u, v)|\\,du\\,dv$: the Jacobian scales area from a simpler region $S$.",
     "由变量代换公式，$\\operatorname{Area}(R) = \\iint_S |J(u, v)|\\,du\\,dv$：雅可比行列式把较简单区域 $S$ 的面积缩放为 $R$ 的面积。",
   ),
+  intro: t(
+    "The map $x = 2u + v$, $y = u + 3v$ sends the triangle $S$: $u, v \\ge 0$, $u + v \\le 1$ to a triangle $R$. Its Jacobian is $\\begin{vmatrix} 2 & 1 \\\\ 1 & 3 \\end{vmatrix} = 5$, so $\\operatorname{Area}(R) = 5 \\cdot \\operatorname{Area}(S) = 5 \\cdot \\frac{1}{2} = \\frac{5}{2}$.\n\nCheck: the corners of $S$ go to $(0, 0)$, $(2, 1)$ and $(1, 3)$, and the triangle with these corners has area $\\frac{1}{2}|2 \\cdot 3 - 1 \\cdot 1| = \\frac{5}{2}$.\n\nIn this lesson we find areas by mapping a simple region onto the given one and multiplying by the absolute value of the Jacobian.",
+    "映射 $x = 2u + v$，$y = u + 3v$ 把三角形 $S$：$u, v \\ge 0$，$u + v \\le 1$ 映为三角形 $R$。其雅可比行列式为 $\\begin{vmatrix} 2 & 1 \\\\ 1 & 3 \\end{vmatrix} = 5$，所以 $\\operatorname{Area}(R) = 5 \\cdot \\operatorname{Area}(S) = 5 \\cdot \\frac{1}{2} = \\frac{5}{2}$。\n\n检验：$S$ 的顶点映到 $(0, 0)$、$(2, 1)$ 和 $(1, 3)$，以它们为顶点的三角形面积为 $\\frac{1}{2}|2 \\cdot 3 - 1 \\cdot 1| = \\frac{5}{2}$。\n\n本课我们把简单区域映到所给区域上，再乘以雅可比行列式的绝对值来求面积。",
+  ),
   prerequisites: ["the-image-of-an-affine-transformation", "the-jacobian"],
   encompasses: [
     { topic: "the-image-of-an-affine-transformation", weight: 0.3 },
@@ -3993,37 +4071,53 @@ export const computingAreasUsingAChangeOfVariables: TopicDef = {
       id: "area-of-elliptical-regions-via-affine-substitution",
       title: t("Area of elliptical regions via affine substitution", "通过仿射代换求椭圆区域面积"),
       explanation: t(
-        "Stretching the unit disk by different factors along the axes produces an ellipse, and its area is the area of the disk times the product of the factors. Under the transformation $x = au, y = bv$, the unit disk $u^2 + v^2 \\le 1$ maps to the ellipse $\\frac{x^2}{a^2} + \\frac{y^2}{b^2} \\le 1$. The Jacobian is $J = ab$, so $\\text{Area}(E) = \\pi ab$.",
-        "沿两轴按不同比例拉伸单位圆盘就得到椭圆，它的面积等于圆盘面积乘以两个比例的乘积。在变换 $x = au, y = bv$ 下，单位圆盘 $u^2 + v^2 \\le 1$ 被映射为椭圆 $\\frac{x^2}{a^2} + \\frac{y^2}{b^2} \\le 1$。雅可比行列式为 $J = ab$，因此椭圆面积为 $\\text{Area}(E) = \\pi ab$。",
+        "Stretching the unit disk by different factors along the axes produces an ellipse, and its area is the area of the disk times the product of the factors. Under the transformation $x = au, y = bv$, the unit disk $u^2 + v^2 \\le 1$ maps to the ellipse $\\frac{x^2}{a^2} + \\frac{y^2}{b^2} \\le 1$. The Jacobian is $J = ab$, so $\\text{Area}(E) = \\pi ab$. For $\\frac{x^2}{144} + y^2 \\le 1$ the area is $12\\pi$.\n\n> **Watch out.** The stretch factors are the semi-axes $a$ and $b$, the square roots of the denominators. And the Jacobian multiplies: the factors are not added.",
+        "沿两轴按不同比例拉伸单位圆盘就得到椭圆，它的面积等于圆盘面积乘以两个比例的乘积。在变换 $x = au, y = bv$ 下，单位圆盘 $u^2 + v^2 \\le 1$ 被映射为椭圆 $\\frac{x^2}{a^2} + \\frac{y^2}{b^2} \\le 1$。雅可比行列式为 $J = ab$，因此椭圆面积为 $\\text{Area}(E) = \\pi ab$。对 $\\frac{x^2}{144} + y^2 \\le 1$，面积为 $12\\pi$。\n\n> **注意。** 拉伸比例是半轴 $a$ 和 $b$，即分母的平方根。雅可比行列式是相乘，不是相加。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(2, 10);
         const b = rng.int(2, 10);
         const ans = a * b;
-
-        const prompt = t(
-          `Find the value of $\\frac{\\text{Area}(E)}{\\pi}$ for the elliptical region $E$ defined by $\\frac{x^2}{${a * a}} + \\frac{y^2}{${b * b}} \\le 1$.`,
-          `计算椭圆区域 $E: \\frac{x^2}{${a * a}} + \\frac{y^2}{${b * b}} \\le 1$ 的面积与 $\\pi$ 的比值 $\\frac{\\text{Area}(E)}{\\pi}$。`,
-        );
-        const solution = t(
-          steps(
-            `Substitute $x = ${a}u$ and $y = ${b}v$. The boundary becomes $u^2 + v^2 \\le 1$, the unit disk $S$.`,
-            `Compute the Jacobian determinant:\n\n$$J = \\begin{vmatrix} ${a} & 0 \\\\ 0 & ${b} \\end{vmatrix} = ${a} \\times ${b} = ${ans}.$$`,
-            `The area is $\\text{Area}(E) = \\iint_S |J|\\,du\\,dv = ${ans} \\iint_S 1\\,du\\,dv = ${ans}(\\pi \\cdot 1^2) = ${ans}\\pi$.`,
-            `Dividing by $\\pi$ gives $${ans}$.`,
-          ),
-          steps(
-            `作代换 $x = ${a}u$ 与 $y = ${b}v$，椭圆边界转化为单位圆盘 $S: u^2 + v^2 \\le 1$。`,
-            `计算雅可比行列式：\n\n$$J = \\begin{vmatrix} ${a} & 0 \\\\ 0 & ${b} \\end{vmatrix} = ${a} \\times ${b} = ${ans}$$`,
-            `根据代换公式，椭圆面积为 $\\text{Area}(E) = \\iint_S |J|\\,du\\,dv = ${ans} \\iint_S 1\\,du\\,dv = ${ans}(\\pi \\cdot 1^2) = ${ans}\\pi$。`,
-            `除以 $\\pi$ 得到 $${ans}$。`,
-          ),
-        );
         return numberProblem({
-          prompt,
-          solution,
+          prompt: t(
+            `Find the value of $\\frac{\\text{Area}(E)}{\\pi}$ for the elliptical region $E$ defined by $\\frac{x^2}{${a * a}} + \\frac{y^2}{${b * b}} \\le 1$.`,
+            `计算椭圆区域 $E: \\frac{x^2}{${a * a}} + \\frac{y^2}{${b * b}} \\le 1$ 的面积与 $\\pi$ 的比值 $\\frac{\\text{Area}(E)}{\\pi}$。`,
+          ),
           answer: ans,
-          wrong: [a + b, 2 * a * b, ans + a],
+          mistakes: distinct(ans, [
+            why(
+              a + b,
+              `That adds the semi-axes; the Jacobian is their product $${a} \\cdot ${b}$.`,
+              `那是把半轴相加；雅可比行列式是它们的乘积 $${a} \\cdot ${b}$。`,
+            ),
+            why(
+              a * a * b * b,
+              `That uses the denominators $${a * a}$ and $${b * b}$; the semi-axes are their square roots.`,
+              `那是用了分母 $${a * a}$ 和 $${b * b}$；半轴是它们的平方根。`,
+            ),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Substitute", "代换"],
+                t(
+                  `With $x = ${a}u$ and $y = ${b}v$ the ellipse becomes the unit disk $u^2 + v^2 \\le 1$.`,
+                  `令 $x = ${a}u$，$y = ${b}v$，椭圆变为单位圆盘 $u^2 + v^2 \\le 1$。`,
+                ),
+              ],
+              [
+                ["Multiply by the Jacobian", "乘以雅可比行列式"],
+                t(
+                  `$J = \\begin{vmatrix} ${a} & 0 \\\\ 0 & ${b} \\end{vmatrix} = ${ans}$, so the area is $${ans} \\cdot \\pi = ${ans}\\pi$, and dividing by $\\pi$ gives $${ans}$.`,
+                  `$J = \\begin{vmatrix} ${a} & 0 \\\\ 0 & ${b} \\end{vmatrix} = ${ans}$，所以面积为 $${ans} \\cdot \\pi = ${ans}\\pi$，除以 $\\pi$ 得 $${ans}$。`,
+                ),
+              ],
+            ],
+            t(
+              `The ellipse fits in the rectangle $${2 * a} \\times ${2 * b}$ of area $${4 * ans}$, and $${ans}\\pi$ is $\\frac{\\pi}{4}$ of it, the same ratio as a disk to its square.`,
+              `椭圆位于面积为 $${4 * ans}$ 的矩形 $${2 * a} \\times ${2 * b}$ 内，而 $${ans}\\pi$ 是它的 $\\frac{\\pi}{4}$，与圆盘和外切正方形之比相同。`,
+            ),
+          ),
         });
       },
     },
@@ -4033,8 +4127,8 @@ export const computingAreasUsingAChangeOfVariables: TopicDef = {
         multivariableDrawings4["computing-areas-using-a-change-of-variables#the-area-of-a-parallelogram-from-a-linear-change-of-variables"],
       title: t("The area of a parallelogram by a change of variables", "用变量替换求平行四边形面积"),
       explanation: t(
-        "A region $\\{0 \\le px + qy \\le U,\\ 0 \\le rx + sy \\le V\\}$ is a parallelogram. Substituting $u = px + qy$ and $v = rx + sy$ turns it into the rectangle $[0, U] \\times [0, V]$. Since $\\frac{\\partial(u, v)}{\\partial(x, y)} = ps - qr$, the Jacobian of the inverse map is $\\frac{1}{|ps - qr|}$, and\n\n$$\\operatorname{Area} = \\iint 1\\,dx\\,dy = \\frac{UV}{|ps - qr|}.$$",
-        "区域 $\\{0 \\le px + qy \\le U,\\ 0 \\le rx + sy \\le V\\}$ 是平行四边形。令 $u = px + qy$，$v = rx + sy$，它变为矩形 $[0, U] \\times [0, V]$。由于 $\\frac{\\partial(u, v)}{\\partial(x, y)} = ps - qr$，逆变换的雅可比行列式为 $\\frac{1}{|ps - qr|}$，于是\n\n$$\\operatorname{Area} = \\iint 1\\,dx\\,dy = \\frac{UV}{|ps - qr|}$$",
+        "A region $\\{0 \\le px + qy \\le U,\\ 0 \\le rx + sy \\le V\\}$ is a parallelogram. Substituting $u = px + qy$ and $v = rx + sy$ turns it into the rectangle $[0, U] \\times [0, V]$. Since $\\frac{\\partial(u, v)}{\\partial(x, y)} = ps - qr$, the Jacobian of the inverse map is $\\frac{1}{|ps - qr|}$, and\n\n$$\\operatorname{Area} = \\iint 1\\,dx\\,dy = \\frac{UV}{|ps - qr|}.$$\n\nFor $0 \\le 2x + y \\le 7$, $0 \\le x + 4y \\le 7$ the determinant is $7$ and the area is $\\frac{49}{7} = 7$.\n\n> **Watch out.** $ps - qr$ is the Jacobian of $(u, v)$ in terms of $(x, y)$, so the area element $dx\\,dy$ is $du\\,dv$ divided by it, not multiplied. The determinant has a minus sign: $ps - qr$, not $ps + qr$.",
+        "区域 $\\{0 \\le px + qy \\le U,\\ 0 \\le rx + sy \\le V\\}$ 是平行四边形。令 $u = px + qy$，$v = rx + sy$，它变为矩形 $[0, U] \\times [0, V]$。由于 $\\frac{\\partial(u, v)}{\\partial(x, y)} = ps - qr$，逆变换的雅可比行列式为 $\\frac{1}{|ps - qr|}$，于是\n\n$$\\operatorname{Area} = \\iint 1\\,dx\\,dy = \\frac{UV}{|ps - qr|}$$\n\n对 $0 \\le 2x + y \\le 7$，$0 \\le x + 4y \\le 7$，行列式为 $7$，面积为 $\\frac{49}{7} = 7$。\n\n> **注意。** $ps - qr$ 是 $(u, v)$ 关于 $(x, y)$ 的雅可比行列式，所以面积元 $dx\\,dy$ 是 $du\\,dv$ 除以它，而不是乘以它。行列式带减号：是 $ps - qr$，不是 $ps + qr$。",
       ),
       generate(rng: Rng): Problem {
         let p = 1;
@@ -4048,19 +4142,64 @@ export const computingAreasUsingAChangeOfVariables: TopicDef = {
           s = rng.int(1, 3);
         }
         const det = p * s - q * r;
+        const d = Math.abs(det);
         const U = rng.int(1, 6);
         const V = rng.int(1, 6);
-        const ans = Q.of(U * V, Math.abs(det));
+        const ans = Q.of(U * V, d);
+        const plus = Math.abs(p * s + q * r);
+        const [x1, y1, x2, y2] = [Q.of(U * s, det), Q.of(-U * r, det), Q.of(-q * V, det), Q.of(p * V, det)];
         return numberProblem({
           prompt: t(
             `Find the area of the region $R = \\{(x, y) : 0 \\le ${poly([p, "x"], [q, "y"])} \\le ${U},\\ 0 \\le ${poly([r, "x"], [s, "y"])} \\le ${V}\\}$.`,
             `求区域 $R = \\{(x, y) : 0 \\le ${poly([p, "x"], [q, "y"])} \\le ${U},\\ 0 \\le ${poly([r, "x"], [s, "y"])} \\le ${V}\\}$ 的面积。`,
           ),
           answer: ans,
-          wrong: [Q.of(U * V * Math.abs(det)), Q.of(U * V), Q.of(U * V, Math.abs(p * s + q * r) || 1), Q.of(U * V, 2)],
-          solution: t(
-            `With $u = ${poly([p, "x"], [q, "y"])}$ and $v = ${poly([r, "x"], [s, "y"])}$, $\\frac{\\partial(u, v)}{\\partial(x, y)} = ${p} \\cdot ${s} - ${paren(q)} \\cdot ${paren(r)} = ${det}$. So $\\operatorname{Area} = \\frac{${U} \\cdot ${V}}{${Math.abs(det)}} = ${ans.toLatex()}$.`,
-            `令 $u = ${poly([p, "x"], [q, "y"])}$，$v = ${poly([r, "x"], [s, "y"])}$，则 $\\frac{\\partial(u, v)}{\\partial(x, y)} = ${p} \\cdot ${s} - ${paren(q)} \\cdot ${paren(r)} = ${det}$。所以 $\\operatorname{Area} = \\frac{${U} \\cdot ${V}}{${Math.abs(det)}} = ${ans.toLatex()}$。`,
+          mistakes: distinct(ans, [
+            why(
+              U * V * d,
+              `That multiplies by $${d}$; the area element is $dx\\,dy = \\frac{1}{${d}}\\,du\\,dv$.`,
+              `那是乘以 $${d}$；面积元是 $dx\\,dy = \\frac{1}{${d}}\\,du\\,dv$。`,
+            ),
+            why(
+              U * V,
+              `That is the area of the rectangle in the $uv$-plane; the Jacobian factor $\\frac{1}{${d}}$ is missing.`,
+              `那是 $uv$ 平面中矩形的面积；漏了雅可比因子 $\\frac{1}{${d}}$。`,
+            ),
+            ...(plus === 0
+              ? []
+              : [
+                  why(
+                    Q.of(U * V, plus),
+                    `That uses $ps + qr$; the determinant is $ps - qr = ${det}$.`,
+                    `那是用了 $ps + qr$；行列式是 $ps - qr = ${det}$。`,
+                  ),
+                ]),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Substitute", "代换"],
+                t(
+                  `With $u = ${poly([p, "x"], [q, "y"])}$ and $v = ${poly([r, "x"], [s, "y"])}$, $R$ becomes the rectangle $[0, ${U}] \\times [0, ${V}]$.`,
+                  `令 $u = ${poly([p, "x"], [q, "y"])}$，$v = ${poly([r, "x"], [s, "y"])}$，$R$ 变为矩形 $[0, ${U}] \\times [0, ${V}]$。`,
+                ),
+              ],
+              [
+                ["Find the Jacobian", "求雅可比行列式"],
+                t(
+                  `$\\frac{\\partial(u, v)}{\\partial(x, y)} = ${p} \\cdot ${s} - ${paren(q)} \\cdot ${paren(r)} = ${det}$, so $dx\\,dy = \\frac{1}{${d}}\\,du\\,dv$.`,
+                  `$\\frac{\\partial(u, v)}{\\partial(x, y)} = ${p} \\cdot ${s} - ${paren(q)} \\cdot ${paren(r)} = ${det}$，所以 $dx\\,dy = \\frac{1}{${d}}\\,du\\,dv$。`,
+                ),
+              ],
+              [
+                ["Compute the area", "计算面积"],
+                t(`$\\frac{${U} \\cdot ${V}}{${d}} = ${ans.toLatex()}$.`, `$\\frac{${U} \\cdot ${V}}{${d}} = ${ans.toLatex()}$。`),
+              ],
+            ],
+            t(
+              `The sides from the origin end at $\\left(${x1.toLatex()}, ${y1.toLatex()}\\right)$ and $\\left(${x2.toLatex()}, ${y2.toLatex()}\\right)$, and the parallelogram they span has area $\\left|${paren(x1)} \\cdot ${paren(y2)} - ${paren(x2)} \\cdot ${paren(y1)}\\right| = ${ans.toLatex()}$.`,
+              `从原点出发的两边终点为 $\\left(${x1.toLatex()}, ${y1.toLatex()}\\right)$ 和 $\\left(${x2.toLatex()}, ${y2.toLatex()}\\right)$，它们张成的平行四边形面积为 $\\left|${paren(x1)} \\cdot ${paren(y2)} - ${paren(x2)} \\cdot ${paren(y1)}\\right| = ${ans.toLatex()}$。`,
+            ),
           ),
         });
       },
@@ -4076,6 +4215,10 @@ export const computingDoubleIntegralsUsingAChangeOfVariables: TopicDef = {
     "The change of variables formula $\\iint_R f(x, y)\\,dA = \\iint_G f(x(u, v), y(u, v))\\,|J(u, v)|\\,du\\,dv$ turns a complicated region into a simple one such as a rectangle.",
     "变量代换公式 $\\iint_R f(x, y)\\,dA = \\iint_G f(x(u, v), y(u, v))\\,|J(u, v)|\\,du\\,dv$ 把复杂区域化为矩形等简单区域。",
   ),
+  intro: t(
+    "Evaluate $\\iint_R (x - y)\\,dA$ over $R = \\{0 \\le x + y \\le 2,\\ 0 \\le x - y \\le 4\\}$. With $u = x + y$ and $v = x - y$ the region is the rectangle $[0, 2] \\times [0, 4]$, the integrand is $v$, and $dA = \\frac{1}{2}\\,du\\,dv$, so the integral is $\\frac{1}{2}\\int_0^4 \\int_0^2 v\\,du\\,dv = \\frac{1}{2} \\cdot 2 \\cdot 8 = 8$.\n\nCheck: $R$ has area $\\frac{2 \\cdot 4}{2} = 4$, and $x - y$ is spread evenly over $[0, 4]$ across it, with average $2$; and $4 \\cdot 2 = 8$.\n\nIn this lesson we evaluate double integrals by changing to coordinates in which the region is a rectangle.",
+    "计算 $\\iint_R (x - y)\\,dA$，其中 $R = \\{0 \\le x + y \\le 2,\\ 0 \\le x - y \\le 4\\}$。令 $u = x + y$，$v = x - y$，区域变为矩形 $[0, 2] \\times [0, 4]$，被积函数为 $v$，$dA = \\frac{1}{2}\\,du\\,dv$，所以积分为 $\\frac{1}{2}\\int_0^4 \\int_0^2 v\\,du\\,dv = \\frac{1}{2} \\cdot 2 \\cdot 8 = 8$。\n\n检验：$R$ 的面积为 $\\frac{2 \\cdot 4}{2} = 4$，$x - y$ 在其上均匀分布于 $[0, 4]$，平均值为 $2$；而 $4 \\cdot 2 = 8$。\n\n本课我们换到使区域成为矩形的坐标来计算二重积分。",
+  ),
   prerequisites: ["computing-areas-using-a-change-of-variables", "double-integrals-in-plane-polar-coordinates"],
   encompasses: [{ topic: "computing-areas-using-a-change-of-variables", weight: 0.3 }],
   xp: 10,
@@ -4088,35 +4231,65 @@ export const computingDoubleIntegralsUsingAChangeOfVariables: TopicDef = {
         ],
       title: t("Integrating over parallelograms via linear coordinates", "通过线性坐标代换在平行四边形上积分"),
       explanation: t(
-        "New coordinates built from the boundary lines turn the parallelogram into a rectangle, and the Jacobian factor corrects for the change in area. For a region $R$ bounded by $0 \\le x + y \\le U$ and $0 \\le x - y \\le V$, set $u = x + y, v = x - y$. The Jacobian determinant is $\\frac{\\partial(u, v)}{\\partial(x, y)} = -2 \\implies |J(u, v)| = \\frac{1}{2}$. Thus $\\iint_R 1\\,dA = \\frac{UV}{2}$.",
-        "由边界直线构造的新坐标把平行四边形变成矩形，雅可比因子修正面积的变化。对于由 $0 \\le x + y \\le U$ 与 $0 \\le x - y \\le V$ 所围成的平行四边形区域 $R$，令 $u = x + y, v = x - y$。雅可比行列式为 $\\frac{\\partial(u, v)}{\\partial(x, y)} = -2 \\implies |J(u, v)| = \\frac{1}{2}$。故其面积为 $\\iint_R 1\\,dA = \\frac{UV}{2}$。",
+        "New coordinates built from the boundary lines turn the parallelogram into a rectangle, and the Jacobian factor corrects for the change in area. For a region $R$ bounded by $0 \\le x + y \\le U$ and $0 \\le x - y \\le V$, set $u = x + y, v = x - y$. The Jacobian determinant is $\\frac{\\partial(u, v)}{\\partial(x, y)} = -2 \\implies |J(u, v)| = \\frac{1}{2}$. Thus $\\iint_R 1\\,dA = \\frac{UV}{2}$. For $U = 1$ and $V = 20$ the area is $10$.\n\n> **Watch out.** The factor in $dA$ is the reciprocal of $\\left|\\frac{\\partial(u, v)}{\\partial(x, y)}\\right| = 2$, so it is $\\frac{1}{2}$, applied once.",
+        "由边界直线构造的新坐标把平行四边形变成矩形，雅可比因子修正面积的变化。对于由 $0 \\le x + y \\le U$ 与 $0 \\le x - y \\le V$ 所围成的平行四边形区域 $R$，令 $u = x + y, v = x - y$。雅可比行列式为 $\\frac{\\partial(u, v)}{\\partial(x, y)} = -2 \\implies |J(u, v)| = \\frac{1}{2}$。故其面积为 $\\iint_R 1\\,dA = \\frac{UV}{2}$。当 $U = 1$，$V = 20$ 时面积为 $10$。\n\n> **注意。** $dA$ 中的因子是 $\\left|\\frac{\\partial(u, v)}{\\partial(x, y)}\\right| = 2$ 的倒数，即 $\\frac{1}{2}$，只乘一次。",
       ),
       generate(rng: Rng): Problem {
         const U = rng.int(2, 12);
         const V = rng.int(2, 12);
         const ans = Q.of(U * V, 2);
-
-        const prompt = t(
-          `Use the change of variables $u = x + y$ and $v = x - y$ to find the area $\\iint_R 1\\,dA$ of the region $R$ bounded by $x + y = 0$, $x + y = ${U}$, $x - y = 0$, and $x - y = ${V}$.`,
-          `利用变量代换 $u = x + y$ 与 $v = x - y$，计算由直线 $x + y = 0$、$x + y = ${U}$、$x - y = 0$ 与 $x - y = ${V}$ 所围成区域 $R$ 的面积 $\\iint_R 1\\,dA$。`,
-        );
-        const solution = t(
-          steps(
-            `In the $uv$-plane, the region $G$ is the rectangle $[0, ${U}] \\times [0, ${V}]$.`,
-            `Compute the Jacobian determinant:\n\n$$\\frac{\\partial(u, v)}{\\partial(x, y)} = \\begin{vmatrix} 1 & 1 \\\\ 1 & -1 \\end{vmatrix} = -1 - 1 = -2 \\implies \\left|\\frac{\\partial(x, y)}{\\partial(u, v)}\\right| = \\frac{1}{|-2|} = \\frac{1}{2}.$$`,
-            `Apply the change of variables formula:\n\n$$\\iint_R 1\\,dA = \\iint_G \\frac{1}{2}\\,du\\,dv = \\frac{1}{2}\\text{Area}(G) = \\frac{${U} \\times ${V}}{2} = ${ans.toLatex()}.$$ `,
-          ),
-          steps(
-            `在 $uv$ 平面内，新积分区域 $G$ 为矩形 $[0, ${U}] \\times [0, ${V}]$。`,
-            `计算雅可比行列式：\n\n$$\\frac{\\partial(u, v)}{\\partial(x, y)} = \\begin{vmatrix} 1 & 1 \\\\ 1 & -1 \\end{vmatrix} = -1 - 1 = -2 \\implies \\left|\\frac{\\partial(x, y)}{\\partial(u, v)}\\right| = \\frac{1}{|-2|} = \\frac{1}{2}$$`,
-            `应用二重积分变量代换公式：\n\n$$\\iint_R 1\\,dA = \\iint_G \\frac{1}{2}\\,du\\,dv = \\frac{1}{2}\\text{Area}(G) = \\frac{${U} \\times ${V}}{2} = ${ans.toLatex()}$$ `,
-          ),
-        );
         return numberProblem({
-          prompt,
-          solution,
+          prompt: t(
+            `Use the change of variables $u = x + y$ and $v = x - y$ to find the area $\\iint_R 1\\,dA$ of the region $R$ bounded by $x + y = 0$, $x + y = ${U}$, $x - y = 0$, and $x - y = ${V}$.`,
+            `利用变量代换 $u = x + y$ 与 $v = x - y$，计算由直线 $x + y = 0$、$x + y = ${U}$、$x - y = 0$ 与 $x - y = ${V}$ 所围成区域 $R$ 的面积 $\\iint_R 1\\,dA$。`,
+          ),
           answer: ans,
-          wrong: [Q.of(U * V), Q.of(U * V, 4), ans.mul(Q.of(2))],
+          mistakes: distinct(ans, [
+            why(
+              U * V,
+              "That is the area of the rectangle in the $uv$-plane; the factor $\\frac{1}{2}$ is missing.",
+              "那是 $uv$ 平面中矩形的面积；漏了因子 $\\frac{1}{2}$。",
+            ),
+            why(
+              2 * U * V,
+              "That multiplies by $2$; the area element is $\\frac{1}{2}\\,du\\,dv$, the reciprocal.",
+              "那是乘以 $2$；面积元是 $\\frac{1}{2}\\,du\\,dv$，取倒数。",
+            ),
+            why(
+              Q.of(U * V, 4),
+              "The factor $\\frac{1}{2}$ is applied twice; it enters once.",
+              "因子 $\\frac{1}{2}$ 用了两次；只应乘一次。",
+            ),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Map the region", "变换区域"],
+                t(
+                  `In the $uv$-plane $R$ becomes the rectangle $[0, ${U}] \\times [0, ${V}]$.`,
+                  `在 $uv$ 平面中 $R$ 变为矩形 $[0, ${U}] \\times [0, ${V}]$。`,
+                ),
+              ],
+              [
+                ["Find the Jacobian", "求雅可比行列式"],
+                t(
+                  "$\\frac{\\partial(u, v)}{\\partial(x, y)} = \\begin{vmatrix} 1 & 1 \\\\ 1 & -1 \\end{vmatrix} = -2$, so $dA = \\frac{1}{2}\\,du\\,dv$.",
+                  "$\\frac{\\partial(u, v)}{\\partial(x, y)} = \\begin{vmatrix} 1 & 1 \\\\ 1 & -1 \\end{vmatrix} = -2$，所以 $dA = \\frac{1}{2}\\,du\\,dv$。",
+                ),
+              ],
+              [
+                ["Integrate", "积分"],
+                t(
+                  `$\\frac{1}{2} \\cdot ${U} \\cdot ${V} = ${ans.toLatex()}$.`,
+                  `$\\frac{1}{2} \\cdot ${U} \\cdot ${V} = ${ans.toLatex()}$。`,
+                ),
+              ],
+            ],
+            t(
+              `$R$ is a rectangle in the $xy$-plane, since the lines $x + y = c$ and $x - y = c$ are perpendicular. Its sides are $\\frac{${U}}{\\sqrt{2}}$ and $\\frac{${V}}{\\sqrt{2}}$, so its area is $\\frac{${U * V}}{2} = ${ans.toLatex()}$.`,
+              `$R$ 在 $xy$ 平面中是矩形，因为直线 $x + y = c$ 与 $x - y = c$ 互相垂直。它的边长为 $\\frac{${U}}{\\sqrt{2}}$ 和 $\\frac{${V}}{\\sqrt{2}}$，所以面积为 $\\frac{${U * V}}{2} = ${ans.toLatex()}$。`,
+            ),
+          ),
         });
       },
     },
@@ -4125,8 +4298,8 @@ export const computingDoubleIntegralsUsingAChangeOfVariables: TopicDef = {
       figure: multivariableDrawings4["computing-double-integrals-using-a-change-of-variables#integrating-x-plus-y-over-a-rotated-square"],
       title: t("Integrating $x + y$ with $u = x + y$, $v = x - y$", "用 $u = x + y$，$v = x - y$ 积分 $x + y$"),
       explanation: t(
-        "With $u = x + y$ and $v = x - y$, we have $x = \\frac{u + v}{2}$ and $y = \\frac{u - v}{2}$, so $\\left|\\frac{\\partial(x, y)}{\\partial(u, v)}\\right| = \\frac{1}{2}$ and $dA = \\frac{1}{2}\\,du\\,dv$. The region $0 \\le x + y \\le U$, $0 \\le x - y \\le V$ becomes the rectangle $[0, U] \\times [0, V]$, and the integrand $x + y$ becomes $u$:\n\n$$\\iint_R (x + y)\\,dA = \\frac{1}{2}\\int_0^V \\int_0^U u\\,du\\,dv = \\frac{U^2V}{4}.$$",
-        "令 $u = x + y$，$v = x - y$，则 $x = \\frac{u + v}{2}$，$y = \\frac{u - v}{2}$，所以 $\\left|\\frac{\\partial(x, y)}{\\partial(u, v)}\\right| = \\frac{1}{2}$，$dA = \\frac{1}{2}\\,du\\,dv$。区域 $0 \\le x + y \\le U$，$0 \\le x - y \\le V$ 变为矩形 $[0, U] \\times [0, V]$，被积函数 $x + y$ 变为 $u$：\n\n$$\\iint_R (x + y)\\,dA = \\frac{1}{2}\\int_0^V \\int_0^U u\\,du\\,dv = \\frac{U^2V}{4}$$",
+        "With $u = x + y$ and $v = x - y$, we have $x = \\frac{u + v}{2}$ and $y = \\frac{u - v}{2}$, so $\\left|\\frac{\\partial(x, y)}{\\partial(u, v)}\\right| = \\frac{1}{2}$ and $dA = \\frac{1}{2}\\,du\\,dv$. The region $0 \\le x + y \\le U$, $0 \\le x - y \\le V$ becomes the rectangle $[0, U] \\times [0, V]$, and the integrand $x + y$ becomes $u$:\n\n$$\\iint_R (x + y)\\,dA = \\frac{1}{2}\\int_0^V \\int_0^U u\\,du\\,dv = \\frac{U^2V}{4}.$$\n\nFor $U = 8$ and $V = 1$ this is $16$.\n\n> **Watch out.** The integrand $x + y$ becomes $u$, not $v$, so it is $U$ that appears squared; and the factor $\\frac{1}{2}$ of $dA$ comes on top of the $\\frac{1}{2}$ from $\\int u\\,du$.",
+        "令 $u = x + y$，$v = x - y$，则 $x = \\frac{u + v}{2}$，$y = \\frac{u - v}{2}$，所以 $\\left|\\frac{\\partial(x, y)}{\\partial(u, v)}\\right| = \\frac{1}{2}$，$dA = \\frac{1}{2}\\,du\\,dv$。区域 $0 \\le x + y \\le U$，$0 \\le x - y \\le V$ 变为矩形 $[0, U] \\times [0, V]$，被积函数 $x + y$ 变为 $u$：\n\n$$\\iint_R (x + y)\\,dA = \\frac{1}{2}\\int_0^V \\int_0^U u\\,du\\,dv = \\frac{U^2V}{4}$$\n\n当 $U = 8$，$V = 1$ 时结果为 $16$。\n\n> **注意。** 被积函数 $x + y$ 变为 $u$ 而不是 $v$，所以平方的是 $U$；$dA$ 的因子 $\\frac{1}{2}$ 要和 $\\int u\\,du$ 的 $\\frac{1}{2}$ 一起乘上。",
       ),
       generate(rng: Rng): Problem {
         const U = rng.int(1, 6);
@@ -4138,10 +4311,36 @@ export const computingDoubleIntegralsUsingAChangeOfVariables: TopicDef = {
             `用 $u = x + y$，$v = x - y$ 计算 $\\iint_R (x + y)\\,dA$，其中 $R = \\{0 \\le x + y \\le ${U},\\ 0 \\le x - y \\le ${V}\\}$。`,
           ),
           answer: ans,
-          wrong: [Q.of(U * U * V, 2), Q.of(U * U * V), Q.of(U * V, 2), Q.of(U * V * V, 4)],
-          solution: t(
-            `$dA = \\frac{1}{2}\\,du\\,dv$, so the integral is $\\frac{1}{2}\\int_0^{${V}} \\int_0^{${U}} u\\,du\\,dv = \\frac{1}{2} \\cdot \\frac{${U * U}}{2} \\cdot ${V} = ${ans.toLatex()}$.`,
-            `$dA = \\frac{1}{2}\\,du\\,dv$，所以积分为 $\\frac{1}{2}\\int_0^{${V}} \\int_0^{${U}} u\\,du\\,dv = \\frac{1}{2} \\cdot \\frac{${U * U}}{2} \\cdot ${V} = ${ans.toLatex()}$。`,
+          mistakes: distinct(ans, [
+            why(Q.of(U * U * V, 2), "The Jacobian factor $\\frac{1}{2}$ of $dA$ is missing.", "漏了 $dA$ 的雅可比因子 $\\frac{1}{2}$。"),
+            why(
+              U * U * V,
+              "Both factors $\\frac{1}{2}$ are missing: the one in $dA$ and the one from $\\int u\\,du$.",
+              "两个因子 $\\frac{1}{2}$ 都漏了：$dA$ 中的和 $\\int u\\,du$ 带来的。",
+            ),
+            why(Q.of(U * V * V, 4), "The integrand $x + y$ becomes $u$, not $v$.", "被积函数 $x + y$ 变为 $u$，不是 $v$。"),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Change variables", "变量代换"],
+                t(
+                  `The region becomes $[0, ${U}] \\times [0, ${V}]$, $x + y = u$ and $dA = \\frac{1}{2}\\,du\\,dv$.`,
+                  `区域变为 $[0, ${U}] \\times [0, ${V}]$，$x + y = u$，$dA = \\frac{1}{2}\\,du\\,dv$。`,
+                ),
+              ],
+              [
+                ["Integrate", "积分"],
+                t(
+                  `$\\frac{1}{2}\\int_0^{${V}} \\int_0^{${U}} u\\,du\\,dv = \\frac{1}{2} \\cdot \\frac{${U * U}}{2} \\cdot ${V} = ${ans.toLatex()}$.`,
+                  `$\\frac{1}{2}\\int_0^{${V}} \\int_0^{${U}} u\\,du\\,dv = \\frac{1}{2} \\cdot \\frac{${U * U}}{2} \\cdot ${V} = ${ans.toLatex()}$。`,
+                ),
+              ],
+            ],
+            t(
+              `$R$ has area $\\frac{${U * V}}{2}$, and $x + y$ is spread evenly over $[0, ${U}]$ across it, with average $\\frac{${U}}{2}$; the product is $${ans.toLatex()}$.`,
+              `$R$ 的面积为 $\\frac{${U * V}}{2}$，$x + y$ 在其上均匀分布于 $[0, ${U}]$，平均值为 $\\frac{${U}}{2}$；两者之积为 $${ans.toLatex()}$。`,
+            ),
           ),
         });
       },
@@ -4161,6 +4360,10 @@ export const cylindricalPolarCoordinates: TopicDef = {
     "Cylindrical coordinates represent a 3D point as (r, θ, z), where (r, θ) are plane polar coordinates and z is the vertical height.",
     "柱面坐标系将三维空间点表示为 (r, θ, z)，其中 (r, θ) 为 xy 平面上的极坐标，z 为竖直高度坐标。",
   ),
+  intro: t(
+    "Convert $(-1, \\sqrt{3}, 4)$ to cylindrical coordinates. The radius is $r = \\sqrt{1 + 3} = 2$. The point $(-1, \\sqrt{3})$ is in the second quadrant with $\\tan\\theta = -\\sqrt{3}$, so $\\theta = \\frac{2\\pi}{3}$. The height stays $z = 4$, giving $\\left(2, \\frac{2\\pi}{3}, 4\\right)$.\n\nCheck: $2\\cos\\frac{2\\pi}{3} = -1$ and $2\\sin\\frac{2\\pi}{3} = \\sqrt{3}$, which recovers the point.\n\nIn this lesson we convert between Cartesian coordinates $(x, y, z)$ and cylindrical coordinates $(r, \\theta, z)$.",
+    "把 $(-1, \\sqrt{3}, 4)$ 化为柱坐标。半径为 $r = \\sqrt{1 + 3} = 2$。点 $(-1, \\sqrt{3})$ 在第二象限，$\\tan\\theta = -\\sqrt{3}$，所以 $\\theta = \\frac{2\\pi}{3}$。高度保持 $z = 4$，得 $\\left(2, \\frac{2\\pi}{3}, 4\\right)$。\n\n检验：$2\\cos\\frac{2\\pi}{3} = -1$，$2\\sin\\frac{2\\pi}{3} = \\sqrt{3}$，恢复了原来的点。\n\n本课我们在直角坐标 $(x, y, z)$ 与柱坐标 $(r, \\theta, z)$ 之间相互转换。",
+  ),
   prerequisites: ["the-jacobian-of-a-three-dimensional-transformation"],
   encompasses: [],
   xp: 10,
@@ -4170,8 +4373,8 @@ export const cylindricalPolarCoordinates: TopicDef = {
       figure: multivariableDrawings5["cylindrical-polar-coordinates#converting-cartesian-points-to-cylindrical-coordinates"],
       title: t("Converting Cartesian points to cylindrical coordinates", "将直角坐标转换为柱坐标"),
       explanation: t(
-        "Cylindrical coordinates use polar coordinates in the horizontal plane and keep the height unchanged, so find the radius and angle from the first two coordinates. To convert $(x, y, z)$ to cylindrical coordinates $(r, \\theta, z)$, compute $r = \\sqrt{x^2 + y^2}$, $\\tan\\theta = \\frac{y}{x}$, and retain $z$.",
-        "柱坐标在水平面内使用极坐标，高度保持不变，所以由前两个坐标求出半径和角度。将直角坐标 $(x, y, z)$ 转换为柱坐标 $(r, \\theta, z)$：$r = \\sqrt{x^2 + y^2}$，$\\tan\\theta = \\frac{y}{x}$，且 $z$ 坐标保持不变。",
+        "Cylindrical coordinates use polar coordinates in the horizontal plane and keep the height unchanged, so find the radius and angle from the first two coordinates. To convert $(x, y, z)$ to cylindrical coordinates $(r, \\theta, z)$, compute $r = \\sqrt{x^2 + y^2}$, $\\tan\\theta = \\frac{y}{x}$, and retain $z$. For $(-6, 8, 3)$ the radius is $\\sqrt{36 + 64} = 10$.\n\n> **Watch out.** $r$ is the distance from the $z$-axis, so it uses only $x$ and $y$; take the square root of $x^2 + y^2$, and do not add the coordinates themselves.",
+        "柱坐标在水平面内使用极坐标，高度保持不变，所以由前两个坐标求出半径和角度。将直角坐标 $(x, y, z)$ 转换为柱坐标 $(r, \\theta, z)$：$r = \\sqrt{x^2 + y^2}$，$\\tan\\theta = \\frac{y}{x}$，且 $z$ 坐标保持不变。对 $(-6, 8, 3)$，半径为 $\\sqrt{36 + 64} = 10$。\n\n> **注意。** $r$ 是到 $z$ 轴的距离，所以只用 $x$ 和 $y$；要对 $x^2 + y^2$ 开平方，而不是把坐标本身相加。",
       ),
       generate(rng: Rng): Problem {
         const [a0, b0, c0] = rng.pick(pythagoreanTriples);
@@ -4180,28 +4383,40 @@ export const cylindricalPolarCoordinates: TopicDef = {
         const y = b0 * k;
         const r = c0 * k;
         const z = rng.int(-5, 5);
-
-        const ans = r;
-
-        const prompt = t(
-          `Find the radial coordinate $r$ in cylindrical coordinates $(r, \\theta, z)$ for the point with Cartesian coordinates $(${x}, ${y}, ${z})$.`,
-          `求直角坐标为 $(${x}, ${y}, ${z})$ 的点在柱坐标系 $(r, \\theta, z)$ 下的径向坐标 $r$。`,
-        );
-        const solution = t(
-          steps(
-            `The radial coordinate in cylindrical coordinates is $r = \\sqrt{x^2 + y^2}$.`,
-            `Substitute $x = ${x}$ and $y = ${y}$:\n\n$$r = \\sqrt{(${x})^2 + (${y})^2} = \\sqrt{${x * x} + ${y * y}} = \\sqrt{${r * r}} = ${ans}.$$`,
-          ),
-          steps(
-            `柱坐标系中的径向坐标公式为 $r = \\sqrt{x^2 + y^2}$。`,
-            `代入 $x = ${x}$ 与 $y = ${y}$：\n\n$$r = \\sqrt{(${x})^2 + (${y})^2} = \\sqrt{${x * x} + ${y * y}} = \\sqrt{${r * r}} = ${ans}$$`,
-          ),
-        );
         return numberProblem({
-          prompt,
-          solution,
-          answer: ans,
-          wrong: [r * r, Math.abs(z), x + y],
+          prompt: t(
+            `Find the radial coordinate $r$ in cylindrical coordinates $(r, \\theta, z)$ for the point with Cartesian coordinates $(${x}, ${y}, ${z})$.`,
+            `求直角坐标为 $(${x}, ${y}, ${z})$ 的点在柱坐标系 $(r, \\theta, z)$ 下的径向坐标 $r$。`,
+          ),
+          answer: r,
+          mistakes: distinct(r, [
+            why(r * r, `That is $x^2 + y^2 = ${r * r}$; take its square root.`, `那是 $x^2 + y^2 = ${r * r}$；还要开平方。`),
+            why(
+              x + y,
+              "That adds the coordinates; the distance from the axis is $\\sqrt{x^2 + y^2}$.",
+              "那是把坐标相加；到轴的距离是 $\\sqrt{x^2 + y^2}$。",
+            ),
+            why(Math.abs(z), "That is the height $|z|$; $r$ is measured in the horizontal plane.", "那是高度 $|z|$；$r$ 在水平面内度量。"),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Use the horizontal coordinates", "用水平坐标"],
+                t("$r = \\sqrt{x^2 + y^2}$; the height $z$ does not enter.", "$r = \\sqrt{x^2 + y^2}$；高度 $z$ 不参与。"),
+              ],
+              [
+                ["Substitute", "代入"],
+                t(
+                  `$r = \\sqrt{${x * x} + ${y * y}} = \\sqrt{${r * r}} = ${r}$.`,
+                  `$r = \\sqrt{${x * x} + ${y * y}} = \\sqrt{${r * r}} = ${r}$。`,
+                ),
+              ],
+            ],
+            t(
+              `$${r}$ is at least each of $${x}$ and $${y}$, as a hypotenuse must be, and $${x}^2 + ${y}^2 = ${r}^2$.`,
+              `$${r}$ 不小于 $${x}$ 和 $${y}$，正如斜边应有的那样，并且 $${x}^2 + ${y}^2 = ${r}^2$。`,
+            ),
+          ),
         });
       },
     },
@@ -4210,8 +4425,8 @@ export const cylindricalPolarCoordinates: TopicDef = {
       figure: multivariableDrawings5["cylindrical-polar-coordinates#converting-cylindrical-coordinates-to-x"],
       title: t("Converting cylindrical coordinates to $x$", "由柱坐标求 $x$"),
       explanation: t(
-        "A point with cylindrical coordinates $(r, \\theta, z)$ has Cartesian coordinates $x = r\\cos\\theta$, $y = r\\sin\\theta$ and the same $z$. The value of $\\cos\\theta$ for standard angles such as $\\frac{\\pi}{3}$ or $\\frac{2\\pi}{3}$ gives the $x$-coordinate directly, and its sign follows the quadrant of $\\theta$.",
-        "柱坐标为 $(r, \\theta, z)$ 的点，其直角坐标为 $x = r\\cos\\theta$，$y = r\\sin\\theta$，$z$ 不变。对 $\\frac{\\pi}{3}$、$\\frac{2\\pi}{3}$ 等标准角，$\\cos\\theta$ 的值直接给出 $x$ 坐标，其符号由 $\\theta$ 所在象限决定。",
+        "A point with cylindrical coordinates $(r, \\theta, z)$ has Cartesian coordinates $x = r\\cos\\theta$, $y = r\\sin\\theta$ and the same $z$. The value of $\\cos\\theta$ for standard angles such as $\\frac{\\pi}{3}$ or $\\frac{2\\pi}{3}$ gives the $x$-coordinate directly, and its sign follows the quadrant of $\\theta$. For $\\left(4, \\frac{5\\pi}{6}, 1\\right)$, $x = 4\\cos\\frac{5\\pi}{6} = -2\\sqrt{3}$.\n\n> **Watch out.** $\\cos\\theta$ is negative in the second and third quadrants, so $x$ is negative there. And $\\cos\\frac{\\pi}{3} = \\frac{1}{2}$, so $x$ is half of $r$, not $r$ itself.",
+        "柱坐标为 $(r, \\theta, z)$ 的点，其直角坐标为 $x = r\\cos\\theta$，$y = r\\sin\\theta$，$z$ 不变。对 $\\frac{\\pi}{3}$、$\\frac{2\\pi}{3}$ 等标准角，$\\cos\\theta$ 的值直接给出 $x$ 坐标，其符号由 $\\theta$ 所在象限决定。对 $\\left(4, \\frac{5\\pi}{6}, 1\\right)$，$x = 4\\cos\\frac{5\\pi}{6} = -2\\sqrt{3}$。\n\n> **注意。** $\\cos\\theta$ 在第二、三象限为负，所以那里 $x$ 为负。$\\cos\\frac{\\pi}{3} = \\frac{1}{2}$，所以 $x$ 是 $r$ 的一半，而不是 $r$ 本身。",
       ),
       generate(rng: Rng): Problem {
         const angles = [
@@ -4228,14 +4443,47 @@ export const cylindricalPolarCoordinates: TopicDef = {
         const r = 2 * rng.int(1, 4);
         const z = rng.int(-5, 5);
         const ans = r * cos;
+        const cosLatex = cos === 0.5 ? "\\frac{1}{2}" : cos === -0.5 ? "-\\frac{1}{2}" : `${cos}`;
         return numberProblem({
           prompt: t(
             `A point has cylindrical coordinates $(r, \\theta, z) = (${r}, ${th}, ${z})$. Find its $x$-coordinate.`,
             `某点的柱坐标为 $(r, \\theta, z) = (${r}, ${th}, ${z})$。求它的 $x$ 坐标。`,
           ),
           answer: ans,
-          wrong: [-ans, r, z, ans === 0 ? r / 2 : ans * 2],
-          solution: t(`$x = r\\cos\\theta = ${r}\\cos ${th} = ${ans}$.`, `$x = r\\cos\\theta = ${r}\\cos ${th} = ${ans}$。`),
+          mistakes: distinct(ans, [
+            ...(ans === 0 ? [] : [why(-ans, `The sign is wrong: $\\cos ${th} = ${cosLatex}$.`, `符号错了：$\\cos ${th} = ${cosLatex}$。`)]),
+            why(
+              r,
+              `That is $r$ itself; $x = r\\cos\\theta$ with $\\cos ${th} = ${cosLatex}$.`,
+              `那是 $r$ 本身；$x = r\\cos\\theta$，且 $\\cos ${th} = ${cosLatex}$。`,
+            ),
+            why(
+              z,
+              "That is the height $z$, which is the same in both systems; $x = r\\cos\\theta$.",
+              "那是高度 $z$，在两种坐标中相同；$x = r\\cos\\theta$。",
+            ),
+            why(
+              ans === 0 ? r / 2 : ans * 2,
+              `$\\cos ${th} = ${cosLatex}$, so $x = ${r} \\cdot ${cosLatex.startsWith("-") ? `\\left(${cosLatex}\\right)` : cosLatex}$.`,
+              `$\\cos ${th} = ${cosLatex}$，所以 $x = ${r} \\cdot ${cosLatex.startsWith("-") ? `\\left(${cosLatex}\\right)` : cosLatex}$。`,
+            ),
+          ]),
+          solution: walked(
+            [
+              [["Use x = r cos θ", "用 x = r cos θ"], t(`$\\cos ${th} = ${cosLatex}$.`, `$\\cos ${th} = ${cosLatex}$。`)],
+              [
+                ["Multiply", "相乘"],
+                t(
+                  `$x = ${r} \\cdot ${cosLatex.startsWith("-") ? `\\left(${cosLatex}\\right)` : cosLatex} = ${ans}$.`,
+                  `$x = ${r} \\cdot ${cosLatex.startsWith("-") ? `\\left(${cosLatex}\\right)` : cosLatex} = ${ans}$。`,
+                ),
+              ],
+            ],
+            t(
+              `$|x| = ${Math.abs(ans)}$ is at most $r = ${r}$, and the sign matches the quadrant of $\\theta = ${th}$${ans === 0 ? ", which lies on the $y$-axis" : ""}.`,
+              `$|x| = ${Math.abs(ans)}$ 不超过 $r = ${r}$，符号与 $\\theta = ${th}$ 所在象限一致${ans === 0 ? "，该角落在 $y$ 轴上" : ""}。`,
+            ),
+          ),
         });
       },
     },
@@ -4250,6 +4498,10 @@ export const surfacesInCylindricalPolarCoordinates: TopicDef = {
     "Simple equations in cylindrical coordinates represent basic surfaces: r = c is a cylinder, θ = c is a half-plane, and z = c r is a cone.",
     "柱坐标系下的简单方程表示基本空间曲面：r = c 为圆柱面，θ = c 为半平面，z = c r 为圆锥面。",
   ),
+  intro: t(
+    "What surface is $r = 4\\sin\\theta$? Multiplying by $r$ gives $r^2 = 4r\\sin\\theta$, that is $x^2 + y^2 = 4y$, and completing the square gives $x^2 + (y - 2)^2 = 4$. Since $z$ is free, this is a circular cylinder of radius $2$ whose axis is the vertical line through $(0, 2)$.\n\nCheck: at $\\theta = \\frac{\\pi}{2}$ the equation gives $r = 4$, the point $(0, 4)$, which is at distance $2$ from $(0, 2)$; at $\\theta = 0$ it gives $r = 0$, the origin, also at distance $2$.\n\nIn this lesson we recognize surfaces given in cylindrical coordinates and write Cartesian surfaces in cylindrical form.",
+    "$r = 4\\sin\\theta$ 是什么曲面？两边乘以 $r$ 得 $r^2 = 4r\\sin\\theta$，即 $x^2 + y^2 = 4y$，配方得 $x^2 + (y - 2)^2 = 4$。由于 $z$ 任意，这是半径为 $2$、轴为过 $(0, 2)$ 的竖直直线的圆柱面。\n\n检验：$\\theta = \\frac{\\pi}{2}$ 时 $r = 4$，即点 $(0, 4)$，它到 $(0, 2)$ 的距离为 $2$；$\\theta = 0$ 时 $r = 0$，即原点，到 $(0, 2)$ 的距离也是 $2$。\n\n本课我们识别柱坐标给出的曲面，并把直角坐标曲面写成柱坐标形式。",
+  ),
   prerequisites: ["cylindrical-polar-coordinates"],
   encompasses: [{ topic: "cylindrical-polar-coordinates", weight: 0.3 }],
   xp: 10,
@@ -4259,61 +4511,151 @@ export const surfacesInCylindricalPolarCoordinates: TopicDef = {
       figure: multivariableDrawings5["surfaces-in-cylindrical-polar-coordinates#identifying-surfaces-given-in-cylindrical-coordinates"],
       title: t("Identifying surfaces given in cylindrical coordinates", "识别柱坐标方程所表示的曲面"),
       explanation: t(
-        "Common cylindrical surfaces:\n- $r = c$ ($c > 0$): Circular cylinder parallel to the $z$-axis.\n- $z = cr$: Circular cone with apex at the origin.\n- $z = cr^2$: Circular paraboloid opening along the $z$-axis.\n- $\\theta = c$: Vertical half-plane passing through the $z$-axis.",
-        "常见柱坐标曲面：\n- $r = c$（$c > 0$）：母线平行于 $z$ 轴的圆柱面。\n- $z = cr$：顶点位于原点的圆锥面。\n- $z = cr^2$：沿 $z$ 轴开口的旋转抛物面。\n- $\\theta = c$：过 $z$ 轴的垂直半平面。",
+        "Common cylindrical surfaces:\n- $r = c$ ($c > 0$): Circular cylinder parallel to the $z$-axis.\n- $z = cr$: Circular cone with apex at the origin.\n- $z = cr^2$: Circular paraboloid opening along the $z$-axis.\n- $\\theta = c$: Vertical half-plane passing through the $z$-axis.\n\nFor example $z = 20r^2$ is $z = 20(x^2 + y^2)$, a paraboloid: its slice at height $z$ is a circle of radius $\\sqrt{\\frac{z}{20}}$.\n\n> **Watch out.** $z = cr$, with the first power of $r$, is a cone, and $z = cr^2$ is a paraboloid. An equation that leaves $z$ out, like $r = c$, allows every height, so it is a cylinder and not a sphere.",
+        "常见柱坐标曲面：\n- $r = c$（$c > 0$）：母线平行于 $z$ 轴的圆柱面。\n- $z = cr$：顶点位于原点的圆锥面。\n- $z = cr^2$：沿 $z$ 轴开口的旋转抛物面。\n- $\\theta = c$：过 $z$ 轴的垂直半平面。\n\n例如 $z = 20r^2$ 即 $z = 20(x^2 + y^2)$，是抛物面：它在高度 $z$ 处的截面是半径为 $\\sqrt{\\frac{z}{20}}$ 的圆。\n\n> **注意。** $z = cr$（$r$ 的一次方）是圆锥面，$z = cr^2$ 是抛物面。不含 $z$ 的方程如 $r = c$ 允许任意高度，所以是圆柱面而不是球面。",
       ),
       generate(rng: Rng): Problem {
         const c = rng.int(2, 15);
         const type = rng.int(0, 3);
-
-        let eq: string;
-        let right: Text;
-        let wrong: readonly Text[];
-        let sol: Text;
-
-        if (type === 0) {
-          eq = `r = ${c}`;
-          right = t("Circular cylinder", "圆柱面");
-          wrong = [t("Circular cone", "圆锥面"), t("Circular paraboloid", "旋转抛物面"), t("Sphere", "球面")];
-          sol = t(
-            `$r = ${c} \\iff x^2 + y^2 = ${c * c}$, which is a circular cylinder of radius $${c}$ around the $z$-axis.`,
-            `$r = ${c} \\iff x^2 + y^2 = ${c * c}$，表示以 $z$ 轴为对称轴、半径为 ${c} 的圆柱面。`,
-          );
-        } else if (type === 1) {
-          eq = `z = ${c}r`;
-          right = t("Circular cone", "圆锥面");
-          wrong = [t("Circular cylinder", "圆柱面"), t("Circular paraboloid", "旋转抛物面"), t("Plane", "平面")];
-          sol = t(
-            `$z = ${c}r \\iff z^2 = ${c * c}(x^2 + y^2)$ (for $z \\ge 0$), which is a circular cone with vertex at the origin.`,
-            `$z = ${c}r \\iff z^2 = ${c * c}(x^2 + y^2)$（$z \\ge 0$），表示顶点位于原点的上半圆锥面。`,
-          );
-        } else if (type === 2) {
-          eq = `z = ${c}r^2`;
-          right = t("Circular paraboloid", "旋转抛物面");
-          wrong = [t("Circular cylinder", "圆柱面"), t("Circular cone", "圆锥面"), t("Hyperboloid", "双曲面")];
-          sol = t(
-            `$z = ${c}r^2 \\iff z = ${c}(x^2 + y^2)$, which is a circular paraboloid opening upwards along the $z$-axis.`,
-            `$z = ${c}r^2 \\iff z = ${c}(x^2 + y^2)$，表示沿 $z$ 轴向上开口的旋转抛物面。`,
-          );
-        } else {
-          eq = `\\theta = \\frac{\\pi}{${c}}`;
-          right = t("Vertical half-plane", "垂直半平面");
-          wrong = [t("Circular cylinder", "圆柱面"), t("Circular cone", "圆锥面"), t("Sphere", "球面")];
-          sol = t(
-            `$\\theta = \\frac{\\pi}{${c}}$ defines a vertical half-plane emanating from the $z$-axis at constant azimuth angle.`,
-            `$\\theta = \\frac{\\pi}{${c}}$ 表示由 $z$ 轴出发、方位角恒定的垂直半平面。`,
-          );
-        }
-
-        const prompt = t(
-          `Identify the geometric surface represented by the cylindrical coordinate equation $${eq}$.`,
-          `识别由柱坐标方程 $${eq}$ 所表示的几何曲面。`,
-        );
-        const solution = t(
-          `The equation represents a ${right.en.toLowerCase()} because ${sol.en}`,
-          `该方程表示一个${right["zh-CN"]}，因为${sol["zh-CN"]}`,
-        );
-        return pickChoice(rng, prompt, right, wrong, solution);
+        const cylinder = t("Circular cylinder", "圆柱面");
+        const cone = t("Circular cone", "圆锥面");
+        const paraboloid = t("Circular paraboloid", "旋转抛物面");
+        const fixesR = t("A cylinder fixes $r$, the distance from the $z$-axis", "圆柱面固定的是 $r$，即到 $z$ 轴的距离");
+        const choice =
+          type === 0
+            ? {
+                eq: `r = ${c}`,
+                right: cylinder,
+                wrong: [
+                  {
+                    option: cone,
+                    why: t(
+                      "A cone has $z$ growing with $r$, like $z = cr$; here $z$ does not appear",
+                      "圆锥面的 $z$ 随 $r$ 增长，如 $z = cr$；这里没有出现 $z$",
+                    ),
+                  },
+                  {
+                    option: paraboloid,
+                    why: t("A paraboloid has $z = cr^2$; here $z$ does not appear", "抛物面是 $z = cr^2$；这里没有出现 $z$"),
+                  },
+                  {
+                    option: t("Sphere", "球面"),
+                    why: t(
+                      `A sphere would be $r^2 + z^2 = ${c * c}$; $r = ${c}$ allows every height $z$`,
+                      `球面应为 $r^2 + z^2 = ${c * c}$；$r = ${c}$ 允许任意高度 $z$`,
+                    ),
+                  },
+                ],
+                convert: t(`$r = ${c}$ means $x^2 + y^2 = ${c * c}$ with $z$ free.`, `$r = ${c}$ 即 $x^2 + y^2 = ${c * c}$，$z$ 任意。`),
+                check: t(
+                  `Every horizontal slice is the same circle of radius $${c}$ about the $z$-axis, at every height, which is a cylinder.`,
+                  `每个水平截面都是绕 $z$ 轴、半径为 $${c}$ 的同一个圆，各高度都相同，这正是圆柱面。`,
+                ),
+              }
+            : type === 1
+              ? {
+                  eq: `z = ${c}r`,
+                  right: cone,
+                  wrong: [
+                    { option: cylinder, why: fixesR },
+                    {
+                      option: paraboloid,
+                      why: t(
+                        "A paraboloid has $z$ proportional to $r^2$; here it is proportional to $r$",
+                        "抛物面的 $z$ 与 $r^2$ 成正比；这里与 $r$ 成正比",
+                      ),
+                    },
+                    {
+                      option: t("Plane", "平面"),
+                      why: t(
+                        `A plane would be like $z = ${c}x$; $z = ${c}\\sqrt{x^2 + y^2}$ is the same in every direction around the $z$-axis`,
+                        `平面形如 $z = ${c}x$；$z = ${c}\\sqrt{x^2 + y^2}$ 绕 $z$ 轴各方向都一样`,
+                      ),
+                    },
+                  ],
+                  convert: t(
+                    `$z = ${c}r$ means $z = ${c}\\sqrt{x^2 + y^2}$, so $z^2 = ${c * c}(x^2 + y^2)$ with $z \\ge 0$.`,
+                    `$z = ${c}r$ 即 $z = ${c}\\sqrt{x^2 + y^2}$，所以 $z^2 = ${c * c}(x^2 + y^2)$，$z \\ge 0$。`,
+                  ),
+                  check: t(
+                    `The slice at height $z$ is a circle of radius $\\frac{z}{${c}}$, growing in proportion to $z$ from a point at the origin, which is a cone.`,
+                    `高度 $z$ 处的截面是半径为 $\\frac{z}{${c}}$ 的圆，从原点的一个点开始与 $z$ 成正比地增长，这正是圆锥面。`,
+                  ),
+                }
+              : type === 2
+                ? {
+                    eq: `z = ${c}r^2`,
+                    right: paraboloid,
+                    wrong: [
+                      { option: cylinder, why: fixesR },
+                      {
+                        option: cone,
+                        why: t(
+                          "A cone has $z$ proportional to $r$; here it is proportional to $r^2$",
+                          "圆锥面的 $z$ 与 $r$ 成正比；这里与 $r^2$ 成正比",
+                        ),
+                      },
+                      {
+                        option: t("Hyperboloid", "双曲面"),
+                        why: t(
+                          "A hyperboloid has $z^2$ and $r^2$ with opposite signs; here $z$ appears to the first power",
+                          "双曲面中 $z^2$ 与 $r^2$ 符号相反；这里 $z$ 是一次方",
+                        ),
+                      },
+                    ],
+                    convert: t(`$z = ${c}r^2$ means $z = ${c}(x^2 + y^2)$.`, `$z = ${c}r^2$ 即 $z = ${c}(x^2 + y^2)$。`),
+                    check: t(
+                      `The slice through the axis at $y = 0$ is the parabola $z = ${c}x^2$, and rotating it about the $z$-axis gives a paraboloid.`,
+                      `过轴的截面 $y = 0$ 是抛物线 $z = ${c}x^2$，绕 $z$ 轴旋转得到抛物面。`,
+                    ),
+                  }
+                : {
+                    eq: `\\theta = \\frac{\\pi}{${c}}`,
+                    right: t("Vertical half-plane", "垂直半平面"),
+                    wrong: [
+                      { option: cylinder, why: t("A cylinder fixes $r$, not the angle $\\theta$", "圆柱面固定的是 $r$，不是角 $\\theta$") },
+                      {
+                        option: cone,
+                        why: t(
+                          "A cone fixes the ratio of $z$ to $r$; here $r$ and $z$ are both free",
+                          "圆锥面固定的是 $z$ 与 $r$ 之比；这里 $r$ 和 $z$ 都任意",
+                        ),
+                      },
+                      {
+                        option: t("Sphere", "球面"),
+                        why: t(
+                          "A sphere fixes the distance from the origin; here only the direction around the axis is fixed",
+                          "球面固定的是到原点的距离；这里只固定了绕轴的方向",
+                        ),
+                      },
+                    ],
+                    convert: t(
+                      `$\\theta = \\frac{\\pi}{${c}}$ fixes the direction around the $z$-axis, with $r \\ge 0$ and $z$ free.`,
+                      `$\\theta = \\frac{\\pi}{${c}}$ 固定了绕 $z$ 轴的方向，$r \\ge 0$，$z$ 任意。`,
+                    ),
+                    check: t(
+                      `The points $\\left(r, \\frac{\\pi}{${c}}, z\\right)$ for all $r \\ge 0$ and all $z$ fill a flat sheet that ends at the $z$-axis, a half-plane; the other half has $\\theta = \\frac{\\pi}{${c}} + \\pi$.`,
+                      `所有 $r \\ge 0$、所有 $z$ 的点 $\\left(r, \\frac{\\pi}{${c}}, z\\right)$ 构成止于 $z$ 轴的平面片，即半平面；另一半的 $\\theta = \\frac{\\pi}{${c}} + \\pi$。`,
+                    ),
+                  };
+        return explainedChoice(rng, {
+          prompt: t(
+            `Identify the geometric surface represented by the cylindrical coordinate equation $${choice.eq}$.`,
+            `识别由柱坐标方程 $${choice.eq}$ 所表示的几何曲面。`,
+          ),
+          correct: choice.right,
+          wrong: choice.wrong,
+          solution: walked(
+            [
+              [["Convert to Cartesian form", "化为直角坐标"], choice.convert],
+              [
+                ["Name the surface", "说出曲面"],
+                t(`The surface is a ${choice.right.en.toLowerCase()}.`, `该曲面是${choice.right["zh-CN"]}。`),
+              ],
+            ],
+            choice.check,
+          ),
+        });
       },
     },
     {
@@ -4321,8 +4663,8 @@ export const surfacesInCylindricalPolarCoordinates: TopicDef = {
       figure: multivariableDrawings5["surfaces-in-cylindrical-polar-coordinates#writing-cartesian-surfaces-in-cylindrical-coordinates"],
       title: t("Writing Cartesian surfaces in cylindrical coordinates", "把直角坐标曲面写成柱坐标"),
       explanation: t(
-        "To convert a surface to cylindrical coordinates, replace $x^2 + y^2$ by $r^2$ and leave $z$ unchanged. For example, the cylinder $x^2 + y^2 = a^2$ becomes $r = a$, the paraboloid $z = k(x^2 + y^2)$ becomes $z = kr^2$, and the sphere $x^2 + y^2 + z^2 = a^2$ becomes $r^2 + z^2 = a^2$. A cone $z = k\\sqrt{x^2 + y^2}$ becomes $z = kr$, since $r \\ge 0$.",
-        "把曲面化为柱坐标时，用 $r^2$ 替换 $x^2 + y^2$，$z$ 不变。例如圆柱面 $x^2 + y^2 = a^2$ 变为 $r = a$，抛物面 $z = k(x^2 + y^2)$ 变为 $z = kr^2$，球面 $x^2 + y^2 + z^2 = a^2$ 变为 $r^2 + z^2 = a^2$。锥面 $z = k\\sqrt{x^2 + y^2}$ 变为 $z = kr$，因为 $r \\ge 0$。",
+        "To convert a surface to cylindrical coordinates, replace $x^2 + y^2$ by $r^2$ and leave $z$ unchanged. For example, the cylinder $x^2 + y^2 = a^2$ becomes $r = a$, the paraboloid $z = k(x^2 + y^2)$ becomes $z = kr^2$, and the sphere $x^2 + y^2 + z^2 = a^2$ becomes $r^2 + z^2 = a^2$. A cone $z = k\\sqrt{x^2 + y^2}$ becomes $z = kr$, since $r \\ge 0$. So $z = 12\\sqrt{x^2 + y^2}$ becomes $z = 12r$.\n\n> **Watch out.** $x^2 + y^2$ is $r^2$, not $r$, while $\\sqrt{x^2 + y^2}$ is $r$. The variable $z$ is the same in both systems, so it keeps its power.",
+        "把曲面化为柱坐标时，用 $r^2$ 替换 $x^2 + y^2$，$z$ 不变。例如圆柱面 $x^2 + y^2 = a^2$ 变为 $r = a$，抛物面 $z = k(x^2 + y^2)$ 变为 $z = kr^2$，球面 $x^2 + y^2 + z^2 = a^2$ 变为 $r^2 + z^2 = a^2$。锥面 $z = k\\sqrt{x^2 + y^2}$ 变为 $z = kr$，因为 $r \\ge 0$。所以 $z = 12\\sqrt{x^2 + y^2}$ 变为 $z = 12r$。\n\n> **注意。** $x^2 + y^2$ 是 $r^2$ 而不是 $r$，$\\sqrt{x^2 + y^2}$ 才是 $r$。$z$ 在两种坐标中相同，次数不变。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(2, 9);
@@ -4330,22 +4672,64 @@ export const surfacesInCylindricalPolarCoordinates: TopicDef = {
         const opt = (s: string) => t(`$${s}$`, `$${s}$`);
         const cart = [`x^2 + y^2 = ${a * a}`, `z = ${a}(x^2 + y^2)`, `x^2 + y^2 + z^2 = ${a * a}`, `z = ${a}\\sqrt{x^2 + y^2}`][kind - 1]!;
         const right = [`r = ${a}`, `z = ${a}r^2`, `r^2 + z^2 = ${a * a}`, `z = ${a}r`][kind - 1]!;
-        const wrong = [
-          [`r = ${a * a}`, `r^2 = ${a}`, `\\theta = ${a}`],
-          [`z = ${a}r`, `z^2 = ${a}r^2`, `r = ${a}z^2`],
-          [`r + z = ${a}`, `r^2 = ${a * a}`, `r^2 + z^2 = ${a}`],
-          [`z = ${a}r^2`, `z^2 = ${a}r`, `r = ${a}z`],
-        ][kind - 1]!;
-        return pickChoice(
-          rng,
-          t(`Write the surface $${cart}$ in cylindrical coordinates.`, `把曲面 $${cart}$ 写成柱坐标方程。`),
-          opt(right),
-          wrong.map(opt),
-          t(
-            `Replace $x^2 + y^2$ by $r^2$ (and $\\sqrt{x^2 + y^2}$ by $r$) to get $${right}$.`,
-            `用 $r^2$ 替换 $x^2 + y^2$（用 $r$ 替换 $\\sqrt{x^2 + y^2}$），得 $${right}$。`,
+        const sq = t("$x^2 + y^2$ is $r^2$, not $r$", "$x^2 + y^2$ 是 $r^2$，不是 $r$");
+        const zSame = t("$z$ is the same in both systems, so it is not squared", "$z$ 在两种坐标中相同，不应平方");
+        const swap = t("That swaps the roles of $r$ and $z$", "那是把 $r$ 和 $z$ 的角色对调了");
+        const table: readonly (readonly (readonly [string, Text])[])[] = [
+          [
+            [
+              `r = ${a * a}`,
+              t(`$x^2 + y^2 = r^2$, so $r^2 = ${a * a}$ and $r = ${a}$`, `$x^2 + y^2 = r^2$，所以 $r^2 = ${a * a}$，$r = ${a}$`),
+            ],
+            [`r^2 = ${a}`, t(`The right side stays $${a * a}$: $r^2 = ${a * a}$`, `右边仍是 $${a * a}$：$r^2 = ${a * a}$`)],
+            [
+              `\\theta = ${a}`,
+              t("$\\theta$ is an angle; the equation fixes the distance from the $z$-axis", "$\\theta$ 是角；方程固定的是到 $z$ 轴的距离"),
+            ],
+          ],
+          [
+            [`z = ${a}r`, sq],
+            [`z^2 = ${a}r^2`, zSame],
+            [`r = ${a}z^2`, swap],
+          ],
+          [
+            [
+              `r + z = ${a}`,
+              t("The squares stay: $x^2 + y^2$ is $r^2$ and $z^2$ stays $z^2$", "平方不能去掉：$x^2 + y^2$ 是 $r^2$，$z^2$ 仍是 $z^2$"),
+            ],
+            [`r^2 = ${a * a}`, t("That loses the $z^2$ term, which stays as it is", "那是丢掉了 $z^2$ 项，它应保持不变")],
+            [`r^2 + z^2 = ${a}`, t(`The right side stays $${a * a}$`, `右边仍是 $${a * a}$`)],
+          ],
+          [
+            [`z = ${a}r^2`, t("$\\sqrt{x^2 + y^2}$ is $r$, not $r^2$", "$\\sqrt{x^2 + y^2}$ 是 $r$，不是 $r^2$")],
+            [`z^2 = ${a}r`, zSame],
+            [`r = ${a}z`, swap],
+          ],
+        ];
+        const wrong = table[kind - 1]!;
+        const point = [`(${a}, 0, 5)`, `(1, 0, ${a})`, `(${a}, 0, 0)`, `(1, 0, ${a})`][kind - 1]!;
+        const cyl = [`r = ${a}`, `r = 1, z = ${a}`, `r = ${a}, z = 0`, `r = 1, z = ${a}`][kind - 1]!;
+        return explainedChoice(rng, {
+          prompt: t(`Write the surface $${cart}$ in cylindrical coordinates.`, `把曲面 $${cart}$ 写成柱坐标方程。`),
+          correct: opt(right),
+          wrong: wrong.map(([s, why]) => ({ option: opt(s), why })),
+          solution: walked(
+            [
+              [
+                ["Replace x² + y²", "替换 x² + y²"],
+                t(
+                  "Replace $x^2 + y^2$ by $r^2$ (and $\\sqrt{x^2 + y^2}$ by $r$), and keep $z$.",
+                  "用 $r^2$ 替换 $x^2 + y^2$（用 $r$ 替换 $\\sqrt{x^2 + y^2}$），$z$ 保持不变。",
+                ),
+              ],
+              [["Write the equation", "写出方程"], t(`The surface is $${right}$.`, `曲面为 $${right}$。`)],
+            ],
+            t(
+              `The point $${point}$ lies on $${cart}$, and its cylindrical coordinates $${cyl}$ satisfy $${right}$.`,
+              `点 $${point}$ 在 $${cart}$ 上，它的柱坐标 $${cyl}$ 满足 $${right}$。`,
+            ),
           ),
-        );
+        });
       },
     },
   ],
@@ -4359,6 +4743,10 @@ export const sphericalPolarCoordinates: TopicDef = {
     "Spherical coordinates describe a 3D point as (ρ, θ, φ), with radial distance ρ, azimuthal angle θ, and polar/colatitude angle φ.",
     "球面坐标系将空间点表示为 (ρ, θ, φ)，其中 ρ 为与原点的距离，θ 为方位角，φ 为极角（余纬角）。",
   ),
+  intro: t(
+    "Convert $(1, 1, \\sqrt{6})$ to spherical coordinates. The distance from the origin is $\\rho = \\sqrt{1 + 1 + 6} = 2\\sqrt{2}$. The angle from the positive $z$-axis has $\\cos\\varphi = \\frac{\\sqrt{6}}{2\\sqrt{2}} = \\frac{\\sqrt{3}}{2}$, so $\\varphi = \\frac{\\pi}{6}$. The shadow $(1, 1)$ is at angle $\\theta = \\frac{\\pi}{4}$.\n\nCheck: $\\rho\\sin\\varphi\\cos\\theta = 2\\sqrt{2} \\cdot \\frac{1}{2} \\cdot \\frac{\\sqrt{2}}{2} = 1$ and $\\rho\\cos\\varphi = 2\\sqrt{2} \\cdot \\frac{\\sqrt{3}}{2} = \\sqrt{6}$, which recovers $x$ and $z$.\n\nIn this lesson we find the spherical coordinates $(\\rho, \\theta, \\varphi)$ of a point.",
+    "把 $(1, 1, \\sqrt{6})$ 化为球坐标。到原点的距离为 $\\rho = \\sqrt{1 + 1 + 6} = 2\\sqrt{2}$。与 $z$ 轴正方向的夹角满足 $\\cos\\varphi = \\frac{\\sqrt{6}}{2\\sqrt{2}} = \\frac{\\sqrt{3}}{2}$，所以 $\\varphi = \\frac{\\pi}{6}$。投影 $(1, 1)$ 的角度为 $\\theta = \\frac{\\pi}{4}$。\n\n检验：$\\rho\\sin\\varphi\\cos\\theta = 2\\sqrt{2} \\cdot \\frac{1}{2} \\cdot \\frac{\\sqrt{2}}{2} = 1$，$\\rho\\cos\\varphi = 2\\sqrt{2} \\cdot \\frac{\\sqrt{3}}{2} = \\sqrt{6}$，恢复了 $x$ 与 $z$。\n\n本课我们求点的球坐标 $(\\rho, \\theta, \\varphi)$。",
+  ),
   prerequisites: ["the-jacobian-of-a-three-dimensional-transformation"],
   encompasses: [],
   xp: 10,
@@ -4368,8 +4756,8 @@ export const sphericalPolarCoordinates: TopicDef = {
       figure: multivariableDrawings5["spherical-polar-coordinates#converting-cartesian-points-to-spherical-coordinates"],
       title: t("Converting Cartesian points to spherical coordinates", "将直角坐标转换为球面坐标"),
       explanation: t(
-        "For a point $(x, y, z)$, the spherical radial distance is $\\rho = \\sqrt{x^2 + y^2 + z^2}$, the polar angle is $\\cos\\phi = \\frac{z}{\\rho}$, and the azimuthal angle is $\\tan\\theta = \\frac{y}{x}$.",
-        "对于空间点 $(x, y, z)$，其球面径向距离为 $\\rho = \\sqrt{x^2 + y^2 + z^2}$，极角满足 $\\cos\\phi = \\frac{z}{\\rho}$，方位角满足 $\\tan\\theta = \\frac{y}{x}$。",
+        "For a point $(x, y, z)$, the spherical radial distance is $\\rho = \\sqrt{x^2 + y^2 + z^2}$, the polar angle is $\\cos\\phi = \\frac{z}{\\rho}$, and the azimuthal angle is $\\tan\\theta = \\frac{y}{x}$. For $(2, 10, 11)$, $\\rho = \\sqrt{4 + 100 + 121} = \\sqrt{225} = 15$.\n\n> **Watch out.** $\\rho$ is the distance from the origin, so it uses all three coordinates, while the cylindrical $r$ uses only $x$ and $y$. Square the coordinates before adding, and take the square root at the end.",
+        "对于空间点 $(x, y, z)$，其球面径向距离为 $\\rho = \\sqrt{x^2 + y^2 + z^2}$，极角满足 $\\cos\\phi = \\frac{z}{\\rho}$，方位角满足 $\\tan\\theta = \\frac{y}{x}$。对 $(2, 10, 11)$，$\\rho = \\sqrt{4 + 100 + 121} = \\sqrt{225} = 15$。\n\n> **注意。** $\\rho$ 是到原点的距离，用到全部三个坐标，而柱坐标的 $r$ 只用 $x$ 和 $y$。要先平方再相加，最后开平方。",
       ),
       generate(rng: Rng): Problem {
         // Integer sum of three squares
@@ -4387,26 +4775,36 @@ export const sphericalPolarCoordinates: TopicDef = {
         const y = b * k;
         const z = c * k;
         const ans = rho * k;
-
-        const prompt = t(
-          `Find the spherical radial distance $\\rho$ for the point with Cartesian coordinates $(${x}, ${y}, ${z})$.`,
-          `求直角坐标为 $(${x}, ${y}, ${z})$ 的点在球面坐标系下的径向距离 $\\rho$。`,
-        );
-        const solution = t(
-          steps(
-            `The spherical radial distance is $\\rho = \\sqrt{x^2 + y^2 + z^2}$.`,
-            `Substitute $x = ${x}$, $y = ${y}$, $z = ${z}$:\n\n$$\\rho = \\sqrt{(${x})^2 + (${y})^2 + (${z})^2} = \\sqrt{${x * x} + ${y * y} + ${z * z}} = \\sqrt{${ans * ans}} = ${ans}.$$`,
-          ),
-          steps(
-            `球面径向距离公式为 $\\rho = \\sqrt{x^2 + y^2 + z^2}$。`,
-            `代入 $x = ${x}$、$y = ${y}$、$z = ${z}$：\n\n$$\\rho = \\sqrt{(${x})^2 + (${y})^2 + (${z})^2} = \\sqrt{${x * x} + ${y * y} + ${z * z}} = \\sqrt{${ans * ans}} = ${ans}$$`,
-          ),
-        );
         return numberProblem({
-          prompt,
-          solution,
+          prompt: t(
+            `Find the spherical radial distance $\\rho$ for the point with Cartesian coordinates $(${x}, ${y}, ${z})$.`,
+            `求直角坐标为 $(${x}, ${y}, ${z})$ 的点在球面坐标系下的径向距离 $\\rho$。`,
+          ),
           answer: ans,
-          wrong: [ans * ans, x + y + z, ans + 2],
+          mistakes: distinct(ans, [
+            why(ans * ans, `That is $\\rho^2 = ${ans * ans}$; take its square root.`, `那是 $\\rho^2 = ${ans * ans}$；还要开平方。`),
+            why(
+              x + y + z,
+              "That adds the coordinates; square them first and take the square root of the sum.",
+              "那是把坐标相加；要先平方，再对和开平方。",
+            ),
+          ]),
+          solution: walked(
+            [
+              [["Use the distance formula", "用距离公式"], t("$\\rho = \\sqrt{x^2 + y^2 + z^2}$.", "$\\rho = \\sqrt{x^2 + y^2 + z^2}$。")],
+              [
+                ["Substitute", "代入"],
+                t(
+                  `$\\rho = \\sqrt{${x * x} + ${y * y} + ${z * z}} = \\sqrt{${ans * ans}} = ${ans}$.`,
+                  `$\\rho = \\sqrt{${x * x} + ${y * y} + ${z * z}} = \\sqrt{${ans * ans}} = ${ans}$。`,
+                ),
+              ],
+            ],
+            t(
+              `The point is $${k === 1 ? "" : `${k}`}(${a}, ${b}, ${c})$, and $${a}^2 + ${b}^2 + ${c}^2 = ${rho * rho} = ${rho}^2$, so $\\rho = ${k === 1 ? "" : `${k} \\cdot `}${rho}${k === 1 ? "" : ` = ${ans}`}$.`,
+              `该点为 $${k === 1 ? "" : `${k}`}(${a}, ${b}, ${c})$，而 $${a}^2 + ${b}^2 + ${c}^2 = ${rho * rho} = ${rho}^2$，所以 $\\rho = ${k === 1 ? "" : `${k} \\cdot `}${rho}${k === 1 ? "" : ` = ${ans}`}$。`,
+            ),
+          ),
         });
       },
     },
@@ -4415,8 +4813,8 @@ export const sphericalPolarCoordinates: TopicDef = {
       figure: multivariableDrawings5["spherical-polar-coordinates#finding-the-polar-angle-phi-of-a-point"],
       title: t("Finding the angle $\\varphi$ of a point", "求点的极角 $\\varphi$"),
       explanation: t(
-        "In spherical coordinates $\\varphi$ is the angle from the positive $z$-axis, with $0 \\le \\varphi \\le \\pi$, and $\\cos\\varphi = \\frac{z}{\\rho}$. A useful shortcut compares $z$ with $r = \\sqrt{x^2 + y^2}$: if $z = r$ then $\\varphi = \\frac{\\pi}{4}$, if $z = 0$ then $\\varphi = \\frac{\\pi}{2}$, and if $z = -r$ then $\\varphi = \\frac{3\\pi}{4}$.",
-        "在球坐标中，$\\varphi$ 是与 $z$ 轴正方向的夹角，$0 \\le \\varphi \\le \\pi$，且 $\\cos\\varphi = \\frac{z}{\\rho}$。一个实用的捷径是比较 $z$ 与 $r = \\sqrt{x^2 + y^2}$：若 $z = r$ 则 $\\varphi = \\frac{\\pi}{4}$，若 $z = 0$ 则 $\\varphi = \\frac{\\pi}{2}$，若 $z = -r$ 则 $\\varphi = \\frac{3\\pi}{4}$。",
+        "In spherical coordinates $\\varphi$ is the angle from the positive $z$-axis, with $0 \\le \\varphi \\le \\pi$, and $\\cos\\varphi = \\frac{z}{\\rho}$. A useful shortcut compares $z$ with $r = \\sqrt{x^2 + y^2}$: if $z = r$ then $\\varphi = \\frac{\\pi}{4}$, if $z = 0$ then $\\varphi = \\frac{\\pi}{2}$, and if $z = -r$ then $\\varphi = \\frac{3\\pi}{4}$. For $(1, \\sqrt{3}, -2)$, $r = 2$ and $z = -r$, so $\\varphi = \\frac{3\\pi}{4}$.\n\n> **Watch out.** $\\varphi$ is measured from the positive $z$-axis, not up from the $xy$-plane. A point below the $xy$-plane has $\\varphi > \\frac{\\pi}{2}$, never a negative angle.",
+        "在球坐标中，$\\varphi$ 是与 $z$ 轴正方向的夹角，$0 \\le \\varphi \\le \\pi$，且 $\\cos\\varphi = \\frac{z}{\\rho}$。一个实用的捷径是比较 $z$ 与 $r = \\sqrt{x^2 + y^2}$：若 $z = r$ 则 $\\varphi = \\frac{\\pi}{4}$，若 $z = 0$ 则 $\\varphi = \\frac{\\pi}{2}$，若 $z = -r$ 则 $\\varphi = \\frac{3\\pi}{4}$。对 $(1, \\sqrt{3}, -2)$，$r = 2$ 且 $z = -r$，所以 $\\varphi = \\frac{3\\pi}{4}$。\n\n> **注意。** $\\varphi$ 从 $z$ 轴正方向量起，而不是从 $xy$ 平面向上量。位于 $xy$ 平面下方的点 $\\varphi > \\frac{\\pi}{2}$，不会是负角。",
       ),
       generate(rng: Rng): Problem {
         const [a, b, c] = rng.pick(pythagoreanTriples);
@@ -4425,18 +4823,66 @@ export const sphericalPolarCoordinates: TopicDef = {
         const kind = rng.int(0, 2);
         const z = [c, 0, -c][kind]!;
         const angles = ["\\frac{\\pi}{4}", "\\frac{\\pi}{2}", "\\frac{3\\pi}{4}"];
+        const cosines = ["\\frac{\\sqrt{2}}{2}", "0", "-\\frac{\\sqrt{2}}{2}"];
         const opt = (s: string) => t(`$${s}$`, `$${s}$`);
         const rho = kind === 1 ? `${c}` : `${c}\\sqrt{2}`;
-        return pickChoice(
-          rng,
-          t(`Find the spherical angle $\\varphi$ of the point $(${x}, ${y}, ${z})$.`, `求点 $(${x}, ${y}, ${z})$ 的球坐标角 $\\varphi$。`),
-          opt(angles[kind]!),
-          [...angles.filter((_, i) => i !== kind), kind === 1 ? "\\frac{\\pi}{3}" : "0"].map(opt),
+        const needs = [
           t(
-            `$r = \\sqrt{${a * a} + ${b * b}} = ${c}$ and $\\rho = ${rho}$, so $\\cos\\varphi = \\frac{${z}}{${rho}}$ and $\\varphi = ${angles[kind]}$.`,
-            `$r = \\sqrt{${a * a} + ${b * b}} = ${c}$，$\\rho = ${rho}$，所以 $\\cos\\varphi = \\frac{${z}}{${rho}}$，$\\varphi = ${angles[kind]}$。`,
+            `$\\varphi = \\frac{\\pi}{4}$ needs $z = r = ${c}$; here $z = ${z}$`,
+            `$\\varphi = \\frac{\\pi}{4}$ 需要 $z = r = ${c}$；这里 $z = ${z}$`,
           ),
-        );
+          t(
+            `$\\varphi = \\frac{\\pi}{2}$ is the $xy$-plane, where $z = 0$; here $z = ${z}$`,
+            `$\\varphi = \\frac{\\pi}{2}$ 是 $xy$ 平面，那里 $z = 0$；这里 $z = ${z}$`,
+          ),
+          t(
+            `$\\varphi = \\frac{3\\pi}{4}$ needs $z = -r = ${-c}$; here $z = ${z}$`,
+            `$\\varphi = \\frac{3\\pi}{4}$ 需要 $z = -r = ${-c}$；这里 $z = ${z}$`,
+          ),
+        ];
+        const extra =
+          kind === 1
+            ? {
+                option: opt("\\frac{\\pi}{3}"),
+                why: t(
+                  "$\\cos\\frac{\\pi}{3} = \\frac{1}{2}$ would need $z = \\frac{\\rho}{2}$; here $z = 0$",
+                  "$\\cos\\frac{\\pi}{3} = \\frac{1}{2}$ 需要 $z = \\frac{\\rho}{2}$；这里 $z = 0$",
+                ),
+              }
+            : {
+                option: opt("0"),
+                why: t("$\\varphi = 0$ is the positive $z$-axis, where $x = y = 0$", "$\\varphi = 0$ 是 $z$ 轴正半轴，那里 $x = y = 0$"),
+              };
+        return explainedChoice(rng, {
+          prompt: t(
+            `Find the spherical angle $\\varphi$ of the point $(${x}, ${y}, ${z})$.`,
+            `求点 $(${x}, ${y}, ${z})$ 的球坐标角 $\\varphi$。`,
+          ),
+          correct: opt(angles[kind]!),
+          wrong: [...[0, 1, 2].filter((i) => i !== kind).map((i) => ({ option: opt(angles[i]!), why: needs[i]! })), extra],
+          solution: walked(
+            [
+              [
+                ["Find r and ρ", "求 r 与 ρ"],
+                t(
+                  `$r = \\sqrt{${a * a} + ${b * b}} = ${c}$ and $\\rho = \\sqrt{${c * c} + ${z * z}} = ${rho}$.`,
+                  `$r = \\sqrt{${a * a} + ${b * b}} = ${c}$，$\\rho = \\sqrt{${c * c} + ${z * z}} = ${rho}$。`,
+                ),
+              ],
+              [
+                ["Find φ", "求 φ"],
+                t(
+                  `$\\cos\\varphi = \\frac{z}{\\rho} = \\frac{${z}}{${rho}} = ${cosines[kind]}$, so $\\varphi = ${angles[kind]}$.`,
+                  `$\\cos\\varphi = \\frac{z}{\\rho} = \\frac{${z}}{${rho}} = ${cosines[kind]}$，所以 $\\varphi = ${angles[kind]}$。`,
+                ),
+              ],
+            ],
+            t(
+              `$\\rho\\cos\\varphi = ${rho} \\cdot ${kind === 2 ? `\\left(${cosines[kind]}\\right)` : cosines[kind]} = ${z}$ recovers $z$, and $\\rho\\sin\\varphi = ${c}$ recovers $r$.`,
+              `$\\rho\\cos\\varphi = ${rho} \\cdot ${kind === 2 ? `\\left(${cosines[kind]}\\right)` : cosines[kind]} = ${z}$ 恢复了 $z$，$\\rho\\sin\\varphi = ${c}$ 恢复了 $r$。`,
+            ),
+          ),
+        });
       },
     },
   ],
@@ -4450,6 +4896,10 @@ export const surfacesInSphericalPolarCoordinates: TopicDef = {
     "In spherical coordinates, ρ = c represents a sphere, φ = c is a cone, and θ = c is a half-plane.",
     "在球面坐标系中，ρ = c 表示球面，φ = c 表示圆锥面，θ = c 表示半平面。",
   ),
+  intro: t(
+    "What surface is $\\rho\\cos\\varphi = 10$? Since $z = \\rho\\cos\\varphi$, the equation says $z = 10$: a horizontal plane at height $10$.\n\nCheck: along the $z$-axis, $\\varphi = 0$ gives $\\rho = 10$, the point $(0, 0, 10)$; at $\\varphi = \\frac{\\pi}{4}$, $\\rho = 10\\sqrt{2}$ and the height is $10\\sqrt{2} \\cdot \\frac{\\sqrt{2}}{2} = 10$ again.\n\nIn this lesson we recognize the surfaces that simple equations in spherical coordinates describe.",
+    "$\\rho\\cos\\varphi = 10$ 是什么曲面？由于 $z = \\rho\\cos\\varphi$，方程就是 $z = 10$：高度为 $10$ 的水平面。\n\n检验：沿 $z$ 轴 $\\varphi = 0$ 时 $\\rho = 10$，即点 $(0, 0, 10)$；$\\varphi = \\frac{\\pi}{4}$ 时 $\\rho = 10\\sqrt{2}$，高度为 $10\\sqrt{2} \\cdot \\frac{\\sqrt{2}}{2} = 10$，仍是 $10$。\n\n本课我们识别球坐标中简单方程所表示的曲面。",
+  ),
   prerequisites: ["spherical-polar-coordinates"],
   encompasses: [{ topic: "spherical-polar-coordinates", weight: 0.3 }],
   xp: 10,
@@ -4459,53 +4909,159 @@ export const surfacesInSphericalPolarCoordinates: TopicDef = {
       figure: multivariableDrawings5["surfaces-in-spherical-polar-coordinates#identifying-surfaces-given-in-spherical-coordinates"],
       title: t("Identifying surfaces given in spherical coordinates", "识别球面坐标方程所表示的曲面"),
       explanation: t(
-        "Standard spherical surfaces:\n- $\\rho = c$ ($c > 0$): Sphere of radius $c$ centered at the origin.\n- $\\phi = c$ ($0 < c < \\pi/2$): Circular cone with opening angle $c$ around the positive $z$-axis.\n- $\\theta = c$: Vertical half-plane.",
-        "常见球面坐标曲面：\n- $\\rho = c$（$c > 0$）：以原点为中心、半径为 $c$ 的球面。\n- $\\phi = c$（$0 < c < \\pi/2$）：以正 $z$ 轴为对称轴、半顶角为 $c$ 的圆锥面。\n- $\\theta = c$：过 $z$ 轴的垂直半平面。",
+        "Standard spherical surfaces:\n- $\\rho = c$ ($c > 0$): Sphere of radius $c$ centered at the origin.\n- $\\phi = c$ ($0 < c < \\pi/2$): Circular cone with opening angle $c$ around the positive $z$-axis.\n- $\\theta = c$: Vertical half-plane.\n\nThe angle $\\phi = \\frac{\\pi}{2}$ is the exception: it is the $xy$-plane. And $\\phi = \\frac{2\\pi}{3}$ is a cone opening downward, around the negative $z$-axis.\n\n> **Watch out.** $\\phi$ is the angle from the $z$-axis, so fixing it gives a cone; $\\theta$ is the angle around the axis, so fixing it gives a half-plane. $\\rho$ is the distance from the origin, not from the axis, so $\\rho = c$ is a sphere and not a cylinder.",
+        "常见球面坐标曲面：\n- $\\rho = c$（$c > 0$）：以原点为中心、半径为 $c$ 的球面。\n- $\\phi = c$（$0 < c < \\pi/2$）：以正 $z$ 轴为对称轴、半顶角为 $c$ 的圆锥面。\n- $\\theta = c$：过 $z$ 轴的垂直半平面。\n\n$\\phi = \\frac{\\pi}{2}$ 是例外：它是 $xy$ 平面。而 $\\phi = \\frac{2\\pi}{3}$ 是向下开口、绕 $z$ 轴负半轴的圆锥面。\n\n> **注意。** $\\phi$ 是与 $z$ 轴的夹角，固定它得到圆锥面；$\\theta$ 是绕轴的角，固定它得到半平面。$\\rho$ 是到原点而不是到轴的距离，所以 $\\rho = c$ 是球面而不是圆柱面。",
       ),
       generate(rng: Rng): Problem {
         const c = rng.int(2, 15);
         const type = rng.int(0, 2);
-
-        let eq: string;
-        let right: Text;
-        let wrong: readonly Text[];
-        let sol: Text;
-
-        if (type === 0) {
-          eq = `\\rho = ${c}`;
-          right = t("Sphere", "球面");
-          wrong = [t("Circular cone", "圆锥面"), t("Circular cylinder", "圆柱面"), t("Paraboloid", "抛物面")];
-          sol = t(
-            `$\\rho = ${c} \\iff x^2 + y^2 + z^2 = ${c * c}$, which is a sphere of radius $${c}$ centered at the origin.`,
-            `$\\rho = ${c} \\iff x^2 + y^2 + z^2 = ${c * c}$，表示以原点为中心、半径为 ${c} 的球面。`,
-          );
-        } else if (type === 1) {
-          eq = `\\phi = \\frac{\\pi}{${c}}`;
-          right = t("Circular cone", "圆锥面");
-          wrong = [t("Sphere", "球面"), t("Circular cylinder", "圆柱面"), t("Plane", "平面")];
-          sol = t(
-            `$\\phi = \\frac{\\pi}{${c}}$ defines a cone with vertex at the origin and half-angle $\\frac{\\pi}{${c}}$ from the positive $z$-axis.`,
-            `$\\phi = \\frac{\\pi}{${c}}$ 表示顶点位于原点、与正 $z$ 轴夹角恒为 $\\frac{\\pi}{${c}}$ 的圆锥面。`,
-          );
-        } else {
-          eq = `\\theta = \\frac{\\pi}{${c}}`;
-          right = t("Vertical half-plane", "垂直半平面");
-          wrong = [t("Sphere", "球面"), t("Circular cone", "圆锥面"), t("Cylinder", "柱面")];
-          sol = t(
-            `$\\theta = \\frac{\\pi}{${c}}$ is a vertical half-plane passing through the $z$-axis.`,
-            `$\\theta = \\frac{\\pi}{${c}}$ 表示过 $z$ 轴的垂直半平面。`,
-          );
-        }
-
-        const prompt = t(
-          `Identify the geometric surface represented by the spherical coordinate equation $${eq}$.`,
-          `识别由球面坐标方程 $${eq}$ 所表示的几何曲面。`,
-        );
-        const solution = t(
-          `The equation represents a ${right.en.toLowerCase()} because ${sol.en}`,
-          `该方程表示一个${right["zh-CN"]}，因为${sol["zh-CN"]}`,
-        );
-        return pickChoice(rng, prompt, right, wrong, solution);
+        const sphere = t("Sphere", "球面");
+        const cone = t("Circular cone", "圆锥面");
+        const plane = t("Plane", "平面");
+        const choice =
+          type === 0
+            ? {
+                eq: `\\rho = ${c}`,
+                right: sphere,
+                wrong: [
+                  {
+                    option: cone,
+                    why: t(
+                      "A cone fixes $\\phi$, the angle from the $z$-axis; here the distance from the origin is fixed",
+                      "圆锥面固定的是 $\\phi$，即与 $z$ 轴的夹角；这里固定的是到原点的距离",
+                    ),
+                  },
+                  {
+                    option: t("Circular cylinder", "圆柱面"),
+                    why: t(
+                      "A cylinder fixes the distance from the $z$-axis; $\\rho$ is the distance from the origin",
+                      "圆柱面固定的是到 $z$ 轴的距离；$\\rho$ 是到原点的距离",
+                    ),
+                  },
+                  {
+                    option: t("Paraboloid", "抛物面"),
+                    why: t(
+                      "A paraboloid has $z$ to the first power; here every coordinate is squared",
+                      "抛物面中 $z$ 是一次方；这里每个坐标都是平方",
+                    ),
+                  },
+                ],
+                convert: t(`$\\rho = ${c}$ means $x^2 + y^2 + z^2 = ${c * c}$.`, `$\\rho = ${c}$ 即 $x^2 + y^2 + z^2 = ${c * c}$。`),
+                check: t(
+                  `The points $(${c}, 0, 0)$, $(0, ${c}, 0)$ and $(0, 0, ${c})$ all lie on it, each at distance $${c}$ from the origin.`,
+                  `点 $(${c}, 0, 0)$、$(0, ${c}, 0)$ 和 $(0, 0, ${c})$ 都在其上，到原点的距离都是 $${c}$。`,
+                ),
+              }
+            : type === 1
+              ? c === 2
+                ? {
+                    eq: "\\phi = \\frac{\\pi}{2}",
+                    right: plane,
+                    wrong: [
+                      { option: sphere, why: t("A sphere fixes $\\rho$; here $\\rho$ is free", "球面固定的是 $\\rho$；这里 $\\rho$ 任意") },
+                      {
+                        option: cone,
+                        why: t(
+                          "Other values of $\\phi$ give cones, but at $\\frac{\\pi}{2}$ the cone opens out flat",
+                          "其他 $\\phi$ 值给出圆锥面，但在 $\\frac{\\pi}{2}$ 处圆锥张开成平面",
+                        ),
+                      },
+                      {
+                        option: t("Circular cylinder", "圆柱面"),
+                        why: t(
+                          "A cylinder fixes the distance from the $z$-axis; here it is free",
+                          "圆柱面固定的是到 $z$ 轴的距离；这里它任意",
+                        ),
+                      },
+                    ],
+                    convert: t(
+                      "$z = \\rho\\cos\\frac{\\pi}{2} = 0$ for every $\\rho$ and $\\theta$.",
+                      "对任意 $\\rho$ 与 $\\theta$，$z = \\rho\\cos\\frac{\\pi}{2} = 0$。",
+                    ),
+                    check: t(
+                      "Every ray at right angles to the $z$-axis lies in the $xy$-plane, and together they fill it.",
+                      "与 $z$ 轴垂直的每条射线都在 $xy$ 平面内，它们合起来正好填满这个平面。",
+                    ),
+                  }
+                : {
+                    eq: `\\phi = \\frac{\\pi}{${c}}`,
+                    right: cone,
+                    wrong: [
+                      {
+                        option: sphere,
+                        why: t(
+                          "A sphere fixes $\\rho$; here $\\rho$ is free along each ray",
+                          "球面固定的是 $\\rho$；这里沿每条射线 $\\rho$ 任意",
+                        ),
+                      },
+                      {
+                        option: t("Circular cylinder", "圆柱面"),
+                        why: t(
+                          "A cylinder fixes the distance $\\rho\\sin\\phi$ from the $z$-axis; here it grows with $\\rho$",
+                          "圆柱面固定的是到 $z$ 轴的距离 $\\rho\\sin\\phi$；这里它随 $\\rho$ 增长",
+                        ),
+                      },
+                      {
+                        option: plane,
+                        why: t(
+                          "Only $\\phi = \\frac{\\pi}{2}$ is a plane; a smaller angle gives a cone",
+                          "只有 $\\phi = \\frac{\\pi}{2}$ 是平面；更小的角给出圆锥面",
+                        ),
+                      },
+                    ],
+                    convert: t(
+                      `Every point makes the angle $\\frac{\\pi}{${c}}$ with the positive $z$-axis, so $\\frac{r}{z} = \\tan\\frac{\\pi}{${c}}$ is constant.`,
+                      `每个点与 $z$ 轴正方向的夹角都是 $\\frac{\\pi}{${c}}$，所以 $\\frac{r}{z} = \\tan\\frac{\\pi}{${c}}$ 为常数。`,
+                    ),
+                    check: t(
+                      `The slice at height $z > 0$ is a circle of radius $z\\tan\\frac{\\pi}{${c}}$, growing in proportion to $z$ from the origin, which is a cone.`,
+                      `高度 $z > 0$ 处的截面是半径为 $z\\tan\\frac{\\pi}{${c}}$ 的圆，从原点起与 $z$ 成正比地增长，这正是圆锥面。`,
+                    ),
+                  }
+              : {
+                  eq: `\\theta = \\frac{\\pi}{${c}}`,
+                  right: t("Vertical half-plane", "垂直半平面"),
+                  wrong: [
+                    { option: sphere, why: t("A sphere fixes $\\rho$; here $\\rho$ is free", "球面固定的是 $\\rho$；这里 $\\rho$ 任意") },
+                    {
+                      option: cone,
+                      why: t(
+                        "A cone fixes $\\phi$, the angle from the $z$-axis; $\\theta$ is the angle around it",
+                        "圆锥面固定的是 $\\phi$，即与 $z$ 轴的夹角；$\\theta$ 是绕轴的角",
+                      ),
+                    },
+                    {
+                      option: t("Cylinder", "柱面"),
+                      why: t("A cylinder fixes the distance from the $z$-axis; here it is free", "柱面固定的是到 $z$ 轴的距离；这里它任意"),
+                    },
+                  ],
+                  convert: t(
+                    `$\\theta = \\frac{\\pi}{${c}}$ fixes the direction around the $z$-axis, with $\\rho$ and $\\phi$ free.`,
+                    `$\\theta = \\frac{\\pi}{${c}}$ 固定了绕 $z$ 轴的方向，$\\rho$ 与 $\\phi$ 任意。`,
+                  ),
+                  check: t(
+                    "With $\\phi$ running from $0$ to $\\pi$, the points sweep from the positive to the negative $z$-axis on one side only, filling a half-plane bounded by the axis.",
+                    "$\\phi$ 从 $0$ 到 $\\pi$，点从 $z$ 轴正半轴扫到负半轴，且只在一侧，填满以该轴为边界的半平面。",
+                  ),
+                };
+        return explainedChoice(rng, {
+          prompt: t(
+            `Identify the geometric surface represented by the spherical coordinate equation $${choice.eq}$.`,
+            `识别由球面坐标方程 $${choice.eq}$ 所表示的几何曲面。`,
+          ),
+          correct: choice.right,
+          wrong: choice.wrong,
+          solution: walked(
+            [
+              [["Read the equation", "解读方程"], choice.convert],
+              [
+                ["Name the surface", "说出曲面"],
+                t(`The surface is a ${choice.right.en.toLowerCase()}.`, `该曲面是${choice.right["zh-CN"]}。`),
+              ],
+            ],
+            choice.check,
+          ),
+        });
       },
     },
     {
@@ -4513,25 +5069,61 @@ export const surfacesInSphericalPolarCoordinates: TopicDef = {
       figure: multivariableDrawings5["surfaces-in-spherical-polar-coordinates#spheres-through-the-origin-in-spherical-coordinates"],
       title: t("Spheres through the origin in spherical coordinates", "球坐标中过原点的球面"),
       explanation: t(
-        "Multiplying $\\rho = k\\cos\\varphi$ by $\\rho$ gives $\\rho^2 = k\\rho\\cos\\varphi$, that is $x^2 + y^2 + z^2 = kz$. Completing the square gives $x^2 + y^2 + \\left(z - \\frac{k}{2}\\right)^2 = \\frac{k^2}{4}$, a sphere of radius $\\frac{k}{2}$ through the origin. In the same way $\\rho = k\\sin\\varphi\\cos\\theta$ is $x^2 + y^2 + z^2 = kx$ and $\\rho = k\\sin\\varphi\\sin\\theta$ is $x^2 + y^2 + z^2 = ky$, also spheres of radius $\\frac{k}{2}$.",
-        "把 $\\rho = k\\cos\\varphi$ 两边乘以 $\\rho$ 得 $\\rho^2 = k\\rho\\cos\\varphi$，即 $x^2 + y^2 + z^2 = kz$。配方得 $x^2 + y^2 + \\left(z - \\frac{k}{2}\\right)^2 = \\frac{k^2}{4}$，是过原点、半径为 $\\frac{k}{2}$ 的球面。同理，$\\rho = k\\sin\\varphi\\cos\\theta$ 即 $x^2 + y^2 + z^2 = kx$，$\\rho = k\\sin\\varphi\\sin\\theta$ 即 $x^2 + y^2 + z^2 = ky$，也都是半径为 $\\frac{k}{2}$ 的球面。",
+        "Multiplying $\\rho = k\\cos\\varphi$ by $\\rho$ gives $\\rho^2 = k\\rho\\cos\\varphi$, that is $x^2 + y^2 + z^2 = kz$. Completing the square gives $x^2 + y^2 + \\left(z - \\frac{k}{2}\\right)^2 = \\frac{k^2}{4}$, a sphere of radius $\\frac{k}{2}$ through the origin. In the same way $\\rho = k\\sin\\varphi\\cos\\theta$ is $x^2 + y^2 + z^2 = kx$ and $\\rho = k\\sin\\varphi\\sin\\theta$ is $x^2 + y^2 + z^2 = ky$, also spheres of radius $\\frac{k}{2}$. So $\\rho = 30\\sin\\varphi\\cos\\theta$ is a sphere of radius $15$.\n\n> **Watch out.** $k$ is the diameter, the largest value of $\\rho$, not the radius. And the right side of $\\left(z - \\frac{k}{2}\\right)^2 = \\frac{k^2}{4}$ is the square of the radius.",
+        "把 $\\rho = k\\cos\\varphi$ 两边乘以 $\\rho$ 得 $\\rho^2 = k\\rho\\cos\\varphi$，即 $x^2 + y^2 + z^2 = kz$。配方得 $x^2 + y^2 + \\left(z - \\frac{k}{2}\\right)^2 = \\frac{k^2}{4}$，是过原点、半径为 $\\frac{k}{2}$ 的球面。同理，$\\rho = k\\sin\\varphi\\cos\\theta$ 即 $x^2 + y^2 + z^2 = kx$，$\\rho = k\\sin\\varphi\\sin\\theta$ 即 $x^2 + y^2 + z^2 = ky$，也都是半径为 $\\frac{k}{2}$ 的球面。所以 $\\rho = 30\\sin\\varphi\\cos\\theta$ 是半径为 $15$ 的球面。\n\n> **注意。** $k$ 是直径，即 $\\rho$ 的最大值，不是半径。$\\left(z - \\frac{k}{2}\\right)^2 = \\frac{k^2}{4}$ 的右边是半径的平方。",
       ),
       generate(rng: Rng): Problem {
         const k = rng.int(1, 10);
         const kind = rng.int(0, 2);
         const form = ["\\cos\\varphi", "\\sin\\varphi\\cos\\theta", "\\sin\\varphi\\sin\\theta"][kind]!;
         const v = ["z", "x", "y"][kind]!;
+        const far = [`(0, 0, ${k})`, `(${k}, 0, 0)`, `(0, ${k}, 0)`][kind]!;
         const ans = Q.of(k, 2);
+        const kk = k === 1 ? "" : `${k}`;
         return numberProblem({
           prompt: t(
-            `The surface $\\rho = ${k === 1 ? "" : k}${form}$ is a sphere. Find its radius.`,
-            `曲面 $\\rho = ${k === 1 ? "" : k}${form}$ 是一个球面。求其半径。`,
+            `The surface $\\rho = ${kk}${form}$ is a sphere. Find its radius.`,
+            `曲面 $\\rho = ${kk}${form}$ 是一个球面。求其半径。`,
           ),
           answer: ans,
-          wrong: [Q.of(k), Q.of(k * k, 4), Q.of(k, 4), Q.of(2 * k)],
-          solution: t(
-            `Multiplying by $\\rho$ gives $x^2 + y^2 + z^2 = ${k === 1 ? "" : k}${v}$. Completing the square in $${v}$ gives radius $\\frac{${k}}{2}${ans.isInteger() ? ` = ${ans.toLatex()}` : ""}$.`,
-            `两边乘以 $\\rho$ 得 $x^2 + y^2 + z^2 = ${k === 1 ? "" : k}${v}$。对 $${v}$ 配方得半径为 $\\frac{${k}}{2}${ans.isInteger() ? ` = ${ans.toLatex()}` : ""}$。`,
+          mistakes: distinct(ans, [
+            why(
+              k,
+              `$${k}$ is the diameter, the largest value of $\\rho$; the radius is half of it.`,
+              `$${k}$ 是直径，即 $\\rho$ 的最大值；半径是它的一半。`,
+            ),
+            why(
+              Q.of(k * k, 4),
+              `$${Q.of(k * k, 4).toLatex()}$ is the square of the radius; take its square root.`,
+              `$${Q.of(k * k, 4).toLatex()}$ 是半径的平方；还要开平方。`,
+            ),
+            why(
+              Q.of(k, 4),
+              `That halves the radius $${ans.toLatex()}$ again; the radius is $\\frac{${k}}{2}$ itself.`,
+              `那是把半径 $${ans.toLatex()}$ 又减半；半径就是 $\\frac{${k}}{2}$。`,
+            ),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Multiply by ρ", "乘以 ρ"],
+                t(
+                  `$\\rho^2 = ${kk}\\rho${form}$ is $x^2 + y^2 + z^2 = ${kk}${v}$.`,
+                  `$\\rho^2 = ${kk}\\rho${form}$ 即 $x^2 + y^2 + z^2 = ${kk}${v}$。`,
+                ),
+              ],
+              [
+                ["Complete the square", "配方"],
+                t(
+                  `$\\left(${v} - ${ans.toLatex()}\\right)^2$ plus the other two squares equals $${Q.of(k * k, 4).toLatex()}$, so the radius is $${ans.toLatex()}$.`,
+                  `$\\left(${v} - ${ans.toLatex()}\\right)^2$ 加上另两个平方等于 $${Q.of(k * k, 4).toLatex()}$，所以半径为 $${ans.toLatex()}$。`,
+                ),
+              ],
+            ],
+            t(
+              `The sphere passes through the origin and through $${far}$, the farthest point, at distance $${k}$; these are the two ends of a diameter, so the radius is $${ans.toLatex()}$.`,
+              `球面经过原点和最远点 $${far}$，两者相距 $${k}$，是一条直径的两端，所以半径为 $${ans.toLatex()}$。`,
+            ),
           ),
         });
       },
@@ -4547,6 +5139,10 @@ export const tripleIntegralsInCylindricalPolarCoordinates: TopicDef = {
     "In cylindrical coordinates, the volume element is dV = r dr dθ dz, ideal for solids with axial symmetry.",
     "在柱面坐标系中，体积微元为 dV = r dr dθ dz，非常适合计算具有轴对称性的几何体上的积分。",
   ),
+  intro: t(
+    "Find the volume of the solid between the paraboloid $z = r^2$ and the plane $z = 4$. Along each vertical line $r^2 \\le z \\le 4$, and the paraboloid meets the plane at $r = 2$, so the volume is $\\int_0^{2\\pi} \\int_0^2 \\int_{r^2}^4 r\\,dz\\,dr\\,d\\theta = 2\\pi \\int_0^2 (4r - r^3)\\,dr = 2\\pi(8 - 4) = 8\\pi$.\n\nCheck: the cylinder $r \\le 2$, $0 \\le z \\le 4$ has volume $16\\pi$, and the solid above a paraboloid fills exactly half of its cylinder, $8\\pi$.\n\nIn this lesson we evaluate triple integrals in cylindrical coordinates, with $dV = r\\,dz\\,dr\\,d\\theta$.",
+    "求抛物面 $z = r^2$ 与平面 $z = 4$ 之间立体的体积。沿每条竖直线 $r^2 \\le z \\le 4$，抛物面与平面交于 $r = 2$，所以体积为 $\\int_0^{2\\pi} \\int_0^2 \\int_{r^2}^4 r\\,dz\\,dr\\,d\\theta = 2\\pi \\int_0^2 (4r - r^3)\\,dr = 2\\pi(8 - 4) = 8\\pi$。\n\n检验：圆柱 $r \\le 2$，$0 \\le z \\le 4$ 的体积为 $16\\pi$，而抛物面上方的立体正好占其圆柱的一半，即 $8\\pi$。\n\n本课我们在柱坐标中计算三重积分，$dV = r\\,dz\\,dr\\,d\\theta$。",
+  ),
   prerequisites: ["surfaces-in-cylindrical-polar-coordinates", "changing-the-order-of-integration-in-triple-integrals-changing-region"],
   encompasses: [
     {
@@ -4561,37 +5157,58 @@ export const tripleIntegralsInCylindricalPolarCoordinates: TopicDef = {
       figure: multivariableDrawings5["triple-integrals-in-cylindrical-polar-coordinates#volume-of-cylindrical-solid-via-triple-integral"],
       title: t("Volume of cylindrical solid via triple integral", "利用柱坐标三重积分计算圆柱体体积"),
       explanation: t(
-        "In cylindrical coordinates a cylinder has constant limits for all three variables, and the extra factor of the radius gives the familiar volume formula. For a cylinder bounded by $r \\le R$ and $0 \\le z \\le H$, the volume divided by $\\pi$ is:\n\n$$\\frac{\\text{Vol}(E)}{\\pi} = \\frac{1}{\\pi}\\int_0^{2\\pi} \\int_0^R \\int_0^H r\\,dz\\,dr\\,d\\theta = R^2 H.$$",
-        "在柱坐标中，圆柱体三个变量的积分限都是常数，多出的半径因子给出熟悉的体积公式。对于由 $r \\le R$ 与 $0 \\le z \\le H$ 所界定的圆柱体，其体积除以 $\\pi$ 为：\n\n$$\\frac{\\text{Vol}(E)}{\\pi} = \\frac{1}{\\pi}\\int_0^{2\\pi} \\int_0^R \\int_0^H r\\,dz\\,dr\\,d\\theta = R^2 H$$",
+        "In cylindrical coordinates a cylinder has constant limits for all three variables, and the extra factor of the radius gives the familiar volume formula. For a cylinder bounded by $r \\le R$ and $0 \\le z \\le H$, the volume divided by $\\pi$ is:\n\n$$\\frac{\\text{Vol}(E)}{\\pi} = \\frac{1}{\\pi}\\int_0^{2\\pi} \\int_0^R \\int_0^H r\\,dz\\,dr\\,d\\theta = R^2 H.$$\n\nFor $x^2 + y^2 \\le 121$ and $0 \\le z \\le 1$ this is $121$.\n\n> **Watch out.** The volume element is $r\\,dz\\,dr\\,d\\theta$: without the factor $r$ the result is wrong. And $\\int_0^R r\\,dr = \\frac{R^2}{2}$, whose $\\frac{1}{2}$ cancels the $2$ of $2\\pi$.",
+        "在柱坐标中，圆柱体三个变量的积分限都是常数，多出的半径因子给出熟悉的体积公式。对于由 $r \\le R$ 与 $0 \\le z \\le H$ 所界定的圆柱体，其体积除以 $\\pi$ 为：\n\n$$\\frac{\\text{Vol}(E)}{\\pi} = \\frac{1}{\\pi}\\int_0^{2\\pi} \\int_0^R \\int_0^H r\\,dz\\,dr\\,d\\theta = R^2 H$$\n\n对 $x^2 + y^2 \\le 121$ 与 $0 \\le z \\le 1$，结果为 $121$。\n\n> **注意。** 体积元是 $r\\,dz\\,dr\\,d\\theta$：漏掉因子 $r$ 结果就错了。$\\int_0^R r\\,dr = \\frac{R^2}{2}$，其中的 $\\frac{1}{2}$ 与 $2\\pi$ 的 $2$ 相消。",
       ),
       generate(rng: Rng): Problem {
         const R = rng.int(2, 10);
         const H = rng.int(2, 12);
         const ans = R * R * H;
-
-        const prompt = t(
-          `Use cylindrical coordinates to evaluate $\\frac{1}{\\pi} \\iiint_E 1\\,dV$ for the solid cylinder $E$ bounded by $x^2 + y^2 \\le ${R * R}$ and $0 \\le z \\le ${H}$.`,
-          `利用柱坐标系计算实心圆柱体 $E: x^2 + y^2 \\le ${R * R}, 0 \\le z \\le ${H}$ 的体积与 $\\pi$ 的比值 $\\frac{1}{\\pi} \\iiint_E 1\\,dV$。`,
-        );
-        const solution = t(
-          steps(
-            `In cylindrical coordinates, $x^2 + y^2 \\le ${R * R} \\iff 0 \\le r \\le ${R}$.`,
-            `The volume element is $dV = r\\,dz\\,dr\\,d\\theta$.`,
-            `Set up the integral: $\\iiint_E 1\\,dV = \\int_0^{2\\pi} d\\theta \\int_0^{${R}} r\\,dr \\int_0^{${H}} dz = 2\\pi \\cdot \\frac{${R * R}}{2} \\cdot ${H} = \\pi \\cdot ${ans}$.`,
-            `Dividing by $\\pi$ yields $${ans}$.`,
-          ),
-          steps(
-            `在柱坐标下，$x^2 + y^2 \\le ${R * R} \\iff 0 \\le r \\le ${R}$。`,
-            `体积微元为 $dV = r\\,dz\\,dr\\,d\\theta$。`,
-            `建立积分：$\\iiint_E 1\\,dV = \\int_0^{2\\pi} d\\theta \\int_0^{${R}} r\\,dr \\int_0^{${H}} dz = 2\\pi \\cdot \\frac{${R * R}}{2} \\cdot ${H} = \\pi \\cdot ${ans}$。`,
-            `除以 $\\pi$ 得到 $${ans}$。`,
-          ),
-        );
         return numberProblem({
-          prompt,
-          solution,
+          prompt: t(
+            `Use cylindrical coordinates to evaluate $\\frac{1}{\\pi} \\iiint_E 1\\,dV$ for the solid cylinder $E$ bounded by $x^2 + y^2 \\le ${R * R}$ and $0 \\le z \\le ${H}$.`,
+            `利用柱坐标系计算实心圆柱体 $E: x^2 + y^2 \\le ${R * R}, 0 \\le z \\le ${H}$ 的体积与 $\\pi$ 的比值 $\\frac{1}{\\pi} \\iiint_E 1\\,dV$。`,
+          ),
           answer: ans,
-          wrong: [R * H, 2 * ans, ans + R * R],
+          mistakes: distinct(ans, [
+            why(
+              2 * R * H,
+              "That leaves out the factor $r$ of $dV$, integrating $1\\,dr$ instead of $r\\,dr$.",
+              "那是漏了 $dV$ 中的因子 $r$，积的是 $1\\,dr$ 而不是 $r\\,dr$。",
+            ),
+            why(
+              2 * ans,
+              `$\\int_0^{${R}} r\\,dr = \\frac{${R * R}}{2}$; the $\\frac{1}{2}$ is missing.`,
+              `$\\int_0^{${R}} r\\,dr = \\frac{${R * R}}{2}$；漏了 $\\frac{1}{2}$。`,
+            ),
+            why(
+              Q.of(ans, 2),
+              "That runs $\\theta$ over $\\pi$ only; a full turn is $2\\pi$.",
+              "那是让 $\\theta$ 只走了 $\\pi$；一整圈是 $2\\pi$。",
+            ),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Set the limits", "确定积分限"],
+                t(
+                  `$x^2 + y^2 \\le ${R * R}$ means $0 \\le r \\le ${R}$; also $0 \\le z \\le ${H}$ and $0 \\le \\theta \\le 2\\pi$, with $dV = r\\,dz\\,dr\\,d\\theta$.`,
+                  `$x^2 + y^2 \\le ${R * R}$ 即 $0 \\le r \\le ${R}$；另有 $0 \\le z \\le ${H}$，$0 \\le \\theta \\le 2\\pi$，$dV = r\\,dz\\,dr\\,d\\theta$。`,
+                ),
+              ],
+              [
+                ["Integrate", "积分"],
+                t(
+                  `$\\int_0^{2\\pi} d\\theta \\int_0^{${R}} r\\,dr \\int_0^{${H}} dz = 2\\pi \\cdot \\frac{${R * R}}{2} \\cdot ${H} = ${ans}\\pi$, and dividing by $\\pi$ gives $${ans}$.`,
+                  `$\\int_0^{2\\pi} d\\theta \\int_0^{${R}} r\\,dr \\int_0^{${H}} dz = 2\\pi \\cdot \\frac{${R * R}}{2} \\cdot ${H} = ${ans}\\pi$，除以 $\\pi$ 得 $${ans}$。`,
+                ),
+              ],
+            ],
+            t(
+              `A cylinder's volume is base times height: $\\pi \\cdot ${R}^2 \\cdot ${H} = ${ans}\\pi$.`,
+              `圆柱体积等于底面积乘高：$\\pi \\cdot ${R}^2 \\cdot ${H} = ${ans}\\pi$。`,
+            ),
+          ),
         });
       },
     },
@@ -4601,8 +5218,8 @@ export const tripleIntegralsInCylindricalPolarCoordinates: TopicDef = {
         multivariableDrawings5["triple-integrals-in-cylindrical-polar-coordinates#integrating-x-squared-plus-y-squared-over-a-cylinder"],
       title: t("Integrating $x^2 + y^2$ over a cylinder", "在圆柱体上积分 $x^2 + y^2$"),
       explanation: t(
-        "In cylindrical coordinates $x^2 + y^2 = r^2$ and $dV = r\\,dz\\,dr\\,d\\theta$. Over the solid cylinder $r \\le R$, $0 \\le z \\le H$:\n\n$$\\iiint_E (x^2 + y^2)\\,dV = \\int_0^{2\\pi} \\int_0^R \\int_0^H r^2 \\cdot r\\,dz\\,dr\\,d\\theta = 2\\pi \\cdot \\frac{R^4}{4} \\cdot H = \\frac{\\pi R^4H}{2}.$$\n\nThis is the moment of inertia of the cylinder about its axis.",
-        "在柱坐标中 $x^2 + y^2 = r^2$，$dV = r\\,dz\\,dr\\,d\\theta$。在实心圆柱 $r \\le R$，$0 \\le z \\le H$ 上：\n\n$$\\iiint_E (x^2 + y^2)\\,dV = \\int_0^{2\\pi} \\int_0^R \\int_0^H r^2 \\cdot r\\,dz\\,dr\\,d\\theta = 2\\pi \\cdot \\frac{R^4}{4} \\cdot H = \\frac{\\pi R^4H}{2}$$\n\n这就是圆柱体绕其轴的转动惯量。",
+        "In cylindrical coordinates $x^2 + y^2 = r^2$ and $dV = r\\,dz\\,dr\\,d\\theta$. Over the solid cylinder $r \\le R$, $0 \\le z \\le H$:\n\n$$\\iiint_E (x^2 + y^2)\\,dV = \\int_0^{2\\pi} \\int_0^R \\int_0^H r^2 \\cdot r\\,dz\\,dr\\,d\\theta = 2\\pi \\cdot \\frac{R^4}{4} \\cdot H = \\frac{\\pi R^4H}{2}.$$\n\nThis is the moment of inertia of the cylinder about its axis. For $R = 2$ and $H = 10$ it is $80\\pi$.\n\n> **Watch out.** The integrand $r^2$ and the factor $r$ of $dV$ multiply to $r^3$, so the radial integral is $\\frac{R^4}{4}$, not $\\frac{R^3}{3}$.",
+        "在柱坐标中 $x^2 + y^2 = r^2$，$dV = r\\,dz\\,dr\\,d\\theta$。在实心圆柱 $r \\le R$，$0 \\le z \\le H$ 上：\n\n$$\\iiint_E (x^2 + y^2)\\,dV = \\int_0^{2\\pi} \\int_0^R \\int_0^H r^2 \\cdot r\\,dz\\,dr\\,d\\theta = 2\\pi \\cdot \\frac{R^4}{4} \\cdot H = \\frac{\\pi R^4H}{2}$$\n\n这就是圆柱体绕其轴的转动惯量。当 $R = 2$，$H = 10$ 时它是 $80\\pi$。\n\n> **注意。** 被积函数 $r^2$ 与 $dV$ 的因子 $r$ 相乘得 $r^3$，所以径向积分是 $\\frac{R^4}{4}$，不是 $\\frac{R^3}{3}$。",
       ),
       generate(rng: Rng): Problem {
         const R = rng.int(1, 4);
@@ -4614,10 +5231,44 @@ export const tripleIntegralsInCylindricalPolarCoordinates: TopicDef = {
             `$E$ 是实心圆柱 $x^2 + y^2 \\le ${R * R}$，$0 \\le z \\le ${H}$。求 $\\frac{1}{\\pi}\\iiint_E (x^2 + y^2)\\,dV$。`,
           ),
           answer: ans,
-          wrong: [Q.of(2 * R ** 3 * H, 3), Q.of(R ** 4 * H), Q.of(R * R * H), Q.of(R ** 4 * H, 4)],
-          solution: t(
-            `$\\int_0^{2\\pi} \\int_0^{${R}} \\int_0^{${H}} r^3\\,dz\\,dr\\,d\\theta = 2\\pi \\cdot \\frac{${R ** 4}}{4} \\cdot ${H}$. Dividing by $\\pi$ gives $${ans.toLatex()}$.`,
-            `$\\int_0^{2\\pi} \\int_0^{${R}} \\int_0^{${H}} r^3\\,dz\\,dr\\,d\\theta = 2\\pi \\cdot \\frac{${R ** 4}}{4} \\cdot ${H}$。除以 $\\pi$ 得 $${ans.toLatex()}$。`,
+          mistakes: distinct(ans, [
+            why(
+              Q.of(2 * R ** 3 * H, 3),
+              "That leaves out the factor $r$ of $dV$, integrating $r^2$ instead of $r^3$.",
+              "那是漏了 $dV$ 的因子 $r$，积的是 $r^2$ 而不是 $r^3$。",
+            ),
+            why(
+              R * R * H,
+              "That is the volume divided by $\\pi$; the integrand $r^2$ was dropped.",
+              "那是体积除以 $\\pi$；丢掉了被积函数 $r^2$。",
+            ),
+            why(
+              Q.of(R ** 4 * H, 4),
+              "That runs $\\theta$ over $\\pi$ only; a full turn is $2\\pi$.",
+              "那是让 $\\theta$ 只走了 $\\pi$；一整圈是 $2\\pi$。",
+            ),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Convert", "化为柱坐标"],
+                t(
+                  `$x^2 + y^2 = r^2$ and $dV = r\\,dz\\,dr\\,d\\theta$, so the integrand becomes $r^3$ over $0 \\le r \\le ${R}$, $0 \\le z \\le ${H}$.`,
+                  `$x^2 + y^2 = r^2$，$dV = r\\,dz\\,dr\\,d\\theta$，所以被积函数变为 $r^3$，范围 $0 \\le r \\le ${R}$，$0 \\le z \\le ${H}$。`,
+                ),
+              ],
+              [
+                ["Integrate", "积分"],
+                t(
+                  `$2\\pi \\cdot \\frac{${R ** 4}}{4} \\cdot ${H}$, and dividing by $\\pi$ gives $${ans.toLatex()}$.`,
+                  `$2\\pi \\cdot \\frac{${R ** 4}}{4} \\cdot ${H}$，除以 $\\pi$ 得 $${ans.toLatex()}$。`,
+                ),
+              ],
+            ],
+            t(
+              `The average of $r^2$ over a disk of radius $${R}$ is $\\frac{${R * R}}{2}$, and the cylinder has volume $${R * R * H}\\pi$, so the integral is $\\frac{${R * R}}{2} \\cdot ${R * R * H}\\pi = ${ans.toLatex()}\\pi$.`,
+              `$r^2$ 在半径 $${R}$ 的圆盘上的平均值为 $\\frac{${R * R}}{2}$，圆柱体积为 $${R * R * H}\\pi$，所以积分为 $\\frac{${R * R}}{2} \\cdot ${R * R * H}\\pi = ${ans.toLatex()}\\pi$。`,
+            ),
           ),
         });
       },
@@ -4633,6 +5284,10 @@ export const tripleIntegralsInSphericalPolarCoordinates: TopicDef = {
     "In spherical coordinates, dV = ρ² sin φ dρ dφ dθ, greatly simplifying integration over spherical solids and cones.",
     "在球面坐标系中，体积微元为 dV = ρ² sin φ dρ dφ dθ，能极大简化在球体、球壳与圆锥体上的积分计算。",
   ),
+  intro: t(
+    "Find the volume of the spherical shell $1 \\le \\rho \\le 2$. With $dV = \\rho^2\\sin\\varphi\\,d\\rho\\,d\\varphi\\,d\\theta$ the integral splits into three factors: $\\int_0^{2\\pi} d\\theta \\cdot \\int_0^{\\pi} \\sin\\varphi\\,d\\varphi \\cdot \\int_1^2 \\rho^2\\,d\\rho = 2\\pi \\cdot 2 \\cdot \\frac{8 - 1}{3} = \\frac{28\\pi}{3}$.\n\nCheck: the ball of radius $2$ has volume $\\frac{32\\pi}{3}$ and the ball of radius $1$ has volume $\\frac{4\\pi}{3}$; the shell is the difference, $\\frac{28\\pi}{3}$.\n\nIn this lesson we evaluate triple integrals in spherical coordinates, with $dV = \\rho^2\\sin\\varphi\\,d\\rho\\,d\\varphi\\,d\\theta$.",
+    "求球壳 $1 \\le \\rho \\le 2$ 的体积。由 $dV = \\rho^2\\sin\\varphi\\,d\\rho\\,d\\varphi\\,d\\theta$，积分分成三个因子：$\\int_0^{2\\pi} d\\theta \\cdot \\int_0^{\\pi} \\sin\\varphi\\,d\\varphi \\cdot \\int_1^2 \\rho^2\\,d\\rho = 2\\pi \\cdot 2 \\cdot \\frac{8 - 1}{3} = \\frac{28\\pi}{3}$。\n\n检验：半径 $2$ 的球体积为 $\\frac{32\\pi}{3}$，半径 $1$ 的球体积为 $\\frac{4\\pi}{3}$；球壳是两者之差 $\\frac{28\\pi}{3}$。\n\n本课我们在球坐标中计算三重积分，$dV = \\rho^2\\sin\\varphi\\,d\\rho\\,d\\varphi\\,d\\theta$。",
+  ),
   prerequisites: ["surfaces-in-spherical-polar-coordinates", "triple-integrals-in-cylindrical-polar-coordinates"],
   encompasses: [
     {
@@ -4647,36 +5302,53 @@ export const tripleIntegralsInSphericalPolarCoordinates: TopicDef = {
       figure: multivariableDrawings5["triple-integrals-in-spherical-polar-coordinates#volume-of-spherical-ball-via-triple-integral"],
       title: t("Volume of spherical ball via triple integral", "利用球面坐标三重积分计算球体体积"),
       explanation: t(
-        "In spherical coordinates a ball has constant limits, and the volume element includes the square of the distance times the sine of the polar angle. For a sphere of radius $R$ ($\\rho \\le R$):\n\n$$\\frac{\\text{Vol}(B)}{\\pi} = \\frac{1}{\\pi}\\int_0^{2\\pi} \\int_0^\\pi \\int_0^R \\rho^2\\sin\\phi\\,d\\rho\\,d\\phi\\,d\\theta = \\frac{4}{3}R^3.$$",
-        "在球坐标中，球体的积分限都是常数，体积微元包含距离的平方乘以极角的正弦。对于半径为 $R$ 的球体（$\\rho \\le R$）：\n\n$$\\frac{\\text{Vol}(B)}{\\pi} = \\frac{1}{\\pi}\\int_0^{2\\pi} \\int_0^\\pi \\int_0^R \\rho^2\\sin\\phi\\,d\\rho\\,d\\phi\\,d\\theta = \\frac{4}{3}R^3$$",
+        "In spherical coordinates a ball has constant limits, and the volume element includes the square of the distance times the sine of the polar angle. For a sphere of radius $R$ ($\\rho \\le R$):\n\n$$\\frac{\\text{Vol}(B)}{\\pi} = \\frac{1}{\\pi}\\int_0^{2\\pi} \\int_0^\\pi \\int_0^R \\rho^2\\sin\\phi\\,d\\rho\\,d\\phi\\,d\\theta = \\frac{4}{3}R^3.$$\n\nFor the unit ball the value is $\\frac{4}{3}$.\n\n> **Watch out.** The factor is $\\rho^2$, not $\\rho$, and $\\int_0^R \\rho^2\\,d\\rho = \\frac{R^3}{3}$ keeps its $\\frac{1}{3}$. The angle $\\phi$ runs to $\\pi$, not $\\frac{\\pi}{2}$, which would give only the upper half.",
+        "在球坐标中，球体的积分限都是常数，体积微元包含距离的平方乘以极角的正弦。对于半径为 $R$ 的球体（$\\rho \\le R$）：\n\n$$\\frac{\\text{Vol}(B)}{\\pi} = \\frac{1}{\\pi}\\int_0^{2\\pi} \\int_0^\\pi \\int_0^R \\rho^2\\sin\\phi\\,d\\rho\\,d\\phi\\,d\\theta = \\frac{4}{3}R^3$$\n\n对单位球，结果为 $\\frac{4}{3}$。\n\n> **注意。** 因子是 $\\rho^2$ 而不是 $\\rho$，$\\int_0^R \\rho^2\\,d\\rho = \\frac{R^3}{3}$ 要保留 $\\frac{1}{3}$。角 $\\phi$ 要走到 $\\pi$，而不是 $\\frac{\\pi}{2}$，否则只得到上半球。",
       ),
       generate(rng: Rng): Problem {
         const R = rng.int(2, 35);
         const ans = Q.of(4 * R * R * R, 3);
-
-        const prompt = t(
-          `Use spherical coordinates to evaluate $\\frac{1}{\\pi} \\iiint_B 1\\,dV$ for the solid sphere $B: x^2 + y^2 + z^2 \\le ${R * R}$.`,
-          `利用球面坐标系计算球体 $B: x^2 + y^2 + z^2 \\le ${R * R}$ 的体积与 $\\pi$ 的比值 $\\frac{1}{\\pi} \\iiint_B 1\\,dV$。`,
-        );
-        const solution = t(
-          steps(
-            `In spherical coordinates, the limits for the ball are $0 \\le \\rho \\le ${R}$, $0 \\le \\phi \\le \\pi$, and $0 \\le \\theta \\le 2\\pi$.`,
-            `The volume element is $dV = \\rho^2 \\sin\\phi\\,d\\rho\\,d\\phi\\,d\\theta$.`,
-            `Evaluate the triple integral:\n\n$$\\iiint_B 1\\,dV = \\left(\\int_0^{2\\pi} d\\theta\\right)\\left(\\int_0^\\pi \\sin\\phi\\,d\\phi\\right)\\left(\\int_0^{${R}} \\rho^2\\,d\\rho\\right) = 2\\pi \\times 2 \\times \\frac{${R}^3}{3} = \\frac{4\\pi}{3}(${R * R * R}) = \\pi \\cdot ${ans.toLatex()}.$$ `,
-            `Dividing by $\\pi$ yields $${ans.toLatex()}$.`,
-          ),
-          steps(
-            `在球面坐标下，整球的积分限为 $0 \\le \\rho \\le ${R}$、$0 \\le \\phi \\le \\pi$ 与 $0 \\le \\theta \\le 2\\pi$。`,
-            `体积微元为 $dV = \\rho^2 \\sin\\phi\\,d\\rho\\,d\\phi\\,d\\theta$。`,
-            `计算三重积分：\n\n$$\\iiint_B 1\\,dV = \\left(\\int_0^{2\\pi} d\\theta\\right)\\left(\\int_0^\\pi \\sin\\phi\\,d\\phi\\right)\\left(\\int_0^{${R}} \\rho^2\\,d\\rho\\right) = 2\\pi \\times 2 \\times \\frac{${R}^3}{3} = \\frac{4\\pi}{3}(${R * R * R}) = \\pi \\cdot ${ans.toLatex()}$$ `,
-            `除以 $\\pi$ 得到 $${ans.toLatex()}$。`,
-          ),
-        );
         return numberProblem({
-          prompt,
-          solution,
+          prompt: t(
+            `Use spherical coordinates to evaluate $\\frac{1}{\\pi} \\iiint_B 1\\,dV$ for the solid sphere $B: x^2 + y^2 + z^2 \\le ${R * R}$.`,
+            `利用球面坐标系计算球体 $B: x^2 + y^2 + z^2 \\le ${R * R}$ 的体积与 $\\pi$ 的比值 $\\frac{1}{\\pi} \\iiint_B 1\\,dV$。`,
+          ),
           answer: ans,
-          wrong: [Q.of(R * R * R, 3), ans.mul(Q.of(2)), ans.div(Q.of(2))],
+          mistakes: distinct(ans, [
+            why(
+              4 * R ** 3,
+              `$\\int_0^{${R}} \\rho^2\\,d\\rho = \\frac{${R ** 3}}{3}$; the $\\frac{1}{3}$ is missing.`,
+              `$\\int_0^{${R}} \\rho^2\\,d\\rho = \\frac{${R ** 3}}{3}$；漏了 $\\frac{1}{3}$。`,
+            ),
+            why(2 * R * R, "That uses $\\rho$ in place of $\\rho^2$ in the volume element.", "那是在体积元中用 $\\rho$ 代替了 $\\rho^2$。"),
+            why(
+              Q.of(2 * R ** 3, 3),
+              "That runs $\\phi$ only to $\\frac{\\pi}{2}$, the upper half of the ball.",
+              "那是让 $\\phi$ 只走到 $\\frac{\\pi}{2}$，只得上半球。",
+            ),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Set the limits", "确定积分限"],
+                t(
+                  `$0 \\le \\rho \\le ${R}$, $0 \\le \\phi \\le \\pi$, $0 \\le \\theta \\le 2\\pi$, with $dV = \\rho^2 \\sin\\phi\\,d\\rho\\,d\\phi\\,d\\theta$.`,
+                  `$0 \\le \\rho \\le ${R}$，$0 \\le \\phi \\le \\pi$，$0 \\le \\theta \\le 2\\pi$，$dV = \\rho^2 \\sin\\phi\\,d\\rho\\,d\\phi\\,d\\theta$。`,
+                ),
+              ],
+              [
+                ["Integrate the three factors", "计算三个因子"],
+                t(
+                  `$2\\pi \\cdot 2 \\cdot \\frac{${R ** 3}}{3} = ${ans.toLatex()}\\pi$, and dividing by $\\pi$ gives $${ans.toLatex()}$.`,
+                  `$2\\pi \\cdot 2 \\cdot \\frac{${R ** 3}}{3} = ${ans.toLatex()}\\pi$，除以 $\\pi$ 得 $${ans.toLatex()}$。`,
+                ),
+              ],
+            ],
+            t(
+              `This is the familiar $\\frac{4}{3}\\pi R^3$ with $R = ${R}$. It is a little over half of the bounding cube of side $${2 * R}$, as a ball should be: $\\frac{4}{3}\\pi \\div 8 \\approx 0.52$.`,
+              `这正是熟悉的 $\\frac{4}{3}\\pi R^3$，$R = ${R}$。它比边长 $${2 * R}$ 的外切立方体的一半略多，球理应如此：$\\frac{4}{3}\\pi \\div 8 \\approx 0.52$。`,
+            ),
+          ),
         });
       },
     },
@@ -4685,23 +5357,58 @@ export const tripleIntegralsInSphericalPolarCoordinates: TopicDef = {
       figure: multivariableDrawings5["triple-integrals-in-spherical-polar-coordinates#integrating-the-squared-distance-over-a-ball"],
       title: t("Integrating the squared distance over a ball", "在球体上积分距离的平方"),
       explanation: t(
-        "In spherical coordinates $x^2 + y^2 + z^2 = \\rho^2$ and $dV = \\rho^2\\sin\\varphi\\,d\\rho\\,d\\varphi\\,d\\theta$. Over the ball $\\rho \\le R$ the angular integrals give $\\int_0^{2\\pi}\\int_0^{\\pi} \\sin\\varphi\\,d\\varphi\\,d\\theta = 4\\pi$, so\n\n$$\\iiint_B c(x^2 + y^2 + z^2)\\,dV = 4\\pi c\\int_0^R \\rho^4\\,d\\rho = \\frac{4\\pi cR^5}{5}.$$\n\nThe factor $4\\pi$ is the total solid angle around the origin, and the extra $\\rho^2$ from the volume element raises the power of $\\rho$ from $2$ to $4$.",
-        "在球坐标中 $x^2 + y^2 + z^2 = \\rho^2$，$dV = \\rho^2\\sin\\varphi\\,d\\rho\\,d\\varphi\\,d\\theta$。在球体 $\\rho \\le R$ 上，角度积分为 $\\int_0^{2\\pi}\\int_0^{\\pi} \\sin\\varphi\\,d\\varphi\\,d\\theta = 4\\pi$，所以\n\n$$\\iiint_B c(x^2 + y^2 + z^2)\\,dV = 4\\pi c\\int_0^R \\rho^4\\,d\\rho = \\frac{4\\pi cR^5}{5}$$\n\n因子 $4\\pi$ 是绕原点的全部立体角，体积元中额外的 $\\rho^2$ 把 $\\rho$ 的次数从 $2$ 提高到 $4$。",
+        "In spherical coordinates $x^2 + y^2 + z^2 = \\rho^2$ and $dV = \\rho^2\\sin\\varphi\\,d\\rho\\,d\\varphi\\,d\\theta$. Over the ball $\\rho \\le R$ the angular integrals give $\\int_0^{2\\pi}\\int_0^{\\pi} \\sin\\varphi\\,d\\varphi\\,d\\theta = 4\\pi$, so\n\n$$\\iiint_B c(x^2 + y^2 + z^2)\\,dV = 4\\pi c\\int_0^R \\rho^4\\,d\\rho = \\frac{4\\pi cR^5}{5}.$$\n\nThe factor $4\\pi$ is the total solid angle around the origin, and the extra $\\rho^2$ from the volume element raises the power of $\\rho$ from $2$ to $4$. For $c = 10$ over the unit ball the integral is $8\\pi$.\n\n> **Watch out.** Keep both factors $\\rho^2$: one from the integrand and one from $dV$. And $\\varphi$ runs to $\\pi$, so the angular integrals give $4\\pi$, not $2\\pi$.",
+        "在球坐标中 $x^2 + y^2 + z^2 = \\rho^2$，$dV = \\rho^2\\sin\\varphi\\,d\\rho\\,d\\varphi\\,d\\theta$。在球体 $\\rho \\le R$ 上，角度积分为 $\\int_0^{2\\pi}\\int_0^{\\pi} \\sin\\varphi\\,d\\varphi\\,d\\theta = 4\\pi$，所以\n\n$$\\iiint_B c(x^2 + y^2 + z^2)\\,dV = 4\\pi c\\int_0^R \\rho^4\\,d\\rho = \\frac{4\\pi cR^5}{5}$$\n\n因子 $4\\pi$ 是绕原点的全部立体角，体积元中额外的 $\\rho^2$ 把 $\\rho$ 的次数从 $2$ 提高到 $4$。当 $c = 10$ 时，在单位球上的积分为 $8\\pi$。\n\n> **注意。** 两个 $\\rho^2$ 都要保留：一个来自被积函数，一个来自 $dV$。$\\varphi$ 走到 $\\pi$，所以角度积分是 $4\\pi$，不是 $2\\pi$。",
       ),
       generate(rng: Rng): Problem {
         const R = rng.int(1, 5);
         const c = rng.int(1, 6);
         const ans = Q.of(4 * c * R ** 5, 5);
+        const cc = c === 1 ? "" : `${c}`;
         return numberProblem({
           prompt: t(
-            `$B$ is the ball $x^2 + y^2 + z^2 \\le ${R * R}$. Find $\\frac{1}{\\pi}\\iiint_B ${c === 1 ? "" : c}(x^2 + y^2 + z^2)\\,dV$.`,
-            `$B$ 是球体 $x^2 + y^2 + z^2 \\le ${R * R}$。求 $\\frac{1}{\\pi}\\iiint_B ${c === 1 ? "" : c}(x^2 + y^2 + z^2)\\,dV$。`,
+            `$B$ is the ball $x^2 + y^2 + z^2 \\le ${R * R}$. Find $\\frac{1}{\\pi}\\iiint_B ${cc}(x^2 + y^2 + z^2)\\,dV$.`,
+            `$B$ 是球体 $x^2 + y^2 + z^2 \\le ${R * R}$。求 $\\frac{1}{\\pi}\\iiint_B ${cc}(x^2 + y^2 + z^2)\\,dV$。`,
           ),
           answer: ans,
-          wrong: [Q.of(4 * c * R ** 3, 3), Q.of(c * R ** 4), Q.of(2 * c * R ** 5, 5), Q.of(4 * c * R ** 4, 5)],
-          solution: t(
-            `The angular integrals give $4\\pi$ and $\\int_0^{${R}} ${c === 1 ? "" : c}\\rho^4\\,d\\rho = \\frac{${c} \\cdot ${R ** 5}}{5}$. Dividing $4\\pi \\cdot \\frac{${c * R ** 5}}{5}$ by $\\pi$ gives $${ans.toLatex()}$.`,
-            `角度积分为 $4\\pi$，且 $\\int_0^{${R}} ${c === 1 ? "" : c}\\rho^4\\,d\\rho = \\frac{${c} \\cdot ${R ** 5}}{5}$。把 $4\\pi \\cdot \\frac{${c * R ** 5}}{5}$ 除以 $\\pi$ 得 $${ans.toLatex()}$。`,
+          mistakes: distinct(ans, [
+            why(
+              Q.of(4 * c * R ** 3, 3),
+              "That leaves out the $\\rho^2$ of $dV$, integrating $\\rho^2$ instead of $\\rho^4$.",
+              "那是漏了 $dV$ 中的 $\\rho^2$，积的是 $\\rho^2$ 而不是 $\\rho^4$。",
+            ),
+            why(
+              c * R ** 4,
+              "That uses only one factor $\\rho$ from $dV$, integrating $\\rho^3$; the volume element has $\\rho^2$.",
+              "那是只从 $dV$ 取了一个 $\\rho$，积的是 $\\rho^3$；体积元中是 $\\rho^2$。",
+            ),
+            why(
+              Q.of(2 * c * R ** 5, 5),
+              "That runs $\\varphi$ only to $\\frac{\\pi}{2}$; over the whole ball the angular integrals give $4\\pi$.",
+              "那是让 $\\varphi$ 只走到 $\\frac{\\pi}{2}$；整个球上角度积分是 $4\\pi$。",
+            ),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Convert", "化为球坐标"],
+                t(
+                  `The integrand is $${cc}\\rho^2$ and $dV = \\rho^2\\sin\\varphi\\,d\\rho\\,d\\varphi\\,d\\theta$; the angular integrals give $4\\pi$.`,
+                  `被积函数为 $${cc}\\rho^2$，$dV = \\rho^2\\sin\\varphi\\,d\\rho\\,d\\varphi\\,d\\theta$；角度积分为 $4\\pi$。`,
+                ),
+              ],
+              [
+                ["Integrate in ρ", "对 ρ 积分"],
+                t(
+                  `$\\int_0^{${R}} ${cc}\\rho^4\\,d\\rho = \\frac{${c * R ** 5}}{5}$, so the integral is $4\\pi \\cdot \\frac{${c * R ** 5}}{5}$, and dividing by $\\pi$ gives $${ans.toLatex()}$.`,
+                  `$\\int_0^{${R}} ${cc}\\rho^4\\,d\\rho = \\frac{${c * R ** 5}}{5}$，所以积分为 $4\\pi \\cdot \\frac{${c * R ** 5}}{5}$，除以 $\\pi$ 得 $${ans.toLatex()}$。`,
+                ),
+              ],
+            ],
+            t(
+              `The average of $\\rho^2$ over a ball of radius $${R}$ is $\\frac{3}{5} \\cdot ${R * R}$, and the ball has volume $${Q.of(4 * R ** 3, 3).toLatex()}\\pi$; so the integral is $${c} \\cdot \\frac{3}{5} \\cdot ${R * R} \\cdot ${Q.of(4 * R ** 3, 3).toLatex()}\\pi = ${ans.toLatex()}\\pi$.`,
+              `$\\rho^2$ 在半径 $${R}$ 的球上的平均值为 $\\frac{3}{5} \\cdot ${R * R}$，球的体积为 $${Q.of(4 * R ** 3, 3).toLatex()}\\pi$；所以积分为 $${c} \\cdot \\frac{3}{5} \\cdot ${R * R} \\cdot ${Q.of(4 * R ** 3, 3).toLatex()}\\pi = ${ans.toLatex()}\\pi$。`,
+            ),
           ),
         });
       },
@@ -4716,6 +5423,10 @@ export const computingTripleIntegralsUsingAChangeOfVariables: TopicDef = {
   summary: t(
     "In three dimensions, $\\iiint_E f\\,dV = \\iiint_G f\\,|J(u, v, w)|\\,du\\,dv\\,dw$ turns ellipsoids and other solids into simpler ones.",
     "在三维中，$\\iiint_E f\\,dV = \\iiint_G f\\,|J(u, v, w)|\\,du\\,dv\\,dw$ 把椭球等立体化为较简单的立体。",
+  ),
+  intro: t(
+    "Find the volume of $E = \\{0 \\le x + y \\le 1,\\ 0 \\le y + z \\le 2,\\ 0 \\le z + x \\le 3\\}$. With $u = x + y$, $v = y + z$, $w = z + x$ the solid becomes the box $[0, 1] \\times [0, 2] \\times [0, 3]$ of volume $6$. The Jacobian is $\\frac{\\partial(u, v, w)}{\\partial(x, y, z)} = \\begin{vmatrix} 1 & 1 & 0 \\\\ 0 & 1 & 1 \\\\ 1 & 0 & 1 \\end{vmatrix} = 2$, so $dV = \\frac{1}{2}\\,du\\,dv\\,dw$ and the volume is $3$.\n\nCheck: solving for $x, y, z$, the edges of $E$ from the origin end at $\\left(\\frac{1}{2}, \\frac{1}{2}, -\\frac{1}{2}\\right)$, $(-1, 1, 1)$ and $\\left(\\frac{3}{2}, -\\frac{3}{2}, \\frac{3}{2}\\right)$, and the absolute value of their triple product is $3$.\n\nIn this lesson we evaluate triple integrals by a change of variables that turns the solid into a box or a ball.",
+    "求 $E = \\{0 \\le x + y \\le 1,\\ 0 \\le y + z \\le 2,\\ 0 \\le z + x \\le 3\\}$ 的体积。令 $u = x + y$，$v = y + z$，$w = z + x$，立体变为体积为 $6$ 的长方体 $[0, 1] \\times [0, 2] \\times [0, 3]$。雅可比行列式为 $\\frac{\\partial(u, v, w)}{\\partial(x, y, z)} = \\begin{vmatrix} 1 & 1 & 0 \\\\ 0 & 1 & 1 \\\\ 1 & 0 & 1 \\end{vmatrix} = 2$，所以 $dV = \\frac{1}{2}\\,du\\,dv\\,dw$，体积为 $3$。\n\n检验：解出 $x, y, z$，$E$ 从原点出发的三条棱终点为 $\\left(\\frac{1}{2}, \\frac{1}{2}, -\\frac{1}{2}\\right)$、$(-1, 1, 1)$ 和 $\\left(\\frac{3}{2}, -\\frac{3}{2}, \\frac{3}{2}\\right)$，它们的混合积的绝对值为 $3$。\n\n本课我们用把立体变为长方体或球的变量代换来计算三重积分。",
   ),
   prerequisites: ["triple-integrals-in-spherical-polar-coordinates", "computing-double-integrals-using-a-change-of-variables"],
   encompasses: [
@@ -4734,8 +5445,8 @@ export const computingTripleIntegralsUsingAChangeOfVariables: TopicDef = {
       id: "volume-of-ellipsoids-via-scaled-spherical-coordinates",
       title: t("Volume of ellipsoids via scaled spherical coordinates", "通过伸缩坐标代换计算椭球体体积"),
       explanation: t(
-        "Scaling each coordinate turns the ellipsoid into a unit ball, so its volume is the volume of the ball times the product of the three scale factors. The ellipsoid $E: \\frac{x^2}{a^2} + \\frac{y^2}{b^2} + \\frac{z^2}{c^2} \\le 1$ transforms to the unit ball under $x = au, y = bv, z = cw$ with Jacobian $J = abc$. The volume is $\\text{Vol}(E) = \\frac{4}{3}\\pi abc$.",
-        "对每个坐标进行缩放把椭球体变成单位球，所以它的体积等于球的体积乘以三个缩放比例的乘积。作伸缩变换 $x = au, y = bv, z = cw$，椭球体 $E: \\frac{x^2}{a^2} + \\frac{y^2}{b^2} + \\frac{z^2}{c^2} \\le 1$ 转化为单位球体，其雅可比行列式为 $J = abc$。因此椭球体体积为 $\\text{Vol}(E) = \\frac{4}{3}\\pi abc$。",
+        "Scaling each coordinate turns the ellipsoid into a unit ball, so its volume is the volume of the ball times the product of the three scale factors. The ellipsoid $E: \\frac{x^2}{a^2} + \\frac{y^2}{b^2} + \\frac{z^2}{c^2} \\le 1$ transforms to the unit ball under $x = au, y = bv, z = cw$ with Jacobian $J = abc$. The volume is $\\text{Vol}(E) = \\frac{4}{3}\\pi abc$. For $\\frac{x^2}{49} + \\frac{y^2}{4} + z^2 \\le 1$ it is $\\frac{4}{3}\\pi \\cdot 14 = \\frac{56}{3}\\pi$.\n\n> **Watch out.** The scale factors are the semi-axes, the square roots of the denominators, and they multiply. The unit ball has volume $\\frac{4}{3}\\pi$, so keep the $\\frac{4}{3}$.",
+        "对每个坐标进行缩放把椭球体变成单位球，所以它的体积等于球的体积乘以三个缩放比例的乘积。作伸缩变换 $x = au, y = bv, z = cw$，椭球体 $E: \\frac{x^2}{a^2} + \\frac{y^2}{b^2} + \\frac{z^2}{c^2} \\le 1$ 转化为单位球体，其雅可比行列式为 $J = abc$。因此椭球体体积为 $\\text{Vol}(E) = \\frac{4}{3}\\pi abc$。对 $\\frac{x^2}{49} + \\frac{y^2}{4} + z^2 \\le 1$，体积为 $\\frac{4}{3}\\pi \\cdot 14 = \\frac{56}{3}\\pi$。\n\n> **注意。** 缩放比例是半轴，即分母的平方根，而且是相乘。单位球的体积是 $\\frac{4}{3}\\pi$，要保留 $\\frac{4}{3}$。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(2, 6);
@@ -4743,30 +5454,51 @@ export const computingTripleIntegralsUsingAChangeOfVariables: TopicDef = {
         const c = rng.int(2, 6);
         const prod = a * b * c;
         const ans = Q.of(4 * prod, 3);
-
-        const prompt = t(
-          `Find the value of $\\frac{\\text{Vol}(E)}{\\pi}$ for the solid ellipsoid $E: \\frac{x^2}{${a * a}} + \\frac{y^2}{${b * b}} + \\frac{z^2}{${c * c}} \\le 1$.`,
-          `计算实心椭球体 $E: \\frac{x^2}{${a * a}} + \\frac{y^2}{${b * b}} + \\frac{z^2}{${c * c}} \\le 1$ 的体积与 $\\pi$ 的比值 $\\frac{\\text{Vol}(E)}{\\pi}$。`,
-        );
-        const solution = t(
-          steps(
-            `Apply the transformation $x = ${a}u, y = ${b}v, z = ${c}w$. The region becomes the unit ball $B: u^2 + v^2 + w^2 \\le 1$.`,
-            `The Jacobian determinant is $J = \\begin{vmatrix} ${a} & 0 & 0 \\\\ 0 & ${b} & 0 \\\\ 0 & 0 & ${c} \\end{vmatrix} = ${a} \\times ${b} \\times ${c} = ${prod}$.`,
-            `Compute the volume: $\\text{Vol}(E) = \\iiint_B |J|\\,du\\,dv\\,dw = ${prod} \\times \\text{Vol}(B) = ${prod}\\left(\\frac{4}{3}\\pi \\cdot 1^3\\right) = \\pi \\cdot ${ans.toLatex()}$.`,
-            `Dividing by $\\pi$ yields $${ans.toLatex()}$.`,
-          ),
-          steps(
-            `作变量代换 $x = ${a}u, y = ${b}v, z = ${c}w$，椭球体转化为单位球体 $B: u^2 + v^2 + w^2 \\le 1$。`,
-            `雅可比行列式为 $J = \\begin{vmatrix} ${a} & 0 & 0 \\\\ 0 & ${b} & 0 \\\\ 0 & 0 & ${c} \\end{vmatrix} = ${a} \\times ${b} \\times ${c} = ${prod}$。`,
-            `计算体积：$\\text{Vol}(E) = \\iiint_B |J|\\,du\\,dv\\,dw = ${prod} \\times \\text{Vol}(B) = ${prod}\\left(\\frac{4}{3}\\pi \\cdot 1^3\\right) = \\pi \\cdot ${ans.toLatex()}$。`,
-            `除以 $\\pi$ 得到 $${ans.toLatex()}$。`,
-          ),
-        );
         return numberProblem({
-          prompt,
-          solution,
+          prompt: t(
+            `Find the value of $\\frac{\\text{Vol}(E)}{\\pi}$ for the solid ellipsoid $E: \\frac{x^2}{${a * a}} + \\frac{y^2}{${b * b}} + \\frac{z^2}{${c * c}} \\le 1$.`,
+            `计算实心椭球体 $E: \\frac{x^2}{${a * a}} + \\frac{y^2}{${b * b}} + \\frac{z^2}{${c * c}} \\le 1$ 的体积与 $\\pi$ 的比值 $\\frac{\\text{Vol}(E)}{\\pi}$。`,
+          ),
           answer: ans,
-          wrong: [Q.of(prod, 3), ans.mul(Q.of(2)), Q.of(4 * prod)],
+          mistakes: distinct(ans, [
+            why(
+              4 * prod,
+              "The unit ball has volume $\\frac{4}{3}\\pi$; the $\\frac{1}{3}$ is missing.",
+              "单位球的体积是 $\\frac{4}{3}\\pi$；漏了 $\\frac{1}{3}$。",
+            ),
+            why(
+              Q.of(4 * (a + b + c), 3),
+              `That adds the semi-axes; the Jacobian is their product $${a} \\cdot ${b} \\cdot ${c}$.`,
+              `那是把半轴相加；雅可比行列式是它们的乘积 $${a} \\cdot ${b} \\cdot ${c}$。`,
+            ),
+            why(
+              Q.of(4 * prod * prod, 3),
+              `That uses the denominators $${a * a}$, $${b * b}$ and $${c * c}$; the semi-axes are their square roots.`,
+              `那是用了分母 $${a * a}$、$${b * b}$ 和 $${c * c}$；半轴是它们的平方根。`,
+            ),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Substitute", "代换"],
+                t(
+                  `With $x = ${a}u$, $y = ${b}v$, $z = ${c}w$ the ellipsoid becomes the unit ball $u^2 + v^2 + w^2 \\le 1$.`,
+                  `令 $x = ${a}u$，$y = ${b}v$，$z = ${c}w$，椭球体变为单位球 $u^2 + v^2 + w^2 \\le 1$。`,
+                ),
+              ],
+              [
+                ["Multiply by the Jacobian", "乘以雅可比行列式"],
+                t(
+                  `$J = ${a} \\cdot ${b} \\cdot ${c} = ${prod}$, so $\\text{Vol}(E) = ${prod} \\cdot \\frac{4}{3}\\pi = ${ans.toLatex()}\\pi$, and dividing by $\\pi$ gives $${ans.toLatex()}$.`,
+                  `$J = ${a} \\cdot ${b} \\cdot ${c} = ${prod}$，所以 $\\text{Vol}(E) = ${prod} \\cdot \\frac{4}{3}\\pi = ${ans.toLatex()}\\pi$，除以 $\\pi$ 得 $${ans.toLatex()}$。`,
+                ),
+              ],
+            ],
+            t(
+              `The ellipsoid fits in the box $${2 * a} \\times ${2 * b} \\times ${2 * c}$ of volume $${8 * prod}$, and $${ans.toLatex()}\\pi$ is $\\frac{\\pi}{6}$ of it, the same ratio as a ball to its cube.`,
+              `椭球体位于体积为 $${8 * prod}$ 的长方体 $${2 * a} \\times ${2 * b} \\times ${2 * c}$ 内，而 $${ans.toLatex()}\\pi$ 是它的 $\\frac{\\pi}{6}$，与球和外切立方体之比相同。`,
+            ),
+          ),
         });
       },
     },
@@ -4778,8 +5510,8 @@ export const computingTripleIntegralsUsingAChangeOfVariables: TopicDef = {
         ],
       title: t("The volume of a parallelepiped by a change of variables", "用变量替换求平行六面体体积"),
       explanation: t(
-        "A solid $\\{0 \\le u \\le U,\\ 0 \\le v \\le V,\\ 0 \\le w \\le W\\}$, where $u, v, w$ are linear in $x, y, z$, is a parallelepiped. The substitution maps it to a box of volume $UVW$, and $dV = \\left|\\frac{\\partial(u, v, w)}{\\partial(x, y, z)}\\right|^{-1} du\\,dv\\,dw$. So the volume is $\\frac{UVW}{|J|}$, where $J$ is the determinant of the coefficient matrix. For a triangular coefficient matrix $J$ is the product of the diagonal entries.",
-        "若 $u, v, w$ 是 $x, y, z$ 的线性函数，则立体 $\\{0 \\le u \\le U,\\ 0 \\le v \\le V,\\ 0 \\le w \\le W\\}$ 是平行六面体。替换把它映成体积为 $UVW$ 的长方体，且 $dV = \\left|\\frac{\\partial(u, v, w)}{\\partial(x, y, z)}\\right|^{-1} du\\,dv\\,dw$。所以体积为 $\\frac{UVW}{|J|}$，其中 $J$ 是系数矩阵的行列式。系数矩阵为三角矩阵时，$J$ 等于对角元素之积。",
+        "A solid $\\{0 \\le u \\le U,\\ 0 \\le v \\le V,\\ 0 \\le w \\le W\\}$, where $u, v, w$ are linear in $x, y, z$, is a parallelepiped. The substitution maps it to a box of volume $UVW$, and $dV = \\left|\\frac{\\partial(u, v, w)}{\\partial(x, y, z)}\\right|^{-1} du\\,dv\\,dw$. So the volume is $\\frac{UVW}{|J|}$, where $J$ is the determinant of the coefficient matrix. For a triangular coefficient matrix $J$ is the product of the diagonal entries. For $\\{0 \\le 4x + y \\le 2,\\ 0 \\le 5y \\le 5,\\ 0 \\le z \\le 10\\}$, $J = 4 \\cdot 5 \\cdot 1 = 20$ and the volume is $\\frac{100}{20} = 5$.\n\n> **Watch out.** Divide by $|J|$, do not multiply: $J$ measures how $u, v, w$ stretch $x, y, z$. For a triangular matrix $J$ is the product of the diagonal entries, not their sum, and the entries off the diagonal do not matter.",
+        "若 $u, v, w$ 是 $x, y, z$ 的线性函数，则立体 $\\{0 \\le u \\le U,\\ 0 \\le v \\le V,\\ 0 \\le w \\le W\\}$ 是平行六面体。替换把它映成体积为 $UVW$ 的长方体，且 $dV = \\left|\\frac{\\partial(u, v, w)}{\\partial(x, y, z)}\\right|^{-1} du\\,dv\\,dw$。所以体积为 $\\frac{UVW}{|J|}$，其中 $J$ 是系数矩阵的行列式。系数矩阵为三角矩阵时，$J$ 等于对角元素之积。对 $\\{0 \\le 4x + y \\le 2,\\ 0 \\le 5y \\le 5,\\ 0 \\le z \\le 10\\}$，$J = 4 \\cdot 5 \\cdot 1 = 20$，体积为 $\\frac{100}{20} = 5$。\n\n> **注意。** 要除以 $|J|$，不是乘：$J$ 衡量 $u, v, w$ 对 $x, y, z$ 的拉伸。三角矩阵的 $J$ 是对角元素之积而不是之和，对角线以外的元素不影响它。",
       ),
       generate(rng: Rng): Problem {
         const d1 = rng.int(1, 3);
@@ -4799,10 +5531,44 @@ export const computingTripleIntegralsUsingAChangeOfVariables: TopicDef = {
             `求 $E = \\{0 \\le ${poly([d1, "x"], [p, "y"], [q, "z"])} \\le ${U},\\ 0 \\le ${poly([d2, "y"], [r, "z"])} \\le ${V},\\ 0 \\le ${poly([d3, "z"])} \\le ${W}\\}$ 的体积。`,
           ),
           answer: ans,
-          wrong: [Q.of(U * V * W * J), Q.of(U * V * W), Q.of(U * V * W, d1 + d2 + d3), Q.of(U * V * W, 6)],
-          solution: t(
-            `The coefficient matrix is triangular with determinant $J = ${d1} \\cdot ${d2} \\cdot ${d3} = ${J}$. So the volume is $\\frac{${U} \\cdot ${V} \\cdot ${W}}{${J}} = ${ans.toLatex()}$.`,
-            `系数矩阵为三角矩阵，行列式 $J = ${d1} \\cdot ${d2} \\cdot ${d3} = ${J}$。所以体积为 $\\frac{${U} \\cdot ${V} \\cdot ${W}}{${J}} = ${ans.toLatex()}$。`,
+          mistakes: distinct(ans, [
+            why(
+              U * V * W * J,
+              `That multiplies by $J = ${J}$; the volume element is $dV = \\frac{1}{${J}}\\,du\\,dv\\,dw$.`,
+              `那是乘以 $J = ${J}$；体积元是 $dV = \\frac{1}{${J}}\\,du\\,dv\\,dw$。`,
+            ),
+            why(
+              U * V * W,
+              `That is the volume of the box in $uvw$-space; the factor $\\frac{1}{${J}}$ is missing.`,
+              `那是 $uvw$ 空间中长方体的体积；漏了因子 $\\frac{1}{${J}}$。`,
+            ),
+            why(
+              Q.of(U * V * W, d1 + d2 + d3),
+              "That adds the diagonal entries; the determinant of a triangular matrix is their product.",
+              "那是把对角元素相加；三角矩阵的行列式是它们的乘积。",
+            ),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Substitute", "代换"],
+                t(
+                  `With $u, v, w$ the three expressions, $E$ becomes the box $[0, ${U}] \\times [0, ${V}] \\times [0, ${W}]$ of volume $${U * V * W}$.`,
+                  `以三个表达式为 $u, v, w$，$E$ 变为体积为 $${U * V * W}$ 的长方体 $[0, ${U}] \\times [0, ${V}] \\times [0, ${W}]$。`,
+                ),
+              ],
+              [
+                ["Find the Jacobian", "求雅可比行列式"],
+                t(
+                  `The coefficient matrix is triangular, so $J = ${d1} \\cdot ${d2} \\cdot ${d3} = ${J}$ and the volume is $\\frac{${U * V * W}}{${J}} = ${ans.toLatex()}$.`,
+                  `系数矩阵为三角矩阵，所以 $J = ${d1} \\cdot ${d2} \\cdot ${d3} = ${J}$，体积为 $\\frac{${U * V * W}}{${J}} = ${ans.toLatex()}$。`,
+                ),
+              ],
+            ],
+            t(
+              `Slice by $z$: $z$ runs over an interval of length $${Q.of(W, d3).toLatex()}$, and each slice is a parallelogram in $x, y$ of area $\\frac{${U} \\cdot ${V}}{${d1} \\cdot ${d2}}$; the product is $${ans.toLatex()}$.`,
+              `按 $z$ 切片：$z$ 的范围长度为 $${Q.of(W, d3).toLatex()}$，每个切片是 $x, y$ 平面中面积为 $\\frac{${U} \\cdot ${V}}{${d1} \\cdot ${d2}}$ 的平行四边形；乘积为 $${ans.toLatex()}$。`,
+            ),
           ),
         });
       },

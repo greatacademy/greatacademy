@@ -1114,8 +1114,8 @@ const volumeOfACone: KnowledgePointDef = {
   figure: multivariableDrawings5["triple-integrals-in-cylindrical-polar-coordinates#the-volume-of-a-cone-in-cylindrical-coordinates"],
   title: t("The volume of a cone in cylindrical coordinates", "用柱坐标求圆锥的体积"),
   explanation: t(
-    "A cone with its tip at the origin is $z = mr$ in cylindrical coordinates. Between the cone and a plane $z = h$, integrate $r$ from $0$ to $\\frac{h}{m}$ or, more simply, take each height $z$ and integrate over a disk of radius $\\frac{z}{m}$.",
-    "顶点在原点的圆锥在柱坐标中是 $z = mr$。在圆锥和平面 $z = h$ 之间，可以让 $r$ 从 $0$ 积到 $\\frac{h}{m}$；更简单的做法是对每个高度 $z$，在半径为 $\\frac{z}{m}$ 的圆盘上积分。",
+    "A cone with its tip at the origin is $z = mr$ in cylindrical coordinates. Between the cone and a plane $z = h$, integrate $r$ from $0$ to $\\frac{h}{m}$ or, more simply, take each height $z$ and integrate over a disk of radius $\\frac{z}{m}$. For $5\\sqrt{x^2 + y^2} \\le z \\le 10$ the disks have area $\\pi\\frac{z^2}{25}$, and $\\int_0^{10} \\pi\\frac{z^2}{25}\\,dz = \\frac{40}{3}\\pi$.\n\n> **Watch out.** The solid lies above the cone, between $z = mr$ and $z = h$, not below it. Keep the factor $r$ of $dV = r\\,dz\\,dr\\,d\\theta$.",
+    "顶点在原点的圆锥在柱坐标中是 $z = mr$。在圆锥和平面 $z = h$ 之间，可以让 $r$ 从 $0$ 积到 $\\frac{h}{m}$；更简单的做法是对每个高度 $z$，在半径为 $\\frac{z}{m}$ 的圆盘上积分。对 $5\\sqrt{x^2 + y^2} \\le z \\le 10$，圆盘面积为 $\\pi\\frac{z^2}{25}$，而 $\\int_0^{10} \\pi\\frac{z^2}{25}\\,dz = \\frac{40}{3}\\pi$。\n\n> **注意。** 立体在圆锥上方，介于 $z = mr$ 与 $z = h$ 之间，而不是在圆锥下方。要保留 $dV = r\\,dz\\,dr\\,d\\theta$ 中的因子 $r$。",
   ),
   generate(rng) {
     const m = rng.int(1, 4);
@@ -1129,10 +1129,44 @@ const volumeOfACone: KnowledgePointDef = {
       ),
       answer,
       solveFor: "c",
-      wrong: [Q.of(h * h * h, m * m), Q.of(h * h, 3 * m), Q.of(2 * h * h * h, 3 * m * m)],
-      solution: t(
-        `In cylindrical coordinates the solid is $${m}r \\le z \\le ${h}$. Integrating, $2\\pi\\int_0^{${h / m}} (${h} - ${m}r)r\\,dr = ${answer.toLatex()}\\pi$, so $c = ${answer.toLatex()}$.`,
-        `在柱坐标中，立体是 $${m}r \\le z \\le ${h}$。积分得 $2\\pi\\int_0^{${h / m}} (${h} - ${m}r)r\\,dr = ${answer.toLatex()}\\pi$，所以 $c = ${answer.toLatex()}$。`,
+      mistakes: apart(answer, [
+        why(
+          Q.of(h * h * h, m * m),
+          `That is the volume of the whole cylinder $r \\le ${h / m}$, $0 \\le z \\le ${h}$; the cone is a third of it.`,
+          `那是整个圆柱 $r \\le ${h / m}$，$0 \\le z \\le ${h}$ 的体积；圆锥只占它的三分之一。`,
+        ),
+        why(
+          Q.of(2 * h * h * h, 3 * m * m),
+          `That is the part of the cylinder below the cone, $0 \\le z \\le ${poly([m, "r"])}$; the solid lies above the cone.`,
+          `那是圆柱中圆锥下方的部分 $0 \\le z \\le ${poly([m, "r"])}$；立体在圆锥上方。`,
+        ),
+        why(
+          Q.of(h * h, m),
+          "That leaves out the factor $r$ of $dV = r\\,dz\\,dr\\,d\\theta$.",
+          "那是漏了 $dV = r\\,dz\\,dr\\,d\\theta$ 中的因子 $r$。",
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Set the limits", "确定积分限"],
+            t(
+              `In cylindrical coordinates the solid is $${poly([m, "r"])} \\le z \\le ${h}$, so $0 \\le r \\le ${h / m}$.`,
+              `在柱坐标中，立体是 $${poly([m, "r"])} \\le z \\le ${h}$，所以 $0 \\le r \\le ${h / m}$。`,
+            ),
+          ],
+          [
+            ["Integrate", "积分"],
+            t(
+              `$2\\pi\\int_0^{${h / m}} (${h} - ${poly([m, "r"])})r\\,dr = ${answer.toLatex()}\\pi$, so $c = ${answer.toLatex()}$.`,
+              `$2\\pi\\int_0^{${h / m}} (${h} - ${poly([m, "r"])})r\\,dr = ${answer.toLatex()}\\pi$，所以 $c = ${answer.toLatex()}$。`,
+            ),
+          ],
+        ],
+        t(
+          `The solid is an upside-down cone of height $${h}$ and base radius $${h / m}$, so its volume is $\\frac{1}{3}\\pi \\cdot ${h / m}^2 \\cdot ${h} = ${answer.toLatex()}\\pi$.`,
+          `该立体是高 $${h}$、底面半径 $${h / m}$ 的倒立圆锥，体积为 $\\frac{1}{3}\\pi \\cdot ${h / m}^2 \\cdot ${h} = ${answer.toLatex()}\\pi$。`,
+        ),
       ),
     });
   },
@@ -1143,8 +1177,8 @@ const volumeOfASphericalCone: KnowledgePointDef = {
   figure: multivariableDrawings5["triple-integrals-in-spherical-polar-coordinates#the-volume-of-a-spherical-sector"],
   title: t("The volume of a spherical sector", "球扇形的体积"),
   explanation: t(
-    "In spherical coordinates, $dV = \\rho^2\\sin\\phi\\,d\\rho\\,d\\phi\\,d\\theta$. The part of a ball with $\\phi \\le \\phi_0$, an ice-cream cone shape, separates into three integrals and has volume $\\frac{2\\pi}{3}R^3(1 - \\cos\\phi_0)$.",
-    "球坐标中 $dV = \\rho^2\\sin\\phi\\,d\\rho\\,d\\phi\\,d\\theta$。球内满足 $\\phi \\le \\phi_0$ 的部分形如蛋卷冰淇淋，可分成三个积分，体积是 $\\frac{2\\pi}{3}R^3(1 - \\cos\\phi_0)$。",
+    "In spherical coordinates, $dV = \\rho^2\\sin\\phi\\,d\\rho\\,d\\phi\\,d\\theta$. The part of a ball with $\\phi \\le \\phi_0$, an ice-cream cone shape, separates into three integrals and has volume $\\frac{2\\pi}{3}R^3(1 - \\cos\\phi_0)$. For $\\rho \\le 20$ and $\\phi \\le \\frac{\\pi}{3}$ this is $\\frac{2\\pi}{3} \\cdot 8000 \\cdot \\frac{1}{2} = \\frac{8000}{3}\\pi$.\n\n> **Watch out.** The $\\phi$ integral is $\\int_0^{\\phi_0} \\sin\\phi\\,d\\phi = 1 - \\cos\\phi_0$, not $\\phi_0$ and not $2$, which belongs to the whole ball. The $\\rho$ integral is $\\frac{R^3}{3}$; keep its $\\frac{1}{3}$.",
+    "球坐标中 $dV = \\rho^2\\sin\\phi\\,d\\rho\\,d\\phi\\,d\\theta$。球内满足 $\\phi \\le \\phi_0$ 的部分形如蛋卷冰淇淋，可分成三个积分，体积是 $\\frac{2\\pi}{3}R^3(1 - \\cos\\phi_0)$。对 $\\rho \\le 20$ 与 $\\phi \\le \\frac{\\pi}{3}$，体积为 $\\frac{2\\pi}{3} \\cdot 8000 \\cdot \\frac{1}{2} = \\frac{8000}{3}\\pi$。\n\n> **注意。** $\\phi$ 的积分是 $\\int_0^{\\phi_0} \\sin\\phi\\,d\\phi = 1 - \\cos\\phi_0$，不是 $\\phi_0$，也不是整个球对应的 $2$。$\\rho$ 的积分是 $\\frac{R^3}{3}$，要保留 $\\frac{1}{3}$。",
   ),
   generate(rng) {
     const R = rng.int(1, 12);
@@ -1161,10 +1195,44 @@ const volumeOfASphericalCone: KnowledgePointDef = {
       ),
       answer,
       solveFor: "c",
-      wrong: [Q.of(4 * R ** 3, 3), Q.of(2 * R ** 3, 3), answer.mul(Q.of(3))],
-      solution: t(
-        `The three integrals give $2\\pi$ for $\\theta$, $\\frac{${R ** 3}}{3}$ for $\\rho$, and $1 - \\cos\\phi_0 = ${oneMinusCos.toLatex()}$ for $\\phi$. Their product is $${answer.toLatex()}\\pi$.`,
-        `三个积分分别给出：$\\theta$ 为 $2\\pi$，$\\rho$ 为 $\\frac{${R ** 3}}{3}$，$\\phi$ 为 $1 - \\cos\\phi_0 = ${oneMinusCos.toLatex()}$。它们的积是 $${answer.toLatex()}\\pi$。`,
+      mistakes: apart(answer, [
+        why(
+          Q.of(4 * R ** 3, 3),
+          `That is the whole ball; only the part with $\\phi \\le ${angle}$ counts.`,
+          `那是整个球；只算 $\\phi \\le ${angle}$ 的部分。`,
+        ),
+        why(
+          Q.of(2 * R ** 3, 3),
+          `That is the upper half, $\\phi \\le \\frac{\\pi}{2}$; the $\\phi$ integral is $1 - \\cos ${angle} = ${oneMinusCos.toLatex()}$.`,
+          `那是上半球 $\\phi \\le \\frac{\\pi}{2}$；$\\phi$ 的积分是 $1 - \\cos ${angle} = ${oneMinusCos.toLatex()}$。`,
+        ),
+        why(
+          answer.mul(Q.of(3)),
+          `$\\int_0^{${R}} \\rho^2\\,d\\rho = \\frac{${R ** 3}}{3}$; the $\\frac{1}{3}$ is missing.`,
+          `$\\int_0^{${R}} \\rho^2\\,d\\rho = \\frac{${R ** 3}}{3}$；漏了 $\\frac{1}{3}$。`,
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Separate the integrals", "分离积分"],
+            t(
+              `The limits are constant: $0 \\le \\theta \\le 2\\pi$, $0 \\le \\phi \\le ${angle}$, $0 \\le \\rho \\le ${R}$.`,
+              `积分限都是常数：$0 \\le \\theta \\le 2\\pi$，$0 \\le \\phi \\le ${angle}$，$0 \\le \\rho \\le ${R}$。`,
+            ),
+          ],
+          [
+            ["Multiply the three factors", "三个因子相乘"],
+            t(
+              `$2\\pi$ for $\\theta$, $\\frac{${R ** 3}}{3}$ for $\\rho$, and $1 - \\cos ${angle} = ${oneMinusCos.toLatex()}$ for $\\phi$; the product is $${answer.toLatex()}\\pi$.`,
+              `$\\theta$ 给出 $2\\pi$，$\\rho$ 给出 $\\frac{${R ** 3}}{3}$，$\\phi$ 给出 $1 - \\cos ${angle} = ${oneMinusCos.toLatex()}$；乘积为 $${answer.toLatex()}\\pi$。`,
+            ),
+          ],
+        ],
+        t(
+          `The whole ball has $\\int_0^{\\pi} \\sin\\phi\\,d\\phi = 2$ and volume $${Q.of(4 * R ** 3, 3).toLatex()}\\pi$, so this part is $${oneMinusCos.div(Q.of(2)).toLatex()}$ of it: $${answer.toLatex()}\\pi$.`,
+          `整个球的 $\\int_0^{\\pi} \\sin\\phi\\,d\\phi = 2$，体积为 $${Q.of(4 * R ** 3, 3).toLatex()}\\pi$，所以这部分占它的 $${oneMinusCos.div(Q.of(2)).toLatex()}$：$${answer.toLatex()}\\pi$。`,
+        ),
       ),
     });
   },
@@ -3733,8 +3801,8 @@ const distanceOverAnnulus: KnowledgePointDef = {
   id: "integrating-the-distance-from-the-origin-over-an-annulus",
   title: t("Integrating the distance from the origin over an annulus", "在圆环上对到原点的距离积分"),
   explanation: t(
-    "In polar coordinates, $\\sqrt{x^2 + y^2}$ becomes $r$, and the area element is $r\\,dr\\,d\\theta$. The two factors of $r$ multiply, so the radial integral is of $r^2$ and not of $r$. An easy mistake is to forget the extra factor from the area element. The integrand does not depend on $\\theta$, so going all the way around the annulus just multiplies the result by $2\\pi$.",
-    "在极坐标中，$\\sqrt{x^2 + y^2}$ 变成 $r$，面积元是 $r\\,dr\\,d\\theta$。两个因子 $r$ 相乘，所以径向积分的被积函数是 $r^2$ 而不是 $r$。一个常见的错误是忘记面积元的额外因子。被积函数与 $\\theta$ 无关，所以绕圆环一周只是把结果乘以 $2\\pi$。",
+    "In polar coordinates, $\\sqrt{x^2 + y^2}$ becomes $r$, and the area element is $r\\,dr\\,d\\theta$. The two factors of $r$ multiply, so the radial integral is of $r^2$ and not of $r$. The integrand does not depend on $\\theta$, so going all the way around the annulus just multiplies the result by $2\\pi$. Over $1 \\le x^2 + y^2 \\le 100$ the integral is $2\\pi \\cdot \\frac{1000 - 1}{3} = 666\\pi$.\n\n> **Watch out.** Do not forget the extra factor $r$ from the area element, and subtract the cubes of the radii, not the cube of the width.",
+    "在极坐标中，$\\sqrt{x^2 + y^2}$ 变成 $r$，面积元是 $r\\,dr\\,d\\theta$。两个因子 $r$ 相乘，所以径向积分的被积函数是 $r^2$ 而不是 $r$。被积函数与 $\\theta$ 无关，所以绕圆环一周只是把结果乘以 $2\\pi$。在 $1 \\le x^2 + y^2 \\le 100$ 上积分为 $2\\pi \\cdot \\frac{1000 - 1}{3} = 666\\pi$。\n\n> **注意。** 不要忘记面积元带来的额外因子 $r$；要用半径立方之差，而不是宽度的立方。",
   ),
   generate(rng) {
     const a = rng.int(1, 6);
@@ -3746,10 +3814,44 @@ const distanceOverAnnulus: KnowledgePointDef = {
         `$\\sqrt{x^2 + y^2}$ 在圆环 $${a * a} \\le x^2 + y^2 \\le ${b * b}$ 上的积分等于 $c\\pi$。求 $c$。`,
       ),
       answer,
-      wrong: [Q.of(b ** 3 - a ** 3, 3), Q.of(b * b - a * a), Q.of(2 * (b - a) ** 3, 3), answer.add(Q.of(1))],
-      solution: t(
-        `The integral is $\\int_0^{2\\pi} \\int_{${a}}^{${b}} r^2\\,dr\\,d\\theta = 2\\pi \\cdot \\frac{${b ** 3} - ${a ** 3}}{3}$, so $c = ${answer.toLatex()}$.`,
-        `积分是 $\\int_0^{2\\pi} \\int_{${a}}^{${b}} r^2\\,dr\\,d\\theta = 2\\pi \\cdot \\frac{${b ** 3} - ${a ** 3}}{3}$，所以 $c = ${answer.toLatex()}$。`,
+      mistakes: apart(answer, [
+        why(
+          Q.of(b ** 3 - a ** 3, 3),
+          "That integrates over half a turn; the angle runs over $2\\pi$.",
+          "那是只积了半圈；角度要走满 $2\\pi$。",
+        ),
+        why(
+          Q.of(b * b - a * a),
+          "That drops the factor $r$ of the area element, integrating $r$ instead of $r^2$.",
+          "那是丢掉了面积元的因子 $r$，积的是 $r$ 而不是 $r^2$。",
+        ),
+        why(
+          Q.of(2 * (b - a) ** 3, 3),
+          `That cubes the width $${b - a}$; the radial integral gives $${b}^3 - ${a}^3$.`,
+          `那是把宽度 $${b - a}$ 立方；径向积分给出 $${b}^3 - ${a}^3$。`,
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Change to polar coordinates", "化为极坐标"],
+            t(
+              `The integrand is $r$ and $dA = r\\,dr\\,d\\theta$, with $${a} \\le r \\le ${b}$.`,
+              `被积函数为 $r$，$dA = r\\,dr\\,d\\theta$，且 $${a} \\le r \\le ${b}$。`,
+            ),
+          ],
+          [
+            ["Integrate", "积分"],
+            t(
+              `$\\int_0^{2\\pi} \\int_{${a}}^{${b}} r^2\\,dr\\,d\\theta = 2\\pi \\cdot \\frac{${b ** 3} - ${a ** 3}}{3}$, so $c = ${answer.toLatex()}$.`,
+              `$\\int_0^{2\\pi} \\int_{${a}}^{${b}} r^2\\,dr\\,d\\theta = 2\\pi \\cdot \\frac{${b ** 3} - ${a ** 3}}{3}$，所以 $c = ${answer.toLatex()}$。`,
+            ),
+          ],
+        ],
+        t(
+          `The annulus has area $${b * b - a * a}\\pi$ and the distance lies between $${a}$ and $${b}$ on it, so $c$ must lie between $${a * (b * b - a * a)}$ and $${b * (b * b - a * a)}$; $${answer.toLatex()}$ does.`,
+          `圆环面积为 $${b * b - a * a}\\pi$，其上距离介于 $${a}$ 与 $${b}$ 之间，所以 $c$ 应介于 $${a * (b * b - a * a)}$ 与 $${b * (b * b - a * a)}$ 之间；$${answer.toLatex()}$ 正是如此。`,
+        ),
       ),
     });
   },
@@ -3760,8 +3862,8 @@ const sphericalToCartesian: KnowledgePointDef = {
   figure: multivariableDrawings5["spherical-polar-coordinates#a-cartesian-coordinate-from-spherical-coordinates"],
   title: t("A Cartesian coordinate from spherical coordinates", "由球坐标求直角坐标"),
   explanation: t(
-    "With $\\varphi$ measured down from the positive $z$-axis, the distance of a point from the $z$-axis is $\\rho\\sin\\varphi$. This distance acts as the polar radius in the $xy$-plane, so $x = \\rho\\sin\\varphi\\cos\\theta$ and $y = \\rho\\sin\\varphi\\sin\\theta$. The height is $z = \\rho\\cos\\varphi$. Mixing up the two angles is the usual mistake, and the role of $\\sin\\varphi$ is the thing to remember.",
-    "当 $\\varphi$ 从 $z$ 轴正向向下量时，点到 $z$ 轴的距离是 $\\rho\\sin\\varphi$。这个距离就是 $xy$ 平面上的极径，所以 $x = \\rho\\sin\\varphi\\cos\\theta$，$y = \\rho\\sin\\varphi\\sin\\theta$。高度是 $z = \\rho\\cos\\varphi$。常见的错误是把两个角弄混，要记住的是 $\\sin\\varphi$ 的作用。",
+    "With $\\varphi$ measured down from the positive $z$-axis, the distance of a point from the $z$-axis is $\\rho\\sin\\varphi$. This distance acts as the polar radius in the $xy$-plane, so $x = \\rho\\sin\\varphi\\cos\\theta$ and $y = \\rho\\sin\\varphi\\sin\\theta$. The height is $z = \\rho\\cos\\varphi$. For $\\rho = 10$, $\\varphi = \\frac{\\pi}{6}$ and $\\theta = \\frac{\\pi}{6}$, $x = 10 \\cdot \\frac{1}{2} \\cdot \\frac{\\sqrt{3}}{2} = \\frac{5\\sqrt{3}}{2}$.\n\n> **Watch out.** Mixing up the two angles is the usual mistake: $x$ needs $\\sin\\varphi$, the factor that turns $\\rho$ into the distance from the axis, and then $\\cos\\theta$. $\\cos\\varphi$ belongs to $z$.",
+    "当 $\\varphi$ 从 $z$ 轴正向向下量时，点到 $z$ 轴的距离是 $\\rho\\sin\\varphi$。这个距离就是 $xy$ 平面上的极径，所以 $x = \\rho\\sin\\varphi\\cos\\theta$，$y = \\rho\\sin\\varphi\\sin\\theta$。高度是 $z = \\rho\\cos\\varphi$。对 $\\rho = 10$，$\\varphi = \\frac{\\pi}{6}$，$\\theta = \\frac{\\pi}{6}$，$x = 10 \\cdot \\frac{1}{2} \\cdot \\frac{\\sqrt{3}}{2} = \\frac{5\\sqrt{3}}{2}$。\n\n> **注意。** 常见的错误是把两个角弄混：$x$ 需要 $\\sin\\varphi$，它把 $\\rho$ 变成到轴的距离，然后再乘 $\\cos\\theta$。$\\cos\\varphi$ 属于 $z$。",
   ),
   generate(rng) {
     const rho = rng.int(2, 20);
@@ -3784,10 +3886,53 @@ const sphericalToCartesian: KnowledgePointDef = {
         `一个点的球坐标是 $\\rho = ${rho}$，$\\theta = ${theta}$，$\\varphi = ${phi}$，其中 $\\varphi$ 从 $z$ 轴正向量起。求它的 $x$ 坐标。`,
       ),
       answer,
-      wrong: [r.mul(cosTheta), r.mul(sinPhi), answer.neg(), answer.mul(Q.of(2)), answer.add(Q.of(1))],
-      solution: t(
-        `Here $\\sin\\varphi = ${sinPhi.toLatex()}$ and $\\cos\\theta = ${cosTheta.toLatex()}$. So $x = \\rho\\sin\\varphi\\cos\\theta = ${answer.toLatex()}$.`,
-        `这里 $\\sin\\varphi = ${sinPhi.toLatex()}$，$\\cos\\theta = ${cosTheta.toLatex()}$。所以 $x = \\rho\\sin\\varphi\\cos\\theta = ${answer.toLatex()}$。`,
+      mistakes: apart(answer, [
+        why(
+          r.mul(cosTheta),
+          `That leaves out $\\sin\\varphi = ${sinPhi.toLatex()}$; the distance from the $z$-axis is $\\rho\\sin\\varphi$, not $\\rho$.`,
+          `那是漏了 $\\sin\\varphi = ${sinPhi.toLatex()}$；到 $z$ 轴的距离是 $\\rho\\sin\\varphi$，不是 $\\rho$。`,
+        ),
+        why(
+          r.mul(sinPhi),
+          `That is the distance $\\rho\\sin\\varphi$ from the $z$-axis; multiply by $\\cos\\theta = ${cosTheta.toLatex()}$ to get $x$.`,
+          `那是到 $z$ 轴的距离 $\\rho\\sin\\varphi$；还要乘以 $\\cos\\theta = ${cosTheta.toLatex()}$ 才得到 $x$。`,
+        ),
+        why(
+          answer.neg(),
+          `The sign is wrong: $\\sin\\varphi \\ge 0$ always, so $x$ has the sign of $\\cos\\theta = ${cosTheta.toLatex()}$.`,
+          `符号错了：$\\sin\\varphi$ 总是非负，所以 $x$ 与 $\\cos\\theta = ${cosTheta.toLatex()}$ 同号。`,
+        ),
+        ...(phi === "\\frac{\\pi}{2}"
+          ? [
+              why(
+                0,
+                "That uses $\\cos\\varphi = 0$ in place of $\\sin\\varphi$; $\\cos\\varphi$ belongs to $z$.",
+                "那是用 $\\cos\\varphi = 0$ 代替了 $\\sin\\varphi$；$\\cos\\varphi$ 属于 $z$。",
+              ),
+            ]
+          : []),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Find the distance from the axis", "求到轴的距离"],
+            t(
+              `$\\sin\\varphi = ${sinPhi.toLatex()}$, so $\\rho\\sin\\varphi = ${r.mul(sinPhi).toLatex()}$.`,
+              `$\\sin\\varphi = ${sinPhi.toLatex()}$，所以 $\\rho\\sin\\varphi = ${r.mul(sinPhi).toLatex()}$。`,
+            ),
+          ],
+          [
+            ["Multiply by cos θ", "乘以 cos θ"],
+            t(
+              `$\\cos\\theta = ${cosTheta.toLatex()}$, so $x = \\rho\\sin\\varphi\\cos\\theta = ${answer.toLatex()}$.`,
+              `$\\cos\\theta = ${cosTheta.toLatex()}$，所以 $x = \\rho\\sin\\varphi\\cos\\theta = ${answer.toLatex()}$。`,
+            ),
+          ],
+        ],
+        t(
+          `$|x| = ${answer.sign() < 0 ? answer.neg().toLatex() : answer.toLatex()}$ is at most $\\rho = ${rho}$, and $x$ has the sign of $\\cos\\theta$ because the shadow of the point lies in the direction $\\theta = ${theta}$.`,
+          `$|x| = ${answer.sign() < 0 ? answer.neg().toLatex() : answer.toLatex()}$ 不超过 $\\rho = ${rho}$，且 $x$ 与 $\\cos\\theta$ 同号，因为该点的投影位于方向 $\\theta = ${theta}$ 上。`,
+        ),
       ),
     });
   },

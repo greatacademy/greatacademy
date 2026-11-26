@@ -11,8 +11,8 @@ import { multivariableDrawings6 } from "../explanation-drawings-multivariable-6.
 import { multivariableDrawings7 } from "../explanation-drawings-multivariable-7.ts";
 import { multivariableDrawings8 } from "../explanation-drawings-multivariable-8.ts";
 
-import { numberProblem, why } from "../problems.ts";
-import { ask, choose, type Pair, point } from "../university-kit.ts";
+import { explainedChoice, numberProblem, why } from "../problems.ts";
+import { ask, type Pair, point } from "../university-kit.ts";
 import { walked } from "./calculus-i-differentiation.ts";
 
 /** apart drops the mistakes whose value is the answer or repeats an earlier one. */
@@ -191,26 +191,60 @@ const ellipticAnnulus = point(
   "the-area-between-two-similar-ellipses",
   ["The area between two similar ellipses", "两个相似椭圆之间的面积"],
   [
-    "The substitution $x = pu$, $y = qv$ turns an elliptical ring into a circular ring, and every area is multiplied by the constant Jacobian $pq$. So the area of the ring is $pq$ times the difference of the two circular areas, using the squared radii.",
-    "代换 $x = pu$，$y = qv$ 把椭圆环变成圆环，所有面积都乘以常数雅可比行列式 $pq$。所以环的面积是 $pq$ 乘以两个圆面积之差，用的是半径的平方。",
+    "The substitution $x = pu$, $y = qv$ turns an elliptical ring into a circular ring, and every area is multiplied by the constant Jacobian $pq$. So the area of the ring is $pq$ times the difference of the two circular areas, using the squared radii. For $1 \\le \\frac{x^2}{49} + y^2 \\le 4$ the circular ring $1 \\le u^2 + v^2 \\le 4$ has area $3\\pi$, and the elliptical ring has area $7 \\cdot 3\\pi = 21\\pi$.\n\n> **Watch out.** The inner ellipse is a hole: subtract its area. The right side $R^2$ is the square of the radius, so the circular ring has area $(R^2 - 1)\\pi$, not $(R - 1)\\pi$.",
+    "代换 $x = pu$，$y = qv$ 把椭圆环变成圆环，所有面积都乘以常数雅可比行列式 $pq$。所以环的面积是 $pq$ 乘以两个圆面积之差，用的是半径的平方。对 $1 \\le \\frac{x^2}{49} + y^2 \\le 4$，圆环 $1 \\le u^2 + v^2 \\le 4$ 面积为 $3\\pi$，椭圆环面积为 $7 \\cdot 3\\pi = 21\\pi$。\n\n> **注意。** 内椭圆是空洞，要减去它的面积。右边的 $R^2$ 是半径的平方，所以圆环面积是 $(R^2 - 1)\\pi$，不是 $(R - 1)\\pi$。",
   ],
   (rng) => {
     const p = rng.int(2, 6);
     const q = rng.int(2, 6);
     const R = rng.int(2, 5);
     const answer = p * q * (R * R - 1);
-    return ask(
-      [
+    return numberProblem({
+      prompt: t(
         `Find $\\frac{A}{\\pi}$, where $A$ is the area of the region $1 \\le \\frac{x^{2}}{${p * p}} + \\frac{y^{2}}{${q * q}} \\le ${R * R}$.`,
         `求 $\\frac{A}{\\pi}$，其中 $A$ 是区域 $1 \\le \\frac{x^{2}}{${p * p}} + \\frac{y^{2}}{${q * q}} \\le ${R * R}$ 的面积。`,
-      ],
+      ),
       answer,
-      [p * q * R * R, (p + q) * (R * R - 1), p * q * (R - 1)],
-      [
-        `With $x = ${p}u$ and $y = ${q}v$, the region becomes $1 \\le u^{2} + v^{2} \\le ${R * R}$, of area $${R * R - 1}\\pi$. Multiplying by the Jacobian $${p * q}$ gives $\\frac{A}{\\pi} = ${answer}$.`,
-        `令 $x = ${p}u$，$y = ${q}v$，区域变为 $1 \\le u^{2} + v^{2} \\le ${R * R}$，面积是 $${R * R - 1}\\pi$。乘以雅可比行列式 $${p * q}$，得 $\\frac{A}{\\pi} = ${answer}$。`,
-      ],
-    );
+      mistakes: apart(answer, [
+        why(
+          p * q * R * R,
+          "That is the area of the outer ellipse; the inner ellipse is a hole to subtract.",
+          "那是外椭圆的面积；内椭圆是要减去的空洞。",
+        ),
+        why(
+          (p + q) * (R * R - 1),
+          `That adds the stretch factors; the Jacobian is their product $${p} \\cdot ${q}$.`,
+          `那是把拉伸比例相加；雅可比行列式是它们的乘积 $${p} \\cdot ${q}$。`,
+        ),
+        why(
+          p * q * (R - 1),
+          `That treats $${R * R}$ as a radius; it is the square of the radius $${R}$.`,
+          `那是把 $${R * R}$ 当作半径；它是半径 $${R}$ 的平方。`,
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Substitute", "代换"],
+            t(
+              `With $x = ${p}u$ and $y = ${q}v$, the region becomes $1 \\le u^{2} + v^{2} \\le ${R * R}$, of area $${R * R - 1}\\pi$.`,
+              `令 $x = ${p}u$，$y = ${q}v$，区域变为 $1 \\le u^{2} + v^{2} \\le ${R * R}$，面积是 $${R * R - 1}\\pi$。`,
+            ),
+          ],
+          [
+            ["Multiply by the Jacobian", "乘以雅可比行列式"],
+            t(
+              `The Jacobian is $${p * q}$, so $\\frac{A}{\\pi} = ${p * q} \\cdot ${R * R - 1} = ${answer}$.`,
+              `雅可比行列式为 $${p * q}$，所以 $\\frac{A}{\\pi} = ${p * q} \\cdot ${R * R - 1} = ${answer}$。`,
+            ),
+          ],
+        ],
+        t(
+          `The outer ellipse has semi-axes $${p * R}$ and $${q * R}$, area $${p * q * R * R}\\pi$; the inner one has semi-axes $${p}$ and $${q}$, area $${p * q}\\pi$; and $${p * q * R * R} - ${p * q} = ${answer}$.`,
+          `外椭圆半轴为 $${p * R}$ 和 $${q * R}$，面积 $${p * q * R * R}\\pi$；内椭圆半轴为 $${p}$ 和 $${q}$，面积 $${p * q}\\pi$；而 $${p * q * R * R} - ${p * q} = ${answer}$。`,
+        ),
+      ),
+    });
   },
 );
 
@@ -219,26 +253,61 @@ const differenceOfSquares = {
     "a-difference-of-squares-under-a-rotated-rectangle",
     ["A difference of squares under a rotated rectangle", "旋转矩形上的平方差"],
     [
-      "With $u = x + y$ and $v = x - y$, a rotated rectangle becomes an ordinary one and $x^{2} - y^{2}$ becomes $uv$. The trap is the area element: the Jacobian of $(x, y)$ in terms of $(u, v)$ has absolute value $\\frac{1}{2}$, not $2$.",
-      "用 $u = x + y$，$v = x - y$，旋转的矩形变成普通矩形，$x^{2} - y^{2}$ 变成 $uv$。陷阱在面积元：$(x, y)$ 关于 $(u, v)$ 的雅可比行列式的绝对值是 $\\frac{1}{2}$，而不是 $2$。",
+      "With $u = x + y$ and $v = x - y$, a rotated rectangle becomes an ordinary one and $x^{2} - y^{2}$ becomes $uv$. For $0 \\le x + y \\le 8$, $0 \\le x - y \\le 2$ the integral of $x^2 - y^2$ is $\\frac{1}{2} \\cdot \\frac{64}{2} \\cdot \\frac{4}{2} = 32$.\n\n> **Watch out.** The trap is the area element: the Jacobian of $(x, y)$ in terms of $(u, v)$ has absolute value $\\frac{1}{2}$, not $2$, and it must not be left out.",
+      "用 $u = x + y$，$v = x - y$，旋转的矩形变成普通矩形，$x^{2} - y^{2}$ 变成 $uv$。对 $0 \\le x + y \\le 8$，$0 \\le x - y \\le 2$，$x^2 - y^2$ 的积分为 $\\frac{1}{2} \\cdot \\frac{64}{2} \\cdot \\frac{4}{2} = 32$。\n\n> **注意。** 陷阱在面积元：$(x, y)$ 关于 $(u, v)$ 的雅可比行列式的绝对值是 $\\frac{1}{2}$，而不是 $2$，也不能省略。",
     ],
     (rng) => {
       const a = rng.int(1, 6);
       const b = rng.int(1, 6);
       const k = rng.int(1, 12);
       const answer = Q.of(k * a * a * b * b, 8);
-      return ask(
-        [
-          `Evaluate $\\iint_{R} ${k}(x^{2} - y^{2})\\,dA$, where $R = \\{(x, y) : 0 \\le x + y \\le ${a},\\ 0 \\le x - y \\le ${b}\\}$.`,
-          `求 $\\iint_{R} ${k}(x^{2} - y^{2})\\,dA$，其中 $R = \\{(x, y) : 0 \\le x + y \\le ${a},\\ 0 \\le x - y \\le ${b}\\}$。`,
-        ],
+      const kk = k === 1 ? "" : `${k}`;
+      return numberProblem({
+        prompt: t(
+          `Evaluate $\\iint_{R} ${kk}(x^{2} - y^{2})\\,dA$, where $R = \\{(x, y) : 0 \\le x + y \\le ${a},\\ 0 \\le x - y \\le ${b}\\}$.`,
+          `求 $\\iint_{R} ${kk}(x^{2} - y^{2})\\,dA$，其中 $R = \\{(x, y) : 0 \\le x + y \\le ${a},\\ 0 \\le x - y \\le ${b}\\}$。`,
+        ),
         answer,
-        [Q.of(k * a * a * b * b, 4), Q.of(k * a * a * b * b, 2), Q.of(k * a * b, 2)],
-        [
-          `The integral becomes $\\int_{0}^{${a}} \\int_{0}^{${b}} ${k}uv \\cdot \\frac{1}{2} \\, dv \\, du$. The $u$ integral gives $${Q.of(a * a, 2).toLatex()}$ and the $v$ integral gives $${Q.of(b * b, 2).toLatex()}$, so the result is $${answer.toLatex()}$.`,
-          `积分变为 $\\int_{0}^{${a}} \\int_{0}^{${b}} ${k}uv \\cdot \\frac{1}{2} \\, dv \\, du$。对 $u$ 积分得 $${Q.of(a * a, 2).toLatex()}$，对 $v$ 积分得 $${Q.of(b * b, 2).toLatex()}$，所以结果是 $${answer.toLatex()}$。`,
-        ],
-      );
+        mistakes: apart(answer, [
+          why(
+            Q.of(k * a * a * b * b, 4),
+            "The area element $\\frac{1}{2}\\,du\\,dv$ is missing its factor $\\frac{1}{2}$.",
+            "面积元 $\\frac{1}{2}\\,du\\,dv$ 漏了因子 $\\frac{1}{2}$。",
+          ),
+          why(
+            Q.of(k * a * a * b * b, 2),
+            "That multiplies by $2$; the area element is $\\frac{1}{2}\\,du\\,dv$, the reciprocal of $2$.",
+            "那是乘以 $2$；面积元是 $\\frac{1}{2}\\,du\\,dv$，是 $2$ 的倒数。",
+          ),
+          why(
+            Q.of(k * a * b, 2),
+            "That treats the integrand as constant; $x^2 - y^2 = uv$ must be integrated too.",
+            "那是把被积函数当作常数；$x^2 - y^2 = uv$ 也要积分。",
+          ),
+        ]),
+        solution: walked(
+          [
+            [
+              ["Change variables", "变量代换"],
+              t(
+                `$x^2 - y^2 = (x + y)(x - y) = uv$, the region becomes $[0, ${a}] \\times [0, ${b}]$, and $dA = \\frac{1}{2}\\,du\\,dv$.`,
+                `$x^2 - y^2 = (x + y)(x - y) = uv$，区域变为 $[0, ${a}] \\times [0, ${b}]$，$dA = \\frac{1}{2}\\,du\\,dv$。`,
+              ),
+            ],
+            [
+              ["Integrate", "积分"],
+              t(
+                `$\\int_{0}^{${a}} \\int_{0}^{${b}} ${kk}uv \\cdot \\frac{1}{2} \\, dv \\, du$: the $u$ integral gives $${Q.of(a * a, 2).toLatex()}$ and the $v$ integral gives $${Q.of(b * b, 2).toLatex()}$, so the result is $${answer.toLatex()}$.`,
+                `$\\int_{0}^{${a}} \\int_{0}^{${b}} ${kk}uv \\cdot \\frac{1}{2} \\, dv \\, du$：对 $u$ 积分得 $${Q.of(a * a, 2).toLatex()}$，对 $v$ 积分得 $${Q.of(b * b, 2).toLatex()}$，所以结果是 $${answer.toLatex()}$。`,
+              ),
+            ],
+          ],
+          t(
+            `$R$ has area $\\frac{${a * b}}{2}$ and $uv$ averages $\\frac{${a}}{2} \\cdot \\frac{${b}}{2}$ over it, so the integral is $${k} \\cdot \\frac{${a * b}}{2} \\cdot \\frac{${a * b}}{4} = ${answer.toLatex()}$.`,
+            `$R$ 的面积为 $\\frac{${a * b}}{2}$，$uv$ 在其上的平均值为 $\\frac{${a}}{2} \\cdot \\frac{${b}}{2}$，所以积分为 $${k} \\cdot \\frac{${a * b}}{2} \\cdot \\frac{${a * b}}{4} = ${answer.toLatex()}$。`,
+          ),
+        ),
+      });
     },
   ),
   figure:
@@ -250,8 +319,8 @@ const oppositeDistance = {
     "the-distance-across-the-axis",
     ["The distance across the axis", "穿过轴的距离"],
     [
-      "Two points with the same $r$ and angles differing by $\\pi$ lie on opposite sides of the $z$-axis, so their horizontal separation is $2r$. Adding the difference in height through the Pythagorean theorem gives the distance, without converting to Cartesian coordinates.",
-      "$r$ 相同、角度相差 $\\pi$ 的两点位于 $z$ 轴的两侧，所以水平距离是 $2r$。再用勾股定理计入高度差就得到距离，不必转换成直角坐标。",
+      "Two points with the same $r$ and angles differing by $\\pi$ lie on opposite sides of the $z$-axis, so their horizontal separation is $2r$. Adding the difference in height through the Pythagorean theorem gives the distance, without converting to Cartesian coordinates. For $\\left(10, \\frac{\\pi}{8}, 0\\right)$ and $\\left(10, \\frac{9\\pi}{8}, 21\\right)$ the distance is $\\sqrt{20^2 + 21^2} = 29$.\n\n> **Watch out.** The horizontal separation is $2r$, not $r$, and the two separations combine by the Pythagorean theorem, not by adding them.",
+      "$r$ 相同、角度相差 $\\pi$ 的两点位于 $z$ 轴的两侧，所以水平距离是 $2r$。再用勾股定理计入高度差就得到距离，不必转换成直角坐标。对 $\\left(10, \\frac{\\pi}{8}, 0\\right)$ 与 $\\left(10, \\frac{9\\pi}{8}, 21\\right)$，距离为 $\\sqrt{20^2 + 21^2} = 29$。\n\n> **注意。** 水平距离是 $2r$ 而不是 $r$；两个方向的距离用勾股定理合成，而不是相加。",
     ],
     (rng) => {
       const [a, b, c] = rng.pick([
@@ -270,18 +339,52 @@ const oppositeDistance = {
       const z1 = rng.int(-6, 6);
       const z2 = z1 + rng.pick([-1, 1]) * b * k;
       const answer = c * k;
-      return ask(
-        [
+      return numberProblem({
+        prompt: t(
           `Find the distance between the points with cylindrical coordinates $(${r}, ${t1}, ${z1})$ and $(${r}, ${t2}, ${z2})$.`,
           `求柱坐标为 $(${r}, ${t1}, ${z1})$ 和 $(${r}, ${t2}, ${z2})$ 的两点之间的距离。`,
-        ],
+        ),
         answer,
-        [b * k, (a + b) * k, (r + b * k) * 2],
-        [
-          `The angles differ by $\\pi$, so the horizontal separation is $2 \\cdot ${r} = ${a * k}$. The heights differ by $${b * k}$, and the distance is $\\sqrt{${(a * k) ** 2} + ${(b * k) ** 2}} = ${answer}$.`,
-          `两个角相差 $\\pi$，所以水平距离是 $2 \\cdot ${r} = ${a * k}$。高度差是 $${b * k}$，距离是 $\\sqrt{${(a * k) ** 2} + ${(b * k) ** 2}} = ${answer}$。`,
-        ],
-      );
+        mistakes: apart(answer, [
+          why(
+            b * k,
+            `That is only the difference in height; the points are also $${a * k}$ apart horizontally.`,
+            `那只是高度差；两点在水平方向上还相距 $${a * k}$。`,
+          ),
+          why(
+            (a + b) * k,
+            `That adds $${a * k}$ and $${b * k}$; perpendicular separations combine by the Pythagorean theorem.`,
+            `那是把 $${a * k}$ 与 $${b * k}$ 相加；互相垂直的距离用勾股定理合成。`,
+          ),
+          why(
+            a * k,
+            `That is only the horizontal separation $2r$; the heights also differ by $${b * k}$.`,
+            `那只是水平距离 $2r$；高度还相差 $${b * k}$。`,
+          ),
+        ]),
+        solution: walked(
+          [
+            [
+              ["Find the horizontal separation", "求水平距离"],
+              t(
+                `The angles differ by $\\pi$, so the points are on opposite sides of the axis: $2 \\cdot ${r} = ${a * k}$.`,
+                `两个角相差 $\\pi$，两点在轴的两侧：$2 \\cdot ${r} = ${a * k}$。`,
+              ),
+            ],
+            [
+              ["Combine with the height", "与高度差合成"],
+              t(
+                `The heights differ by $${b * k}$, and the distance is $\\sqrt{${(a * k) ** 2} + ${(b * k) ** 2}} = ${answer}$.`,
+                `高度差是 $${b * k}$，距离是 $\\sqrt{${(a * k) ** 2} + ${(b * k) ** 2}} = ${answer}$。`,
+              ),
+            ],
+          ],
+          t(
+            `$${answer}$ is more than each of $${a * k}$ and $${b * k}$ and less than their sum $${(a + b) * k}$, as the hypotenuse of a right triangle must be.`,
+            `$${answer}$ 大于 $${a * k}$ 和 $${b * k}$，又小于它们的和 $${(a + b) * k}$，正如直角三角形的斜边应有的那样。`,
+          ),
+        ),
+      });
     },
   ),
   figure: multivariableDrawings5["cylindrical-polar-coordinates#the-distance-across-the-axis"],
@@ -292,8 +395,8 @@ const offAxisCylinder = {
     "a-cylinder-whose-axis-is-not-the-z-axis",
     ["A cylinder whose axis is not the z-axis", "轴不是 z 轴的圆柱"],
     [
-      "The equation $r = p\\cos\\theta + q\\sin\\theta$ looks unlike a cylinder, but multiplying by $r$ gives $x^{2} + y^{2} = px + qy$. Completing the square shows a circular cylinder through the $z$-axis, with radius $\\frac{1}{2}\\sqrt{p^{2} + q^{2}}$.",
-      "方程 $r = p\\cos\\theta + q\\sin\\theta$ 看起来不像圆柱，但两边乘以 $r$ 得 $x^{2} + y^{2} = px + qy$。配方后可知，这是过 $z$ 轴的圆柱，半径为 $\\frac{1}{2}\\sqrt{p^{2} + q^{2}}$。",
+      "The equation $r = p\\cos\\theta + q\\sin\\theta$ looks unlike a cylinder, but multiplying by $r$ gives $x^{2} + y^{2} = px + qy$. Completing the square shows a circular cylinder through the $z$-axis, with radius $\\frac{1}{2}\\sqrt{p^{2} + q^{2}}$. For $r = 7\\cos\\theta + 24\\sin\\theta$ the center is $\\left(\\frac{7}{2}, 12\\right)$ and the radius is $\\frac{1}{2}\\sqrt{49 + 576} = \\frac{25}{2}$.\n\n> **Watch out.** $\\sqrt{p^2 + q^2}$ is the diameter, the largest value of $r$; the radius is half of it. And the coordinates of the center combine by the Pythagorean theorem, not by adding.",
+      "方程 $r = p\\cos\\theta + q\\sin\\theta$ 看起来不像圆柱，但两边乘以 $r$ 得 $x^{2} + y^{2} = px + qy$。配方后可知，这是过 $z$ 轴的圆柱，半径为 $\\frac{1}{2}\\sqrt{p^{2} + q^{2}}$。对 $r = 7\\cos\\theta + 24\\sin\\theta$，圆心为 $\\left(\\frac{7}{2}, 12\\right)$，半径为 $\\frac{1}{2}\\sqrt{49 + 576} = \\frac{25}{2}$。\n\n> **注意。** $\\sqrt{p^2 + q^2}$ 是直径，即 $r$ 的最大值；半径是它的一半。圆心坐标要用勾股定理合成，而不是相加。",
     ],
     (rng) => {
       const [a, b, c] = rng.pick(triples);
@@ -302,18 +405,52 @@ const offAxisCylinder = {
       const q = 2 * b * u * rng.pick([-1, 1]);
       const answer = c * u;
       const eq = poly([p, "\\cos\\theta"], [q, "\\sin\\theta"]);
-      return ask(
-        [
+      return numberProblem({
+        prompt: t(
           `The surface with cylindrical equation $r = ${eq}$ is a circular cylinder. Find its radius.`,
           `柱坐标方程 $r = ${eq}$ 表示的曲面是圆柱。求它的半径。`,
-        ],
+        ),
         answer,
-        [2 * c * u, (a + b) * u, c * c * u * u],
-        [
-          `Multiplying by $r$ gives $x^{2} + y^{2} = ${poly([p, "x"], [q, "y"])}$. Completing the square, the radius squared is $${a * u}^{2} + ${b * u}^{2}$, so the radius is $${answer}$.`,
-          `两边乘以 $r$，得 $x^{2} + y^{2} = ${poly([p, "x"], [q, "y"])}$。配方后，半径的平方是 $${a * u}^{2} + ${b * u}^{2}$，所以半径是 $${answer}$。`,
-        ],
-      );
+        mistakes: apart(answer, [
+          why(
+            2 * c * u,
+            `$${2 * c * u}$ is the diameter, the largest value of $r$; the radius is half of it.`,
+            `$${2 * c * u}$ 是直径，即 $r$ 的最大值；半径是它的一半。`,
+          ),
+          why(
+            (a + b) * u,
+            `That adds $${a * u}$ and $${b * u}$; the center is at distance $\\sqrt{${a * u}^2 + ${b * u}^2}$ from the axis.`,
+            `那是把 $${a * u}$ 与 $${b * u}$ 相加；圆心到轴的距离是 $\\sqrt{${a * u}^2 + ${b * u}^2}$。`,
+          ),
+          why(
+            c * c * u * u,
+            `$${c * c * u * u}$ is the square of the radius; take its square root.`,
+            `$${c * c * u * u}$ 是半径的平方；还要开平方。`,
+          ),
+        ]),
+        solution: walked(
+          [
+            [
+              ["Multiply by r", "乘以 r"],
+              t(
+                `$r^2 = ${poly([p, "r\\cos\\theta"], [q, "r\\sin\\theta"])}$ is $x^{2} + y^{2} = ${poly([p, "x"], [q, "y"])}$.`,
+                `$r^2 = ${poly([p, "r\\cos\\theta"], [q, "r\\sin\\theta"])}$ 即 $x^{2} + y^{2} = ${poly([p, "x"], [q, "y"])}$。`,
+              ),
+            ],
+            [
+              ["Complete the square", "配方"],
+              t(
+                `The center is $(${p / 2}, ${q / 2})$ and the radius squared is $${a * u}^{2} + ${b * u}^{2} = ${answer * answer}$, so the radius is $${answer}$.`,
+                `圆心为 $(${p / 2}, ${q / 2})$，半径的平方是 $${a * u}^{2} + ${b * u}^{2} = ${answer * answer}$，所以半径是 $${answer}$。`,
+              ),
+            ],
+          ],
+          t(
+            `The circle passes through the origin, since $x = y = 0$ satisfies the equation, so its radius is the distance from the center $(${p / 2}, ${q / 2})$ to the origin: $${answer}$.`,
+            `圆经过原点，因为 $x = y = 0$ 满足方程，所以半径就是圆心 $(${p / 2}, ${q / 2})$ 到原点的距离：$${answer}$。`,
+          ),
+        ),
+      });
     },
   ),
   figure: multivariableDrawings5["surfaces-in-cylindrical-polar-coordinates#a-cylinder-whose-axis-is-not-the-z-axis"],
@@ -324,13 +461,14 @@ const sphericalKinds = {
     "recognizing-planes-and-cylinders-in-spherical-form",
     ["Recognizing planes and cylinders in spherical form", "识别球坐标形式的平面和圆柱"],
     [
-      "Since $z = \\rho\\cos\\varphi$ and $r = \\rho\\sin\\varphi$, the equation $\\rho = a\\sec\\varphi$ is a plane and $\\rho = a\\csc\\varphi$ is a cylinder. And $\\rho = 2a\\cos\\varphi$ becomes $x^{2} + y^{2} + z^{2} = 2az$ after multiplying by $\\rho$, a sphere not centered at the origin.",
-      "由于 $z = \\rho\\cos\\varphi$，$r = \\rho\\sin\\varphi$，方程 $\\rho = a\\sec\\varphi$ 是平面，$\\rho = a\\csc\\varphi$ 是圆柱。而 $\\rho = 2a\\cos\\varphi$ 两边乘以 $\\rho$ 后变成 $x^{2} + y^{2} + z^{2} = 2az$，是球心不在原点的球面。",
+      "Since $z = \\rho\\cos\\varphi$ and $r = \\rho\\sin\\varphi$, the equation $\\rho = a\\sec\\varphi$ is a plane and $\\rho = a\\csc\\varphi$ is a cylinder. And $\\rho = 2a\\cos\\varphi$ becomes $x^{2} + y^{2} + z^{2} = 2az$ after multiplying by $\\rho$, a sphere not centered at the origin. So $\\rho = 12\\sec\\varphi$ is the plane $z = 12$.\n\n> **Watch out.** $\\sec\\varphi$ goes with $z = \\rho\\cos\\varphi$, a horizontal plane, and $\\csc\\varphi$ with $r = \\rho\\sin\\varphi$, a cylinder; do not swap them. The sphere $\\rho = 2a\\cos\\varphi$ has radius $a$, not $2a$, and passes through the origin.",
+      "由于 $z = \\rho\\cos\\varphi$，$r = \\rho\\sin\\varphi$，方程 $\\rho = a\\sec\\varphi$ 是平面，$\\rho = a\\csc\\varphi$ 是圆柱。而 $\\rho = 2a\\cos\\varphi$ 两边乘以 $\\rho$ 后变成 $x^{2} + y^{2} + z^{2} = 2az$，是球心不在原点的球面。所以 $\\rho = 12\\sec\\varphi$ 是平面 $z = 12$。\n\n> **注意。** $\\sec\\varphi$ 对应 $z = \\rho\\cos\\varphi$，是水平面；$\\csc\\varphi$ 对应 $r = \\rho\\sin\\varphi$，是圆柱；不要弄反。球面 $\\rho = 2a\\cos\\varphi$ 的半径是 $a$ 而不是 $2a$，并且经过原点。",
     ],
     (rng) => {
       const a = rng.int(1, 9);
       const kind = rng.int(0, 3);
-      const eq = [`${a}\\sec\\varphi`, `${a}\\csc\\varphi`, `${2 * a}\\cos\\varphi`, `${a}`][kind] as string;
+      const lead = a === 1 ? "" : `${a}`;
+      const eq = [`${lead}\\sec\\varphi`, `${lead}\\csc\\varphi`, `${2 * a}\\cos\\varphi`, `${a}`][kind] as string;
       const options: Pair[] = [
         [`The plane $z = ${a}$`, `平面 $z = ${a}$`],
         [`The cylinder $x^{2} + y^{2} = ${a * a}$`, `圆柱 $x^{2} + y^{2} = ${a * a}$`],
@@ -356,14 +494,47 @@ const sphericalKinds = {
           `$\\rho$ 为常数表示到原点的距离不变，所以这是以原点为球心的球面。`,
         ],
       ];
-      const why = whys[kind] as Pair;
-      return choose(
-        rng,
-        [`Which surface has the spherical equation $\\rho = ${eq}$?`, `球坐标方程 $\\rho = ${eq}$ 表示哪个曲面？`],
-        correct,
-        options.filter((o) => o !== correct),
-        why,
-      );
+      const reading = whys[kind] as Pair;
+      const forms: Pair[] = [
+        [
+          `The plane $z = ${a}$ is $\\rho\\cos\\varphi = ${a}$, that is $\\rho = ${lead}\\sec\\varphi$`,
+          `平面 $z = ${a}$ 是 $\\rho\\cos\\varphi = ${a}$，即 $\\rho = ${lead}\\sec\\varphi$`,
+        ],
+        [
+          `The cylinder $r = ${a}$ is $\\rho\\sin\\varphi = ${a}$, that is $\\rho = ${lead}\\csc\\varphi$`,
+          `圆柱 $r = ${a}$ 是 $\\rho\\sin\\varphi = ${a}$，即 $\\rho = ${lead}\\csc\\varphi$`,
+        ],
+        [
+          `That sphere is $x^{2} + y^{2} + z^{2} = ${2 * a}z$, that is $\\rho = ${2 * a}\\cos\\varphi$`,
+          `那个球面是 $x^{2} + y^{2} + z^{2} = ${2 * a}z$，即 $\\rho = ${2 * a}\\cos\\varphi$`,
+        ],
+        [`That sphere has the constant $\\rho = ${a}$`, `那个球面是常数 $\\rho = ${a}$`],
+      ];
+      const checks: Pair[] = [
+        [
+          `At $\\varphi = 0$, $\\rho = ${a}$ gives $(0, 0, ${a})$, and at $\\varphi = \\frac{\\pi}{3}$, $\\rho = ${2 * a}$ gives height $${2 * a} \\cdot \\frac{1}{2} = ${a}$ again.`,
+          `$\\varphi = 0$ 时 $\\rho = ${a}$，得 $(0, 0, ${a})$；$\\varphi = \\frac{\\pi}{3}$ 时 $\\rho = ${2 * a}$，高度为 $${2 * a} \\cdot \\frac{1}{2} = ${a}$，仍相同。`,
+        ],
+        [
+          `At $\\varphi = \\frac{\\pi}{2}$, $\\rho = ${a}$ gives $(${a}, 0, 0)$, and at $\\varphi = \\frac{\\pi}{6}$, $\\rho = ${2 * a}$ gives distance $${2 * a} \\cdot \\frac{1}{2} = ${a}$ from the axis again.`,
+          `$\\varphi = \\frac{\\pi}{2}$ 时 $\\rho = ${a}$，得 $(${a}, 0, 0)$；$\\varphi = \\frac{\\pi}{6}$ 时 $\\rho = ${2 * a}$，到轴的距离为 $${2 * a} \\cdot \\frac{1}{2} = ${a}$，仍相同。`,
+        ],
+        [
+          `At $\\varphi = 0$, $\\rho = ${2 * a}$ gives $(0, 0, ${2 * a})$, and at $\\varphi = \\frac{\\pi}{2}$, $\\rho = 0$ gives the origin; both are at distance $${a}$ from $(0, 0, ${a})$.`,
+          `$\\varphi = 0$ 时 $\\rho = ${2 * a}$，得 $(0, 0, ${2 * a})$；$\\varphi = \\frac{\\pi}{2}$ 时 $\\rho = 0$，得原点；两者到 $(0, 0, ${a})$ 的距离都是 $${a}$。`,
+        ],
+        [
+          `The points $(${a}, 0, 0)$ and $(0, 0, ${a})$ both have $\\rho = ${a}$, and both are at distance $${a}$ from the origin.`,
+          `点 $(${a}, 0, 0)$ 与 $(0, 0, ${a})$ 的 $\\rho$ 都是 $${a}$，到原点的距离都是 $${a}$。`,
+        ],
+      ];
+      const text = ([en, zh]: Pair) => t(en, zh);
+      return explainedChoice(rng, {
+        prompt: t(`Which surface has the spherical equation $\\rho = ${eq}$?`, `球坐标方程 $\\rho = ${eq}$ 表示哪个曲面？`),
+        correct: text(correct),
+        wrong: [0, 1, 2, 3].filter((i) => i !== kind).map((i) => ({ option: text(options[i] as Pair), why: text(forms[i] as Pair) })),
+        solution: walked([[["Convert to Cartesian form", "化为直角坐标"], text(reading)]], text(checks[kind] as Pair)),
+      });
     },
   ),
   figure: multivariableDrawings5["surfaces-in-spherical-polar-coordinates#recognizing-planes-and-cylinders-in-spherical-form"],
@@ -373,26 +544,60 @@ const zSquaredEllipsoid = point(
   "a-nonconstant-integrand-over-an-ellipsoid",
   ["A nonconstant integrand over an ellipsoid", "椭球上的非常数被积函数"],
   [
-    "Scaling an ellipsoid to the unit ball multiplies volume by $pqr$, and the integrand must be rewritten too: $z^{2}$ becomes $r^{2}w^{2}$. Over the unit ball, symmetry gives $\\iiint w^{2}\\,dV = \\frac{1}{3}\\iiint \\rho^{2}\\,dV = \\frac{4\\pi}{15}$.",
-    "把椭球缩放成单位球，体积乘以 $pqr$，被积函数也必须改写：$z^{2}$ 变成 $r^{2}w^{2}$。在单位球上，由对称性得 $\\iiint w^{2}\\,dV = \\frac{1}{3}\\iiint \\rho^{2}\\,dV = \\frac{4\\pi}{15}$。",
+    "Scaling an ellipsoid to the unit ball multiplies volume by $pqr$, and the integrand must be rewritten too: $z^{2}$ becomes $r^{2}w^{2}$. Over the unit ball, symmetry gives $\\iiint w^{2}\\,dV = \\frac{1}{3}\\iiint \\rho^{2}\\,dV = \\frac{4\\pi}{15}$. For $x^2 + y^2 + \\frac{z^2}{36} \\le 1$ the integral of $z^2$ is $6 \\cdot 36 \\cdot \\frac{4\\pi}{15} = \\frac{288}{5}\\pi$.\n\n> **Watch out.** The factor $r$ appears three times: once in the Jacobian $pqr$ and twice in $z^2 = r^2w^2$. And $\\iiint w^2\\,dV = \\frac{4\\pi}{15}$ over the unit ball, not its volume $\\frac{4\\pi}{3}$.",
+    "把椭球缩放成单位球，体积乘以 $pqr$，被积函数也必须改写：$z^{2}$ 变成 $r^{2}w^{2}$。在单位球上，由对称性得 $\\iiint w^{2}\\,dV = \\frac{1}{3}\\iiint \\rho^{2}\\,dV = \\frac{4\\pi}{15}$。对 $x^2 + y^2 + \\frac{z^2}{36} \\le 1$，$z^2$ 的积分为 $6 \\cdot 36 \\cdot \\frac{4\\pi}{15} = \\frac{288}{5}\\pi$。\n\n> **注意。** 因子 $r$ 出现三次：雅可比行列式 $pqr$ 中一次，$z^2 = r^2w^2$ 中两次。单位球上 $\\iiint w^2\\,dV = \\frac{4\\pi}{15}$，不是它的体积 $\\frac{4\\pi}{3}$。",
   ],
   (rng) => {
     const p = rng.int(1, 5);
     const q = rng.int(1, 5);
     const r = rng.int(2, 5);
     const answer = Q.of(4 * p * q * r ** 3, 15);
-    return ask(
-      [
+    return numberProblem({
+      prompt: t(
         `Find $\\frac{1}{\\pi}\\iiint_{E} z^{2}\\,dV$, where $E$ is the solid ellipsoid $\\frac{x^{2}}{${p * p}} + \\frac{y^{2}}{${q * q}} + \\frac{z^{2}}{${r * r}} \\le 1$.`,
         `求 $\\frac{1}{\\pi}\\iiint_{E} z^{2}\\,dV$，其中 $E$ 是实心椭球 $\\frac{x^{2}}{${p * p}} + \\frac{y^{2}}{${q * q}} + \\frac{z^{2}}{${r * r}} \\le 1$。`,
-      ],
+      ),
       answer,
-      [Q.of(4 * p * q * r, 15), Q.of(4 * p * q * r * r, 15), Q.of(4 * p * q * r ** 3, 3)],
-      [
-        `With $x = ${p}u$, $y = ${q}v$, $z = ${r}w$, the Jacobian is $${p * q * r}$ and $z^{2} = ${r * r}w^{2}$. Over the unit ball the integral of $w^{2}$ is $\\frac{4\\pi}{15}$, so the value is $${answer.toLatex()}$.`,
-        `令 $x = ${p}u$，$y = ${q}v$，$z = ${r}w$，雅可比行列式是 $${p * q * r}$，且 $z^{2} = ${r * r}w^{2}$。在单位球上，$w^{2}$ 的积分是 $\\frac{4\\pi}{15}$，所以结果是 $${answer.toLatex()}$。`,
-      ],
-    );
+      mistakes: apart(answer, [
+        why(
+          Q.of(4 * p * q * r, 15),
+          `That keeps $w^2$ in place of $z^2$; the integrand becomes $z^2 = ${r * r}w^2$.`,
+          `那是用 $w^2$ 代替了 $z^2$；被积函数变为 $z^2 = ${r * r}w^2$。`,
+        ),
+        why(
+          Q.of(4 * p * q * r * r, 15),
+          `That has one factor $${r}$ too few: $z^2 = ${r}^2w^2$, on top of the $${r}$ in the Jacobian.`,
+          `那是少了一个因子 $${r}$：$z^2 = ${r}^2w^2$，此外雅可比行列式中还有一个 $${r}$。`,
+        ),
+        why(
+          Q.of(4 * p * q * r ** 3, 3),
+          "That uses the volume $\\frac{4\\pi}{3}$ of the unit ball; the integral of $w^2$ over it is $\\frac{4\\pi}{15}$.",
+          "那是用了单位球的体积 $\\frac{4\\pi}{3}$；$w^2$ 在其上的积分是 $\\frac{4\\pi}{15}$。",
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Scale to the unit ball", "缩放为单位球"],
+            t(
+              `With $x = ${p}u$, $y = ${q}v$, $z = ${r}w$, the Jacobian is $${p * q * r}$ and $z^{2} = ${r * r}w^{2}$.`,
+              `令 $x = ${p}u$，$y = ${q}v$，$z = ${r}w$，雅可比行列式是 $${p * q * r}$，且 $z^{2} = ${r * r}w^{2}$。`,
+            ),
+          ],
+          [
+            ["Integrate over the ball", "在单位球上积分"],
+            t(
+              `The integral of $w^{2}$ over the unit ball is $\\frac{4\\pi}{15}$, so the value is $${p * q * r} \\cdot ${r * r} \\cdot \\frac{4}{15} = ${answer.toLatex()}$.`,
+              `$w^{2}$ 在单位球上的积分是 $\\frac{4\\pi}{15}$，所以结果是 $${p * q * r} \\cdot ${r * r} \\cdot \\frac{4}{15} = ${answer.toLatex()}$。`,
+            ),
+          ],
+        ],
+        t(
+          `$w^2$ averages $\\frac{1}{5}$ over the unit ball, so $z^2$ averages $\\frac{${r * r}}{5}$ over $E$, whose volume is $${Q.of(4 * p * q * r, 3).toLatex()}\\pi$; the product is $${answer.toLatex()}\\pi$.`,
+          `$w^2$ 在单位球上的平均值为 $\\frac{1}{5}$，所以 $z^2$ 在 $E$ 上的平均值为 $\\frac{${r * r}}{5}$，而 $E$ 的体积为 $${Q.of(4 * p * q * r, 3).toLatex()}\\pi$；乘积为 $${answer.toLatex()}\\pi$。`,
+        ),
+      ),
+    });
   },
 );
 

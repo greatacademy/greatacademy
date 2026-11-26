@@ -1156,8 +1156,8 @@ const polarArea = {
     "the-area-of-a-drawn-piece-of-a-ring",
     ["The area of a drawn piece of a ring", "所画圆环一部分的面积"],
     [
-      "In polar coordinates $dA = r\\,dr\\,d\\theta$, so a piece of a ring with radii $a < b$ and angle $\\Delta\\theta$ has area $\\int \\int_a^b r\\,dr\\,d\\theta = \\frac{1}{2}\\Delta\\theta\\,(b^2 - a^2)$. The factor $r$ appears because a small polar patch gets wider the farther it lies from the origin.",
-      "极坐标下 $dA = r\\,dr\\,d\\theta$，所以半径 $a < b$、角度 $\\Delta\\theta$ 的一段圆环面积为 $\\int \\int_a^b r\\,dr\\,d\\theta = \\frac{1}{2}\\Delta\\theta\\,(b^2 - a^2)$。出现因子 $r$，是因为极坐标的小块离原点越远就越宽。",
+      "In polar coordinates $dA = r\\,dr\\,d\\theta$, so a piece of a ring with radii $a < b$ and angle $\\Delta\\theta$ has area $\\int \\int_a^b r\\,dr\\,d\\theta = \\frac{1}{2}\\Delta\\theta\\,(b^2 - a^2)$. The factor $r$ appears because a small polar patch gets wider the farther it lies from the origin. A half ring between radii $2$ and $7$ has area $\\frac{1}{2} \\cdot \\pi \\cdot (49 - 4) = \\frac{45}{2}\\pi$.\n\n> **Watch out.** Use the difference of the squared radii, $b^2 - a^2$, not the squared width $(b - a)^2$, and keep the factor $\\frac{1}{2}$ from $\\int r\\,dr$.",
+      "极坐标下 $dA = r\\,dr\\,d\\theta$，所以半径 $a < b$、角度 $\\Delta\\theta$ 的一段圆环面积为 $\\int \\int_a^b r\\,dr\\,d\\theta = \\frac{1}{2}\\Delta\\theta\\,(b^2 - a^2)$。出现因子 $r$，是因为极坐标的小块离原点越远就越宽。半径 $2$ 与 $7$ 之间的半个圆环面积为 $\\frac{1}{2} \\cdot \\pi \\cdot (49 - 4) = \\frac{45}{2}\\pi$。\n\n> **注意。** 要用半径平方之差 $b^2 - a^2$，不是宽度的平方 $(b - a)^2$；并保留 $\\int r\\,dr$ 带来的因子 $\\frac{1}{2}$。",
     ],
     (rng) => {
       const a = rng.int(1, 4);
@@ -1177,15 +1177,52 @@ const polarArea = {
       }
       const n = quarters * (b * b - a * a);
       const answer = Q.of(n, 4);
-      return ask(
-        ["The area of the shaded region is $k\\pi$. Find $k$.", "阴影区域的面积为 $k\\pi$。求 $k$。"],
-        answer,
-        [Q.of(quarters * (b - a) * (b - a), 4), Q.of(n, 2), Q.of(quarters * b * b, 4), Q.of(quarters * (b - a), 4)],
-        [
-          `The radii are $${a}$ and $${b}$ and the angle is $${piTimes(quarters, 2)}$, so the area is $\\frac{1}{2} \\cdot ${piTimes(quarters, 2)} \\cdot (${b * b} - ${a * a}) = ${piTimes(n, 4)}$.`,
-          `半径为 $${a}$ 和 $${b}$，角度为 $${piTimes(quarters, 2)}$，所以面积为 $\\frac{1}{2} \\cdot ${piTimes(quarters, 2)} \\cdot (${b * b} - ${a * a}) = ${piTimes(n, 4)}$。`,
-        ],
-        fig(
+      return {
+        ...numberProblem({
+          prompt: t("The area of the shaded region is $k\\pi$. Find $k$.", "阴影区域的面积为 $k\\pi$。求 $k$。"),
+          answer,
+          mistakes: apart(answer, [
+            why(
+              Q.of(quarters * (b - a) * (b - a), 4),
+              `That squares the width $${b - a}$; the radial integral gives $${b}^2 - ${a}^2$.`,
+              `那是把宽度 $${b - a}$ 平方；径向积分给出 $${b}^2 - ${a}^2$。`,
+            ),
+            why(Q.of(n, 2), "The factor $\\frac{1}{2}$ from $\\int r\\,dr$ is missing.", "漏了 $\\int r\\,dr$ 带来的因子 $\\frac{1}{2}$。"),
+            why(
+              Q.of(quarters * b * b, 4),
+              `That starts $r$ at $0$; the hole of radius $${a}$ is not shaded.`,
+              `那是让 $r$ 从 $0$ 开始；半径 $${a}$ 的空洞没有涂阴影。`,
+            ),
+            why(
+              Q.of(quarters * (b - a), 4),
+              "That integrates $1\\,dr$; the area element is $r\\,dr\\,d\\theta$.",
+              "那是对 $1\\,dr$ 积分；面积元是 $r\\,dr\\,d\\theta$。",
+            ),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Read the drawing", "读图"],
+                t(
+                  `The radii are $${a}$ and $${b}$ and the angle is $${piTimes(quarters, 2)}$.`,
+                  `半径为 $${a}$ 和 $${b}$，角度为 $${piTimes(quarters, 2)}$。`,
+                ),
+              ],
+              [
+                ["Integrate", "积分"],
+                t(
+                  `$\\frac{1}{2} \\cdot ${piTimes(quarters, 2)} \\cdot (${b * b} - ${a * a}) = ${piTimes(n, 4)}$, so $k = ${answer.toLatex()}$.`,
+                  `$\\frac{1}{2} \\cdot ${piTimes(quarters, 2)} \\cdot (${b * b} - ${a * a}) = ${piTimes(n, 4)}$，所以 $k = ${answer.toLatex()}$。`,
+                ),
+              ],
+            ],
+            t(
+              `The whole ring has area $${piTimes(b * b - a * a)}$, and the shaded piece is $${Q.of(quarters, 4).toLatex()}$ of it: $${piTimes(n, 4)}$.`,
+              `整个圆环面积为 $${piTimes(b * b - a * a)}$，阴影部分占它的 $${Q.of(quarters, 4).toLatex()}$：$${piTimes(n, 4)}$。`,
+            ),
+          ),
+        }),
+        figure: fig(
           7,
           [{ kind: "polygon", points: ring }],
           [
@@ -1193,7 +1230,7 @@ const polarArea = {
             `绕原点的一段阴影圆环，半径在 ${a} 和 ${b} 之间，占 ${quarters} 个四分之一圈。`,
           ],
         ),
-      );
+      };
     },
   ),
   figure: multivariableDrawings4["double-integrals-between-polar-curves#the-area-of-a-drawn-piece-of-a-ring"],
@@ -1204,8 +1241,8 @@ const cylindricalPoint = {
     "cylindrical-coordinates-of-a-drawn-point",
     ["Cylindrical coordinates of a drawn point", "所画点的柱坐标"],
     [
-      "The coordinates $r$ and $\\theta$ describe the shadow of the point in the $xy$-plane: $r$ is its distance from the origin and $\\theta$ is its angle from the positive $x$-axis. The coordinate $z$ does not change.",
-      "坐标 $r$ 和 $\\theta$ 描述点在 $xy$ 平面上的投影：$r$ 是它到原点的距离，$\\theta$ 是它与 $x$ 轴正方向的夹角。坐标 $z$ 不变。",
+      "The coordinates $r$ and $\\theta$ describe the shadow of the point in the $xy$-plane: $r$ is its distance from the origin and $\\theta$ is its angle from the positive $x$-axis. The coordinate $z$ does not change. A point of height $2$ whose shadow is $(-6, 6)$ has $r = \\sqrt{36 + 36} = 6\\sqrt{2}$ and $\\theta = \\frac{3\\pi}{4}$, so its cylindrical coordinates are $\\left(6\\sqrt{2}, \\frac{3\\pi}{4}, 2\\right)$.\n\n> **Watch out.** Measure $\\theta$ counterclockwise from the positive $x$-axis and read the quadrant from the signs of $x$ and $y$. For a diagonal shadow $r$ carries a factor $\\sqrt{2}$; it is not $|x| + |y|$.",
+      "坐标 $r$ 和 $\\theta$ 描述点在 $xy$ 平面上的投影：$r$ 是它到原点的距离，$\\theta$ 是它与 $x$ 轴正方向的夹角。坐标 $z$ 不变。高度为 $2$、投影为 $(-6, 6)$ 的点有 $r = \\sqrt{36 + 36} = 6\\sqrt{2}$，$\\theta = \\frac{3\\pi}{4}$，所以柱坐标为 $\\left(6\\sqrt{2}, \\frac{3\\pi}{4}, 2\\right)$。\n\n> **注意。** $\\theta$ 从 $x$ 轴正方向逆时针量，象限由 $x$、$y$ 的符号判断。对角线方向的投影，$r$ 带因子 $\\sqrt{2}$，不是 $|x| + |y|$。",
     ],
     (rng) => {
       const a = rng.int(1, 5);
@@ -1225,25 +1262,72 @@ const cylindricalPoint = {
       const P: Point = [a * d[0], a * d[1]];
       const diagonal = octant % 2 === 1;
       const r = diagonal ? `${a === 1 ? "" : a}\\sqrt{2}` : String(a);
-      const coordinates = (rr: string, n: number) => same(`(r, \\theta, z) = \\left(${rr},\\ ${piTimes(n, 4)},\\ ${z}\\right)`);
-      return choose(
-        rng,
-        [
+      const coordinates = (rr: string, n: number) => {
+        const s = `(r, \\theta, z) = \\left(${rr},\\ ${piTimes(n, 4)},\\ ${z}\\right)`;
+        return t(`$${s}$`, `$${s}$`);
+      };
+      const mirrored = (8 - octant) % 8 === octant ? (octant + 2) % 8 : (8 - octant) % 8;
+      return explainedChoice(rng, {
+        prompt: t(
           `The drawing shows the $xy$-plane and the shadow $P$ of a point whose height is $z = ${z}$. What are its cylindrical coordinates, with $0 \\le \\theta < 2\\pi$?`,
           `图中是 $xy$ 平面，$P$ 是一个高度为 $z = ${z}$ 的点的投影。它的柱坐标是什么（$0 \\le \\theta < 2\\pi$）？`,
+        ),
+        correct: coordinates(r, octant),
+        wrong: [
+          {
+            option: coordinates(r, (octant + 4) % 8),
+            why: t(`That angle points the opposite way, to $${at([-P[0], -P[1]])}$`, `这个角指向相反方向，到 $${at([-P[0], -P[1]])}$`),
+          },
+          {
+            option: coordinates(r, (octant + 2) % 8),
+            why: t(
+              `That angle is a quarter turn too far, pointing to $${at([-P[1], P[0]])}$`,
+              `这个角多转了四分之一圈，指向 $${at([-P[1], P[0]])}$`,
+            ),
+          },
+          {
+            option: coordinates(r, mirrored),
+            why: t(
+              `That angle points to $${at([a * (dirs[mirrored] as Point)[0], a * (dirs[mirrored] as Point)[1]])}$; $\\theta$ is measured counterclockwise from the positive $x$-axis`,
+              `这个角指向 $${at([a * (dirs[mirrored] as Point)[0], a * (dirs[mirrored] as Point)[1]])}$；$\\theta$ 从 $x$ 轴正方向逆时针量`,
+            ),
+          },
+          {
+            option: coordinates(diagonal ? String(2 * a) : `${a}\\sqrt{2}`, octant),
+            why: diagonal
+              ? t(
+                  `$${2 * a}$ is $|x| + |y|$; the distance from the origin is $\\sqrt{${a * a} + ${a * a}} = ${r}$`,
+                  `$${2 * a}$ 是 $|x| + |y|$；到原点的距离是 $\\sqrt{${a * a} + ${a * a}} = ${r}$`,
+                )
+              : t(
+                  `$P$ lies on an axis, so its distance from the origin is $${a}$, with no factor $\\sqrt{2}$`,
+                  `$P$ 在坐标轴上，所以它到原点的距离是 $${a}$，没有因子 $\\sqrt{2}$`,
+                ),
+          },
         ],
-        coordinates(r, octant),
-        [
-          coordinates(r, (octant + 4) % 8),
-          coordinates(r, (8 - octant) % 8 === octant ? (octant + 2) % 8 : (8 - octant) % 8),
-          coordinates(diagonal ? String(2 * a) : `${a}\\sqrt{2}`, octant),
-          coordinates(r, (octant + 2) % 8),
-        ],
-        [
-          `$P = ${at(P)}$, so $r = \\sqrt{${P[0] * P[0]} + ${P[1] * P[1]}} = ${r}$ and the angle from the positive $x$-axis is $${piTimes(octant, 4)}$.`,
-          `$P = ${at(P)}$，所以 $r = \\sqrt{${P[0] * P[0]} + ${P[1] * P[1]}} = ${r}$，与 $x$ 轴正方向的夹角为 $${piTimes(octant, 4)}$。`,
-        ],
-        fig(
+        solution: walked(
+          [
+            [
+              ["Find r", "求 r"],
+              t(
+                `$P = ${at(P)}$, so $r = \\sqrt{${P[0] * P[0]} + ${P[1] * P[1]}} = ${r}$.`,
+                `$P = ${at(P)}$，所以 $r = \\sqrt{${P[0] * P[0]} + ${P[1] * P[1]}} = ${r}$。`,
+              ),
+            ],
+            [
+              ["Find θ", "求 θ"],
+              t(
+                `The angle from the positive $x$-axis, counterclockwise, is $${piTimes(octant, 4)}$, and $z = ${z}$ stays.`,
+                `从 $x$ 轴正方向逆时针量得角度为 $${piTimes(octant, 4)}$，$z = ${z}$ 不变。`,
+              ),
+            ],
+          ],
+          t(
+            `$x = r\\cos\\theta$ and $y = r\\sin\\theta$ with $r = ${r}$ and $\\theta = ${piTimes(octant, 4)}$ give back $${at(P)}$.`,
+            `由 $r = ${r}$，$\\theta = ${piTimes(octant, 4)}$，$x = r\\cos\\theta$，$y = r\\sin\\theta$ 恢复出 $${at(P)}$。`,
+          ),
+        ),
+        figure: fig(
           6,
           [
             { kind: "segment", a: [0, 0], b: P, dashed: true },
@@ -1251,7 +1335,7 @@ const cylindricalPoint = {
           ],
           [`The point P at ${at(P)} joined to the origin by a dashed segment.`, `点 P 位于 ${at(P)}，用虚线与原点相连。`],
         ),
-      );
+      });
     },
   ),
   figure: multivariableDrawings5["cylindrical-polar-coordinates#cylindrical-coordinates-of-a-drawn-point"],
@@ -1622,8 +1706,8 @@ const areaChange = {
     "an-integral-through-a-drawn-change-of-variables",
     ["An integral through a drawn change of variables", "由所画的变量替换求积分"],
     [
-      "A linear map with images $T(1, 0)$ and $T(0, 1)$ has Jacobian determinant equal to the determinant of those two vectors. It multiplies every area by its absolute value, so $\\iint_R k\\,dA = k \\lvert J \\rvert \\cdot$ (area of the rectangle in $uv$).",
-      "像为 $T(1, 0)$ 和 $T(0, 1)$ 的线性映射，其雅可比行列式等于这两个向量的行列式。它把每个面积乘以其绝对值，所以 $\\iint_R k\\,dA = k \\lvert J \\rvert \\cdot$（$uv$ 中矩形的面积）。",
+      "A linear map with images $T(1, 0)$ and $T(0, 1)$ has Jacobian determinant equal to the determinant of those two vectors. It multiplies every area by its absolute value, so $\\iint_R k\\,dA = k \\lvert J \\rvert \\cdot$ (area of the rectangle in $uv$). For $T(1, 0) = (3, 1)$, $T(0, 1) = (1, 2)$ and the rectangle $[0, 1] \\times [0, 3]$, $\\lvert J \\rvert = 6 - 1 = 5$ and $\\iint_R 2\\,dA = 2 \\cdot 5 \\cdot 3 = 30$.\n\n> **Watch out.** Three factors multiply: the constant $k$, the Jacobian $\\lvert J \\rvert$ and the area of the rectangle. Leaving out any one of them is the usual slip.",
+      "像为 $T(1, 0)$ 和 $T(0, 1)$ 的线性映射，其雅可比行列式等于这两个向量的行列式。它把每个面积乘以其绝对值，所以 $\\iint_R k\\,dA = k \\lvert J \\rvert \\cdot$（$uv$ 中矩形的面积）。对 $T(1, 0) = (3, 1)$，$T(0, 1) = (1, 2)$ 和矩形 $[0, 1] \\times [0, 3]$，$\\lvert J \\rvert = 6 - 1 = 5$，$\\iint_R 2\\,dA = 2 \\cdot 5 \\cdot 3 = 30$。\n\n> **注意。** 三个因子相乘：常数 $k$、雅可比行列式 $\\lvert J \\rvert$ 和矩形面积。漏掉其中任何一个都是常见的失误。",
     ],
     (rng) => {
       const vectors: Point[] = [
@@ -1652,18 +1736,50 @@ const areaChange = {
         [m * u[0] + n * v[0], m * u[1] + n * v[1]],
         [n * v[0], n * v[1]],
       ];
-      return ask(
-        [
-          `The arrows show $T(1, 0)$ and $T(0, 1)$ for a linear map $T$, and the shaded region $R$ is the image of the rectangle $[0, ${m}] \\times [0, ${n}]$ in the $uv$-plane. Find $\\iint_R ${k}\\,dA$.`,
-          `箭头表示线性映射 $T$ 的 $T(1, 0)$ 和 $T(0, 1)$，阴影区域 $R$ 是 $uv$ 平面上矩形 $[0, ${m}] \\times [0, ${n}]$ 的像。求 $\\iint_R ${k}\\,dA$。`,
-        ],
-        answer,
-        [k * m * n, k * J, J * m * n, answer + k],
-        [
-          `$\\lvert J \\rvert = \\lvert (${u[0]})(${v[1]}) - (${u[1]})(${v[0]}) \\rvert = ${J}$, and the rectangle has area $${m * n}$, so the integral is $${k} \\cdot ${J} \\cdot ${m * n} = ${answer}$.`,
-          `$\\lvert J \\rvert = \\lvert (${u[0]})(${v[1]}) - (${u[1]})(${v[0]}) \\rvert = ${J}$，矩形面积为 $${m * n}$，所以积分为 $${k} \\cdot ${J} \\cdot ${m * n} = ${answer}$。`,
-        ],
-        fig(
+      return {
+        ...numberProblem({
+          prompt: t(
+            `The arrows show $T(1, 0)$ and $T(0, 1)$ for a linear map $T$, and the shaded region $R$ is the image of the rectangle $[0, ${m}] \\times [0, ${n}]$ in the $uv$-plane. Find $\\iint_R ${k}\\,dA$.`,
+            `箭头表示线性映射 $T$ 的 $T(1, 0)$ 和 $T(0, 1)$，阴影区域 $R$ 是 $uv$ 平面上矩形 $[0, ${m}] \\times [0, ${n}]$ 的像。求 $\\iint_R ${k}\\,dA$。`,
+          ),
+          answer,
+          mistakes: apart(answer, [
+            why(
+              k * m * n,
+              `That leaves out the Jacobian: $T$ multiplies areas by $${J}$.`,
+              `那是漏了雅可比行列式：$T$ 把面积乘以 $${J}$。`,
+            ),
+            why(
+              k * J,
+              `That leaves out the area $${m * n}$ of the rectangle $[0, ${m}] \\times [0, ${n}]$.`,
+              `那是漏了矩形 $[0, ${m}] \\times [0, ${n}]$ 的面积 $${m * n}$。`,
+            ),
+            why(J * m * n, `That is the area of $R$; the integrand is the constant $${k}$.`, `那是 $R$ 的面积；被积函数是常数 $${k}$。`),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Find the Jacobian", "求雅可比行列式"],
+                t(
+                  `$\\lvert J \\rvert = \\lvert (${u[0]})(${v[1]}) - (${u[1]})(${v[0]}) \\rvert = ${J}$.`,
+                  `$\\lvert J \\rvert = \\lvert (${u[0]})(${v[1]}) - (${u[1]})(${v[0]}) \\rvert = ${J}$。`,
+                ),
+              ],
+              [
+                ["Multiply", "相乘"],
+                t(
+                  `The rectangle has area $${m * n}$, so the integral is $${k} \\cdot ${J} \\cdot ${m * n} = ${answer}$.`,
+                  `矩形面积为 $${m * n}$，所以积分为 $${k} \\cdot ${J} \\cdot ${m * n} = ${answer}$。`,
+                ),
+              ],
+            ],
+            t(
+              `$R$ is the parallelogram with sides $${at(corners[1] as Point)}$ and $${at(corners[3] as Point)}$ from the origin, of area $${J * m * n}$ by the cross product, and $${k} \\cdot ${J * m * n} = ${answer}$.`,
+              `$R$ 是从原点出发、两边为 $${at(corners[1] as Point)}$ 和 $${at(corners[3] as Point)}$ 的平行四边形，由叉积得面积 $${J * m * n}$，而 $${k} \\cdot ${J * m * n} = ${answer}$。`,
+            ),
+          ),
+        }),
+        figure: fig(
           7,
           [
             { kind: "polygon", points: corners },
@@ -1675,7 +1791,7 @@ const areaChange = {
             `阴影平行四边形，顶点为 ${corners.map(at).join("、")}，以及从原点指向 ${at(u)} 和 ${at(v)} 的箭头。`,
           ],
         ),
-      );
+      };
     },
   ),
   figure: multivariableDrawings4["computing-areas-using-a-change-of-variables#an-integral-through-a-drawn-change-of-variables"],
