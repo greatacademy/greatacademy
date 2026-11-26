@@ -8,7 +8,9 @@ import { gcd, svgDocument } from "@ga/subject-math";
 import { proofDrawings1 } from "../explanation-drawings-methods-of-proof-1.ts";
 import { numberTheoryDrawings1 } from "../explanation-drawings-number-theory-1.ts";
 
+import { say, withMistakes } from "../problems.ts";
 import { ask, choose, type Pair, point, same } from "../university-kit.ts";
+import { reasoned } from "../wrong-reasons.ts";
 import { drawn, label } from "./figure-reading-more.ts";
 
 /** fig draws a plane figure with its description in both locales. */
@@ -24,8 +26,8 @@ const lineThroughLatticePoints = point(
   "the-equation-of-a-line-through-lattice-points",
   ["The equation of a line through lattice points", "过格点的直线的方程"],
   [
-    "The whole-number solutions of $ax + by = c$ are lattice points on a line. When $a$ and $b$ have no common factor, neighboring solutions differ by the step $(b, -a)$. So a drawing gives the coefficients from the step between neighboring marked points, and any one of the marked points then gives the value of $c$.",
-    "$ax + by = c$ 的整数解是一条直线上的格点。当 $a$ 和 $b$ 没有公因数时，相邻的解相差步长 $(b, -a)$。所以图中相邻标记点之间的步长给出系数，任何一个标记点再给出 $c$ 的值。",
+    "The whole-number solutions of $ax + by = c$ are lattice points on a line. When $a$ and $b$ have no common factor, neighboring solutions differ by the step $(b, -a)$. So a drawing gives the coefficients from the step between neighboring marked points, and any one of the marked points then gives the value of $c$.\n\n> **Watch out.** The step $(b, -a)$ puts the coefficient of $y$ first: a step of $3$ across and $2$ down gives $2x + 3y$, not $3x + 2y$.",
+    "$ax + by = c$ 的整数解是一条直线上的格点。当 $a$ 和 $b$ 没有公因数时，相邻的解相差步长 $(b, -a)$。所以图中相邻标记点之间的步长给出系数，任何一个标记点再给出 $c$ 的值。\n\n> **注意。** 步长 $(b, -a)$ 中先出现的是 $y$ 的系数：向右 $3$、向下 $2$ 的步长给出 $2x + 3y$，而不是 $3x + 2y$。",
   ],
   (rng) => {
     const [a, b] = rng.pick<Point>([
@@ -48,22 +50,48 @@ const lineThroughLatticePoints = point(
       if (x >= -3 && x <= 12 && y >= -3 && y <= 12) marks.push({ kind: "point", at: [x, y], accent: true });
     }
     const listed = marks.flatMap((m) => (m.kind === "point" ? [`(${m.at[0]}, ${m.at[1]})`] : [])).join(", ");
-    return choose(
-      rng,
+    const [x1, y1] = [x0 + b, y0 - a];
+    const y1s = y1 < 0 ? `(${y1})` : `${y1}`;
+    return reasoned(
+      choose(
+        rng,
+        [
+          "The marked points are neighboring whole-number solutions on the line. Which equation does the line have?",
+          "标记的点是直线上相邻的整数解。这条直线的方程是什么？",
+        ],
+        same(linear(a, b, c)),
+        [same(linear(b, a, c)), same(linear(a, -b, c)), same(linear(a, b, c + 1)), same(linear(a, b, c - 1))],
+        [
+          `**Step 1: Read the step.** Neighboring points differ by $(${b}, ${-a})$, so the coefficient of $x$ is $${a}$ and the coefficient of $y$ is $${b}$.\n\n**Step 2: Find $c$.** The point $(${x0}, ${y0})$ gives $c = ${a} \\cdot ${x0} + ${b} \\cdot ${y0} = ${c}$.\n\n**Check.** The next point $(${x1}, ${y1})$ gives $${a} \\cdot ${x1} + ${b} \\cdot ${y1s} = ${c}$ as well.`,
+          `**第一步：读出步长。** 相邻的点相差 $(${b}, ${-a})$，所以 $x$ 的系数是 $${a}$，$y$ 的系数是 $${b}$。\n\n**第二步：求 $c$。** 点 $(${x0}, ${y0})$ 给出 $c = ${a} \\cdot ${x0} + ${b} \\cdot ${y0} = ${c}$。\n\n**检验。** 下一个点 $(${x1}, ${y1})$ 同样给出 $${a} \\cdot ${x1} + ${b} \\cdot ${y1s} = ${c}$。`,
+        ],
+        fig({ xMin: -3, xMax: 12, yMin: -3, yMax: 12, xName: "x", yName: "y" }, marks, [
+          `A line through the marked lattice points ${listed}.`,
+          `过标记格点 ${listed} 的直线。`,
+        ]),
+      ),
       [
-        "The marked points are neighboring whole-number solutions on the line. Which equation does the line have?",
-        "标记的点是直线上相邻的整数解。这条直线的方程是什么？",
+        [
+          `$${linear(b, a, c)}$`,
+          "That swaps the coefficients: the step across belongs to $y$, the step down to $x$.",
+          "这把系数交换了：横向步长对应 $y$，纵向步长对应 $x$。",
+        ],
+        [
+          `$${linear(a, -b, c)}$`,
+          "With opposite signs the line would rise to the right, but the points fall.",
+          "系数异号时直线向右上升，但这些点是向右下降的。",
+        ],
+        [
+          `$${linear(a, b, c + 1)}$`,
+          `The marked point $(${x0}, ${y0})$ gives $${c}$, not $${c + 1}$.`,
+          `标记点 $(${x0}, ${y0})$ 给出 $${c}$，而不是 $${c + 1}$。`,
+        ],
+        [
+          `$${linear(a, b, c - 1)}$`,
+          `The marked point $(${x0}, ${y0})$ gives $${c}$, not $${c - 1}$.`,
+          `标记点 $(${x0}, ${y0})$ 给出 $${c}$，而不是 $${c - 1}$。`,
+        ],
       ],
-      same(linear(a, b, c)),
-      [same(linear(b, a, c)), same(linear(a, -b, c)), same(linear(a, b, c + 1)), same(linear(a, b, c - 1))],
-      [
-        `Neighboring points differ by the step $(${b}, ${-a})$, so the coefficients of $x$ and $y$ are $${a}$ and $${b}$. The point $(${x0}, ${y0})$ then gives $c = ${c}$.`,
-        `相邻的点相差步长 $(${b}, ${-a})$，所以 $x$ 和 $y$ 的系数是 $${a}$ 和 $${b}$。点 $(${x0}, ${y0})$ 再给出 $c = ${c}$。`,
-      ],
-      fig({ xMin: -3, xMax: 12, yMin: -3, yMax: 12, xName: "x", yName: "y" }, marks, [
-        `A line through the marked lattice points ${listed}.`,
-        `过标记格点 ${listed} 的直线。`,
-      ]),
     );
   },
 );
@@ -263,8 +291,8 @@ const euclidInSquares = {
     "the-euclidean-algorithm-as-a-tiling-by-squares",
     ["The Euclidean algorithm as a tiling by squares", "用正方形铺满表示欧几里得算法"],
     [
-      "The Euclidean algorithm can be drawn on a rectangle. Cut off as many squares as fit along the long side, and then repeat with the leftover rectangle. The number of squares at each stage is a quotient of the algorithm. The final squares fill the last leftover exactly, and their side is the greatest common divisor of the two sides.",
-      "欧几里得算法可以画在矩形上。沿长边切下尽可能多的正方形，再对剩下的矩形重复。每一阶段正方形的个数是算法的一个商。最后的正方形恰好填满最后剩下的部分，它们的边长是两条边的最大公因数。",
+      "The Euclidean algorithm can be drawn on a rectangle. Cut off as many squares as fit along the long side, and then repeat with the leftover rectangle. The number of squares at each stage is a quotient of the algorithm. The final squares fill the last leftover exactly, and their side is the greatest common divisor of the two sides.\n\n> **Watch out.** The greatest common divisor is the side of the smallest squares, not the shorter side of the rectangle. The first quotient counts only the largest squares.",
+      "欧几里得算法可以画在矩形上。沿长边切下尽可能多的正方形，再对剩下的矩形重复。每一阶段正方形的个数是算法的一个商。最后的正方形恰好填满最后剩下的部分，它们的边长是两条边的最大公因数。\n\n> **注意。** 最大公因数是最小正方形的边长，而不是矩形的短边。第一个商只数最大的正方形。",
     ],
     (rng) => {
       const [p, q] = rng.pick<Point>([
@@ -293,34 +321,56 @@ const euclidInSquares = {
         body += `<rect ${accent} x="${30 + x * scale}" y="${24 + y * scale}" width="${side * scale}" height="${side * scale}"/>`;
       }
       const quotient = Math.floor(w / h);
-      return ask(
+      const left = w - quotient * h;
+      const lines: string[] = [];
+      for (let x = w, y = h; y !== 0; [x, y] = [y, x % y]) lines.push(`$$${x} = ${y} \\cdot ${Math.floor(x / y)} + ${x % y}$$`);
+      const answer = asksGcd ? g : quotient;
+      const mistakes = (
         asksGcd
           ? [
-              "The rectangle is cut into squares by the Euclidean algorithm, with its sides labeled. What is the greatest common divisor of the two sides?",
-              "矩形按欧几里得算法切成正方形，边长已标出。两条边的最大公因数是多少？",
+              say(String(h), "That is the shorter side, the side of the largest squares.", "这是短边，即最大的正方形的边长。"),
+              say(String(w - h), "That is the leftover after one square is cut.", "这是切下一个正方形后剩下的边。"),
             ]
           : [
-              "The rectangle is cut into squares by the Euclidean algorithm, with its sides labeled. What is the first quotient of the algorithm on the two sides?",
-              "矩形按欧几里得算法切成正方形，边长已标出。对这两条边做算法时，第一个商是多少？",
-            ],
-        asksGcd ? g : quotient,
-        asksGcd ? [h, w - h, 2 * g, g + 1] : [quotient + 1, q, p, h],
-        asksGcd
-          ? [
-              `The shaded squares are the last ones cut, and they fill the leftover exactly. There are $${w / g}$ of their sides along the top, which has length $${w}$, so their side is $${g}$.`,
-              `阴影正方形是最后切下的，它们恰好填满剩下的部分。上边长度为 $${w}$，相当于 $${w / g}$ 个边长，所以边长是 $${g}$。`,
+              say(
+                String(quotient + 1),
+                `That many squares of side $${h}$ would need $${(quotient + 1) * h}$, more than $${w}$.`,
+                `这么多边长为 $${h}$ 的正方形需要 $${(quotient + 1) * h}$，超过了 $${w}$。`,
+              ),
+              say(String(h), "That is the side of the largest squares, not how many fit.", "这是最大的正方形的边长，而不是能放下的个数。"),
             ]
-          : [
-              `The largest squares have side $${h}$, and $${quotient}$ of them fit along the side of length $${w}$. So the first division is $${w} = ${quotient} \\cdot ${h} + ${w - quotient * h}$.`,
-              `最大的正方形边长为 $${h}$，长度为 $${w}$ 的边上能放 $${quotient}$ 个。所以第一步除法是 $${w} = ${quotient} \\cdot ${h} + ${w - quotient * h}$。`,
-            ],
-        {
-          svg: svgDocument(Math.ceil(h * scale) + 36, body),
-          alt: t(
-            `A rectangle with sides ${w} and ${h} cut into squares; the smallest squares, of side ${g}, are shaded.`,
-            `边长为 ${w} 和 ${h} 的矩形切成正方形；最小的正方形边长为 ${g}，有阴影。`,
-          ),
-        },
+      ).filter((m) => m.response !== String(answer));
+      return withMistakes(
+        ask(
+          asksGcd
+            ? [
+                "The rectangle is cut into squares by the Euclidean algorithm, with its sides labeled. What is the greatest common divisor of the two sides?",
+                "矩形按欧几里得算法切成正方形，边长已标出。两条边的最大公因数是多少？",
+              ]
+            : [
+                "The rectangle is cut into squares by the Euclidean algorithm, with its sides labeled. What is the first quotient of the algorithm on the two sides?",
+                "矩形按欧几里得算法切成正方形，边长已标出。对这两条边做算法时，第一个商是多少？",
+              ],
+          answer,
+          asksGcd ? [h, w - h, 2 * g, g + 1] : [quotient + 1, q, p, h],
+          asksGcd
+            ? [
+                `**Step 1: Follow the cuts.** Each stage is one division:\n\n${lines.join("\n\n")}\n\n**Step 2: Read the last squares.** The shaded squares are the last ones cut and fill the leftover exactly, so the greatest common divisor is their side, $${g}$.\n\n**Check.** $${g}$ divides both sides: $${w} = ${g} \\cdot ${p}$ and $${h} = ${g} \\cdot ${q}$.`,
+                `**第一步：跟着切法走。** 每个阶段是一次除法：\n\n${lines.join("\n\n")}\n\n**第二步：读出最后的正方形。** 阴影正方形是最后切下的，恰好填满剩下的部分，所以最大公因数是它们的边长 $${g}$。\n\n**检验。** $${g}$ 整除两条边：$${w} = ${g} \\cdot ${p}$，$${h} = ${g} \\cdot ${q}$。`,
+              ]
+            : [
+                `**Step 1: Find the largest squares.** The largest squares have side $${h}$, the shorter side.\n\n**Step 2: Count them.** ${quotient === 1 ? "Only one fits" : `$${quotient}$ of them fit`} along the side of length $${w}$, so the first division is $${w} = ${quotient} \\cdot ${h} + ${left}$ and the first quotient is $${quotient}$.\n\n**Check.** The leftover $${left}$ is less than $${h}$, so no further square of side $${h}$ fits.`,
+                `**第一步：找出最大的正方形。** 最大的正方形边长为 $${h}$，即短边。\n\n**第二步：数一数。** 长度为 $${w}$ 的边上能放 $${quotient}$ 个，所以第一步除法是 $${w} = ${quotient} \\cdot ${h} + ${left}$，第一个商是 $${quotient}$。\n\n**检验。** 剩下的 $${left}$ 小于 $${h}$，所以再也放不下边长为 $${h}$ 的正方形。`,
+              ],
+          {
+            svg: svgDocument(Math.ceil(h * scale) + 36, body),
+            alt: t(
+              `A rectangle with sides ${w} and ${h} cut into squares; the smallest squares, of side ${g}, are shaded.`,
+              `边长为 ${w} 和 ${h} 的矩形切成正方形；最小的正方形边长为 ${g}，有阴影。`,
+            ),
+          },
+        ),
+        mistakes,
       );
     },
   ),

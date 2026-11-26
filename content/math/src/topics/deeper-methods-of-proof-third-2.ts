@@ -16,8 +16,8 @@ const baseCaseMatters = point(
   "the-base-case-an-inductive-step-cannot-supply",
   ["The base case an inductive step cannot supply", "归纳步骤无法提供的基础情形"],
   [
-    "An inductive step can succeed even when the claim is false, because it only passes truth along. For $d \\mid a^{n} + c$ with $d \\mid a - 1$, the step works for every $c$, so the base case alone decides which values of $c$ make the claim true.",
-    "即使命题不成立，归纳步骤也可能成功，因为它只是传递真值。对于 $d \\mid a^{n} + c$，当 $d \\mid a - 1$ 时，归纳步骤对每个 $c$ 都成立，所以只有基础情形决定哪些 $c$ 使命题成立。",
+    "An inductive step can succeed even when the claim is false, because it only passes truth along. For $d \\mid a^{n} + c$ with $d \\mid a - 1$, the step works for every $c$, so the base case alone decides which values of $c$ make the claim true.\n\n> **Watch out.** A working inductive step proves nothing on its own. Check the base case, which here needs $d \\mid a + c$, not $d \\mid c$.",
+    "即使命题不成立，归纳步骤也可能成功，因为它只是传递真值。对于 $d \\mid a^{n} + c$，当 $d \\mid a - 1$ 时，归纳步骤对每个 $c$ 都成立，所以只有基础情形决定哪些 $c$ 使命题成立。\n\n> **注意。** 单靠成功的归纳步骤什么也证明不了。要检查基础情形，这里它要求 $d \\mid a + c$，而不是 $d \\mid c$。",
   ],
   (rng) => {
     const d = rng.int(2, 9);
@@ -26,17 +26,33 @@ const baseCaseMatters = point(
     let c = low + 1;
     while ((a + c) % d !== 0) c++;
     const plain = low + 1 + ((d - ((low + 1) % d)) % d);
-    return ask(
-      [
-        `For which smallest integer $c > ${low}$ does $${d} \\mid ${a}^{n} + c$ hold for every positive integer $n$?`,
-        `对于大于 $${low}$ 的哪个最小整数 $c$，$${d} \\mid ${a}^{n} + c$ 对每个正整数 $n$ 都成立？`,
-      ],
-      c,
-      [c + d, plain === c ? c + 1 : plain, low + 1 === c ? c + 2 : low + 1],
-      [
-        `Since $${a}^{k+1} + c = ${a}(${a}^{k} + c) - ${a - 1}c$ and $${d} \\mid ${a - 1}$, the step holds for any $c$. The base case needs $${d} \\mid ${a} + c$, and the smallest such $c$ above $${low}$ is $${c}$.`,
-        `由于 $${a}^{k+1} + c = ${a}(${a}^{k} + c) - ${a - 1}c$ 且 $${d} \\mid ${a - 1}$，所以归纳步骤对任何 $c$ 都成立。基础情形要求 $${d} \\mid ${a} + c$，大于 $${low}$ 的最小 $c$ 是 $${c}$。`,
-      ],
+    const second = a * a + c;
+    return withMistakes(
+      ask(
+        [
+          `For which smallest integer $c > ${low}$ does $${d} \\mid ${a}^{n} + c$ hold for every positive integer $n$?`,
+          `对于大于 $${low}$ 的哪个最小整数 $c$，$${d} \\mid ${a}^{n} + c$ 对每个正整数 $n$ 都成立？`,
+        ],
+        c,
+        [c + d, plain === c ? c + 1 : plain, low + 1 === c ? c + 2 : low + 1],
+        [
+          `**Step 1: Check the inductive step.** $${a}^{k+1} + c = ${a}(${a}^{k} + c) - ${a - 1}c$, and $${d} \\mid ${a - 1}$, so the step holds for every $c$.\n\n**Step 2: Use the base case.** At $n = 1$ the claim needs $${d} \\mid ${a} + c$. The smallest such $c$ above $${low}$ is $${c}$, since $${a} + ${c} = ${a + c} = ${d} \\cdot ${(a + c) / d}$.\n\n**Check.** At $n = 2$: $${a}^{2} + ${c} = ${second} = ${d} \\cdot ${second / d}$.`,
+          `**第一步：检查归纳步骤。** $${a}^{k+1} + c = ${a}(${a}^{k} + c) - ${a - 1}c$，且 $${d} \\mid ${a - 1}$，所以归纳步骤对每个 $c$ 都成立。\n\n**第二步：用基础情形。** $n = 1$ 时命题要求 $${d} \\mid ${a} + c$。大于 $${low}$ 的最小这样的 $c$ 是 $${c}$，因为 $${a} + ${c} = ${a + c} = ${d} \\cdot ${(a + c) / d}$。\n\n**检验。** $n = 2$ 时：$${a}^{2} + ${c} = ${second} = ${d} \\cdot ${second / d}$。`,
+        ],
+      ),
+      sayApart(String(c), [
+        say(
+          String(plain),
+          `That makes $c$ itself a multiple of $${d}$; the base case needs $${d} \\mid ${a} + c$.`,
+          `这使 $c$ 本身是 $${d}$ 的倍数；而基础情形要求 $${d} \\mid ${a} + c$。`,
+        ),
+        say(
+          String(low + 1),
+          `The base case fails: $${a} + ${low + 1} = ${a + low + 1}$ is not a multiple of $${d}$.`,
+          `基础情形不成立：$${a} + ${low + 1} = ${a + low + 1}$ 不是 $${d}$ 的倍数。`,
+        ),
+        say(String(c + d), `That works too, but $${d}$ less still lies above $${low}$.`, `它也成立，但再减 $${d}$ 仍大于 $${low}$。`),
+      ]),
     );
   },
 );

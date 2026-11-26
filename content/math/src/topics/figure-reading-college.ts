@@ -9,9 +9,11 @@ import { proofDrawings1 } from "../explanation-drawings-methods-of-proof-1.ts";
 import { numberTheoryDrawings1 } from "../explanation-drawings-number-theory-1.ts";
 import { analysisDrawings1 } from "../explanation-drawings-real-analysis-1.ts";
 
-import { explainedChoice } from "../problems.ts";
+import { explainedChoice, numberProblem, why } from "../problems.ts";
 import { stepLabel } from "../solution-kit.ts";
+import { reasoned } from "../wrong-reasons.ts";
 import { table } from "./calculus-common.ts";
+import { walked } from "./calculus-i-differentiation.ts";
 import { arrowLine, drawn, label, node, numeric, pickChoice, ring } from "./figure-reading-more.ts";
 
 /** math writes the same formula as an option in both languages. */
@@ -246,8 +248,8 @@ const latticeOnLine: KnowledgePointDef = {
   id: "the-next-whole-number-point-on-a-line",
   title: t("The next whole-number point on a line", "直线上的下一个整点"),
   explanation: t(
-    "All integer solutions of $ax + by = c$ lie evenly spaced along its line. From one solution, the next is found by adding $b / d$ to $x$ and subtracting $a / d$ from $y$, where $d = \\gcd(a, b)$. Forgetting to divide by $d$ still lands on a solution, but it skips the ones in between.",
-    "$ax + by = c$ 的所有整数解等距排在这条直线上。从一个解出发，$x$ 加 $b / d$，$y$ 减 $a / d$，就得到下一个解，其中 $d = \\gcd(a, b)$。忘了除以 $d$ 虽然仍落在解上，却跳过了中间的解。",
+    "All integer solutions of $ax + by = c$ lie evenly spaced along its line. From one solution, the next is found by adding $b / d$ to $x$ and subtracting $a / d$ from $y$, where $d = \\gcd(a, b)$. Forgetting to divide by $d$ still lands on a solution, but it skips the ones in between.\n\n> **Watch out.** $x$ moves by the reduced coefficient of $y$, and $y$ by the reduced coefficient of $x$, in opposite directions. Swapping them, or moving both the same way, leaves the line.",
+    "$ax + by = c$ 的所有整数解等距排在这条直线上。从一个解出发，$x$ 加 $b / d$，$y$ 减 $a / d$，就得到下一个解，其中 $d = \\gcd(a, b)$。忘了除以 $d$ 虽然仍落在解上，却跳过了中间的解。\n\n> **注意。** $x$ 按 $y$ 的约简系数移动，$y$ 按 $x$ 的约简系数移动，方向相反。把它们交换，或者朝同一方向移动，都会离开这条直线。",
   ),
   generate(rng) {
     const [a, b] = rng.pick([
@@ -266,8 +268,10 @@ const latticeOnLine: KnowledgePointDef = {
     const y0 = a + rng.int(0, 10 - a);
     const c = A * x0 + B * y0;
     const point = (x: number, y: number) => math(`(${x}, ${y})`);
+    const key = (x: number, y: number) => `$(${x}, ${y})$`;
     const lhs = `${A === 1 ? "" : A}x + ${B === 1 ? "" : B}y`;
-    return pickChoice(
+    const off = A * (x0 + 1) + B * (y0 - 1);
+    const problem = pickChoice(
       rng,
       t(
         `The line $${lhs} = ${c}$ passes through the marked point $(${x0}, ${y0})$. Moving right along the line, which is the next point with whole-number coordinates?`,
@@ -275,9 +279,24 @@ const latticeOnLine: KnowledgePointDef = {
       ),
       point(x0 + b, y0 - a),
       [point(x0 + B, y0 - A), point(x0 + a, y0 - b), point(x0 + b, y0 + a), point(x0 + a, y0 + b), point(x0 + 1, y0 - 1)],
-      t(
-        `Here $\\gcd(${A}, ${B}) = ${d}$, so the solutions step by ${b} to the right and ${a} down. That gives $(${x0 + b}, ${y0 - a})$, and indeed $${A} \\cdot ${x0 + b} + ${B} \\cdot ${y0 - a} = ${c}$.`,
-        `这里 $\\gcd(${A}, ${B}) = ${d}$，所以解每次向右 ${b}、向下 ${a}。得到 $(${x0 + b}, ${y0 - a})$，验算 $${A} \\cdot ${x0 + b} + ${B} \\cdot ${y0 - a} = ${c}$。`,
+      walked(
+        [
+          [
+            ["Find the step", "求步长"],
+            t(
+              `$\\gcd(${A}, ${B}) = ${d}$, so the reduced coefficients are $${a}$ and $${b}$: each solution is the last one with $${b}$ added to $x$ and $${a}$ taken from $y$.`,
+              `$\\gcd(${A}, ${B}) = ${d}$，所以约简后的系数是 $${a}$ 和 $${b}$：每个解都是上一个解的 $x$ 加 $${b}$、$y$ 减 $${a}$。`,
+            ),
+          ],
+          [
+            ["Take one step", "走一步"],
+            t(`From $(${x0}, ${y0})$ this gives $(${x0 + b}, ${y0 - a})$.`, `从 $(${x0}, ${y0})$ 出发得到 $(${x0 + b}, ${y0 - a})$。`),
+          ],
+        ],
+        t(
+          `$${A} \\cdot ${x0 + b} + ${B} \\cdot ${y0 - a < 0 ? `(${y0 - a})` : y0 - a} = ${A * (x0 + b)} ${y0 - a < 0 ? "-" : "+"} ${Math.abs(B * (y0 - a))} = ${c}$, so the point is on the line.`,
+          `$${A} \\cdot ${x0 + b} + ${B} \\cdot ${y0 - a < 0 ? `(${y0 - a})` : y0 - a} = ${A * (x0 + b)} ${y0 - a < 0 ? "-" : "+"} ${Math.abs(B * (y0 - a))} = ${c}$，所以这个点在直线上。`,
+        ),
       ),
       drawn(
         { xMin: 0, xMax: 12, yMin: 0, yMax: 12, labelEvery: 2 },
@@ -291,6 +310,37 @@ const latticeOnLine: KnowledgePointDef = {
         ),
       ),
     );
+    return reasoned(problem, [
+      ...(d > 1
+        ? [
+            [
+              key(x0 + B, y0 - A),
+              `That steps by the full coefficients; dividing them by the gcd $${d}$ gives a shorter step, and this point skips one solution.`,
+              `这是按完整的系数走的；除以最大公因数 $${d}$ 后步长更短，这个点跳过了一个解。`,
+            ] as const,
+          ]
+        : []),
+      [
+        key(x0 + a, y0 - b),
+        "That swaps the steps: $x$ moves by the coefficient of $y$, not of $x$.",
+        "这把步长交换了：$x$ 应按 $y$ 的系数移动，而不是按 $x$ 的系数。",
+      ],
+      [
+        key(x0 + b, y0 + a),
+        "The line falls to the right, so $y$ must go down as $x$ goes up.",
+        "直线向右下降，所以 $x$ 增大时 $y$ 必须减小。",
+      ],
+      [
+        key(x0 + a, y0 + b),
+        "That swaps the steps and goes up; the line falls to the right.",
+        "这既交换了步长，又向上走了；而直线向右下降。",
+      ],
+      [
+        key(x0 + 1, y0 - 1),
+        `That point is off the line: it gives $${off}$, not $${c}$.`,
+        `这个点不在直线上：它给出 $${off}$，而不是 $${c}$。`,
+      ],
+    ]);
   },
 };
 
@@ -354,31 +404,55 @@ const gcdFromSquares: KnowledgePointDef = {
   figure: proofDrawings1["the-euclidean-algorithm#the-gcd-from-cutting-squares"],
   title: t("The GCD from cutting squares", "切正方形求最大公因数"),
   explanation: t(
-    "Cut the largest possible squares from a rectangle, then repeat on the piece left over. Each round is one division in the Euclidean algorithm, since the squares removed are the quotient and the leftover side is the remainder. The last and smallest square has side equal to the greatest common divisor, and it fits evenly into both sides.",
-    "从长方形上切下尽可能大的正方形，再对剩下的部分重复。每一轮就是欧几里得算法的一次除法：切下的正方形个数是商，剩下的边是余数。最后最小的正方形边长就是最大公因数，它能整除两条边。",
+    "Cut the largest possible squares from a rectangle, then repeat on the piece left over. Each round is one division in the Euclidean algorithm, since the squares removed are the quotient and the leftover side is the remainder. The last and smallest square has side equal to the greatest common divisor, and it fits evenly into both sides.\n\n> **Watch out.** The leftover after the first round is a remainder, not the answer. Keep cutting until the squares fill the last piece exactly.",
+    "从长方形上切下尽可能大的正方形，再对剩下的部分重复。每一轮就是欧几里得算法的一次除法：切下的正方形个数是商，剩下的边是余数。最后最小的正方形边长就是最大公因数，它能整除两条边。\n\n> **注意。** 第一轮后剩下的边是余数，不是答案。要一直切，直到正方形恰好填满最后一块。",
   ),
   generate(rng) {
     const [p, q] = rng.pick(euclidPairs);
     const g = rng.int(1, 4);
     const [a, b] = [p * g, q * g];
-    return numeric(
-      t(
-        `This ${a} by ${b} rectangle has been cut into squares, always taking the largest that fits. What is the side of the smallest square?`,
-        `这个 ${a} 乘 ${b} 的长方形被切成正方形，每次都切下能放下的最大的正方形。最小的正方形边长是多少？`,
-      ),
-      g,
-      [a % b, b, a - b, g + 1, b - (a % b)],
-      t(
-        `The cutting follows the Euclidean algorithm on ${a} and ${b}, and it stops at the greatest common divisor. Since $\\gcd(${a}, ${b}) = ${g}$, the smallest square has side ${g}.`,
-        `切法就是对 ${a} 和 ${b} 做欧几里得算法，结束时得到最大公因数。因为 $\\gcd(${a}, ${b}) = ${g}$，所以最小的正方形边长是 ${g}。`,
-      ),
-      squaresFigure(
+    const lines: string[] = [];
+    for (let x = a, y = b; y !== 0; [x, y] = [y, x % y]) lines.push(`${x} = ${y} \\cdot ${Math.floor(x / y)} + ${x % y}`);
+    return {
+      ...numberProblem({
+        prompt: t(
+          `This ${a} by ${b} rectangle has been cut into squares, always taking the largest that fits. What is the side of the smallest square?`,
+          `这个 ${a} 乘 ${b} 的长方形被切成正方形，每次都切下能放下的最大的正方形。最小的正方形边长是多少？`,
+        ),
+        answer: g,
+        form: "integer",
+        wrong: [a - b, g + 1, b - (a % b)],
+        mistakes: [
+          why(a % b, "That is the leftover after the first round of squares; keep cutting.", "这是第一轮切完后剩下的边；还要继续切。"),
+          why(b, "That is the side of the largest squares.", "这是最大的正方形的边长。"),
+        ],
+        solution: walked(
+          [
+            [
+              ["Follow the cuts", "跟着切法走"],
+              t("Each round cuts as many squares as fit, one division each:", "每一轮切下尽可能多的正方形，对应一次除法："),
+              lines,
+            ],
+            [
+              ["Read the smallest square", "读出最小的正方形"],
+              t(
+                `The last division leaves nothing, so the smallest squares have side $${g}$.`,
+                `最后一次除法没有剩余，所以最小的正方形边长是 $${g}$。`,
+              ),
+            ],
+          ],
+          t(
+            `$${g}$ fits evenly into both sides: $${a} = ${g} \\cdot ${p}$ and $${b} = ${g} \\cdot ${q}$.`,
+            `$${g}$ 能整除两条边：$${a} = ${g} \\cdot ${p}$，$${b} = ${g} \\cdot ${q}$。`,
+          ),
+        ),
+      }),
+      figure: squaresFigure(
         a,
         b,
         t(`A ${a} by ${b} rectangle cut into squares of decreasing size.`, `${a} 乘 ${b} 的长方形被切成一个比一个小的正方形。`),
       ),
-      "integer",
-    );
+    };
   },
 };
 

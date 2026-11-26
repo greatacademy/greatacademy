@@ -300,8 +300,8 @@ const divisionLine = {
     "the-division-algorithm-on-a-number-line",
     ["The division algorithm on a number line", "数轴上的带余除法"],
     [
-      "Writing $a = qd + r$ with $0 \\le r < d$ means stepping back from $a$ to the nearest multiple of $d$ at or to its left. This holds for negative $a$ too, so $q$ is often more negative than you might first guess.",
-      "写成 $a = qd + r$（$0 \\le r < d$）就是从 $a$ 退回到它左边（或恰好在它上面）最近的 $d$ 的倍数。对负的 $a$ 也是如此，所以 $q$ 往往比第一感觉更负。",
+      "Writing $a = qd + r$ with $0 \\le r < d$ means stepping back from $a$ to the nearest multiple of $d$ at or to its left. This holds for negative $a$ too, so $q$ is often more negative than you might first guess.\n\n> **Watch out.** For a negative $a$, step back to the multiple on the left, which is further from zero. The remainder is still between $0$ and $d - 1$, never negative.",
+      "写成 $a = qd + r$（$0 \\le r < d$）就是从 $a$ 退回到它左边（或恰好在它上面）最近的 $d$ 的倍数。对负的 $a$ 也是如此，所以 $q$ 往往比第一感觉更负。\n\n> **注意。** 对负的 $a$，要退回到左边的倍数，它离零更远。余数仍在 $0$ 到 $d - 1$ 之间，绝不是负数。",
     ],
     (rng) => {
       const d = rng.int(3, 7);
@@ -315,30 +315,56 @@ const divisionLine = {
       const x0 = low * d;
       const x1 = high * d;
       const px = (v: number) => Math.round((20 + ((v - x0) * 280) / (x1 - x0)) * 10) / 10;
+      const par = (v: number) => (v < 0 ? `(${v})` : `${v}`);
       let body = `<line x1="14" y1="60" x2="306" y2="60"/>`;
       for (const v of dots) body += `<line x1="${px(v)}" y1="54" x2="${px(v)}" y2="66"/>${label(px(v), 84, String(v).replace("-", "−"))}`;
       body += `<circle class="accent" cx="${px(a)}" cy="60" r="5" fill="currentColor" stroke="none"/>${label(px(a), 42, "a")}`;
       const svg = svgDocument(100, body);
-      return ask(
-        askQ
-          ? [
-              `The long ticks are the multiples of $${d}$, and the dot is $a = ${a}$. Write $a = ${d}q + r$ with $0 \\le r < ${d}$. Find $q$.`,
-              `长刻度是 $${d}$ 的倍数，点是 $a = ${a}$。写成 $a = ${d}q + r$，$0 \\le r < ${d}$。求 $q$。`,
-            ]
-          : [
-              `The long ticks are the multiples of $${d}$, and the dot is $a = ${a}$. Write $a = ${d}q + r$ with $0 \\le r < ${d}$. Find $r$.`,
-              `长刻度是 $${d}$ 的倍数，点是 $a = ${a}$。写成 $a = ${d}q + r$，$0 \\le r < ${d}$。求 $r$。`,
-            ],
-        askQ ? q : r,
-        askQ ? [q + 1, q - 1, r, a] : [d - r, -(d - r), q, r + 1, a],
-        [
-          `The nearest multiple of $${d}$ at or to the left of $${a}$ is $${q * d} = ${d}(${q})$. So $q = ${q}$ and $r = ${a} - (${q * d}) = ${r}$.`,
-          `$${a}$ 左边最近的 $${d}$ 的倍数是 $${q * d} = ${d}(${q})$。所以 $q = ${q}$，$r = ${a} - (${q * d}) = ${r}$。`,
-        ],
-        figureOf(svg, [
-          `A number line with ticks at ${dots.join(", ")}, and a dot at ${a}.`,
-          `数轴上的刻度位于 ${dots.join("、")}，点位于 ${a}。`,
-        ]),
+      const mistakes = askQ
+        ? [
+            say(
+              String(q + 1),
+              `$${d} \\cdot ${par(q + 1)} = ${(q + 1) * d}$ lies to the right of $${a}$; step back to the multiple on the left.`,
+              `$${d} \\cdot ${par(q + 1)} = ${(q + 1) * d}$ 在 $${a}$ 的右边；要退回到左边的倍数。`,
+            ),
+            say(String(r), "That is the remainder, the distance from the multiple to the dot.", "这是余数，即倍数到点的距离。"),
+          ]
+        : [
+            say(
+              String(d - r),
+              `That is the distance to the multiple on the right, $${(q + 1) * d}$; measure from the one on the left.`,
+              `这是到右边倍数 $${(q + 1) * d}$ 的距离；要从左边的倍数量起。`,
+            ),
+            say(
+              String(-(d - r)),
+              "A remainder is never negative; measure from the multiple on the left.",
+              "余数绝不是负数；要从左边的倍数量起。",
+            ),
+            say(String(q), "That is the quotient, the number of steps of the divisor.", "这是商，即除数的步数。"),
+          ];
+      return withMistakes(
+        ask(
+          askQ
+            ? [
+                `The long ticks are the multiples of $${d}$, and the dot is $a = ${a}$. Write $a = ${d}q + r$ with $0 \\le r < ${d}$. Find $q$.`,
+                `长刻度是 $${d}$ 的倍数，点是 $a = ${a}$。写成 $a = ${d}q + r$，$0 \\le r < ${d}$。求 $q$。`,
+              ]
+            : [
+                `The long ticks are the multiples of $${d}$, and the dot is $a = ${a}$. Write $a = ${d}q + r$ with $0 \\le r < ${d}$. Find $r$.`,
+                `长刻度是 $${d}$ 的倍数，点是 $a = ${a}$。写成 $a = ${d}q + r$，$0 \\le r < ${d}$。求 $r$。`,
+              ],
+          askQ ? q : r,
+          askQ ? [q + 1, q - 1, r, a] : [d - r, -(d - r), q, r + 1, a],
+          [
+            `**Step 1: Step back to a multiple.** The nearest multiple of $${d}$ at or to the left of $${a}$ is $${q * d} = ${d} \\cdot ${par(q)}$.\n\n**Step 2: Read $q$ and $r$.** So $q = ${q}$, and $r = ${a} - ${par(q * d)} = ${r}$.\n\n**Check.** $${d} \\cdot ${par(q)} + ${r} = ${a}$, and $0 \\le ${r} < ${d}$.`,
+            `**第一步：退回到倍数。** $${a}$ 左边（或恰好在其上）最近的 $${d}$ 的倍数是 $${q * d} = ${d} \\cdot ${par(q)}$。\n\n**第二步：读出 $q$ 与 $r$。** 所以 $q = ${q}$，$r = ${a} - ${par(q * d)} = ${r}$。\n\n**检验。** $${d} \\cdot ${par(q)} + ${r} = ${a}$，且 $0 \\le ${r} < ${d}$。`,
+          ],
+          figureOf(svg, [
+            `A number line with ticks at ${dots.join(", ")}, and a dot at ${a}.`,
+            `数轴上的刻度位于 ${dots.join("、")}，点位于 ${a}。`,
+          ]),
+        ),
+        mistakes,
       );
     },
   ),

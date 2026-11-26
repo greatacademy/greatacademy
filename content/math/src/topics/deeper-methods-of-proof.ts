@@ -963,14 +963,15 @@ const remainderForAFactor: KnowledgePointDef = {
   id: "a-remainder-for-a-factor-of-the-divisor",
   title: t("A remainder for a factor of the divisor", "除数的因数对应的余数"),
   explanation: t(
-    "If you know the remainder of $n$ on division by $ab$, you also know its remainder on division by $a$. Write $n = abq + r$ and notice that $abq$ is a multiple of $a$. So only $r$ matters. The converse fails: knowing the remainder for $a$ does not determine the remainder for $ab$.",
-    "如果知道 $n$ 除以 $ab$ 的余数，也就知道它除以 $a$ 的余数。写出 $n = abq + r$，注意 $abq$ 是 $a$ 的倍数，所以只有 $r$ 起作用。反过来不成立：知道除以 $a$ 的余数，并不能确定除以 $ab$ 的余数。",
+    "If you know the remainder of $n$ on division by $ab$, you also know its remainder on division by $a$. Write $n = abq + r$ and notice that $abq$ is a multiple of $a$. So only $r$ matters. The converse fails: knowing the remainder for $a$ does not determine the remainder for $ab$.\n\n> **Watch out.** A remainder on division by $a$ is less than $a$. The old remainder $r$ is usually too big, so divide it by $a$ in turn.",
+    "如果知道 $n$ 除以 $ab$ 的余数，也就知道它除以 $a$ 的余数。写出 $n = abq + r$，注意 $abq$ 是 $a$ 的倍数，所以只有 $r$ 起作用。反过来不成立：知道除以 $a$ 的余数，并不能确定除以 $ab$ 的余数。\n\n> **注意。** 除以 $a$ 的余数小于 $a$。原来的余数 $r$ 通常太大，还要再除以 $a$。",
   ),
   generate(rng) {
     const a = rng.int(2, 9);
     const b = rng.int(2, 9);
     const r = rng.int(a, a * b - 1);
     const answer = r % a;
+    const n = a * b + r;
     return numberProblem({
       prompt: t(
         `An integer $n$ leaves remainder ${r} on division by ${a * b}. What remainder does it leave on division by ${a}?`,
@@ -978,10 +979,37 @@ const remainderForAFactor: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong: [r, Math.floor(r / a), a - answer],
-      solution: t(
-        `Write $n = ${a * b}q + ${r}$. The first term is a multiple of ${a}, and $${r} = ${a} \\cdot ${Math.floor(r / a)} + ${answer}$, so the remainder is ${answer}.`,
-        `写出 $n = ${a * b}q + ${r}$。第一项是 ${a} 的倍数，而 $${r} = ${a} \\cdot ${Math.floor(r / a)} + ${answer}$，所以余数是 ${answer}。`,
+      wrong: [a - answer],
+      mistakes: firstOf([
+        why(
+          r,
+          `That is the remainder on division by $${a * b}$; a remainder on division by $${a}$ must be less than $${a}$.`,
+          `这是除以 $${a * b}$ 的余数；除以 $${a}$ 的余数必须小于 $${a}$。`,
+        ),
+        why(
+          Math.floor(r / a),
+          `That is the quotient of $${r}$ by $${a}$, not the remainder.`,
+          `这是 $${r}$ 除以 $${a}$ 的商，而不是余数。`,
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Write n with the larger divisor", "用较大的除数写出 n"],
+            t(`$n = ${a * b}q + ${r}$ for some integer $q$.`, `存在整数 $q$ 使 $n = ${a * b}q + ${r}$。`),
+          ],
+          [
+            ["Drop the multiple of " + a, `去掉 ${a} 的倍数`],
+            t(
+              `$${a * b}q = ${a}(${b}q)$ is a multiple of $${a}$, so $n$ leaves the same remainder as $${r} = ${a} \\cdot ${Math.floor(r / a)} + ${answer}$: the remainder is $${answer}$.`,
+              `$${a * b}q = ${a}(${b}q)$ 是 $${a}$ 的倍数，所以 $n$ 的余数与 $${r} = ${a} \\cdot ${Math.floor(r / a)} + ${answer}$ 相同：余数是 $${answer}$。`,
+            ),
+          ],
+        ],
+        t(
+          `Take $q = 1$: $n = ${n} = ${a} \\cdot ${Math.floor(n / a)} + ${answer}$.`,
+          `取 $q = 1$：$n = ${n} = ${a} \\cdot ${Math.floor(n / a)} + ${answer}$。`,
+        ),
       ),
     });
   },
@@ -991,22 +1019,22 @@ const euclidSteps: KnowledgePointDef = {
   id: "counting-the-divisions-of-the-euclidean-algorithm",
   title: t("Counting the divisions of the Euclidean algorithm", "数欧几里得算法的除法次数"),
   explanation: t(
-    "The cost of the Euclidean algorithm is the number of divisions it performs. Every two steps at least halve the larger number, so this count grows only with the number of digits, which is why the algorithm is fast even for huge inputs. Trace the remainders until one of them is zero, and count that last division too.",
-    "欧几里得算法的代价是它做除法的次数。每两步至少使较大的数减半，所以这个次数只随位数增长，这就是算法即使对很大的输入也很快的原因。依次写出余数，直到某个余数为零，最后这次除法也要算上。",
+    "The cost of the Euclidean algorithm is the number of divisions it performs. Every two steps at least halve the larger number, so this count grows only with the number of digits, which is why the algorithm is fast even for huge inputs. Trace the remainders until one of them is zero, and count that last division too.\n\n> **Watch out.** Count the division that leaves remainder $0$ as well: it is the one that shows the previous remainder is the gcd.",
+    "欧几里得算法的代价是它做除法的次数。每两步至少使较大的数减半，所以这个次数只随位数增长，这就是算法即使对很大的输入也很快的原因。依次写出余数，直到某个余数为零，最后这次除法也要算上。\n\n> **注意。** 余数为 $0$ 的那次除法也要算上：正是它说明了前一个余数是最大公因数。",
   ),
   generate(rng) {
     const a = rng.int(40, 300);
     const b = rng.int(11, a - 1);
-    const remainders: number[] = [];
+    const lines: string[] = [];
     let x = a;
     let y = b;
     while (y !== 0) {
       const next = x % y;
-      remainders.push(next);
+      lines.push(`${x} = ${y} \\cdot ${Math.floor(x / y)} + ${next}`);
       x = y;
       y = next;
     }
-    const answer = remainders.length;
+    const answer = lines.length;
     return numberProblem({
       prompt: t(
         `The Euclidean algorithm is applied to ${a} and ${b}. How many divisions does it make, including the one that leaves remainder 0?`,
@@ -1014,10 +1042,23 @@ const euclidSteps: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong: [answer - 1, answer + 1, x],
-      solution: t(
-        `The successive remainders are ${remainders.join(", ")}, one for each division. That is ${answer} divisions.`,
-        `依次得到的余数是 ${remainders.join(", ")}，每次除法一个。所以共 ${answer} 次除法。`,
+      wrong: [answer + 1],
+      mistakes: firstOf([
+        why(answer - 1, "That leaves out the last division, the one with remainder $0$.", "这漏掉了最后一次余数为 $0$ 的除法。"),
+        why(x, "That is the gcd the algorithm finds, not the number of divisions.", "这是算法求出的最大公因数，而不是除法的次数。"),
+      ]),
+      solution: walked(
+        [
+          [["Run the divisions", "依次做除法"], t("Divide until a remainder is $0$:", "一直除到余数为 $0$："), lines],
+          [
+            ["Count them", "数一数"],
+            t(`There is one line per division, so there are $${answer}$ divisions.`, `每次除法一行，所以共有 $${answer}$ 次除法。`),
+          ],
+        ],
+        t(
+          `The last nonzero remainder $${x}$ divides both numbers: $${a} = ${x} \\cdot ${a / x}$ and $${b} = ${x} \\cdot ${b / x}$, so the algorithm did end at the gcd.`,
+          `最后一个非零余数 $${x}$ 整除两个数：$${a} = ${x} \\cdot ${a / x}$，$${b} = ${x} \\cdot ${b / x}$，所以算法确实在最大公因数处结束。`,
+        ),
       ),
     });
   },
@@ -1027,8 +1068,8 @@ const smallestPositiveSolution: KnowledgePointDef = {
   id: "the-smallest-positive-x-of-a-linear-diophantine-equation",
   title: t("The smallest positive $x$ of a linear Diophantine equation", "线性丢番图方程的最小正 $x$"),
   explanation: t(
-    "For coprime $a$ and $b$, the values of $x$ in the integer solutions of $ax + by = c$ differ by multiples of $b$, because adding $b$ to $x$ can be balanced by subtracting $a$ from $y$. So exactly one solution has $x$ between $1$ and $b$. Here $y$ may be negative, so positivity of $y$ is not required.",
-    "$a$、$b$ 互素时，$ax + by = c$ 的整数解中，$x$ 的值相差 $b$ 的倍数，因为给 $x$ 加 $b$，可以通过给 $y$ 减 $a$ 来抵消。所以恰有一个解的 $x$ 在 $1$ 到 $b$ 之间。这里 $y$ 可以是负数，不要求它为正。",
+    "For coprime $a$ and $b$, the values of $x$ in the integer solutions of $ax + by = c$ differ by multiples of $b$, because adding $b$ to $x$ can be balanced by subtracting $a$ from $y$. So exactly one solution has $x$ between $1$ and $b$. Here $y$ may be negative, so positivity of $y$ is not required.\n\n> **Watch out.** The values of $x$ repeat every $b$, the coefficient of $y$, not every $a$. Once one solution is found, any smaller positive $x$ must differ from it by a multiple of $b$.",
+    "$a$、$b$ 互素时，$ax + by = c$ 的整数解中，$x$ 的值相差 $b$ 的倍数，因为给 $x$ 加 $b$，可以通过给 $y$ 减 $a$ 来抵消。所以恰有一个解的 $x$ 在 $1$ 到 $b$ 之间。这里 $y$ 可以是负数，不要求它为正。\n\n> **注意。** $x$ 的值每隔 $b$（$y$ 的系数）重复一次，而不是每隔 $a$。找到一个解后，更小的正 $x$ 必须与它相差 $b$ 的倍数。",
   ),
   generate(rng) {
     const a = rng.int(3, 15);
@@ -1038,6 +1079,7 @@ const smallestPositiveSolution: KnowledgePointDef = {
     let x = 1;
     while ((c - a * x) % b !== 0) x += 1;
     const y = (c - a * x) / b;
+    const rems = Array.from({ length: x }, (_, i) => (((c - a * (i + 1)) % b) + b) % b).join(", ");
     return numberProblem({
       prompt: t(
         `Among the integer solutions of $${poly([a, "x"], [b, "y"])} = ${c}$, where $y$ may be negative, what is the smallest positive value of $x$?`,
@@ -1045,10 +1087,40 @@ const smallestPositiveSolution: KnowledgePointDef = {
       ),
       answer: x,
       form: "integer",
-      wrong: [x + b, b, (c % b) + 1],
-      solution: t(
-        `The values of $x$ repeat every ${b}, so try $x$ from 1 upward. The first that makes $${c} - ${a}x$ divisible by ${b} is $x = ${x}$, with $y = ${y}$.`,
-        `$x$ 的值每隔 ${b} 重复一次，所以从 1 开始试。第一个使 $${c} - ${a}x$ 被 ${b} 整除的是 $x = ${x}$，此时 $y = ${y}$。`,
+      wrong: [(c % b) + 1],
+      mistakes: firstOf([
+        why(
+          x + b,
+          `That gives a solution, but $${b}$ less is one too: the values of $x$ repeat every $${b}$.`,
+          `这给出一个解，但再减 $${b}$ 也是解：$x$ 的值每隔 $${b}$ 重复一次。`,
+        ),
+        why(
+          b,
+          `That is how often $x$ repeats, not a solution: $${c} - ${a} \\cdot ${b}$ is not a multiple of $${b}$.`,
+          `这是 $x$ 重复的间隔，而不是解：$${c} - ${a} \\cdot ${b}$ 不是 $${b}$ 的倍数。`,
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["State the condition", "写出条件"],
+            t(
+              `$y = \\frac{${c} - ${a}x}{${b}}$ is an integer exactly when $${b} \\mid ${c} - ${a}x$.`,
+              `$y = \\frac{${c} - ${a}x}{${b}}$ 是整数当且仅当 $${b} \\mid ${c} - ${a}x$。`,
+            ),
+          ],
+          [
+            ["Try x from 1 upward", "从 1 开始试 x"],
+            t(
+              `For $x = 1, \\dots, ${x}$ the remainders of $${c} - ${a}x$ on division by $${b}$ are $${rems}$. The first $0$ is at $x = ${x}$, with $y = ${y}$.`,
+              `$x = 1, \\dots, ${x}$ 时，$${c} - ${a}x$ 除以 $${b}$ 的余数依次是 $${rems}$。第一个 $0$ 出现在 $x = ${x}$，此时 $y = ${y}$。`,
+            ),
+          ],
+        ],
+        t(
+          `$${a} \\cdot ${x} + ${b} \\cdot ${y < 0 ? `(${y})` : y} = ${a * x} ${y < 0 ? "-" : "+"} ${Math.abs(b * y)} = ${c}$.`,
+          `$${a} \\cdot ${x} + ${b} \\cdot ${y < 0 ? `(${y})` : y} = ${a * x} ${y < 0 ? "-" : "+"} ${Math.abs(b * y)} = ${c}$。`,
+        ),
       ),
     });
   },
@@ -1058,8 +1130,8 @@ const gcdTimesLcm: KnowledgePointDef = {
   id: "a-number-from-its-gcd-and-lcm",
   title: t("A number from its gcd and lcm", "由最大公因数和最小公倍数求数"),
   explanation: t(
-    "For positive integers, $\\gcd(a, b) \\cdot \\operatorname{lcm}(a, b) = ab$. In each prime, the gcd takes the smaller exponent and the lcm the larger, so together they use both exponents, just as the product $ab$ does. Knowing one number with the gcd and the lcm therefore determines the other number.",
-    "对正整数，$\\gcd(a, b) \\cdot \\operatorname{lcm}(a, b) = ab$。对每个素数，最大公因数取较小的指数，最小公倍数取较大的指数，所以二者合起来用到了两个指数，和乘积 $ab$ 一样。因此知道一个数以及最大公因数和最小公倍数，就能确定另一个数。",
+    "For positive integers, $\\gcd(a, b) \\cdot \\operatorname{lcm}(a, b) = ab$. In each prime, the gcd takes the smaller exponent and the lcm the larger, so together they use both exponents, just as the product $ab$ does. Knowing one number with the gcd and the lcm therefore determines the other number.\n\n> **Watch out.** Divide the whole product $\\gcd \\cdot \\operatorname{lcm}$ by the known number. The quotient $\\frac{\\operatorname{lcm}}{a}$ alone misses the factor from the gcd.",
+    "对正整数，$\\gcd(a, b) \\cdot \\operatorname{lcm}(a, b) = ab$。对每个素数，最大公因数取较小的指数，最小公倍数取较大的指数，所以二者合起来用到了两个指数，和乘积 $ab$ 一样。因此知道一个数以及最大公因数和最小公倍数，就能确定另一个数。\n\n> **注意。** 要用整个乘积 $\\gcd \\cdot \\operatorname{lcm}$ 除以已知的数。只算 $\\frac{\\operatorname{lcm}}{a}$ 会漏掉来自最大公因数的因子。",
   ),
   generate(rng) {
     const g = rng.int(2, 9);
@@ -1076,10 +1148,30 @@ const gcdTimesLcm: KnowledgePointDef = {
       ),
       answer: b,
       form: "integer",
-      wrong: [q, g * lcm, lcm - a],
-      solution: t(
-        `Since $ab = \\gcd(a, b) \\cdot \\operatorname{lcm}(a, b)$, we get $b = \\frac{${g} \\cdot ${lcm}}{${a}} = ${b}$.`,
-        `由于 $ab = \\gcd(a, b) \\cdot \\operatorname{lcm}(a, b)$，得 $b = \\frac{${g} \\cdot ${lcm}}{${a}} = ${b}$。`,
+      wrong: [lcm - a],
+      mistakes: firstOf([
+        why(
+          q,
+          "That is the lcm divided by $a$; the factor from the gcd is missing.",
+          "这是最小公倍数除以 $a$；漏掉了来自最大公因数的因子。",
+        ),
+        why(g * lcm, "That is the product $ab$ itself; divide it by $a$.", "这是乘积 $ab$ 本身；还要除以 $a$。"),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Use the product rule", "用乘积关系"],
+            t(
+              `$ab = \\gcd(a, b) \\cdot \\operatorname{lcm}(a, b) = ${g} \\cdot ${lcm} = ${g * lcm}$.`,
+              `$ab = \\gcd(a, b) \\cdot \\operatorname{lcm}(a, b) = ${g} \\cdot ${lcm} = ${g * lcm}$。`,
+            ),
+          ],
+          [["Divide by a", "除以 a"], t(`$b = \\frac{${g * lcm}}{${a}} = ${b}$.`, `$b = \\frac{${g * lcm}}{${a}} = ${b}$。`)],
+        ],
+        t(
+          `$\\gcd(${a}, ${b}) = ${g}$, and $\\frac{${a} \\cdot ${b}}{${g}} = ${lcm}$ is the lcm, as given.`,
+          `$\\gcd(${a}, ${b}) = ${g}$，且 $\\frac{${a} \\cdot ${b}}{${g}} = ${lcm}$ 正是给定的最小公倍数。`,
+        ),
       ),
     });
   },
@@ -1089,23 +1181,55 @@ const legendre: KnowledgePointDef = {
   id: "the-power-of-a-prime-in-a-factorial",
   title: t("The power of a prime in a factorial", "阶乘中素数的幂次"),
   explanation: t(
-    "To find the exponent of a prime $p$ in $n!$, count the factors from $1$ to $n$ that contribute. Each multiple of $p$ gives one factor, each multiple of $p^2$ gives one more, and so on. So the exponent is $\\lfloor \\frac{n}{p} \\rfloor + \\lfloor \\frac{n}{p^2} \\rfloor + \\dots$, and the sum stops once the power exceeds $n$.",
-    "要求素数 $p$ 在 $n!$ 中的指数，就数 $1$ 到 $n$ 中贡献因子的数。$p$ 的每个倍数贡献一个因子，$p^2$ 的每个倍数再多贡献一个，依此类推。所以指数是 $\\lfloor \\frac{n}{p} \\rfloor + \\lfloor \\frac{n}{p^2} \\rfloor + \\dots$，幂超过 $n$ 后这个和就终止了。",
+    "To find the exponent of a prime $p$ in $n!$, count the factors from $1$ to $n$ that contribute. Each multiple of $p$ gives one factor, each multiple of $p^2$ gives one more, and so on. So the exponent is $\\lfloor \\frac{n}{p} \\rfloor + \\lfloor \\frac{n}{p^2} \\rfloor + \\dots$, and the sum stops once the power exceeds $n$.\n\n> **Watch out.** A multiple of $p^2$ contributes two factors of $p$, so it is counted again in the second term. Stopping at $\\lfloor \\frac{n}{p} \\rfloor$ undercounts.",
+    "要求素数 $p$ 在 $n!$ 中的指数，就数 $1$ 到 $n$ 中贡献因子的数。$p$ 的每个倍数贡献一个因子，$p^2$ 的每个倍数再多贡献一个，依此类推。所以指数是 $\\lfloor \\frac{n}{p} \\rfloor + \\lfloor \\frac{n}{p^2} \\rfloor + \\dots$，幂超过 $n$ 后这个和就终止了。\n\n> **注意。** $p^2$ 的倍数贡献两个因子 $p$，所以在第二项中要再数一次。只算到 $\\lfloor \\frac{n}{p} \\rfloor$ 会数少。",
   ),
   generate(rng) {
     const p = rng.pick([2, 3, 5, 7]);
     const n = rng.int(p * p, 200);
     const parts: number[] = [];
-    for (let power = p; power <= n; power *= p) parts.push(Math.floor(n / power));
+    const lines: string[] = [];
+    let e = 1;
+    for (let power = p; power <= n; power *= p, e++) {
+      parts.push(Math.floor(n / power));
+      lines.push(
+        `\\left\\lfloor \\frac{${n}}{${p}^{${e}}} \\right\\rfloor = \\left\\lfloor \\frac{${n}}{${power}} \\right\\rfloor = ${Math.floor(n / power)}`,
+      );
+    }
     const answer = parts.reduce((sum, v) => sum + v, 0);
     return numberProblem({
       prompt: t(`What is the largest $k$ for which $${p}^k$ divides $${n}!$?`, `使 $${p}^k$ 整除 $${n}!$ 的最大 $k$ 是多少？`),
       answer,
       form: "integer",
-      wrong: [Math.floor(n / p), (parts[0] ?? 0) + (parts[1] ?? 0) + 1, Math.floor(n / (p - 1))],
-      solution: t(
-        `Adding the multiples of each power of ${p} gives $${parts.join(" + ")} = ${answer}$.`,
-        `把 ${p} 的各个幂的倍数个数相加，得 $${parts.join(" + ")} = ${answer}$。`,
+      wrong: [(parts[0] ?? 0) + (parts[1] ?? 0) + 1],
+      mistakes: firstOf([
+        why(
+          Math.floor(n / p),
+          `That counts the multiples of $${p}$ only; multiples of $${p * p}$ give a second factor of $${p}$.`,
+          `这只数了 $${p}$ 的倍数；$${p * p}$ 的倍数还会贡献第二个因子 $${p}$。`,
+        ),
+        why(
+          Math.floor(n / (p - 1)),
+          `That approximates the sum by $\\frac{n}{p - 1}$; the floors make the true sum smaller.`,
+          `这是用 $\\frac{n}{p - 1}$ 近似这个和；取整后真实的和更小。`,
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Count the multiples of each power", "数每个幂的倍数"],
+            t(
+              `Each power of $${p}$ up to $${n}$ adds one factor for each of its multiples:`,
+              `不超过 $${n}$ 的 $${p}$ 的每个幂，对它的每个倍数各贡献一个因子：`,
+            ),
+            lines,
+          ],
+          [["Add", "相加"], t(`$${parts.join(" + ")} = ${answer}$.`, `$${parts.join(" + ")} = ${answer}$。`)],
+        ],
+        t(
+          `The next power, $${p}^{${e}} = ${p ** e}$, exceeds $${n}$, so it adds nothing, and the sum is complete.`,
+          `下一个幂 $${p}^{${e}} = ${p ** e}$ 超过了 $${n}$，不再贡献，所以这个和是完整的。`,
+        ),
       ),
     });
   },
@@ -1115,8 +1239,8 @@ const coefficientForInduction: KnowledgePointDef = {
   id: "finding-the-formula-that-induction-will-prove",
   title: t("Finding the formula that induction will prove", "求出归纳法要证明的公式"),
   explanation: t(
-    "Induction proves a formula but does not say where it came from. The inductive step can find it: if $S(n) = \\alpha n^2 + \\beta n$, then $S(n + 1) - S(n)$ must equal the next term for every $n$. Comparing the coefficients of $n$ and the constants fixes $\\alpha$ and $\\beta$, and then the base case holds automatically.",
-    "归纳法能证明公式，却不说明公式从何而来。归纳步骤可以用来求公式：如果 $S(n) = \\alpha n^2 + \\beta n$，那么对每个 $n$，$S(n + 1) - S(n)$ 都必须等于下一项。比较 $n$ 的系数和常数项就确定了 $\\alpha$ 和 $\\beta$，这时基础情形自动成立。",
+    "Induction proves a formula but does not say where it came from. The inductive step can find it: if $S(n) = \\alpha n^2 + \\beta n$, then $S(n + 1) - S(n)$ must equal the next term for every $n$. Comparing the coefficients of $n$ and the constants fixes $\\alpha$ and $\\beta$, and then the base case holds automatically.\n\n> **Watch out.** $S(n + 1) - S(n)$ is the term at $k = n + 1$, not at $k = n$. Substitute $n + 1$ for $k$ before comparing.",
+    "归纳法能证明公式，却不说明公式从何而来。归纳步骤可以用来求公式：如果 $S(n) = \\alpha n^2 + \\beta n$，那么对每个 $n$，$S(n + 1) - S(n)$ 都必须等于下一项。比较 $n$ 的系数和常数项就确定了 $\\alpha$ 和 $\\beta$，这时基础情形自动成立。\n\n> **注意。** $S(n + 1) - S(n)$ 是 $k = n + 1$ 时的项，而不是 $k = n$ 时的。比较之前先把 $k$ 换成 $n + 1$。",
   ),
   generate(rng) {
     const a = rng.int(1, 8);
@@ -1124,16 +1248,48 @@ const coefficientForInduction: KnowledgePointDef = {
     const answer = Q.of(a + 2 * b, 2);
     const alpha = Q.of(a, 2);
     const term = poly([a, "k"], [b, ""]);
+    const next = poly([a, "n"], [a + b, ""]);
+    const top = a + 2 * b < 0 ? `(${a + 2 * b})` : `${a + 2 * b}`;
     return numberProblem({
       prompt: t(
         `There are constants with $\\sum_{k=1}^{n} (${term}) = \\alpha n^2 + \\beta n$ for every positive integer $n$. Find $\\beta$.`,
         `存在常数使得对每个正整数 $n$，$\\sum_{k=1}^{n} (${term}) = \\alpha n^2 + \\beta n$。求 $\\beta$。`,
       ),
       answer,
-      wrong: [alpha, Q.of(b), Q.of(a + b)],
-      solution: t(
-        `The step needs $\\alpha(2n + 1) + \\beta = ${poly([a, "(n + 1)"], [b, ""])}$ for every $n$. The coefficients of $n$ give $\\alpha = ${alpha.toLatex()}$, and then the constants give $\\beta = ${answer.toLatex()}$.`,
-        `归纳步骤要求对每个 $n$，$\\alpha(2n + 1) + \\beta = ${poly([a, "(n + 1)"], [b, ""])}$。比较 $n$ 的系数得 $\\alpha = ${alpha.toLatex()}$，再比较常数项得 $\\beta = ${answer.toLatex()}$。`,
+      wrong: [Q.of(a + b)],
+      mistakes: [
+        why(alpha, "That is $\\alpha$, the coefficient of $n^2$.", "这是 $\\alpha$，即 $n^2$ 的系数。"),
+        ...(a === 2 * b
+          ? []
+          : [
+              why(
+                Q.of(b),
+                "That matches the constants without the $\\alpha$ that $\\alpha(2n + 1)$ also contributes.",
+                "这样比较常数项时漏掉了 $\\alpha(2n + 1)$ 中 $\\alpha$ 的贡献。",
+              ),
+            ]),
+      ],
+      solution: walked(
+        [
+          [
+            ["Take the difference", "作差"],
+            t(
+              `$S(n + 1) - S(n) = \\alpha(2n + 1) + \\beta$, and it must equal the term at $k = n + 1$, which is $${poly([a, "(n + 1)"], [b, ""])} = ${next}$.`,
+              `$S(n + 1) - S(n) = \\alpha(2n + 1) + \\beta$，它必须等于 $k = n + 1$ 时的项，即 $${poly([a, "(n + 1)"], [b, ""])} = ${next}$。`,
+            ),
+          ],
+          [
+            ["Compare coefficients", "比较系数"],
+            t(
+              `The coefficients of $n$ give $2\\alpha = ${a}$, so $\\alpha = ${alpha.toLatex()}$. The constants give $\\alpha + \\beta = ${a + b}$, so $\\beta = ${answer.toLatex()}$.`,
+              `比较 $n$ 的系数得 $2\\alpha = ${a}$，所以 $\\alpha = ${alpha.toLatex()}$。比较常数项得 $\\alpha + \\beta = ${a + b}$，所以 $\\beta = ${answer.toLatex()}$。`,
+            ),
+          ],
+        ],
+        t(
+          `At $n = 1$: $\\alpha + \\beta = \\frac{${a} + ${top}}{2} = ${a + b}$, which is the first term, $${a} \\cdot 1 ${b < 0 ? "-" : "+"} ${Math.abs(b)}$.`,
+          `$n = 1$ 时：$\\alpha + \\beta = \\frac{${a} + ${top}}{2} = ${a + b}$，正是第一项 $${a} \\cdot 1 ${b < 0 ? "-" : "+"} ${Math.abs(b)}$。`,
+        ),
       ),
     });
   },
@@ -3209,8 +3365,8 @@ const leastPositiveBezoutY: KnowledgePointDef = {
   id: "the-bezout-solution-with-the-least-positive-y",
   title: t("The Bézout solution with the least positive $y$", "$y$ 最小且为正的贝祖解"),
   explanation: t(
-    "One Bézout pair gives all the others. Adding the same multiple of the lcm to one term and removing it from the other keeps the total fixed. So after dividing out the gcd, $x$ moves in steps of the reduced second coefficient and $y$ moves in steps of the reduced first coefficient, in opposite directions. This lets you slide to the solution you want.",
-    "一组贝祖系数可以给出其他所有的贝祖系数。给一项加上最小公倍数的某个倍数，同时从另一项减去它，总和不变。所以约去最大公因数后，$x$ 以约简后的第二个系数为步长，$y$ 以约简后的第一个系数为步长，方向相反地变化。这样就能滑动到想要的解。",
+    "One Bézout pair gives all the others. Adding the same multiple of the lcm to one term and removing it from the other keeps the total fixed. So after dividing out the gcd, $x$ moves in steps of the reduced second coefficient and $y$ moves in steps of the reduced first coefficient, in opposite directions. This lets you slide to the solution you want.\n\n> **Watch out.** $y$ moves in steps of $\\frac{a}{\\gcd(a, b)}$, not of $a$ itself. Steps of $a$ skip solutions when the gcd is larger than $1$.",
+    "一组贝祖系数可以给出其他所有的贝祖系数。给一项加上最小公倍数的某个倍数，同时从另一项减去它，总和不变。所以约去最大公因数后，$x$ 以约简后的第二个系数为步长，$y$ 以约简后的第一个系数为步长，方向相反地变化。这样就能滑动到想要的解。\n\n> **注意。** $y$ 的步长是 $\\frac{a}{\\gcd(a, b)}$，而不是 $a$ 本身。当最大公因数大于 $1$ 时，以 $a$ 为步长会跳过一些解。",
   ),
   generate(rng) {
     const g = rng.int(1, 6);
@@ -3227,6 +3383,8 @@ const leastPositiveBezoutY: KnowledgePointDef = {
     const k = rng.int(1, 3);
     const givenX = x + k * v;
     const givenY = y - k * u;
+    const ys = Array.from({ length: k + 1 }, (_, i) => givenY + i * u).join(", ");
+    const par = (n: number) => (n < 0 ? `(${n})` : `${n}`);
     return numberProblem({
       prompt: t(
         `Given $${a}(${givenX}) + ${b}(${givenY}) = ${g}$, find the least positive value of $y$ among the integer solutions of $${a}x + ${b}y = ${g}$.`,
@@ -3234,10 +3392,37 @@ const leastPositiveBezoutY: KnowledgePointDef = {
       ),
       answer: y,
       form: "integer",
-      wrong: [y + u, u - y, v, -givenY],
-      solution: t(
-        `Since $${a} \\cdot ${v} = ${b} \\cdot ${u}$, subtracting ${v} from $x$ while adding ${u} to $y$ keeps the sum fixed, and every solution comes this way. Adding ${u} to $${givenY}$ repeatedly reaches $y = ${y}$ as the first positive value, with $x = ${x}$. Check: $${a}(${x}) + ${b}(${y}) = ${g}$.`,
-        `由于 $${a} \\cdot ${v} = ${b} \\cdot ${u}$，从 $x$ 减去 ${v}，同时给 $y$ 加上 ${u}，总和不变，而且所有解都这样得到。从 $${givenY}$ 起反复加 ${u}，第一个正值是 $y = ${y}$，此时 $x = ${x}$。验算：$${a}(${x}) + ${b}(${y}) = ${g}$。`,
+      wrong: [u - y],
+      mistakes: firstOf([
+        why(y + u, `That is positive, but $${u}$ less is still positive: keep sliding.`, `它是正的，但再减 $${u}$ 仍是正的：继续滑动。`),
+        why(v, `That is the step size for $x$, not a value of $y$.`, `这是 $x$ 的步长，而不是 $y$ 的值。`),
+        why(
+          -givenY,
+          `Changing the sign of $y$ does not keep the sum; $y$ moves only in steps of $${u}$.`,
+          `改变 $y$ 的符号不能保持总和；$y$ 只能以 $${u}$ 为步长变化。`,
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Find the step sizes", "求步长"],
+            t(
+              `$${a} \\cdot ${v} = ${b} \\cdot ${u} = ${a * v}$, so subtracting $${v}$ from $x$ while adding $${u}$ to $y$ keeps the sum fixed, and every solution comes this way.`,
+              `$${a} \\cdot ${v} = ${b} \\cdot ${u} = ${a * v}$，所以从 $x$ 减去 $${v}$、同时给 $y$ 加上 $${u}$，总和不变，而且所有解都这样得到。`,
+            ),
+          ],
+          [
+            ["Slide y up", "向上滑动 y"],
+            t(
+              `Adding $${u}$ to $y$ repeatedly gives $${ys}$. The first positive value is $y = ${y}$, with $x = ${givenX} - ${k * v} = ${x}$.`,
+              `反复给 $y$ 加 $${u}$ 得 $${ys}$。第一个正值是 $y = ${y}$，此时 $x = ${givenX} - ${k * v} = ${x}$。`,
+            ),
+          ],
+        ],
+        t(
+          `$${a} \\cdot ${par(x)} + ${b} \\cdot ${y} = ${a * x} + ${b * y} = ${g}$, and $${y} - ${u} = ${y - u}$ is not positive.`,
+          `$${a} \\cdot ${par(x)} + ${b} \\cdot ${y} = ${a * x} + ${b * y} = ${g}$，而 $${y} - ${u} = ${y - u}$ 不是正数。`,
+        ),
       ),
     });
   },
@@ -3247,8 +3432,8 @@ const largestUnmakeableAmount: KnowledgePointDef = {
   id: "the-largest-amount-that-two-stamps-cannot-make",
   title: t("The largest amount that two stamps cannot make", "两种邮票凑不出的最大面值"),
   explanation: t(
-    "Strong induction suits claims that reach back several steps. If a run of consecutive amounts as long as one stamp's value can all be made, then every later amount can be made too, by adding that stamp to an amount in the run or later. So finding where the run begins also finds the last amount that cannot be made.",
-    "强归纳法适合需要回溯好几步的命题。如果连续若干个面值都能凑出，且个数等于一种邮票的面值，那么之后的每个面值也都能凑出，只要在这段或更后的某个面值上再加一张这种邮票。所以找到这一段的起点，也就找到了最后一个凑不出的面值。",
+    "Strong induction suits claims that reach back several steps. If a run of consecutive amounts as long as one stamp's value can all be made, then every later amount can be made too, by adding that stamp to an amount in the run or later. So finding where the run begins also finds the last amount that cannot be made.\n\n> **Watch out.** Amounts near $ab$ can be made: $ab$ is $b$ stamps of $a$, and $ab - a$ is $b - 1$ of them. For coprime values the last gap is $ab - a - b$.",
+    "强归纳法适合需要回溯好几步的命题。如果连续若干个面值都能凑出，且个数等于一种邮票的面值，那么之后的每个面值也都能凑出，只要在这段或更后的某个面值上再加一张这种邮票。所以找到这一段的起点，也就找到了最后一个凑不出的面值。\n\n> **注意。** 接近 $ab$ 的面值都能凑出：$ab$ 是 $b$ 张 $a$，$ab - a$ 是 $b - 1$ 张 $a$。对互素的面值，最后一个凑不出的是 $ab - a - b$。",
   ),
   generate(rng) {
     const pairs = [...Array(11).keys()]
@@ -3257,6 +3442,10 @@ const largestUnmakeableAmount: KnowledgePointDef = {
       .filter(([a, b]) => b <= 15 && gcd(a, b) === 1);
     const [a, b] = rng.pick(pairs);
     const answer = a * b - a - b;
+    const make = (m: number) => {
+      for (let y = 0; b * y <= m; y++) if ((m - b * y) % a === 0) return `${a} \\cdot ${(m - b * y) / a} + ${b} \\cdot ${y}`;
+      return "";
+    };
     return numberProblem({
       prompt: t(
         `Stamps come in values of ${a} and ${b}, with as many of each as needed. What is the largest whole amount that cannot be made exactly?`,
@@ -3264,10 +3453,34 @@ const largestUnmakeableAmount: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong: [a * b, a * b - a, a * b - b, answer + 1],
-      solution: t(
-        `Every amount from $${answer + 1}$ on can be made: the ${a} amounts starting there can be checked directly, and strong induction adds a stamp of ${a} to reach the rest. If $${answer} = ${a}x + ${b}y$ with $x, y \\ge 0$, then $${a}(x + 1) + ${b}(y + 1) = ${a * b}$, which forces $x + 1 \\ge ${b}$ and $y + 1 \\ge ${a}$. The left side would then be at least $${2 * a * b}$, a contradiction. So the answer is ${answer}.`,
-        `从 $${answer + 1}$ 起的每个面值都能凑出：从那里开始的 ${a} 个面值可以直接检验，再用强归纳法加一张 ${a} 的邮票得到其余面值。如果 $${answer} = ${a}x + ${b}y$，其中 $x, y \\ge 0$，那么 $${a}(x + 1) + ${b}(y + 1) = ${a * b}$，这迫使 $x + 1 \\ge ${b}$ 且 $y + 1 \\ge ${a}$。于是左边至少是 $${2 * a * b}$，矛盾。所以答案是 ${answer}。`,
+      wrong: [],
+      mistakes: firstOf([
+        why(a * b, `That can be made: $${b}$ stamps of $${a}$.`, `它可以凑出：$${b}$ 张 $${a}$。`),
+        why(a * b - a, `That can be made: $${b - 1}$ stamps of $${a}$.`, `它可以凑出：$${b - 1}$ 张 $${a}$。`),
+        why(a * b - b, `That can be made: $${a - 1}$ stamps of $${b}$.`, `它可以凑出：$${a - 1}$ 张 $${b}$。`),
+        why(answer + 1, `That can be made: $${answer + 1} = ${make(answer + 1)}$.`, `它可以凑出：$${answer + 1} = ${make(answer + 1)}$。`),
+      ]),
+      solution: walked(
+        [
+          [
+            [`Show ${answer} cannot be made`, `说明 ${answer} 凑不出`],
+            t(
+              `If $${answer} = ${a}x + ${b}y$ with $x, y \\ge 0$, then $${a}(x + 1) + ${b}(y + 1) = ${a * b}$. So $${b} \\mid x + 1$ and $${a} \\mid y + 1$, which forces $x + 1 \\ge ${b}$ and $y + 1 \\ge ${a}$, and the left side is at least $${2 * a * b}$, a contradiction.`,
+              `若 $${answer} = ${a}x + ${b}y$，其中 $x, y \\ge 0$，则 $${a}(x + 1) + ${b}(y + 1) = ${a * b}$。于是 $${b} \\mid x + 1$，$${a} \\mid y + 1$，迫使 $x + 1 \\ge ${b}$，$y + 1 \\ge ${a}$，左边至少是 $${2 * a * b}$，矛盾。`,
+            ),
+          ],
+          [
+            ["Show every larger amount can be made", "说明更大的面值都能凑出"],
+            t(
+              `The $${a}$ amounts from $${answer + 1}$ to $${answer + a}$ can each be made, and strong induction adds a stamp of $${a}$ to reach every amount after them.`,
+              `从 $${answer + 1}$ 到 $${answer + a}$ 的 $${a}$ 个面值都能凑出，再用强归纳法加一张 $${a}$ 的邮票，就能得到之后的每个面值。`,
+            ),
+          ],
+        ],
+        t(
+          `The run begins with $${answer + 1} = ${make(answer + 1)}$ and $${answer + 2} = ${make(answer + 2)}$.`,
+          `这一段以 $${answer + 1} = ${make(answer + 1)}$ 和 $${answer + 2} = ${make(answer + 2)}$ 开始。`,
+        ),
       ),
     });
   },
@@ -4196,8 +4409,8 @@ const sumOfDivisors: KnowledgePointDef = {
   id: "the-sum-of-the-divisors-of-a-number",
   title: t("The sum of the divisors of a number", "一个数的因数之和"),
   explanation: t(
-    "Every divisor of $p^a q^b$ has the form $p^i q^j$, with $0 \\le i \\le a$ and $0 \\le j \\le b$. Adding all of them gives a product of two sums, $(1 + p + \\dots + p^a)(1 + q + \\dots + q^b)$, as expanding the product shows. So no list of divisors is needed, and the idea works just as well for more primes. A number's divisors always include 1 and the number itself.",
-    "$p^a q^b$ 的每个因数都形如 $p^i q^j$，其中 $0 \\le i \\le a$，$0 \\le j \\le b$。把它们全部相加，得到两个和的乘积 $(1 + p + \\dots + p^a)(1 + q + \\dots + q^b)$，展开乘积就可以看出。所以不需要列出因数，这个想法对更多素数同样有效。一个数的因数总包含 1 和它本身。",
+    "Every divisor of $p^a q^b$ has the form $p^i q^j$, with $0 \\le i \\le a$ and $0 \\le j \\le b$. Adding all of them gives a product of two sums, $(1 + p + \\dots + p^a)(1 + q + \\dots + q^b)$, as expanding the product shows. So no list of divisors is needed, and the idea works just as well for more primes. A number's divisors always include 1 and the number itself.\n\n> **Watch out.** Each sum starts at $p^0 = 1$. Leaving out the $1$ drops every divisor that does not use that prime.",
+    "$p^a q^b$ 的每个因数都形如 $p^i q^j$，其中 $0 \\le i \\le a$，$0 \\le j \\le b$。把它们全部相加，得到两个和的乘积 $(1 + p + \\dots + p^a)(1 + q + \\dots + q^b)$，展开乘积就可以看出。所以不需要列出因数，这个想法对更多素数同样有效。一个数的因数总包含 1 和它本身。\n\n> **注意。** 每个和都从 $p^0 = 1$ 开始。漏掉 $1$，就丢掉了所有不含这个素数的因数。",
   ),
   generate(rng) {
     const [p, q] = rng.pick([
@@ -4214,22 +4427,42 @@ const sumOfDivisors: KnowledgePointDef = {
     const first = (p ** (a + 1) - 1) / (p - 1);
     const second = (q ** (b + 1) - 1) / (q - 1);
     const answer = first * second;
+    const sumP = oneTo(a + 1)
+      .map((i) => p ** (i - 1))
+      .join(" + ");
+    const sumQ = oneTo(b + 1)
+      .map((i) => q ** (i - 1))
+      .join(" + ");
     return numberProblem({
       prompt: t(`Find the sum of all positive divisors of ${n}.`, `求 ${n} 的所有正因数之和。`),
       answer,
       form: "integer",
-      wrong: [n + 1, (a + 1) * (b + 1), answer - n, answer + 1],
-      solution: t(
-        `Since $${n} = ${powerLatex(p, a)} \\cdot ${powerLatex(q, b)}$, the sum is $(${oneTo(a + 1)
-          .map((i) => p ** (i - 1))
-          .join(" + ")})(${oneTo(b + 1)
-          .map((i) => q ** (i - 1))
-          .join(" + ")}) = ${first} \\cdot ${second} = ${answer}$.`,
-        `由于 $${n} = ${powerLatex(p, a)} \\cdot ${powerLatex(q, b)}$，和是 $(${oneTo(a + 1)
-          .map((i) => p ** (i - 1))
-          .join(" + ")})(${oneTo(b + 1)
-          .map((i) => q ** (i - 1))
-          .join(" + ")}) = ${first} \\cdot ${second} = ${answer}$。`,
+      wrong: [answer + 1],
+      mistakes: firstOf([
+        why(
+          n + 1,
+          `That adds only $1$ and $${n}$; every $p^i q^j$ is a divisor too.`,
+          `这只加了 $1$ 和 $${n}$；每个 $p^i q^j$ 也都是因数。`,
+        ),
+        why((a + 1) * (b + 1), "That is the number of divisors, not their sum.", "这是因数的个数，而不是它们的和。"),
+        why(answer - n, `That leaves out $${n}$ itself, which is also a divisor.`, `这漏掉了 $${n}$ 本身，它也是因数。`),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Factor", "分解"],
+            t(`$${n} = ${powerLatex(p, a)} \\cdot ${powerLatex(q, b)}$.`, `$${n} = ${powerLatex(p, a)} \\cdot ${powerLatex(q, b)}$。`),
+          ],
+          [
+            ["Sum the powers of each prime", "对每个素数的幂求和"],
+            t(`$${sumP} = ${first}$ and $${sumQ} = ${second}$.`, `$${sumP} = ${first}$，$${sumQ} = ${second}$。`),
+          ],
+          [["Multiply", "相乘"], t(`$${first} \\cdot ${second} = ${answer}$.`, `$${first} \\cdot ${second} = ${answer}$。`)],
+        ],
+        t(
+          `Expanding $(${sumP})(${sumQ})$ gives $${a + 1} \\cdot ${b + 1} = ${(a + 1) * (b + 1)}$ terms, one for each divisor, from $1 \\cdot 1 = 1$ up to $${p ** a} \\cdot ${q ** b} = ${n}$.`,
+          `展开 $(${sumP})(${sumQ})$ 得 $${a + 1} \\cdot ${b + 1} = ${(a + 1) * (b + 1)}$ 项，每个因数一项，从 $1 \\cdot 1 = 1$ 到 $${p ** a} \\cdot ${q ** b} = ${n}$。`,
+        ),
       ),
     });
   },
@@ -4239,8 +4472,8 @@ const triangularMatrixCorner: KnowledgePointDef = {
   id: "the-corner-of-a-power-of-a-triangular-matrix",
   title: t("The corner of a power of a triangular matrix", "三角矩阵的幂的右上角"),
   explanation: t(
-    "To guess a formula for the powers of $\\begin{pmatrix} r & a \\\\ 0 & r \\end{pmatrix}$, compute a few by hand. The corner entries come out as $a$, $2ra$, $3r^2a$, and so on, which suggests $nr^{n - 1}a$. Induction then proves it: multiplying by the matrix once more gives $r \\cdot nr^{n - 1}a + a \\cdot r^n = (n + 1)r^n a$. This has the same shape as the derivative of $r^n$, and that is no accident.",
-    "要猜测 $\\begin{pmatrix} r & a \\\\ 0 & r \\end{pmatrix}$ 的幂的公式，先手算几个。右上角元素依次是 $a$、$2ra$、$3r^2a$ 等，这提示公式是 $nr^{n - 1}a$。然后用归纳法证明：再乘一次矩阵，得 $r \\cdot nr^{n - 1}a + a \\cdot r^n = (n + 1)r^n a$。它的形状与 $r^n$ 的导数相同，这并非巧合。",
+    "To guess a formula for the powers of $\\begin{pmatrix} r & a \\\\ 0 & r \\end{pmatrix}$, compute a few by hand. The corner entries come out as $a$, $2ra$, $3r^2a$, and so on, which suggests $nr^{n - 1}a$. Induction then proves it: multiplying by the matrix once more gives $r \\cdot nr^{n - 1}a + a \\cdot r^n = (n + 1)r^n a$. This has the same shape as the derivative of $r^n$, and that is no accident.\n\n> **Watch out.** The power of $r$ in the corner is $n - 1$, one less than on the diagonal. The factor $n$ counts the products that add up in the corner.",
+    "要猜测 $\\begin{pmatrix} r & a \\\\ 0 & r \\end{pmatrix}$ 的幂的公式，先手算几个。右上角元素依次是 $a$、$2ra$、$3r^2a$ 等，这提示公式是 $nr^{n - 1}a$。然后用归纳法证明：再乘一次矩阵，得 $r \\cdot nr^{n - 1}a + a \\cdot r^n = (n + 1)r^n a$。它的形状与 $r^n$ 的导数相同，这并非巧合。\n\n> **注意。** 右上角中 $r$ 的指数是 $n - 1$，比对角线上少一。因子 $n$ 数的是在右上角累加的乘积个数。",
   ),
   generate(rng) {
     const r = rng.int(2, 3);
@@ -4254,10 +4487,42 @@ const triangularMatrixCorner: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong: [a * r ** (n - 1), n * r ** n * a, r ** n, n * a],
-      solution: t(
-        `The formula $nr^{n - 1}a$, which induction proves, gives $${n} \\cdot ${r}^{${n - 1}} \\cdot ${a} = ${answer}$.`,
-        `归纳法证明的公式 $nr^{n - 1}a$ 给出 $${n} \\cdot ${r}^{${n - 1}} \\cdot ${a} = ${answer}$。`,
+      wrong: [],
+      mistakes: firstOf([
+        why(
+          a * r ** (n - 1),
+          `That misses the factor $${n}$: the corner collects $${n}$ equal products.`,
+          `这漏掉了因数 $${n}$：右上角累积了 $${n}$ 个相同的乘积。`,
+        ),
+        why(
+          n * r ** n * a,
+          "The power of $r$ in the corner is one less than the power of the matrix.",
+          "右上角中 $r$ 的指数比矩阵的幂次小一。",
+        ),
+        why(r ** n, `That is a diagonal entry, $${r}^{${n}}$.`, `这是对角元素 $${r}^{${n}}$。`),
+        why(n * a, `That drops the powers of $${r}$ that the diagonal contributes.`, `这丢掉了对角元素贡献的 $${r}$ 的幂。`),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Use the formula", "用公式"],
+            t(
+              `By induction the corner is $nr^{n - 1}a$: one more multiplication gives $r \\cdot nr^{n - 1}a + a \\cdot r^n = (n + 1)r^n a$.`,
+              `由归纳法，右上角是 $nr^{n - 1}a$：再乘一次得 $r \\cdot nr^{n - 1}a + a \\cdot r^n = (n + 1)r^n a$。`,
+            ),
+          ],
+          [
+            ["Substitute", "代入"],
+            t(
+              `$${n} \\cdot ${r}^{${n - 1}} \\cdot ${a} = ${n} \\cdot ${r ** (n - 1)} \\cdot ${a} = ${answer}$.`,
+              `$${n} \\cdot ${r}^{${n - 1}} \\cdot ${a} = ${n} \\cdot ${r ** (n - 1)} \\cdot ${a} = ${answer}$。`,
+            ),
+          ],
+        ],
+        t(
+          `The square has corner $${r} \\cdot ${a} + ${a} \\cdot ${r} = ${2 * r * a} = 2 \\cdot ${r} \\cdot ${a}$, as the formula says for $n = 2$.`,
+          `平方的右上角是 $${r} \\cdot ${a} + ${a} \\cdot ${r} = ${2 * r * a} = 2 \\cdot ${r} \\cdot ${a}$，与公式在 $n = 2$ 时一致。`,
+        ),
       ),
     });
   },
@@ -4826,12 +5091,14 @@ const oddTriangularNumbers: KnowledgePointDef = {
   id: "counting-the-odd-triangular-numbers",
   title: t("Counting the odd triangular numbers", "计算奇三角形数的个数"),
   explanation: t(
-    "The parity of the triangular number $T_k = \\frac{k(k + 1)}{2}$ follows a pattern of period four: odd, odd, even, even. It is not enough to look at $k$ and $k + 1$ alone, because one of them is always even and the factor 2 cancels part of it. Only when the even one is a multiple of 4 is $T_k$ even. So $T_k$ is odd when $k$ leaves a remainder of 1 or 2 on division by 4.",
-    "三角形数 $T_k = \\frac{k(k + 1)}{2}$ 的奇偶性呈周期为四的规律：奇、奇、偶、偶。只看 $k$ 和 $k + 1$ 不够，因为其中总有一个是偶数，而因子 2 会消去它的一部分。只有当那个偶数是 4 的倍数时，$T_k$ 才是偶数。所以当 $k$ 除以 4 余 1 或 2 时，$T_k$ 是奇数。",
+    "The parity of the triangular number $T_k = \\frac{k(k + 1)}{2}$ follows a pattern of period four: odd, odd, even, even. It is not enough to look at $k$ and $k + 1$ alone, because one of them is always even and the factor 2 cancels part of it. Only when the even one is a multiple of 4 is $T_k$ even. So $T_k$ is odd when $k$ leaves a remainder of 1 or 2 on division by 4.\n\n> **Watch out.** The product $k(k + 1)$ is always even, but halving it can remove its only factor $2$. So the parity of $T_k$ depends on $k$ modulo $4$, not modulo $2$.",
+    "三角形数 $T_k = \\frac{k(k + 1)}{2}$ 的奇偶性呈周期为四的规律：奇、奇、偶、偶。只看 $k$ 和 $k + 1$ 不够，因为其中总有一个是偶数，而因子 2 会消去它的一部分。只有当那个偶数是 4 的倍数时，$T_k$ 才是偶数。所以当 $k$ 除以 4 余 1 或 2 时，$T_k$ 是奇数。\n\n> **注意。** 乘积 $k(k + 1)$ 总是偶数，但减半可能去掉它唯一的因子 $2$。所以 $T_k$ 的奇偶性取决于 $k$ 除以 $4$ 的余数，而不是除以 $2$ 的余数。",
   ),
   generate(rng) {
     const n = rng.int(5, 60);
     const answer = oneTo(n).filter((k) => k % 4 === 1 || k % 4 === 2).length;
+    const blocks = Math.floor(n / 4);
+    const rest = n % 4;
     return numberProblem({
       prompt: t(
         `How many of the numbers $\\frac{k(k + 1)}{2}$, for $k = 1, 2, \\dots, ${n}$, are odd?`,
@@ -4839,10 +5106,37 @@ const oddTriangularNumbers: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong: [n - answer, Math.floor(n / 4), n, answer + 1, answer - 1],
-      solution: t(
-        `The number is odd exactly when $k$ leaves remainder 1 or 2 on division by 4. Up to ${n}, there are $${answer}$ such values of $k$.`,
-        `当且仅当 $k$ 除以 4 余 1 或 2 时，这个数是奇数。不超过 ${n} 的这样的 $k$ 有 $${answer}$ 个。`,
+      wrong: [n, answer + 1],
+      mistakes: firstOf([
+        why(n - answer, "That counts the even ones.", "这数的是偶数。"),
+        why(blocks, "Each block of four values of $k$ gives two odd numbers, not one.", "每四个连续的 $k$ 给出两个奇数，而不是一个。"),
+        why(
+          Math.ceil(n / 2),
+          "That assumes odd and even alternate; the pattern has period four: odd, odd, even, even.",
+          "这假设奇偶交替出现；实际规律的周期是四：奇、奇、偶、偶。",
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Find the pattern", "找规律"],
+            t(
+              "$T_k$ is odd exactly when $k$ leaves remainder $1$ or $2$ on division by $4$, since only then is the even one of $k$ and $k + 1$ not a multiple of $4$.",
+              "当且仅当 $k$ 除以 $4$ 余 $1$ 或 $2$ 时 $T_k$ 是奇数，因为只有这时 $k$ 与 $k + 1$ 中的偶数不是 $4$ 的倍数。",
+            ),
+          ],
+          [
+            ["Count", "计数"],
+            t(
+              `$${n} = 4 \\cdot ${blocks} + ${rest}$. Each of the $${blocks}$ full blocks gives $2$, and the last $${rest}$ values give $${Math.min(rest, 2)}$: $2 \\cdot ${blocks} + ${Math.min(rest, 2)} = ${answer}$.`,
+              `$${n} = 4 \\cdot ${blocks} + ${rest}$。$${blocks}$ 个完整的段各给出 $2$ 个，最后 $${rest}$ 个值给出 $${Math.min(rest, 2)}$ 个：$2 \\cdot ${blocks} + ${Math.min(rest, 2)} = ${answer}$。`,
+            ),
+          ],
+        ],
+        t(
+          "The first eight are $1, 3, 6, 10, 15, 21, 28, 36$: odd, odd, even, even, odd, odd, even, even.",
+          "前八个是 $1, 3, 6, 10, 15, 21, 28, 36$：奇、奇、偶、偶、奇、奇、偶、偶。",
+        ),
       ),
     });
   },
@@ -4852,8 +5146,8 @@ const factorialBeatsPower: KnowledgePointDef = {
   id: "the-smallest-n-where-a-factorial-beats-a-power",
   title: t("The smallest n where a factorial beats a power", "阶乘超过幂的最小 n"),
   explanation: t(
-    "Before an inductive proof of an inequality such as $n! > ca^n$ can start, the right base case must be found, by testing small values. The inductive step then goes through as soon as $n + 1 \\ge a$, because the left side is multiplied by $n + 1$ and the right side only by $a$. So the factorial must win eventually, whatever the values of $a$ and $c$, even though it starts off behind the power.",
-    "在用归纳法证明像 $n! > ca^n$ 这样的不等式之前，必须通过试小值找到正确的基础情形。只要 $n + 1 \\ge a$，归纳步骤就能完成，因为左边乘以 $n + 1$，而右边只乘以 $a$。所以无论 $a$ 和 $c$ 取什么值，阶乘最终一定会胜出，尽管开始时它落后于幂。",
+    "Before an inductive proof of an inequality such as $n! > ca^n$ can start, the right base case must be found, by testing small values. The inductive step then goes through as soon as $n + 1 \\ge a$, because the left side is multiplied by $n + 1$ and the right side only by $a$. So the factorial must win eventually, whatever the values of $a$ and $c$, even though it starts off behind the power.\n\n> **Watch out.** The factorial starts behind, so test the values one by one up to the first win. A guess such as $n = a$ is usually too early.",
+    "在用归纳法证明像 $n! > ca^n$ 这样的不等式之前，必须通过试小值找到正确的基础情形。只要 $n + 1 \\ge a$，归纳步骤就能完成，因为左边乘以 $n + 1$，而右边只乘以 $a$。所以无论 $a$ 和 $c$ 取什么值，阶乘最终一定会胜出，尽管开始时它落后于幂。\n\n> **注意。** 阶乘开始时落后，所以要逐个检验，直到第一次胜出。像 $n = a$ 这样的猜测通常太早。",
   ),
   generate(rng) {
     const a = rng.int(2, 6);
@@ -4873,10 +5167,45 @@ const factorialBeatsPower: KnowledgePointDef = {
       prompt: t(`Find the smallest positive integer $n$ with $n! > ${scale}${a}^n$.`, `求满足 $n! > ${scale}${a}^n$ 的最小正整数 $n$。`),
       answer: n,
       form: "integer",
-      wrong: [n - 1, n + 1, a, a + 1],
-      solution: t(
-        `At $n = ${n - 1}$, the two sides are $${previousLeft}$ and $${previousRight}$. At $n = ${n}$, they are $${left}$ and $${right}$, so $n = ${n}$ is the first to work.`,
-        `在 $n = ${n - 1}$ 时，两边分别是 $${previousLeft}$ 和 $${previousRight}$。在 $n = ${n}$ 时，它们是 $${left}$ 和 $${right}$，所以 $n = ${n}$ 是第一个满足的。`,
+      wrong: [a + 1],
+      mistakes: firstOf([
+        why(
+          n - 1,
+          `At $n = ${n - 1}$ the factorial is still behind: $${previousLeft} \\le ${previousRight}$.`,
+          `$n = ${n - 1}$ 时阶乘仍然落后：$${previousLeft} \\le ${previousRight}$。`,
+        ),
+        why(
+          n + 1,
+          `The factorial already wins at $n = ${n}$: $${left} > ${right}$.`,
+          `阶乘在 $n = ${n}$ 时已经胜出：$${left} > ${right}$。`,
+        ),
+        why(
+          a,
+          `That is where the inductive step starts to work, not where the factorial first wins.`,
+          `这是归纳步骤开始可行的地方，而不是阶乘第一次胜出的地方。`,
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Test the values", "检验各值"],
+            t(
+              `At $n = ${n - 1}$ the two sides are $${previousLeft}$ and $${previousRight}$, so the factorial is still behind. At $n = ${n}$ they are $${left}$ and $${right}$, so it wins.`,
+              `$n = ${n - 1}$ 时两边分别是 $${previousLeft}$ 和 $${previousRight}$，阶乘仍落后。$n = ${n}$ 时它们是 $${left}$ 和 $${right}$，阶乘胜出。`,
+            ),
+          ],
+          [
+            ["Check that it keeps winning", "确认之后一直胜出"],
+            t(
+              `From here each step multiplies the left side by at least $${n + 1}$ and the right side by only $${a}$, so $n = ${n}$ is the base case.`,
+              `从这里起，每一步左边至少乘以 $${n + 1}$，右边只乘以 $${a}$，所以 $n = ${n}$ 就是基础情形。`,
+            ),
+          ],
+        ],
+        t(
+          `At $n = ${n + 1}$: $${left * (n + 1)} > ${right * a}$, as the step predicts.`,
+          `$n = ${n + 1}$ 时：$${left * (n + 1)} > ${right * a}$，与归纳步骤的预期一致。`,
+        ),
       ),
     });
   },
