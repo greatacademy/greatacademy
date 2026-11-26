@@ -253,8 +253,8 @@ const generalizedRank = point(
   "the-rank-of-a-given-generalized-eigenvector",
   ["The rank of a given generalized eigenvector", "给定广义特征向量的秩"],
   [
-    "The rank of a generalized eigenvector is the smallest $k$ for which $(A - \\lambda I)^{k}$ sends it to zero. For an upper triangular block with nonzero superdiagonal, each application of $A - \\lambda I$ pushes the lowest nonzero entry up by one, so the position of that entry gives the rank.",
-    "广义特征向量的秩是使 $(A - \\lambda I)^{k}$ 把它变为零的最小 $k$。对上对角线元素非零的上三角块，每作用一次 $A - \\lambda I$，最低的非零元素就上移一位，所以这个元素的位置给出秩。",
+    "The rank of a generalized eigenvector is the smallest $k$ for which $(A - \\lambda I)^{k}$ sends it to zero. For an upper triangular block with nonzero superdiagonal, each application of $A - \\lambda I$ pushes the lowest nonzero entry up by one, so the position of that entry gives the rank. For example, with $N = A - \\lambda I$ having nonzero superdiagonal, the vector $(5, 2, 0)$ has its lowest nonzero entry in position $2$: one application of $N$ leaves only a first entry, and a second gives zero, so its rank is $2$.\n\n> **Watch out.** The rank is set by the lowest nonzero entry, not by the number of nonzero entries: $(0, 0, 1)$ has rank $3$, and $(4, 0, 0)$ has rank $1$, an ordinary eigenvector.",
+    "广义特征向量的秩是使 $(A - \\lambda I)^{k}$ 把它变为零的最小 $k$。对上对角线元素非零的上三角块，每作用一次 $A - \\lambda I$，最低的非零元素就上移一位，所以这个元素的位置给出秩。例如当 $N = A - \\lambda I$ 的上对角线元素非零时，向量 $(5, 2, 0)$ 最低的非零元素在第 $2$ 位：作用一次 $N$ 后只剩第一个分量，再作用一次就得零，所以秩为 $2$。\n\n> **注意。** 秩由最低的非零元素决定，而不是由非零元素的个数决定：$(0, 0, 1)$ 的秩是 $3$，$(4, 0, 0)$ 的秩是 $1$，即普通特征向量。",
   ],
   (rng) => {
     const l = nz(rng, 5);
@@ -265,8 +265,14 @@ const generalizedRank = point(
     const x1 = nz(rng, 5);
     const x2 = answer >= 2 ? nz(rng, 5) : 0;
     const x3 = answer === 3 ? nz(rng, 5) : 0;
-    return ask(
-      [
+    const once = [p * x2 + q * x3 + 0, r * x3 + 0, 0] as const;
+    const twice = [p * r * x3 + 0, 0, 0] as const;
+    const images = [`N\\mathbf{v} = ${vec(...once)}`, `N^{2}\\mathbf{v} = ${vec(...twice)}`, `N^{3}\\mathbf{v} = ${vec(0, 0, 0)}`].slice(
+      0,
+      answer,
+    );
+    return numberProblem({
+      prompt: text([
         `$A = ${mat([
           [l, p, q],
           [0, l, r],
@@ -277,14 +283,59 @@ const generalizedRank = point(
           [0, l, r],
           [0, 0, l],
         ])}$。求 $${vec(x1, x2, x3)}$ 作为 $A$ 关于 $\\lambda = ${l}$ 的广义特征向量的秩。`,
-      ],
+      ]),
       answer,
-      [1, 2, 3, 4],
-      [
-        `Let $N = A - ${wrap(l)}I$. The lowest nonzero entry of this vector is in position $${answer}$, and each application of $N$ moves that entry up one place because the superdiagonal is nonzero. So exactly $${answer}$ applications are needed to reach zero.`,
-        `设 $N = A - ${wrap(l)}I$。这个向量最低的非零元素在第 $${answer}$ 位，由于上对角线元素非零，每作用一次 $N$，它就上移一位。所以恰好作用 $${answer}$ 次才得到零。`,
-      ],
-    );
+      form: "integer",
+      mistakes: [
+        ...(answer > 1
+          ? [
+              why(
+                answer - 1,
+                "Count the powers up to the first that gives zero, not the last that gives a nonzero vector.",
+                "要数到第一个得零的幂，而不是最后一个得非零向量的幂。",
+              ),
+            ]
+          : []),
+        why(
+          answer + 1,
+          "Stop at the first power that gives zero; one more application is not needed.",
+          "到第一个得零的幂就停止，不需要再作用一次。",
+        ),
+        why(
+          3,
+          "That is the size of the block, the largest possible rank, not the rank of this vector.",
+          "这是块的大小，即可能的最大秩，不是这个向量的秩。",
+        ),
+        why(4, "No generalized eigenvector of a $3 \\times 3$ block has rank above $3$.", "$3 \\times 3$ 块的广义特征向量的秩不超过 $3$。"),
+      ].filter((w, i, all) => w.value !== answer && all.findIndex((o) => o.value === w.value) === i),
+      solution: walked(
+        [
+          [
+            ["Subtract the eigenvalue", "减去特征值"],
+            text([`Let $\\mathbf{v} = ${vec(x1, x2, x3)}$ and`, `设 $\\mathbf{v} = ${vec(x1, x2, x3)}$，且`]),
+            [
+              `N = A - ${wrap(l)}I = ${mat([
+                [0, p, q],
+                [0, 0, r],
+                [0, 0, 0],
+              ])}`,
+            ],
+          ],
+          [["Apply N until zero", "反复作用 N 直到得零"], text(["", ""]), images],
+          [
+            ["Read the rank", "读出秩"],
+            text([
+              `The first power that gives zero is $${answer === 1 ? "N" : `N^{${answer}}`}$, so the rank is $${answer}$.`,
+              `第一个得零的幂是 $${answer === 1 ? "N" : `N^{${answer}}`}$，所以秩为 $${answer}$。`,
+            ]),
+          ],
+        ],
+        text([
+          `The lowest nonzero entry of $\\mathbf{v}$ is in position $${answer}$, which agrees with the rank.`,
+          `$\\mathbf{v}$ 最低的非零元素在第 $${answer}$ 位，与秩一致。`,
+        ]),
+      ),
+    });
   },
 );
 
@@ -292,16 +343,16 @@ const jordanPower = point(
   "a-power-of-a-jordan-block",
   ["A power of a Jordan block", "若尔当块的幂"],
   [
-    "Write a $2 \\times 2$ Jordan-type matrix as $\\lambda I + N$ with $N^{2} = 0$. Then the binomial theorem stops after two terms: $A^{n} = \\lambda^{n}I + n\\lambda^{n - 1}N$. The off-diagonal entry therefore gains a factor of $n$, which is not what raising each entry to a power would give.",
-    "把 $2 \\times 2$ 若尔当型矩阵写成 $\\lambda I + N$，其中 $N^{2} = 0$。于是二项式定理两项后就终止：$A^{n} = \\lambda^{n}I + n\\lambda^{n - 1}N$。所以对角线外的元素多了因子 $n$，这与逐个元素取幂的结果不同。",
+    "Write a $2 \\times 2$ Jordan-type matrix as $\\lambda I + N$ with $N^{2} = 0$. Then the binomial theorem stops after two terms: $A^{n} = \\lambda^{n}I + n\\lambda^{n - 1}N$. The off-diagonal entry therefore gains a factor of $n$, which is not what raising each entry to a power would give. For example, rows $(2, 5)$ and $(0, 2)$ give $N$ with the single entry $5$, and the $(1, 2)$ entry of $A^{3}$ is $3 \\cdot 2^{2} \\cdot 5 = 60$.\n\n> **Watch out.** Do not raise the entries to the power one by one: $5^{3}$ is not the $(1, 2)$ entry of $A^{3}$. That entry is $n\\lambda^{n - 1}b$, with the factor $n$.",
+    "把 $2 \\times 2$ 若尔当型矩阵写成 $\\lambda I + N$，其中 $N^{2} = 0$。于是二项式定理两项后就终止：$A^{n} = \\lambda^{n}I + n\\lambda^{n - 1}N$。所以对角线外的元素多了因子 $n$，这与逐个元素取幂的结果不同。例如行为 $(2, 5)$ 和 $(0, 2)$ 时，$N$ 只有一个元素 $5$，$A^{3}$ 的 $(1, 2)$ 元素是 $3 \\cdot 2^{2} \\cdot 5 = 60$。\n\n> **注意。** 不要逐个元素取幂：$5^{3}$ 不是 $A^{3}$ 的 $(1, 2)$ 元素。这个元素是 $n\\lambda^{n - 1}b$，带有因子 $n$。",
   ],
   (rng) => {
     const l = rng.pick([-3, -2, -1, 2, 3]);
     const b = nz(rng, 5);
     const n = rng.int(2, 5);
     const answer = n * l ** (n - 1) * b;
-    return ask(
-      [
+    return numberProblem({
+      prompt: text([
         `Find the $(1, 2)$ entry of $A^{${n}}$ for $A = ${mat([
           [l, b],
           [0, l],
@@ -310,14 +361,47 @@ const jordanPower = point(
           [l, b],
           [0, l],
         ])}$，求 $A^{${n}}$ 的 $(1, 2)$ 元素。`,
-      ],
+      ]),
       answer,
-      [l ** (n - 1) * b, b ** n, n * b],
-      [
-        `$A = ${wrap(l)}I + N$ with $N^{2} = 0$, so $A^{${n}}$ has the $(1, 2)$ entry $${n} \\cdot ${wrap(l ** (n - 1))} \\cdot ${wrap(b)} = ${answer}$.`,
-        `$A = ${wrap(l)}I + N$，且 $N^{2} = 0$，所以 $A^{${n}}$ 的 $(1, 2)$ 元素是 $${n} \\cdot ${wrap(l ** (n - 1))} \\cdot ${wrap(b)} = ${answer}$。`,
-      ],
-    );
+      form: "integer",
+      mistakes: [
+        why(
+          l ** (n - 1) * b,
+          "The binomial term $n\\lambda^{n - 1}N$ carries the factor $n$.",
+          "二项式项 $n\\lambda^{n - 1}N$ 带有因子 $n$。",
+        ),
+        why(b ** n, "Matrix powers are not taken entry by entry.", "矩阵的幂不能逐个元素去取。"),
+        why(n * b, "The factor $\\lambda^{n - 1}$ is missing.", "漏掉了因子 $\\lambda^{n - 1}$。"),
+        why(l ** n, "That is a diagonal entry of the power, $\\lambda^{n}$.", "这是幂的对角线元素 $\\lambda^{n}$。"),
+      ].filter((w, i, all) => w.value !== answer && all.findIndex((o) => o.value === w.value) === i),
+      solution: walked(
+        [
+          [
+            ["Split the matrix", "拆分矩阵"],
+            text([
+              `$A = ${wrap(l)}I + N$, where $N$ has the single entry $${b}$ in position $(1, 2)$ and $N^{2} = 0$, so`,
+              `$A = ${wrap(l)}I + N$，其中 $N$ 只在 $(1, 2)$ 位置有元素 $${b}$，且 $N^{2} = 0$，所以`,
+            ]),
+            [`A^{${n}} = ${wrap(l)}^{${n}}I + ${n} \\cdot ${wrap(l)}^{${n - 1}}N`],
+          ],
+          [
+            ["Read the (1, 2) entry", "读出 (1, 2) 元素"],
+            text(["", ""]),
+            [`${n} \\cdot ${wrap(l ** (n - 1))} \\cdot ${wrap(b)} = ${answer}`],
+          ],
+        ],
+        text([
+          `For $n = 2$ the rule gives $2\\lambda b = ${2 * l * b}$, which matches $A^{2} = ${mat([
+            [l * l, 2 * l * b],
+            [0, l * l],
+          ])}$.`,
+          `$n = 2$ 时规则给出 $2\\lambda b = ${2 * l * b}$，与 $A^{2} = ${mat([
+            [l * l, 2 * l * b],
+            [0, l * l],
+          ])}$ 一致。`,
+        ]),
+      ),
+    });
   },
 );
 

@@ -2004,14 +2004,24 @@ const inverseOfIPlusNilpotent: KnowledgePointDef = {
   id: "the-inverse-of-the-identity-plus-a-nilpotent-matrix",
   title: t("The inverse of the identity plus a nilpotent matrix", "单位矩阵加幂零矩阵的逆"),
   explanation: t(
-    "If $N^3 = 0$, then $(I+N)(I - N + N^2) = I + N^3 = I$, so $(I+N)^{-1} = I - N + N^2$. The series for $\\frac{1}{1+x}$ stops after finitely many terms because high powers of $N$ vanish.",
-    "若 $N^3 = 0$，则 $(I+N)(I - N + N^2) = I + N^3 = I$，所以 $(I+N)^{-1} = I - N + N^2$。$\\frac{1}{1+x}$ 的级数在有限项后就停止，因为 $N$ 的高次幂为零。",
+    "If $N^3 = 0$, then $(I+N)(I - N + N^2) = I + N^3 = I$, so $(I+N)^{-1} = I - N + N^2$. The series for $\\frac{1}{1+x}$ stops after finitely many terms because high powers of $N$ vanish. For example, the inverse of $\\begin{pmatrix} 1 & 2 & 3 \\\\ 0 & 1 & 4 \\\\ 0 & 0 & 1 \\end{pmatrix}$ has corner entry $-3 + 2 \\cdot 4 = 5$.\n\n> **Watch out.** The corner of the inverse is $pq - r$: $-N$ contributes $-r$ and $N^2$ contributes $pq$. Keeping only one of the two terms, or flipping both signs, gives a wrong entry.",
+    "若 $N^3 = 0$，则 $(I+N)(I - N + N^2) = I + N^3 = I$，所以 $(I+N)^{-1} = I - N + N^2$。$\\frac{1}{1+x}$ 的级数在有限项后就停止，因为 $N$ 的高次幂为零。例如 $\\begin{pmatrix} 1 & 2 & 3 \\\\ 0 & 1 & 4 \\\\ 0 & 0 & 1 \\end{pmatrix}$ 的逆的角元素为 $-3 + 2 \\cdot 4 = 5$。\n\n> **注意。** 逆的角元素是 $pq - r$：$-N$ 贡献 $-r$，$N^2$ 贡献 $pq$。只保留其中一项，或把两项都变号，都会得到错误的元素。",
   ),
   generate(rng) {
     const p = nonzero(rng, 4);
     const q = nonzero(rng, 4);
     const r = nonzero(rng, 5);
     const answer = p * q - r;
+    const N = mat([
+      [0, p, r],
+      [0, 0, q],
+      [0, 0, 0],
+    ]);
+    const N2 = mat([
+      [0, 0, p * q],
+      [0, 0, 0],
+      [0, 0, 0],
+    ]);
     return numberProblem({
       prompt: t(
         `Find the entry in row 1, column 3 of the inverse of $${mat([
@@ -2027,10 +2037,35 @@ const inverseOfIPlusNilpotent: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong: [-r, r - p * q, p * q],
-      solution: t(
-        `The matrix is $I + N$ with $N$ strictly upper triangular, so the inverse is $I - N + N^2$. In that corner $N$ has $${r}$ and $N^2$ has $${p}(${q}) = ${p * q}$, giving $${-r} + ${inParens(p * q)} = ${answer}$.`,
-        `矩阵是 $I + N$，$N$ 严格上三角，所以逆是 $I - N + N^2$。在该位置 $N$ 为 $${r}$，$N^2$ 为 $${p}(${q}) = ${p * q}$，得 $${-r} + ${inParens(p * q)} = ${answer}$。`,
+      mistakes: [
+        why(-r, "That keeps only $-N$; the $N^2$ term adds $pq$ in the corner.", "这只保留了 $-N$；$N^2$ 项还在角上加上 $pq$。"),
+        why(
+          r - p * q,
+          "The signs are flipped: the inverse is $I - N + N^2$, so the corner is $-r + pq$.",
+          "符号反了：逆是 $I - N + N^2$，所以角元素为 $-r + pq$。",
+        ),
+        why(p * q, "That keeps only $N^2$; $-N$ contributes $-r$ as well.", "这只保留了 $N^2$；$-N$ 还贡献 $-r$。"),
+      ].filter((w, i, all) => w.value !== answer && all.findIndex((o) => o.value === w.value) === i),
+      solution: walked(
+        [
+          [
+            ["Split off the identity", "分出单位矩阵"],
+            t(
+              "The matrix is $I + N$ with $N$ strictly upper triangular, so $N^3 = 0$:",
+              "矩阵是 $I + N$，$N$ 严格上三角，所以 $N^3 = 0$：",
+            ),
+            [`N = ${N}`, `N^2 = ${N2}`],
+          ],
+          [
+            ["Use the finite series", "利用有限级数"],
+            t("$(I + N)^{-1} = I - N + N^2$, whose corner entry is", "$(I + N)^{-1} = I - N + N^2$，其角元素为"),
+            [`${-r} + ${inParens(p * q)} = ${answer}`],
+          ],
+        ],
+        t(
+          `Column 3 of the inverse is $(${answer}, ${-q}, 1)$, and row 1 of the matrix times it gives $${answer} + ${inParens(p)} \\cdot ${inParens(-q)} + ${inParens(r)} = 0$, as the identity requires.`,
+          `逆的第 3 列为 $(${answer}, ${-q}, 1)$，原矩阵第 1 行与它相乘得 $${answer} + ${inParens(p)} \\cdot ${inParens(-q)} + ${inParens(r)} = 0$，符合单位矩阵的要求。`,
+        ),
       ),
     });
   },
@@ -2040,8 +2075,8 @@ const blocksFromNullities: KnowledgePointDef = {
   id: "counting-jordan-blocks-from-nullities",
   title: t("Counting Jordan blocks from nullities", "由零度数若尔当块"),
   explanation: t(
-    "Let $N = A - \\lambda I$. The nullity of $N$ counts the Jordan blocks for $\\lambda$, because each block has one eigenvector. Each further power gains one dimension for every block that is long enough, so the nullity of $N^2$ minus the nullity of $N$ counts the blocks of size at least two.",
-    "设 $N = A - \\lambda I$。$N$ 的零度等于 $\\lambda$ 的若尔当块个数，因为每块有一个特征向量。再乘一次，每个足够长的块都多一维，所以 $N^2$ 的零度减 $N$ 的零度，就是大小至少为二的块数。",
+    "Let $N = A - \\lambda I$. The nullity of $N$ counts the Jordan blocks for $\\lambda$, because each block has one eigenvector. Each further power gains one dimension for every block that is long enough, so the nullity of $N^2$ minus the nullity of $N$ counts the blocks of size at least two. For example, blocks of sizes $3$ and $1$ give nullities $2$ for $N$ and $3$ for $N^2$: two blocks, of which $3 - 2 = 1$ has size at least two.\n\n> **Watch out.** The nullity of $N^2$ is not itself a count of blocks; it is the difference of the two nullities that counts the blocks of size at least two.",
+    "设 $N = A - \\lambda I$。$N$ 的零度等于 $\\lambda$ 的若尔当块个数，因为每块有一个特征向量。再乘一次，每个足够长的块都多一维，所以 $N^2$ 的零度减 $N$ 的零度，就是大小至少为二的块数。例如大小为 $3$ 和 $1$ 的两个块使 $N$ 的零度为 $2$，$N^2$ 的零度为 $3$：共两个块，其中 $3 - 2 = 1$ 个大小至少为二。\n\n> **注意。** $N^2$ 的零度本身不是块数；两个零度之差才是大小至少为二的块数。",
   ),
   generate(rng) {
     const sizes = rng.pick([
@@ -2071,10 +2106,47 @@ const blocksFromNullities: KnowledgePointDef = {
         : t(`${given} How many Jordan blocks have size at least 2?`, `${givenZh}大小至少为 2 的若尔当块有多少个？`),
       answer,
       form: "integer",
-      wrong: [n1, n2, askSingles ? n2 - n1 : singles, answer + 1].filter((x) => x !== answer),
-      solution: t(
-        `There are $${n1}$ blocks in all, and $${n2} - ${n1} = ${n2 - n1}$ of them have size at least 2.${askSingles ? ` That leaves $${n1} - ${n2 - n1} = ${singles}$ of size 1.` : ""}`,
-        `一共有 $${n1}$ 个块，其中 $${n2} - ${n1} = ${n2 - n1}$ 个大小至少为 2。${askSingles ? `剩下 $${n1} - ${n2 - n1} = ${singles}$ 个大小为 1。` : ""}`,
+      mistakes: [
+        why(n1, "That is the nullity of $N$, which counts all the blocks.", "这是 $N$ 的零度，它数的是全部块。"),
+        why(
+          n2,
+          "The nullity of $N^2$ is not a count of blocks; take the difference of the nullities.",
+          "$N^2$ 的零度不是块数；要取两个零度之差。",
+        ),
+        askSingles
+          ? why(
+              n2 - n1,
+              "That counts the blocks of size at least 2; subtract it from the total.",
+              "这是大小至少为 2 的块数；还要从总块数中减去它。",
+            )
+          : why(singles, "That counts the blocks of size exactly 1.", "这是大小恰为 1 的块数。"),
+        why(answer + 1, "That is one too many; recount from the two nullities.", "多了一个；请由两个零度重新计算。"),
+      ].filter((w, i, all) => w.value !== answer && all.findIndex((o) => o.value === w.value) === i),
+      solution: walked(
+        [
+          [
+            ["Count all the blocks", "数全部块"],
+            t(`Each block has one eigenvector, so there are $${n1}$ blocks.`, `每个块有一个特征向量，所以共有 $${n1}$ 个块。`),
+          ],
+          [
+            ["Count the longer blocks", "数较长的块"],
+            t("Each block of size at least 2 adds one dimension from $N$ to $N^2$:", "每个大小至少为 2 的块从 $N$ 到 $N^2$ 多一维："),
+            [`${n2} - ${n1} = ${n2 - n1}`],
+          ],
+          ...(askSingles
+            ? [
+                [
+                  ["Subtract", "相减"] as const,
+                  t("The rest have size 1:", "其余的块大小为 1："),
+                  [`${n1} - ${n2 - n1} = ${singles}`],
+                ] as const,
+              ]
+            : []),
+        ],
+        t(
+          `Blocks of sizes $${sizes.join(", ")}$ fill a ${total}×${total} matrix and give these nullities: $${n1}$ for $N$ and $${n2}$ for $N^2$.`,
+          `大小为 ${sizes.map((s) => `$${s}$`).join("、")} 的块组成 ${total} 阶矩阵，并给出这些零度：$N$ 为 $${n1}$，$N^2$ 为 $${n2}$。`,
+        ),
       ),
     });
   },
@@ -2084,8 +2156,8 @@ const exponentialOfJordanBlock: KnowledgePointDef = {
   id: "the-exponential-of-a-2x2-jordan-block",
   title: t("The exponential of a 2×2 Jordan block", "二阶若尔当块的指数"),
   explanation: t(
-    "Write $A = \\lambda I + N$ with $N^2 = 0$. Since $\\lambda I$ and $N$ commute, $e^{At} = e^{\\lambda t}e^{Nt} = e^{\\lambda t}(I + tN)$. The exponential series for $N$ stops after two terms, and so a factor of $t$ appears beside the exponential.",
-    "把 $A$ 写成 $\\lambda I + N$，其中 $N^2 = 0$。因为 $\\lambda I$ 与 $N$ 可交换，$e^{At} = e^{\\lambda t}e^{Nt} = e^{\\lambda t}(I + tN)$。$N$ 的指数级数两项后就停止，所以指数旁边出现因子 $t$。",
+    "Write $A = \\lambda I + N$ with $N^2 = 0$. Since $\\lambda I$ and $N$ commute, $e^{At} = e^{\\lambda t}e^{Nt} = e^{\\lambda t}(I + tN)$. The exponential series for $N$ stops after two terms, and so a factor of $t$ appears beside the exponential. For example, $A = \\begin{pmatrix} 3 & 2 \\\\ 0 & 3 \\end{pmatrix}$ gives $e^{At} = e^{3t}\\begin{pmatrix} 1 & 2t \\\\ 0 & 1 \\end{pmatrix}$.\n\n> **Watch out.** $e^{At}$ is not found by exponentiating each entry. The corner is $ct$, with the factor $t$, and it is multiplied by $e^{\\lambda t}$ like every other entry.",
+    "把 $A$ 写成 $\\lambda I + N$，其中 $N^2 = 0$。因为 $\\lambda I$ 与 $N$ 可交换，$e^{At} = e^{\\lambda t}e^{Nt} = e^{\\lambda t}(I + tN)$。$N$ 的指数级数两项后就停止，所以指数旁边出现因子 $t$。例如 $A = \\begin{pmatrix} 3 & 2 \\\\ 0 & 3 \\end{pmatrix}$ 给出 $e^{At} = e^{3t}\\begin{pmatrix} 1 & 2t \\\\ 0 & 1 \\end{pmatrix}$。\n\n> **注意。** $e^{At}$ 不是把每个元素取指数。角上是带因子 $t$ 的 $ct$，并且它和其他元素一样乘以 $e^{\\lambda t}$。",
   ),
   generate(rng) {
     const l = nonzero(rng, 5);
@@ -2093,7 +2165,27 @@ const exponentialOfJordanBlock: KnowledgePointDef = {
     const off = c === 1 ? "t" : c === -1 ? "-t" : `${c}t`;
     const lt = l === 1 ? "t" : l === -1 ? "-t" : `${l}t`;
     const exp = `e^{${lt}}`;
-    return pickChoice(
+    const wrong = [
+      both(
+        mat([
+          [exp, `e^{${off}}`],
+          [0, exp],
+        ]),
+      ),
+      both(
+        `${exp}${mat([
+          [1, c],
+          [0, 1],
+        ])}`,
+      ),
+      both(
+        mat([
+          [exp, off],
+          [0, exp],
+        ]),
+      ),
+    ];
+    const problem = pickChoice(
       rng,
       t(
         `What is $e^{At}$ for $A = ${mat([
@@ -2111,26 +2203,7 @@ const exponentialOfJordanBlock: KnowledgePointDef = {
           [0, 1],
         ])}`,
       ),
-      [
-        both(
-          mat([
-            [exp, `e^{${off}}`],
-            [0, exp],
-          ]),
-        ),
-        both(
-          `${exp}${mat([
-            [1, c],
-            [0, 1],
-          ])}`,
-        ),
-        both(
-          mat([
-            [exp, off],
-            [0, exp],
-          ]),
-        ),
-      ],
+      wrong,
       t(
         `Here $A = ${l}I + N$ with $N = ${mat([
           [0, c],
@@ -2142,6 +2215,19 @@ const exponentialOfJordanBlock: KnowledgePointDef = {
         ])}$，$N^2 = 0$。所以 $e^{At} = ${exp}(I + tN)$，角上是 $${off}$，它和其他元素一样乘以指数。`,
       ),
     );
+    return reasoned(problem, [
+      [
+        wrong[0]!.en,
+        "Exponentiating each entry works only for diagonal matrices; here $e^{At} = e^{\\lambda t}(I + tN)$.",
+        "逐个元素取指数只对对角矩阵成立；这里 $e^{At} = e^{\\lambda t}(I + tN)$。",
+      ],
+      [wrong[1]!.en, "The corner needs the factor $t$, because $e^{Nt} = I + tN$.", "角上需要因子 $t$，因为 $e^{Nt} = I + tN$。"],
+      [
+        wrong[2]!.en,
+        "The corner entry is multiplied by $e^{\\lambda t}$ too, like every other entry.",
+        "角上的元素也要乘以 $e^{\\lambda t}$，和其他元素一样。",
+      ],
+    ]);
   },
 };
 
@@ -3616,8 +3702,8 @@ const blockDeterminant: KnowledgePointDef = {
   figure: linearAlgebraDrawings2["block-diagonalization-of-nxn-matrices#the-determinant-from-a-real-and-a-complex-pair-of-eigenvalues"],
   title: t("The determinant from a real eigenvalue and a complex pair", "由实特征值与共轭复特征值求行列式"),
   explanation: t(
-    "A real $3 \\times 3$ matrix with a real eigenvalue and a complex pair is similar to a block diagonal matrix, with a $1 \\times 1$ block and a rotation-scaling block. The determinant of a block diagonal matrix is the product of the block determinants, and the rotation-scaling block has determinant $a^2 + b^2$. This is the same as multiplying all three eigenvalues.",
-    "具有一个实特征值和一对复特征值的实 $3 \\times 3$ 矩阵，相似于一个分块对角矩阵，含一个 $1 \\times 1$ 块和一个旋转缩放块。分块对角矩阵的行列式是各块行列式之积，旋转缩放块的行列式是 $a^2 + b^2$。这与三个特征值相乘是一样的。",
+    "A real $3 \\times 3$ matrix with a real eigenvalue and a complex pair is similar to a block diagonal matrix, with a $1 \\times 1$ block and a rotation-scaling block. The determinant of a block diagonal matrix is the product of the block determinants, and the rotation-scaling block has determinant $a^2 + b^2$. This is the same as multiplying all three eigenvalues. For example, eigenvalues $2$ and $1 \\pm 3i$ give $\\det A = 2 \\cdot (1 + 9) = 20$.\n\n> **Watch out.** The pair multiplies to $a^2 + b^2$, with a plus sign, which is never negative. Adding the eigenvalues gives the trace, not the determinant.",
+    "具有一个实特征值和一对复特征值的实 $3 \\times 3$ 矩阵，相似于一个分块对角矩阵，含一个 $1 \\times 1$ 块和一个旋转缩放块。分块对角矩阵的行列式是各块行列式之积，旋转缩放块的行列式是 $a^2 + b^2$。这与三个特征值相乘是一样的。例如特征值 $2$ 和 $1 \\pm 3i$ 给出 $\\det A = 2 \\cdot (1 + 9) = 20$。\n\n> **注意。** 这对复特征值之积是 $a^2 + b^2$，中间是加号，永远不为负。把特征值相加得到的是迹，不是行列式。",
   ),
   generate(rng) {
     const r = nonzero(rng, 6);
@@ -3631,10 +3717,41 @@ const blockDeterminant: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong: [r * (a * a - b * b), r + 2 * a, r * a * b, -answer],
-      solution: t(
-        `The complex pair multiplies to $${inParens(a)}^2 + ${b}^2 = ${a * a + b * b}$. Multiplying by $${r}$ gives $${answer}$.`,
-        `这对复特征值之积是 $${inParens(a)}^2 + ${b}^2 = ${a * a + b * b}$。乘以 $${r}$，得 $${answer}$。`,
+      mistakes: [
+        why(r * (a * a - b * b), "The pair multiplies to $a^2 + b^2$, with a plus sign.", "这对复特征值之积是 $a^2 + b^2$，中间是加号。"),
+        why(r + 2 * a, "That adds the eigenvalues, which gives the trace.", "这是把特征值相加，得到的是迹。"),
+        why(r * a * b, "The pair multiplies to $a^2 + b^2$, not $ab$.", "这对复特征值之积是 $a^2 + b^2$，不是 $ab$。"),
+        why(
+          -answer,
+          "Check the sign: $a^2 + b^2$ is positive, so the sign comes from the real eigenvalue alone.",
+          "检查符号：$a^2 + b^2$ 为正，所以符号只由实特征值决定。",
+        ),
+      ].filter((w, i, all) => w.value !== answer && all.findIndex((o) => o.value === w.value) === i),
+      solution: walked(
+        [
+          [
+            ["Multiply the pair", "复特征值对相乘"],
+            t("", ""),
+            [`(${a} + ${withCoefficient(b, "i")})(${a} - ${withCoefficient(b, "i")}) = ${inParens(a)}^2 + ${b}^2 = ${a * a + b * b}`],
+          ],
+          [
+            ["Multiply by the real eigenvalue", "乘以实特征值"],
+            t("", ""),
+            [`\\det A = ${inParens(r)} \\cdot ${a * a + b * b} = ${answer}`],
+          ],
+        ],
+        t(
+          `The block form $${mat([
+            [r, 0, 0],
+            [0, a, -b],
+            [0, b, a],
+          ])}$ has determinant $${inParens(r)} \\cdot (${a * a} + ${b * b}) = ${answer}$, the product of the block determinants.`,
+          `分块形式 $${mat([
+            [r, 0, 0],
+            [0, a, -b],
+            [0, b, a],
+          ])}$ 的行列式为 $${inParens(r)} \\cdot (${a * a} + ${b * b}) = ${answer}$，即各块行列式之积。`,
+        ),
       ),
     });
   },
@@ -3644,8 +3761,8 @@ const rankOfNilpotentPower: KnowledgePointDef = {
   id: "the-rank-of-a-power-of-a-jordan-block-minus-its-eigenvalue",
   title: t("The rank of a power of a shifted Jordan block", "平移若尔当块的幂的秩"),
   explanation: t(
-    "For a single Jordan block, $N = J - \\lambda I$ has ones just above the diagonal and shifts the basis vectors down a chain. Each power pushes the line of ones one place further from the diagonal and removes one of them. So the rank of $N^k$ is $n - k$ until it reaches zero, and this is what the ranks of generalized eigenvectors measure.",
-    "对单个若尔当块，$N = J - \\lambda I$ 在对角线正上方有一串 1，并把基向量沿一条链移动。每求一次幂，这串 1 就离对角线更远一格，并少掉一个。所以 $N^k$ 的秩是 $n - k$，直到变成零，这正是广义特征向量的秩所度量的。",
+    "For a single Jordan block, $N = J - \\lambda I$ has ones just above the diagonal and shifts the basis vectors down a chain. Each power pushes the line of ones one place further from the diagonal and removes one of them. So the rank of $N^k$ is $n - k$ until it reaches zero, and this is what the ranks of generalized eigenvectors measure. For example, for a block of size $5$, $N^2$ has its ones two places above the diagonal, in $3$ rows, so its rank is $3$.\n\n> **Watch out.** The rank of $N^k$ is $n - k$, while $k$ is its nullity. The eigenvalue plays no part once it is subtracted.",
+    "对单个若尔当块，$N = J - \\lambda I$ 在对角线正上方有一串 1，并把基向量沿一条链移动。每求一次幂，这串 1 就离对角线更远一格，并少掉一个。所以 $N^k$ 的秩是 $n - k$，直到变成零，这正是广义特征向量的秩所度量的。例如对大小为 $5$ 的块，$N^2$ 的 1 位于对角线上方第二条线上，共 $3$ 行，所以秩为 $3$。\n\n> **注意。** $N^k$ 的秩是 $n - k$，而 $k$ 是它的零度。减去特征值之后，特征值就不再起作用。",
   ),
   generate(rng) {
     const n = rng.int(3, 12);
@@ -3659,10 +3776,46 @@ const rankOfNilpotentPower: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong: [k, n - k + 1, n, n - k - 1],
-      solution: t(
-        `The power moves the line of ones ${k} places from the main diagonal, which leaves $${n} - ${k} = ${answer}$ ones in independent rows.`,
-        `这个幂把那串 1 从主对角线移开 ${k} 格，留下 $${n} - ${k} = ${answer}$ 个位于独立行中的 1。`,
+      mistakes: [
+        why(
+          k,
+          `That is the nullity of the power: it sends the first ${k} basis vectors to zero.`,
+          `这是该幂的零度：它把前 ${k} 个基向量变为零。`,
+        ),
+        why(
+          n - k + 1,
+          "Each power removes one more of the ones, so $N^k$ keeps $n - k$, not $n - k + 1$.",
+          "每求一次幂就少一个 1，所以 $N^k$ 剩 $n - k$ 个，不是 $n - k + 1$ 个。",
+        ),
+        why(
+          n,
+          "After subtracting the eigenvalue the block is singular, so the rank is less than its size.",
+          "减去特征值后块是奇异的，所以秩小于其大小。",
+        ),
+        why(n - k - 1, "That removes one too many; the power keeps $n - k$ ones.", "多减了一个；这个幂保留 $n - k$ 个 1。"),
+      ].filter((w, i, all) => w.value !== answer && all.findIndex((o) => o.value === w.value) === i),
+      solution: walked(
+        [
+          [
+            ["Subtract the eigenvalue", "减去特征值"],
+            t(
+              `$N = J ${shiftTerm(-lambda)}$ has $${n - 1}$ ones just above the diagonal and zeros elsewhere.`,
+              `$N = J ${shiftTerm(-lambda)}$ 在对角线正上方有 $${n - 1}$ 个 1，其余为零。`,
+            ),
+          ],
+          [
+            ["Raise to the power", "求幂"],
+            t(
+              `$N^{${k}}$ has its ones ${k} places above the diagonal, one in each of the first $${n} - ${k}$ rows:`,
+              `$N^{${k}}$ 的 1 位于对角线上方第 ${k} 条线上，前 $${n} - ${k}$ 行各一个：`,
+            ),
+            [`\\operatorname{rank} N^{${k}} = ${n} - ${k} = ${answer}`],
+          ],
+        ],
+        t(
+          `$N^{${k}}$ sends the first ${k} basis vectors to zero, so its nullity is $${k}$, and $${answer} + ${k} = ${n}$.`,
+          `$N^{${k}}$ 把前 ${k} 个基向量变为零，所以零度为 $${k}$，且 $${answer} + ${k} = ${n}$。`,
+        ),
       ),
     });
   },
@@ -3672,8 +3825,8 @@ const powerOfTwoBlock: KnowledgePointDef = {
   id: "an-entry-of-a-power-of-a-2x2-jordan-block",
   title: t("An entry of a power of a 2×2 Jordan block", "二阶若尔当块的幂的元素"),
   explanation: t(
-    "Write the block as $J = \\lambda I + N$, where $N$ has a single 1 above the diagonal and $N^2 = 0$. Since $\\lambda I$ commutes with $N$, the binomial theorem applies and stops after two terms: $J^k = \\lambda^kI + k\\lambda^{k - 1}N$. So the top right entry grows like $k\\lambda^{k - 1}$, which is the derivative of $\\lambda^k$.",
-    "把块写成 $J = \\lambda I + N$，其中 $N$ 在对角线上方有一个 1，且 $N^2 = 0$。由于 $\\lambda I$ 与 $N$ 可交换，二项式定理适用，并且两项后就停止：$J^k = \\lambda^kI + k\\lambda^{k - 1}N$。所以右上角元素按 $k\\lambda^{k - 1}$ 增长，这正是 $\\lambda^k$ 的导数。",
+    "Write the block as $J = \\lambda I + N$, where $N$ has a single 1 above the diagonal and $N^2 = 0$. Since $\\lambda I$ commutes with $N$, the binomial theorem applies and stops after two terms: $J^k = \\lambda^kI + k\\lambda^{k - 1}N$. So the top right entry grows like $k\\lambda^{k - 1}$, which is the derivative of $\\lambda^k$. For example, with $\\lambda = 2$ and $k = 4$ the top right entry of $J^4$ is $4 \\cdot 2^3 = 32$.\n\n> **Watch out.** The diagonal entries are $\\lambda^k$, but the top right entry is not: it carries the factor $k$ and the lower power $\\lambda^{k - 1}$.",
+    "把块写成 $J = \\lambda I + N$，其中 $N$ 在对角线上方有一个 1，且 $N^2 = 0$。由于 $\\lambda I$ 与 $N$ 可交换，二项式定理适用，并且两项后就停止：$J^k = \\lambda^kI + k\\lambda^{k - 1}N$。所以右上角元素按 $k\\lambda^{k - 1}$ 增长，这正是 $\\lambda^k$ 的导数。例如 $\\lambda = 2$、$k = 4$ 时，$J^4$ 右上角的元素是 $4 \\cdot 2^3 = 32$。\n\n> **注意。** 对角线元素是 $\\lambda^k$，右上角元素却不是：它带有因子 $k$，幂次降为 $\\lambda^{k - 1}$。",
   ),
   generate(rng) {
     const lambda = nonzero(rng, 5);
@@ -3692,10 +3845,56 @@ const powerOfTwoBlock: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong: [lambda ** k, k * lambda ** k, lambda ** (k - 1), k, answer + lambda, answer - 1],
-      solution: t(
-        `The entry is $k\\lambda^{k - 1} = ${k} \\cdot ${inParens(lambda)}^{${k - 1}} = ${answer}$.`,
-        `这个元素是 $k\\lambda^{k - 1} = ${k} \\cdot ${inParens(lambda)}^{${k - 1}} = ${answer}$。`,
+      mistakes: [
+        why(lambda ** k, "That is a diagonal entry of the power, $\\lambda^k$.", "这是幂的对角线元素 $\\lambda^k$。"),
+        why(
+          k * lambda ** k,
+          "The power of $\\lambda$ drops by one: the entry is $k\\lambda^{k - 1}$.",
+          "$\\lambda$ 的幂次要降一：这个元素是 $k\\lambda^{k - 1}$。",
+        ),
+        why(
+          lambda ** (k - 1),
+          "The binomial term $k\\lambda^{k - 1}N$ carries the factor $k$.",
+          "二项式项 $k\\lambda^{k - 1}N$ 带有因子 $k$。",
+        ),
+        why(k, "The factor $\\lambda^{k - 1}$ is missing.", "漏掉了因子 $\\lambda^{k - 1}$。"),
+        why(
+          answer + lambda,
+          "Expand $J^k$ with the binomial theorem rather than adding terms by guess.",
+          "用二项式定理展开 $J^k$，不要凭猜测加项。",
+        ),
+        why(
+          answer - 1,
+          "The single 1 of $N$ multiplies the whole coefficient; nothing is subtracted.",
+          "$N$ 中的那个 1 乘以整个系数，不需要减去什么。",
+        ),
+      ].filter((w, i, all) => w.value !== answer && all.findIndex((o) => o.value === w.value) === i),
+      solution: walked(
+        [
+          [
+            ["Split the block", "拆分若尔当块"],
+            t(
+              `$J = ${inParens(lambda)}I + N$ with $N^2 = 0$, so the binomial theorem stops after two terms:`,
+              `$J = ${inParens(lambda)}I + N$，且 $N^2 = 0$，所以二项式定理两项后就停止：`,
+            ),
+            [`J^{${k}} = ${inParens(lambda)}^{${k}}I + ${k} \\cdot ${inParens(lambda)}^{${k - 1}}N`],
+          ],
+          [
+            ["Read the top right entry", "读出右上角元素"],
+            t("Only $N$ has an entry in the top right corner:", "只有 $N$ 在右上角有元素："),
+            [`${k} \\cdot ${inParens(lambda)}^{${k - 1}} = ${k} \\cdot ${lambda ** (k - 1)} = ${answer}`],
+          ],
+        ],
+        t(
+          `For $k = 2$ the rule gives $2\\lambda$, which matches $J^2 = ${mat([
+            [lambda * lambda, 2 * lambda],
+            [0, lambda * lambda],
+          ])}$.`,
+          `$k = 2$ 时规则给出 $2\\lambda$，与 $J^2 = ${mat([
+            [lambda * lambda, 2 * lambda],
+            [0, lambda * lambda],
+          ])}$ 一致。`,
+        ),
       ),
     });
   },
@@ -3705,8 +3904,8 @@ const powerOfThreeBlock: KnowledgePointDef = {
   id: "the-corner-entry-of-a-power-of-a-3x3-jordan-block",
   title: t("The corner entry of a power of a 3×3 Jordan block", "三阶若尔当块的幂的角元素"),
   explanation: t(
-    "For a block of size three, $J = \\lambda I + N$ with $N^3 = 0$, so the binomial theorem gives three terms: $J^k = \\lambda^kI + k\\lambda^{k - 1}N + \\binom{k}{2}\\lambda^{k - 2}N^2$. Only $N^2$ reaches the top right corner. That corner entry is therefore $\\binom{k}{2}\\lambda^{k - 2}$, and it is half of the second derivative of $\\lambda^k$.",
-    "对大小为三的块，$J = \\lambda I + N$，$N^3 = 0$，所以二项式定理给出三项：$J^k = \\lambda^kI + k\\lambda^{k - 1}N + \\binom{k}{2}\\lambda^{k - 2}N^2$。只有 $N^2$ 能到达右上角。所以这个角元素是 $\\binom{k}{2}\\lambda^{k - 2}$，它是 $\\lambda^k$ 二阶导数的一半。",
+    "For a block of size three, $J = \\lambda I + N$ with $N^3 = 0$, so the binomial theorem gives three terms: $J^k = \\lambda^kI + k\\lambda^{k - 1}N + \\binom{k}{2}\\lambda^{k - 2}N^2$. Only $N^2$ reaches the top right corner. That corner entry is therefore $\\binom{k}{2}\\lambda^{k - 2}$, and it is half of the second derivative of $\\lambda^k$. For example, with $\\lambda = 2$ and $k = 5$ the corner entry of $J^5$ is $\\binom{5}{2} \\cdot 2^3 = 10 \\cdot 8 = 80$.\n\n> **Watch out.** The coefficient is $\\binom{k}{2} = \\frac{k(k - 1)}{2}$, not $k(k - 1)$; the entries just above the diagonal are $k\\lambda^{k - 1}$, not the corner.",
+    "对大小为三的块，$J = \\lambda I + N$，$N^3 = 0$，所以二项式定理给出三项：$J^k = \\lambda^kI + k\\lambda^{k - 1}N + \\binom{k}{2}\\lambda^{k - 2}N^2$。只有 $N^2$ 能到达右上角。所以这个角元素是 $\\binom{k}{2}\\lambda^{k - 2}$，它是 $\\lambda^k$ 二阶导数的一半。例如 $\\lambda = 2$、$k = 5$ 时，$J^5$ 的角元素是 $\\binom{5}{2} \\cdot 2^3 = 10 \\cdot 8 = 80$。\n\n> **注意。** 系数是 $\\binom{k}{2} = \\frac{k(k - 1)}{2}$，不是 $k(k - 1)$；对角线正上方的元素是 $k\\lambda^{k - 1}$，不是角元素。",
   ),
   generate(rng) {
     const lambda = nonzero(rng, 4);
@@ -3728,10 +3927,38 @@ const powerOfThreeBlock: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong: [k * lambda ** (k - 1), k * (k - 1) * lambda ** (k - 2), lambda ** (k - 2), choose],
-      solution: t(
-        `The entry is $\\binom{${k}}{2}\\lambda^{${k - 2}} = ${choose} \\cdot ${inParens(lambda)}^{${k - 2}} = ${answer}$.`,
-        `这个元素是 $\\binom{${k}}{2}\\lambda^{${k - 2}} = ${choose} \\cdot ${inParens(lambda)}^{${k - 2}} = ${answer}$。`,
+      mistakes: [
+        why(k * lambda ** (k - 1), "That is an entry just above the diagonal, from the $N$ term.", "这是对角线正上方的元素，来自 $N$ 项。"),
+        why(
+          k * (k - 1) * lambda ** (k - 2),
+          "The coefficient is $\\binom{k}{2} = \\frac{k(k - 1)}{2}$; the halving is missing.",
+          "系数是 $\\binom{k}{2} = \\frac{k(k - 1)}{2}$；漏掉了除以 2。",
+        ),
+        why(lambda ** (k - 2), "The $N^2$ term carries the coefficient $\\binom{k}{2}$.", "$N^2$ 项带有系数 $\\binom{k}{2}$。"),
+        why(choose, "The factor $\\lambda^{k - 2}$ is missing.", "漏掉了因子 $\\lambda^{k - 2}$。"),
+      ].filter((w, i, all) => w.value !== answer && all.findIndex((o) => o.value === w.value) === i),
+      solution: walked(
+        [
+          [
+            ["Split the block", "拆分若尔当块"],
+            t(
+              `$J = ${inParens(lambda)}I + N$ with $N^3 = 0$, and only $N^2$ has an entry in the top right corner, equal to $1$.`,
+              `$J = ${inParens(lambda)}I + N$，且 $N^3 = 0$；只有 $N^2$ 在右上角有元素，等于 $1$。`,
+            ),
+          ],
+          [
+            ["Take the N squared term", "取 N 平方项"],
+            t(
+              "The binomial theorem gives that term the coefficient $\\binom{k}{2}\\lambda^{k - 2}$:",
+              "二项式定理给这一项的系数是 $\\binom{k}{2}\\lambda^{k - 2}$：",
+            ),
+            [`\\binom{${k}}{2} \\cdot ${inParens(lambda)}^{${k - 2}} = ${choose} \\cdot ${lambda ** (k - 2)} = ${answer}`],
+          ],
+        ],
+        t(
+          `For $k = 2$ the rule gives $\\binom{2}{2}\\lambda^0 = 1$, and indeed the corner of $J^2$ is $1 \\cdot 1 = 1$.`,
+          `$k = 2$ 时规则给出 $\\binom{2}{2}\\lambda^0 = 1$，而 $J^2$ 的角元素确实是 $1 \\cdot 1 = 1$。`,
+        ),
       ),
     });
   },
@@ -4663,8 +4890,8 @@ const angleInRotationScaling: KnowledgePointDef = {
   figure: linearAlgebraDrawings1["reducing-real-2x2-matrices-to-rotation-scaling-form#the-angle-in-a-rotation-scaling-form"],
   title: t("The angle in a rotation-scaling form", "旋转缩放形式中的角"),
   explanation: t(
-    "The matrix with rows $(a, -b)$ and $(b, a)$ is a rotation followed by a scaling. Its scaling factor is $r = \\sqrt{a^2 + b^2}$, and dividing every entry by $r$ leaves the rotation matrix for an angle $\\theta$. Comparing entries gives $\\cos\\theta = \\frac{a}{r}$ and $\\sin\\theta = \\frac{b}{r}$. In terms of eigenvalues, $a \\pm bi = re^{\\pm i\\theta}$, so that this angle is the argument of a complex eigenvalue.",
-    "行为 $(a, -b)$ 和 $(b, a)$ 的矩阵是一个旋转接一个缩放。它的缩放因子是 $r = \\sqrt{a^2 + b^2}$，把每个元素除以 $r$，就得到角 $\\theta$ 的旋转矩阵。比较元素得 $\\cos\\theta = \\frac{a}{r}$，$\\sin\\theta = \\frac{b}{r}$。用特征值来说，$a \\pm bi = re^{\\pm i\\theta}$，所以这个角就是复特征值的辐角。",
+    "The matrix with rows $(a, -b)$ and $(b, a)$ is a rotation followed by a scaling. Its scaling factor is $r = \\sqrt{a^2 + b^2}$, and dividing every entry by $r$ leaves the rotation matrix for an angle $\\theta$. Comparing entries gives $\\cos\\theta = \\frac{a}{r}$ and $\\sin\\theta = \\frac{b}{r}$. In terms of eigenvalues, $a \\pm bi = re^{\\pm i\\theta}$, so that this angle is the argument of a complex eigenvalue. For example, rows $(6, -8)$ and $(8, 6)$ give $r = \\sqrt{36 + 64} = 10$, $\\cos\\theta = \\frac{3}{5}$ and $\\sin\\theta = \\frac{4}{5}$.\n\n> **Watch out.** Read $b$ from the bottom left entry: the top right entry is $-b$. Divide by $r$, not by the other entry, which would give $\\tan\\theta$.",
+    "行为 $(a, -b)$ 和 $(b, a)$ 的矩阵是一个旋转接一个缩放。它的缩放因子是 $r = \\sqrt{a^2 + b^2}$，把每个元素除以 $r$，就得到角 $\\theta$ 的旋转矩阵。比较元素得 $\\cos\\theta = \\frac{a}{r}$，$\\sin\\theta = \\frac{b}{r}$。用特征值来说，$a \\pm bi = re^{\\pm i\\theta}$，所以这个角就是复特征值的辐角。例如行为 $(6, -8)$ 和 $(8, 6)$ 时，$r = \\sqrt{36 + 64} = 10$，$\\cos\\theta = \\frac{3}{5}$，$\\sin\\theta = \\frac{4}{5}$。\n\n> **注意。** $b$ 要从左下角元素读出：右上角元素是 $-b$。要除以 $r$，而不是除以另一个元素，否则得到的是 $\\tan\\theta$。",
   ),
   generate(rng) {
     const [u, v, w] = rng.pick([
@@ -4696,10 +4923,44 @@ const angleInRotationScaling: KnowledgePointDef = {
         ])}$ 写成缩放 $r > 0$ 乘以转角为 $\\theta$ 的旋转。求 $${fn}$。`,
       ),
       answer,
-      wrong: [Q.of(asksCos ? b : a, r), answer.neg(), Q.of(asksCos ? a : b, asksCos ? b : a), Q.of(r, asksCos ? a : b)],
-      solution: t(
-        `Here $r = \\sqrt{${a * a} + ${b * b}} = ${r}$, and so $${fn} = \\frac{${asksCos ? a : b}}{${r}} = ${answer.toLatex()}$.`,
-        `这里 $r = \\sqrt{${a * a} + ${b * b}} = ${r}$，所以 $${fn} = \\frac{${asksCos ? a : b}}{${r}} = ${answer.toLatex()}$。`,
+      mistakes: [
+        why(
+          Q.of(asksCos ? b : a, r),
+          asksCos
+            ? "That is $\\sin\\theta$: the cosine comes from the diagonal entry $a$."
+            : "That is $\\cos\\theta$: the sine comes from the bottom left entry $b$.",
+          asksCos ? "这是 $\\sin\\theta$：余弦来自对角线元素 $a$。" : "这是 $\\cos\\theta$：正弦来自左下角元素 $b$。",
+        ),
+        why(
+          answer.neg(),
+          asksCos
+            ? "Check the sign: $\\cos\\theta = \\frac{a}{r}$ keeps the sign of $a$."
+            : "Check the sign: $b$ is the bottom left entry, not the top right entry $-b$.",
+          asksCos ? "检查符号：$\\cos\\theta = \\frac{a}{r}$ 保留 $a$ 的符号。" : "检查符号：$b$ 是左下角元素，不是右上角的 $-b$。",
+        ),
+        why(
+          Q.of(asksCos ? a : b, asksCos ? b : a),
+          "Divide by $r = \\sqrt{a^2 + b^2}$, not by the other entry.",
+          "要除以 $r = \\sqrt{a^2 + b^2}$，不是除以另一个元素。",
+        ),
+        why(Q.of(r, asksCos ? a : b), "The fraction is upside down: divide the entry by $r$.", "分数颠倒了：要用元素除以 $r$。"),
+      ].filter((w, i, all) => all.findIndex((o) => String(o.value) === String(w.value)) === i),
+      solution: walked(
+        [
+          [
+            ["Read a and b", "读出 a 和 b"],
+            t(
+              `The diagonal gives $a = ${a}$ and the bottom left entry gives $b = ${b}$.`,
+              `对角线给出 $a = ${a}$，左下角元素给出 $b = ${b}$。`,
+            ),
+          ],
+          [["Find the scaling factor", "求缩放因子"], t("", ""), [`r = \\sqrt{${a * a} + ${b * b}} = \\sqrt{${r * r}} = ${r}`]],
+          [["Divide by r", "除以 r"], t("", ""), [`${fn} = \\frac{${asksCos ? a : b}}{${r}} = ${answer.toLatex()}`]],
+        ],
+        t(
+          `$\\cos^2\\theta + \\sin^2\\theta = \\frac{${a * a} + ${b * b}}{${r * r}} = 1$, as it must be.`,
+          `$\\cos^2\\theta + \\sin^2\\theta = \\frac{${a * a} + ${b * b}}{${r * r}} = 1$，符合要求。`,
+        ),
       ),
     });
   },
@@ -4709,8 +4970,8 @@ const generalizedEigenspaceDimension: KnowledgePointDef = {
   id: "the-dimension-of-a-generalized-eigenspace",
   title: t("The dimension of a generalized eigenspace", "广义特征空间的维数"),
   explanation: t(
-    "The ordinary eigenspace of $\\lambda$ may be too small to match the multiplicity of $\\lambda$ in the characteristic polynomial, and this is what stops a matrix from being diagonalizable. The generalized eigenspace, the vectors killed by some power of $A - \\lambda I$, repairs the shortage. Its dimension always equals the algebraic multiplicity. So the characteristic polynomial alone decides this dimension, and the size of the ordinary eigenspace has no effect on it.",
-    "$\\lambda$ 的普通特征空间可能太小，配不上 $\\lambda$ 在特征多项式中的重数，这正是矩阵不能对角化的原因。广义特征空间，即被 $A - \\lambda I$ 的某个幂消灭的向量，弥补了这一不足。它的维数总是等于代数重数。所以仅由特征多项式就能决定这个维数，普通特征空间的大小对它没有影响。",
+    "The ordinary eigenspace of $\\lambda$ may be too small to match the multiplicity of $\\lambda$ in the characteristic polynomial, and this is what stops a matrix from being diagonalizable. The generalized eigenspace, the vectors killed by some power of $A - \\lambda I$, repairs the shortage. Its dimension always equals the algebraic multiplicity. So the characteristic polynomial alone decides this dimension, and the size of the ordinary eigenspace has no effect on it. For example, if $(\\lambda - 2)^4$ divides the characteristic polynomial exactly, the generalized eigenspace of $2$ has dimension $4$, whether the eigenspace has dimension $1$, $2$ or more.\n\n> **Watch out.** The dimension of the eigenspace is the number of Jordan blocks, not the dimension of the generalized eigenspace. Read the exponent of the factor, not the size of the matrix.",
+    "$\\lambda$ 的普通特征空间可能太小，配不上 $\\lambda$ 在特征多项式中的重数，这正是矩阵不能对角化的原因。广义特征空间，即被 $A - \\lambda I$ 的某个幂消灭的向量，弥补了这一不足。它的维数总是等于代数重数。所以仅由特征多项式就能决定这个维数，普通特征空间的大小对它没有影响。例如特征多项式恰含因子 $(\\lambda - 2)^4$ 时，$2$ 的广义特征空间维数是 $4$，不管特征空间的维数是 $1$、$2$ 还是更大。\n\n> **注意。** 特征空间的维数是若尔当块的个数，不是广义特征空间的维数。要读因子的指数，而不是矩阵的大小。",
   ),
   generate(rng) {
     const [l1, l2, l3] = distinctNonzero(rng, 7, 3) as [number, number, number];
@@ -4726,10 +4987,46 @@ const generalizedEigenspaceDimension: KnowledgePointDef = {
       ),
       answer: m1,
       form: "integer",
-      wrong: [geometric, n, m1 - geometric, m1 + 1, n - m1],
-      solution: t(
-        `The dimension of a generalized eigenspace equals the algebraic multiplicity, whatever the eigenspace is. The multiplicity of $${l1}$ is $${m1}$.`,
-        `广义特征空间的维数等于代数重数，不管特征空间是怎样的。$${l1}$ 的重数是 $${m1}$。`,
+      mistakes: [
+        why(
+          geometric,
+          "That is the dimension of the ordinary eigenspace, the number of Jordan blocks.",
+          "这是普通特征空间的维数，即若尔当块的个数。",
+        ),
+        why(
+          n,
+          "That is the size of the whole matrix; only the factor of this eigenvalue counts.",
+          "这是整个矩阵的大小；只算这个特征值的因子。",
+        ),
+        why(
+          m1 - geometric,
+          "The generalized eigenspace contains the eigenspace; nothing is subtracted.",
+          "广义特征空间包含特征空间，不需要减去什么。",
+        ),
+        why(m1 + 1, "The dimension equals the exponent of the factor exactly.", "维数恰好等于因子的指数。"),
+        why(n - m1, "That counts the other eigenvalues.", "这数的是其他特征值。"),
+      ].filter((w, i, all) => w.value !== m1 && all.findIndex((o) => o.value === w.value) === i),
+      solution: walked(
+        [
+          [
+            ["Read the multiplicity", "读出重数"],
+            t(
+              `The factor $${rootFactor(l1, m1)}$ shows that $${l1}$ has algebraic multiplicity $${m1}$.`,
+              `因子 $${rootFactor(l1, m1)}$ 表明 $${l1}$ 的代数重数是 $${m1}$。`,
+            ),
+          ],
+          [
+            ["Ignore the eigenspace", "不必看特征空间"],
+            t(
+              `The generalized eigenspace always has dimension equal to the algebraic multiplicity, so the eigenspace of dimension ${geometric} only tells how many Jordan blocks there are. The dimension is $${m1}$.`,
+              `广义特征空间的维数总是等于代数重数，维数为 ${geometric} 的特征空间只说明有几个若尔当块。所求维数是 $${m1}$。`,
+            ),
+          ],
+        ],
+        t(
+          `The generalized eigenspaces fill the whole space: $${m1} + ${m2} + ${m3} = ${n}$.`,
+          `各广义特征空间合起来就是整个空间：$${m1} + ${m2} + ${m3} = ${n}$。`,
+        ),
       ),
     });
   },
@@ -4739,8 +5036,8 @@ const countingJordanForms: KnowledgePointDef = {
   id: "counting-jordan-forms-with-a-given-characteristic-polynomial",
   title: t("Counting Jordan forms with a given characteristic polynomial", "计算给定特征多项式的若尔当形"),
   explanation: t(
-    "The Jordan form of a matrix is decided, up to the order of its blocks, by the block sizes for each eigenvalue. The sizes for an eigenvalue of multiplicity $m$ form a partition of $m$, and there are $1, 2, 3, 5, 7$ partitions of the numbers $1$ to $5$. The choices for different eigenvalues are independent, so these counts multiply. The result counts the similarity classes of matrices with that characteristic polynomial.",
-    "矩阵的若尔当形由每个特征值的块大小决定（不计块的顺序）。重数为 $m$ 的特征值的块大小构成 $m$ 的一个分拆，数 $1$ 到 $5$ 的分拆个数分别是 $1, 2, 3, 5, 7$。不同特征值的选择彼此独立，所以这些个数相乘。结果就是具有该特征多项式的矩阵的相似类个数。",
+    "The Jordan form of a matrix is decided, up to the order of its blocks, by the block sizes for each eigenvalue. The sizes for an eigenvalue of multiplicity $m$ form a partition of $m$, and there are $1, 2, 3, 5, 7$ partitions of the numbers $1$ to $5$. The choices for different eigenvalues are independent, so these counts multiply. The result counts the similarity classes of matrices with that characteristic polynomial. For example, $(\\lambda - 1)^3(\\lambda - 4)^2$ allows $3$ choices for the eigenvalue $1$ (sizes $3$; $2, 1$; $1, 1, 1$) and $2$ for the eigenvalue $4$, so $3 \\cdot 2 = 6$ Jordan forms.\n\n> **Watch out.** Multiply the counts, do not add them: each choice for one eigenvalue goes with every choice for the other.",
+    "矩阵的若尔当形由每个特征值的块大小决定（不计块的顺序）。重数为 $m$ 的特征值的块大小构成 $m$ 的一个分拆，数 $1$ 到 $5$ 的分拆个数分别是 $1, 2, 3, 5, 7$。不同特征值的选择彼此独立，所以这些个数相乘。结果就是具有该特征多项式的矩阵的相似类个数。例如 $(\\lambda - 1)^3(\\lambda - 4)^2$ 中，特征值 $1$ 有 $3$ 种选择（大小 $3$；$2, 1$；$1, 1, 1$），特征值 $4$ 有 $2$ 种，所以共 $3 \\cdot 2 = 6$ 种若尔当形。\n\n> **注意。** 个数要相乘，不是相加：一个特征值的每种选择都可以与另一个特征值的每种选择搭配。",
   ),
   generate(rng) {
     const partitions = [0, 1, 2, 3, 5, 7];
@@ -4757,10 +5054,41 @@ const countingJordanForms: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong: [c1 + c2, m1 * m2, m1 + m2, answer + 1, answer * 2, answer + 2],
-      solution: t(
-        `The block sizes form a partition of each multiplicity. There are ${c1} partitions of ${m1} and ${c2} of ${m2}, which gives $${c1} \\cdot ${c2} = ${answer}$ forms.`,
-        `块的大小构成每个重数的一个分拆。${m1} 有 ${c1} 个分拆，${m2} 有 ${c2} 个分拆，所以有 $${c1} \\cdot ${c2} = ${answer}$ 种形式。`,
+      mistakes: [
+        why(c1 + c2, "The choices are independent, so the counts multiply rather than add.", "各选择彼此独立，所以个数相乘，而不是相加。"),
+        why(
+          m1 * m2,
+          "Count the partitions of each multiplicity, not the multiplicities themselves.",
+          "要数每个重数的分拆个数，而不是重数本身。",
+        ),
+        why(m1 + m2, "That is the size of the matrix, not the number of Jordan forms.", "这是矩阵的大小，不是若尔当形的个数。"),
+        why(
+          answer + 1,
+          "Count the partitions again: there are $1, 2, 3, 5, 7$ partitions of $1$ to $5$.",
+          "重新数分拆：$1$ 到 $5$ 的分拆个数是 $1, 2, 3, 5, 7$。",
+        ),
+        why(answer * 2, "The order of the blocks does not matter, so each partition counts once.", "块的顺序不计，所以每个分拆只算一次。"),
+        why(
+          answer + 2,
+          "Count the partitions again: there are $1, 2, 3, 5, 7$ partitions of $1$ to $5$.",
+          "重新数分拆：$1$ 到 $5$ 的分拆个数是 $1, 2, 3, 5, 7$。",
+        ),
+      ].filter((w, i, all) => w.value !== answer && all.findIndex((o) => o.value === w.value) === i),
+      solution: walked(
+        [
+          [
+            ["Count for each eigenvalue", "对每个特征值计数"],
+            t(
+              `The block sizes for $${l1}$ form a partition of $${m1}$, which has ${c1} partitions; those for $${l2}$ form a partition of $${m2}$, which has ${c2}.`,
+              `$${l1}$ 的块大小构成 $${m1}$ 的一个分拆，共 ${c1} 个；$${l2}$ 的块大小构成 $${m2}$ 的一个分拆，共 ${c2} 个。`,
+            ),
+          ],
+          [["Multiply", "相乘"], t("The choices are independent:", "这些选择彼此独立："), [`${c1} \\cdot ${c2} = ${answer}`]],
+        ],
+        t(
+          `Fixing the blocks of $${l2}$ leaves ${c1} forms, one for each partition of $${m1}$; doing this for each of the ${c2} partitions of $${m2}$ gives $${answer}$ in all.`,
+          `固定 $${l2}$ 的块后，剩下 ${c1} 种形式，每个 $${m1}$ 的分拆对应一种；对 $${m2}$ 的 ${c2} 个分拆各做一次，共得 $${answer}$ 种。`,
+        ),
       ),
     });
   },

@@ -4736,6 +4736,10 @@ export const reducingReal2x2MatricesToRotationScalingForm: TopicDef = {
     "Find the matrix $P = \\begin{pmatrix} \\operatorname{Re}\\mathbf{v} & \\operatorname{Im}\\mathbf{v} \\end{pmatrix}$ that brings $A$ to rotation-scaling form $A = PCP^{-1}$.",
     "构造矩阵 $P = \\begin{pmatrix} \\operatorname{Re}\\mathbf{v} & \\operatorname{Im}\\mathbf{v} \\end{pmatrix}$，使实矩阵 $A$ 化为旋转缩放形式 $A = PCP^{-1}$。",
   ),
+  intro: t(
+    "The matrix $A = \\begin{pmatrix} 1 & -5 \\\\ 1 & -3 \\end{pmatrix}$ has trace $-2$ and determinant $2$, so its eigenvalues are $-1 \\pm i$. For $\\lambda = -1 - i$ the first row of $A - \\lambda I$ reads $(2 + i)x - 5y = 0$, so $\\mathbf{v} = (5, 2 + i)$, with real part $(5, 2)$ and imaginary part $(0, 1)$. Then $P = \\begin{pmatrix} 5 & 0 \\\\ 2 & 1 \\end{pmatrix}$ and $C = \\begin{pmatrix} -1 & -1 \\\\ 1 & -1 \\end{pmatrix}$.\n\nCheck: $AP = \\begin{pmatrix} -5 & -5 \\\\ -1 & -3 \\end{pmatrix}$ and $PC = \\begin{pmatrix} -5 & -5 \\\\ -1 & -3 \\end{pmatrix}$, so $AP = PC$ and $A = PCP^{-1}$.\n\nIn this lesson we build $P$ from the real and imaginary parts of a complex eigenvector and read off the scaling factor of the rotation-scaling form.",
+    "矩阵 $A = \\begin{pmatrix} 1 & -5 \\\\ 1 & -3 \\end{pmatrix}$ 的迹为 $-2$，行列式为 $2$，所以特征值为 $-1 \\pm i$。对 $\\lambda = -1 - i$，$A - \\lambda I$ 的第一行为 $(2 + i)x - 5y = 0$，所以 $\\mathbf{v} = (5, 2 + i)$，实部为 $(5, 2)$，虚部为 $(0, 1)$。于是 $P = \\begin{pmatrix} 5 & 0 \\\\ 2 & 1 \\end{pmatrix}$，$C = \\begin{pmatrix} -1 & -1 \\\\ 1 & -1 \\end{pmatrix}$。\n\n检验：$AP = \\begin{pmatrix} -5 & -5 \\\\ -1 & -3 \\end{pmatrix}$，$PC = \\begin{pmatrix} -5 & -5 \\\\ -1 & -3 \\end{pmatrix}$，所以 $AP = PC$，$A = PCP^{-1}$。\n\n本课我们用复特征向量的实部和虚部构造 $P$，并读出旋转缩放形式的伸缩因子。",
+  ),
   prerequisites: ["rotation-scaling-matrices"],
   encompasses: [],
   xp: 14,
@@ -4745,8 +4749,8 @@ export const reducingReal2x2MatricesToRotationScalingForm: TopicDef = {
       figure: linearAlgebraDrawings1["reducing-real-2x2-matrices-to-rotation-scaling-form#constructing-rotation-scaling-basis"],
       title: t("Constructing the Rotation-Scaling Basis", "构造旋转缩放基"),
       explanation: t(
-        "Using the real and imaginary parts of a complex eigenvector as a basis turns the matrix into a rotation scaling matrix with real entries. Assemble $P = \\begin{bmatrix} \\operatorname{Re}(\\mathbf{v}) & \\operatorname{Im}(\\mathbf{v}) \\end{bmatrix}$ for an eigenvector $\\mathbf{v}$ of the eigenvalue $a - bi$.",
-        "用复特征向量的实部和虚部作为基，就能把矩阵化为实元素的旋转缩放矩阵。利用特征值 $a - bi$ 的特征向量 $\\mathbf{v}$ 构造矩阵 $P = \\begin{bmatrix} \\operatorname{Re}(\\mathbf{v}) & \\operatorname{Im}(\\mathbf{v}) \\end{bmatrix}$。",
+        "Using the real and imaginary parts of a complex eigenvector as a basis turns the matrix into a rotation scaling matrix with real entries. Assemble $P = \\begin{bmatrix} \\operatorname{Re}(\\mathbf{v}) & \\operatorname{Im}(\\mathbf{v}) \\end{bmatrix}$ for an eigenvector $\\mathbf{v}$ of the eigenvalue $a - bi$. For example, $A = \\begin{pmatrix} 1 & -5 \\\\ 1 & -3 \\end{pmatrix}$ has the eigenvector $\\mathbf{v} = (5, 2 + i)$ for $-1 - i$, so $P = \\begin{pmatrix} 5 & 0 \\\\ 2 & 1 \\end{pmatrix}$ and $A = PCP^{-1}$ with $C = \\begin{pmatrix} -1 & -1 \\\\ 1 & -1 \\end{pmatrix}$.\n\n> **Watch out.** The real part goes in the first column and the imaginary part in the second. Swapping the columns, or negating the imaginary part, turns $C$ into its transpose $\\begin{pmatrix} a & b \\\\ -b & a \\end{pmatrix}$.",
+        "用复特征向量的实部和虚部作为基，就能把矩阵化为实元素的旋转缩放矩阵。利用特征值 $a - bi$ 的特征向量 $\\mathbf{v}$ 构造矩阵 $P = \\begin{bmatrix} \\operatorname{Re}(\\mathbf{v}) & \\operatorname{Im}(\\mathbf{v}) \\end{bmatrix}$。例如 $A = \\begin{pmatrix} 1 & -5 \\\\ 1 & -3 \\end{pmatrix}$ 对特征值 $-1 - i$ 有特征向量 $\\mathbf{v} = (5, 2 + i)$，所以 $P = \\begin{pmatrix} 5 & 0 \\\\ 2 & 1 \\end{pmatrix}$，且 $A = PCP^{-1}$，其中 $C = \\begin{pmatrix} -1 & -1 \\\\ 1 & -1 \\end{pmatrix}$。\n\n> **注意。** 实部放在第一列，虚部放在第二列。交换两列，或把虚部取相反数，都会把 $C$ 变成它的转置 $\\begin{pmatrix} a & b \\\\ -b & a \\end{pmatrix}$。",
       ),
       generate: (rng: Rng): Problem => {
         const a = rng.int(-3, 3);
@@ -4775,11 +4779,60 @@ export const reducingReal2x2MatricesToRotationScalingForm: TopicDef = {
             `$P = \\begin{pmatrix} v_{\\text{re}} + v_{\\text{im}} & v_{\\text{re}} - v_{\\text{im}} \\end{pmatrix}$`,
           ),
         ];
-        const solution = t(
-          `By the Real Canonical Form Theorem, for eigenvalue $\\lambda = a - bi$, setting $P = \\begin{pmatrix} \\operatorname{Re}(v) & \\operatorname{Im}(v) \\end{pmatrix}$ gives $AP = P C$, so $A = P C P^{-1}$ with $C = \\begin{pmatrix} a & -b \\\\ b & a \\end{pmatrix}$.`,
-          `由实标准型定理，对于特征值 $\\lambda = a - bi$，取 $P = \\begin{pmatrix} \\operatorname{Re}(v) & \\operatorname{Im}(v) \\end{pmatrix}$ 可得 $AP = P C$，从而 $A = P C P^{-1}$，其中 $C = \\begin{pmatrix} a & -b \\\\ b & a \\end{pmatrix}$。`,
+        const re = "v_{\\text{re}}";
+        const im = "v_{\\text{im}}";
+        const solution = walked(
+          [
+            [
+              ["Read $a$ and $b$", "读出 $a$ 和 $b$"],
+              t(
+                `The eigenvalue is $\\lambda = a - bi = ${eigStr}$, so $a = ${a}$ and $b = ${b}$, matching $C$.`,
+                `特征值为 $\\lambda = a - bi = ${eigStr}$，所以 $a = ${a}$，$b = ${b}$，与 $C$ 一致。`,
+              ),
+            ],
+            [
+              ["Split $Av = \\lambda v$", "拆分 $Av = \\lambda v$"],
+              t(
+                "Taking real and imaginary parts of $A(v_{\\text{re}} + i v_{\\text{im}}) = (a - bi)(v_{\\text{re}} + i v_{\\text{im}})$ gives",
+                "取 $A(v_{\\text{re}} + i v_{\\text{im}}) = (a - bi)(v_{\\text{re}} + i v_{\\text{im}})$ 的实部和虚部，得到",
+              ),
+              [`A ${re} = ${formatLinearComb2(a, re, b, im)}`, `A ${im} = ${formatLinearComb2(-b, re, a, im)}`],
+            ],
+            [
+              ["Assemble $P$", "组成 $P$"],
+              t(
+                `These two equations are the two columns of $AP = PC$ for $P = \\begin{pmatrix} ${re} & ${im} \\end{pmatrix}$, since the columns of $C$ are $(${a}, ${b})$ and $(-${b}, ${a})$.`,
+                `这两个等式正是 $P = \\begin{pmatrix} ${re} & ${im} \\end{pmatrix}$ 时 $AP = PC$ 的两列，因为 $C$ 的两列为 $(${a}, ${b})$ 和 $(-${b}, ${a})$。`,
+              ),
+            ],
+          ],
+          t(
+            `The first column of $PC$ is $P(${a}, ${b}) = ${formatLinearComb2(a, re, b, im)}$, which is exactly $A ${re}$ from the real part.`,
+            `$PC$ 的第一列为 $P(${a}, ${b}) = ${formatLinearComb2(a, re, b, im)}$，正是由实部得到的 $A ${re}$。`,
+          ),
         );
-        return oneOf(rng, prompt, right, wrong, solution);
+        return reasoned(oneOf(rng, prompt, right, wrong, solution), [
+          [
+            wrong[0]!.en,
+            "With the columns swapped, $P^{-1}AP$ is the transpose $\\begin{pmatrix} a & b \\\\ -b & a \\end{pmatrix}$, not $C$.",
+            "交换两列后，$P^{-1}AP$ 是转置 $\\begin{pmatrix} a & b \\\\ -b & a \\end{pmatrix}$，而不是 $C$。",
+          ],
+          [
+            wrong[1]!.en,
+            "Negating the second column also turns $C$ into its transpose $\\begin{pmatrix} a & b \\\\ -b & a \\end{pmatrix}$.",
+            "把第二列取相反数同样会把 $C$ 变成它的转置 $\\begin{pmatrix} a & b \\\\ -b & a \\end{pmatrix}$。",
+          ],
+          [
+            wrong[2]!.en,
+            "This $P$ is complex and diagonalizes $A$ to $\\operatorname{diag}(\\lambda, \\bar{\\lambda})$; the rotation-scaling form needs a real $P$.",
+            "这个 $P$ 是复矩阵，它把 $A$ 对角化为 $\\operatorname{diag}(\\lambda, \\bar{\\lambda})$；旋转缩放形式需要实矩阵 $P$。",
+          ],
+          [
+            wrong[3]!.en,
+            "Mixing the real and imaginary parts in each column no longer matches the two equations from $Av = \\lambda v$.",
+            "每一列都混合实部和虚部，就不再符合由 $Av = \\lambda v$ 得到的两个等式。",
+          ],
+        ]);
       },
     },
     {
@@ -4790,8 +4843,8 @@ export const reducingReal2x2MatricesToRotationScalingForm: TopicDef = {
         ],
       title: t("The scaling factor of a real matrix with complex eigenvalues", "具有复特征值的实矩阵的伸缩因子"),
       explanation: t(
-        "A real $2 \\times 2$ matrix with eigenvalues $\\alpha \\pm \\beta i$ is similar to the rotation-scaling matrix $C = \\begin{pmatrix} \\alpha & -\\beta \\\\ \\beta & \\alpha \\end{pmatrix}$. Similar matrices have the same determinant, so the scaling factor of $C$ is\n\n$$r = \\sqrt{\\alpha^2 + \\beta^2} = \\sqrt{\\det A}.$$\n\nRepeated multiplication by $A$ stretches vectors by roughly $r$ each time.",
-        "具有特征值 $\\alpha \\pm \\beta i$ 的实 $2 \\times 2$ 矩阵相似于旋转伸缩矩阵 $C = \\begin{pmatrix} \\alpha & -\\beta \\\\ \\beta & \\alpha \\end{pmatrix}$。相似矩阵行列式相同，所以 $C$ 的伸缩因子为\n\n$$r = \\sqrt{\\alpha^2 + \\beta^2} = \\sqrt{\\det A}.$$\n\n反复乘以 $A$ 时，向量每次大约被拉伸 $r$ 倍。",
+        "A real $2 \\times 2$ matrix with eigenvalues $\\alpha \\pm \\beta i$ is similar to the rotation-scaling matrix $C = \\begin{pmatrix} \\alpha & -\\beta \\\\ \\beta & \\alpha \\end{pmatrix}$. Similar matrices have the same determinant, so the scaling factor of $C$ is\n\n$$r = \\sqrt{\\alpha^2 + \\beta^2} = \\sqrt{\\det A}.$$\n\nRepeated multiplication by $A$ stretches vectors by roughly $r$ each time. For example, $A = \\begin{pmatrix} 2 & -5 \\\\ 5 & 8 \\end{pmatrix}$ has $\\det A = 16 + 25 = 41$ and trace $10$, so its eigenvalues are $5 \\pm 4i$ and $r = \\sqrt{41}$.\n\n> **Watch out.** The scaling factor is $\\sqrt{\\det A}$, not $\\det A$ itself, and not the sum $|\\alpha| + \\beta$.",
+        "具有特征值 $\\alpha \\pm \\beta i$ 的实 $2 \\times 2$ 矩阵相似于旋转伸缩矩阵 $C = \\begin{pmatrix} \\alpha & -\\beta \\\\ \\beta & \\alpha \\end{pmatrix}$。相似矩阵行列式相同，所以 $C$ 的伸缩因子为\n\n$$r = \\sqrt{\\alpha^2 + \\beta^2} = \\sqrt{\\det A}.$$\n\n反复乘以 $A$ 时，向量每次大约被拉伸 $r$ 倍。例如 $A = \\begin{pmatrix} 2 & -5 \\\\ 5 & 8 \\end{pmatrix}$ 有 $\\det A = 16 + 25 = 41$，迹为 $10$，所以特征值为 $5 \\pm 4i$，$r = \\sqrt{41}$。\n\n> **注意。** 伸缩因子是 $\\sqrt{\\det A}$，而不是 $\\det A$ 本身，也不是和 $|\\alpha| + \\beta$。",
       ),
       generate(rng: Rng): Problem {
         const [x, y, r] = rng.pick([
@@ -4806,16 +4859,35 @@ export const reducingReal2x2MatricesToRotationScalingForm: TopicDef = {
         const a = x * rng.pick([-1, 1]);
         const b = y;
         const A = complexEigenMatrix(rng, a, b);
+        const [[p, q], [s, d]] = A;
         return numberProblem({
           prompt: t(
             `The real matrix $A = ${mat2Latex(A)}$ is similar to a rotation-scaling matrix $C$. Find the scaling factor $r$ of $C$.`,
             `实矩阵 $A = ${mat2Latex(A)}$ 相似于旋转伸缩矩阵 $C$。求 $C$ 的伸缩因子 $r$。`,
           ),
           answer: r,
-          wrong: [r * r, Math.abs(a) + b, b],
-          solution: t(
-            `$\\det A = ${r * r}$, and the eigenvalues are $${formatComplexPair(a, b)}$, so $r = \\sqrt{${r * r}} = ${r}$.`,
-            `$\\det A = ${r * r}$，特征值为 $${formatComplexPair(a, b)}$，所以 $r = \\sqrt{${r * r}} = ${r}$。`,
+          mistakes: [
+            why(r * r, "That is $\\det A = r^2$; take the square root.", "这是 $\\det A = r^2$；还要开平方。"),
+            why(
+              Math.abs(a) + b,
+              "That adds the real and imaginary parts of the eigenvalues; the modulus is $\\sqrt{\\alpha^2 + \\beta^2}$.",
+              "这是把特征值的实部和虚部相加；模应为 $\\sqrt{\\alpha^2 + \\beta^2}$。",
+            ),
+            why(b, "That is only the imaginary part $\\beta$ of the eigenvalues.", "这只是特征值的虚部 $\\beta$。"),
+          ].filter((w, i, all) => w.value !== r && all.findIndex((o) => o.value === w.value) === i),
+          solution: walked(
+            [
+              [
+                ["Find the determinant", "求行列式"],
+                t("Similar matrices share the determinant, so $\\det C = \\det A$:", "相似矩阵行列式相同，所以 $\\det C = \\det A$："),
+                [`\\det A = ${p} \\cdot ${paren(d)} - ${paren(q)} \\cdot ${paren(s)} = ${r * r}`],
+              ],
+              [["Take the square root", "开平方"], t("", ""), [`r = \\sqrt{\\det C} = \\sqrt{${r * r}} = ${r}`]],
+            ],
+            t(
+              `The trace is $${p + d}$, so the eigenvalues are $${formatComplexPair(a, b)}$, whose modulus is $\\sqrt{${a * a} + ${b * b}} = ${r}$.`,
+              `迹为 $${p + d}$，所以特征值为 $${formatComplexPair(a, b)}$，其模为 $\\sqrt{${a * a} + ${b * b}} = ${r}$。`,
+            ),
           ),
         });
       },
@@ -4831,6 +4903,10 @@ export const blockDiagonalizationOfNxNMatrices: TopicDef = {
     "Decompose real matrices into real canonical block diagonal form with 1x1 real blocks and 2x2 rotation-scaling blocks.",
     "将实矩阵分解为含有 1x1 实特征值块和 2x2 旋转缩放块的实标准型分块对角矩阵。",
   ),
+  intro: t(
+    "A real $3 \\times 3$ matrix $A$ with eigenvalues $2$ and $1 \\pm 3i$ is similar to\n\n$$R = \\begin{pmatrix} 2 & 0 & 0 \\\\ 0 & 1 & -3 \\\\ 0 & 3 & 1 \\end{pmatrix},$$\n\na $1 \\times 1$ block for the real eigenvalue and a $2 \\times 2$ rotation-scaling block for the pair. So $\\operatorname{tr} A = 2 + 1 + 1 = 4$ and $\\det A = 2 \\cdot (1 + 9) = 20$.\n\nCheck: the eigenvalues add to $2 + (1 + 3i) + (1 - 3i) = 4$ and multiply to $2(1 + 3i)(1 - 3i) = 2 \\cdot 10 = 20$.\n\nIn this lesson we read the block structure of the real canonical form from the eigenvalues and use it to find the trace and the determinant.",
+    "具有特征值 $2$ 和 $1 \\pm 3i$ 的实 $3 \\times 3$ 矩阵 $A$ 相似于\n\n$$R = \\begin{pmatrix} 2 & 0 & 0 \\\\ 0 & 1 & -3 \\\\ 0 & 3 & 1 \\end{pmatrix},$$\n\n即实特征值对应一个 $1 \\times 1$ 块，复特征值对对应一个 $2 \\times 2$ 旋转缩放块。所以 $\\operatorname{tr} A = 2 + 1 + 1 = 4$，$\\det A = 2 \\cdot (1 + 9) = 20$。\n\n检验：特征值之和为 $2 + (1 + 3i) + (1 - 3i) = 4$，之积为 $2(1 + 3i)(1 - 3i) = 2 \\cdot 10 = 20$。\n\n本课我们由特征值读出实标准型的分块结构，并用它求迹和行列式。",
+  ),
   prerequisites: ["reducing-real-2x2-matrices-to-rotation-scaling-form"],
   encompasses: [],
   xp: 14,
@@ -4840,8 +4916,8 @@ export const blockDiagonalizationOfNxNMatrices: TopicDef = {
       figure: linearAlgebraDrawings2["block-diagonalization-of-nxn-matrices#real-canonical-block-structure"],
       title: t("Real Canonical Block Structure", "实标准型的分块结构"),
       explanation: t(
-        "Each real eigenvalue gives a single diagonal entry, while each pair of complex conjugate eigenvalues gives a two by two rotation scaling block. Determine the block diagonal structure from real and complex conjugate pairs of eigenvalues.",
-        "每个实特征值给出一个对角元素，而每对共轭复特征值给出一个二阶旋转缩放块。根据实特征值与共轭复特征值对确定分块对角结构。",
+        "Each real eigenvalue gives a single diagonal entry, while each pair of complex conjugate eigenvalues gives a two by two rotation scaling block. Determine the block diagonal structure from real and complex conjugate pairs of eigenvalues. For example, a real $4 \\times 4$ matrix with eigenvalues $3$, $-1$ and $2 \\pm i$ has the form $R = \\begin{pmatrix} 3 & 0 & 0 & 0 \\\\ 0 & -1 & 0 & 0 \\\\ 0 & 0 & 2 & -1 \\\\ 0 & 0 & 1 & 2 \\end{pmatrix}$: two $1 \\times 1$ blocks and one $2 \\times 2$ block.\n\n> **Watch out.** A conjugate pair gives one $2 \\times 2$ block, not two $1 \\times 1$ blocks: a non-real eigenvalue cannot stand alone on the diagonal of a real matrix. The block sizes must add up to the size of $A$.",
+        "每个实特征值给出一个对角元素，而每对共轭复特征值给出一个二阶旋转缩放块。根据实特征值与共轭复特征值对确定分块对角结构。例如特征值为 $3$、$-1$ 和 $2 \\pm i$ 的实 $4 \\times 4$ 矩阵的形式为 $R = \\begin{pmatrix} 3 & 0 & 0 & 0 \\\\ 0 & -1 & 0 & 0 \\\\ 0 & 0 & 2 & -1 \\\\ 0 & 0 & 1 & 2 \\end{pmatrix}$：两个 $1 \\times 1$ 块和一个 $2 \\times 2$ 块。\n\n> **注意。** 一对共轭复特征值给出一个 $2 \\times 2$ 块，而不是两个 $1 \\times 1$ 块：非实特征值不能单独出现在实矩阵的对角线上。各块的阶数之和必须等于 $A$ 的阶数。",
       ),
       generate: (rng: Rng): Problem => {
         // kind: 0 three real eigenvalues (3 × 3), 1 one real and a pair (3 × 3), 2 two pairs (4 × 4), 3 two real and a pair (4 × 4).
@@ -4871,20 +4947,57 @@ export const blockDiagonalizationOfNxNMatrices: TopicDef = {
           t("Two $2 \\times 2$ blocks", "两个 $2 \\times 2$ 块"),
           t("Two $1 \\times 1$ blocks and one $2 \\times 2$ block", "两个 $1 \\times 1$ 块和一个 $2 \\times 2$ 块"),
         ];
+        const counts = [
+          [3, 0],
+          [1, 1],
+          [0, 2],
+          [2, 1],
+        ] as const;
+        const many = (n: number, word: string) => `${n} ${word}${n === 1 ? "" : "s"}`;
         const blocks = pairs.map(([a, b]) => `\\begin{pmatrix} ${a} & -${b} \\\\ ${b} & ${a} \\end{pmatrix}`).join(", ");
-        const solution = t(
-          `Each real eigenvalue contributes a $1 \\times 1$ block, and each complex conjugate pair $a \\pm bi$ contributes a $2 \\times 2$ rotation-scaling block $\\begin{pmatrix} a & -b \\\\ b & a \\end{pmatrix}$${pairs.length ? `, here $${blocks}$` : ""}. With ${reals.length} real eigenvalue${reals.length === 1 ? "" : "s"} and ${pairs.length} pair${pairs.length === 1 ? "" : "s"}, the form has ${options[kind]!.en.toLowerCase()}.`,
-          `每个实特征值对应一个 $1 \\times 1$ 块，每对共轭复特征值 $a \\pm bi$ 对应一个 $2 \\times 2$ 旋转缩放块 $\\begin{pmatrix} a & -b \\\\ b & a \\end{pmatrix}$${pairs.length ? `，这里是 $${blocks}$` : ""}。有 ${reals.length} 个实特征值和 ${pairs.length} 对复特征值，所以实标准型由${options[kind]!["zh-CN"]}组成。`,
+        const solution = walked(
+          [
+            [
+              ["Sort the eigenvalues", "给特征值分类"],
+              t(
+                `$A$ has ${many(reals.length, "real eigenvalue")} and ${many(pairs.length, "conjugate pair")}.`,
+                `$A$ 有 ${reals.length} 个实特征值和 ${pairs.length} 对共轭复特征值。`,
+              ),
+            ],
+            [
+              ["Assign the blocks", "分配各块"],
+              t(
+                `Each real eigenvalue gives a $1 \\times 1$ block, and each pair $a \\pm bi$ gives a $2 \\times 2$ rotation-scaling block $\\begin{pmatrix} a & -b \\\\ b & a \\end{pmatrix}$${pairs.length ? `, here $${blocks}$` : ""}. The form has ${options[kind]!.en.toLowerCase()}.`,
+                `每个实特征值给出一个 $1 \\times 1$ 块，每对 $a \\pm bi$ 给出一个 $2 \\times 2$ 旋转缩放块 $\\begin{pmatrix} a & -b \\\\ b & a \\end{pmatrix}$${pairs.length ? `，这里是 $${blocks}$` : ""}。所以实标准型由${options[kind]!["zh-CN"]}组成。`,
+              ),
+            ],
+          ],
+          t(
+            `The block sizes add up to $${reals.length} \\cdot 1 + ${pairs.length} \\cdot 2 = ${size}$, the size of $A$.`,
+            `各块阶数之和为 $${reals.length} \\cdot 1 + ${pairs.length} \\cdot 2 = ${size}$，等于 $A$ 的阶数。`,
+          ),
         );
-        return choiceProblem({ prompt, options, correct: kind, solution });
+        const reasons = counts.map(([ones, twos], i) => {
+          const filled = ones + 2 * twos;
+          return [
+            options[i]!.en,
+            filled !== size
+              ? `These blocks fill a $${filled} \\times ${filled}$ matrix, but $A$ is $${size} \\times ${size}$.`
+              : `That needs ${many(ones, "real eigenvalue")} and ${many(twos, "conjugate pair")}, but $A$ has ${many(reals.length, "real eigenvalue")} and ${many(pairs.length, "conjugate pair")}.`,
+            filled !== size
+              ? `这些块组成 $${filled} \\times ${filled}$ 矩阵，而 $A$ 是 $${size} \\times ${size}$ 矩阵。`
+              : `那需要 ${ones} 个实特征值和 ${twos} 对共轭复特征值，而 $A$ 有 ${reals.length} 个实特征值和 ${pairs.length} 对共轭复特征值。`,
+          ] as const;
+        });
+        return reasoned(choiceProblem({ prompt, options, correct: kind, solution }), reasons);
       },
     },
     {
       id: "invariants-of-a-real-block-diagonal-form",
       title: t("Invariants of a real block diagonal form", "实块对角形的不变量"),
       explanation: t(
-        "A real $3 \\times 3$ matrix with a real eigenvalue $\\mu$ and a complex pair $\\alpha \\pm \\beta i$ is similar to the block diagonal matrix\n\n$$R = \\begin{pmatrix} \\mu & 0 & 0 \\\\ 0 & \\alpha & -\\beta \\\\ 0 & \\beta & \\alpha \\end{pmatrix}.$$\n\nSimilar matrices share trace and determinant, so $\\operatorname{tr} A = \\mu + 2\\alpha$ and $\\det A = \\mu(\\alpha^2 + \\beta^2)$, the determinant of a block diagonal matrix being the product of the block determinants.",
-        "具有实特征值 $\\mu$ 和复共轭对 $\\alpha \\pm \\beta i$ 的实 $3 \\times 3$ 矩阵相似于块对角矩阵\n\n$$R = \\begin{pmatrix} \\mu & 0 & 0 \\\\ 0 & \\alpha & -\\beta \\\\ 0 & \\beta & \\alpha \\end{pmatrix}.$$\n\n相似矩阵有相同的迹和行列式，所以 $\\operatorname{tr} A = \\mu + 2\\alpha$，$\\det A = \\mu(\\alpha^2 + \\beta^2)$，因为块对角矩阵的行列式是各块行列式之积。",
+        "A real $3 \\times 3$ matrix with a real eigenvalue $\\mu$ and a complex pair $\\alpha \\pm \\beta i$ is similar to the block diagonal matrix\n\n$$R = \\begin{pmatrix} \\mu & 0 & 0 \\\\ 0 & \\alpha & -\\beta \\\\ 0 & \\beta & \\alpha \\end{pmatrix}.$$\n\nSimilar matrices share trace and determinant, so $\\operatorname{tr} A = \\mu + 2\\alpha$ and $\\det A = \\mu(\\alpha^2 + \\beta^2)$, the determinant of a block diagonal matrix being the product of the block determinants. For example, eigenvalues $-3$ and $2 \\pm i$ give $\\operatorname{tr} A = -3 + 4 = 1$ and $\\det A = -3 \\cdot 5 = -15$.\n\n> **Watch out.** The pair contributes $2\\alpha$ to the trace, because both $\\alpha + \\beta i$ and $\\alpha - \\beta i$ count, and the imaginary parts cancel. Its block determinant is $\\alpha^2 + \\beta^2$, with a plus sign.",
+        "具有实特征值 $\\mu$ 和复共轭对 $\\alpha \\pm \\beta i$ 的实 $3 \\times 3$ 矩阵相似于块对角矩阵\n\n$$R = \\begin{pmatrix} \\mu & 0 & 0 \\\\ 0 & \\alpha & -\\beta \\\\ 0 & \\beta & \\alpha \\end{pmatrix}.$$\n\n相似矩阵有相同的迹和行列式，所以 $\\operatorname{tr} A = \\mu + 2\\alpha$，$\\det A = \\mu(\\alpha^2 + \\beta^2)$，因为块对角矩阵的行列式是各块行列式之积。例如特征值 $-3$ 和 $2 \\pm i$ 给出 $\\operatorname{tr} A = -3 + 4 = 1$，$\\det A = -3 \\cdot 5 = -15$。\n\n> **注意。** 复特征值对给迹贡献 $2\\alpha$，因为 $\\alpha + \\beta i$ 和 $\\alpha - \\beta i$ 都要算，虚部相互抵消。它的块行列式是 $\\alpha^2 + \\beta^2$，中间是加号。",
       ),
       generate(rng: Rng): Problem {
         const mu = rng.int(-5, 5) || 2;
@@ -4892,20 +5005,61 @@ export const blockDiagonalizationOfNxNMatrices: TopicDef = {
         const b = rng.int(1, 4);
         const wantDet = rng.int(0, 1) === 0;
         const ans = wantDet ? mu * (a * a + b * b) : mu + 2 * a;
+        const mistakes = wantDet
+          ? [
+              why(
+                mu * (a * a - b * b),
+                "The block determinant is $\\alpha^2 + \\beta^2$, with a plus sign.",
+                "块行列式是 $\\alpha^2 + \\beta^2$，中间是加号。",
+              ),
+              why(mu * a * a, "That drops $\\beta^2$ from the block determinant.", "这漏掉了块行列式中的 $\\beta^2$。"),
+              why(
+                2 * mu * (a * a + b * b),
+                "The pair gives one block whose determinant $\\alpha^2 + \\beta^2$ already covers both eigenvalues.",
+                "复特征值对只给出一个块，其行列式 $\\alpha^2 + \\beta^2$ 已包含两个特征值。",
+              ),
+            ]
+          : [
+              why(
+                mu + a,
+                "Both $\\alpha + \\beta i$ and $\\alpha - \\beta i$ count, so the pair adds $2\\alpha$.",
+                "$\\alpha + \\beta i$ 和 $\\alpha - \\beta i$ 都要算，所以复特征值对贡献 $2\\alpha$。",
+              ),
+              why(mu + 2 * a + 2 * b, "The imaginary parts $\\pm \\beta i$ cancel in the trace.", "迹中的虚部 $\\pm \\beta i$ 相互抵消。"),
+              why(2 * a, "That leaves out the real eigenvalue $\\mu$.", "这漏掉了实特征值 $\\mu$。"),
+            ];
+        const R = `\\begin{pmatrix} ${mu} & 0 & 0 \\\\ 0 & ${a} & -${b} \\\\ 0 & ${b} & ${a} \\end{pmatrix}`;
         return numberProblem({
           prompt: t(
             `A real $3 \\times 3$ matrix $A$ has eigenvalues $${mu}$ and $${formatComplexPair(a, b)}$. Find $${wantDet ? "\\det A" : "\\operatorname{tr} A"}$.`,
             `实 $3 \\times 3$ 矩阵 $A$ 的特征值为 $${mu}$ 和 $${formatComplexPair(a, b)}$。求 $${wantDet ? "\\det A" : "\\operatorname{tr} A"}$。`,
           ),
           answer: ans,
-          wrong: wantDet ? [mu * (a * a - b * b), mu * a * a, mu * (a * a + b * b) * 2] : [mu + a, mu + 2 * a + 2 * b, 2 * a],
-          solution: t(
+          mistakes: mistakes.filter((w, i, all) => w.value !== ans && all.findIndex((o) => o.value === w.value) === i),
+          solution: walked(
+            [
+              [["Write the block form", "写出分块形式"], t("$A$ is similar to", "$A$ 相似于"), [`R = ${R}`]],
+              wantDet
+                ? [
+                    ["Multiply the block determinants", "各块行列式相乘"],
+                    t("", ""),
+                    [`\\det A = \\det R = ${mu} \\cdot (${a * a} + ${b * b}) = ${ans}`],
+                  ]
+                : [
+                    ["Add the diagonal", "对角元相加"],
+                    t("", ""),
+                    [`\\operatorname{tr} A = \\operatorname{tr} R = ${mu} + 2 \\cdot ${paren(a)} = ${ans}`],
+                  ],
+            ],
             wantDet
-              ? `$\\det A = \\det R = ${mu} \\cdot (${a * a} + ${b * b}) = ${ans}$.`
-              : `$\\operatorname{tr} A = \\operatorname{tr} R = ${mu} + 2 \\cdot ${paren(a)} = ${ans}$.`,
-            wantDet
-              ? `$\\det A = \\det R = ${mu} \\cdot (${a * a} + ${b * b}) = ${ans}$。`
-              : `$\\operatorname{tr} A = \\operatorname{tr} R = ${mu} + 2 \\cdot ${paren(a)} = ${ans}$。`,
+              ? t(
+                  `The eigenvalues multiply to $${paren(mu)}(${formatComplex(a, b)})(${formatComplex(a, -b)}) = ${paren(mu)} \\cdot ${a * a + b * b} = ${ans}$.`,
+                  `特征值之积为 $${paren(mu)}(${formatComplex(a, b)})(${formatComplex(a, -b)}) = ${paren(mu)} \\cdot ${a * a + b * b} = ${ans}$。`,
+                )
+              : t(
+                  `The eigenvalues add to $${mu} + (${formatComplex(a, b)}) + (${formatComplex(a, -b)}) = ${ans}$.`,
+                  `特征值之和为 $${mu} + (${formatComplex(a, b)}) + (${formatComplex(a, -b)}) = ${ans}$。`,
+                ),
           ),
         });
       },
@@ -4925,6 +5079,10 @@ export const nilpotentAndIdempotentMatrices: TopicDef = {
     "Identify nilpotent ($N^k = 0$) and idempotent ($M^2 = M$) matrices and determine their eigenvalues.",
     "识别幂零矩阵（$N^k = 0$）与幂等矩阵（$M^2 = M$），并求其特征值。",
   ),
+  intro: t(
+    "The matrix $N = \\begin{pmatrix} 2 & 4 \\\\ -1 & -2 \\end{pmatrix}$ has trace $0$ and determinant $-4 + 4 = 0$, so its characteristic polynomial is $\\lambda^2$ and its only eigenvalue is $0$. The matrix $M = \\begin{pmatrix} 1 & 1 \\\\ 0 & 0 \\end{pmatrix}$ satisfies $M^2 = M$, and its eigenvalues are $1$ and $0$.\n\nCheck: $N^2 = \\begin{pmatrix} 4 - 4 & 8 - 8 \\\\ -2 + 2 & -4 + 4 \\end{pmatrix} = 0$, so $N$ is nilpotent, as an only eigenvalue of $0$ requires for a $2 \\times 2$ matrix.\n\nIn this lesson we find the eigenvalues of nilpotent and idempotent matrices and complete a $2 \\times 2$ matrix so that it is nilpotent.",
+    "矩阵 $N = \\begin{pmatrix} 2 & 4 \\\\ -1 & -2 \\end{pmatrix}$ 的迹为 $0$，行列式为 $-4 + 4 = 0$，所以特征多项式为 $\\lambda^2$，唯一的特征值是 $0$。矩阵 $M = \\begin{pmatrix} 1 & 1 \\\\ 0 & 0 \\end{pmatrix}$ 满足 $M^2 = M$，特征值为 $1$ 和 $0$。\n\n检验：$N^2 = \\begin{pmatrix} 4 - 4 & 8 - 8 \\\\ -2 + 2 & -4 + 4 \\end{pmatrix} = 0$，所以 $N$ 是幂零矩阵，这正符合 $2 \\times 2$ 矩阵唯一特征值为 $0$ 的情形。\n\n本课我们求幂零矩阵和幂等矩阵的特征值，并补全一个 $2 \\times 2$ 矩阵使它成为幂零矩阵。",
+  ),
   prerequisites: ["block-diagonalization-of-nxn-matrices"],
   encompasses: [],
   xp: 14,
@@ -4933,8 +5091,8 @@ export const nilpotentAndIdempotentMatrices: TopicDef = {
       id: "nilpotent-idempotent-eigenvalues",
       title: t("Eigenvalues of Nilpotent and Idempotent Matrices", "幂零与幂等矩阵的特征值"),
       explanation: t(
-        "Applying the defining equation to an eigenvector turns it into an equation for the eigenvalue, which limits the values the eigenvalue can take. Recognize that nilpotent matrices have only eigenvalue 0, and idempotent matrices have only eigenvalues 0 and 1.",
-        "把定义方程作用在特征向量上，就得到关于特征值的方程，从而限制了特征值可能的取值。认识到幂零矩阵的特征值只能为 0，而幂等矩阵的特征值只能为 0 或 1。",
+        "Applying the defining equation to an eigenvector turns it into an equation for the eigenvalue, which limits the values the eigenvalue can take. Recognize that nilpotent matrices have only eigenvalue 0, and idempotent matrices have only eigenvalues 0 and 1. For example, $N = \\begin{pmatrix} 0 & 1 \\\\ 0 & 0 \\end{pmatrix}$ satisfies $N^2 = 0$ and has only the eigenvalue $0$, while the projection $M = \\begin{pmatrix} 1 & 0 \\\\ 0 & 0 \\end{pmatrix}$ satisfies $M^2 = M$ and has eigenvalues $1$ and $0$.\n\n> **Watch out.** A nilpotent matrix need not be the zero matrix, yet its only eigenvalue is $0$ whatever its index. $M^2 = M$ gives $\\lambda^2 = \\lambda$, so $-1$ is not possible; $\\lambda^2 = 1$ would describe $M^2 = I$ instead.",
+        "把定义方程作用在特征向量上，就得到关于特征值的方程，从而限制了特征值可能的取值。认识到幂零矩阵的特征值只能为 0，而幂等矩阵的特征值只能为 0 或 1。例如 $N = \\begin{pmatrix} 0 & 1 \\\\ 0 & 0 \\end{pmatrix}$ 满足 $N^2 = 0$，只有特征值 $0$；投影 $M = \\begin{pmatrix} 1 & 0 \\\\ 0 & 0 \\end{pmatrix}$ 满足 $M^2 = M$，特征值为 $1$ 和 $0$。\n\n> **注意。** 幂零矩阵不一定是零矩阵，但无论幂零指数是多少，它唯一的特征值都是 $0$。$M^2 = M$ 给出 $\\lambda^2 = \\lambda$，所以 $-1$ 不可能；$\\lambda^2 = 1$ 描述的是 $M^2 = I$。",
       ),
       generate: (rng: Rng): Problem => {
         const n = rng.int(3, 9);
@@ -4956,25 +5114,65 @@ export const nilpotentAndIdempotentMatrices: TopicDef = {
             "对 $N$，仅有 $\\lambda = 0$；对 $M$，仅有 $\\lambda = -1$ 或 $\\lambda = 1$",
           ),
         ];
-        const solution = t(
-          `If $N v = \\lambda v$, then $N^{${k}} v = \\lambda^{${k}} v = 0$, so $\\lambda = 0$. If $M v = \\lambda v$, then $M^2 v = \\lambda^2 v = \\lambda v$, so $\\lambda^2 - \\lambda = 0$, giving $\\lambda = 0$ or $\\lambda = 1$.`,
-          `若 $N v = \\lambda v$，则 $N^{${k}} v = \\lambda^{${k}} v = 0$，故 $\\lambda = 0$。若 $M v = \\lambda v$，则 $M^2 v = \\lambda^2 v = \\lambda v$，故 $\\lambda^2 - \\lambda = 0$，即 $\\lambda = 0$ 或 $\\lambda = 1$。`,
+        const solution = walked(
+          [
+            [
+              [`Use $N^{${k}} = 0$`, `利用 $N^{${k}} = 0$`],
+              t(
+                `If $N v = \\lambda v$ with $v \\neq 0$, then $N^{${k}} v = \\lambda^{${k}} v = 0$, so $\\lambda^{${k}} = 0$ and $\\lambda = 0$.`,
+                `若 $N v = \\lambda v$ 且 $v \\neq 0$，则 $N^{${k}} v = \\lambda^{${k}} v = 0$，所以 $\\lambda^{${k}} = 0$，$\\lambda = 0$。`,
+              ),
+            ],
+            [
+              ["Use $M^2 = M$", "利用 $M^2 = M$"],
+              t(
+                "If $M v = \\lambda v$ with $v \\neq 0$, then $M^2 v = \\lambda^2 v$ must equal $M v = \\lambda v$, so $\\lambda^2 - \\lambda = 0$ and $\\lambda = 0$ or $\\lambda = 1$.",
+                "若 $M v = \\lambda v$ 且 $v \\neq 0$，则 $M^2 v = \\lambda^2 v$ 必须等于 $M v = \\lambda v$，所以 $\\lambda^2 - \\lambda = 0$，$\\lambda = 0$ 或 $\\lambda = 1$。",
+              ),
+            ],
+          ],
+          t(
+            "The projection $\\begin{pmatrix} 1 & 0 \\\\ 0 & 0 \\end{pmatrix}$ has both eigenvalues $1$ and $0$, and $\\begin{pmatrix} 0 & 1 \\\\ 0 & 0 \\end{pmatrix}$ has characteristic polynomial $\\lambda^2$, so these values do occur.",
+            "投影 $\\begin{pmatrix} 1 & 0 \\\\ 0 & 0 \\end{pmatrix}$ 的特征值为 $1$ 和 $0$，$\\begin{pmatrix} 0 & 1 \\\\ 0 & 0 \\end{pmatrix}$ 的特征多项式为 $\\lambda^2$，所以这些值确实会出现。",
+          ),
         );
-        return oneOf(rng, prompt, right, wrong, solution);
+        return reasoned(oneOf(rng, prompt, right, wrong, solution), [
+          [
+            wrong[0]!.en,
+            `$N^{${k}} = 0$ gives $\\lambda^{${k}} = 0$, so $N$ has eigenvalue $0$, and a projection can also have eigenvalue $1$.`,
+            `$N^{${k}} = 0$ 给出 $\\lambda^{${k}} = 0$，所以 $N$ 的特征值为 $0$，而投影也可以有特征值 $1$。`,
+          ],
+          [
+            wrong[1]!.en,
+            "Each defining equation becomes an equation for $\\lambda$, which allows only a few values.",
+            "每个定义方程都化为关于 $\\lambda$ 的方程，只允许少数几个值。",
+          ],
+          [
+            wrong[2]!.en,
+            `$\\lambda^{${k}} = 0$ allows only $\\lambda = 0$; $\\pm 1$ raised to a power is never $0$.`,
+            `$\\lambda^{${k}} = 0$ 只允许 $\\lambda = 0$；$\\pm 1$ 的幂永远不是 $0$。`,
+          ],
+          [
+            wrong[3]!.en,
+            "$M^2 = M$ gives $\\lambda^2 = \\lambda$, not $\\lambda^2 = 1$, so $M$ has $0$ or $1$.",
+            "$M^2 = M$ 给出 $\\lambda^2 = \\lambda$，而不是 $\\lambda^2 = 1$，所以 $M$ 的特征值为 $0$ 或 $1$。",
+          ],
+        ]);
       },
     },
     {
       id: "completing-a-nilpotent-2x2-matrix",
       title: t("Completing a nilpotent 2x2 matrix", "补全幂零 2x2 矩阵"),
       explanation: t(
-        "A $2 \\times 2$ matrix is nilpotent exactly when both eigenvalues are $0$, that is when its trace and determinant are both $0$. A matrix with trace $0$ has the form $N = \\begin{pmatrix} a & b \\\\ c & -a \\end{pmatrix}$, and\n\n$$N^2 = (a^2 + bc)I.$$\n\nSo $N^2 = 0$ exactly when $a^2 + bc = 0$, which is the same as $\\det N = 0$.",
-        "$2 \\times 2$ 矩阵是幂零的当且仅当两个特征值都是 $0$，即迹和行列式都为 $0$。迹为 $0$ 的矩阵形如 $N = \\begin{pmatrix} a & b \\\\ c & -a \\end{pmatrix}$，且\n\n$$N^2 = (a^2 + bc)I.$$\n\n所以 $N^2 = 0$ 当且仅当 $a^2 + bc = 0$，这与 $\\det N = 0$ 相同。",
+        "A $2 \\times 2$ matrix is nilpotent exactly when both eigenvalues are $0$, that is when its trace and determinant are both $0$. A matrix with trace $0$ has the form $N = \\begin{pmatrix} a & b \\\\ c & -a \\end{pmatrix}$, and\n\n$$N^2 = (a^2 + bc)I.$$\n\nSo $N^2 = 0$ exactly when $a^2 + bc = 0$, which is the same as $\\det N = 0$. For example, $\\begin{pmatrix} 2 & 4 \\\\ c & -2 \\end{pmatrix}$ is nilpotent when $4 + 4c = 0$, that is $c = -1$.\n\n> **Watch out.** The condition is $a^2 + bc = 0$, with $a$ squared and a plus sign: the diagonal of $N^2$ is $a^2 + bc$.",
+        "$2 \\times 2$ 矩阵是幂零的当且仅当两个特征值都是 $0$，即迹和行列式都为 $0$。迹为 $0$ 的矩阵形如 $N = \\begin{pmatrix} a & b \\\\ c & -a \\end{pmatrix}$，且\n\n$$N^2 = (a^2 + bc)I.$$\n\n所以 $N^2 = 0$ 当且仅当 $a^2 + bc = 0$，这与 $\\det N = 0$ 相同。例如 $\\begin{pmatrix} 2 & 4 \\\\ c & -2 \\end{pmatrix}$ 当 $4 + 4c = 0$ 即 $c = -1$ 时是幂零的。\n\n> **注意。** 条件是 $a^2 + bc = 0$：$a$ 要平方，中间是加号，因为 $N^2$ 的对角元是 $a^2 + bc$。",
       ),
       generate(rng: Rng): Problem {
         const b = rng.pick([-4, -2, -1, 1, 2, 4]);
         const m = rng.int(1, 3) * rng.pick([-1, 1]);
         const a = b * m;
         const c = -b * m * m;
+        const sum = formatLinearComb2(a * a, "", b, "c");
         return numberProblem({
           prompt: t(
             `Find $c$ so that $N = \\begin{pmatrix} ${a} & ${b} \\\\ c & ${-a} \\end{pmatrix}$ is nilpotent.`,
@@ -4982,10 +5180,28 @@ export const nilpotentAndIdempotentMatrices: TopicDef = {
           ),
           answer: c,
           solveFor: "c",
-          wrong: [-c, Q.of(-a, b), a * a],
-          solution: t(
-            `$N^2 = (${formatLinearComb2(a * a, "", b, "c")})I$, so $${formatLinearComb2(a * a, "", b, "c")} = 0$ and $c = ${c}$.`,
-            `$N^2 = (${formatLinearComb2(a * a, "", b, "c")})I$，所以 $${formatLinearComb2(a * a, "", b, "c")} = 0$，$c = ${c}$。`,
+          mistakes: [
+            why(
+              -c,
+              "That solves $a^2 - bc = 0$; the diagonal of $N^2$ is $a^2 + bc$.",
+              "这是解 $a^2 - bc = 0$ 的结果；$N^2$ 的对角元是 $a^2 + bc$。",
+            ),
+            why(-m, "That solves $a + bc = 0$; the condition uses $a^2$.", "这是解 $a + bc = 0$ 的结果；条件中是 $a^2$。"),
+            why(a * a, "That is $a^2$ itself; solve $a^2 + bc = 0$ for $c$.", "这是 $a^2$ 本身；要由 $a^2 + bc = 0$ 解出 $c$。"),
+          ].filter((w, i, all) => w.value !== c && all.findIndex((o) => o.value === w.value) === i),
+          solution: walked(
+            [
+              [
+                ["Square the matrix", "计算平方"],
+                t("A matrix with trace $0$ squares to a multiple of $I$:", "迹为 $0$ 的矩阵的平方是 $I$ 的倍数："),
+                [`N^2 = (${sum})I`],
+              ],
+              [["Solve for $c$", "解出 $c$"], t("$N^2 = 0$ needs", "$N^2 = 0$ 要求"), [`${sum} = 0`, `c = ${c}`]],
+            ],
+            t(
+              `With $c = ${c}$, $\\operatorname{tr} N = 0$ and $\\det N = ${-a * a} - ${paren(b * c)} = 0$, so both eigenvalues are $0$.`,
+              `取 $c = ${c}$，$\\operatorname{tr} N = 0$，$\\det N = ${-a * a} - ${paren(b * c)} = 0$，所以两个特征值都是 $0$。`,
+            ),
           ),
         });
       },
@@ -5001,6 +5217,10 @@ export const generalizedEigenvectors: TopicDef = {
     "Define generalized eigenvectors, which satisfy $(A - \\lambda I)^k \\mathbf{v} = \\mathbf{0}$, and understand generalized eigenspaces.",
     "定义满足 $(A - \\lambda I)^k \\mathbf{v} = \\mathbf{0}$ 的广义特征向量，并理解广义特征子空间。",
   ),
+  intro: t(
+    "The matrix $A = \\begin{pmatrix} 3 & 1 \\\\ 0 & 3 \\end{pmatrix}$ has the single eigenvalue $3$ but only the eigenvectors along $(1, 0)$. Take $\\mathbf{v} = (0, 1)$: $(A - 3I)\\mathbf{v} = (1, 0) \\neq \\mathbf{0}$, and $(A - 3I)^2\\mathbf{v} = (A - 3I)(1, 0) = \\mathbf{0}$. So $\\mathbf{v}$ is a generalized eigenvector of rank $2$.\n\nCheck: $A\\mathbf{v} = (1, 3)$ is not a multiple of $(0, 1)$, so $\\mathbf{v}$ is not an ordinary eigenvector, yet $(1, 0)$ and $(0, 1)$ together form a basis.\n\nIn this lesson we state the definition of a generalized eigenvector and find the power of $A - \\lambda I$ that sends every generalized eigenvector to $\\mathbf{0}$.",
+    "矩阵 $A = \\begin{pmatrix} 3 & 1 \\\\ 0 & 3 \\end{pmatrix}$ 只有特征值 $3$，而特征向量只沿 $(1, 0)$ 方向。取 $\\mathbf{v} = (0, 1)$：$(A - 3I)\\mathbf{v} = (1, 0) \\neq \\mathbf{0}$，$(A - 3I)^2\\mathbf{v} = (A - 3I)(1, 0) = \\mathbf{0}$。所以 $\\mathbf{v}$ 是秩为 $2$ 的广义特征向量。\n\n检验：$A\\mathbf{v} = (1, 3)$ 不是 $(0, 1)$ 的倍数，所以 $\\mathbf{v}$ 不是普通特征向量，而 $(1, 0)$ 与 $(0, 1)$ 合起来构成一组基。\n\n本课我们给出广义特征向量的定义，并求出把每个广义特征向量都变为 $\\mathbf{0}$ 的 $A - \\lambda I$ 的幂次。",
+  ),
   prerequisites: ["nilpotent-and-idempotent-matrices"],
   encompasses: [],
   xp: 14,
@@ -5009,8 +5229,8 @@ export const generalizedEigenvectors: TopicDef = {
       id: "generalized-eigenvector-definition-kp",
       title: t("Generalized Eigenvector Definition", "广义特征向量的定义"),
       explanation: t(
-        "When there are too few eigenvectors, generalized eigenvectors are sent to zero by a higher power of the shifted matrix and fill out the basis. Identify the defining condition $(A - \\lambda I)^k \\mathbf{v} = \\mathbf{0}$ for a generalized eigenvector.",
-        "当特征向量不够时，广义特征向量会被平移矩阵的更高次幂映射到零，从而补足一组基。识别广义特征向量的定义条件 $(A - \\lambda I)^k \\mathbf{v} = \\mathbf{0}$。",
+        "When there are too few eigenvectors, generalized eigenvectors are sent to zero by a higher power of the shifted matrix and fill out the basis. Identify the defining condition $(A - \\lambda I)^k \\mathbf{v} = \\mathbf{0}$ for a generalized eigenvector. For example, for $A = \\begin{pmatrix} 3 & 1 \\\\ 0 & 3 \\end{pmatrix}$ the vector $(0, 1)$ has $(A - 3I)(0, 1) = (1, 0) \\neq \\mathbf{0}$ and $(A - 3I)^2(0, 1) = \\mathbf{0}$, so it is a generalized eigenvector of rank $2$.\n\n> **Watch out.** The rank $k$ needs both conditions: the $k$-th power sends $\\mathbf{v}$ to $\\mathbf{0}$ and the $(k - 1)$-th power does not. The power is taken of $A - \\lambda I$, not of $A$.",
+        "当特征向量不够时，广义特征向量会被平移矩阵的更高次幂映射到零，从而补足一组基。识别广义特征向量的定义条件 $(A - \\lambda I)^k \\mathbf{v} = \\mathbf{0}$。例如对 $A = \\begin{pmatrix} 3 & 1 \\\\ 0 & 3 \\end{pmatrix}$，向量 $(0, 1)$ 满足 $(A - 3I)(0, 1) = (1, 0) \\neq \\mathbf{0}$，$(A - 3I)^2(0, 1) = \\mathbf{0}$，所以它是秩为 $2$ 的广义特征向量。\n\n> **注意。** 秩 $k$ 需要两个条件：第 $k$ 次幂把 $\\mathbf{v}$ 变为 $\\mathbf{0}$，而第 $k - 1$ 次幂不能。取幂的是 $A - \\lambda I$，不是 $A$。",
       ),
       generate: (rng: Rng): Problem => {
         const lambda = rng.nonZero(-5, 5);
@@ -5034,9 +5254,27 @@ export const generalizedEigenvectors: TopicDef = {
             `$(A${shiftStr})^{${k}} v \\neq 0$ 且 $(A${shiftStr})^{${k + 1}} v = 0$`,
           ),
         ];
-        const solution = t(
-          `A non-zero vector $v$ is a generalized eigenvector of rank $k = ${k}$ for $\\lambda = ${lambda}$ if $(A${shiftStr})^{${k}} v = 0$ and $(A${shiftStr})^{${k - 1}} v \\neq 0$.`,
-          `非零向量 $v$ 是对应于 $\\lambda = ${lambda}$ 的 $k = ${k}$ 阶广义特征向量，当且仅当 $(A${shiftStr})^{${k}} v = 0$ 且 $(A${shiftStr})^{${k - 1}} v \\neq 0$。`,
+        const solution = walked(
+          [
+            [
+              ["Shift by the eigenvalue", "按特征值平移"],
+              t(
+                `For $\\lambda = ${lambda}$ the shifted matrix is $A - \\lambda I = A${shiftStr}$.`,
+                `对 $\\lambda = ${lambda}$，平移后的矩阵为 $A - \\lambda I = A${shiftStr}$。`,
+              ),
+            ],
+            [
+              ["State both conditions", "写出两个条件"],
+              t(
+                `Rank $${k}$ means that the $${k}$-th power of $A${shiftStr}$ sends $v$ to $0$ while the power $${k - 1}$ does not: $(A${shiftStr})^{${k}} v = 0$ and $(A${shiftStr})^{${k - 1}} v \\neq 0$.`,
+                `秩为 $${k}$ 指 $A${shiftStr}$ 的 $${k}$ 次幂把 $v$ 变为 $0$，而 $${k - 1}$ 次幂不能：$(A${shiftStr})^{${k}} v = 0$ 且 $(A${shiftStr})^{${k - 1}} v \\neq 0$。`,
+              ),
+            ],
+          ],
+          t(
+            `For rank $1$ the same two conditions read $(A${shiftStr}) v = 0$ and $v \\neq 0$, which is the definition of an ordinary eigenvector.`,
+            `对秩 $1$，同样的两个条件变成 $(A${shiftStr}) v = 0$ 且 $v \\neq 0$，正是普通特征向量的定义。`,
+          ),
         );
         return reasoned(oneOf(rng, prompt, right, wrong, solution), [
           [wrong[0]!.en, "The power must send $v$ to $0$, not back to $v$.", "这个幂应把 $v$ 变成 $0$，而不是变回 $v$。"],
@@ -5054,8 +5292,8 @@ export const generalizedEigenvectors: TopicDef = {
       id: "the-power-that-kills-every-generalized-eigenvector",
       title: t("The power that kills every generalized eigenvector", "消去所有广义特征向量的幂"),
       explanation: t(
-        "Every generalized eigenvector for $\\lambda$ satisfies $(A - \\lambda I)^k\\mathbf{v} = \\mathbf{0}$ for some $k$. On a Jordan block $J_m(\\lambda)$, $(J - \\lambda I)$ shifts the basis vectors down one step, so it takes exactly $m$ applications to reach $\\mathbf{0}$. Hence the smallest $k$ that works for all generalized eigenvectors of $\\lambda$ is the size of the largest Jordan block for $\\lambda$.",
-        "$\\lambda$ 的每个广义特征向量都对某个 $k$ 满足 $(A - \\lambda I)^k\\mathbf{v} = \\mathbf{0}$。在若尔当块 $J_m(\\lambda)$ 上，$(J - \\lambda I)$ 把基向量依次下移一步，恰好作用 $m$ 次才得到 $\\mathbf{0}$。所以对 $\\lambda$ 的所有广义特征向量都成立的最小 $k$ 就是 $\\lambda$ 的最大若尔当块的阶数。",
+        "Every generalized eigenvector for $\\lambda$ satisfies $(A - \\lambda I)^k\\mathbf{v} = \\mathbf{0}$ for some $k$. On a Jordan block $J_m(\\lambda)$, $(J - \\lambda I)$ shifts the basis vectors down one step, so it takes exactly $m$ applications to reach $\\mathbf{0}$. Hence the smallest $k$ that works for all generalized eigenvectors of $\\lambda$ is the size of the largest Jordan block for $\\lambda$. For example, for $J_3(2) \\oplus J_1(2) \\oplus J_2(5)$ the smallest such $k$ for $\\lambda = 2$ is $3$.\n\n> **Watch out.** Take the largest block for $\\lambda$; do not add the block sizes, and ignore the blocks of other eigenvalues.",
+        "$\\lambda$ 的每个广义特征向量都对某个 $k$ 满足 $(A - \\lambda I)^k\\mathbf{v} = \\mathbf{0}$。在若尔当块 $J_m(\\lambda)$ 上，$(J - \\lambda I)$ 把基向量依次下移一步，恰好作用 $m$ 次才得到 $\\mathbf{0}$。所以对 $\\lambda$ 的所有广义特征向量都成立的最小 $k$ 就是 $\\lambda$ 的最大若尔当块的阶数。例如对 $J_3(2) \\oplus J_1(2) \\oplus J_2(5)$，$\\lambda = 2$ 对应的最小 $k$ 为 $3$。\n\n> **注意。** 要取 $\\lambda$ 的最大块；不要把各块阶数相加，也不要考虑其他特征值的块。",
       ),
       generate(rng: Rng): Problem {
         const lam = rng.int(-4, 4);
@@ -5072,10 +5310,44 @@ export const generalizedEigenvectors: TopicDef = {
             `一个 $${n} \\times ${n}$ 矩阵的若尔当形为 $${shown.join(" \\oplus ")}$。求最小的 $k$，使对 $\\lambda = ${lam}$ 的每个广义特征向量 $\\mathbf{v}$ 都有 $(A - \\lambda I)^k\\mathbf{v} = \\mathbf{0}$。`,
           ),
           answer: ans,
-          wrong: [sizes[0]! + sizes[1]!, Math.min(...sizes), 2],
-          solution: t(
-            `The blocks for $\\lambda = ${lam}$ have sizes $${sizes[0]}$ and $${sizes[1]}$. The largest is $${ans}$, so $k = ${ans}$.`,
-            `$\\lambda = ${lam}$ 的若尔当块阶数为 $${sizes[0]}$ 和 $${sizes[1]}$。最大的为 $${ans}$，所以 $k = ${ans}$。`,
+          mistakes: [
+            why(
+              sizes[0]! + sizes[1]!,
+              "That adds the block sizes, which gives the dimension of the generalized eigenspace; the largest block decides.",
+              "这是把各块阶数相加，得到的是广义特征子空间的维数；起决定作用的是最大块。",
+            ),
+            why(
+              Math.min(...sizes),
+              "The smaller block is cleared sooner; every vector needs the largest block.",
+              "较小的块更早变为零；要对所有向量成立须看最大块。",
+            ),
+            why(
+              n,
+              "That is the size of the whole matrix, including the block of another eigenvalue.",
+              "这是整个矩阵的阶数，还包括了另一个特征值的块。",
+            ),
+          ].filter((w, i, all) => w.value !== ans && all.findIndex((o) => o.value === w.value) === i),
+          solution: walked(
+            [
+              [
+                ["Pick the blocks of $\\lambda$", "选出 $\\lambda$ 的块"],
+                t(
+                  `The blocks for $\\lambda = ${lam}$ have sizes $${sizes[0]}$ and $${sizes[1]}$; the block $J_{${other}}(${mu})$ belongs to another eigenvalue.`,
+                  `$\\lambda = ${lam}$ 的块阶数为 $${sizes[0]}$ 和 $${sizes[1]}$；块 $J_{${other}}(${mu})$ 属于另一个特征值。`,
+                ),
+              ],
+              [
+                ["Take the largest", "取最大者"],
+                t(
+                  `A block of size $m$ needs exactly $m$ applications of $A - \\lambda I$, so all of them are cleared by $k = ${ans}$.`,
+                  `阶数为 $m$ 的块恰好需要作用 $m$ 次 $A - \\lambda I$，所以 $k = ${ans}$ 能使它们全部变为零。`,
+                ),
+              ],
+            ],
+            t(
+              `On $J_{${ans}}(${lam})$ the last basis vector needs all $${ans}$ steps to reach $\\mathbf{0}$, so no smaller power works.`,
+              `在 $J_{${ans}}(${lam})$ 上，最后一个基向量要经过全部 $${ans}$ 步才变为 $\\mathbf{0}$，所以更小的幂不行。`,
+            ),
           ),
         });
       },
@@ -5091,6 +5363,10 @@ export const ranksOfGeneralizedEigenvectors: TopicDef = {
     "Determine the rank of a generalized eigenvector by computing successive powers $(A - \\lambda I)^m \\mathbf{v}$.",
     "通过计算逐次幂 $(A - \\lambda I)^m \\mathbf{v}$ 确定广义特征向量的秩。",
   ),
+  intro: t(
+    "Let $A = \\begin{pmatrix} -1 & 2 & 1 \\\\ 0 & -1 & 3 \\\\ 0 & 0 & -1 \\end{pmatrix}$, so $N = A + I = \\begin{pmatrix} 0 & 2 & 1 \\\\ 0 & 0 & 3 \\\\ 0 & 0 & 0 \\end{pmatrix}$. For $\\mathbf{v} = (1, 1, 1)$: $N\\mathbf{v} = (3, 3, 0)$, $N^2\\mathbf{v} = (6, 0, 0)$ and $N^3\\mathbf{v} = \\mathbf{0}$. So $\\mathbf{v}$ has rank $3$.\n\nCheck: $N(6, 0, 0) = \\mathbf{0}$ because the first column of $N$ is zero, while $N^2\\mathbf{v} = (6, 0, 0) \\neq \\mathbf{0}$ rules out rank $2$.\n\nIn this lesson we find the rank of a generalized eigenvector by applying $A - \\lambda I$ until the zero vector appears.",
+    "设 $A = \\begin{pmatrix} -1 & 2 & 1 \\\\ 0 & -1 & 3 \\\\ 0 & 0 & -1 \\end{pmatrix}$，则 $N = A + I = \\begin{pmatrix} 0 & 2 & 1 \\\\ 0 & 0 & 3 \\\\ 0 & 0 & 0 \\end{pmatrix}$。对 $\\mathbf{v} = (1, 1, 1)$：$N\\mathbf{v} = (3, 3, 0)$，$N^2\\mathbf{v} = (6, 0, 0)$，$N^3\\mathbf{v} = \\mathbf{0}$。所以 $\\mathbf{v}$ 的秩为 $3$。\n\n检验：$N$ 的第一列为零，所以 $N(6, 0, 0) = \\mathbf{0}$；而 $N^2\\mathbf{v} = (6, 0, 0) \\neq \\mathbf{0}$ 排除了秩 $2$。\n\n本课我们反复作用 $A - \\lambda I$ 直到出现零向量，以求广义特征向量的秩。",
+  ),
   prerequisites: ["generalized-eigenvectors"],
   encompasses: [],
   xp: 14,
@@ -5099,8 +5375,8 @@ export const ranksOfGeneralizedEigenvectors: TopicDef = {
       id: "determining-rank-of-generalized-vector",
       title: t("Determining the Rank of a Generalized Vector", "确定广义特征向量的阶"),
       explanation: t(
-        "Apply the shifted matrix repeatedly to the vector and count how many applications it takes to reach the zero vector. Find the smallest positive integer $k$ such that $(A - \\lambda I)^k \\mathbf{v} = \\mathbf{0}$.",
-        "反复用平移后的矩阵作用于这个向量，数出需要作用多少次才能得到零向量。求满足 $(A - \\lambda I)^k \\mathbf{v} = \\mathbf{0}$ 的最小正整数 $k$。",
+        "Apply the shifted matrix repeatedly to the vector and count how many applications it takes to reach the zero vector. Find the smallest positive integer $k$ such that $(A - \\lambda I)^k \\mathbf{v} = \\mathbf{0}$. For example, with $A - \\lambda I = \\begin{pmatrix} 0 & 1 \\\\ 0 & 0 \\end{pmatrix}$ and $\\mathbf{v} = (0, 2)$: $(A - \\lambda I)\\mathbf{v} = (2, 0) \\neq \\mathbf{0}$ and $(A - \\lambda I)^2\\mathbf{v} = \\mathbf{0}$, so the rank is $2$.\n\n> **Watch out.** Count the applications up to and including the one that gives $\\mathbf{0}$. A nonzero vector has rank at least $1$; an eigenvector has rank $1$, not $0$.",
+        "反复用平移后的矩阵作用于这个向量，数出需要作用多少次才能得到零向量。求满足 $(A - \\lambda I)^k \\mathbf{v} = \\mathbf{0}$ 的最小正整数 $k$。例如 $A - \\lambda I = \\begin{pmatrix} 0 & 1 \\\\ 0 & 0 \\end{pmatrix}$，$\\mathbf{v} = (0, 2)$：$(A - \\lambda I)\\mathbf{v} = (2, 0) \\neq \\mathbf{0}$，$(A - \\lambda I)^2\\mathbf{v} = \\mathbf{0}$，所以秩为 $2$。\n\n> **注意。** 要数到得出 $\\mathbf{0}$ 的那一次为止，并把它算在内。非零向量的秩至少为 $1$；特征向量的秩是 $1$，不是 $0$。",
       ),
       generate: (rng: Rng): Problem => {
         const lambda = rng.nonZero(-3, 3);
@@ -5126,15 +5402,44 @@ export const ranksOfGeneralizedEigenvectors: TopicDef = {
           `对于矩阵 $A = ${mat3Latex(mat)}$（特征值 $\\lambda = ${lambda}$），求广义特征向量 $v = ${vec3Latex(v)}$ 的阶（秩）。`,
         );
         const shiftStr = formatShift(lambda, "I");
-        const solution = t(
-          `We compute powers of $(A${shiftStr}) = \\begin{pmatrix} 0 & 1 & 0 \\\\ 0 & 0 & 1 \\\\ 0 & 0 & 0 \\end{pmatrix}$. The vector $v$ satisfies $(A${shiftStr})^{${rankCase}} v = 0$, while $(A${shiftStr})^{${rankCase - 1}} v \\neq 0$. Therefore, the rank is ${rankCase}.`,
-          `计算 $(A${shiftStr}) = \\begin{pmatrix} 0 & 1 & 0 \\\\ 0 & 0 & 1 \\\\ 0 & 0 & 0 \\end{pmatrix}$ 对向量 $v$ 的作用。可知 $(A${shiftStr})^{${rankCase}} v = 0$，且 $(A${shiftStr})^{${rankCase - 1}} v \\neq 0$。因此阶为 $${rankCase}$。`,
+        const shift = (x: Vec3): Vec3 => [x[1], x[2], 0];
+        const powers: Vec3[] = [v];
+        for (let j = 1; j <= rankCase; j++) powers.push(shift(powers[j - 1]!));
+        const solution = walked(
+          [
+            [
+              ["Shift by the eigenvalue", "按特征值平移"],
+              t("", ""),
+              [`N = A${shiftStr} = \\begin{pmatrix} 0 & 1 & 0 \\\\ 0 & 0 & 1 \\\\ 0 & 0 & 0 \\end{pmatrix}`],
+            ],
+            [
+              ["Apply $N$ until $\\mathbf{0}$", "作用 $N$ 直到得 $\\mathbf{0}$"],
+              t("$N$ moves each entry up one place:", "$N$ 把每个分量上移一位："),
+              powers.slice(1).map((p, j) => `N${j === 0 ? "" : `^{${j + 1}}`}v = ${vec3Latex(p)}`),
+            ],
+          ],
+          t(
+            `${rankCase === 1 ? "$v$ itself is nonzero" : `$N^{${rankCase - 1}}v = ${vec3Latex(powers[rankCase - 1]!)} \\neq 0$`} and $N^{${rankCase}}v = 0$, so the smallest power that reaches $0$ is $${rankCase}$.`,
+            `${rankCase === 1 ? "$v$ 本身非零" : `$N^{${rankCase - 1}}v = ${vec3Latex(powers[rankCase - 1]!)} \\neq 0$`}，而 $N^{${rankCase}}v = 0$，所以得出 $0$ 的最小幂次为 $${rankCase}$。`,
+          ),
         );
         return numberProblem({
           prompt,
           answer: rankCase,
           solution,
-          wrong: [0, 1, 2, 3, 4].filter((w) => w !== rankCase),
+          mistakes: [0, 1, 2, 3, 4]
+            .filter((w) => w !== rankCase)
+            .map((w) =>
+              w === 0
+                ? why(0, "A generalized eigenvector is nonzero, so its rank is at least $1$.", "广义特征向量非零，所以它的秩至少为 $1$。")
+                : w < rankCase
+                  ? why(w, `$N^{${w}}v = ${vec3Latex(powers[w]!)}$ is not yet $0$.`, `$N^{${w}}v = ${vec3Latex(powers[w]!)}$ 还不是 $0$。`)
+                  : why(
+                      w,
+                      `$N^{${rankCase}}v$ is already $0$, so a smaller power works.`,
+                      `$N^{${rankCase}}v$ 已经是 $0$，所以更小的幂就够了。`,
+                    ),
+            ),
         });
       },
     },
@@ -5142,8 +5447,8 @@ export const ranksOfGeneralizedEigenvectors: TopicDef = {
       id: "the-rank-of-a-generalized-eigenvector-for-a-general-nilpotent-part",
       title: t("The rank of a generalized eigenvector", "广义特征向量的秩"),
       explanation: t(
-        "A generalized eigenvector $\\mathbf{v}$ for $\\lambda$ has rank $k$ when $(A - \\lambda I)^k\\mathbf{v} = \\mathbf{0}$ but $(A - \\lambda I)^{k-1}\\mathbf{v} \\ne \\mathbf{0}$. To find it, apply $N = A - \\lambda I$ repeatedly and count the steps until the result is the zero vector. An ordinary eigenvector has rank $1$.",
-        "若 $(A - \\lambda I)^k\\mathbf{v} = \\mathbf{0}$ 而 $(A - \\lambda I)^{k-1}\\mathbf{v} \\ne \\mathbf{0}$，则 $\\lambda$ 的广义特征向量 $\\mathbf{v}$ 的秩为 $k$。要求秩，反复作用 $N = A - \\lambda I$，数到结果为零向量所需的步数。普通特征向量的秩为 $1$。",
+        "A generalized eigenvector $\\mathbf{v}$ for $\\lambda$ has rank $k$ when $(A - \\lambda I)^k\\mathbf{v} = \\mathbf{0}$ but $(A - \\lambda I)^{k-1}\\mathbf{v} \\ne \\mathbf{0}$. To find it, apply $N = A - \\lambda I$ repeatedly and count the steps until the result is the zero vector. An ordinary eigenvector has rank $1$. For example, with $N = \\begin{pmatrix} 0 & 2 & 1 \\\\ 0 & 0 & 3 \\\\ 0 & 0 & 0 \\end{pmatrix}$ and $\\mathbf{v} = (0, 1, 0)$: $N\\mathbf{v} = (2, 0, 0) \\ne \\mathbf{0}$ and $N^2\\mathbf{v} = \\mathbf{0}$, so the rank is $2$.\n\n> **Watch out.** Compute each power from the actual entries of $N$; a nonzero product at one step does not tell you how many steps remain.",
+        "若 $(A - \\lambda I)^k\\mathbf{v} = \\mathbf{0}$ 而 $(A - \\lambda I)^{k-1}\\mathbf{v} \\ne \\mathbf{0}$，则 $\\lambda$ 的广义特征向量 $\\mathbf{v}$ 的秩为 $k$。要求秩，反复作用 $N = A - \\lambda I$，数到结果为零向量所需的步数。普通特征向量的秩为 $1$。例如 $N = \\begin{pmatrix} 0 & 2 & 1 \\\\ 0 & 0 & 3 \\\\ 0 & 0 & 0 \\end{pmatrix}$，$\\mathbf{v} = (0, 1, 0)$：$N\\mathbf{v} = (2, 0, 0) \\ne \\mathbf{0}$，$N^2\\mathbf{v} = \\mathbf{0}$，所以秩为 $2$。\n\n> **注意。** 每一次幂都要用 $N$ 的实际元素计算；某一步的乘积非零，并不能说明还剩几步。",
       ),
       generate(rng: Rng): Problem {
         const lam = rng.int(-4, 4);
@@ -5164,24 +5469,51 @@ export const ranksOfGeneralizedEigenvectors: TopicDef = {
               : [rng.int(1, 3) * rng.pick([-1, 1]), 0, 0];
         const Nv: Vec3 = [p * v[1] + q * v[2], r * v[2], 0];
         const N2v: Vec3 = [p * Nv[1] + q * Nv[2], 0, 0];
+        const powers = [v, Nv, N2v];
+        const N = mat3Latex([
+          [0, p, q],
+          [0, 0, r],
+          [0, 0, 0],
+        ]);
+        const lines = [`N\\mathbf{v} = ${vec3Latex(Nv)}`, ...(kind >= 2 ? [`N^2\\mathbf{v} = ${vec3Latex(N2v)}`] : [])];
         return numberProblem({
           prompt: t(
             `For $A = ${mat3Latex(A)}$ with eigenvalue $\\lambda = ${lam}$, find the rank of the generalized eigenvector $\\mathbf{v} = ${vec3Latex(v)}$.`,
             `对特征值为 $\\lambda = ${lam}$ 的 $A = ${mat3Latex(A)}$，求广义特征向量 $\\mathbf{v} = ${vec3Latex(v)}$ 的秩。`,
           ),
           answer: kind,
-          wrong: [1, 2, 3],
-          solution: t(
-            kind === 1
-              ? `With $N = A - \\lambda I$: $N\\mathbf{v} = ${vec3Latex(Nv)} = \\mathbf{0}$, so $\\mathbf{v}$ is an eigenvector: rank $1$.`
-              : kind === 2
-                ? `With $N = A - \\lambda I$: $N\\mathbf{v} = ${vec3Latex(Nv)} \\ne \\mathbf{0}$ and $N^2\\mathbf{v} = ${vec3Latex(N2v)} = \\mathbf{0}$, so the rank is $2$.`
-                : `With $N = A - \\lambda I$: $N\\mathbf{v} = ${vec3Latex(Nv)}$ and $N^2\\mathbf{v} = ${vec3Latex(N2v)} \\ne \\mathbf{0}$, while $N^3 = 0$, so the rank is $3$.`,
-            kind === 1
-              ? `令 $N = A - \\lambda I$，$N\\mathbf{v} = ${vec3Latex(Nv)} = \\mathbf{0}$，所以 $\\mathbf{v}$ 是特征向量：秩为 $1$。`
-              : kind === 2
-                ? `令 $N = A - \\lambda I$：$N\\mathbf{v} = ${vec3Latex(Nv)} \\ne \\mathbf{0}$，$N^2\\mathbf{v} = ${vec3Latex(N2v)} = \\mathbf{0}$，所以秩为 $2$。`
-                : `令 $N = A - \\lambda I$：$N\\mathbf{v} = ${vec3Latex(Nv)}$，$N^2\\mathbf{v} = ${vec3Latex(N2v)} \\ne \\mathbf{0}$，而 $N^3 = 0$，所以秩为 $3$。`,
+          mistakes: [1, 2, 3]
+            .filter((w) => w !== kind)
+            .map((w) =>
+              w < kind
+                ? why(
+                    w,
+                    `$N^{${w}}\\mathbf{v} = ${vec3Latex(powers[w]!)}$ is not yet $\\mathbf{0}$.`,
+                    `$N^{${w}}\\mathbf{v} = ${vec3Latex(powers[w]!)}$ 还不是 $\\mathbf{0}$。`,
+                  )
+                : why(
+                    w,
+                    `$N^{${kind}}\\mathbf{v}$ is already $\\mathbf{0}$, so a smaller power works.`,
+                    `$N^{${kind}}\\mathbf{v}$ 已经是 $\\mathbf{0}$，所以更小的幂就够了。`,
+                  ),
+            ),
+          solution: walked(
+            [
+              [["Shift by the eigenvalue", "按特征值平移"], t("", ""), [`N = A - \\lambda I = ${N}`]],
+              [["Apply $N$ repeatedly", "反复作用 $N$"], t("", ""), lines],
+            ],
+            t(
+              kind === 1
+                ? "$N\\mathbf{v} = \\mathbf{0}$ with $\\mathbf{v} \\ne \\mathbf{0}$, so $\\mathbf{v}$ is an eigenvector: rank $1$."
+                : kind === 2
+                  ? "$N\\mathbf{v} \\ne \\mathbf{0}$ and $N^2\\mathbf{v} = \\mathbf{0}$, so the rank is $2$."
+                  : "$N^2\\mathbf{v} \\ne \\mathbf{0}$, while $N^3 = 0$ for this strictly upper triangular $N$, so the rank is $3$.",
+              kind === 1
+                ? "$N\\mathbf{v} = \\mathbf{0}$ 且 $\\mathbf{v} \\ne \\mathbf{0}$，所以 $\\mathbf{v}$ 是特征向量：秩为 $1$。"
+                : kind === 2
+                  ? "$N\\mathbf{v} \\ne \\mathbf{0}$，$N^2\\mathbf{v} = \\mathbf{0}$，所以秩为 $2$。"
+                  : "$N^2\\mathbf{v} \\ne \\mathbf{0}$，而对这个严格上三角的 $N$ 有 $N^3 = 0$，所以秩为 $3$。",
+            ),
           ),
         });
       },
@@ -5197,6 +5529,10 @@ export const findingGeneralizedEigenvectorsOfSpecificRanks: TopicDef = {
     "Solve $(A - \\lambda I)\\mathbf{v}_2 = \\mathbf{v}_1$ to find rank-2 generalized eigenvectors and build Jordan chains.",
     "通过求解 $(A - \\lambda I)\\mathbf{v}_2 = \\mathbf{v}_1$ 寻找秩为 2 的广义特征向量，并构造若尔当链。",
   ),
+  intro: t(
+    "The matrix $A = \\begin{pmatrix} 2 & 3 \\\\ 0 & 2 \\end{pmatrix}$ has eigenvalue $2$ with eigenvector $\\mathbf{v}_1 = (3, 0)$. To find a rank-$2$ vector, solve $(A - 2I)\\mathbf{v}_2 = \\mathbf{v}_1$: the system $\\begin{pmatrix} 0 & 3 \\\\ 0 & 0 \\end{pmatrix}\\begin{pmatrix} x \\\\ y \\end{pmatrix} = \\begin{pmatrix} 3 \\\\ 0 \\end{pmatrix}$ gives $y = 1$, so $\\mathbf{v}_2 = (0, 1)$ works.\n\nCheck: $(A - 2I)(0, 1) = (3, 0) = \\mathbf{v}_1 \\neq \\mathbf{0}$ and $(A - 2I)\\mathbf{v}_1 = \\mathbf{0}$, so $\\mathbf{v}_2$ has rank $2$.\n\nIn this lesson we solve for generalized eigenvectors of rank $2$ and build a Jordan chain down from a vector of rank $3$.",
+    "矩阵 $A = \\begin{pmatrix} 2 & 3 \\\\ 0 & 2 \\end{pmatrix}$ 有特征值 $2$ 和特征向量 $\\mathbf{v}_1 = (3, 0)$。要找秩为 $2$ 的向量，解 $(A - 2I)\\mathbf{v}_2 = \\mathbf{v}_1$：方程组 $\\begin{pmatrix} 0 & 3 \\\\ 0 & 0 \\end{pmatrix}\\begin{pmatrix} x \\\\ y \\end{pmatrix} = \\begin{pmatrix} 3 \\\\ 0 \\end{pmatrix}$ 给出 $y = 1$，所以可取 $\\mathbf{v}_2 = (0, 1)$。\n\n检验：$(A - 2I)(0, 1) = (3, 0) = \\mathbf{v}_1 \\neq \\mathbf{0}$，且 $(A - 2I)\\mathbf{v}_1 = \\mathbf{0}$，所以 $\\mathbf{v}_2$ 的秩为 $2$。\n\n本课我们求秩为 $2$ 的广义特征向量，并由秩为 $3$ 的向量向下构造若尔当链。",
+  ),
   prerequisites: ["ranks-of-generalized-eigenvectors"],
   encompasses: [],
   xp: 14,
@@ -5205,8 +5541,8 @@ export const findingGeneralizedEigenvectorsOfSpecificRanks: TopicDef = {
       id: "solving-for-rank-2-generalized-eigenvector-kp",
       title: t("Solving for Rank-2 Generalized Eigenvectors", "求解 2 阶广义特征向量"),
       explanation: t(
-        "A generalized eigenvector of rank two is a vector that the shifted matrix sends to an ordinary eigenvector, so solve a linear system with that eigenvector on the right. Solve $(A - \\lambda I)\\mathbf{v}_2 = \\mathbf{v}_1$, where $\\mathbf{v}_1$ is an ordinary eigenvector.",
-        "二阶广义特征向量被平移矩阵映射为一个普通特征向量，所以要解右边为该特征向量的线性方程组。求解 $(A - \\lambda I)\\mathbf{v}_2 = \\mathbf{v}_1$，其中 $\\mathbf{v}_1$ 为普通特征向量。",
+        "A generalized eigenvector of rank two is a vector that the shifted matrix sends to an ordinary eigenvector, so solve a linear system with that eigenvector on the right. Solve $(A - \\lambda I)\\mathbf{v}_2 = \\mathbf{v}_1$, where $\\mathbf{v}_1$ is an ordinary eigenvector. For example, $A = \\begin{pmatrix} 2 & 3 \\\\ 0 & 2 \\end{pmatrix}$ has $\\mathbf{v}_1 = (3, 0)$, and $(A - 2I)\\mathbf{v}_2 = \\mathbf{v}_1$ reads $3y = 3$, so $\\mathbf{v}_2 = (0, 1)$.\n\n> **Watch out.** The right side is $\\mathbf{v}_1$, not $\\mathbf{0}$: solving $(A - \\lambda I)\\mathbf{v} = \\mathbf{0}$ only gives eigenvectors again.",
+        "二阶广义特征向量被平移矩阵映射为一个普通特征向量，所以要解右边为该特征向量的线性方程组。求解 $(A - \\lambda I)\\mathbf{v}_2 = \\mathbf{v}_1$，其中 $\\mathbf{v}_1$ 为普通特征向量。例如 $A = \\begin{pmatrix} 2 & 3 \\\\ 0 & 2 \\end{pmatrix}$ 有 $\\mathbf{v}_1 = (3, 0)$，$(A - 2I)\\mathbf{v}_2 = \\mathbf{v}_1$ 化为 $3y = 3$，所以 $\\mathbf{v}_2 = (0, 1)$。\n\n> **注意。** 右边是 $\\mathbf{v}_1$，不是 $\\mathbf{0}$：解 $(A - \\lambda I)\\mathbf{v} = \\mathbf{0}$ 只会再次得到特征向量。",
       ),
       generate: (rng: Rng): Problem => {
         const lambda = rng.nonZero(-5, 5);
@@ -5226,30 +5562,64 @@ export const findingGeneralizedEigenvectorsOfSpecificRanks: TopicDef = {
           `Let $A = ${mat2Latex(mat)}$ have eigenvalue $\\lambda = ${lambda}$ with eigenvector $v_1 = ${vec2Latex(v1)}$. Find a rank-$2$ generalized eigenvector $\\mathbf{v}_2 = \\langle x, y \\rangle$ satisfying $(A${shiftStr})\\mathbf{v}_2 = v_1$ whose first component is $x = 0$.`,
           `设 $A = ${mat2Latex(mat)}$ 具有特征值 $\\lambda = ${lambda}$，其特征向量为 $v_1 = ${vec2Latex(v1)}$。求满足 $(A${shiftStr})\\mathbf{v}_2 = v_1$ 且第一分量为 $x = 0$ 的 $2$ 阶广义特征向量 $\\mathbf{v}_2 = \\langle x, y \\rangle$。`,
         );
-        const solution = t(
-          `We solve $(A${shiftStr})\\mathbf{v}_2 = v_1$: $\\begin{pmatrix} 0 & ${k} \\\\ 0 & 0 \\end{pmatrix} \\begin{pmatrix} x \\\\ y \\end{pmatrix} = \\begin{pmatrix} ${k} \\\\ 0 \\end{pmatrix}$, which requires $${k}y = ${k}$, so $y = 1$. With $x = 0$, $\\mathbf{v}_2 = \\langle 0, 1 \\rangle$.`,
-          `求解方程 $(A${shiftStr})\\mathbf{v}_2 = v_1$：$\\begin{pmatrix} 0 & ${k} \\\\ 0 & 0 \\end{pmatrix} \\begin{pmatrix} x \\\\ y \\end{pmatrix} = \\begin{pmatrix} ${k} \\\\ 0 \\end{pmatrix}$，要求 $${k}y = ${k}$，故 $y = 1$。取 $x = 0$，得到 $\\mathbf{v}_2 = \\langle 0, 1 \\rangle$。`,
-        );
-        return pointProblem({
-          prompt,
-          answer: [0, 1],
-          vector: true,
-          solution,
-          wrong: [
-            [1, 0],
-            [1, 1],
-            [0, k],
-            [k, 0],
+        const solution = walked(
+          [
+            [
+              ["Write the system", "写出方程组"],
+              t("", ""),
+              [
+                `\\begin{pmatrix} 0 & ${k} \\\\ 0 & 0 \\end{pmatrix} \\begin{pmatrix} x \\\\ y \\end{pmatrix} = \\begin{pmatrix} ${k} \\\\ 0 \\end{pmatrix}`,
+              ],
+            ],
+            [
+              ["Solve", "求解"],
+              t(
+                `The first row requires $${k}y = ${k}$, so $y = 1$; the second row holds for every vector. With $x = 0$, $\\mathbf{v}_2 = \\langle 0, 1 \\rangle$.`,
+                `第一行要求 $${k}y = ${k}$，所以 $y = 1$；第二行对任何向量都成立。取 $x = 0$，得 $\\mathbf{v}_2 = \\langle 0, 1 \\rangle$。`,
+              ),
+            ],
           ],
-        });
+          t(
+            `$(A${shiftStr})\\langle 0, 1 \\rangle = \\langle ${k}, 0 \\rangle = v_1 \\neq 0$ and $(A${shiftStr})v_1 = 0$, so $\\langle 0, 1 \\rangle$ has rank $2$.`,
+            `$(A${shiftStr})\\langle 0, 1 \\rangle = \\langle ${k}, 0 \\rangle = v_1 \\neq 0$，且 $(A${shiftStr})v_1 = 0$，所以 $\\langle 0, 1 \\rangle$ 的秩为 $2$。`,
+          ),
+        );
+        return withMistakes(
+          pointProblem({ prompt, answer: [0, 1], vector: true, solution }),
+          dedupeSaid(
+            [
+              say(
+                vectorLatex([1, 0]),
+                "That is an eigenvector: $A - \\lambda I$ sends it to $0$, not to $v_1$.",
+                "这是特征向量：$A - \\lambda I$ 把它变为 $0$，而不是 $v_1$。",
+              ),
+              say(
+                vectorLatex([1, 1]),
+                "This solves the system, but its first component is $1$, not $0$.",
+                "它满足方程组，但第一分量是 $1$，不是 $0$。",
+              ),
+              say(
+                vectorLatex([0, k]),
+                `$A - \\lambda I$ sends this to $\\langle ${k * k}, 0 \\rangle$, which is $${k}v_1$, not $v_1$.`,
+                `$A - \\lambda I$ 把它变为 $\\langle ${k * k}, 0 \\rangle$，即 $${k}v_1$，而不是 $v_1$。`,
+              ),
+              say(
+                vectorLatex([k, 0]),
+                "That is $v_1$ itself, which $A - \\lambda I$ sends to $0$.",
+                "这就是 $v_1$ 本身，$A - \\lambda I$ 把它变为 $0$。",
+              ),
+            ],
+            vectorLatex([0, 1]),
+          ),
+        );
       },
     },
     {
       id: "building-a-jordan-chain-from-a-rank-3-generalized-eigenvector",
       title: t("Building a Jordan chain from a rank-3 vector", "由秩 3 向量构造若尔当链"),
       explanation: t(
-        "Once a generalized eigenvector $\\mathbf{v}_3$ of rank $3$ is known, the rest of its Jordan chain follows by multiplication: $\\mathbf{v}_2 = (A - \\lambda I)\\mathbf{v}_3$ has rank $2$ and $\\mathbf{v}_1 = (A - \\lambda I)\\mathbf{v}_2$ has rank $1$, so it is an ordinary eigenvector. Each step lowers the rank by exactly one.",
-        "一旦知道秩为 $3$ 的广义特征向量 $\\mathbf{v}_3$，其若尔当链的其余部分可由乘法得到：$\\mathbf{v}_2 = (A - \\lambda I)\\mathbf{v}_3$ 的秩为 $2$，$\\mathbf{v}_1 = (A - \\lambda I)\\mathbf{v}_2$ 的秩为 $1$，即普通特征向量。每一步秩恰好降低一。",
+        "Once a generalized eigenvector $\\mathbf{v}_3$ of rank $3$ is known, the rest of its Jordan chain follows by multiplication: $\\mathbf{v}_2 = (A - \\lambda I)\\mathbf{v}_3$ has rank $2$ and $\\mathbf{v}_1 = (A - \\lambda I)\\mathbf{v}_2$ has rank $1$, so it is an ordinary eigenvector. Each step lowers the rank by exactly one. For example, with $A - \\lambda I = \\begin{pmatrix} 0 & 1 & 0 \\\\ 0 & 0 & 2 \\\\ 0 & 0 & 0 \\end{pmatrix}$ and $\\mathbf{v}_3 = (0, 0, 1)$: $\\mathbf{v}_2 = (0, 2, 0)$ and $\\mathbf{v}_1 = (2, 0, 0)$.\n\n> **Watch out.** Multiply by $A - \\lambda I$, not by $A$. One multiplication gives $\\mathbf{v}_2$; the second gives the eigenvector $\\mathbf{v}_1$.",
+        "一旦知道秩为 $3$ 的广义特征向量 $\\mathbf{v}_3$，其若尔当链的其余部分可由乘法得到：$\\mathbf{v}_2 = (A - \\lambda I)\\mathbf{v}_3$ 的秩为 $2$，$\\mathbf{v}_1 = (A - \\lambda I)\\mathbf{v}_2$ 的秩为 $1$，即普通特征向量。每一步秩恰好降低一。例如 $A - \\lambda I = \\begin{pmatrix} 0 & 1 & 0 \\\\ 0 & 0 & 2 \\\\ 0 & 0 & 0 \\end{pmatrix}$，$\\mathbf{v}_3 = (0, 0, 1)$：$\\mathbf{v}_2 = (0, 2, 0)$，$\\mathbf{v}_1 = (2, 0, 0)$。\n\n> **注意。** 要乘 $A - \\lambda I$，而不是 $A$。乘一次得到 $\\mathbf{v}_2$；乘第二次得到特征向量 $\\mathbf{v}_1$。",
       ),
       generate(rng: Rng): Problem {
         const lam = rng.int(-4, 4);
@@ -5264,31 +5634,65 @@ export const findingGeneralizedEigenvectorsOfSpecificRanks: TopicDef = {
         const v3: Vec3 = [rng.int(-2, 2), rng.int(-2, 2), rng.int(1, 2) * rng.pick([-1, 1])];
         const v2: Vec3 = [p * v3[1] + q * v3[2], r * v3[2], 0];
         const v1: Vec3 = [p * v2[1], 0, 0];
-        return pointProblem({
-          prompt: t(
-            `$A = ${mat3Latex(A)}$ has the single eigenvalue $\\lambda = ${lam}$, and $\\mathbf{v}_3 = ${vec3Latex(v3)}$ is a generalized eigenvector of rank $3$. Find $\\mathbf{v}_2 = (A - \\lambda I)\\mathbf{v}_3$.`,
-            `$A = ${mat3Latex(A)}$ 只有特征值 $\\lambda = ${lam}$，$\\mathbf{v}_3 = ${vec3Latex(v3)}$ 是秩为 $3$ 的广义特征向量。求 $\\mathbf{v}_2 = (A - \\lambda I)\\mathbf{v}_3$。`,
+        const answer = vectorLatex([v2[0], v2[1], v2[2]]);
+        return withMistakes(
+          pointProblem({
+            prompt: t(
+              `$A = ${mat3Latex(A)}$ has the single eigenvalue $\\lambda = ${lam}$, and $\\mathbf{v}_3 = ${vec3Latex(v3)}$ is a generalized eigenvector of rank $3$. Find $\\mathbf{v}_2 = (A - \\lambda I)\\mathbf{v}_3$.`,
+              `$A = ${mat3Latex(A)}$ 只有特征值 $\\lambda = ${lam}$，$\\mathbf{v}_3 = ${vec3Latex(v3)}$ 是秩为 $3$ 的广义特征向量。求 $\\mathbf{v}_2 = (A - \\lambda I)\\mathbf{v}_3$。`,
+            ),
+            answer: [v2[0], v2[1], v2[2]],
+            vector: true,
+            solution: walked(
+              [
+                [
+                  ["Shift by the eigenvalue", "按特征值平移"],
+                  t("", ""),
+                  [
+                    `A - \\lambda I = ${mat3Latex([
+                      [0, p, q],
+                      [0, 0, r],
+                      [0, 0, 0],
+                    ])}`,
+                  ],
+                ],
+                [
+                  ["Multiply by $\\mathbf{v}_3$", "乘以 $\\mathbf{v}_3$"],
+                  t("Row by row:", "逐行计算："),
+                  [
+                    `${paren(p)} \\cdot ${paren(v3[1])} + ${paren(q)} \\cdot ${paren(v3[2])} = ${v2[0]}`,
+                    `${paren(r)} \\cdot ${paren(v3[2])} = ${v2[1]}`,
+                    `\\mathbf{v}_2 = ${vec3Latex(v2)}`,
+                  ],
+                ],
+              ],
+              t(
+                `One more step gives $\\mathbf{v}_1 = (A - \\lambda I)\\mathbf{v}_2 = ${vec3Latex(v1)} \\neq \\mathbf{0}$, and $(A - \\lambda I)\\mathbf{v}_1 = \\mathbf{0}$, so $\\mathbf{v}_1$ is an eigenvector and $\\mathbf{v}_2$ has rank $2$.`,
+                `再作用一次得到 $\\mathbf{v}_1 = (A - \\lambda I)\\mathbf{v}_2 = ${vec3Latex(v1)} \\neq \\mathbf{0}$，且 $(A - \\lambda I)\\mathbf{v}_1 = \\mathbf{0}$，所以 $\\mathbf{v}_1$ 是特征向量，$\\mathbf{v}_2$ 的秩为 $2$。`,
+              ),
+            ),
+          }),
+          dedupeSaid(
+            [
+              say(
+                vectorLatex([v1[0], 0, 0]),
+                "That is $\\mathbf{v}_1 = (A - \\lambda I)^2\\mathbf{v}_3$, one step too far.",
+                "这是 $\\mathbf{v}_1 = (A - \\lambda I)^2\\mathbf{v}_3$，多算了一步。",
+              ),
+              say(
+                vectorLatex([q * v3[1] + p * v3[2], r * v3[2], 0]),
+                "The entries of the first row were used in swapped places; multiply each entry by the matching component.",
+                "第一行的元素用错了位置；每个元素要乘以对应的分量。",
+              ),
+              say(
+                vectorLatex([p * v3[1] + q * v3[2] + lam * v3[0], r * v3[2] + lam * v3[1], lam * v3[2]]),
+                "That is $A\\mathbf{v}_3$; subtract $\\lambda I$ first and multiply by $A - \\lambda I$.",
+                "这是 $A\\mathbf{v}_3$；要先减去 $\\lambda I$，再乘以 $A - \\lambda I$。",
+              ),
+            ],
+            answer,
           ),
-          answer: [v2[0], v2[1], v2[2]],
-          vector: true,
-          wrong: [
-            [v1[0], 0, 0],
-            [q * v3[1] + p * v3[2], r * v3[2], 0],
-            [p * v3[1] + q * v3[2] + lam * v3[0], r * v3[2] + lam * v3[1], lam * v3[2]],
-          ],
-          solution: t(
-            `$A - \\lambda I = ${mat3Latex([
-              [0, p, q],
-              [0, 0, r],
-              [0, 0, 0],
-            ])}$, so $\\mathbf{v}_2 = ${vec3Latex(v2)}$. One more step gives the eigenvector $\\mathbf{v}_1 = ${vec3Latex(v1)}$.`,
-            `$A - \\lambda I = ${mat3Latex([
-              [0, p, q],
-              [0, 0, r],
-              [0, 0, 0],
-            ])}$，所以 $\\mathbf{v}_2 = ${vec3Latex(v2)}$。再作用一次得到特征向量 $\\mathbf{v}_1 = ${vec3Latex(v1)}$。`,
-          ),
-        });
+        );
       },
     },
   ],
@@ -5306,6 +5710,10 @@ export const jordanBlocksAndJordanMatrices: TopicDef = {
     "Understand the structure of a Jordan block $J_k(\\lambda)$, with $\\lambda$ on the diagonal and $1$ on the superdiagonal.",
     "理解主对角线上为 $\\lambda$、上对角线上为 $1$ 的若尔当块 $J_k(\\lambda)$ 的结构。",
   ),
+  intro: t(
+    "The Jordan matrix $J = J_2(4) \\oplus J_1(4) = \\begin{pmatrix} 4 & 1 & 0 \\\\ 0 & 4 & 0 \\\\ 0 & 0 & 4 \\end{pmatrix}$ has two blocks for the eigenvalue $4$. Then $J - 4I = \\begin{pmatrix} 0 & 1 & 0 \\\\ 0 & 0 & 0 \\\\ 0 & 0 & 0 \\end{pmatrix}$ has rank $1$, so the eigenspace of $4$ has dimension $3 - 1 = 2$, one direction per block.\n\nCheck: $(J - 4I)\\mathbf{e}_1 = \\mathbf{0}$ and $(J - 4I)\\mathbf{e}_3 = \\mathbf{0}$, two independent eigenvectors, while $(J - 4I)\\mathbf{e}_2 = \\mathbf{e}_1 \\neq \\mathbf{0}$.\n\nIn this lesson we recognize Jordan blocks and Jordan matrices and find the rank of $J - \\lambda I$ from the blocks.",
+    "若尔当矩阵 $J = J_2(4) \\oplus J_1(4) = \\begin{pmatrix} 4 & 1 & 0 \\\\ 0 & 4 & 0 \\\\ 0 & 0 & 4 \\end{pmatrix}$ 对特征值 $4$ 有两个块。于是 $J - 4I = \\begin{pmatrix} 0 & 1 & 0 \\\\ 0 & 0 & 0 \\\\ 0 & 0 & 0 \\end{pmatrix}$ 的秩为 $1$，所以 $4$ 的特征空间维数为 $3 - 1 = 2$，每个块一个方向。\n\n检验：$(J - 4I)\\mathbf{e}_1 = \\mathbf{0}$，$(J - 4I)\\mathbf{e}_3 = \\mathbf{0}$，是两个线性无关的特征向量；而 $(J - 4I)\\mathbf{e}_2 = \\mathbf{e}_1 \\neq \\mathbf{0}$。\n\n本课我们识别若尔当块与若尔当矩阵，并由各块求出 $J - \\lambda I$ 的秩。",
+  ),
   prerequisites: ["finding-generalized-eigenvectors-of-specific-ranks"],
   encompasses: [],
   xp: 14,
@@ -5314,174 +5722,124 @@ export const jordanBlocksAndJordanMatrices: TopicDef = {
       id: "jordan-block-structure-definition",
       title: t("Jordan Block Structure Definition", "若尔当块的结构定义"),
       explanation: t(
-        "A Jordan block has one eigenvalue repeated down the diagonal and ones just above it, and a Jordan matrix places such blocks along the diagonal. Identify Jordan blocks and block diagonal Jordan matrices.",
-        "若尔当块的对角线上是同一个重复的特征值，紧挨着对角线上方是 1，若尔当矩阵则把这样的块沿对角线排列。识别若尔当块及分块对角的若尔当矩阵。",
+        "A Jordan block has one eigenvalue repeated down the diagonal and ones just above it, and a Jordan matrix places such blocks along the diagonal. Identify Jordan blocks and block diagonal Jordan matrices. For example, $J_2(5) = \\begin{pmatrix} 5 & 1 \\\\ 0 & 5 \\end{pmatrix}$, and $J_2(5) \\oplus J_1(-1) = \\begin{pmatrix} 5 & 1 & 0 \\\\ 0 & 5 & 0 \\\\ 0 & 0 & -1 \\end{pmatrix}$.\n\n> **Watch out.** The ones sit on the superdiagonal, just above the diagonal, never below it and never further out. $\\lambda I$ has no ones at all: it is a sum of $1 \\times 1$ blocks, not one large block.",
+        "若尔当块的对角线上是同一个重复的特征值，紧挨着对角线上方是 1，若尔当矩阵则把这样的块沿对角线排列。识别若尔当块及分块对角的若尔当矩阵。例如 $J_2(5) = \\begin{pmatrix} 5 & 1 \\\\ 0 & 5 \\end{pmatrix}$，$J_2(5) \\oplus J_1(-1) = \\begin{pmatrix} 5 & 1 & 0 \\\\ 0 & 5 & 0 \\\\ 0 & 0 & -1 \\end{pmatrix}$。\n\n> **注意。** 1 位于上对角线，紧挨在对角线上方，既不在下方，也不在更远处。$\\lambda I$ 中根本没有 1：它是若干 $1 \\times 1$ 块之和，而不是一个大块。",
       ),
       generate: (rng: Rng): Problem => {
         const lambda = rng.int(-8, 8);
         const isDim2 = rng.bool();
-        if (isDim2) {
-          const prompt = t(
-            `Which of the following matrices represents a $2 \\times 2$ Jordan block $J_2(${lambda})$ associated with eigenvalue $\\lambda = ${lambda}$?`,
-            `下列哪个矩阵表示对应特征值 $\\lambda = ${lambda}$ 的 $2 \\times 2$ 若尔当块 $J_2(${lambda})$？`,
-          );
-          const right = t(
-            `$${mat2Latex([
+        const m2 = (x: Mat2): Text => t(`$${mat2Latex(x)}$`, `$${mat2Latex(x)}$`);
+        const m3 = (x: Mat3): Text => t(`$${mat3Latex(x)}$`, `$${mat3Latex(x)}$`);
+        const size = isDim2 ? 2 : 3;
+        const block = isDim2
+          ? mat2Latex([
               [lambda, 1],
               [0, lambda],
-            ])}$`,
-            `$${mat2Latex([
-              [lambda, 1],
-              [0, lambda],
-            ])}$`,
-          );
-          const wrong = [
-            t(
-              `$${mat2Latex([
-                [lambda, 0],
-                [1, lambda],
-              ])}$`,
-              `$${mat2Latex([
-                [lambda, 0],
-                [1, lambda],
-              ])}$`,
-            ),
-            t(
-              `$${mat2Latex([
-                [lambda, 0],
-                [0, lambda],
-              ])}$`,
-              `$${mat2Latex([
-                [lambda, 0],
-                [0, lambda],
-              ])}$`,
-            ),
-            t(
-              `$${mat2Latex([
-                [1, lambda],
-                [0, 1],
-              ])}$`,
-              `$${mat2Latex([
-                [1, lambda],
-                [0, 1],
-              ])}$`,
-            ),
-            t(
-              `$${mat2Latex([
-                [lambda, 1],
-                [1, lambda],
-              ])}$`,
-              `$${mat2Latex([
-                [lambda, 1],
-                [1, lambda],
-              ])}$`,
-            ),
-          ];
-          const solution = t(
-            `A standard Jordan block $J_2(${lambda})$ has $${lambda}$ on the main diagonal, $1$ on the superdiagonal, and $0$ on the subdiagonal: $J_2(${lambda}) = ${mat2Latex(
-              [
-                [lambda, 1],
-                [0, lambda],
-              ],
-            )}$.`,
-            `标准若尔当块 $J_2(${lambda})$ 的主对角线上为 $${lambda}$，上对角线上为 $1$，下对角线上为 $0$：$J_2(${lambda}) = ${mat2Latex([
-              [lambda, 1],
-              [0, lambda],
-            ])}$。`,
-          );
-          return oneOf(rng, prompt, right, wrong, solution);
-        }
+            ])
+          : mat3Latex([
+              [lambda, 1, 0],
+              [0, lambda, 1],
+              [0, 0, lambda],
+            ]);
         const prompt = t(
-          `Which of the following matrices represents a $3 \\times 3$ Jordan block $J_3(${lambda})$ associated with eigenvalue $\\lambda = ${lambda}$?`,
-          `下列哪个矩阵表示对应特征值 $\\lambda = ${lambda}$ 的 $3 \\times 3$ 若尔当块 $J_3(${lambda})$？`,
+          `Which of the following matrices represents a $${size} \\times ${size}$ Jordan block $J_${size}(${lambda})$ associated with eigenvalue $\\lambda = ${lambda}$?`,
+          `下列哪个矩阵表示对应特征值 $\\lambda = ${lambda}$ 的 $${size} \\times ${size}$ 若尔当块 $J_${size}(${lambda})$？`,
         );
-        const right = t(
-          `$${mat3Latex([
-            [lambda, 1, 0],
-            [0, lambda, 1],
-            [0, 0, lambda],
-          ])}$`,
-          `$${mat3Latex([
-            [lambda, 1, 0],
-            [0, lambda, 1],
-            [0, 0, lambda],
-          ])}$`,
-        );
-        const wrong = [
-          t(
-            `$${mat3Latex([
-              [lambda, 0, 0],
-              [1, lambda, 0],
-              [0, 1, lambda],
-            ])}$`,
-            `$${mat3Latex([
-              [lambda, 0, 0],
-              [1, lambda, 0],
-              [0, 1, lambda],
-            ])}$`,
-          ),
-          t(
-            `$${mat3Latex([
-              [lambda, 0, 0],
-              [0, lambda, 0],
-              [0, 0, lambda],
-            ])}$`,
-            `$${mat3Latex([
-              [lambda, 0, 0],
-              [0, lambda, 0],
-              [0, 0, lambda],
-            ])}$`,
-          ),
-          t(
-            `$${mat3Latex([
-              [1, lambda, 0],
-              [0, 1, lambda],
-              [0, 0, 1],
-            ])}$`,
-            `$${mat3Latex([
-              [1, lambda, 0],
-              [0, 1, lambda],
-              [0, 0, 1],
-            ])}$`,
-          ),
-          t(
-            `$${mat3Latex([
-              [lambda, 1, 1],
-              [0, lambda, 1],
-              [0, 0, lambda],
-            ])}$`,
-            `$${mat3Latex([
-              [lambda, 1, 1],
-              [0, lambda, 1],
-              [0, 0, lambda],
-            ])}$`,
-          ),
-        ];
-        const solution = t(
-          `A standard Jordan block $J_k(\\lambda)$ has $\\lambda$ on the main diagonal, $1$s on the superdiagonal directly above the main diagonal, and $0$ elsewhere. Thus, $J_3(${lambda}) = ${mat3Latex(
+        const right = t(`$${block}$`, `$${block}$`);
+        const wrong = isDim2
+          ? [
+              m2([
+                [lambda, 0],
+                [1, lambda],
+              ]),
+              m2([
+                [lambda, 0],
+                [0, lambda],
+              ]),
+              m2([
+                [1, lambda],
+                [0, 1],
+              ]),
+              m2([
+                [lambda, 1],
+                [1, lambda],
+              ]),
+            ]
+          : [
+              m3([
+                [lambda, 0, 0],
+                [1, lambda, 0],
+                [0, 1, lambda],
+              ]),
+              m3([
+                [lambda, 0, 0],
+                [0, lambda, 0],
+                [0, 0, lambda],
+              ]),
+              m3([
+                [1, lambda, 0],
+                [0, 1, lambda],
+                [0, 0, 1],
+              ]),
+              m3([
+                [lambda, 1, 1],
+                [0, lambda, 1],
+                [0, 0, lambda],
+              ]),
+            ];
+        const shifted = isDim2
+          ? "\\begin{pmatrix} 0 & 1 \\\\ 0 & 0 \\end{pmatrix}"
+          : "\\begin{pmatrix} 0 & 1 & 0 \\\\ 0 & 0 & 1 \\\\ 0 & 0 & 0 \\end{pmatrix}";
+        const solution = walked(
+          [
             [
-              [lambda, 1, 0],
-              [0, lambda, 1],
-              [0, 0, lambda],
+              ["Fill the diagonal", "填对角线"],
+              t(
+                `Every diagonal entry of $J_${size}(${lambda})$ is the eigenvalue $${lambda}$.`,
+                `$J_${size}(${lambda})$ 的每个对角元都是特征值 $${lambda}$。`,
+              ),
             ],
-          )}$.`,
-          `标准若尔当块 $J_k(\\lambda)$ 的主对角线上全为 $\\lambda$，紧邻主对角线上方的上对角线上全为 $1$，其余元素均为 $0$。因此 $J_3(${lambda}) = ${mat3Latex(
             [
-              [lambda, 1, 0],
-              [0, lambda, 1],
-              [0, 0, lambda],
+              ["Put ones just above it", "在其上方放 1"],
+              t("The superdiagonal holds $1$s and every other entry is $0$:", "上对角线上为 $1$，其余元素都为 $0$："),
+              [`J_${size}(${lambda}) = ${block}`],
             ],
-          )}$。`,
+          ],
+          t(
+            `$J_${size}(${lambda}) - ${paren(lambda)}I = ${shifted}$ has rank $${size - 1}$, so there is only one eigenvector direction, as a single block requires.`,
+            `$J_${size}(${lambda}) - ${paren(lambda)}I = ${shifted}$ 的秩为 $${size - 1}$，所以只有一个特征向量方向，正符合单个块的要求。`,
+          ),
         );
-        return oneOf(rng, prompt, right, wrong, solution);
+        return reasoned(oneOf(rng, prompt, right, wrong, solution), [
+          [
+            wrong[0]!.en,
+            "The ones sit below the diagonal; in a Jordan block they sit just above it.",
+            "这里的 1 在对角线下方；若尔当块中的 1 紧挨在对角线上方。",
+          ],
+          [
+            wrong[1]!.en,
+            `This is $${paren(lambda)}I$, a sum of $1 \\times 1$ blocks, with no ones above the diagonal.`,
+            `这是 $${paren(lambda)}I$，是若干 $1 \\times 1$ 块之和，对角线上方没有 1。`,
+          ],
+          [
+            wrong[2]!.en,
+            "The eigenvalue and the ones are swapped: $\\lambda$ goes on the diagonal, $1$ just above it.",
+            "特征值和 1 的位置互换了：$\\lambda$ 应在对角线上，$1$ 紧挨在其上方。",
+          ],
+          [
+            wrong[3]!.en,
+            isDim2 ? "The entry below the diagonal must be $0$." : "The corner entry must be $0$; only the superdiagonal holds ones.",
+            isDim2 ? "对角线下方的元素必须是 $0$。" : "角上的元素必须是 $0$；只有上对角线上是 1。",
+          ],
+        ]);
       },
     },
     {
       id: "the-rank-of-a-shifted-jordan-matrix",
       title: t("The rank of a shifted Jordan matrix", "平移后若尔当矩阵的秩"),
       explanation: t(
-        "Subtracting $\\lambda I$ from a Jordan matrix turns every block $J_m(\\lambda)$ into a nilpotent block of rank $m - 1$, while blocks for other eigenvalues stay invertible and keep full rank. Adding up, $\\operatorname{rank}(J - \\lambda I) = n - (\\text{number of blocks for } \\lambda)$. Equivalently, the number of blocks for $\\lambda$ equals the dimension of its eigenspace.",
-        "从若尔当矩阵中减去 $\\lambda I$，每个块 $J_m(\\lambda)$ 变成秩为 $m - 1$ 的幂零块，而其他特征值的块仍可逆、保持满秩。相加得 $\\operatorname{rank}(J - \\lambda I) = n - (\\lambda \\text{ 的块数})$。等价地，$\\lambda$ 的块数等于其特征空间的维数。",
+        "Subtracting $\\lambda I$ from a Jordan matrix turns every block $J_m(\\lambda)$ into a nilpotent block of rank $m - 1$, while blocks for other eigenvalues stay invertible and keep full rank. Adding up, $\\operatorname{rank}(J - \\lambda I) = n - (\\text{number of blocks for } \\lambda)$. Equivalently, the number of blocks for $\\lambda$ equals the dimension of its eigenspace. For example, $J_2(3) \\oplus J_1(3) \\oplus J_2(1)$ is $5 \\times 5$ with two blocks for $3$, so $\\operatorname{rank}(J - 3I) = 5 - 2 = 3$.\n\n> **Watch out.** Subtract the number of blocks for $\\lambda$, not their total size, and leave the blocks of other eigenvalues at full rank.",
+        "从若尔当矩阵中减去 $\\lambda I$，每个块 $J_m(\\lambda)$ 变成秩为 $m - 1$ 的幂零块，而其他特征值的块仍可逆、保持满秩。相加得 $\\operatorname{rank}(J - \\lambda I) = n - (\\lambda \\text{ 的块数})$。等价地，$\\lambda$ 的块数等于其特征空间的维数。例如 $J_2(3) \\oplus J_1(3) \\oplus J_2(1)$ 为 $5 \\times 5$ 矩阵，$3$ 有两个块，所以 $\\operatorname{rank}(J - 3I) = 5 - 2 = 3$。\n\n> **注意。** 要减去 $\\lambda$ 的块数，而不是这些块的总阶数；其他特征值的块保持满秩。",
       ),
       generate(rng: Rng): Problem {
         const lam = rng.int(-3, 4);
@@ -5498,10 +5856,50 @@ export const jordanBlocksAndJordanMatrices: TopicDef = {
             `设 $J = ${blocks.join(" \\oplus ")}$。求 $\\operatorname{rank}(J${formatShift(lam)})$。`,
           ),
           answer: ans,
-          wrong: [own.length, n - ownSize, n - others.length, n],
-          solution: t(
-            `$J$ is $${n} \\times ${n}$ and has $${own.length}$ block${own.length === 1 ? "" : "s"} for $\\lambda = ${lam}$. Each loses one rank, so the rank is $${n} - ${own.length} = ${ans}$.`,
-            `$J$ 为 $${n} \\times ${n}$ 矩阵，$\\lambda = ${lam}$ 有 $${own.length}$ 个块。每个块秩减一，所以秩为 $${n} - ${own.length} = ${ans}$。`,
+          mistakes: [
+            why(
+              own.length,
+              "That is the number of blocks for $\\lambda$, which is the nullity, not the rank.",
+              "这是 $\\lambda$ 的块数，即零度，而不是秩。",
+            ),
+            why(
+              n - ownSize,
+              `That counts only the blocks of $${mu}$; each block $J_m(${lam})$ still keeps rank $m - 1$.`,
+              `这只算了 $${mu}$ 的块；每个块 $J_m(${lam})$ 仍保留秩 $m - 1$。`,
+            ),
+            why(
+              n - others.length,
+              `That subtracts the blocks of $${mu}$, which stay invertible; subtract the blocks of $${lam}$.`,
+              `这减去的是 $${mu}$ 的块，而它们仍可逆；应减去 $${lam}$ 的块。`,
+            ),
+            why(
+              n,
+              `The blocks for $${lam}$ become singular, so the rank drops below $${n}$.`,
+              `$${lam}$ 的块变为奇异，所以秩小于 $${n}$。`,
+            ),
+          ].filter((w, i, all) => w.value !== ans && all.findIndex((o) => o.value === w.value) === i),
+          solution: walked(
+            [
+              [
+                ["Count the blocks", "数块"],
+                t(
+                  `$J$ is $${n} \\times ${n}$ and has $${own.length}$ block${own.length === 1 ? "" : "s"} for $\\lambda = ${lam}$.`,
+                  `$J$ 为 $${n} \\times ${n}$ 矩阵，$\\lambda = ${lam}$ 有 $${own.length}$ 个块。`,
+                ),
+              ],
+              [
+                ["Lose one rank per block", "每块秩减一"],
+                t(
+                  `Each block $J_m(${lam})$ becomes nilpotent of rank $m - 1$, and the blocks of $${mu}$ keep full rank:`,
+                  `每个块 $J_m(${lam})$ 变成秩为 $m - 1$ 的幂零块，$${mu}$ 的块保持满秩：`,
+                ),
+                [`\\operatorname{rank}(J${formatShift(lam)}) = ${n} - ${own.length} = ${ans}`],
+              ],
+            ],
+            t(
+              `The nullity is $${own.length}$, one eigenvector per block, and $${ans} + ${own.length} = ${n}$ as rank and nullity must add up to the size.`,
+              `零度为 $${own.length}$，每个块一个特征向量；$${ans} + ${own.length} = ${n}$，秩与零度之和正等于阶数。`,
+            ),
           ),
         });
       },
@@ -5517,6 +5915,10 @@ export const jordanCanonicalFormOfA2x2Matrix: TopicDef = {
     "Determine the Jordan canonical form of a 2x2 matrix based on its eigenvalues and geometric multiplicity.",
     "根据特征值与几何重数确定 2x2 矩阵的若尔当标准型。",
   ),
+  intro: t(
+    "The matrix $A = \\begin{pmatrix} 4 & 1 \\\\ -1 & 2 \\end{pmatrix}$ has trace $6$ and determinant $8 + 1 = 9$, so its characteristic polynomial is $(\\lambda - 3)^2$. The matrix $A - 3I = \\begin{pmatrix} 1 & 1 \\\\ -1 & -1 \\end{pmatrix}$ has rank $1$, so there is only one eigenvector direction and $J = \\begin{pmatrix} 3 & 1 \\\\ 0 & 3 \\end{pmatrix}$.\n\nCheck: $\\operatorname{tr} J = 6$ and $\\det J = 9$ match $A$, and $A \\neq 3I$, so $A$ cannot be similar to the diagonal matrix $3I$.\n\nIn this lesson we decide whether a $2 \\times 2$ matrix with a repeated eigenvalue is diagonal or a single Jordan block, and find the eigenvalue in that block.",
+    "矩阵 $A = \\begin{pmatrix} 4 & 1 \\\\ -1 & 2 \\end{pmatrix}$ 的迹为 $6$，行列式为 $8 + 1 = 9$，所以特征多项式为 $(\\lambda - 3)^2$。矩阵 $A - 3I = \\begin{pmatrix} 1 & 1 \\\\ -1 & -1 \\end{pmatrix}$ 的秩为 $1$，所以只有一个特征向量方向，$J = \\begin{pmatrix} 3 & 1 \\\\ 0 & 3 \\end{pmatrix}$。\n\n检验：$\\operatorname{tr} J = 6$，$\\det J = 9$，与 $A$ 一致；而 $A \\neq 3I$，所以 $A$ 不可能相似于对角矩阵 $3I$。\n\n本课我们判断有重特征值的 $2 \\times 2$ 矩阵是对角形还是单个若尔当块，并求出该块中的特征值。",
+  ),
   prerequisites: ["jordan-blocks-and-jordan-matrices"],
   encompasses: [],
   xp: 14,
@@ -5525,8 +5927,8 @@ export const jordanCanonicalFormOfA2x2Matrix: TopicDef = {
       id: "determining-jordan-form-2x2-kp",
       title: t("Determining the Jordan Form of a 2x2 Matrix", "确定 2x2 矩阵的若尔当标准型"),
       explanation: t(
-        "A two by two matrix with a repeated eigenvalue is diagonalizable only if it is already a multiple of the identity; otherwise it is similar to a single Jordan block. Distinguish diagonalizable $2 \\times 2$ matrices from those similar to a single Jordan block $\\begin{bmatrix} \\lambda & 1 \\\\ 0 & \\lambda \\end{bmatrix}$.",
-        "有重复特征值的二阶矩阵只有本身就是单位矩阵的倍数时才能对角化，否则它与一个若尔当块相似。区分可对角化的 $2 \\times 2$ 矩阵与相似于单个若尔当块 $\\begin{bmatrix} \\lambda & 1 \\\\ 0 & \\lambda \\end{bmatrix}$ 的矩阵。",
+        "A two by two matrix with a repeated eigenvalue is diagonalizable only if it is already a multiple of the identity; otherwise it is similar to a single Jordan block. Distinguish diagonalizable $2 \\times 2$ matrices from those similar to a single Jordan block $\\begin{bmatrix} \\lambda & 1 \\\\ 0 & \\lambda \\end{bmatrix}$. For example, $\\begin{pmatrix} 2 & 5 \\\\ 0 & 2 \\end{pmatrix}$ is not $2I$, so its Jordan form is $\\begin{pmatrix} 2 & 1 \\\\ 0 & 2 \\end{pmatrix}$.\n\n> **Watch out.** The entry above the diagonal of a Jordan block is always $1$, whatever the corresponding entry of $A$, so $A$ itself is usually not its own Jordan form.",
+        "有重复特征值的二阶矩阵只有本身就是单位矩阵的倍数时才能对角化，否则它与一个若尔当块相似。区分可对角化的 $2 \\times 2$ 矩阵与相似于单个若尔当块 $\\begin{bmatrix} \\lambda & 1 \\\\ 0 & \\lambda \\end{bmatrix}$ 的矩阵。例如 $\\begin{pmatrix} 2 & 5 \\\\ 0 & 2 \\end{pmatrix}$ 不是 $2I$，所以它的若尔当形为 $\\begin{pmatrix} 2 & 1 \\\\ 0 & 2 \\end{pmatrix}$。\n\n> **注意。** 若尔当块对角线上方的元素总是 $1$，与 $A$ 中对应元素无关，所以 $A$ 本身通常不是自己的若尔当形。",
       ),
       generate: (rng: Rng): Problem => {
         const lambda = rng.int(-4, 4);
@@ -5540,58 +5942,85 @@ export const jordanCanonicalFormOfA2x2Matrix: TopicDef = {
           [lambda, 1],
           [0, lambda],
         ];
+        const m2 = (x: Mat2): Text => t(`$${mat2Latex(x)}$`, `$${mat2Latex(x)}$`);
         const prompt = t(
           `Find the Jordan canonical form $J$ of the matrix $A = ${mat2Latex(matA)}$.`,
           `求矩阵 $A = ${mat2Latex(matA)}$ 的若尔当标准型 $J$。`,
         );
-        const right = t(`$${mat2Latex(matJ)}$`, `$${mat2Latex(matJ)}$`);
+        const right = m2(matJ);
         const wrong = [
-          t(
-            `$${mat2Latex([
-              [lambda, 0],
-              [0, lambda],
-            ])}$`,
-            `$${mat2Latex([
-              [lambda, 0],
-              [0, lambda],
-            ])}$`,
-          ),
-          t(`$${mat2Latex(matA)}$`, `$${mat2Latex(matA)}$`),
-          t(
-            `$${mat2Latex([
-              [1, lambda],
-              [0, 1],
-            ])}$`,
-            `$${mat2Latex([
-              [1, lambda],
-              [0, 1],
-            ])}$`,
-          ),
-          t(
-            `$${mat2Latex([
-              [lambda, 1],
-              [1, lambda],
-            ])}$`,
-            `$${mat2Latex([
-              [lambda, 1],
-              [1, lambda],
-            ])}$`,
-          ),
+          m2([
+            [lambda, 0],
+            [0, lambda],
+          ]),
+          m2(matA),
+          m2([
+            [1, lambda],
+            [0, 1],
+          ]),
+          m2([
+            [lambda, 1],
+            [1, lambda],
+          ]),
         ];
         const shiftStr = formatShift(lambda, "I");
-        const solution = t(
-          `The matrix $A$ has repeated eigenvalue $\\lambda = ${lambda}$ with algebraic multiplicity 2. Since $A${shiftStr} = \\begin{pmatrix} 0 & ${a} \\\\ 0 & 0 \\end{pmatrix}$ has rank 1, its nullity (geometric multiplicity) is $2 - 1 = 1 < 2$. Thus $A$ is defective and consists of a single $2 \\times 2$ Jordan block: $J = ${mat2Latex(matJ)}$.`,
-          `矩阵 $A$ 具有重特征值 $\\lambda = ${lambda}$（代数重数为 2）。因为 $A${shiftStr} = \\begin{pmatrix} 0 & ${a} \\\\ 0 & 0 \\end{pmatrix}$ 的秩为 1，零度（几何重数）为 $2 - 1 = 1 < 2$。因此 $A$ 不可对角化，由单一的 $2 \\times 2$ 若尔当块构成：$J = ${mat2Latex(matJ)}$。`,
+        const solution = walked(
+          [
+            [
+              ["Find the eigenvalue", "求特征值"],
+              t(
+                `$A$ is triangular with both diagonal entries $${lambda}$, so $\\lambda = ${lambda}$ has algebraic multiplicity $2$.`,
+                `$A$ 是三角矩阵，两个对角元都是 $${lambda}$，所以 $\\lambda = ${lambda}$ 的代数重数为 $2$。`,
+              ),
+            ],
+            [
+              ["Count the eigenvectors", "数特征向量"],
+              t(
+                `$A${shiftStr} = \\begin{pmatrix} 0 & ${a} \\\\ 0 & 0 \\end{pmatrix}$ has rank $1$, so the geometric multiplicity is $2 - 1 = 1 < 2$.`,
+                `$A${shiftStr} = \\begin{pmatrix} 0 & ${a} \\\\ 0 & 0 \\end{pmatrix}$ 的秩为 $1$，所以几何重数为 $2 - 1 = 1 < 2$。`,
+              ),
+            ],
+            [
+              ["Write the Jordan form", "写出若尔当形"],
+              t("One eigenvector means one $2 \\times 2$ block:", "只有一个特征向量，意味着一个 $2 \\times 2$ 块："),
+              [`J = ${mat2Latex(matJ)}`],
+            ],
+          ],
+          t(
+            `$\\operatorname{tr} J = ${2 * lambda} = \\operatorname{tr} A$ and $\\det J = ${lambda * lambda} = \\det A$, as similar matrices require.`,
+            `$\\operatorname{tr} J = ${2 * lambda} = \\operatorname{tr} A$，$\\det J = ${lambda * lambda} = \\det A$，正符合相似矩阵的要求。`,
+          ),
         );
-        return oneOf(rng, prompt, right, wrong, solution);
+        return reasoned(oneOf(rng, prompt, right, wrong, solution), [
+          [
+            wrong[0]!.en,
+            `$A$ would have to equal $${paren(lambda)}I$ to be diagonalizable, but $A${shiftStr}$ has rank $1$.`,
+            `$A$ 要可对角化必须等于 $${paren(lambda)}I$，但 $A${shiftStr}$ 的秩为 $1$。`,
+          ],
+          [
+            wrong[1]!.en,
+            `$A$ is similar to $J$, but the entry above the diagonal of a Jordan block is $1$, not $${a}$.`,
+            `$A$ 与 $J$ 相似，但若尔当块对角线上方的元素是 $1$，不是 $${a}$。`,
+          ],
+          [
+            wrong[2]!.en,
+            "This matrix has eigenvalue $1$; the eigenvalue belongs on the diagonal and $1$ above it.",
+            "这个矩阵的特征值是 $1$；特征值应在对角线上，$1$ 在其上方。",
+          ],
+          [
+            wrong[3]!.en,
+            `This symmetric matrix has eigenvalues $${lambda} \\pm 1$, not $${lambda}$ twice.`,
+            `这个对称矩阵的特征值是 $${lambda} \\pm 1$，而不是两个 $${lambda}$。`,
+          ],
+        ]);
       },
     },
     {
       id: "the-eigenvalue-in-the-jordan-block-of-a-defective-2x2-matrix",
       title: t("The eigenvalue in a defective 2×2 Jordan block", "亏损 2×2 矩阵若尔当块中的特征值"),
       explanation: t(
-        "A $2 \\times 2$ matrix that is not diagonalizable has one repeated eigenvalue $\\lambda$, and its Jordan form is $\\begin{pmatrix} \\lambda & 1 \\\\ 0 & \\lambda \\end{pmatrix}$. Similar matrices have the same trace, so $2\\lambda = \\operatorname{tr} A$ and $\\lambda = \\tfrac{1}{2}\\operatorname{tr} A$. The determinant gives a check: $\\det A = \\lambda^2$.",
-        "不可对角化的 $2 \\times 2$ 矩阵只有一个重特征值 $\\lambda$，其若尔当形为 $\\begin{pmatrix} \\lambda & 1 \\\\ 0 & \\lambda \\end{pmatrix}$。相似矩阵的迹相同，所以 $2\\lambda = \\operatorname{tr} A$，$\\lambda = \\tfrac{1}{2}\\operatorname{tr} A$。行列式可作检验：$\\det A = \\lambda^2$。",
+        "A $2 \\times 2$ matrix that is not diagonalizable has one repeated eigenvalue $\\lambda$, and its Jordan form is $\\begin{pmatrix} \\lambda & 1 \\\\ 0 & \\lambda \\end{pmatrix}$. Similar matrices have the same trace, so $2\\lambda = \\operatorname{tr} A$ and $\\lambda = \\tfrac{1}{2}\\operatorname{tr} A$. The determinant gives a check: $\\det A = \\lambda^2$. For example, $A = \\begin{pmatrix} 5 & 1 \\\\ -4 & 1 \\end{pmatrix}$ has trace $6$, so $\\lambda = 3$, and indeed $\\det A = 5 + 4 = 9 = 3^2$.\n\n> **Watch out.** $\\lambda$ is half the trace, not the trace itself, and the diagonal entries of $A$ need not be eigenvalues.",
+        "不可对角化的 $2 \\times 2$ 矩阵只有一个重特征值 $\\lambda$，其若尔当形为 $\\begin{pmatrix} \\lambda & 1 \\\\ 0 & \\lambda \\end{pmatrix}$。相似矩阵的迹相同，所以 $2\\lambda = \\operatorname{tr} A$，$\\lambda = \\tfrac{1}{2}\\operatorname{tr} A$。行列式可作检验：$\\det A = \\lambda^2$。例如 $A = \\begin{pmatrix} 5 & 1 \\\\ -4 & 1 \\end{pmatrix}$ 的迹为 $6$，所以 $\\lambda = 3$，而 $\\det A = 5 + 4 = 9 = 3^2$ 确实成立。\n\n> **注意。** $\\lambda$ 是迹的一半，不是迹本身；$A$ 的对角元也不一定是特征值。",
       ),
       generate(rng: Rng): Problem {
         const lam = rng.int(-5, 5);
@@ -5609,10 +6038,40 @@ export const jordanCanonicalFormOfA2x2Matrix: TopicDef = {
             `$A = ${mat2Latex(A)}$ 不可对角化，所以其若尔当形为 $\\begin{pmatrix} \\lambda & 1 \\\\ 0 & \\lambda \\end{pmatrix}$。求 $\\lambda$。`,
           ),
           answer: lam,
-          wrong: [2 * lam, lam + a, lam - a, -lam],
-          solution: t(
-            `$\\operatorname{tr} A = ${2 * lam} = 2\\lambda$, so $\\lambda = ${lam}$. Check: $\\det A = ${det} = \\lambda^2$.`,
-            `$\\operatorname{tr} A = ${2 * lam} = 2\\lambda$，所以 $\\lambda = ${lam}$。检验：$\\det A = ${det} = \\lambda^2$。`,
+          mistakes: [
+            why(2 * lam, "That is the trace $2\\lambda$; halve it.", "这是迹 $2\\lambda$；还要除以 2。"),
+            why(
+              lam + a,
+              "That is the top-left entry of $A$, which need not be an eigenvalue.",
+              "这是 $A$ 左上角的元素，它不一定是特征值。",
+            ),
+            why(
+              lam - a,
+              "That is the bottom-right entry of $A$, which need not be an eigenvalue.",
+              "这是 $A$ 右下角的元素，它不一定是特征值。",
+            ),
+            why(
+              -lam,
+              "Check the sign: $\\lambda = \\tfrac{1}{2}\\operatorname{tr} A$.",
+              "检查符号：$\\lambda = \\tfrac{1}{2}\\operatorname{tr} A$。",
+            ),
+          ].filter((w, i, all) => w.value !== lam && all.findIndex((o) => o.value === w.value) === i),
+          solution: walked(
+            [
+              [
+                ["Use the trace", "利用迹"],
+                t(
+                  "Similar matrices share the trace, so $\\operatorname{tr} A = 2\\lambda$:",
+                  "相似矩阵的迹相同，所以 $\\operatorname{tr} A = 2\\lambda$：",
+                ),
+                [`\\operatorname{tr} A = ${lam + a} + ${paren(lam - a)} = ${2 * lam}`],
+              ],
+              [["Halve it", "除以 2"], t("", ""), [`\\lambda = \\frac{${2 * lam}}{2} = ${lam}`]],
+            ],
+            t(
+              `$\\det A = ${(lam + a) * (lam - a)} - ${paren(b * c)} = ${det} = ${paren(lam)}^2$, as the Jordan form requires.`,
+              `$\\det A = ${(lam + a) * (lam - a)} - ${paren(b * c)} = ${det} = ${paren(lam)}^2$，与若尔当形一致。`,
+            ),
           ),
         });
       },
@@ -5628,6 +6087,10 @@ export const jordanCanonicalDecompositionOfA2x2Matrix: TopicDef = {
     "Construct the matrix $P$ of generalized eigenvectors with $A = PJP^{-1}$ for a $2 \\times 2$ matrix.",
     "对 $2 \\times 2$ 矩阵构造由广义特征向量组成的矩阵 $P$，使 $A = PJP^{-1}$。",
   ),
+  intro: t(
+    "For $A = \\begin{pmatrix} 3 & 2 \\\\ 0 & 3 \\end{pmatrix}$, the matrix $A - 3I = \\begin{pmatrix} 0 & 2 \\\\ 0 & 0 \\end{pmatrix}$ sends $(1, 0)$ to $\\mathbf{0}$, so take the eigenvector $\\mathbf{v}_1 = (2, 0)$. Solving $(A - 3I)\\mathbf{v}_2 = \\mathbf{v}_1$ gives $2y = 2$, so $\\mathbf{v}_2 = (0, 1)$ and $P = \\begin{pmatrix} 2 & 0 \\\\ 0 & 1 \\end{pmatrix}$.\n\nCheck: $AP = \\begin{pmatrix} 6 & 2 \\\\ 0 & 3 \\end{pmatrix}$ and $PJ = \\begin{pmatrix} 2 & 0 \\\\ 0 & 1 \\end{pmatrix}\\begin{pmatrix} 3 & 1 \\\\ 0 & 3 \\end{pmatrix} = \\begin{pmatrix} 6 & 2 \\\\ 0 & 3 \\end{pmatrix}$, so $A = PJP^{-1}$.\n\nIn this lesson we build $P$ from a Jordan chain and multiply a Jordan decomposition back out to recover $A$.",
+    "对 $A = \\begin{pmatrix} 3 & 2 \\\\ 0 & 3 \\end{pmatrix}$，矩阵 $A - 3I = \\begin{pmatrix} 0 & 2 \\\\ 0 & 0 \\end{pmatrix}$ 把 $(1, 0)$ 变为 $\\mathbf{0}$，所以取特征向量 $\\mathbf{v}_1 = (2, 0)$。解 $(A - 3I)\\mathbf{v}_2 = \\mathbf{v}_1$ 得 $2y = 2$，所以 $\\mathbf{v}_2 = (0, 1)$，$P = \\begin{pmatrix} 2 & 0 \\\\ 0 & 1 \\end{pmatrix}$。\n\n检验：$AP = \\begin{pmatrix} 6 & 2 \\\\ 0 & 3 \\end{pmatrix}$，$PJ = \\begin{pmatrix} 2 & 0 \\\\ 0 & 1 \\end{pmatrix}\\begin{pmatrix} 3 & 1 \\\\ 0 & 3 \\end{pmatrix} = \\begin{pmatrix} 6 & 2 \\\\ 0 & 3 \\end{pmatrix}$，所以 $A = PJP^{-1}$。\n\n本课我们由若尔当链构造 $P$，并把若尔当分解乘开以还原 $A$。",
+  ),
   prerequisites: ["jordan-canonical-form-of-a-2x2-matrix"],
   encompasses: [],
   xp: 14,
@@ -5636,8 +6099,8 @@ export const jordanCanonicalDecompositionOfA2x2Matrix: TopicDef = {
       id: "jordan-decomposition-2x2-computation",
       title: t("Jordan Decomposition Computation for 2x2 Matrices", "2x2 矩阵的若尔当分解计算"),
       explanation: t(
-        "The first column is an eigenvector and the second is a generalized eigenvector that the shifted matrix sends to the first, forming a chain. Find $P = \\begin{bmatrix} \\mathbf{v}_1 & \\mathbf{v}_2 \\end{bmatrix}$ satisfying $(A - \\lambda I)\\mathbf{v}_1 = \\mathbf{0}$ and $(A - \\lambda I)\\mathbf{v}_2 = \\mathbf{v}_1$.",
-        "第一列是特征向量，第二列是被平移矩阵映射到第一列的广义特征向量，它们构成一条链。求满足 $(A - \\lambda I)\\mathbf{v}_1 = \\mathbf{0}$ 与 $(A - \\lambda I)\\mathbf{v}_2 = \\mathbf{v}_1$ 的矩阵 $P = \\begin{bmatrix} \\mathbf{v}_1 & \\mathbf{v}_2 \\end{bmatrix}$。",
+        "The first column is an eigenvector and the second is a generalized eigenvector that the shifted matrix sends to the first, forming a chain. Find $P = \\begin{bmatrix} \\mathbf{v}_1 & \\mathbf{v}_2 \\end{bmatrix}$ satisfying $(A - \\lambda I)\\mathbf{v}_1 = \\mathbf{0}$ and $(A - \\lambda I)\\mathbf{v}_2 = \\mathbf{v}_1$. For example, $A = \\begin{pmatrix} 3 & 2 \\\\ 0 & 3 \\end{pmatrix}$ has $\\mathbf{v}_1 = (2, 0)$ and $\\mathbf{v}_2 = (0, 1)$, so $P = \\begin{pmatrix} 2 & 0 \\\\ 0 & 1 \\end{pmatrix}$.\n\n> **Watch out.** The eigenvector goes in the first column, and $(A - \\lambda I)\\mathbf{v}_2$ must equal $\\mathbf{v}_1$ exactly; a multiple of $\\mathbf{v}_1$ puts that multiple above the diagonal of $J$ instead of $1$.",
+        "第一列是特征向量，第二列是被平移矩阵映射到第一列的广义特征向量，它们构成一条链。求满足 $(A - \\lambda I)\\mathbf{v}_1 = \\mathbf{0}$ 与 $(A - \\lambda I)\\mathbf{v}_2 = \\mathbf{v}_1$ 的矩阵 $P = \\begin{bmatrix} \\mathbf{v}_1 & \\mathbf{v}_2 \\end{bmatrix}$。例如 $A = \\begin{pmatrix} 3 & 2 \\\\ 0 & 3 \\end{pmatrix}$ 有 $\\mathbf{v}_1 = (2, 0)$，$\\mathbf{v}_2 = (0, 1)$，所以 $P = \\begin{pmatrix} 2 & 0 \\\\ 0 & 1 \\end{pmatrix}$。\n\n> **注意。** 特征向量放在第一列，且 $(A - \\lambda I)\\mathbf{v}_2$ 必须恰好等于 $\\mathbf{v}_1$；若等于 $\\mathbf{v}_1$ 的倍数，$J$ 对角线上方的元素就成了那个倍数而不是 $1$。",
       ),
       generate: (rng: Rng): Problem => {
         const lambda = rng.int(-3, 3);
@@ -5654,67 +6117,90 @@ export const jordanCanonicalDecompositionOfA2x2Matrix: TopicDef = {
           [k, 0],
           [0, 1],
         ];
+        const choice = (x: Mat2): Text => t(`$P = ${mat2Latex(x)}$`, `$P = ${mat2Latex(x)}$`);
         const prompt = t(
           `For the matrix $A = ${mat2Latex(matA)}$, find an invertible matrix $P$ such that $P^{-1} A P = J = \\begin{pmatrix} ${lambda} & 1 \\\\ 0 & ${lambda} \\end{pmatrix}$.`,
           `对于矩阵 $A = ${mat2Latex(matA)}$，求可逆矩阵 $P$，使得 $P^{-1} A P = J = \\begin{pmatrix} ${lambda} & 1 \\\\ 0 & ${lambda} \\end{pmatrix}$。`,
         );
-        const right = t(`$P = ${mat2Latex(matP)}$`, `$P = ${mat2Latex(matP)}$`);
+        const right = choice(matP);
         const wrong = [
-          t(
-            `$P = ${mat2Latex([
-              [1, 0],
-              [0, k],
-            ])}$`,
-            `$P = ${mat2Latex([
-              [1, 0],
-              [0, k],
-            ])}$`,
-          ),
-          t(
-            `$P = ${mat2Latex([
-              [1, 1],
-              [0, 1],
-            ])}$`,
-            `$P = ${mat2Latex([
-              [1, 1],
-              [0, 1],
-            ])}$`,
-          ),
-          t(
-            `$P = ${mat2Latex([
-              [0, k],
-              [1, 0],
-            ])}$`,
-            `$P = ${mat2Latex([
-              [0, k],
-              [1, 0],
-            ])}$`,
-          ),
-          t(
-            `$P = ${mat2Latex([
-              [k, 1],
-              [0, 1],
-            ])}$`,
-            `$P = ${mat2Latex([
-              [k, 1],
-              [0, 1],
-            ])}$`,
-          ),
+          choice([
+            [1, 0],
+            [0, k],
+          ]),
+          choice([
+            [1, 1],
+            [0, 1],
+          ]),
+          choice([
+            [0, k],
+            [1, 0],
+          ]),
+          choice([
+            [k, 0],
+            [0, -1],
+          ]),
         ];
         const shiftStr = formatShift(lambda, "I");
-        const solution = t(
-          `The columns of $P = \\begin{pmatrix} v_1 & v_2 \\end{pmatrix}$ satisfy $A v_1 = ${lambda} v_1$ and $(A${shiftStr})v_2 = v_1$. Choosing $v_1 = ${vec2Latex([k, 0])}$ and $v_2 = ${vec2Latex([0, 1])}$ gives $(A${shiftStr})v_2 = \\begin{pmatrix} 0 & ${k} \\\\ 0 & 0 \\end{pmatrix} ${vec2Latex([0, 1])} = ${vec2Latex([k, 0])} = v_1$. Thus $P = ${mat2Latex(matP)}$.`,
-          `$P = \\begin{pmatrix} v_1 & v_2 \\end{pmatrix}$ 的列满足 $A v_1 = ${lambda} v_1$ 与 $(A${shiftStr})v_2 = v_1$。取 $v_1 = ${vec2Latex([k, 0])}$ 与 $v_2 = ${vec2Latex([0, 1])}$，满足 $(A${shiftStr})v_2 = \\begin{pmatrix} 0 & ${k} \\\\ 0 & 0 \\end{pmatrix} ${vec2Latex([0, 1])} = ${vec2Latex([k, 0])} = v_1$。因此 $P = ${mat2Latex(matP)}$。`,
+        const solution = walked(
+          [
+            [
+              ["Find an eigenvector", "求特征向量"],
+              t(
+                `$A${shiftStr} = \\begin{pmatrix} 0 & ${k} \\\\ 0 & 0 \\end{pmatrix}$ sends $(1, 0)$ to $0$; take the multiple $v_1 = ${vec2Latex([k, 0])}$.`,
+                `$A${shiftStr} = \\begin{pmatrix} 0 & ${k} \\\\ 0 & 0 \\end{pmatrix}$ 把 $(1, 0)$ 变为 $0$；取它的倍数 $v_1 = ${vec2Latex([k, 0])}$。`,
+              ),
+            ],
+            [
+              ["Solve for $v_2$", "解出 $v_2$"],
+              t(
+                `$(A${shiftStr})v_2 = v_1$ reads $${k}y = ${k}$, so $y = 1$, and $v_2 = ${vec2Latex([0, 1])}$ works.`,
+                `$(A${shiftStr})v_2 = v_1$ 化为 $${k}y = ${k}$，所以 $y = 1$，可取 $v_2 = ${vec2Latex([0, 1])}$。`,
+              ),
+            ],
+            [["Assemble $P$", "组成 $P$"], t("The chain gives the columns in order:", "按链的顺序排列各列："), [`P = ${mat2Latex(matP)}`]],
+          ],
+          t(
+            `$AP = ${mat2Latex([
+              [lambda * k, k],
+              [0, lambda],
+            ])} = PJ$.`,
+            `$AP = ${mat2Latex([
+              [lambda * k, k],
+              [0, lambda],
+            ])} = PJ$。`,
+          ),
         );
-        return oneOf(rng, prompt, right, wrong, solution);
+        return reasoned(oneOf(rng, prompt, right, wrong, solution), [
+          [
+            wrong[0]!.en,
+            `$(A${shiftStr})(0, ${k}) = (${k * k}, 0)$, which is $${k * k}$ times the first column, not the first column itself.`,
+            `$(A${shiftStr})(0, ${k}) = (${k * k}, 0)$，是第一列的 $${k * k}$ 倍，而不是第一列本身。`,
+          ],
+          [
+            wrong[1]!.en,
+            `$(A${shiftStr})(1, 1) = (${k}, 0)$, which is $${k}$ times the first column $(1, 0)$, not the column itself.`,
+            `$(A${shiftStr})(1, 1) = (${k}, 0)$，是第一列 $(1, 0)$ 的 $${k}$ 倍，而不是第一列本身。`,
+          ],
+          [
+            wrong[2]!.en,
+            `The first column $(0, 1)$ is not an eigenvector: $(A${shiftStr})(0, 1) = (${k}, 0) \\neq 0$.`,
+            `第一列 $(0, 1)$ 不是特征向量：$(A${shiftStr})(0, 1) = (${k}, 0) \\neq 0$。`,
+          ],
+          [
+            wrong[3]!.en,
+            `$(A${shiftStr})(0, -1) = (-${k}, 0)$ is the negative of the first column, so $J$ would get $-1$ above the diagonal.`,
+            `$(A${shiftStr})(0, -1) = (-${k}, 0)$ 是第一列的相反数，所以 $J$ 对角线上方会是 $-1$。`,
+          ],
+        ]);
       },
     },
     {
       id: "rebuilding-a-2x2-matrix-from-its-jordan-decomposition",
       title: t("Rebuilding a matrix from its Jordan decomposition", "由若尔当分解还原矩阵"),
       explanation: t(
-        "A Jordan decomposition $A = PJP^{-1}$ can be multiplied out to recover $A$. With $J = \\lambda I + N$ and $N = \\begin{pmatrix} 0 & 1 \\\\ 0 & 0 \\end{pmatrix}$, this is $A = \\lambda I + PNP^{-1}$, so only the nilpotent part needs to be conjugated. When $\\det P = 1$, the inverse is simply $P^{-1} = \\begin{pmatrix} s & -q \\\\ -r & p \\end{pmatrix}$ for $P = \\begin{pmatrix} p & q \\\\ r & s \\end{pmatrix}$.",
-        "若尔当分解 $A = PJP^{-1}$ 乘开即可还原 $A$。设 $J = \\lambda I + N$，$N = \\begin{pmatrix} 0 & 1 \\\\ 0 & 0 \\end{pmatrix}$，则 $A = \\lambda I + PNP^{-1}$，只需对幂零部分作共轭。当 $\\det P = 1$ 时，对 $P = \\begin{pmatrix} p & q \\\\ r & s \\end{pmatrix}$ 有 $P^{-1} = \\begin{pmatrix} s & -q \\\\ -r & p \\end{pmatrix}$。",
+        "A Jordan decomposition $A = PJP^{-1}$ can be multiplied out to recover $A$. With $J = \\lambda I + N$ and $N = \\begin{pmatrix} 0 & 1 \\\\ 0 & 0 \\end{pmatrix}$, this is $A = \\lambda I + PNP^{-1}$, so only the nilpotent part needs to be conjugated. When $\\det P = 1$, the inverse is simply $P^{-1} = \\begin{pmatrix} s & -q \\\\ -r & p \\end{pmatrix}$ for $P = \\begin{pmatrix} p & q \\\\ r & s \\end{pmatrix}$. For example, $P = \\begin{pmatrix} 1 & 0 \\\\ 1 & 1 \\end{pmatrix}$ and $\\lambda = 2$ give $PNP^{-1} = \\begin{pmatrix} -1 & 1 \\\\ -1 & 1 \\end{pmatrix}$, so $A = \\begin{pmatrix} 1 & 1 \\\\ -1 & 3 \\end{pmatrix}$.\n\n> **Watch out.** Keep the order $PNP^{-1}$; $P^{-1}NP$ is a different matrix. The diagonal of $A$ is not simply $\\lambda$, because $PNP^{-1}$ has diagonal entries of its own.",
+        "若尔当分解 $A = PJP^{-1}$ 乘开即可还原 $A$。设 $J = \\lambda I + N$，$N = \\begin{pmatrix} 0 & 1 \\\\ 0 & 0 \\end{pmatrix}$，则 $A = \\lambda I + PNP^{-1}$，只需对幂零部分作共轭。当 $\\det P = 1$ 时，对 $P = \\begin{pmatrix} p & q \\\\ r & s \\end{pmatrix}$ 有 $P^{-1} = \\begin{pmatrix} s & -q \\\\ -r & p \\end{pmatrix}$。例如 $P = \\begin{pmatrix} 1 & 0 \\\\ 1 & 1 \\end{pmatrix}$，$\\lambda = 2$，得 $PNP^{-1} = \\begin{pmatrix} -1 & 1 \\\\ -1 & 1 \\end{pmatrix}$，所以 $A = \\begin{pmatrix} 1 & 1 \\\\ -1 & 3 \\end{pmatrix}$。\n\n> **注意。** 顺序是 $PNP^{-1}$；$P^{-1}NP$ 是另一个矩阵。$A$ 的对角元不只是 $\\lambda$，因为 $PNP^{-1}$ 自己也有对角元。",
       ),
       generate(rng: Rng): Problem {
         const lam = rng.int(-4, 4);
@@ -5760,22 +6246,76 @@ export const jordanCanonicalDecompositionOfA2x2Matrix: TopicDef = {
           ["top-right", "右上"],
           ["bottom-left", "左下"],
         ][i * 2 + j]!;
+        const ans = A[i]![j]!;
+        const conj: Mat2 = [
+          [-p * r, p * p],
+          [-r * r, p * r],
+        ];
         return numberProblem({
           prompt: t(
             `Let $P = ${mat2Latex(P)}$ and $J = \\begin{pmatrix} ${lam} & 1 \\\\ 0 & ${lam} \\end{pmatrix}$. Find the ${pos[0]} entry of $A = PJP^{-1}$.`,
             `设 $P = ${mat2Latex(P)}$，$J = \\begin{pmatrix} ${lam} & 1 \\\\ 0 & ${lam} \\end{pmatrix}$。求 $A = PJP^{-1}$ 的${pos[1]}元素。`,
           ),
-          answer: A[i]![j]!,
-          wrong: [swapped[i]![j]!, -A[i]![j]!, i === j ? lam : A[j]![i]!, A[i]![j]! - lam],
-          solution: t(
-            `$\\det P = 1$, so $P^{-1} = ${mat2Latex([
-              [s, -q],
-              [-r, p],
-            ])}$. Multiplying out gives $A = ${mat2Latex(A)}$, whose ${pos[0]} entry is $${A[i]![j]!}$.`,
-            `$\\det P = 1$，所以 $P^{-1} = ${mat2Latex([
-              [s, -q],
-              [-r, p],
-            ])}$。乘开得 $A = ${mat2Latex(A)}$，其${pos[1]}元素为 $${A[i]![j]!}$。`,
+          answer: ans,
+          mistakes: [
+            why(
+              swapped[i]![j]!,
+              "That comes from $P^{-1}JP$; the decomposition is $PJP^{-1}$, and the order matters.",
+              "这是 $P^{-1}JP$ 的结果；分解是 $PJP^{-1}$，顺序不能换。",
+            ),
+            why(-ans, "That has the wrong sign; recheck the signs in $P^{-1}$.", "符号错了；检查 $P^{-1}$ 中的符号。"),
+            i === j
+              ? why(
+                  lam,
+                  "$\\lambda$ is only the diagonal of $\\lambda I$; $PNP^{-1}$ adds to the diagonal too.",
+                  "$\\lambda$ 只是 $\\lambda I$ 的对角元；$PNP^{-1}$ 也会加到对角线上。",
+                )
+              : why(A[j]![i]!, "That is the entry in the transposed position.", "这是转置位置上的元素。"),
+            i === j
+              ? why(
+                  ans - lam,
+                  "That is the entry of $PNP^{-1}$ alone; add $\\lambda I$ back.",
+                  "这只是 $PNP^{-1}$ 的元素；还要加上 $\\lambda I$。",
+                )
+              : why(
+                  ans - lam,
+                  "$\\lambda I$ adds nothing off the diagonal, so do not subtract $\\lambda$ here.",
+                  "$\\lambda I$ 不影响非对角元，所以这里不要减去 $\\lambda$。",
+                ),
+          ].filter((w, k, all) => w.value !== ans && all.findIndex((o) => o.value === w.value) === k),
+          solution: walked(
+            [
+              [
+                ["Invert $P$", "求 $P^{-1}$"],
+                t("$\\det P = 1$, so", "$\\det P = 1$，所以"),
+                [
+                  `P^{-1} = ${mat2Latex([
+                    [s, -q],
+                    [-r, p],
+                  ])}`,
+                ],
+              ],
+              [
+                ["Conjugate the nilpotent part", "对幂零部分作共轭"],
+                t(
+                  "With $N = J - \\lambda I = \\begin{pmatrix} 0 & 1 \\\\ 0 & 0 \\end{pmatrix}$:",
+                  "取 $N = J - \\lambda I = \\begin{pmatrix} 0 & 1 \\\\ 0 & 0 \\end{pmatrix}$：",
+                ),
+                [`PNP^{-1} = ${mat2Latex(conj)}`],
+              ],
+              [
+                ["Add $\\lambda I$", "加上 $\\lambda I$"],
+                t(
+                  `$A = ${paren(lam)}I + PNP^{-1}$, whose ${pos[0]} entry is $${ans}$:`,
+                  `$A = ${paren(lam)}I + PNP^{-1}$，其${pos[1]}元素为 $${ans}$：`,
+                ),
+                [`A = ${mat2Latex(A)}`],
+              ],
+            ],
+            t(
+              `$\\operatorname{tr} A = ${2 * lam}$ and $\\det A = ${lam * lam}$, the trace and determinant of $J$.`,
+              `$\\operatorname{tr} A = ${2 * lam}$，$\\det A = ${lam * lam}$，正是 $J$ 的迹和行列式。`,
+            ),
           ),
         });
       },
@@ -5791,6 +6331,10 @@ export const jordanCanonicalFormOfA3x3Matrix: TopicDef = {
     "Determine the block sizes in the Jordan canonical form of a 3x3 matrix using rank powers.",
     "利用矩阵秩的逐次幂确定 3x3 矩阵若尔当标准型中的块尺寸。",
   ),
+  intro: t(
+    "The matrix $A = \\begin{pmatrix} 2 & 0 & 1 \\\\ 0 & 2 & 0 \\\\ 0 & 0 & 2 \\end{pmatrix}$ has characteristic polynomial $(\\lambda - 2)^3$. Here $A - 2I = \\begin{pmatrix} 0 & 0 & 1 \\\\ 0 & 0 & 0 \\\\ 0 & 0 & 0 \\end{pmatrix}$ has rank $1$, so the nullity is $2$ and there are two blocks. Three dimensions in two blocks means sizes $2 + 1$: $J = J_2(2) \\oplus J_1(2)$.\n\nCheck: $(A - 2I)^2 = 0$ while $A - 2I \\neq 0$, so the largest block has size exactly $2$.\n\nIn this lesson we split a $3 \\times 3$ Jordan form into blocks from the rank of $A - \\lambda I$ and find the largest block of a triangular matrix.",
+    "矩阵 $A = \\begin{pmatrix} 2 & 0 & 1 \\\\ 0 & 2 & 0 \\\\ 0 & 0 & 2 \\end{pmatrix}$ 的特征多项式为 $(\\lambda - 2)^3$。这里 $A - 2I = \\begin{pmatrix} 0 & 0 & 1 \\\\ 0 & 0 & 0 \\\\ 0 & 0 & 0 \\end{pmatrix}$ 的秩为 $1$，所以零度为 $2$，共有两个块。三个维度分成两个块，阶数只能是 $2 + 1$：$J = J_2(2) \\oplus J_1(2)$。\n\n检验：$(A - 2I)^2 = 0$ 而 $A - 2I \\neq 0$，所以最大块的阶数恰为 $2$。\n\n本课我们由 $A - \\lambda I$ 的秩把 $3 \\times 3$ 若尔当形分块，并求三角矩阵的最大若尔当块。",
+  ),
   prerequisites: ["jordan-canonical-decomposition-of-a-2x2-matrix"],
   encompasses: [],
   xp: 14,
@@ -5799,116 +6343,110 @@ export const jordanCanonicalFormOfA3x3Matrix: TopicDef = {
       id: "jordan-blocks-partition-3x3",
       title: t("Jordan Blocks Partition for 3x3 Matrices", "3x3 矩阵的若尔当块划分"),
       explanation: t(
-        "The number of blocks equals the number of independent eigenvectors, so the geometric multiplicity tells you how the three dimensions split into blocks. Determine whether $J$ is $J_3(\\lambda)$, $\\operatorname{diag}(J_2(\\lambda), J_1(\\lambda))$, or $\\operatorname{diag}(J_1(\\lambda), J_1(\\lambda), J_1(\\lambda))$.",
-        "块的个数等于线性无关特征向量的个数，所以几何重数告诉你三个维度怎样分成若干块。判定若尔当标准型 $J$ 是 $J_3(\\lambda)$、$\\operatorname{diag}(J_2(\\lambda), J_1(\\lambda))$ 还是 $\\operatorname{diag}(J_1(\\lambda), J_1(\\lambda), J_1(\\lambda))$。",
+        "The number of blocks equals the number of independent eigenvectors, so the geometric multiplicity tells you how the three dimensions split into blocks. Determine whether $J$ is $J_3(\\lambda)$, $\\operatorname{diag}(J_2(\\lambda), J_1(\\lambda))$, or $\\operatorname{diag}(J_1(\\lambda), J_1(\\lambda), J_1(\\lambda))$. For example, if $p(\\lambda) = (\\lambda - 2)^3$ and $\\operatorname{rank}(A - 2I) = 1$, the nullity is $2$, so there are two blocks, of sizes $2$ and $1$.\n\n> **Watch out.** The number of blocks is the nullity $3 - \\operatorname{rank}(A - \\lambda I)$, not the rank itself.",
+        "块的个数等于线性无关特征向量的个数，所以几何重数告诉你三个维度怎样分成若干块。判定若尔当标准型 $J$ 是 $J_3(\\lambda)$、$\\operatorname{diag}(J_2(\\lambda), J_1(\\lambda))$ 还是 $\\operatorname{diag}(J_1(\\lambda), J_1(\\lambda), J_1(\\lambda))$。例如若 $p(\\lambda) = (\\lambda - 2)^3$ 且 $\\operatorname{rank}(A - 2I) = 1$，则零度为 $2$，共有两个块，阶数为 $2$ 和 $1$。\n\n> **注意。** 块数是零度 $3 - \\operatorname{rank}(A - \\lambda I)$，而不是秩本身。",
       ),
       generate: (rng: Rng): Problem => {
         const c = rng.nonZero(-9, 9);
         const rankCase = rng.pick([1, 2])!;
         // If rank(A - cI) = 1, nullity = 2 => 2 Jordan blocks => sizes 2 + 1.
         // If rank(A - cI) = 2, nullity = 1 => 1 Jordan block => size 3.
-        const matJ: Mat3 =
-          rankCase === 1
-            ? [
-                [c, 1, 0],
-                [0, c, 0],
-                [0, 0, c],
-              ]
-            : [
-                [c, 1, 0],
-                [0, c, 1],
-                [0, 0, c],
-              ];
+        const twoBlocks: Mat3 = [
+          [c, 1, 0],
+          [0, c, 0],
+          [0, 0, c],
+        ];
+        const oneBlock: Mat3 = [
+          [c, 1, 0],
+          [0, c, 1],
+          [0, 0, c],
+        ];
+        const matJ = rankCase === 1 ? twoBlocks : oneBlock;
+        const m3 = (x: Mat3): Text => t(`$${mat3Latex(x)}$`, `$${mat3Latex(x)}$`);
         const polyFactor = formatFactor("\\lambda", c);
         const shiftStr = formatShift(c, "I");
         const prompt = t(
           `A $3 \\times 3$ matrix $A$ has characteristic polynomial $p(\\lambda) = (${polyFactor})^3$. If $\\operatorname{rank}(A${shiftStr}) = ${rankCase}$, what is the Jordan canonical form $J$ of $A$?`,
           `$3 \\times 3$ 矩阵 $A$ 的特征多项式为 $p(\\lambda) = (${polyFactor})^3$。若 $\\operatorname{rank}(A${shiftStr}) = ${rankCase}$，求 $A$ 的若尔当标准型 $J$。`,
         );
-        const right = t(`$${mat3Latex(matJ)}$`, `$${mat3Latex(matJ)}$`);
+        const right = m3(matJ);
         const wrong = [
-          t(
-            `$${mat3Latex([
-              [c, 0, 0],
-              [0, c, 0],
-              [0, 0, c],
-            ])}$`,
-            `$${mat3Latex([
-              [c, 0, 0],
-              [0, c, 0],
-              [0, 0, c],
-            ])}$`,
-          ),
-          t(
-            rankCase === 1
-              ? `$${mat3Latex([
-                  [c, 1, 0],
-                  [0, c, 1],
-                  [0, 0, c],
-                ])}$`
-              : `$${mat3Latex([
-                  [c, 1, 0],
-                  [0, c, 0],
-                  [0, 0, c],
-                ])}$`,
-            rankCase === 1
-              ? `$${mat3Latex([
-                  [c, 1, 0],
-                  [0, c, 1],
-                  [0, 0, c],
-                ])}$`
-              : `$${mat3Latex([
-                  [c, 1, 0],
-                  [0, c, 0],
-                  [0, 0, c],
-                ])}$`,
-          ),
-          t(
-            `$${mat3Latex([
-              [c, 0, 1],
-              [0, c, 0],
-              [0, 0, c],
-            ])}$`,
-            `$${mat3Latex([
-              [c, 0, 1],
-              [0, c, 0],
-              [0, 0, c],
-            ])}$`,
-          ),
-          t(
-            `$${mat3Latex([
-              [c, 1, 1],
-              [0, c, 1],
-              [0, 0, c],
-            ])}$`,
-            `$${mat3Latex([
-              [c, 1, 1],
-              [0, c, 1],
-              [0, 0, c],
-            ])}$`,
-          ),
+          m3([
+            [c, 0, 0],
+            [0, c, 0],
+            [0, 0, c],
+          ]),
+          m3(rankCase === 1 ? oneBlock : twoBlocks),
+          m3([
+            [c, 0, 1],
+            [0, c, 0],
+            [0, 0, c],
+          ]),
+          m3([
+            [c, 1, 1],
+            [0, c, 1],
+            [0, 0, c],
+          ]),
         ];
-        const solution = t(
-          `The number of Jordan blocks is the geometric multiplicity $\\operatorname{nullity}(A${shiftStr}) = 3 - ${rankCase} = ${3 - rankCase}$. ${
-            rankCase === 1
-              ? `Since there are 2 Jordan blocks of total size 3, the block sizes must be $2 + 1$: $J = \\operatorname{diag}(J_2(${c}), J_1(${c})) = ${mat3Latex(matJ)}$.`
-              : `Since there is only 1 Jordan block of size 3, $J = J_3(${c}) = ${mat3Latex(matJ)}$.`
-          }`,
-          `若尔当块的数量等于几何重数 $\\operatorname{nullity}(A${shiftStr}) = 3 - ${rankCase} = ${3 - rankCase}$。${
-            rankCase === 1
-              ? `因为总尺寸为 3 且有 2 个若尔当块，所以块尺寸必为 $2 + 1$：$J = \\operatorname{diag}(J_2(${c}), J_1(${c})) = ${mat3Latex(matJ)}$。`
-              : `因为只有一个尺寸为 3 的若尔当块，所以 $J = J_3(${c}) = ${mat3Latex(matJ)}$。`
-          }`,
+        const solution = walked(
+          [
+            [
+              ["Count the blocks", "数块"],
+              t(
+                `The number of Jordan blocks is the geometric multiplicity $\\operatorname{nullity}(A${shiftStr}) = 3 - ${rankCase} = ${3 - rankCase}$.`,
+                `若尔当块的个数等于几何重数 $\\operatorname{nullity}(A${shiftStr}) = 3 - ${rankCase} = ${3 - rankCase}$。`,
+              ),
+            ],
+            [
+              ["Split the size $3$", "分配阶数 $3$"],
+              rankCase === 1
+                ? t(
+                    `Two blocks of total size $3$ must have sizes $2 + 1$: $J = \\operatorname{diag}(J_2(${c}), J_1(${c}))$.`,
+                    `总阶数为 $3$ 的两个块，阶数只能是 $2 + 1$：$J = \\operatorname{diag}(J_2(${c}), J_1(${c}))$。`,
+                  )
+                : t(`One block of size $3$: $J = J_3(${c})$.`, `一个阶数为 $3$ 的块：$J = J_3(${c})$。`),
+              [`J = ${mat3Latex(matJ)}`],
+            ],
+          ],
+          t(
+            `$J${shiftStr}$ has $${rankCase}$ entr${rankCase === 1 ? "y" : "ies"} equal to $1$ above the diagonal, so its rank is $${rankCase}$, matching $\\operatorname{rank}(A${shiftStr})$.`,
+            `$J${shiftStr}$ 对角线上方有 $${rankCase}$ 个 $1$，所以秩为 $${rankCase}$，与 $\\operatorname{rank}(A${shiftStr})$ 一致。`,
+          ),
         );
-        return oneOf(rng, prompt, right, wrong, solution);
+        return reasoned(oneOf(rng, prompt, right, wrong, solution), [
+          [
+            wrong[0]!.en,
+            `That is $${paren(c)}I$, which would need $\\operatorname{rank}(A${shiftStr}) = 0$.`,
+            `这是 $${paren(c)}I$，需要 $\\operatorname{rank}(A${shiftStr}) = 0$。`,
+          ],
+          [
+            wrong[1]!.en,
+            rankCase === 1
+              ? "A single block $J_3$ gives $\\operatorname{rank}(J - \\lambda I) = 2$, not $1$."
+              : "Two blocks $J_2 \\oplus J_1$ give $\\operatorname{rank}(J - \\lambda I) = 1$, not $2$.",
+            rankCase === 1
+              ? "单个块 $J_3$ 给出 $\\operatorname{rank}(J - \\lambda I) = 2$，不是 $1$。"
+              : "两个块 $J_2 \\oplus J_1$ 给出 $\\operatorname{rank}(J - \\lambda I) = 1$，不是 $2$。",
+          ],
+          [
+            wrong[2]!.en,
+            "The $1$ is not on the superdiagonal, so this is not a Jordan matrix.",
+            "这个 $1$ 不在上对角线上，所以这不是若尔当矩阵。",
+          ],
+          [
+            wrong[3]!.en,
+            "The corner entry of a Jordan matrix is $0$; only the superdiagonal holds ones.",
+            "若尔当矩阵的角元素是 $0$；只有上对角线上是 1。",
+          ],
+        ]);
       },
     },
     {
       id: "the-largest-jordan-block-of-a-triangular-3x3-matrix",
       title: t("The largest Jordan block of a triangular 3×3 matrix", "三角 3×3 矩阵的最大若尔当块"),
       explanation: t(
-        "For $A = cI + N$ with $N$ strictly upper triangular, the only eigenvalue is $c$ and the size of the largest Jordan block is the smallest $k$ with $N^k = 0$. If $N = 0$ every block has size $1$. Otherwise check $N^2$: for $N = \\begin{pmatrix} 0 & p & q \\\\ 0 & 0 & r \\\\ 0 & 0 & 0 \\end{pmatrix}$ the only nonzero entry of $N^2$ is $pr$ in the corner, so the largest block has size $3$ when $pr \\ne 0$ and size $2$ when $pr = 0$.",
-        "对 $A = cI + N$（$N$ 为严格上三角），唯一特征值是 $c$，最大若尔当块的阶数是满足 $N^k = 0$ 的最小 $k$。若 $N = 0$，所有块阶数为 $1$。否则检查 $N^2$：对 $N = \\begin{pmatrix} 0 & p & q \\\\ 0 & 0 & r \\\\ 0 & 0 & 0 \\end{pmatrix}$，$N^2$ 唯一的非零元素是角上的 $pr$，所以 $pr \\ne 0$ 时最大块阶数为 $3$，$pr = 0$ 时为 $2$。",
+        "For $A = cI + N$ with $N$ strictly upper triangular, the only eigenvalue is $c$ and the size of the largest Jordan block is the smallest $k$ with $N^k = 0$. If $N = 0$ every block has size $1$. Otherwise check $N^2$: for $N = \\begin{pmatrix} 0 & p & q \\\\ 0 & 0 & r \\\\ 0 & 0 & 0 \\end{pmatrix}$ the only nonzero entry of $N^2$ is $pr$ in the corner, so the largest block has size $3$ when $pr \\ne 0$ and size $2$ when $pr = 0$. For example, $A = \\begin{pmatrix} 1 & 2 & 5 \\\\ 0 & 1 & 0 \\\\ 0 & 0 & 1 \\end{pmatrix}$ has $p = 2$ and $r = 0$, so $N^2 = 0$ and the largest block has size $2$.\n\n> **Watch out.** The corner entry $q$ does not affect $N^2$; only the product $pr$ decides between sizes $2$ and $3$.",
+        "对 $A = cI + N$（$N$ 为严格上三角），唯一特征值是 $c$，最大若尔当块的阶数是满足 $N^k = 0$ 的最小 $k$。若 $N = 0$，所有块阶数为 $1$。否则检查 $N^2$：对 $N = \\begin{pmatrix} 0 & p & q \\\\ 0 & 0 & r \\\\ 0 & 0 & 0 \\end{pmatrix}$，$N^2$ 唯一的非零元素是角上的 $pr$，所以 $pr \\ne 0$ 时最大块阶数为 $3$，$pr = 0$ 时为 $2$。例如 $A = \\begin{pmatrix} 1 & 2 & 5 \\\\ 0 & 1 & 0 \\\\ 0 & 0 & 1 \\end{pmatrix}$ 有 $p = 2$，$r = 0$，所以 $N^2 = 0$，最大块阶数为 $2$。\n\n> **注意。** 角上的元素 $q$ 不影响 $N^2$；只有乘积 $pr$ 决定阶数是 $2$ 还是 $3$。",
       ),
       generate(rng: Rng): Problem {
         const c = rng.int(-4, 4);
@@ -5927,20 +6465,71 @@ export const jordanCanonicalFormOfA3x3Matrix: TopicDef = {
           [0, c, r],
           [0, 0, c],
         ];
+        const N = mat3Latex([
+          [0, p, q],
+          [0, 0, r],
+          [0, 0, 0],
+        ]);
+        const N2 = mat3Latex([
+          [0, 0, p * r],
+          [0, 0, 0],
+          [0, 0, 0],
+        ]);
+        const shift = formatShift(c);
         return numberProblem({
           prompt: t(
             `What is the size of the largest Jordan block in the Jordan form of $A = ${mat3Latex(A)}$?`,
             `$A = ${mat3Latex(A)}$ 的若尔当形中最大若尔当块的阶数是多少？`,
           ),
           answer: kind,
-          wrong: [1, 2, 3],
-          solution: t(
-            kind === 1
-              ? `$A = ${c}I$ is already diagonal, so every block has size $1$.`
-              : `$N = A - ${c < 0 ? `(${c})` : c}I$ is nonzero and the corner entry of $N^2$ is $pr = ${p * r}$. ${kind === 3 ? "It is nonzero, so $N^2 \\ne 0$ and the largest block has size $3$." : "So $N^2 = 0$ and the largest block has size $2$."}`,
-            kind === 1
-              ? `$A = ${c}I$ 已是对角矩阵，所以每个块的阶数都是 $1$。`
-              : `$N = A - ${c < 0 ? `(${c})` : c}I$ 非零，$N^2$ 角上的元素为 $pr = ${p * r}$。${kind === 3 ? "它非零，所以 $N^2 \\ne 0$，最大块阶数为 $3$。" : "所以 $N^2 = 0$，最大块阶数为 $2$。"}`,
+          mistakes: [1, 2, 3]
+            .filter((w) => w !== kind)
+            .map((w) =>
+              kind === 1
+                ? why(
+                    w,
+                    `$A = ${paren(c)}I$, so $N = 0$ and every block has size $1$.`,
+                    `$A = ${paren(c)}I$，所以 $N = 0$，每个块阶数都是 $1$。`,
+                  )
+                : w === 1
+                  ? why(w, "$N \\ne 0$, so some block is larger than $1$.", "$N \\ne 0$，所以有块的阶数大于 $1$。")
+                  : kind === 3
+                    ? why(
+                        w,
+                        `$N^2$ has corner entry $pr = ${p * r} \\ne 0$, so $N^2 \\ne 0$ and size $2$ is too small.`,
+                        `$N^2$ 的角元素 $pr = ${p * r} \\ne 0$，所以 $N^2 \\ne 0$，阶数 $2$ 太小。`,
+                      )
+                    : why(w, "$pr = 0$ makes $N^2 = 0$, so no block has size $3$.", "$pr = 0$ 使 $N^2 = 0$，所以没有阶数为 $3$ 的块。"),
+            ),
+          solution: walked(
+            [
+              [["Split off the diagonal", "分出对角部分"], t("", ""), [`N = A${shift} = ${N}`]],
+              kind === 1
+                ? [
+                    ["Read the blocks", "读出各块"],
+                    t(`$N = 0$, so $A = ${paren(c)}I$ is already diagonal.`, `$N = 0$，所以 $A = ${paren(c)}I$ 已是对角矩阵。`),
+                  ]
+                : [
+                    ["Square $N$", "计算 $N^2$"],
+                    t(
+                      `$N \\ne 0$, and the only possible nonzero entry of $N^2$ is $pr = ${p * r}$:`,
+                      `$N \\ne 0$，$N^2$ 唯一可能的非零元素为 $pr = ${p * r}$：`,
+                    ),
+                    [`N^2 = ${N2}`],
+                  ],
+            ],
+            t(
+              kind === 1
+                ? "$A - cI = 0$ has nullity $3$: three blocks, each of size $1$."
+                : kind === 3
+                  ? "$N^2 \\ne 0$ while $N^3 = 0$ for every strictly upper triangular $3 \\times 3$ matrix, so the largest block has size exactly $3$."
+                  : "$N \\ne 0$ rules out size $1$ only, and $N^2 = 0$ caps the blocks at size $2$.",
+              kind === 1
+                ? "$A - cI = 0$ 的零度为 $3$：三个块，每块阶数为 $1$。"
+                : kind === 3
+                  ? "$N^2 \\ne 0$，而每个严格上三角 $3 \\times 3$ 矩阵都有 $N^3 = 0$，所以最大块阶数恰为 $3$。"
+                  : "$N \\ne 0$ 只排除了阶数 $1$，$N^2 = 0$ 使各块阶数至多为 $2$。",
+            ),
           ),
         });
       },
@@ -5956,6 +6545,10 @@ export const jordanCanonicalDecompositionOfA3x3Matrix: TopicDef = {
     "Build Jordan chains to form the invertible matrix $P$ with $A = PJP^{-1}$ for $3 \\times 3$ matrices.",
     "对 $3 \\times 3$ 矩阵构造若尔当链，得到满足 $A = PJP^{-1}$ 的可逆矩阵 $P$。",
   ),
+  intro: t(
+    "For $A = \\begin{pmatrix} 2 & 1 & 0 \\\\ 0 & 2 & 3 \\\\ 0 & 0 & 2 \\end{pmatrix}$, start from $\\mathbf{v}_3 = (0, 0, 1)$. Then $\\mathbf{v}_2 = (A - 2I)\\mathbf{v}_3 = (0, 3, 0)$ and $\\mathbf{v}_1 = (A - 2I)\\mathbf{v}_2 = (3, 0, 0)$, an eigenvector. So $P = \\begin{pmatrix} 3 & 0 & 0 \\\\ 0 & 3 & 0 \\\\ 0 & 0 & 1 \\end{pmatrix}$ gives $A = PJ_3(2)P^{-1}$.\n\nCheck: the second column of $AP = PJ$ requires $A\\mathbf{v}_2 = \\mathbf{v}_1 + 2\\mathbf{v}_2$, and indeed $A(0, 3, 0) = (3, 6, 0) = (3, 0, 0) + (0, 6, 0)$.\n\nIn this lesson we read the chain relations among the columns of $P$ and use a Jordan decomposition to find determinants without computing $A$.",
+    "对 $A = \\begin{pmatrix} 2 & 1 & 0 \\\\ 0 & 2 & 3 \\\\ 0 & 0 & 2 \\end{pmatrix}$，从 $\\mathbf{v}_3 = (0, 0, 1)$ 出发。则 $\\mathbf{v}_2 = (A - 2I)\\mathbf{v}_3 = (0, 3, 0)$，$\\mathbf{v}_1 = (A - 2I)\\mathbf{v}_2 = (3, 0, 0)$，是特征向量。所以 $P = \\begin{pmatrix} 3 & 0 & 0 \\\\ 0 & 3 & 0 \\\\ 0 & 0 & 1 \\end{pmatrix}$ 使 $A = PJ_3(2)P^{-1}$。\n\n检验：$AP = PJ$ 的第二列要求 $A\\mathbf{v}_2 = \\mathbf{v}_1 + 2\\mathbf{v}_2$，而确实 $A(0, 3, 0) = (3, 6, 0) = (3, 0, 0) + (0, 6, 0)$。\n\n本课我们读出 $P$ 各列之间的链式关系，并利用若尔当分解在不算出 $A$ 的情况下求行列式。",
+  ),
   prerequisites: ["jordan-canonical-form-of-a-3x3-matrix"],
   encompasses: [],
   xp: 14,
@@ -5964,8 +6557,8 @@ export const jordanCanonicalDecompositionOfA3x3Matrix: TopicDef = {
       id: "jordan-chain-relations-3x3",
       title: t("Jordan Chain Relations for 3x3 Matrices", "3x3 矩阵若尔当链的关系"),
       explanation: t(
-        "In a chain the shifted matrix sends each column to the one before it, and sends the first column, an ordinary eigenvector, to zero. Identify the relations between column vectors of P corresponding to a size-3 Jordan block.",
-        "在一条链中，平移后的矩阵把每一列映射到前一列，并把第一列（一个普通特征向量）映射到零。识别对应 3 阶若尔当块的变换矩阵 P 各列向量之间的链式关系。",
+        "In a chain the shifted matrix sends each column to the one before it, and sends the first column, an ordinary eigenvector, to zero. Identify the relations between column vectors of P corresponding to a size-3 Jordan block. For example, with $A - 2I = \\begin{pmatrix} 0 & 1 & 0 \\\\ 0 & 0 & 3 \\\\ 0 & 0 & 0 \\end{pmatrix}$ the columns $\\mathbf{v}_1 = (3, 0, 0)$, $\\mathbf{v}_2 = (0, 3, 0)$, $\\mathbf{v}_3 = (0, 0, 1)$ form a chain: $(A - 2I)\\mathbf{v}_3 = \\mathbf{v}_2$, $(A - 2I)\\mathbf{v}_2 = \\mathbf{v}_1$, $(A - 2I)\\mathbf{v}_1 = \\mathbf{0}$.\n\n> **Watch out.** The chain starts at the eigenvector in the first column; each later column is sent to the column before it, not to $\\mathbf{0}$.",
+        "在一条链中，平移后的矩阵把每一列映射到前一列，并把第一列（一个普通特征向量）映射到零。识别对应 3 阶若尔当块的变换矩阵 P 各列向量之间的链式关系。例如 $A - 2I = \\begin{pmatrix} 0 & 1 & 0 \\\\ 0 & 0 & 3 \\\\ 0 & 0 & 0 \\end{pmatrix}$ 时，列 $\\mathbf{v}_1 = (3, 0, 0)$、$\\mathbf{v}_2 = (0, 3, 0)$、$\\mathbf{v}_3 = (0, 0, 1)$ 构成一条链：$(A - 2I)\\mathbf{v}_3 = \\mathbf{v}_2$，$(A - 2I)\\mathbf{v}_2 = \\mathbf{v}_1$，$(A - 2I)\\mathbf{v}_1 = \\mathbf{0}$。\n\n> **注意。** 链从第一列的特征向量开始；后面每一列都被映射到前一列，而不是 $\\mathbf{0}$。",
       ),
       generate: (rng: Rng): Problem => {
         const lambda = rng.nonZero(-15, 15);
@@ -5993,19 +6586,57 @@ export const jordanCanonicalDecompositionOfA3x3Matrix: TopicDef = {
           ),
           t(`$v_1 + v_2 + v_3 = 0$`, `$v_1 + v_2 + v_3 = 0$`),
         ];
-        const solution = t(
-          `The equation $AP = PJ_3(\\lambda)$ expands column-by-column to $Av_1 = \\lambda v_1$, $Av_2 = v_1 + \\lambda v_2$, and $Av_3 = v_2 + \\lambda v_3$. Rearranging gives $(A - \\lambda I)v_1 = 0$, $(A - \\lambda I)v_2 = v_1$, and $(A - \\lambda I)v_3 = v_2$.`,
-          `方程 $AP = PJ_3(\\lambda)$ 按列展开为 $Av_1 = \\lambda v_1$、$Av_2 = v_1 + \\lambda v_2$ 以及 $Av_3 = v_2 + \\lambda v_3$。移项整理得到 $(A - \\lambda I)v_1 = 0$、$(A - \\lambda I)v_2 = v_1$ 且 $(A - \\lambda I)v_3 = v_2$。`,
+        const plus = (name: string) => `${lambda < 0 ? "-" : "+"} ${Math.abs(lambda) === 1 ? "" : Math.abs(lambda)}${name}`;
+        const solution = walked(
+          [
+            [
+              ["Compare columns of $AP = PJ$", "比较 $AP = PJ$ 的各列"],
+              t(`The columns of $PJ_3(${lambda})$ give`, `$PJ_3(${lambda})$ 的各列给出`),
+              [`Av_1 = ${lambda}v_1`, `Av_2 = v_1 ${plus("v_2")}`, `Av_3 = v_2 ${plus("v_3")}`],
+            ],
+            [
+              ["Move the eigenvalue terms", "移项"],
+              t(
+                `Subtracting $${lambda}v_j$ from both sides gives $(A${shiftStr})v_1 = 0$, $(A${shiftStr})v_2 = v_1$ and $(A${shiftStr})v_3 = v_2$.`,
+                `两边减去 $${lambda}v_j$，得 $(A${shiftStr})v_1 = 0$、$(A${shiftStr})v_2 = v_1$、$(A${shiftStr})v_3 = v_2$。`,
+              ),
+            ],
+          ],
+          t(
+            `Then $(A${shiftStr})^2 v_3 = v_1 \\neq 0$ and $(A${shiftStr})^3 v_3 = 0$, so $v_3$ has rank $3$, as the last column of a block of size $3$ must.`,
+            `于是 $(A${shiftStr})^2 v_3 = v_1 \\neq 0$，$(A${shiftStr})^3 v_3 = 0$，所以 $v_3$ 的秩为 $3$，正符合 $3$ 阶块最后一列的要求。`,
+          ),
         );
-        return oneOf(rng, prompt, right, wrong, solution);
+        return reasoned(oneOf(rng, prompt, right, wrong, solution), [
+          [
+            wrong[0]!.en,
+            "That makes every column an eigenvector, which describes three $1 \\times 1$ blocks, not $J_3$.",
+            "这使每一列都是特征向量，描述的是三个 $1 \\times 1$ 块，而不是 $J_3$。",
+          ],
+          [
+            wrong[1]!.en,
+            "The chain runs the other way: the eigenvector is the first column $v_1$.",
+            "链的方向反了：特征向量是第一列 $v_1$。",
+          ],
+          [
+            wrong[2]!.en,
+            `Only $v_1$ is an eigenvector; $v_2$ and $v_3$ are generalized eigenvectors of $${lambda}$, not eigenvectors for powers of $${lambda}$.`,
+            `只有 $v_1$ 是特征向量；$v_2$ 和 $v_3$ 是 $${lambda}$ 的广义特征向量，而不是 $${lambda}$ 的幂的特征向量。`,
+          ],
+          [
+            wrong[3]!.en,
+            "The columns of an invertible $P$ are independent, so no such relation holds.",
+            "可逆矩阵 $P$ 的各列线性无关，所以不会有这样的关系。",
+          ],
+        ]);
       },
     },
     {
       id: "a-determinant-from-a-3x3-jordan-decomposition",
       title: t("A determinant from a Jordan decomposition", "由若尔当分解求行列式"),
       explanation: t(
-        "If $A = PJP^{-1}$, then $A - kI = P(J - kI)P^{-1}$, so $\\det(A - kI) = \\det(J - kI)$. The matrix $J - kI$ is upper triangular, so its determinant is the product of its diagonal entries. For $J = J_2(\\lambda) \\oplus J_1(\\mu)$ this gives $(\\lambda - k)^2(\\mu - k)$, without ever computing $A$.",
-        "若 $A = PJP^{-1}$，则 $A - kI = P(J - kI)P^{-1}$，所以 $\\det(A - kI) = \\det(J - kI)$。$J - kI$ 是上三角矩阵，其行列式等于对角元素之积。对 $J = J_2(\\lambda) \\oplus J_1(\\mu)$，结果为 $(\\lambda - k)^2(\\mu - k)$，无需算出 $A$。",
+        "If $A = PJP^{-1}$, then $A - kI = P(J - kI)P^{-1}$, so $\\det(A - kI) = \\det(J - kI)$. The matrix $J - kI$ is upper triangular, so its determinant is the product of its diagonal entries. For $J = J_2(\\lambda) \\oplus J_1(\\mu)$ this gives $(\\lambda - k)^2(\\mu - k)$, without ever computing $A$. For example, $J = J_2(1) \\oplus J_1(4)$ and $k = 2$ give $\\det(A - 2I) = (-1)^2 \\cdot 2 = 2$.\n\n> **Watch out.** $\\lambda$ appears twice on the diagonal of $J_2(\\lambda)$, so its factor is squared. The $1$ above the diagonal does not change the determinant.",
+        "若 $A = PJP^{-1}$，则 $A - kI = P(J - kI)P^{-1}$，所以 $\\det(A - kI) = \\det(J - kI)$。$J - kI$ 是上三角矩阵，其行列式等于对角元素之积。对 $J = J_2(\\lambda) \\oplus J_1(\\mu)$，结果为 $(\\lambda - k)^2(\\mu - k)$，无需算出 $A$。例如 $J = J_2(1) \\oplus J_1(4)$，$k = 2$，得 $\\det(A - 2I) = (-1)^2 \\cdot 2 = 2$。\n\n> **注意。** $\\lambda$ 在 $J_2(\\lambda)$ 的对角线上出现两次，所以它的因子要平方。对角线上方的 $1$ 不影响行列式。",
       ),
       generate(rng: Rng): Problem {
         const lam = rng.int(-3, 4);
@@ -6017,16 +6648,54 @@ export const jordanCanonicalDecompositionOfA3x3Matrix: TopicDef = {
           [0, lam, 0],
           [0, 0, mu],
         ];
+        const sub = `${k < 0 ? "+" : "-"} ${Math.abs(k)}`;
         return numberProblem({
           prompt: t(
             `$A = PJP^{-1}$ with $J = ${mat3Latex(J)}$. Find $\\det(A${formatShift(k)})$.`,
             `$A = PJP^{-1}$，其中 $J = ${mat3Latex(J)}$。求 $\\det(A${formatShift(k)})$。`,
           ),
           answer: ans,
-          wrong: [(lam - k) * (mu - k), (lam + k) ** 2 * (mu + k), lam * lam * mu - k, (lam - k) ** 2 * (mu - k) - (mu - k)],
-          solution: t(
-            `$\\det(A${formatShift(k)}) = \\det(J${formatShift(k)}) = (${lam} ${k < 0 ? "+" : "-"} ${Math.abs(k)})^2(${mu} ${k < 0 ? "+" : "-"} ${Math.abs(k)}) = ${ans}$.`,
-            `$\\det(A${formatShift(k)}) = \\det(J${formatShift(k)}) = (${lam} ${k < 0 ? "+" : "-"} ${Math.abs(k)})^2(${mu} ${k < 0 ? "+" : "-"} ${Math.abs(k)}) = ${ans}$。`,
+          mistakes: [
+            why(
+              (lam - k) * (mu - k),
+              "That counts $\\lambda$ once; $J_2(\\lambda)$ puts it on the diagonal twice.",
+              "这里 $\\lambda$ 只算了一次；$J_2(\\lambda)$ 在对角线上放了两个 $\\lambda$。",
+            ),
+            why(
+              (lam + k) ** 2 * (mu + k),
+              "$A - kI$ subtracts $k$ from each diagonal entry; check the sign.",
+              "$A - kI$ 是从每个对角元中减去 $k$；检查符号。",
+            ),
+            why(
+              lam * lam * mu - k,
+              "$\\det(A - kI)$ is not $\\det A - k$; subtract $k$ on the diagonal first.",
+              "$\\det(A - kI)$ 不是 $\\det A - k$；要先在对角线上减去 $k$。",
+            ),
+            why(
+              (lam - k) ** 2 * (mu - k) - (mu - k),
+              "The $1$ above the diagonal does not change the determinant of a triangular matrix.",
+              "对角线上方的 $1$ 不影响三角矩阵的行列式。",
+            ),
+          ].filter((w, i, all) => w.value !== ans && all.findIndex((o) => o.value === w.value) === i),
+          solution: walked(
+            [
+              [
+                ["Pass to $J$", "转到 $J$"],
+                t(
+                  `$A${formatShift(k)} = P(J${formatShift(k)})P^{-1}$, and similar matrices have the same determinant.`,
+                  `$A${formatShift(k)} = P(J${formatShift(k)})P^{-1}$，而相似矩阵的行列式相同。`,
+                ),
+              ],
+              [
+                ["Multiply the diagonal", "对角元相乘"],
+                t(`$J${formatShift(k)}$ is upper triangular:`, `$J${formatShift(k)}$ 是上三角矩阵：`),
+                [`\\det(J${formatShift(k)}) = (${lam} ${sub})^2(${mu} ${sub}) = ${paren(lam - k)}^2 \\cdot ${paren(mu - k)} = ${ans}`],
+              ],
+            ],
+            t(
+              `The characteristic polynomial $\\det(A - xI) = (${lam} - x)^2(${mu} - x)$ at $x = ${k}$ gives the same value $${ans}$.`,
+              `特征多项式 $\\det(A - xI) = (${lam} - x)^2(${mu} - x)$ 在 $x = ${k}$ 处的值也是 $${ans}$。`,
+            ),
           ),
         });
       },
@@ -6042,6 +6711,10 @@ export const matrixFunctions: TopicDef = {
     "Evaluate analytic matrix functions f(A) on diagonalizable matrices and Jordan blocks using derivatives.",
     "利用导数在可对角化矩阵与若尔当块上计算解析矩阵函数 f(A)。",
   ),
+  intro: t(
+    "For the Jordan block $J = \\begin{pmatrix} 2 & 1 \\\\ 0 & 2 \\end{pmatrix}$ and $f(x) = x^3$, the formula puts $f(2) = 8$ on the diagonal and $f'(2) = 3 \\cdot 2^2 = 12$ above it: $J^3 = \\begin{pmatrix} 8 & 12 \\\\ 0 & 8 \\end{pmatrix}$.\n\nCheck: $J^2 = \\begin{pmatrix} 4 & 4 \\\\ 0 & 4 \\end{pmatrix}$ and $J^3 = J^2 J = \\begin{pmatrix} 8 & 4 + 8 \\\\ 0 & 8 \\end{pmatrix} = \\begin{pmatrix} 8 & 12 \\\\ 0 & 8 \\end{pmatrix}$.\n\nIn this lesson we evaluate functions of Jordan blocks, with derivatives of $f$ above the diagonal.",
+    "对若尔当块 $J = \\begin{pmatrix} 2 & 1 \\\\ 0 & 2 \\end{pmatrix}$ 和 $f(x) = x^3$，公式在对角线上放 $f(2) = 8$，在其上方放 $f'(2) = 3 \\cdot 2^2 = 12$：$J^3 = \\begin{pmatrix} 8 & 12 \\\\ 0 & 8 \\end{pmatrix}$。\n\n检验：$J^2 = \\begin{pmatrix} 4 & 4 \\\\ 0 & 4 \\end{pmatrix}$，$J^3 = J^2 J = \\begin{pmatrix} 8 & 4 + 8 \\\\ 0 & 8 \\end{pmatrix} = \\begin{pmatrix} 8 & 12 \\\\ 0 & 8 \\end{pmatrix}$。\n\n本课我们求若尔当块的函数，对角线上方是 $f$ 的各阶导数。",
+  ),
   prerequisites: ["jordan-canonical-decomposition-of-a-3x3-matrix"],
   encompasses: [],
   xp: 14,
@@ -6050,8 +6723,8 @@ export const matrixFunctions: TopicDef = {
       id: "evaluating-functions-on-jordan-blocks-kp",
       title: t("Evaluating Functions on Jordan Blocks", "在若尔当块上求值矩阵函数"),
       explanation: t(
-        "The one above the diagonal acts like a small step, so a function of a Jordan block brings in the derivative of the function above the diagonal, as in a Taylor expansion. Apply $f\\left(\\begin{bmatrix} \\lambda & 1 \\\\ 0 & \\lambda \\end{bmatrix}\\right) = \\begin{bmatrix} f(\\lambda) & f'(\\lambda) \\\\ 0 & f(\\lambda) \\end{bmatrix}$.",
-        "对角线上方的 1 像一个小步长，所以若尔当块的函数会在对角线上方引入函数的导数，就像泰勒展开一样。应用公式 $f\\left(\\begin{bmatrix} \\lambda & 1 \\\\ 0 & \\lambda \\end{bmatrix}\\right) = \\begin{bmatrix} f(\\lambda) & f'(\\lambda) \\\\ 0 & f(\\lambda) \\end{bmatrix}$。",
+        "The one above the diagonal acts like a small step, so a function of a Jordan block brings in the derivative of the function above the diagonal, as in a Taylor expansion. Apply $f\\left(\\begin{bmatrix} \\lambda & 1 \\\\ 0 & \\lambda \\end{bmatrix}\\right) = \\begin{bmatrix} f(\\lambda) & f'(\\lambda) \\\\ 0 & f(\\lambda) \\end{bmatrix}$. For example, with $f(x) = x^3$ and $\\lambda = 2$, $J^3 = \\begin{pmatrix} 8 & 12 \\\\ 0 & 8 \\end{pmatrix}$, since $f'(2) = 12$.\n\n> **Watch out.** The entry above the diagonal is $f'(\\lambda)$, not $1$ and not $f(\\lambda)$; for $f(x) = x^k$ it is $k\\lambda^{k-1}$.",
+        "对角线上方的 1 像一个小步长，所以若尔当块的函数会在对角线上方引入函数的导数，就像泰勒展开一样。应用公式 $f\\left(\\begin{bmatrix} \\lambda & 1 \\\\ 0 & \\lambda \\end{bmatrix}\\right) = \\begin{bmatrix} f(\\lambda) & f'(\\lambda) \\\\ 0 & f(\\lambda) \\end{bmatrix}$。例如取 $f(x) = x^3$，$\\lambda = 2$，因为 $f'(2) = 12$，所以 $J^3 = \\begin{pmatrix} 8 & 12 \\\\ 0 & 8 \\end{pmatrix}$。\n\n> **注意。** 对角线上方的元素是 $f'(\\lambda)$，不是 $1$，也不是 $f(\\lambda)$；对 $f(x) = x^k$，它是 $k\\lambda^{k-1}$。",
       ),
       generate: (rng: Rng): Problem => {
         const lambda = rng.int(1, 8);
@@ -6060,45 +6733,64 @@ export const matrixFunctions: TopicDef = {
         // f(J) = [[lambda^k, k * lambda^(k-1)], [0, lambda^k]]
         const diagVal = lambda ** k;
         const superVal = k * lambda ** (k - 1);
+        const m = (x: number, y: number, z: number): Text =>
+          t(`$\\begin{pmatrix} ${x} & ${y} \\\\ 0 & ${z} \\end{pmatrix}$`, `$\\begin{pmatrix} ${x} & ${y} \\\\ 0 & ${z} \\end{pmatrix}$`);
         const prompt = t(
           `For the $2 \\times 2$ Jordan block $J = \\begin{pmatrix} ${lambda} & 1 \\\\ 0 & ${lambda} \\end{pmatrix}$, compute the matrix power $J^{${k}}$ by applying the matrix function formula $f(J) = \\begin{pmatrix} f(\\lambda) & f'(\\lambda) \\\\ 0 & f(\\lambda) \\end{pmatrix}$ with $f(x) = x^{${k}}$.`,
           `对于 $2 \\times 2$ 若尔当块 $J = \\begin{pmatrix} ${lambda} & 1 \\\\ 0 & ${lambda} \\end{pmatrix}$，应用矩阵函数公式 $f(J) = \\begin{pmatrix} f(\\lambda) & f'(\\lambda) \\\\ 0 & f(\\lambda) \\end{pmatrix}$（其中 $f(x) = x^{${k}}$）计算矩阵幂 $J^{${k}}$。`,
         );
-        const right = t(
-          `$\\begin{pmatrix} ${diagVal} & ${superVal} \\\\ 0 & ${diagVal} \\end{pmatrix}$`,
-          `$\\begin{pmatrix} ${diagVal} & ${superVal} \\\\ 0 & ${diagVal} \\end{pmatrix}$`,
+        const right = m(diagVal, superVal, diagVal);
+        const wrong = [m(diagVal, 1, diagVal), m(diagVal, 0, diagVal), m(diagVal, diagVal, diagVal), m(superVal, diagVal, superVal)];
+        const derivative = `${k}${k === 2 ? "x" : ` x^{${k - 1}}`}`;
+        const solution = walked(
+          [
+            [["Differentiate", "求导"], t("", ""), [`f(x) = x^{${k}}`, `f'(x) = ${derivative}`]],
+            [
+              ["Evaluate at $\\lambda$", "在 $\\lambda$ 处取值"],
+              t("", ""),
+              [`f(${lambda}) = ${lambda}^{${k}} = ${diagVal}`, `f'(${lambda}) = ${k} \\cdot ${lambda}^{${k - 1}} = ${superVal}`],
+            ],
+            [
+              ["Fill in the formula", "代入公式"],
+              t("", ""),
+              [`J^{${k}} = \\begin{pmatrix} ${diagVal} & ${superVal} \\\\ 0 & ${diagVal} \\end{pmatrix}`],
+            ],
+          ],
+          t(
+            `$J = ${lambda}I + N$ with $N^2 = 0$, so the binomial theorem gives $J^{${k}} = ${lambda}^{${k}}I + ${k} \\cdot ${lambda}^{${k - 1}}N$, the same matrix.`,
+            `$J = ${lambda}I + N$ 且 $N^2 = 0$，由二项式定理得 $J^{${k}} = ${lambda}^{${k}}I + ${k} \\cdot ${lambda}^{${k - 1}}N$，是同一个矩阵。`,
+          ),
         );
-        const wrong = [
-          t(
-            `$\\begin{pmatrix} ${diagVal} & 1 \\\\ 0 & ${diagVal} \\end{pmatrix}$`,
-            `$\\begin{pmatrix} ${diagVal} & 1 \\\\ 0 & ${diagVal} \\end{pmatrix}$`,
-          ),
-          t(
-            `$\\begin{pmatrix} ${diagVal} & 0 \\\\ 0 & ${diagVal} \\end{pmatrix}$`,
-            `$\\begin{pmatrix} ${diagVal} & 0 \\\\ 0 & ${diagVal} \\end{pmatrix}$`,
-          ),
-          t(
-            `$\\begin{pmatrix} ${diagVal} & ${diagVal} \\\\ 0 & ${diagVal} \\end{pmatrix}$`,
-            `$\\begin{pmatrix} ${diagVal} & ${diagVal} \\\\ 0 & ${diagVal} \\end{pmatrix}$`,
-          ),
-          t(
-            `$\\begin{pmatrix} ${superVal} & ${diagVal} \\\\ 0 & ${superVal} \\end{pmatrix}$`,
-            `$\\begin{pmatrix} ${superVal} & ${diagVal} \\\\ 0 & ${superVal} \\end{pmatrix}$`,
-          ),
-        ];
-        const solution = t(
-          `For $f(x) = x^{${k}}$, the derivative is $f'(x) = ${k}${k === 2 ? "x" : ` x^{${k - 1}}`}$. At $x = ${lambda}$, we have $f(${lambda}) = ${lambda}^{${k}} = ${diagVal}$ and $f'(${lambda}) = ${k}(${lambda})^{${k - 1}} = ${superVal}$. Therefore, $J^{${k}} = \\begin{pmatrix} ${diagVal} & ${superVal} \\\\ 0 & ${diagVal} \\end{pmatrix}$.`,
-          `对于 $f(x) = x^{${k}}$，其导数为 $f'(x) = ${k}${k === 2 ? "x" : ` x^{${k - 1}}`}$。在 $x = ${lambda}$ 处，$f(${lambda}) = ${lambda}^{${k}} = ${diagVal}$ 且 $f'(${lambda}) = ${k}(${lambda})^{${k - 1}} = ${superVal}$。因此 $J^{${k}} = \\begin{pmatrix} ${diagVal} & ${superVal} \\\\ 0 & ${diagVal} \\end{pmatrix}$。`,
-        );
-        return oneOf(rng, prompt, right, wrong, solution);
+        return reasoned(oneOf(rng, prompt, right, wrong, solution), [
+          [
+            wrong[0]!.en,
+            "The $1$ above the diagonal becomes $f'(\\lambda)$; it does not stay $1$.",
+            "对角线上方的 $1$ 会变成 $f'(\\lambda)$，而不是保持为 $1$。",
+          ],
+          [
+            wrong[1]!.en,
+            "That treats $J$ as diagonal; the power picks up $f'(\\lambda)$ above the diagonal.",
+            "这是把 $J$ 当作对角矩阵；幂会在对角线上方产生 $f'(\\lambda)$。",
+          ],
+          [
+            wrong[2]!.en,
+            `The entry above the diagonal is $f'(\\lambda) = ${k} \\cdot ${lambda}^{${k - 1}}$, not $f(\\lambda)$.`,
+            `对角线上方的元素是 $f'(\\lambda) = ${k} \\cdot ${lambda}^{${k - 1}}$，不是 $f(\\lambda)$。`,
+          ],
+          [
+            wrong[3]!.en,
+            "$f(\\lambda)$ goes on the diagonal and $f'(\\lambda)$ above it, not the other way round.",
+            "$f(\\lambda)$ 在对角线上，$f'(\\lambda)$ 在其上方，不能反过来。",
+          ],
+        ]);
       },
     },
     {
       id: "the-corner-entry-of-a-power-of-a-3x3-jordan-block",
       title: t("The corner entry of a power of a 3×3 Jordan block", "3×3 若尔当块幂的角元素"),
       explanation: t(
-        "For a Jordan block $J_3(\\lambda)$, a matrix function is $f(J) = \\begin{pmatrix} f(\\lambda) & f'(\\lambda) & \\tfrac{1}{2}f''(\\lambda) \\\\ 0 & f(\\lambda) & f'(\\lambda) \\\\ 0 & 0 & f(\\lambda) \\end{pmatrix}$. With $f(x) = x^n$ the corner entry is $\\tfrac{1}{2}n(n-1)\\lambda^{n-2} = \\binom{n}{2}\\lambda^{n-2}$. The same pattern comes from the binomial expansion of $(\\lambda I + N)^n$, which stops after $N^2$.",
-        "对若尔当块 $J_3(\\lambda)$，矩阵函数为 $f(J) = \\begin{pmatrix} f(\\lambda) & f'(\\lambda) & \\tfrac{1}{2}f''(\\lambda) \\\\ 0 & f(\\lambda) & f'(\\lambda) \\\\ 0 & 0 & f(\\lambda) \\end{pmatrix}$。取 $f(x) = x^n$，角元素为 $\\tfrac{1}{2}n(n-1)\\lambda^{n-2} = \\binom{n}{2}\\lambda^{n-2}$。由 $(\\lambda I + N)^n$ 的二项展开（到 $N^2$ 为止）也得到同样的规律。",
+        "For a Jordan block $J_3(\\lambda)$, a matrix function is $f(J) = \\begin{pmatrix} f(\\lambda) & f'(\\lambda) & \\tfrac{1}{2}f''(\\lambda) \\\\ 0 & f(\\lambda) & f'(\\lambda) \\\\ 0 & 0 & f(\\lambda) \\end{pmatrix}$. With $f(x) = x^n$ the corner entry is $\\tfrac{1}{2}n(n-1)\\lambda^{n-2} = \\binom{n}{2}\\lambda^{n-2}$. The same pattern comes from the binomial expansion of $(\\lambda I + N)^n$, which stops after $N^2$. For example, the corner entry of $J_3(2)^4$ is $\\binom{4}{2} \\cdot 2^2 = 24$.\n\n> **Watch out.** The corner is $\\tfrac{1}{2}f''(\\lambda)$: keep the factor $\\tfrac{1}{2}$, and the power of $\\lambda$ drops by two, to $n - 2$.",
+        "对若尔当块 $J_3(\\lambda)$，矩阵函数为 $f(J) = \\begin{pmatrix} f(\\lambda) & f'(\\lambda) & \\tfrac{1}{2}f''(\\lambda) \\\\ 0 & f(\\lambda) & f'(\\lambda) \\\\ 0 & 0 & f(\\lambda) \\end{pmatrix}$。取 $f(x) = x^n$，角元素为 $\\tfrac{1}{2}n(n-1)\\lambda^{n-2} = \\binom{n}{2}\\lambda^{n-2}$。由 $(\\lambda I + N)^n$ 的二项展开（到 $N^2$ 为止）也得到同样的规律。例如 $J_3(2)^4$ 的角元素为 $\\binom{4}{2} \\cdot 2^2 = 24$。\n\n> **注意。** 角元素是 $\\tfrac{1}{2}f''(\\lambda)$：不要漏掉 $\\tfrac{1}{2}$，而且 $\\lambda$ 的指数降低二，变为 $n - 2$。",
       ),
       generate(rng: Rng): Problem {
         const lam = rng.pick([-3, -2, -1, 1, 2, 3]);
@@ -6116,10 +6808,33 @@ export const matrixFunctions: TopicDef = {
             `设 $J = ${mat3Latex(J)}$。求 $J^{${n}}$ 的右上角元素。`,
           ),
           answer: ans,
-          wrong: [n * (n - 1) * lam ** (n - 2), n * lam ** (n - 1), c2 * lam ** (n - 1), lam ** n],
-          solution: t(
-            `With $f(x) = x^{${n}}$, the corner entry is $\\tfrac{1}{2}f''(${lam}) = \\binom{${n}}{2}(${lam})^{${n - 2}} = ${c2} \\cdot ${lam ** (n - 2)} = ${ans}$.`,
-            `取 $f(x) = x^{${n}}$，角元素为 $\\tfrac{1}{2}f''(${lam}) = \\binom{${n}}{2}(${lam})^{${n - 2}} = ${c2} \\cdot ${lam ** (n - 2)} = ${ans}$。`,
+          mistakes: [
+            why(
+              n * (n - 1) * lam ** (n - 2),
+              "That is $f''(\\lambda)$; the corner entry is half of it.",
+              "这是 $f''(\\lambda)$；角元素是它的一半。",
+            ),
+            why(
+              n * lam ** (n - 1),
+              "That is $f'(\\lambda)$, the entry just above the diagonal.",
+              "这是 $f'(\\lambda)$，即紧挨在对角线上方的元素。",
+            ),
+            why(c2 * lam ** (n - 1), "The power of $\\lambda$ is $n - 2$, not $n - 1$.", "$\\lambda$ 的指数是 $n - 2$，不是 $n - 1$。"),
+            why(lam ** n, "That is the diagonal entry $f(\\lambda)$.", "这是对角元 $f(\\lambda)$。"),
+          ].filter((w, i, all) => w.value !== ans && all.findIndex((o) => o.value === w.value) === i),
+          solution: walked(
+            [
+              [["Differentiate twice", "求二阶导数"], t("", ""), [`f(x) = x^{${n}}`, `f''(x) = ${n * (n - 1)}x^{${n - 2}}`]],
+              [
+                ["Halve and evaluate", "取一半并代入"],
+                t("", ""),
+                [`\\tfrac{1}{2}f''(${lam}) = \\binom{${n}}{2}${paren(lam)}^{${n - 2}} = ${c2} \\cdot ${paren(lam ** (n - 2))} = ${ans}`],
+              ],
+            ],
+            t(
+              `$(\\lambda I + N)^{${n}} = \\lambda^{${n}}I + ${n}\\lambda^{${n - 1}}N + \\binom{${n}}{2}\\lambda^{${n - 2}}N^2$, and $N^2$ has a single $1$ in the corner, so the corner entry is $\\binom{${n}}{2}\\lambda^{${n - 2}} = ${ans}$.`,
+              `$(\\lambda I + N)^{${n}} = \\lambda^{${n}}I + ${n}\\lambda^{${n - 1}}N + \\binom{${n}}{2}\\lambda^{${n - 2}}N^2$，而 $N^2$ 只在角上有一个 $1$，所以角元素为 $\\binom{${n}}{2}\\lambda^{${n - 2}} = ${ans}$。`,
+            ),
           ),
         });
       },

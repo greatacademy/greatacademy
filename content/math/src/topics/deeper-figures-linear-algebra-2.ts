@@ -1169,19 +1169,78 @@ const powersOnEigen = point(
     const coordinate = (p1: number, p2: number) => a * p1 * (v1[i] as number) + b * p2 * (v2[i] as number);
     const answer = coordinate(l1 ** k, l2 ** k);
     const combo = `${a === 1 ? "" : a === -1 ? "-" : a}v ${b < 0 ? "-" : "+"} ${Math.abs(b) === 1 ? "" : Math.abs(b)}w`;
-    return ask(
-      [
-        `The drawing shows eigenvectors $v$ and $w$ of a matrix $A$ with their images. Find the ${name[0]} coordinate of $A^{${k}}(${combo})$.`,
-        `图中是矩阵 $A$ 的特征向量 $v$ 和 $w$ 及其像。求 $A^{${k}}(${combo})$ 的${name[1]}个坐标。`,
-      ],
-      answer,
-      [coordinate(l1, l2), coordinate(l1 * k, l2 * k), coordinate(l2 ** k, l1 ** k), answer + 1],
-      [
-        `The eigenvalues are $${l1}$ and $${l2}$, so $A^{${k}}(${combo}) = ${a}(${l1})^{${k}} ${at(v1)} + ${b < 0 ? `(${b})` : b}(${l2})^{${k}} ${at(v2)}$, whose ${name[0]} coordinate is $${answer}$.`,
-        `特征值为 $${l1}$ 和 $${l2}$，所以 $A^{${k}}(${combo}) = ${a}(${l1})^{${k}} ${at(v1)} + ${b < 0 ? `(${b})` : b}(${l2})^{${k}} ${at(v2)}$，其${name[1]}个坐标为 $${answer}$。`,
-      ],
+    const ca = a * l1 ** k;
+    const cb = b * l2 ** k;
+    const p = (x: number) => (x < 0 ? `(${x})` : `${x}`);
+    const chain = (c: number, l: number) => Array.from({ length: k + 1 }, (_, j) => c * l ** j).join(" \\to ");
+    return {
+      ...numberProblem({
+        prompt: t(
+          `The drawing shows eigenvectors $v$ and $w$ of a matrix $A$ with their images. Find the ${name[0]} coordinate of $A^{${k}}(${combo})$.`,
+          `图中是矩阵 $A$ 的特征向量 $v$ 和 $w$ 及其像。求 $A^{${k}}(${combo})$ 的${name[1]}个坐标。`,
+        ),
+        answer,
+        form: "integer",
+        mistakes: [
+          why(
+            coordinate(l1, l2),
+            `That applies $A$ once; $A^{${k}}$ multiplies by $\\lambda^{${k}}$.`,
+            `这只作用了一次 $A$；$A^{${k}}$ 乘以 $\\lambda^{${k}}$。`,
+          ),
+          why(
+            coordinate(l1 * k, l2 * k),
+            `Raise each eigenvalue to the power ${k}; do not multiply it by ${k}.`,
+            `要把每个特征值取 ${k} 次方，而不是乘以 ${k}。`,
+          ),
+          why(
+            coordinate(l2 ** k, l1 ** k),
+            "The eigenvalues are swapped: read each one from its own arrow.",
+            "特征值交换了：每个特征值要从它自己的箭头读出。",
+          ),
+          why(
+            l1 ** k * (v1[i] as number) + l2 ** k * (v2[i] as number),
+            `The weights ${a} on $v$ and ${b} on $w$ are left out.`,
+            `漏掉了 $v$ 上的权重 ${a} 和 $w$ 上的权重 ${b}。`,
+          ),
+          why(
+            coordinate(1, 1),
+            `That is the coordinate of $${combo}$ itself, before $A^{${k}}$ acts.`,
+            `这是 $${combo}$ 本身的坐标，还没有作用 $A^{${k}}$。`,
+          ),
+        ].filter((m, j, all) => m.value !== answer && all.findIndex((o) => o.value === m.value) === j),
+        solution: walked(
+          [
+            [
+              ["Read the eigenvalues", "读出特征值"],
+              t(
+                `$Av$ is $${l1}$ times $v = ${at(v1)}$ and $Aw$ is $${l2}$ times $w = ${at(v2)}$, so the eigenvalues are $${l1}$ and $${l2}$.`,
+                `$Av$ 是 $v = ${at(v1)}$ 的 $${l1}$ 倍，$Aw$ 是 $w = ${at(v2)}$ 的 $${l2}$ 倍，所以特征值为 $${l1}$ 和 $${l2}$。`,
+              ),
+            ],
+            [
+              ["Apply the power to each piece", "对每一部分作用幂"],
+              t("", ""),
+              [
+                `A^{${k}}(${combo}) = ${a} \\cdot ${p(l1)}^{${k}}v + ${p(b)} \\cdot ${p(l2)}^{${k}}w = ${ca}v ${cb < 0 ? "-" : "+"} ${Math.abs(cb)}w`,
+              ],
+            ],
+            [
+              ["Take the coordinate", "取坐标"],
+              t(
+                `The ${name[0]} coordinates of $v$ and $w$ are $${v1[i]}$ and $${v2[i]}$:`,
+                `$v$ 和 $w$ 的${name[1]}个坐标是 $${v1[i]}$ 和 $${v2[i]}$：`,
+              ),
+              [`${p(ca)} \\cdot ${p(v1[i] as number)} + ${p(cb)} \\cdot ${p(v2[i] as number)} = ${answer}`],
+            ],
+          ],
+          t(
+            `Applying $A$ one step at a time multiplies the weight on $v$ by $${l1}$ and the weight on $w$ by $${l2}$: $${chain(a, l1)}$ and $${chain(b, l2)}$.`,
+            `逐次作用 $A$，$v$ 上的权重每次乘以 $${l1}$，$w$ 上的权重每次乘以 $${l2}$：$${chain(a, l1)}$ 与 $${chain(b, l2)}$。`,
+          ),
+        ),
+      }),
       figure,
-    );
+    };
   },
 );
 
@@ -1259,24 +1318,48 @@ const rotationScale = {
     "the-rotation-scaling-form-from-a-drawn-image",
     ["The rotation-scaling form from a drawn image", "由所画的像写旋转伸缩形式"],
     [
-      "A rotation-scaling matrix is determined by the image of $e_1$: if that image is $(a, b)$, the first column is $(a, b)$ and the second is the same vector turned by a quarter turn counterclockwise, $(-b, a)$.",
-      "旋转伸缩矩阵由 $e_1$ 的像决定：如果这个像是 $(a, b)$，第一列就是 $(a, b)$，第二列是同一向量逆时针转四分之一圈，即 $(-b, a)$。",
+      "A rotation-scaling matrix is determined by the image of $e_1$: if that image is $(a, b)$, the first column is $(a, b)$ and the second is the same vector turned by a quarter turn counterclockwise, $(-b, a)$. For example, if $e_1$ goes to $(3, 1)$, then $e_2$ goes to $(-1, 3)$ and the matrix has rows $(3, -1)$ and $(1, 3)$.\n\n> **Watch out.** Turn counterclockwise: $(a, b)$ becomes $(-b, a)$. The clockwise turn $(b, -a)$ gives a reflection, and writing the arrow as the first row instead of the first column gives the opposite rotation.",
+      "旋转伸缩矩阵由 $e_1$ 的像决定：如果这个像是 $(a, b)$，第一列就是 $(a, b)$，第二列是同一向量逆时针转四分之一圈，即 $(-b, a)$。例如 $e_1$ 映到 $(3, 1)$ 时，$e_2$ 映到 $(-1, 3)$，矩阵的行为 $(3, -1)$ 和 $(1, 3)$。\n\n> **注意。** 要逆时针转：$(a, b)$ 变为 $(-b, a)$。顺时针转得到的 $(b, -a)$ 会给出反射；把箭头写成第一行而不是第一列，会得到反方向的旋转。",
     ],
     (rng) => {
       const [a, b] = spin(rng);
-      return choose(
-        rng,
+      return reasoned(
+        choose(
+          rng,
+          [
+            "A linear map rotates and scales the plane, without reflecting it, and the arrow shows the image of $e_1$. Which matrix is it?",
+            "一个线性映射对平面做旋转和伸缩，没有反射，箭头表示 $e_1$ 的像。它是哪个矩阵？",
+          ],
+          same(mat(a, -b, b, a)),
+          [same(mat(a, b, -b, a)), same(mat(a, b, b, a)), same(mat(a, b, b, -a)), same(mat(b, -a, a, b))],
+          [
+            `**Step 1: Write the first column.** The first column is the arrow, $${at([a, b])}$.\n\n**Step 2: Turn it a quarter turn.** Turning $(a, b)$ a quarter turn counterclockwise gives $(-b, a) = (${-b}, ${a})$, the second column, so the matrix is $${mat(a, -b, b, a)}$.\n\n**Check.** Both columns have squared length $${a * a + b * b}$, and their dot product is $${a} \\cdot ${-b < 0 ? `(${-b})` : -b} + ${b < 0 ? `(${b})` : b} \\cdot ${a < 0 ? `(${a})` : a} = 0$; the determinant $${a * a + b * b}$ is positive, so there is no reflection.`,
+            `**第一步：写出第一列。** 第一列就是箭头 $${at([a, b])}$。\n\n**第二步：转四分之一圈。** 把 $(a, b)$ 逆时针转四分之一圈得 $(-b, a) = (${-b}, ${a})$，即第二列，所以矩阵是 $${mat(a, -b, b, a)}$。\n\n**检验。** 两列长度的平方都是 $${a * a + b * b}$，点积为 $${a} \\cdot ${-b < 0 ? `(${-b})` : -b} + ${b < 0 ? `(${b})` : b} \\cdot ${a < 0 ? `(${a})` : a} = 0$；行列式 $${a * a + b * b}$ 为正，所以没有反射。`,
+          ],
+          fig(5, arrow([a, b], "T(e1)"), [`An arrow from the origin to ${at([a, b])}.`, `从原点指向 ${at([a, b])} 的箭头。`]),
+        ),
         [
-          "A linear map rotates and scales the plane, without reflecting it, and the arrow shows the image of $e_1$. Which matrix is it?",
-          "一个线性映射对平面做旋转和伸缩，没有反射，箭头表示 $e_1$ 的像。它是哪个矩阵？",
+          [
+            same(mat(a, b, -b, a))[0],
+            "The arrow is written as the first row; it belongs in the first column, which turns the rotation the wrong way.",
+            "箭头被写成了第一行；它应当是第一列，写成行会使旋转方向相反。",
+          ],
+          [
+            same(mat(a, b, b, a))[0],
+            "The second column $(b, a)$ is not a quarter turn of $(a, b)$; this matrix does not rotate the plane.",
+            "第二列 $(b, a)$ 不是 $(a, b)$ 转四分之一圈的结果；这个矩阵不旋转平面。",
+          ],
+          [
+            same(mat(a, b, b, -a))[0],
+            "The second column $(b, -a)$ is the clockwise turn; the determinant is negative, so this map reflects the plane.",
+            "第二列 $(b, -a)$ 是顺时针转的结果；行列式为负，所以这个映射反射平面。",
+          ],
+          [
+            same(mat(b, -a, a, b))[0],
+            "The coordinates of the arrow are swapped: its first coordinate is the top entry of the first column.",
+            "箭头的坐标交换了：它的第一个坐标是第一列的上方元素。",
+          ],
         ],
-        same(mat(a, -b, b, a)),
-        [same(mat(a, b, -b, a)), same(mat(a, b, b, a)), same(mat(a, b, b, -a)), same(mat(b, -a, a, b))],
-        [
-          `The first column is the arrow, $${at([a, b])}$. Turning it a quarter turn counterclockwise gives the second column, $(${-b}, ${a})$.`,
-          `第一列就是箭头 $${at([a, b])}$。把它逆时针转四分之一圈得第二列 $(${-b}, ${a})$。`,
-        ],
-        fig(5, arrow([a, b], "T(e1)"), [`An arrow from the origin to ${at([a, b])}.`, `从原点指向 ${at([a, b])} 的箭头。`]),
       );
     },
   ),
