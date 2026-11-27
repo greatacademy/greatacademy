@@ -2261,38 +2261,73 @@ const fareyLine = point(
   "the-next-fraction-between-drawn-farey-neighbours",
   ["The next fraction between drawn Farey neighbours", "所画法里相邻分数之间的下一个分数"],
   [
-    "Two neighbours $\\frac{a}{b} < \\frac{c}{d}$ in a Farey sequence satisfy $bc - ad = 1$. The first fraction to appear between them, as the order grows, is their mediant $\\frac{a + c}{b + d}$, not their average.",
-    "法里数列中的相邻分数 $\\frac{a}{b} < \\frac{c}{d}$ 满足 $bc - ad = 1$。随着阶数增大，第一个出现在它们之间的分数是它们的中间分数 $\\frac{a + c}{b + d}$，而不是平均数。",
+    "Two neighbours $\\frac{a}{b} < \\frac{c}{d}$ in a Farey sequence satisfy $bc - ad = 1$. The first fraction to appear between them, as the order grows, is their mediant $\\frac{a + c}{b + d}$, not their average. For the neighbours $\\frac{1}{3}$ and $\\frac{1}{2}$, $3 \\cdot 1 - 1 \\cdot 2 = 1$, and the first fraction between them is $\\frac{1 + 1}{3 + 2} = \\frac{2}{5}$, which appears in order $5$.\n\nCheck: $5 \\cdot 1 - 2 \\cdot 2 = 1$ and $3 \\cdot 2 - 1 \\cdot 5 = 1$, so $\\frac{2}{5}$ is a Farey neighbour of both.\n\n> **Watch out.** The average $\\frac{5}{12}$ also lies between them, but its denominator is larger, so it appears only later; add the tops and the bottoms instead.",
+    "法里数列中的相邻分数 $\\frac{a}{b} < \\frac{c}{d}$ 满足 $bc - ad = 1$。随着阶数增大，第一个出现在它们之间的分数是它们的中间分数 $\\frac{a + c}{b + d}$，而不是平均数。对相邻分数 $\\frac{1}{3}$ 和 $\\frac{1}{2}$，$3 \\cdot 1 - 1 \\cdot 2 = 1$，它们之间的第一个分数是 $\\frac{1 + 1}{3 + 2} = \\frac{2}{5}$，在 $5$ 阶出现。\n\n检验：$5 \\cdot 1 - 2 \\cdot 2 = 1$，$3 \\cdot 2 - 1 \\cdot 5 = 1$，所以 $\\frac{2}{5}$ 与两者都是法里相邻分数。\n\n> **注意。** 平均数 $\\frac{5}{12}$ 也在它们之间，但分母更大，要更晚才出现；应当分子加分子、分母加分母。",
   ],
-  (rng) => {
-    const order = rng.int(4, 8);
-    const [a, b, c, d] = rng.pick(fareyNeighbours(order));
-    const answer = Q.of(a + c, b + d);
-    const low = Q.of(a, b);
-    const high = Q.of(c, d);
-    const text = (n: number, m: number) => (m === 1 ? String(n) : `${n}/${m}`);
-    const px = (v: number) => Math.round((30 + v * 260) * 10) / 10;
-    const svg = svgDocument(
-      100,
-      `<line x1="30" y1="60" x2="290" y2="60"/><line x1="30" y1="54" x2="30" y2="66"/><line x1="290" y1="54" x2="290" y2="66"/>${label(30, 84, "0")}${label(290, 84, "1")}<circle class="accent" cx="${px(a / b)}" cy="60" r="5" fill="currentColor" stroke="none"/><circle class="accent" cx="${px(c / d)}" cy="60" r="5" fill="currentColor" stroke="none"/>${label(px(a / b) - 12, 42, text(a, b))}${label(px(c / d) + 12, 42, text(c, d))}`,
-    );
-    return ask(
-      [
-        `The marked fractions are neighbours in the Farey sequence of order $${order}$. Which fraction first appears between them as the order grows?`,
-        `标记的分数是 $${order}$ 阶法里数列中的相邻分数。随着阶数增大，哪个分数最先出现在它们之间？`,
-      ],
-      answer,
-      [low.add(high).div(Q.of(2, 1)), Q.of(a * c + 1, b * d), Q.of(a + c + 1, b + d), Q.of(a + c, b + d + 1)],
-      [
-        `The mediant of the neighbours is $\\frac{${a} + ${c}}{${b} + ${d}} = ${answer.toLatex()}$.`,
-        `相邻分数的中间分数为 $\\frac{${a} + ${c}}{${b} + ${d}} = ${answer.toLatex()}$。`,
-      ],
-      figureOf(svg, [
-        `A number line from 0 to 1, with dots at ${text(a, b)} and ${text(c, d)}.`,
-        `从 0 到 1 的数轴，点位于 ${text(a, b)} 和 ${text(c, d)}。`,
-      ]),
-    );
-  },
+  (rng) =>
+    until(() => {
+      const order = rng.int(4, 8);
+      const [a, b, c, d] = rng.pick(fareyNeighbours(order));
+      const answer = Q.of(a + c, b + d);
+      const low = Q.of(a, b);
+      const high = Q.of(c, d);
+      const text = (n: number, m: number) => (m === 1 ? String(n) : `${n}/${m}`);
+      const px = (v: number) => Math.round((30 + v * 260) * 10) / 10;
+      const svg = svgDocument(
+        100,
+        `<line x1="30" y1="60" x2="290" y2="60"/><line x1="30" y1="54" x2="30" y2="66"/><line x1="290" y1="54" x2="290" y2="66"/>${label(30, 84, "0")}${label(290, 84, "1")}<circle class="accent" cx="${px(a / b)}" cy="60" r="5" fill="currentColor" stroke="none"/><circle class="accent" cx="${px(c / d)}" cy="60" r="5" fill="currentColor" stroke="none"/>${label(px(a / b) - 12, 42, text(a, b))}${label(px(c / d) + 12, 42, text(c, d))}`,
+      );
+      const average = low.add(high).div(Q.of(2, 1));
+      const misses: Miss[] = [
+        [
+          average,
+          `$${average.toLatex()}$ is the average; it lies between them, but its denominator is larger than $${b + d}$, so it appears later.`,
+          `$${average.toLatex()}$ 是平均数；它在两者之间，但分母大于 $${b + d}$，所以出现得更晚。`,
+        ],
+        [
+          low.add(high),
+          `That adds the two fractions, which gives $${low.add(high).toLatex()}$, beyond both of them; the mediant adds the tops and the bottoms separately.`,
+          `那是把两个分数相加，得到 $${low.add(high).toLatex()}$，超出了两者；中间分数是分子加分子、分母加分母。`,
+        ],
+        [
+          Q.of(a + c, b * d),
+          `That adds the tops but multiplies the bottoms, $\\frac{${a + c}}{${b * d}}$; the mediant adds both.`,
+          `那是分子相加而分母相乘，$\\frac{${a + c}}{${b * d}}$；中间分数两者都相加。`,
+        ],
+      ];
+      return worked(
+        [
+          `The marked fractions are neighbours in the Farey sequence of order $${order}$. Which fraction first appears between them as the order grows?`,
+          `标记的分数是 $${order}$ 阶法里数列中的相邻分数。随着阶数增大，哪个分数最先出现在它们之间？`,
+        ],
+        answer,
+        misses,
+        [
+          [
+            ["Read the neighbours", "读出相邻分数"],
+            [
+              `The dots are at $${low.toLatex()}$ and $${high.toLatex()}$, and indeed $${b} \\cdot ${c} - ${a} \\cdot ${d} = 1$.`,
+              `两个点在 $${low.toLatex()}$ 和 $${high.toLatex()}$，并且确实 $${b} \\cdot ${c} - ${a} \\cdot ${d} = 1$。`,
+            ],
+          ],
+          [
+            ["Take the mediant", "取中间分数"],
+            [
+              `The mediant is $\\frac{${a} + ${c}}{${b} + ${d}} = ${answer.toLatex()}$; it first appears in order $${b + d}$.`,
+              `中间分数为 $\\frac{${a} + ${c}}{${b} + ${d}} = ${answer.toLatex()}$；它在 $${b + d}$ 阶首次出现。`,
+            ],
+          ],
+        ],
+        [
+          `$${b} \\cdot ${a + c} - ${a} \\cdot ${b + d} = 1$ and $${b + d} \\cdot ${c} - ${a + c} \\cdot ${d} = 1$, so $${answer.toLatex()}$ is a Farey neighbour of both dots.`,
+          `$${b} \\cdot ${a + c} - ${a} \\cdot ${b + d} = 1$，$${b + d} \\cdot ${c} - ${a + c} \\cdot ${d} = 1$，所以 $${answer.toLatex()}$ 与两个点都是法里相邻分数。`,
+        ],
+        figureOf(svg, [
+          `A number line from 0 to 1, with dots at ${text(a, b)} and ${text(c, d)}.`,
+          `从 0 到 1 的数轴，点位于 ${text(a, b)} 和 ${text(c, d)}。`,
+        ]),
+      );
+    }),
 );
 
 /** deeperFiguresProofsAlgebraNumbersPoints adds knowledge points of Methods of Proof, Abstract Algebra and Number Theory that are answered by reading a drawing. */

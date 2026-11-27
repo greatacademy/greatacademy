@@ -12,7 +12,7 @@ import { say, withMistakes } from "../problems.ts";
 import { ask, choose, type Pair, point, same } from "../university-kit.ts";
 import { reasoned } from "../wrong-reasons.ts";
 import { drawn, label } from "./figure-reading-more.ts";
-import { type Miss, until, worked } from "./number-theory-course.ts";
+import { chosen, type Miss, type Slip, until, worked } from "./number-theory-course.ts";
 
 /** fig draws a plane figure with its description in both locales. */
 const fig = (v: PlaneView, marks: readonly PlaneMark[], [en, zh]: Pair) => drawn(v, marks, t(en, zh));
@@ -178,25 +178,68 @@ const gaussianQuotient = point(
   "a-gaussian-quotient-from-two-points",
   ["A Gaussian quotient from two points", "由两点读高斯整数的商"],
   [
-    "A Gaussian integer $a + bi$ is a lattice point of the complex plane, and $\\alpha$ divides $\\beta$ when $\\beta$ equals $\\alpha$ times another Gaussian integer. To find that quotient, read both points from the drawing, multiply the top and the bottom by the conjugate of $\\alpha$, and then divide by the norm of $\\alpha$.",
-    "高斯整数 $a + bi$ 是复平面上的格点，当 $\\beta$ 等于 $\\alpha$ 乘以另一个高斯整数时，$\\alpha$ 整除 $\\beta$。要求这个商，就从图中读出两个点，分子分母同乘 $\\alpha$ 的共轭，再除以 $\\alpha$ 的范数。",
+    "A Gaussian integer $a + bi$ is a lattice point of the complex plane, and $\\alpha$ divides $\\beta$ when $\\beta$ equals $\\alpha$ times another Gaussian integer. To find that quotient, read both points from the drawing, multiply the top and the bottom by the conjugate of $\\alpha$, and then divide by the norm of $\\alpha$. For $\\alpha = 1 + 2i$ at $(1, 2)$ and $\\beta = -3 + 4i$ at $(-3, 4)$: $(-3 + 4i)(1 - 2i) = 5 + 10i$ and the norm of $\\alpha$ is $1 + 4 = 5$, so $\\beta / \\alpha = 1 + 2i$.\n\nCheck: $(1 + 2i)(1 + 2i) = 1 + 4i - 4 = -3 + 4i$, which is $\\beta$.\n\n> **Watch out.** Multiply by the conjugate $1 - 2i$, not by $\\alpha$ itself, or the imaginary part comes out with the wrong sign; and read the real part across and the imaginary part up.",
+    "高斯整数 $a + bi$ 是复平面上的格点，当 $\\beta$ 等于 $\\alpha$ 乘以另一个高斯整数时，$\\alpha$ 整除 $\\beta$。要求这个商，就从图中读出两个点，分子分母同乘 $\\alpha$ 的共轭，再除以 $\\alpha$ 的范数。对在 $(1, 2)$ 的 $\\alpha = 1 + 2i$ 和在 $(-3, 4)$ 的 $\\beta = -3 + 4i$：$(-3 + 4i)(1 - 2i) = 5 + 10i$，而 $\\alpha$ 的范数是 $1 + 4 = 5$，所以 $\\beta / \\alpha = 1 + 2i$。\n\n检验：$(1 + 2i)(1 + 2i) = 1 + 4i - 4 = -3 + 4i$，正是 $\\beta$。\n\n> **注意。** 要乘以共轭 $1 - 2i$，而不是 $\\alpha$ 本身，否则虚部的符号会错；并且实部横着读，虚部竖着读。",
   ],
   (rng) => {
     const [a, b] = [rng.int(1, 2) * rng.sign(), rng.int(1, 2) * rng.sign()];
     const [c, d] = [rng.int(1, 3) * rng.sign(), rng.int(1, 2) * rng.sign()];
     const [x, y] = [a * c - b * d, a * d + b * c];
     const reach = Math.max(5, Math.abs(x) + 1, Math.abs(y) + 1);
-    return choose(
+    const N = a * a + b * b;
+    const product = (u: number, v: number) => gaussian(a * u - b * v, a * v + b * u);
+    const slip = (u: number, v: number, en: string, zh: string): Slip => [
+      same(gaussian(u, v)),
+      `${en} Indeed $(${gaussian(a, b)})(${gaussian(u, v)}) = ${product(u, v)}$, not $\\beta$.`,
+      `${zh}确实 $(${gaussian(a, b)})(${gaussian(u, v)}) = ${product(u, v)}$，不是 $\\beta$。`,
+    ];
+    const seen = new Set([gaussian(c, d)]);
+    const slips = [
+      slip(
+        c,
+        -d,
+        "That flips the sign of the imaginary part, as when multiplying by $\\alpha$ instead of its conjugate.",
+        "那把虚部的符号弄反了，就像乘的是 $\\alpha$ 而不是它的共轭。",
+      ),
+      slip(-c, -d, "That has both signs flipped.", "那两个符号都反了。"),
+      slip(-d, c, "That is $i$ times the quotient, a quarter turn too far.", "那是商乘以 $i$，多转了四分之一圈。"),
+      slip(d, c, "That swaps the real and imaginary parts.", "那把实部和虚部对调了。"),
+      slip(c + 1, d, "That is one too many in the real part.", "那的实部多了一。"),
+    ].filter(([[en]]) => !seen.has(en.slice(1, -1)) && Boolean(seen.add(en.slice(1, -1))));
+    return chosen(
       rng,
       [
         "The points $\\alpha$ and $\\beta$ are Gaussian integers in the complex plane. What is $\\beta / \\alpha$?",
         "点 $\\alpha$ 和 $\\beta$ 是复平面上的高斯整数。$\\beta / \\alpha$ 是多少？",
       ],
       same(gaussian(c, d)),
-      [same(gaussian(c, -d)), same(gaussian(-c, -d)), same(gaussian(-d, c)), same(gaussian(d, c)), same(gaussian(c + 1, d))],
+      slips,
       [
-        `The drawing shows $\\alpha = ${gaussian(a, b)}$ and $\\beta = ${gaussian(x, y)}$. Multiplying back confirms it, since $(${gaussian(a, b)})(${gaussian(c, d)}) = ${gaussian(x, y)}$.`,
-        `图中 $\\alpha = ${gaussian(a, b)}$，$\\beta = ${gaussian(x, y)}$。乘回去可以验证，因为 $(${gaussian(a, b)})(${gaussian(c, d)}) = ${gaussian(x, y)}$。`,
+        [
+          ["Read the points", "读点"],
+          [
+            `$\\alpha$ is at $(${a}, ${b})$ and $\\beta$ at $(${x}, ${y})$, so $\\alpha = ${gaussian(a, b)}$ and $\\beta = ${gaussian(x, y)}$.`,
+            `$\\alpha$ 在 $(${a}, ${b})$，$\\beta$ 在 $(${x}, ${y})$，所以 $\\alpha = ${gaussian(a, b)}$，$\\beta = ${gaussian(x, y)}$。`,
+          ],
+        ],
+        [
+          ["Multiply by the conjugate", "乘以共轭"],
+          [
+            `$(${gaussian(x, y)})(${gaussian(a, -b)}) = ${gaussian(x * a + y * b, y * a - x * b)}$, and the norm of $\\alpha$ is $${a * a} + ${b * b} = ${N}$.`,
+            `$(${gaussian(x, y)})(${gaussian(a, -b)}) = ${gaussian(x * a + y * b, y * a - x * b)}$，而 $\\alpha$ 的范数是 $${a * a} + ${b * b} = ${N}$。`,
+          ],
+        ],
+        [
+          ["Divide by the norm", "除以范数"],
+          [
+            `Dividing both parts by $${N}$ gives $\\beta / \\alpha = ${gaussian(c, d)}$.`,
+            `两部分都除以 $${N}$，得 $\\beta / \\alpha = ${gaussian(c, d)}$。`,
+          ],
+        ],
+      ],
+      [
+        `Multiplying back, $(${gaussian(a, b)})(${gaussian(c, d)}) = ${gaussian(x, y)}$, which is $\\beta$.`,
+        `乘回去，$(${gaussian(a, b)})(${gaussian(c, d)}) = ${gaussian(x, y)}$，正是 $\\beta$。`,
       ],
       fig(
         { xMin: -reach, xMax: reach, yMin: -reach, yMax: reach, labelEvery: reach > 7 ? 2 : 1, xName: "Re", yName: "Im" },
@@ -214,47 +257,84 @@ const gaussianNorm = point(
   "the-norm-from-a-lattice-of-multiples",
   ["The norm from a lattice of multiples", "由倍数格读范数"],
   [
-    "The multiples of a Gaussian integer $\\alpha$ form a tilted square lattice, because multiplying by $i$ turns $\\alpha$ by a quarter turn. Each cell of this lattice is a square with side $\\alpha$. So the area of a cell equals the norm $a^2 + b^2$, which is also the number of residue classes modulo $\\alpha$.",
-    "高斯整数 $\\alpha$ 的倍数构成倾斜的正方形格，因为乘以 $i$ 把 $\\alpha$ 转四分之一圈。这个格的每个单元是以 $\\alpha$ 为边的正方形。所以单元的面积等于范数 $a^2 + b^2$，它也是模 $\\alpha$ 的剩余类的个数。",
+    "The multiples of a Gaussian integer $\\alpha$ form a tilted square lattice, because multiplying by $i$ turns $\\alpha$ by a quarter turn. Each cell of this lattice is a square with side $\\alpha$. So the area of a cell equals the norm $a^2 + b^2$, which is also the number of residue classes modulo $\\alpha$. For $\\alpha = 2 + i$, the multiples include $2 + i$ and $i\\alpha = -1 + 2i$, and the cell at $0$ has corners $0$, $2 + i$, $1 + 3i$ and $-1 + 2i$; its area is the norm $2^{2} + 1^{2} = 5$.\n\nCheck: the sides $(2, 1)$ and $(-1, 2)$ give the area $2 \\cdot 2 - 1 \\cdot (-1) = 5$.\n\n> **Watch out.** The norm is $a^{2} + b^{2}$, the square of the side, not $|a| + |b|$ or $(|a| + |b|)^{2}$; and the diagonal of the cell is longer, with square $2(a^{2} + b^{2})$.",
+    "高斯整数 $\\alpha$ 的倍数构成倾斜的正方形格，因为乘以 $i$ 把 $\\alpha$ 转四分之一圈。这个格的每个单元是以 $\\alpha$ 为边的正方形。所以单元的面积等于范数 $a^2 + b^2$，它也是模 $\\alpha$ 的剩余类的个数。对 $\\alpha = 2 + i$，倍数包括 $2 + i$ 和 $i\\alpha = -1 + 2i$，原点处的单元的顶点是 $0$、$2 + i$、$1 + 3i$ 和 $-1 + 2i$；它的面积就是范数 $2^{2} + 1^{2} = 5$。\n\n检验：两边 $(2, 1)$ 和 $(-1, 2)$ 给出面积 $2 \\cdot 2 - 1 \\cdot (-1) = 5$。\n\n> **注意。** 范数是 $a^{2} + b^{2}$，即边长的平方，不是 $|a| + |b|$ 或 $(|a| + |b|)^{2}$；单元的对角线更长，它的平方是 $2(a^{2} + b^{2})$。",
   ],
-  (rng) => {
-    const [a, b] = [rng.int(1, 3) * rng.sign(), rng.int(1, 3) * rng.sign()];
-    const norm = a * a + b * b;
-    const marks: PlaneMark[] = [
-      {
-        kind: "polygon",
-        points: [
-          [0, 0],
-          [a, b],
-          [a - b, a + b],
-          [-b, a],
-        ],
-      },
-    ];
-    for (let m = -6; m <= 6; m++) {
-      for (let n = -6; n <= 6; n++) {
-        const [x, y] = [m * a - n * b, m * b + n * a];
-        if (Math.abs(x) <= 8 && Math.abs(y) <= 8 && !(x === a && y === b)) marks.push({ kind: "point", at: [x, y] });
+  (rng) =>
+    until(() => {
+      const [a, b] = [rng.int(1, 3) * rng.sign(), rng.int(1, 3) * rng.sign()];
+      const norm = a * a + b * b;
+      const marks: PlaneMark[] = [
+        {
+          kind: "polygon",
+          points: [
+            [0, 0],
+            [a, b],
+            [a - b, a + b],
+            [-b, a],
+          ],
+        },
+      ];
+      for (let m = -6; m <= 6; m++) {
+        for (let n = -6; n <= 6; n++) {
+          const [x, y] = [m * a - n * b, m * b + n * a];
+          if (Math.abs(x) <= 8 && Math.abs(y) <= 8 && !(x === a && y === b)) marks.push({ kind: "point", at: [x, y] });
+        }
       }
-    }
-    marks.push({ kind: "point", at: [a, b], label: "α", dir: "ne", accent: true });
-    return ask(
-      [
-        "The dots are the Gaussian integer multiples of $\\alpha$, and the shaded square is one cell of this lattice. What is the norm of $\\alpha$?",
-        "这些点是 $\\alpha$ 的高斯整数倍，阴影正方形是这个格的一个单元。$\\alpha$ 的范数是多少？",
-      ],
-      norm,
-      [Math.abs(a) + Math.abs(b), (Math.abs(a) + Math.abs(b)) ** 2, 2 * norm, norm + 1],
-      [
-        `The drawing shows $\\alpha = ${gaussian(a, b)}$, so its norm is $${a * a} + ${b * b} = ${norm}$, which is also the area of the shaded cell.`,
-        `图中 $\\alpha = ${gaussian(a, b)}$，所以范数是 $${a * a} + ${b * b} = ${norm}$，它也是阴影单元的面积。`,
-      ],
-      fig({ xMin: -9, xMax: 9, yMin: -9, yMax: 9, xName: "Re", yName: "Im" }, marks, [
-        `A tilted square lattice of multiples of alpha, which lies at (${a}, ${b}), with the cell at the origin shaded.`,
-        `alpha 的倍数构成的倾斜正方形格，alpha 在 (${a}, ${b})，原点处的单元有阴影。`,
-      ]),
-    );
-  },
+      marks.push({ kind: "point", at: [a, b], label: "α", dir: "ne", accent: true });
+      const sum = Math.abs(a) + Math.abs(b);
+      const par = (v: number) => (v < 0 ? `(${v})` : `${v}`);
+      const misses: Miss[] = [
+        [sum, `That adds the coordinates $|${a}| + |${b}|$ without squaring them.`, `那把坐标 $|${a}| + |${b}|$ 直接相加，没有平方。`],
+        [
+          sum ** 2,
+          `That squares the sum, $(${Math.abs(a)} + ${Math.abs(b)})^{2}$; the norm is the sum of the squares.`,
+          `那是和的平方 $(${Math.abs(a)} + ${Math.abs(b)})^{2}$；范数是平方的和。`,
+        ],
+        [
+          2 * norm,
+          `That squares the diagonal of the cell, from $0$ to $${gaussian(a - b, a + b)}$, instead of its side.`,
+          `那是单元对角线（从 $0$ 到 $${gaussian(a - b, a + b)}$）的平方，不是边长的平方。`,
+        ],
+        [
+          Math.abs(a * a - b * b),
+          "That subtracts the squares; the norm $(a + bi)(a - bi) = a^{2} + b^{2}$ adds them.",
+          "那把平方相减了；范数 $(a + bi)(a - bi) = a^{2} + b^{2}$ 是相加。",
+        ],
+      ];
+      return worked(
+        [
+          "The dots are the Gaussian integer multiples of $\\alpha$, and the shaded square is one cell of this lattice. What is the norm of $\\alpha$?",
+          "这些点是 $\\alpha$ 的高斯整数倍，阴影正方形是这个格的一个单元。$\\alpha$ 的范数是多少？",
+        ],
+        norm,
+        misses,
+        [
+          [
+            ["Read alpha", "读出 alpha"],
+            [
+              `The labeled point is at $(${a}, ${b})$, so $\\alpha = ${gaussian(a, b)}$.`,
+              `标出的点在 $(${a}, ${b})$，所以 $\\alpha = ${gaussian(a, b)}$。`,
+            ],
+          ],
+          [
+            ["Square and add", "平方相加"],
+            [
+              `The norm is $${par(a)}^{2} + ${par(b)}^{2} = ${a * a} + ${b * b} = ${norm}$.`,
+              `范数是 $${par(a)}^{2} + ${par(b)}^{2} = ${a * a} + ${b * b} = ${norm}$。`,
+            ],
+          ],
+        ],
+        [
+          `The shaded cell has sides $\\alpha = (${a}, ${b})$ and $i\\alpha = (${-b}, ${a})$, so its area is $${par(a)} \\cdot ${par(a)} - ${par(b)} \\cdot ${par(-b)} = ${norm}$, the same.`,
+          `阴影单元的两边是 $\\alpha = (${a}, ${b})$ 和 $i\\alpha = (${-b}, ${a})$，所以面积是 $${par(a)} \\cdot ${par(a)} - ${par(b)} \\cdot ${par(-b)} = ${norm}$，一致。`,
+        ],
+        fig({ xMin: -9, xMax: 9, yMin: -9, yMax: 9, xName: "Re", yName: "Im" }, marks, [
+          `A tilted square lattice of multiples of alpha, which lies at (${a}, ${b}), with the cell at the origin shaded.`,
+          `alpha 的倍数构成的倾斜正方形格，alpha 在 (${a}, ${b})，原点处的单元有阴影。`,
+        ]),
+      );
+    }),
 );
 
 const inverseInTable = point(
