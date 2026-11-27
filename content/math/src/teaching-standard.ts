@@ -36,4 +36,35 @@ export const taughtCourses: readonly string[] = [
  * taughtTopics lists further topics written to the standard while their course is still being rewritten; once the
  * course is listed in taughtCourses, its topics leave this list.
  */
-export const taughtTopics: readonly string[] = [];
+export const taughtTopics: readonly string[] = [
+  "functions-of-a-complex-variable",
+  "limits-of-complex-functions",
+  "the-complex-derivative",
+  "the-cauchy-riemann-equations",
+  "harmonic-functions-and-conjugates",
+  "the-complex-exponential-function",
+  "the-complex-logarithm",
+  "contour-integrals",
+  "cauchys-integral-theorem",
+  "cauchys-integral-formula",
+  "cauchys-estimates-and-liouvilles-theorem",
+  "taylor-series-of-analytic-functions",
+  "laurent-series",
+  "classifying-isolated-singularities",
+  "computing-residues",
+  "the-residue-theorem",
+  "mobius-transformations",
+  "conformal-maps",
+  "power-series-on-discs",
+  "complex-trigonometric-and-hyperbolic-functions",
+  "complex-powers-and-branches",
+  "the-ml-inequality",
+  "winding-numbers",
+  "zeros-of-analytic-functions",
+  "laurent-series-on-annuli",
+  "the-argument-principle-and-rouches-theorem",
+  "trigonometric-integrals-by-residues",
+  "improper-integrals-by-residues",
+  "the-cross-ratio",
+  "conformal-maps-of-regions",
+];
