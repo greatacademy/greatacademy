@@ -284,6 +284,7 @@ Stages 4 and 5 were reopened on 2026-11-25 and are written by whoever coordinate
 | `partial-differential-equations-more.ts` | 13 | done | coordinator, helper A | insulated and Robin ends, nonhomogeneous problems, damped waves, energy, reflection, domains of dependence, membranes, Laplace on rectangles and discs, Poisson's equation and finite differences |
 | `partial-differential-equations-extra.ts` | 20 | done | coordinator, helper A | Sturm-Liouville problems and the further topics of the course, with the four outline topics of `university-outline-additions.ts` and third points for these three files in `deeper-partial-differential-equations.ts`, `deeper-partial-differential-equations-third.ts`, `deeper-figures-partial-differential-equations.ts` and `figure-reading-college.ts` |
 | `sat-exam-algebra-1.ts` to `sat-exam-algebra-4.ts` | 65 | done | coordinator, helper B | SAT exam-style algebra topics, with walked solutions and explained wrong answers through `step` and `worked` in `exam.ts`, and intros and callouts for their lessons in `exam-lessons-sat.ts` |
+| `act-exam-own-1.ts` to `act-exam-own-3.ts` | 86 | done | coordinator, helper A | ACT exam-style topics, with walked solutions and explained wrong answers through `ask` and `askExact` in `act-exam-kit.ts`, and intros and callouts for their lessons in `exam-lessons-act.ts` |
 
 ## Open Gaps
 

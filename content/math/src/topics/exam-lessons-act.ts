@@ -1985,6 +1985,18 @@ export const actExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "act-exam-combining-like-terms": {
+    intro: t(
+      "A garden plan has a bed of area $4x^2 + 6x$ square feet, and a path of $x^2 - 2x$ square feet is taken out of it. The ACT asks for what is left as one expression: $(4x^2 + 6x) - (x^2 - 2x) = 3x^2 + 8x$. Other questions add up the sides of a figure written as expressions.\n\nCheck: at $x = 1$ the bed is $10$, the path is $-1$, and $10 - (-1) = 11 = 3 + 8$.\n\nIn this lesson we subtract and add groups of terms, keeping every sign, and combine only terms with the same power.",
+      "一份花园设计图中，花坛面积为 $4x^2 + 6x$ 平方英尺，从中去掉一条面积为 $x^2 - 2x$ 平方英尺的小路。ACT 要求把剩下的面积写成一个式子：$(4x^2 + 6x) - (x^2 - 2x) = 3x^2 + 8x$。另一些题把图形各边写成式子，要求相加。\n\n检验：$x = 1$ 时花坛为 $10$，小路为 $-1$，而 $10 - (-1) = 11 = 3 + 8$。\n\n本课我们对成组的项做加减，保留每个符号，只合并次数相同的项。",
+    ),
+    watch: t(
+      "The minus sign reaches the last term of the group too: $(6x^2 + x) - (2x^2 - 3x) = 4x^2 + 4x$, not $4x^2 - 2x$.",
+      "减号也作用于括号里的最后一项：$(6x^2 + x) - (2x^2 - 3x) = 4x^2 + 4x$，而不是 $4x^2 - 2x$。",
+    ),
+    hardWatch: t(
+      "A side written as $x - 4$ still has $x$ coefficient $1$: sides $2x + 3$, $x - 4$ and $3x + 2$ give a perimeter of $6x + 1$, not $5x + 1$.",
+      "写成 $x - 4$ 的边，$x$ 的系数仍是 $1$：边为 $2x + 3$、$x - 4$、$3x + 2$ 时周长为 $6x + 1$，而不是 $5x + 1$。",
+    ),
     tip: t(
       "Subtracting a group changes the sign of every term in it. Then combine terms with the same power. So $(5x^2 + 3x) - (2x^2 - x) = 3x^2 + 4x$. Applying the minus only to the first term gives $2x$ at the end. Unlike powers, such as $x^2$ and $x$, never merge.",
       "减去一组时，其中每一项都要变号。再合并次数相同的项。所以 $(5x^2 + 3x) - (2x^2 - x) = 3x^2 + 4x$。减号只作用于第一项，末尾就成了 $2x$。不同次的项，如 $x^2$ 和 $x$，绝不能合并。",
@@ -1995,6 +2007,18 @@ export const actExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "act-exam-distributing-over-binomials": {
+    intro: t(
+      "A school orders $3$ packs of $x - 2$ markers each and returns $2$ packs of $x + 1$. The markers kept are $3(x - 2) - 2(x + 1) = x - 8$. ACT questions ask for the whole simplified expression or just its constant term.\n\nCheck: with $x = 10$, $3(8) - 2(11) = 2$, and $10 - 8 = 2$.\n\nIn this lesson we distribute each factor through its parentheses, carry signs to every term and combine the results.",
+      "一所学校订了 $3$ 包、每包 $x - 2$ 支马克笔，又退回 $2$ 包、每包 $x + 1$ 支。留下的笔数是 $3(x - 2) - 2(x + 1) = x - 8$。ACT 题要求写出化简后的整个式子，或只求它的常数项。\n\n检验：取 $x = 10$，$3(8) - 2(11) = 2$，而 $10 - 8 = 2$。\n\n本课我们把每个因数乘进括号，把符号带给每一项，再合并结果。",
+    ),
+    watch: t(
+      "A subtracted multiple changes both signs inside: $-4(x - 3) = -4x + 12$, not $-4x - 12$.",
+      "减去一个倍数时，括号里两项都要变号：$-4(x - 3) = -4x + 12$，而不是 $-4x - 12$。",
+    ),
+    hardWatch: t(
+      "Setting $x = 0$ gives the constant term at once: for $5(x - 2) + 3(2x + 1)$ it is $-10 + 3 = -7$, which is not the $-2 + 1 = -1$ of the bare numbers.",
+      "令 $x = 0$ 就能直接得到常数项：$5(x - 2) + 3(2x + 1)$ 的常数项是 $-10 + 3 = -7$，而不是括号里两数之和 $-2 + 1 = -1$。",
+    ),
     tip: t(
       "Multiply each outside factor through its parentheses, carrying the minus sign to both terms of a subtracted group. So $3(x - 4) - 2(x + 5) = 3x - 12 - 2x - 10 = x - 22$. Writing $+10$ instead of $-10$ is the common sign slip. Then combine like terms.",
       "把外面的每个因数乘进括号，减号要带到被减组的两项。所以 $3(x - 4) - 2(x + 5) = 3x - 12 - 2x - 10 = x - 22$。把 $-10$ 写成 $+10$ 是常见的符号错误。然后合并同类项。",
@@ -2005,6 +2029,18 @@ export const actExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "act-exam-expanding-products-of-binomials": {
+    intro: t(
+      "A square photo of side $x$ inches is trimmed $5$ inches in one direction and widened $2$ in the other, so its area is $(x + 2)(x - 5) = x^2 - 3x - 10$. ACT questions ask for the whole expansion or for one coefficient of it.\n\nCheck: at $x = 6$, $(8)(1) = 8$, and $36 - 18 - 10 = 8$.\n\nIn this lesson we multiply each term of one binomial by each term of the other and combine the middle terms.",
+      "一张边长 $x$ 英寸的正方形照片，一个方向裁去 $5$ 英寸，另一个方向加宽 $2$ 英寸，面积为 $(x + 2)(x - 5) = x^2 - 3x - 10$。ACT 题要求写出整个展开式，或只求其中一个系数。\n\n检验：$x = 6$ 时，$(8)(1) = 8$，而 $36 - 18 - 10 = 8$。\n\n本课我们用一个二项式的每一项乘另一个的每一项，再合并中间两项。",
+    ),
+    watch: t(
+      "The sign of the middle term follows the larger of the two numbers: $(x + 2)(x - 9) = x^2 - 7x - 18$, while $(x - 2)(x + 9) = x^2 + 7x - 18$.",
+      "中间项的符号跟随绝对值较大的那个数：$(x + 2)(x - 9) = x^2 - 7x - 18$，而 $(x - 2)(x + 9) = x^2 + 7x - 18$。",
+    ),
+    hardWatch: t(
+      "Each outer and inner product includes a coefficient: in $(3x + 4)(2x - 1)$ the $x$ terms are $-3x$ and $8x$, so the coefficient is $5$, not $4 - 1 = 3$.",
+      "外项积和内项积都带着系数：$(3x + 4)(2x - 1)$ 中 $x$ 项为 $-3x$ 与 $8x$，系数是 $5$，而不是 $4 - 1 = 3$。",
+    ),
     tip: t(
       "Each term of the first binomial multiplies each term of the second, giving four products. Then combine the middle two. So $(x + 3)(x - 7) = x^2 - 7x + 3x - 21 = x^2 - 4x - 21$. Multiplying only firsts and lasts drops the middle term, which is the trap.",
       "第一个二项式的每一项乘第二个的每一项，得四个乘积。再合并中间两项。所以 $(x + 3)(x - 7) = x^2 - 7x + 3x - 21 = x^2 - 4x - 21$。只乘首项和末项就漏了中间项，这就是陷阱。",
@@ -2015,6 +2051,18 @@ export const actExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "act-exam-factoring-algebraic-expressions": {
+    intro: t(
+      "A rectangle has area $12x^2 - 18x$ and a width of $6x$. Its length is what is left when the common factor comes out: $12x^2 - 18x = 6x(2x - 3)$. ACT questions ask for a factored form or for the factor that completes a product.\n\nCheck: $6x \\cdot 2x = 12x^2$ and $6x \\cdot (-3) = -18x$.\n\nIn this lesson we take out the greatest common factor, numbers and variables together, and check by multiplying back.",
+      "一个长方形面积为 $12x^2 - 18x$，宽为 $6x$。提出公因式后剩下的就是长：$12x^2 - 18x = 6x(2x - 3)$。ACT 题要求写出因式分解，或求补全乘积的那个因式。\n\n检验：$6x \\cdot 2x = 12x^2$，$6x \\cdot (-3) = -18x$。\n\n本课我们提出最大公因式，数字和字母一起提，并乘回去检验。",
+    ),
+    watch: t(
+      "When the factor is a whole term, a $1$ is left in its place: $5x^2 + 5x = 5x(x + 1)$, not $5x(x)$.",
+      "当公因式就是某一整项时，那一项留下的是 $1$：$5x^2 + 5x = 5x(x + 1)$，而不是 $5x(x)$。",
+    ),
+    hardWatch: t(
+      "Each variable loses exactly one power: $8x^3y^2 \\div 4xy = 2x^2y$, not $2x^3y^2$ or $2x^2$.",
+      "每个字母恰好少一次方：$8x^3y^2 \\div 4xy = 2x^2y$，而不是 $2x^3y^2$ 或 $2x^2$。",
+    ),
     tip: t(
       "Take out the greatest factor shared by all terms: the number and the variable. For $6x^2 - 21x$: the common factor is $3x$, which leaves $3x(2x - 7)$. Distribute back to check. A smaller factor leaves a common factor inside, so it is not fully factored.",
       "提出所有项共有的最大因式：数和变量都要。对 $6x^2 - 21x$：公因式是 $3x$，得 $3x(2x - 7)$。乘回去验算。用较小的因式，括号内还有公因式，就没有分解完全。",
@@ -2025,6 +2073,18 @@ export const actExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "act-exam-simplifying-by-canceling-factors": {
+    intro: t(
+      "A tank's volume $3x^2 - 27$ is shared among $x - 3$ equal containers. Each gets $\\frac{3x^2 - 27}{x - 3} = \\frac{3(x - 3)(x + 3)}{x - 3} = 3x + 9$. ACT questions ask for the simplified form or for its value at a given $x$.\n\nCheck: at $x = 5$, $\\frac{75 - 27}{2} = 24$, and $3(5) + 9 = 24$.\n\nIn this lesson we factor first, cancel only whole common factors, and then simplify or substitute.",
+      "一个水箱的容积 $3x^2 - 27$ 平均分到 $x - 3$ 个容器里，每个得 $\\frac{3x^2 - 27}{x - 3} = \\frac{3(x - 3)(x + 3)}{x - 3} = 3x + 9$。ACT 题要求写出化简结果，或求它在某个 $x$ 处的值。\n\n检验：$x = 5$ 时，$\\frac{75 - 27}{2} = 24$，而 $3(5) + 9 = 24$。\n\n本课我们先因式分解，只约去整个公因式，再化简或代入。",
+    ),
+    watch: t(
+      "Terms that are added cannot be cancelled: in $\\frac{x^2 + 4}{x + 2}$ nothing cancels, since $x^2 + 4$ does not factor, so it is not $x + 2$.",
+      "相加的项不能约分：$\\frac{x^2 + 4}{x + 2}$ 中什么也约不掉，因为 $x^2 + 4$ 不能分解，所以它不等于 $x + 2$。",
+    ),
+    hardWatch: t(
+      "The factor left is the one that does not match the denominator: $\\frac{x^2 + 7x + 12}{x + 4} = x + 3$, so at $x = 2$ the value is $5$, not $6$.",
+      "留下的是与分母不同的那个因式：$\\frac{x^2 + 7x + 12}{x + 4} = x + 3$，所以 $x = 2$ 时值为 $5$，而不是 $6$。",
+    ),
     tip: t(
       "You can cancel only whole factors, so factor the numerator first, then remove the matching factor. Here a common number comes out, then a difference of squares. So $\\frac{2x^2 - 18}{x - 3} = \\frac{2(x - 3)(x + 3)}{x - 3} = 2x + 6$. Cancelling individual terms is the invalid move.",
       "只能约去完整的因式，所以先分解分子，再去掉相同的因式。这里先提公因数，再用平方差。所以 $\\frac{2x^2 - 18}{x - 3} = \\frac{2(x - 3)(x + 3)}{x - 3} = 2x + 6$。约去单独的项是错误的做法。",
@@ -2035,6 +2095,18 @@ export const actExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "act-exam-evaluating-algebraic-expressions": {
+    intro: t(
+      "A science formula gives the height of a ball as $3t^2 - 2h$ for given values. With $t = -4$ and $h = 5$ it is $3(16) - 10 = 38$. ACT questions give negative inputs and several variables, and each one goes in with parentheses.\n\nCheck: $38 + 10 = 48$, and $48 \\div 3 = 16 = (-4)^2$.\n\nIn this lesson we substitute with parentheses and evaluate in the order of operations, even with three variables.",
+      "某个科学公式给出的值是 $3t^2 - 2h$。取 $t = -4$，$h = 5$，得 $3(16) - 10 = 38$。ACT 题会给出负数和多个变量，每个都要带括号代入。\n\n检验：$38 + 10 = 48$，而 $48 \\div 3 = 16 = (-4)^2$。\n\n本课我们带括号代入，按运算顺序求值，即使有三个变量也一样。",
+    ),
+    watch: t(
+      "A coefficient is not squared with the variable: at $x = -2$, $3x^2 = 3(4) = 12$, not $(3 \\cdot (-2))^2 = 36$.",
+      "系数不随字母一起平方：$x = -2$ 时，$3x^2 = 3(4) = 12$，而不是 $(3 \\cdot (-2))^2 = 36$。",
+    ),
+    hardWatch: t(
+      "A negative factor in front keeps its sign after the square: with $a = -3$, $b = 4$ and $c = 2$, $a(b - c)^2 = -3(4) = -12$, not $36$.",
+      "前面的负因数在平方之后仍保留符号：$a = -3$，$b = 4$，$c = 2$ 时，$a(b - c)^2 = -3(4) = -12$，而不是 $36$。",
+    ),
     tip: t(
       "Substitute with parentheses, then do powers before multiplication. A squared negative is positive. For $2x^2 - 4y$ with $x = -5$ and $y = 1$: $2(25) - 4 = 46$. Without parentheses, the common error reads $-5^2$ as $-25$, which makes the first term negative.",
       "用括号代入，再先算幂后算乘。负数的平方是正数。对 $2x^2 - 4y$，$x = -5$，$y = 1$：$2(25) - 4 = 46$。不加括号时，常见的错误把 $-5^2$ 读成 $-25$，第一项就成了负数。",
@@ -2045,6 +2117,18 @@ export const actExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "act-exam-solving-linear-equations": {
+    intro: t(
+      "Two phone plans cost $6x + 4$ and $2x + 24$ dollars for $x$ gigabytes, and the ACT asks when they cost the same: $4x = 20$, so $x = 5$. Some questions then want a related expression, not $x$ itself.\n\nCheck: $6(5) + 4 = 34$ and $2(5) + 24 = 34$.\n\nIn this lesson we collect variable terms on one side, solve, and answer exactly the expression asked for.",
+      "两个手机套餐在用 $x$ GB 时分别收费 $6x + 4$ 和 $2x + 24$ 美元，ACT 问何时费用相同：$4x = 20$，所以 $x = 5$。有些题接着问一个相关式子，而不是 $x$ 本身。\n\n检验：$6(5) + 4 = 34$，$2(5) + 24 = 34$。\n\n本课我们把含变量的项移到一边，求解，并准确回答题目所问的式子。",
+    ),
+    watch: t(
+      "A term changes sign when it crosses the equals sign: from $7x + 3 = 4x + 18$, subtract to get $3x = 15$, not $3x = 21$.",
+      "项移过等号要变号：由 $7x + 3 = 4x + 18$，相减得 $3x = 15$，而不是 $3x = 21$。",
+    ),
+    hardWatch: t(
+      "Scale only the part that is known: if $3x - 2 = 13$, then $3x = 15$ and $6x + 1 = 31$; doubling $3x - 2$ instead gives $6x - 4 = 26$, a different expression.",
+      "只放大已知的那一部分：若 $3x - 2 = 13$，则 $3x = 15$，$6x + 1 = 31$；把 $3x - 2$ 整个加倍得到的是 $6x - 4 = 26$，那是另一个式子。",
+    ),
     tip: t(
       "Gather the variable terms on one side and the numbers on the other, changing signs as they cross. Then divide by the coefficient. For $5x + 1 = 2x + 13$: $3x = 12$, so $x = 4$. Adding terms across instead of subtracting is the usual error. Substitute back to verify.",
       "把变量项移到一边，数字移到另一边，过等号要变号。再除以系数。对 $5x + 1 = 2x + 13$：$3x = 12$，所以 $x = 4$。移项时加而不是减是常见错误。代回去验算。",
@@ -2055,6 +2139,18 @@ export const actExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "act-exam-solving-linear-equations-with-parentheses": {
+    intro: t(
+      "Six boxes, each short $2$ items, hold as many items as $3$ boxes with $x + 1$ items each: $6(x - 2) = 3(x + 1)$. Distributing gives $6x - 12 = 3x + 3$, so $x = 5$. ACT questions also put a minus sign in front of a group.\n\nCheck: $6(3) = 18$ and $3(6) = 18$.\n\nIn this lesson we distribute on both sides, minus signs included, and then solve as usual.",
+      "$6$ 个各少 $2$ 件的箱子，所装件数与 $3$ 个各装 $x + 1$ 件的箱子相同：$6(x - 2) = 3(x + 1)$。展开得 $6x - 12 = 3x + 3$，所以 $x = 5$。ACT 题还会在括号前放一个负号。\n\n检验：$6(3) = 18$，$3(6) = 18$。\n\n本课我们把两边都展开，包括负号，再照常求解。",
+    ),
+    watch: t(
+      "The factor multiplies the constant too: $5(x - 3) = 5x - 15$, so $5(x - 3) = 2x$ gives $x = 5$, while $5x - 3 = 2x$ would give $x = 1$.",
+      "因数也要乘常数：$5(x - 3) = 5x - 15$，所以 $5(x - 3) = 2x$ 得 $x = 5$，而 $5x - 3 = 2x$ 会得 $x = 1$。",
+    ),
+    hardWatch: t(
+      "A bare minus before parentheses flips every sign inside: $-(x - 6) = -x + 6$, so $2x - (x - 6) = 10$ gives $x = 4$.",
+      "括号前单独的负号使括号里每一项变号：$-(x - 6) = -x + 6$，所以 $2x - (x - 6) = 10$ 得 $x = 4$。",
+    ),
     tip: t(
       "Distribute first on each side, and then collect terms. So $4(x - 2) = 2(x + 3)$ becomes $4x - 8 = 2x + 6$, which leads to $2x = 14$ and $x = 7$. Multiplying just the $x$ inside parentheses leaves the constant unscaled, which is the classic mistake.",
       "先在两边分别展开，再合并各项。所以 $4(x - 2) = 2(x + 3)$ 变为 $4x - 8 = 2x + 6$，得 $2x = 14$，$x = 7$。只乘括号里的 $x$，常数没有放大，这是典型错误。",
@@ -2065,6 +2161,18 @@ export const actExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "act-exam-solving-literal-equations": {
+    intro: t(
+      "A taxi charges $C = 4 + 3m$ dollars for $m$ miles. A rider who knows the fare wants the miles, so the ACT asks for $m$ in terms of $C$: $m = \\frac{C - 4}{3}$. Other questions solve a two-variable equation for one letter.\n\nCheck: a $5$-mile ride costs $19$, and $\\frac{19 - 4}{3} = 5$.\n\nIn this lesson we isolate one letter, treating the others as numbers, and keep every sign and the whole difference.",
+      "出租车行驶 $m$ 英里收费 $C = 4 + 3m$ 美元。乘客知道车费想求里程，所以 ACT 要求用 $C$ 表示 $m$：$m = \\frac{C - 4}{3}$。另一些题要求把二元方程解出其中一个字母。\n\n检验：$5$ 英里车费为 $19$，而 $\\frac{19 - 4}{3} = 5$。\n\n本课我们解出一个字母，把其他字母当作数，保留每个符号和整个差。",
+    ),
+    watch: t(
+      "Dividing by a negative coefficient changes every sign: $2x - 4y = 8$ gives $-4y = 8 - 2x$ and $y = \\frac{2x - 8}{4}$, not $\\frac{8 - 2x}{4}$.",
+      "除以负系数时每一项都变号：$2x - 4y = 8$ 得 $-4y = 8 - 2x$，$y = \\frac{2x - 8}{4}$，而不是 $\\frac{8 - 2x}{4}$。",
+    ),
+    hardWatch: t(
+      "The whole difference goes over the coefficient: from $P = 10 + 5k$, $k = \\frac{P - 10}{5}$, and $P = 40$ gives $6$; $\\frac{P}{5} - 10$ would give $-2$.",
+      "整个差都要除以系数：由 $P = 10 + 5k$ 得 $k = \\frac{P - 10}{5}$，$P = 40$ 时为 $6$；$\\frac{P}{5} - 10$ 却会得到 $-2$。",
+    ),
     tip: t(
       "Treat the other letter as a number and isolate the target variable. For $3x - 5y = 10$: subtract $3x$ to get $-5y = 10 - 3x$, then divide by $-5$, which flips the signs: $y = \\frac{3x - 10}{5}$. Dividing just one term by the coefficient is the most common slip.",
       "把另一个字母当作数，孤立目标变量。对 $3x - 5y = 10$：减去 $3x$ 得 $-5y = 10 - 3x$，再除以 $-5$，符号翻转：$y = \\frac{3x - 10}{5}$。只把一项除以系数是最常见的疏漏。",
@@ -2075,6 +2183,18 @@ export const actExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "act-exam-identifying-characteristics-of-linear-equations": {
+    intro: t(
+      "Two savings plans give $4(x + 2)$ and $4x + 8$ dollars after $x$ weeks, and they agree every week, so the equation $4(x + 2) = 4x + 8$ has infinitely many solutions. The ACT asks how many solutions an equation has, or which value of a constant makes it have none.\n\nCheck: at $x = 0$ both are $8$, and at $x = 3$ both are $20$.\n\nIn this lesson we simplify both sides and compare their $x$ terms and constants.",
+      "两个储蓄计划在 $x$ 周后分别有 $4(x + 2)$ 和 $4x + 8$ 美元，每周都相同，所以方程 $4(x + 2) = 4x + 8$ 有无穷多个解。ACT 会问方程有几个解，或常数取何值时方程无解。\n\n检验：$x = 0$ 时两者都是 $8$，$x = 3$ 时都是 $20$。\n\n本课我们化简两边，比较 $x$ 项和常数。",
+    ),
+    watch: t(
+      "A solution of $x = 0$ is still one solution: $3x + 5 = 5x + 5$ gives $x = 0$, so it has exactly one, not none.",
+      "解是 $x = 0$ 也算一个解：$3x + 5 = 5x + 5$ 得 $x = 0$，所以恰有一个解，而不是无解。",
+    ),
+    hardWatch: t(
+      "Equal constants as well would give infinitely many: for $kx + 2 = 6x + 2$, $k = 6$ makes every $x$ work, so no value of $k$ gives no solution.",
+      "如果常数也相等，就会有无穷多个解：对 $kx + 2 = 6x + 2$，$k = 6$ 时任何 $x$ 都成立，所以没有哪个 $k$ 能使它无解。",
+    ),
     tip: t(
       "Simplify both sides and compare. Identical sides mean infinitely many solutions; the same $x$ coefficient with different constants means none; different $x$ coefficients mean exactly one. So $3(x + 1) = 3x + 3$ holds for every $x$, while $2x + 1 = 2x + 5$ never does.",
       "化简两边再比较。两边完全相同有无穷多解；$x$ 系数相同而常数不同则无解；$x$ 系数不同恰有一解。所以 $3(x + 1) = 3x + 3$ 对每个 $x$ 都成立，而 $2x + 1 = 2x + 5$ 永不成立。",
@@ -2085,6 +2205,18 @@ export const actExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "act-exam-writing-linear-inequalities": {
+    intro: t(
+      "A club has $40$ members and signs up $6$ more each month. To find when it has at least $100$ members, the ACT asks for the inequality $40 + 6m \\ge 100$. Other questions describe a limit, such as the most an elevator can carry.\n\nCheck: after $10$ months there are $40 + 60 = 100$ members, which counts as at least $100$.\n\nIn this lesson we write a starting amount plus a rate times the variable and pick the symbol from the wording.",
+      "一个俱乐部有 $40$ 名会员，每月再加入 $6$ 名。要求何时至少有 $100$ 名会员，ACT 要求列出不等式 $40 + 6m \\ge 100$。另一些题描述一个上限，比如电梯最多能载多少。\n\n检验：$10$ 个月后有 $40 + 60 = 100$ 名会员，算作至少 $100$ 名。\n\n本课我们写出起始量加上变化率乘变量，并根据措辞选择不等号。",
+    ),
+    watch: t(
+      "No more than means $\\le$ and no less than means $\\ge$: spending no more than $50$ dollars at $8$ dollars each is $8n \\le 50$.",
+      "“不超过”表示 $\\le$，“不少于”表示 $\\ge$：每件 $8$ 美元、花费不超过 $50$ 美元，就是 $8n \\le 50$。",
+    ),
+    hardWatch: t(
+      "A fixed weight is counted once: a $180$-pound driver with $n$ crates of $40$ pounds is $180 + 40n$, not $180n + 40n$.",
+      "固定的重量只算一次：$180$ 磅的司机加上 $n$ 箱、每箱 $40$ 磅，是 $180 + 40n$，而不是 $180n + 40n$。",
+    ),
     tip: t(
       "Write the amount as a starting value plus a rate times the variable, then pick the symbol from the wording: at least means $\\ge$. Starting with $50$ dollars and adding $5$ dollars each week, reaching at least $300$ dollars gives $50 + 5w \\ge 300$. Using $\\le$ reverses the condition.",
       "把数量写成初始值加变化率乘变量，再根据措辞选符号：“至少”表示 $\\ge$。从 $50$ 美元开始、每周加 $5$ 美元，要至少达到 $300$ 美元，得 $50 + 5w \\ge 300$。用 $\\le$ 就把条件弄反了。",
@@ -2095,6 +2227,18 @@ export const actExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "act-exam-finding-a-threshold-from-a-linear-inequality": {
+    intro: t(
+      "A museum pass costs $12$ dollars plus $4$ dollars a visit, and a student has $45$ dollars. The ACT asks for the most visits: $12 + 4v \\le 45$ gives $v \\le 8.25$, so $8$ visits. Other questions ask for the fewest sales that reach a goal.\n\nCheck: $8$ visits cost $12 + 32 = 44$ dollars, and $9$ would cost $48$.\n\nIn this lesson we solve the inequality and round to a whole number in the direction the question needs.",
+      "博物馆通行证需 $12$ 美元，每次参观再付 $4$ 美元，一名学生有 $45$ 美元。ACT 问最多能参观几次：$12 + 4v \\le 45$ 得 $v \\le 8.25$，所以 $8$ 次。另一些题问至少卖出多少才能达到目标。\n\n检验：$8$ 次花 $12 + 32 = 44$ 美元，$9$ 次要 $48$ 美元。\n\n本课我们解不等式，并按题目需要的方向取整。",
+    ),
+    watch: t(
+      "For a greatest count, round down even when the decimal is large: $v \\le 9.9$ still allows only $9$, because $10$ goes over the limit.",
+      "求最大次数时，即使小数部分很大也要向下取整：$v \\le 9.9$ 仍然只能取 $9$，因为 $10$ 超出了限制。",
+    ),
+    hardWatch: t(
+      "For a least count, round up even when the decimal is small: $c \\ge 12.1$ needs $13$, because $12$ falls short of the goal.",
+      "求最少数量时，即使小数部分很小也要向上取整：$c \\ge 12.1$ 需要 $13$，因为 $12$ 还达不到目标。",
+    ),
     tip: t(
       "For a greatest count, solve the inequality with $\\le$ and round down when the result is not whole, since going over breaks the limit. With a $20$-dollar fee and $3$ dollars per use on a $70$-dollar budget: $3v \\le 50$, so $v \\le 16.\\overline{6}$, and the most is $16$.",
       "求最大数量时，解 $\\le$ 的不等式，结果不是整数就向下取整，因为超过就破坏了限制。固定费 $20$ 美元、每次 $3$ 美元、预算 $70$ 美元：$3v \\le 50$，所以 $v \\le 16.\\overline{6}$，最多 $16$ 次。",
@@ -2105,6 +2249,18 @@ export const actExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "act-exam-graphing-linear-inequalities": {
+    intro: t(
+      "A graph shades the region below a dashed line through $(0, 2)$ that rises $1$ for each step right. The ACT asks which inequality it shows, $y < x + 2$, or which point lies in the shading.\n\nCheck: $(0, 0)$ is shaded, and $0 < 0 + 2$ is true.\n\nIn this lesson we read the boundary line, its style and the shaded side, and test points against the inequality.",
+      "一幅图在一条虚线下方画了阴影，这条虚线过 $(0, 2)$，每向右一格升高 $1$。ACT 问它表示哪个不等式，即 $y < x + 2$，或问哪个点在阴影内。\n\n检验：$(0, 0)$ 在阴影内，而 $0 < 0 + 2$ 成立。\n\n本课我们读出边界线、线型和阴影所在一侧，并用不等式检验点。",
+    ),
+    watch: t(
+      "A line falling to the right has a negative slope: a line through $(0, 3)$ that drops $2$ per step is $y = -2x + 3$, not $y = 2x + 3$.",
+      "向右下降的直线斜率为负：过 $(0, 3)$、每格下降 $2$ 的直线是 $y = -2x + 3$，而不是 $y = 2x + 3$。",
+    ),
+    hardWatch: t(
+      "A point on a dashed boundary is not a solution: for $y > 2x - 1$, $(2, 3)$ lies on the line, since $2(2) - 1 = 3$, and $3 > 3$ is false.",
+      "虚线边界上的点不是解：对 $y > 2x - 1$，$(2, 3)$ 在直线上，因为 $2(2) - 1 = 3$，而 $3 > 3$ 不成立。",
+    ),
     tip: t(
       "First read the boundary: the $y$-intercept and slope give the line. A dashed line means a strict sign, and a solid line includes equality. Shading above means $y >$, and shading below means $y <$. A dashed line crossing at $1$ with slope $3$, shaded below, is $y < 3x + 1$.",
       "先读边界：$y$ 轴截距和斜率确定直线。虚线表示严格不等号，实线包含等号。阴影在上方是 $y >$，在下方是 $y <$。虚线在 $1$ 处穿过 $y$ 轴、斜率为 $3$、阴影在下方，就是 $y < 3x + 1$。",
@@ -2115,6 +2271,18 @@ export const actExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "act-exam-using-systems-of-linear-inequalities": {
+    intro: t(
+      "A farmer plants $x$ acres of corn and $y$ acres of beans with $x + y \\le 30$ and $y \\ge 10$. Corn earns $200$ dollars an acre, so the most from corn is with $y = 10$: $20$ acres and $4{,}000$ dollars. The ACT also asks which point satisfies a system.\n\nCheck: $20 + 10 = 30 \\le 30$ and $10 \\ge 10$, so the plan is allowed.\n\nIn this lesson we test points in every inequality at once and push a variable to its limit to find a maximum.",
+      "一位农民种 $x$ 英亩玉米和 $y$ 英亩豆子，且 $x + y \\le 30$，$y \\ge 10$。玉米每英亩赚 $200$ 美元，所以 $y = 10$ 时玉米收入最多：$20$ 英亩，$4{,}000$ 美元。ACT 也会问哪个点满足不等式组。\n\n检验：$20 + 10 = 30 \\le 30$，$10 \\ge 10$，方案可行。\n\n本课我们把点代入每个不等式检验，并把变量推到极限来求最大值。",
+    ),
+    watch: t(
+      "One inequality is not enough: $(1, 6)$ satisfies $y > x + 2$, but for $y < -x + 6$ it gives $6 < 5$, which is false, so it is not in the solution set.",
+      "只满足一个不等式不够：$(1, 6)$ 满足 $y > x + 2$，但代入 $y < -x + 6$ 得 $6 < 5$，不成立，所以不在解集中。",
+    ),
+    hardWatch: t(
+      "Push the variable that earns, not the one that is limited from below: with $x + y \\le 12$ and $y \\ge 4$, the largest $x$ is $8$, not $12$.",
+      "要推到极限的是带来收入的变量，而不是有下限的那个：$x + y \\le 12$ 且 $y \\ge 4$ 时，$x$ 最大为 $8$，而不是 $12$。",
+    ),
     tip: t(
       "A solution of a system must satisfy every inequality at once. Substitute each candidate into both. For $y > 2x - 1$ and $y < -x + 8$, the point $(2, 4)$ works, since $4 > 3$ and $4 < 6$. A point satisfying only one inequality is the trap in the options.",
       "方程组的解必须同时满足每个不等式。把每个候选点代入两个不等式。对 $y > 2x - 1$ 和 $y < -x + 8$，点 $(2, 4)$ 成立，因为 $4 > 3$，$4 < 6$。只满足其中一个不等式的点就是选项中的陷阱。",
@@ -2125,6 +2293,18 @@ export const actExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "act-exam-solving-linear-systems": {
+    intro: t(
+      "Two numbers add to $15$ and differ by $3$. Adding $x + y = 15$ and $x - y = 3$ cancels $y$: $2x = 18$, so $x = 9$. When one equation already gives $y$, the ACT expects you to substitute it into the other.\n\nCheck: $y = 15 - 9 = 6$, and $9 - 6 = 3$.\n\nIn this lesson we solve systems by adding equations or by substitution and report the variable asked for.",
+      "两个数之和为 $15$，之差为 $3$。把 $x + y = 15$ 与 $x - y = 3$ 相加消去 $y$：$2x = 18$，所以 $x = 9$。当一个方程已经给出 $y$ 时，ACT 希望你把它代入另一个方程。\n\n检验：$y = 15 - 9 = 6$，而 $9 - 6 = 3$。\n\n本课我们用加减或代入法解方程组，并回答题目要求的那个变量。",
+    ),
+    watch: t(
+      "Divide by $2$ after adding: $x + y = 11$ and $x - y = 5$ give $2x = 16$, so $x = 8$, not $16$.",
+      "相加之后要除以 $2$：$x + y = 11$ 与 $x - y = 5$ 得 $2x = 16$，所以 $x = 8$，而不是 $16$。",
+    ),
+    hardWatch: t(
+      "Put the whole expression in parentheses when substituting: with $y = 3x - 2$, $x - y = 4$ becomes $x - (3x - 2) = 4$, so $-2x + 2 = 4$ and $x = -1$.",
+      "代入时要给整个式子加括号：$y = 3x - 2$ 时，$x - y = 4$ 变为 $x - (3x - 2) = 4$，所以 $-2x + 2 = 4$，$x = -1$。",
+    ),
     tip: t(
       "When one variable has opposite signs in two equations, adding them cancels it. For $x + y = 7$ and $x - y = 3$: $2x = 10$, so $x = 5$. Note that the question asks for one variable; solving for the other and reporting it is the usual slip. Divide the sum by the remaining coefficient.",
       "一个变量在两个方程中符号相反时，相加就能消去它。对 $x + y = 7$ 和 $x - y = 3$：$2x = 10$，所以 $x = 5$。注意题目问的是一个变量；解出另一个并报告它是常见的疏漏。要用和除以剩下的系数。",
@@ -2135,6 +2315,18 @@ export const actExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "act-exam-solving-systems-by-elimination": {
+    intro: t(
+      "A café sells $4$ muffins and $3$ teas for $18$ dollars, and $4$ muffins and $1$ tea for $14$ dollars. Subtracting cancels the muffins: $2$ teas cost $4$ dollars, so a tea is $2$ dollars. The ACT also asks for a sum like $x + y$.\n\nCheck: $4$ muffins then cost $14 - 2 = 12$ dollars, $3$ dollars each, and $4(3) + 3(2) = 18$.\n\nIn this lesson we add or subtract equations to cancel a variable, solve, and finish with the combination asked for.",
+      "一家咖啡馆 $4$ 个松饼加 $3$ 杯茶卖 $18$ 美元，$4$ 个松饼加 $1$ 杯茶卖 $14$ 美元。相减消去松饼：$2$ 杯茶 $4$ 美元，每杯 $2$ 美元。ACT 还会问 $x + y$ 这样的和。\n\n检验：于是 $4$ 个松饼是 $14 - 2 = 12$ 美元，每个 $3$ 美元，而 $4(3) + 3(2) = 18$。\n\n本课我们把方程相加或相减消去一个变量，求解，并算出题目要的组合。",
+    ),
+    watch: t(
+      "Subtracting a negative term adds it: $(2x + 3y) - (2x - 4y) = 7y$, not $-y$.",
+      "减去一个负项等于加上它：$(2x + 3y) - (2x - 4y) = 7y$，而不是 $-y$。",
+    ),
+    hardWatch: t(
+      "Finish the request after finding one variable: from $x = 3$ and $y = -2$, the value of $x + y$ is $1$, and $3$ alone does not answer it.",
+      "求出一个变量后还要完成所问：由 $x = 3$，$y = -2$，$x + y$ 的值是 $1$，单独的 $3$ 并不是答案。",
+    ),
     tip: t(
       "If a variable has the same coefficient in both equations, subtracting cancels it. Mind the sign when subtracting a negative term. For $3x + 2y = 12$ and $3x - y = 3$: $2y - (-y) = 3y$ and $3y = 9$, so $y = 3$. Writing $2y - y$ loses a term and gives the wrong value.",
       "一个变量在两个方程中系数相同时，相减就能消去它。减去负项时要注意符号。对 $3x + 2y = 12$ 和 $3x - y = 3$：$2y - (-y) = 3y$，$3y = 9$，所以 $y = 3$。写成 $2y - y$ 就少了一项，值也错了。",
@@ -2145,6 +2337,18 @@ export const actExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "act-exam-determining-how-many-solutions-a-system-has": {
+    intro: t(
+      "Two delivery routes are drawn as lines $x + 2y = 6$ and $2x + 4y = 12$. The second is twice the first, so they are the same line and share every point. The ACT asks how many solutions a system has or which value makes it have none.\n\nCheck: $(6, 0)$ and $(0, 3)$ satisfy both equations.\n\nIn this lesson we scale one equation to compare with the other and read off one, none or infinitely many solutions.",
+      "两条送货路线画成直线 $x + 2y = 6$ 和 $2x + 4y = 12$。第二个方程是第一个的两倍，所以它们是同一条直线，所有点都是公共点。ACT 会问方程组有几个解，或参数取何值时无解。\n\n检验：$(6, 0)$ 和 $(0, 3)$ 都满足两个方程。\n\n本课我们把一个方程放大来和另一个比较，判断有一个、没有还是无穷多个解。",
+    ),
+    watch: t(
+      "Scale the whole equation, right side included: $3x + y = 4$ times $2$ is $6x + 2y = 8$, so $6x + 2y = 4$ is parallel, with no solution.",
+      "放大时要连右边一起乘：$3x + y = 4$ 乘以 $2$ 是 $6x + 2y = 8$，所以 $6x + 2y = 4$ 与它平行，无解。",
+    ),
+    hardWatch: t(
+      "Equal slopes alone are not enough; the intercepts must differ: $y = 2x + 3$ and $3y = 6x + 9$ have the same slope and the same intercept, so they are one line.",
+      "只有斜率相等还不够，截距必须不同：$y = 2x + 3$ 与 $3y = 6x + 9$ 斜率和截距都相同，是同一条直线。",
+    ),
     tip: t(
       "Compare the equations by scaling one to match the other. If everything matches, they are the same line with infinitely many solutions. If only the variable side matches, the lines are parallel with none. For $2x + y = 5$: the partner $4x + 2y = 10$ gives infinitely many, and $4x + 2y = 7$ gives none.",
       "把一个方程放大来与另一个比较。如果全部相同，就是同一条直线，有无穷多解。如果只有变量部分相同，就是平行线，无解。对 $2x + y = 5$：配上 $4x + 2y = 10$ 有无穷多解，配上 $4x + 2y = 7$ 无解。",
@@ -2155,6 +2359,18 @@ export const actExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "act-exam-modeling-word-problems-with-systems": {
+    intro: t(
+      "A bake sale sold $40$ items, cookies at $2$ dollars and pies at $5$ dollars, for $110$ dollars. With $p$ pies, $2(40 - p) + 5p = 110$ gives $p = 10$. The ACT also sets up two purchases whose sum gives a combined price at once.\n\nCheck: $30$ cookies and $10$ pies make $60 + 50 = 110$ dollars.\n\nIn this lesson we turn a count and a total value into equations and look for shortcuts that answer the question directly.",
+      "一次义卖共卖出 $40$ 件，饼干每件 $2$ 美元，馅饼每件 $5$ 美元，收入 $110$ 美元。设馅饼 $p$ 件，$2(40 - p) + 5p = 110$，得 $p = 10$。ACT 还会给出两笔购买，相加后直接得到组合价格。\n\n检验：$30$ 件饼干和 $10$ 件馅饼共 $60 + 50 = 110$ 美元。\n\n本课我们把数量和总价写成方程，并寻找能直接回答问题的捷径。",
+    ),
+    watch: t(
+      "Answer for the item asked about: if $p = 10$ pies were sold, the $30$ cookies are the other count, and choosing it answers a different question.",
+      "要回答题目问的那种东西：若卖出馅饼 $p = 10$ 件，那么 $30$ 是饼干的件数，选它就答错了问题。",
+    ),
+    hardWatch: t(
+      "The sum of the two sales must still be divided: $4s + 4c = 36$ gives $s + c = 9$, and $36$ is the price of four of each.",
+      "两笔相加后还要相除：$4s + 4c = 36$ 得 $s + c = 9$，$36$ 是四套的价钱。",
+    ),
     tip: t(
       "Two totals give two facts: one counts items, and one counts value. Use the first to write one count as total minus the other, then insert it in the value equation. With $50$ tickets at $10$ and $4$ dollars totalling $350$ dollars: $10a + 4(50 - a) = 350$, so $a = 25$.",
       "两个总数给出两个事实：一个数物品，一个算价值。用第一个把一种数量写成总数减另一种，再代入价值方程。$50$ 张票，单价 $10$ 和 $4$ 美元，共 $350$ 美元：$10a + 4(50 - a) = 350$，所以 $a = 25$。",
@@ -2165,6 +2381,18 @@ export const actExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "act-exam-using-a-system-solution": {
+    intro: t(
+      "A rectangle's length and width add to $12$ and differ by $4$, and the ACT asks for $L^2 - W^2$. Since $L^2 - W^2 = (L + W)(L - W)$, the answer is $12 \\times 4 = 48$, with no need for $L$ or $W$.\n\nCheck: $L = 8$ and $W = 4$, and $64 - 16 = 48$.\n\nIn this lesson we spot the structure of the requested expression and get it straight from the given equations.",
+      "一个长方形的长与宽之和为 $12$，之差为 $4$，ACT 问 $L^2 - W^2$。因为 $L^2 - W^2 = (L + W)(L - W)$，答案是 $12 \\times 4 = 48$，不必求出 $L$ 或 $W$。\n\n检验：$L = 8$，$W = 4$，而 $64 - 16 = 48$。\n\n本课我们看出所求式子的结构，直接由已知方程得到它。",
+    ),
+    watch: t(
+      "$x^2 - y^2$ is not $(x - y)^2$: with $x + y = 10$ and $x - y = 2$, $x^2 - y^2 = 20$ while $(x - y)^2 = 4$.",
+      "$x^2 - y^2$ 不等于 $(x - y)^2$：$x + y = 10$，$x - y = 2$ 时，$x^2 - y^2 = 20$，而 $(x - y)^2 = 4$。",
+    ),
+    hardWatch: t(
+      "Divide by the common coefficient after adding: $3x + 2y = 17$ and $2x + 3y = 13$ add to $5x + 5y = 30$, so $x + y = 6$, not $30$.",
+      "相加后要除以公共系数：$3x + 2y = 17$ 与 $2x + 3y = 13$ 相加得 $5x + 5y = 30$，所以 $x + y = 6$，而不是 $30$。",
+    ),
     tip: t(
       "Recognize the structure first: a difference of squares factors as $x^2 - y^2 = (x + y)(x - y)$, so multiply the two given values. If $x + y = 7$ and $x - y = 3$, then $x^2 - y^2 = 21$. Squaring the given numbers separately is a trap, and you need not find $x$ or $y$.",
       "先识别结构：平方差可分解为 $x^2 - y^2 = (x + y)(x - y)$，所以把两个给定的值相乘。若 $x + y = 7$，$x - y = 3$，则 $x^2 - y^2 = 21$。把给定的数分别平方是陷阱，也不必求出 $x$ 或 $y$。",
@@ -2175,6 +2403,18 @@ export const actExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "act-exam-factoring-quadratic-expressions": {
+    intro: t(
+      "A tile layout has area $x^2 + 5x - 14$, and the ACT asks which expression is one of its side lengths. Two numbers that multiply to $-14$ and add to $5$ are $7$ and $-2$, so $x^2 + 5x - 14 = (x + 7)(x - 2)$.\n\nCheck: at $x = 3$ the area is $9 + 15 - 14 = 10$, and $(10)(1) = 10$.\n\nIn this lesson we factor quadratics by finding the pair of numbers behind the middle and last terms, with a leading coefficient or without one.",
+      "一块瓷砖拼图的面积为 $x^2 + 5x - 14$，ACT 问哪个式子是它的一条边长。积为 $-14$、和为 $5$ 的两个数是 $7$ 和 $-2$，所以 $x^2 + 5x - 14 = (x + 7)(x - 2)$。\n\n检验：$x = 3$ 时面积为 $9 + 15 - 14 = 10$，而 $(10)(1) = 10$。\n\n本课我们找出中间项与常数项背后的那对数来分解二次式，首项系数可以是 $1$，也可以不是。",
+    ),
+    watch: t(
+      "A negative constant means the two numbers have opposite signs: $x^2 - 3x - 10 = (x - 5)(x + 2)$, not $(x - 5)(x - 2)$, whose constant is $+10$.",
+      "常数项为负，说明两个数异号：$x^2 - 3x - 10 = (x - 5)(x + 2)$，而不是常数项为 $+10$ 的 $(x - 5)(x - 2)$。",
+    ),
+    hardWatch: t(
+      "With a leading coefficient, the number next to $x$ in the other factor is multiplied: $(3x + 2)(x + 4) = 3x^2 + 14x + 8$, since $3 \\times 4 + 2 = 14$, not $3x^2 + 6x + 8$.",
+      "有首项系数时，另一个因式中的数要乘上它：$(3x + 2)(x + 4) = 3x^2 + 14x + 8$，因为 $3 \\times 4 + 2 = 14$，而不是 $3x^2 + 6x + 8$。",
+    ),
     tip: t(
       "For $x^2 + bx + c$, find two numbers whose product is $c$ and whose sum is $b$. For $x^2 + 2x - 15$: $5$ and $-3$ work, so it factors as $(x + 5)(x - 3)$. A negative product means the numbers have opposite signs. Check the sum to choose the signs correctly.",
       "对 $x^2 + bx + c$，找两个数，积为 $c$，和为 $b$。对 $x^2 + 2x - 15$：$5$ 和 $-3$ 符合，所以分解为 $(x + 5)(x - 3)$。积为负时两个数异号。用和来确定符号。",
@@ -2185,6 +2425,18 @@ export const actExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "act-exam-using-factors-of-a-quadratic": {
+    intro: t(
+      "A ball's path is $h = (t - 1)(t - 6)$ below a ledge, and the question asks when $h$ is $0$. A product is $0$ only when a factor is, so $t = 1$ or $t = 6$. Other questions give one factor and ask for a missing coefficient.\n\nCheck: at $t = 6$, $(5)(0) = 0$.\n\nIn this lesson we read zeros from factors and use a known factor to find the rest of a quadratic.",
+      "一个球相对于台面的高度为 $h = (t - 1)(t - 6)$，题目问 $h$ 何时为 $0$。乘积为 $0$ 当且仅当某个因式为 $0$，所以 $t = 1$ 或 $t = 6$。另一些题给出一个因式，求缺少的系数。\n\n检验：$t = 6$ 时 $(5)(0) = 0$。\n\n本课我们从因式读出零点，并用已知因式求出二次式的其余部分。",
+    ),
+    watch: t(
+      "The zero of $x + 4$ is $-4$, not $4$: $(x + 4)(x - 2) = 0$ at $x = -4$ and $x = 2$.",
+      "$x + 4$ 的零点是 $-4$，不是 $4$：$(x + 4)(x - 2) = 0$ 的解是 $x = -4$ 和 $x = 2$。",
+    ),
+    hardWatch: t(
+      "The $x$ coefficient is minus the sum of the zeros: zeros $3$ and $-5$ give $x^2 + 2x - 15$, so $k = 2$, not $-2$.",
+      "$x$ 的系数是两零点之和的相反数：零点 $3$ 与 $-5$ 给出 $x^2 + 2x - 15$，所以 $k = 2$，不是 $-2$。",
+    ),
     tip: t(
       "A product is $0$ only when a factor is $0$, so set each factor to $0$ and solve. In $(x + 4)(x - 2) = 0$: $x = -4$ or $x = 2$. Copying the numbers inside without reversing their signs gives the wrong pair, which is a frequent option.",
       "乘积为 $0$ 只在某个因式为 $0$ 时成立，所以令每个因式为 $0$ 并求解。在 $(x + 4)(x - 2) = 0$ 中：$x = -4$ 或 $x = 2$。照抄括号内的数而不反转符号，得到的一对就错了，这是常见选项。",
@@ -2195,6 +2447,18 @@ export const actExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "act-exam-solving-perfect-square-equations": {
+    intro: t(
+      "A square patio is extended by $3$ feet on each side's length, and the new area is $64$ square feet: $(x + 3)^2 = 64$. Taking square roots gives $x + 3 = 8$ or $x + 3 = -8$, so $x = 5$ or $x = -11$.\n\nCheck: $(5 + 3)^2 = 64$ and $(-11 + 3)^2 = 64$.\n\nIn this lesson we solve equations whose left side is a square, keeping both roots, and spot squares written out in full.",
+      "一块正方形露台的边长加长 $3$ 英尺后，面积为 $64$ 平方英尺：$(x + 3)^2 = 64$。两边开方得 $x + 3 = 8$ 或 $x + 3 = -8$，所以 $x = 5$ 或 $x = -11$。\n\n检验：$(5 + 3)^2 = 64$，$(-11 + 3)^2 = 64$。\n\n本课我们解左边是平方式的方程，保留两个根，并识别展开写出的完全平方。",
+    ),
+    watch: t(
+      "Both roots count: $(x - 2)^2 = 9$ gives $x = 5$ and also $x = -1$, since $(-1 - 2)^2 = 9$.",
+      "两个根都要算：$(x - 2)^2 = 9$ 得 $x = 5$，还有 $x = -1$，因为 $(-1 - 2)^2 = 9$。",
+    ),
+    hardWatch: t(
+      "$x^2 - 8x + 16$ is $(x - 4)^2$, so $x^2 - 8x + 16 = 25$ has solutions $9$ and $-1$, which add to $8$, not $10$.",
+      "$x^2 - 8x + 16$ 是 $(x - 4)^2$，所以 $x^2 - 8x + 16 = 25$ 的解是 $9$ 和 $-1$，和为 $8$，不是 $10$。",
+    ),
     tip: t(
       "Taking the square root of both sides gives two cases, plus and minus. For $(x + 1)^2 = 9$: $x + 1 = \\pm 3$, so $x$ is $2$ or $-4$. Then pick what the question wants, such as the greater. Taking only the positive root may miss a solution.",
       "两边开平方得到正负两种情况。对 $(x + 1)^2 = 9$：$x + 1 = \\pm 3$，所以 $x$ 是 $2$ 或 $-4$。再按题目要求选择，比如较大的那个。只取正根可能会漏解。",
@@ -2205,6 +2469,18 @@ export const actExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "act-exam-solving-quadratic-equations-by-factoring": {
+    intro: t(
+      "A rectangle is $5$ feet longer than it is wide and has area $36$ square feet: $w(w + 5) = 36$, or $w^2 + 5w - 36 = 0$. It factors as $(w + 9)(w - 4) = 0$, and a width must be positive, so $w = 4$.\n\nCheck: $4 \\times 9 = 36$.\n\nIn this lesson we set a quadratic equal to $0$, factor it, and keep the root the question asks for.",
+      "一个长方形的长比宽多 $5$ 英尺，面积为 $36$ 平方英尺：$w(w + 5) = 36$，即 $w^2 + 5w - 36 = 0$。分解为 $(w + 9)(w - 4) = 0$，宽必须为正，所以 $w = 4$。\n\n检验：$4 \\times 9 = 36$。\n\n本课我们把二次方程化为等于 $0$，分解后取题目要求的根。",
+    ),
+    watch: t(
+      "Move everything to one side first: $x^2 + x = 12$ is $(x + 4)(x - 3) = 0$, while factoring $x^2 + x$ as $x(x + 1) = 12$ leads nowhere.",
+      "先把所有项移到一边：$x^2 + x = 12$ 即 $(x + 4)(x - 3) = 0$；若写成 $x(x + 1) = 12$ 就无从下手。",
+    ),
+    hardWatch: t(
+      "A word problem keeps only the root that makes sense: $w^2 + 2w - 24 = 0$ gives $w = 4$ or $w = -6$, and a width of $-6$ feet is impossible.",
+      "应用题只保留有意义的根：$w^2 + 2w - 24 = 0$ 得 $w = 4$ 或 $w = -6$，宽不可能是 $-6$ 英尺。",
+    ),
     tip: t(
       "A quadratic must equal $0$ before you factor, so move every term to one side first. For $x^2 + 3x = 28$: $x^2 + 3x - 28 = 0$, which is $(x + 7)(x - 4) = 0$. The positive root is $4$. Factoring $x(x + 3) = 28$ and setting pieces to $28$ is the invalid move.",
       "二次方程要先等于 $0$ 才能分解，所以先把所有项移到一边。对 $x^2 + 3x = 28$：$x^2 + 3x - 28 = 0$，即 $(x + 7)(x - 4) = 0$。正根是 $4$。分解成 $x(x + 3) = 28$ 再令各部分等于 $28$ 是错误的做法。",
@@ -2215,6 +2491,18 @@ export const actExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "act-exam-applying-the-quadratic-formula": {
+    intro: t(
+      "Some quadratics do not factor with whole numbers, like $x^2 + 3x - 2 = 0$. The formula $x = \\frac{-b \\pm \\sqrt{b^2 - 4ac}}{2a}$ always works: here $\\frac{-3 \\pm \\sqrt{9 + 8}}{2} = \\frac{-3 \\pm \\sqrt{17}}{2}$.\n\nCheck: the two solutions add to $-3 = -\\frac{b}{a}$.\n\nIn this lesson we read $a$, $b$ and $c$ with their signs, compute the discriminant, and simplify the result.",
+      "有些二次式不能用整数分解，例如 $x^2 + 3x - 2 = 0$。公式 $x = \\frac{-b \\pm \\sqrt{b^2 - 4ac}}{2a}$ 总能用：这里得 $\\frac{-3 \\pm \\sqrt{9 + 8}}{2} = \\frac{-3 \\pm \\sqrt{17}}{2}$。\n\n检验：两解之和为 $-3 = -\\frac{b}{a}$。\n\n本课我们连同符号读出 $a$、$b$、$c$，计算判别式，并化简结果。",
+    ),
+    watch: t(
+      "With $c$ negative, $-4ac$ is positive: for $2x^2 + x - 3$, $b^2 - 4ac = 1 + 24 = 25$, not $1 - 24$.",
+      "$c$ 为负时，$-4ac$ 为正：对 $2x^2 + x - 3$，$b^2 - 4ac = 1 + 24 = 25$，而不是 $1 - 24$。",
+    ),
+    hardWatch: t(
+      "Halving a root means halving the square root, not the number under it: $\\frac{\\sqrt{20}}{2} = \\frac{2\\sqrt{5}}{2} = \\sqrt{5}$, not $\\sqrt{10}$.",
+      "根式减半是把平方根减半，不是把根号里的数减半：$\\frac{\\sqrt{20}}{2} = \\frac{2\\sqrt{5}}{2} = \\sqrt{5}$，不是 $\\sqrt{10}$。",
+    ),
     tip: t(
       "Write the equation in standard form, read $a$, $b$ and $c$ with their signs, and insert them into $x = \\frac{-b \\pm \\sqrt{b^2 - 4ac}}{2a}$. For $x^2 + 3x - 4 = 0$: the radicand is $9 + 16 = 25$, so $x = \\frac{-3 \\pm 5}{2}$, which is $1$ or $-4$. Dividing only the root by $2a$ is the trap.",
       "把方程写成标准形式，连同符号读出 $a$、$b$、$c$，代入 $x = \\frac{-b \\pm \\sqrt{b^2 - 4ac}}{2a}$。对 $x^2 + 3x - 4 = 0$：根号内是 $9 + 16 = 25$，所以 $x = \\frac{-3 \\pm 5}{2}$，即 $1$ 或 $-4$。只把根式除以 $2a$ 就是陷阱。",
@@ -2225,6 +2513,18 @@ export const actExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "act-exam-using-the-discriminant": {
+    intro: t(
+      "A question asks how many times a parabola meets the $x$-axis, without asking where. The discriminant answers it: for $x^2 + 4x + 7 = 0$, $16 - 28 = -12 < 0$, so there are no real solutions. Other questions choose a constant so that there is exactly one.\n\nCheck: $x^2 + 4x + 7 = (x + 2)^2 + 3$, which is never below $3$.\n\nIn this lesson we compute $b^2 - 4ac$ and read its sign, and set it to $0$ to find a missing coefficient.",
+      "一道题问抛物线与 $x$ 轴有几个交点，而不问在哪里。判别式就能回答：对 $x^2 + 4x + 7 = 0$，$16 - 28 = -12 < 0$，所以没有实数解。另一些题要求选一个常数，使方程恰有一个解。\n\n检验：$x^2 + 4x + 7 = (x + 2)^2 + 3$，永远不小于 $3$。\n\n本课我们计算 $b^2 - 4ac$ 并看它的符号，或令它为 $0$ 求出缺少的系数。",
+    ),
+    watch: t(
+      "Square $b$ with its sign and multiply $4ac$ with all of its signs: $x^2 - 6x + 9$ gives $36 - 36 = 0$, one solution.",
+      "$b$ 带符号平方，$4ac$ 带全部符号相乘：$x^2 - 6x + 9$ 得 $36 - 36 = 0$，一个解。",
+    ),
+    hardWatch: t(
+      "Exactly one solution needs the discriminant to be $0$: for $9x^2 + 12x + c$, $144 - 36c = 0$ gives $c = 4$, not $c = 12$.",
+      "恰有一解要求判别式为 $0$：对 $9x^2 + 12x + c$，$144 - 36c = 0$ 得 $c = 4$，不是 $c = 12$。",
+    ),
     tip: t(
       "The discriminant $b^2 - 4ac$ counts the real solutions: positive gives two, zero gives one and negative gives none. For $x^2 + 6x + 9 = 0$: $36 - 36 = 0$, so one, while $x^2 + x + 1 = 0$ gives $-3$, so none. There is no need to solve the equation.",
       "判别式 $b^2 - 4ac$ 决定实数解的个数：正数有两个，零有一个，负数没有。对 $x^2 + 6x + 9 = 0$：$36 - 36 = 0$，有一个；而 $x^2 + x + 1 = 0$ 得 $-3$，没有。不必解方程。",
@@ -2235,6 +2535,18 @@ export const actExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "act-exam-applying-vieta-s-formulas": {
+    intro: t(
+      "For $ax^2 + bx + c = 0$ the solutions add to $-\\frac{b}{a}$ and multiply to $\\frac{c}{a}$, so a question about their sum or product needs no solving. For $2x^2 - 6x - 8 = 0$ the product is $\\frac{-8}{2} = -4$.\n\nCheck: the equation is $2(x - 4)(x + 1) = 0$, and $4(-1) = -4$.\n\nIn this lesson we read sums and products from the coefficients and build other expressions, such as $r^2 + s^2$, from them.",
+      "对 $ax^2 + bx + c = 0$，两解之和为 $-\\frac{b}{a}$，之积为 $\\frac{c}{a}$，所以问和或积的题不必解方程。对 $2x^2 - 6x - 8 = 0$，积为 $\\frac{-8}{2} = -4$。\n\n检验：方程即 $2(x - 4)(x + 1) = 0$，而 $4(-1) = -4$。\n\n本课我们从系数读出和与积，并由它们算出 $r^2 + s^2$ 等其他式子。",
+    ),
+    watch: t(
+      "Divide by the leading coefficient: the solutions of $3x^2 - 9x + 6 = 0$ multiply to $\\frac{6}{3} = 2$, not $6$.",
+      "要除以首项系数：$3x^2 - 9x + 6 = 0$ 的两解之积为 $\\frac{6}{3} = 2$，不是 $6$。",
+    ),
+    hardWatch: t(
+      "$r^2 + s^2$ is $(r + s)^2 - 2rs$: with $r + s = 5$ and $rs = 6$ it is $25 - 12 = 13$, not $25$.",
+      "$r^2 + s^2$ 等于 $(r + s)^2 - 2rs$：当 $r + s = 5$、$rs = 6$ 时为 $25 - 12 = 13$，不是 $25$。",
+    ),
     tip: t(
       "For $ax^2 + bx + c = 0$, the solutions have product $\\frac{c}{a}$ and sum $-\\frac{b}{a}$, with no need to solve. For $2x^2 + 6x - 20 = 0$: the product is $-10$. Using $c$ alone ignores the leading coefficient, and the sign of $c$ must be kept.",
       "对 $ax^2 + bx + c = 0$，解的积是 $\\frac{c}{a}$，和是 $-\\frac{b}{a}$，不必求解。对 $2x^2 + 6x - 20 = 0$：积是 $-10$。只用 $c$ 就忽略了首项系数，$c$ 的符号也要保留。",
@@ -2245,6 +2557,18 @@ export const actExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "act-exam-modeling-with-quadratic-equations": {
+    intro: t(
+      "Two numbers differ by $3$ and multiply to $40$: with the smaller $n$, $n(n + 3) = 40$, which factors as $(n - 5)(n + 8) = 0$, so $n = 5$. A thrown ball's height $h = -16t^2 + vt + h_0$ is another model the ACT uses, highest at $t = \\frac{v}{32}$.\n\nCheck: $5 \\times 8 = 40$ and $8 - 5 = 3$.\n\nIn this lesson we turn a description into a quadratic equation, solve it, and keep the answer the situation allows.",
+      "两个数相差 $3$，积为 $40$：设较小的为 $n$，$n(n + 3) = 40$，分解为 $(n - 5)(n + 8) = 0$，所以 $n = 5$。抛出的球的高度 $h = -16t^2 + vt + h_0$ 也是 ACT 常用的模型，在 $t = \\frac{v}{32}$ 时最高。\n\n检验：$5 \\times 8 = 40$，$8 - 5 = 3$。\n\n本课我们把文字描述写成二次方程，求解，并保留情境允许的答案。",
+    ),
+    watch: t(
+      "Answer the quantity asked for: if the smaller number is $5$ and the question asks for the larger, the answer is $8$.",
+      "回答题目问的量：若较小的数是 $5$，而题目问较大的数，答案是 $8$。",
+    ),
+    hardWatch: t(
+      "The peak is halfway between the times at the same height: $h = -16t^2 + 64t + 5$ is $5$ at $t = 0$ and $t = 4$, so the peak is at $t = 2$, not $t = 4$.",
+      "最高点在等高的两个时刻正中：$h = -16t^2 + 64t + 5$ 在 $t = 0$ 与 $t = 4$ 时都是 $5$，所以最高点在 $t = 2$，不是 $t = 4$。",
+    ),
     tip: t(
       "Let the smaller quantity be the variable, express the other in terms of it, and set their product equal to the given value. For a product of $63$ with one number $2$ greater: $n(n + 2) = 63$, so $(n - 7)(n + 9) = 0$ and $n = 7$. A negative root is rejected for positive whole numbers.",
       "设较小的量为变量，用它表示另一个量，令其积等于给定的值。积为 $63$、一个数比另一个大 $2$：$n(n + 2) = 63$，所以 $(n - 7)(n + 9) = 0$，$n = 7$。题目要求正整数，负根要舍去。",
@@ -2255,6 +2579,18 @@ export const actExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "act-exam-factoring-polynomials": {
+    intro: t(
+      "A cubic like $x^3 + 2x^2 - 9x - 18$ factors by grouping: $x^2(x + 2) - 9(x + 2) = (x + 2)(x^2 - 9) = (x + 2)(x - 3)(x + 3)$. Higher powers often hide a common factor and a difference of squares.\n\nCheck: at $x = 1$, $1 + 2 - 9 - 18 = -24$ and $(3)(-2)(4) = -24$.\n\nIn this lesson we group terms, pull out common factors, and finish with differences of squares, then count the zeros.",
+      "像 $x^3 + 2x^2 - 9x - 18$ 这样的三次式可以分组分解：$x^2(x + 2) - 9(x + 2) = (x + 2)(x^2 - 9) = (x + 2)(x - 3)(x + 3)$。更高次的式子常藏着公因式和平方差。\n\n检验：$x = 1$ 时 $1 + 2 - 9 - 18 = -24$，而 $(3)(-2)(4) = -24$。\n\n本课我们分组、提公因式，再用平方差分解到底，然后数零点。",
+    ),
+    watch: t(
+      "$x^2 - 16$ is $(x - 4)(x + 4)$, not $(x - 4)^2$, which is $x^2 - 8x + 16$.",
+      "$x^2 - 16$ 是 $(x - 4)(x + 4)$，不是 $(x - 4)^2$；后者是 $x^2 - 8x + 16$。",
+    ),
+    hardWatch: t(
+      "A repeated factor gives one distinct zero: $x^4 - 4x^2 = x^2(x - 2)(x + 2)$ has the $3$ distinct zeros $0$, $2$ and $-2$, not $4$.",
+      "重复的因式只给出一个不同的零点：$x^4 - 4x^2 = x^2(x - 2)(x + 2)$ 有 $0$、$2$、$-2$ 三个不同零点，不是 $4$ 个。",
+    ),
     tip: t(
       "Four terms suggest grouping: factor the first two and the last two so that a shared binomial appears. So $x^3 + 2x^2 - 9x - 18 = x^2(x + 2) - 9(x + 2) = (x + 2)(x^2 - 9)$. Then split the difference of squares: $(x + 2)(x - 3)(x + 3)$. Stopping early leaves it unfinished.",
       "四项式适合分组：分别从前两项和后两项提公因式，使共同的二项式出现。所以 $x^3 + 2x^2 - 9x - 18 = x^2(x + 2) - 9(x + 2) = (x + 2)(x^2 - 9)$。再把平方差拆开：$(x + 2)(x - 3)(x + 3)$。提前停下就没分解完。",
@@ -2265,6 +2601,18 @@ export const actExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "act-exam-simplifying-rational-expressions": {
+    intro: t(
+      "A ratio of two areas, $\\frac{x^2 + 7x + 12}{x^2 + 5x + 6}$, simplifies once both are factored: $\\frac{(x + 3)(x + 4)}{(x + 3)(x + 2)} = \\frac{x + 4}{x + 2}$.\n\nCheck: at $x = 0$, $\\frac{12}{6} = 2 = \\frac{4}{2}$.\n\nIn this lesson we factor the top and bottom completely and cancel only whole factors they share.",
+      "两个面积之比 $\\frac{x^2 + 7x + 12}{x^2 + 5x + 6}$ 在分子分母都分解后就能化简：$\\frac{(x + 3)(x + 4)}{(x + 3)(x + 2)} = \\frac{x + 4}{x + 2}$。\n\n检验：$x = 0$ 时 $\\frac{12}{6} = 2 = \\frac{4}{2}$。\n\n本课我们把分子分母完全分解，只约去它们共有的整个因式。",
+    ),
+    watch: t(
+      "Terms that are added do not cancel: $\\frac{x + 4}{x + 2}$ is not $\\frac{4}{2}$; at $x = 2$ it is $\\frac{6}{4}$.",
+      "相加的项不能约分：$\\frac{x + 4}{x + 2}$ 不等于 $\\frac{4}{2}$；$x = 2$ 时它是 $\\frac{6}{4}$。",
+    ),
+    hardWatch: t(
+      "Factor a number out first: $\\frac{3x - 6}{x^2 - 4} = \\frac{3(x - 2)}{(x - 2)(x + 2)} = \\frac{3}{x + 2}$, and the factor left is $x + 2$, not $x - 2$.",
+      "先提出数字因数：$\\frac{3x - 6}{x^2 - 4} = \\frac{3(x - 2)}{(x - 2)(x + 2)} = \\frac{3}{x + 2}$，剩下的因式是 $x + 2$，不是 $x - 2$。",
+    ),
     tip: t(
       "Factor both the top and bottom, then cancel matching whole factors. So $\\frac{x^2 + 7x + 10}{x^2 + 5x + 6} = \\frac{(x + 2)(x + 5)}{(x + 2)(x + 3)} = \\frac{x + 5}{x + 3}$. Crossing out the $x^2$ terms, or the $x$ terms, is not valid, because only factors cancel, never terms.",
       "分子分母都分解，再约去相同的完整因式。所以 $\\frac{x^2 + 7x + 10}{x^2 + 5x + 6} = \\frac{(x + 2)(x + 5)}{(x + 2)(x + 3)} = \\frac{x + 5}{x + 3}$。划掉 $x^2$ 项或 $x$ 项是错的，因为只能约因式，不能约项。",
@@ -2275,6 +2623,18 @@ export const actExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "act-exam-combining-rational-expressions": {
+    intro: t(
+      "Two pipes fill a tank in $x$ and $2x$ hours, and together they fill $\\frac{1}{x} + \\frac{1}{2x}$ of it each hour. Over the common denominator $2x$ that is $\\frac{2}{2x} + \\frac{1}{2x} = \\frac{3}{2x}$.\n\nCheck: at $x = 3$, $\\frac{1}{3} + \\frac{1}{6} = \\frac{1}{2} = \\frac{3}{6}$.\n\nIn this lesson we rewrite fractions over a common denominator and add or subtract whole numerators.",
+      "两根水管分别用 $x$ 小时和 $2x$ 小时注满一个水箱，同时打开每小时注满 $\\frac{1}{x} + \\frac{1}{2x}$。通分到 $2x$ 得 $\\frac{2}{2x} + \\frac{1}{2x} = \\frac{3}{2x}$。\n\n检验：$x = 3$ 时 $\\frac{1}{3} + \\frac{1}{6} = \\frac{1}{2} = \\frac{3}{6}$。\n\n本课我们把分数通分，再把整个分子相加或相减。",
+    ),
+    watch: t(
+      "Do not add tops and bottoms: $\\frac{2}{x} + \\frac{1}{3x} = \\frac{7}{3x}$, not $\\frac{3}{4x}$; at $x = 1$ that is $\\frac{7}{3}$.",
+      "不能分子加分子、分母加分母：$\\frac{2}{x} + \\frac{1}{3x} = \\frac{7}{3x}$，不是 $\\frac{3}{4x}$；$x = 1$ 时它等于 $\\frac{7}{3}$。",
+    ),
+    hardWatch: t(
+      "The minus sign reaches the whole second numerator: $\\frac{2}{x - 1} - \\frac{3}{x + 1}$ has numerator $2(x + 1) - 3(x - 1) = -x + 5$, not $-x - 1$.",
+      "减号作用于第二个分子的全部：$\\frac{2}{x - 1} - \\frac{3}{x + 1}$ 的分子为 $2(x + 1) - 3(x - 1) = -x + 5$，不是 $-x - 1$。",
+    ),
     tip: t(
       "Fractions need a common denominator before adding. If one denominator is a multiple of the other, scale only the simpler fraction. For $\\frac{5}{x} + \\frac{1}{2x}$: rewrite as $\\frac{10}{2x} + \\frac{1}{2x} = \\frac{11}{2x}$. Adding numerators and denominators straight across is not valid.",
       "分式相加前要通分。一个分母是另一个的倍数时，只需放大较简单的分式。对 $\\frac{5}{x} + \\frac{1}{2x}$：改写为 $\\frac{10}{2x} + \\frac{1}{2x} = \\frac{11}{2x}$。分子分母直接分别相加是错的。",
@@ -2285,6 +2645,18 @@ export const actExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "act-exam-solving-rational-equations": {
+    intro: t(
+      "A recipe ratio says $\\frac{x}{x + 6} = \\frac{2}{5}$. Cross-multiplying gives $5x = 2x + 12$, so $x = 4$.\n\nCheck: $\\frac{4}{10} = \\frac{2}{5}$, and the denominator is not $0$.\n\nIn this lesson we clear denominators by multiplying, solve the equation that is left, and make sure no denominator becomes $0$.",
+      "一个配方比例为 $\\frac{x}{x + 6} = \\frac{2}{5}$。交叉相乘得 $5x = 2x + 12$，所以 $x = 4$。\n\n检验：$\\frac{4}{10} = \\frac{2}{5}$，分母不为 $0$。\n\n本课我们通过相乘去分母，解剩下的方程，并确认没有分母变成 $0$。",
+    ),
+    watch: t(
+      "Multiply the whole binomial: $\\frac{x}{x + 6} = \\frac{2}{5}$ gives $5x = 2(x + 6) = 2x + 12$, not $5x = 2x + 6$.",
+      "要乘整个二项式：$\\frac{x}{x + 6} = \\frac{2}{5}$ 得 $5x = 2(x + 6) = 2x + 12$，不是 $5x = 2x + 6$。",
+    ),
+    hardWatch: t(
+      "Divide before you subtract: $\\frac{24}{x + 2} = 4$ gives $x + 2 = 6$ and $x = 4$, not $x + 2 = 20$.",
+      "先除后减：$\\frac{24}{x + 2} = 4$ 得 $x + 2 = 6$，$x = 4$，而不是 $x + 2 = 20$。",
+    ),
     tip: t(
       "With one fraction on each side, cross-multiply and treat the denominator as a whole group. For $\\frac{x}{x + 6} = \\frac{2}{5}$: $5x = 2(x + 6)$, so $3x = 12$ and $x = 4$. Multiplying only the $x$ in the group loses a term. Check that no denominator becomes $0$.",
       "两边各有一个分式时，交叉相乘，并把分母作为整体。对 $\\frac{x}{x + 6} = \\frac{2}{5}$：$5x = 2(x + 6)$，所以 $3x = 12$，$x = 4$。只乘这组中的 $x$ 就少了一项。检查分母不为 $0$。",
@@ -2295,6 +2667,18 @@ export const actExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "act-exam-solving-square-root-equations": {
+    intro: t(
+      "A pendulum formula gives $\\sqrt{L - 2} = 3$. Squaring both sides gives $L - 2 = 9$, so $L = 11$.\n\nCheck: $\\sqrt{11 - 2} = \\sqrt{9} = 3$.\n\nIn this lesson we isolate the square root, square both sides, solve, and check the answer in the original equation.",
+      "一个单摆公式给出 $\\sqrt{L - 2} = 3$。两边平方得 $L - 2 = 9$，所以 $L = 11$。\n\n检验：$\\sqrt{11 - 2} = \\sqrt{9} = 3$。\n\n本课我们先分离根式，再两边平方、求解，并在原方程中检验答案。",
+    ),
+    watch: t(
+      "Square the other side, do not add to it: $\\sqrt{x - 5} = 4$ gives $x = 21$, not $9$.",
+      "要把另一边平方，而不是直接相加：$\\sqrt{x - 5} = 4$ 得 $x = 21$，不是 $9$。",
+    ),
+    hardWatch: t(
+      "Get the root alone before squaring: $2\\sqrt{x - 1} + 6 = 12$ gives $\\sqrt{x - 1} = 3$ and $x = 10$; squaring $2\\sqrt{x - 1} = 6$ as $x - 1 = 36$ gives $37$.",
+      "平方前先让根式单独在一边：$2\\sqrt{x - 1} + 6 = 12$ 得 $\\sqrt{x - 1} = 3$，$x = 10$；若把 $2\\sqrt{x - 1} = 6$ 平方成 $x - 1 = 36$，就得到错误的 $37$。",
+    ),
     tip: t(
       "To undo a square root, square both sides, then solve the linear equation. For $\\sqrt{x + 2} = 4$: $x + 2 = 16$, so $x = 14$. Substitute back to confirm. Doubling the right side instead of squaring it gives a wrong value, and so does forgetting the constant inside.",
       "要消去平方根，两边平方，再解线性方程。对 $\\sqrt{x + 2} = 4$：$x + 2 = 16$，所以 $x = 14$。代回去确认。把右边加倍而不是平方会得到错误的值，忘了根号内的常数也一样。",
@@ -2305,6 +2689,18 @@ export const actExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "act-exam-solving-absolute-value-equations": {
+    intro: t(
+      "A part must be within $0.5$ millimeters of $20$, and the edge cases solve $|x - 20| = 0.5$: $x = 20.5$ or $x = 19.5$. An absolute value equation splits into two cases whenever the other side is positive.\n\nCheck: both values are $0.5$ from $20$.\n\nIn this lesson we isolate the absolute value, solve both cases, and work with the pair of solutions.",
+      "一个零件必须在 $20$ 毫米上下 $0.5$ 毫米以内，边界情况就是 $|x - 20| = 0.5$：$x = 20.5$ 或 $x = 19.5$。只要另一边为正，绝对值方程就分成两种情况。\n\n检验：两个值到 $20$ 的距离都是 $0.5$。\n\n本课我们分离绝对值，解两种情况，并处理这一对解。",
+    ),
+    watch: t(
+      "There are two cases: $|x - 3| = 5$ gives $x = 8$ and also $x = -2$.",
+      "有两种情况：$|x - 3| = 5$ 得 $x = 8$，还有 $x = -2$。",
+    ),
+    hardWatch: t(
+      "The solutions of $|x + 4| = 6$ are $2$ and $-10$, centered at $-4$, so they add to $-8$, not $0$ or $8$.",
+      "$|x + 4| = 6$ 的解是 $2$ 和 $-10$，以 $-4$ 为中心，所以和为 $-8$，不是 $0$ 或 $8$。",
+    ),
     tip: t(
       "An equation $|x - a| = d$ says that $x$ is $d$ away from $a$, on either side. So $|x - 5| = 2$ has the solutions $3$ and $7$. Equivalently, split it into $x - 5 = 2$ and $x - 5 = -2$. Giving just one solution is the trap, as the bars allow both directions.",
       "方程 $|x - a| = d$ 表示 $x$ 到 $a$ 的距离为 $d$，两侧都可以。所以 $|x - 5| = 2$ 的解是 $3$ 和 $7$。等价地，拆成 $x - 5 = 2$ 和 $x - 5 = -2$。只给一个解就是陷阱，因为绝对值允许两个方向。",
@@ -2315,6 +2711,18 @@ export const actExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "act-exam-writing-rate-and-earnings-models": {
+    intro: t(
+      "A phone plan costs $\\$20$ a month plus $\\$3$ per gigabyte. The fixed part is paid once and the rate is multiplied by the amount used: $C = 20 + 3g$. A supply that runs down works the same way with a minus sign.\n\nCheck: $4$ gigabytes cost $20 + 12 = 32$ dollars.\n\nIn this lesson we tell the starting amount from the rate and write the linear model for pay, cost or a supply that is used up.",
+      "一个手机套餐每月 $\\$20$，另外每 GB 流量 $\\$3$。固定部分只付一次，单价乘以用量：$C = 20 + 3g$。逐渐用完的储量也是一样，只是用减号。\n\n检验：$4$ GB 花费 $20 + 12 = 32$ 美元。\n\n本课我们分清起始量与变化率，写出工资、费用或消耗储量的线性模型。",
+    ),
+    watch: t(
+      "The rate goes with the variable: $\\$15$ a week plus $\\$9$ an hour is $15 + 9h$, not $9 + 15h$.",
+      "变化率跟着变量走：每周 $\\$15$ 加每小时 $\\$9$ 是 $15 + 9h$，不是 $9 + 15h$。",
+    ),
+    hardWatch: t(
+      "Something used up is subtracted: $500$ sheets used at $4$ a minute leave $S = 500 - 4m$, not $500 + 4m$.",
+      "用掉的要减去：$500$ 张纸每分钟用 $4$ 张，剩 $S = 500 - 4m$，不是 $500 + 4m$。",
+    ),
     tip: t(
       "Flat amounts appear once, and rates multiply the variable. A worker paid a flat $20$ dollars plus $12$ dollars per hour earns $20 + 12h$. Attaching the hours to the flat fee, or to both amounts, as $(20 + 12)h$, charges the fee repeatedly, which is the wrong model.",
       "固定金额只出现一次，费率要乘变量。固定报酬 $20$ 美元、每小时 $12$ 美元的工人，收入是 $20 + 12h$。把小时数放到固定费用上，或者放到两个金额上，写成 $(20 + 12)h$，就重复收了固定费用，模型错了。",
@@ -2325,6 +2733,18 @@ export const actExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "act-exam-expressing-related-quantities": {
+    intro: t(
+      "Mia has $3$ times as many stamps as Leo, and Leo has $4$ fewer than Ana. If Ana has $a$ stamps, Leo has $a - 4$ and Mia has $3(a - 4)$.\n\nCheck: with $a = 10$, Leo has $6$ and Mia $18$, and $3(10 - 4) = 18$.\n\nIn this lesson we build expressions one relation at a time, keeping parentheses around a quantity that is scaled.",
+      "Mia 的邮票是 Leo 的 $3$ 倍，Leo 比 Ana 少 $4$ 张。若 Ana 有 $a$ 张，Leo 有 $a - 4$ 张，Mia 有 $3(a - 4)$ 张。\n\n检验：$a = 10$ 时 Leo 有 $6$ 张，Mia 有 $18$ 张，而 $3(10 - 4) = 18$。\n\n本课我们一次处理一个关系来写式子，被放大的量要加括号。",
+    ),
+    watch: t(
+      "Three times the whole age needs parentheses: $3(y - 4)$ is $3y - 12$, not $3y - 4$.",
+      "整个年龄的 $3$ 倍要加括号：$3(y - 4)$ 是 $3y - 12$，不是 $3y - 4$。",
+    ),
+    hardWatch: t(
+      "A total includes every part: boxes of $n$ and $2n + 5$ pencils hold $3n + 5$ in all, not $2n + 5$.",
+      "总数要包括每一部分：分别装 $n$ 支和 $2n + 5$ 支的两个盒子共有 $3n + 5$ 支，不是 $2n + 5$ 支。",
+    ),
     tip: t(
       "Build from the known variable outward, one relation at a time. If Ben is $3$ years younger than Cal, whose age is $y$, then Ben is $y - 3$. If Ana is twice as old as Ben, Ana is $2(y - 3)$. Doubling only the $y$ forgets that the whole expression is multiplied.",
       "从已知变量出发，一次处理一个关系。Ben 比 Cal 小 $3$ 岁，Cal 的年龄是 $y$，则 Ben 是 $y - 3$。Ana 的年龄是 Ben 的两倍，则 Ana 是 $2(y - 3)$。只把 $y$ 加倍，就忘了要乘的是整个表达式。",
@@ -2335,6 +2755,18 @@ export const actExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "act-exam-using-a-given-algebraic-model": {
+    intro: t(
+      "A taxi charges $C = 4 + 2m$ dollars for $m$ miles. For $7$ miles, $C = 4 + 2(7) = 18$. Other questions give the output and ask for the input: a $\\$24$ ride is $4 + 2m = 24$, so $m = 10$.\n\nCheck: $4 + 2(10) = 24$.\n\nIn this lesson we substitute into a given model in the right order, or solve it backward from a given output.",
+      "一辆出租车行驶 $m$ 英里收费 $C = 4 + 2m$ 美元。$7$ 英里时 $C = 4 + 2(7) = 18$。另一些题给出结果，求输入：车费 $\\$24$ 即 $4 + 2m = 24$，所以 $m = 10$。\n\n检验：$4 + 2(10) = 24$。\n\n本课我们按正确的顺序代入所给模型，或由给定的结果倒推回去。",
+    ),
+    watch: t(
+      "Multiply before adding: $C = 30 + 5h$ at $h = 4$ is $30 + 20 = 50$, not $35 \\times 4 = 140$.",
+      "先乘后加：$C = 30 + 5h$ 在 $h = 4$ 时是 $30 + 20 = 50$，不是 $35 \\times 4 = 140$。",
+    ),
+    hardWatch: t(
+      "Set the model equal to the given value: $H = 90 - 6t = 60$ gives $6t = 30$ and $t = 5$; the drop of $30$ is not the time.",
+      "让模型等于给定值：$H = 90 - 6t = 60$ 得 $6t = 30$，$t = 5$；下降的 $30$ 不是时间。",
+    ),
     tip: t(
       "Substitute the value given for the input variable, multiply, and then add the fixed part. With $C = 20 + 4h$ and $6$ hours: $C = 20 + 24 = 44$. Adding the $20$ and $4$ before multiplying charges the fee every hour, and this produces the expected wrong value.",
       "把给定的值代入输入变量，先乘，再加固定部分。$C = 20 + 4h$，$6$ 小时：$C = 20 + 24 = 44$。先把 $20$ 和 $4$ 相加再乘，就每小时都收了固定费用，这会得到预料中的错误值。",
@@ -2345,6 +2777,15 @@ export const actExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "act-exam-modeling-perimeter-problems": {
+    intro: t(
+      "A pen is $4$ meters longer than it is wide and takes $40$ meters of fence. With width $w$, $2(w + w + 4) = 40$, so $2w + 4 = 20$ and $w = 8$.\n\nCheck: the pen is $8$ by $12$, and $2(8 + 12) = 40$.\n\nIn this lesson we write a perimeter from side lengths given in terms of one variable and solve for the side asked.",
+      "一个围栏的长比宽多 $4$ 米，用了 $40$ 米栅栏。设宽为 $w$，$2(w + w + 4) = 40$，所以 $2w + 4 = 20$，$w = 8$。\n\n检验：围栏是 $8$ 乘 $12$，而 $2(8 + 12) = 40$。\n\n本课我们用一个变量表示各边，写出周长，再求题目问的那条边。",
+    ),
+    watch: t("Finish dividing: $2w = 18$ means $w = 9$, and $18$ is twice the width.", "要除完：$2w = 18$ 表示 $w = 9$，$18$ 是宽的两倍。"),
+    hardWatch: t(
+      "An isosceles triangle has two equal sides: equal sides $s$ and base $s + 3$ give perimeter $3s + 3$, not $2s + 3$.",
+      "等腰三角形有两条相等的边：腰为 $s$、底为 $s + 3$ 时周长为 $3s + 3$，不是 $2s + 3$。",
+    ),
     tip: t(
       "Write the length in terms of the width, then use $P = 2(\\ell + w)$. With length $3$ more than width and perimeter $30$: $2(2w + 3) = 30$, so $2w + 3 = 15$ and $w = 6$. Forgetting that there are two widths and two lengths gives an equation that is off by a factor of two.",
       "用宽表示长，再用 $P = 2(\\ell + w)$。长比宽多 $3$、周长 $30$：$2(2w + 3) = 30$，所以 $2w + 3 = 15$，$w = 6$。忘了有两条宽和两条长，方程就差了两倍。",
@@ -2355,6 +2796,18 @@ export const actExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "act-exam-modeling-cost-problems": {
+    intro: t(
+      "Tickets cost $\\$8$ for students and $\\$12$ for adults, so $s$ student and $a$ adult tickets cost $8s + 12a$. If $5$ adult tickets were sold and $\\$124$ was taken in, then $8s + 60 = 124$ and $s = 8$.\n\nCheck: $8(8) + 12(5) = 64 + 60 = 124$.\n\nIn this lesson we price each kind of item separately, add the costs, and solve for an unknown count.",
+      "学生票 $\\$8$，成人票 $\\$12$，所以 $s$ 张学生票和 $a$ 张成人票共 $8s + 12a$ 美元。若卖出 $5$ 张成人票，共收入 $\\$124$，则 $8s + 60 = 124$，$s = 8$。\n\n检验：$8(8) + 12(5) = 64 + 60 = 124$。\n\n本课我们对每种物品分别计价，把费用相加，并求出未知的数量。",
+    ),
+    watch: t(
+      "Each price goes with its own item: $\\$3$ apples and $\\$5$ melons cost $3a + 5m$, not $8(a + m)$.",
+      "每个价格对应自己的物品：$\\$3$ 的苹果和 $\\$5$ 的甜瓜共 $3a + 5m$，不是 $8(a + m)$。",
+    ),
+    hardWatch: t(
+      "Take out the known part before dividing: $\\$70$ with $4$ binders at $\\$10$ leaves $\\$30$ for $\\$3$ pens, so $10$ pens, not $70 \\div 3$.",
+      "先减去已知部分再除：共 $\\$70$，$4$ 个 $\\$10$ 的活页夹后剩 $\\$30$，买 $\\$3$ 的钢笔是 $10$ 支，不是 $70 \\div 3$。",
+    ),
     tip: t(
       "Each price multiplies its own quantity, and the two costs add. With pencils at $3$ dollars and rulers at $8$ dollars, the total for $p$ pencils and $r$ rulers is $3p + 8r$. Multiplying the two costs together, or crossing the prices, gives a formula that does not reflect the purchase.",
       "每个单价乘自己的数量，两部分费用相加。铅笔 $3$ 美元、尺子 $8$ 美元，$p$ 支铅笔和 $r$ 把尺子总价是 $3p + 8r$。把两部分费用相乘，或者把单价弄混，得到的公式都不符合这次购买。",
@@ -2365,6 +2818,18 @@ export const actExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "act-exam-modeling-related-quantity-problems": {
+    intro: t(
+      "A shelf holds $50$ books, and there are $2$ more than $3$ times as many novels as atlases. With $n$ atlases, $n + 3n + 2 = 50$, so $4n = 48$ and $n = 12$.\n\nCheck: $12$ atlases and $38$ novels make $50$.\n\nIn this lesson we name one quantity, write the others from it, and solve one equation for the total.",
+      "一个书架有 $50$ 本书，小说比地图册的 $3$ 倍多 $2$ 本。设地图册 $n$ 本，$n + 3n + 2 = 50$，所以 $4n = 48$，$n = 12$。\n\n检验：$12$ 本地图册加 $38$ 本小说共 $50$ 本。\n\n本课我们设一个量，用它表示其余的量，再对总数列一个方程求解。",
+    ),
+    watch: t(
+      "Count the named quantity once more in the total: $n$ and $3n + 2$ add to $4n + 2$, not $3n + 2$.",
+      "总数里还要算上所设的量：$n$ 与 $3n + 2$ 之和是 $4n + 2$，不是 $3n + 2$。",
+    ),
+    hardWatch: t(
+      "Consecutive even integers step by $2$: $e$, $e + 2$ and $e + 4$ with sum $48$ give $e = 14$, and the greatest is $18$, not $14$.",
+      "连续偶数每次加 $2$：$e$、$e + 2$、$e + 4$ 之和为 $48$ 时 $e = 14$，最大的是 $18$，不是 $14$。",
+    ),
     tip: t(
       "Let the variable be the group that everything else is measured from. Express the other group, then add them to the total. With $40$ items and one group $4$ more than twice the other: $n + 2n + 4 = 40$, so $3n = 36$ and $n = 12$. Using only $2n + 4$ ignores the base group.",
       "把其他量都以之为基准的那一组设为变量。表示出另一组，再相加等于总数。共 $40$ 件、一组比另一组的两倍多 $4$：$n + 2n + 4 = 40$，所以 $3n = 36$，$n = 12$。只用 $2n + 4$ 就忽略了基准组。",
@@ -2375,6 +2840,18 @@ export const actExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "act-exam-writing-linear-models-from-data": {
+    intro: t(
+      "A table shows shipping costs of $\\$17$, $\\$21$, $\\$25$ for $1$, $2$, $3$ boxes. Each box adds $\\$4$, and $17 - 4 = 13$, so $y = 4x + 13$. The same line then predicts costs outside the table.\n\nCheck: $4(3) + 13 = 25$.\n\nIn this lesson we find the slope from the change in $y$, find the intercept from one row, and use the model to predict.",
+      "一张表显示 $1$、$2$、$3$ 箱的运费分别是 $\\$17$、$\\$21$、$\\$25$。每多一箱加 $\\$4$，而 $17 - 4 = 13$，所以 $y = 4x + 13$。这条直线还能预测表外的费用。\n\n检验：$4(3) + 13 = 25$。\n\n本课我们由 $y$ 的变化求斜率，由一行数据求截距，再用模型作预测。",
+    ),
+    watch: t(
+      "The intercept is the value at $x = 0$, not at the first row: rows $(2, 11)$ and $(3, 14)$ give $y = 3x + 5$, not $y = 3x + 11$.",
+      "截距是 $x = 0$ 时的值，不是第一行的值：数据 $(2, 11)$、$(3, 14)$ 给出 $y = 3x + 5$，不是 $y = 3x + 11$。",
+    ),
+    hardWatch: t(
+      "Move from a known point by the change in $x$: through $(2, 9)$ with slope $3$, the value at $x = 12$ is $9 + 3(10) = 39$, not $3(12) = 36$.",
+      "从已知点出发，按 $x$ 的变化量移动：过 $(2, 9)$、斜率 $3$ 时，$x = 12$ 处的值为 $9 + 3(10) = 39$，不是 $3(12) = 36$。",
+    ),
     tip: t(
       "The slope is the change in $y$ per step in $x$. The intercept then comes from any pair. In a table with $(1, 5)$, $(2, 8)$ and $(3, 11)$: the slope is $3$, and $5 = 3(1) + b$ gives $b = 2$. Test the equation on another row. Reading the first $y$ as the intercept fails unless $x$ starts at $0$.",
       "斜率是 $x$ 每变化一步时 $y$ 的变化。截距再由任意一对数得到。表中有 $(1, 5)$、$(2, 8)$、$(3, 11)$：斜率是 $3$，由 $5 = 3(1) + b$ 得 $b = 2$。用另一行检验方程。除非 $x$ 从 $0$ 开始，否则把第一个 $y$ 当作截距是不对的。",
@@ -2385,6 +2862,18 @@ export const actExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "act-exam-evaluating-a-function": {
+    intro: t(
+      "If $f(x) = 2x^2 - 3x + 1$, then $f(-2)$ puts $-2$ in every place $x$ appears: $2(4) - 3(-2) + 1 = 8 + 6 + 1 = 15$. Other questions give an output and ask for the input.\n\nCheck: $2(-2)^2 = 8$ is positive, since a square is never negative.\n\nIn this lesson we substitute with parentheses, keep every sign, and solve backward when the output is given.",
+      "若 $f(x) = 2x^2 - 3x + 1$，求 $f(-2)$ 就是把每个 $x$ 都换成 $-2$：$2(4) - 3(-2) + 1 = 8 + 6 + 1 = 15$。另一些题给出函数值，求输入。\n\n检验：$2(-2)^2 = 8$ 为正，因为平方不会是负数。\n\n本课我们带括号代入，保留每个符号，并在给出函数值时倒推求解。",
+    ),
+    watch: t(
+      "Square the negative number with its sign: $(-3)^2 = 9$, so $x^2$ at $x = -3$ is $9$, not $-9$.",
+      "负数连同符号一起平方：$(-3)^2 = 9$，所以 $x = -3$ 时 $x^2$ 是 $9$，不是 $-9$。",
+    ),
+    hardWatch: t(
+      "$g(k) = 23$ is an equation for $k$: with $g(x) = 3x + 5$, $3k + 5 = 23$ gives $k = 6$, while $g(23) = 74$ answers a different question.",
+      "$g(k) = 23$ 是关于 $k$ 的方程：$g(x) = 3x + 5$ 时 $3k + 5 = 23$ 得 $k = 6$；$g(23) = 74$ 回答的是另一个问题。",
+    ),
     tip: t(
       "Replace every $x$ with the input, in parentheses, so that signs stay correct. For $f(x) = 2x^2 - x + 1$ at $-3$: $2(9) - (-3) + 1 = 22$. Without parentheses, the square loses its sign or the middle term goes wrong, and both produce the likely wrong options.",
       "把每个 $x$ 都换成输入，并加上括号，这样符号才对。$f(x) = 2x^2 - x + 1$ 在 $-3$ 处：$2(9) - (-3) + 1 = 22$。不加括号，平方就会丢了符号，或者中间项出错，这两种情况都会得到很可能的错误选项。",
@@ -2395,6 +2884,18 @@ export const actExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "act-exam-evaluating-function-compositions": {
+    intro: t(
+      "$f(g(2))$ is worked from the inside out. With $g(x) = 3x - 1$ and $f(x) = x^2 + 4$: $g(2) = 5$, then $f(5) = 29$.\n\nCheck: $f(g(x)) = (3x - 1)^2 + 4$, and at $x = 2$ that is $25 + 4 = 29$.\n\nIn this lesson we evaluate compositions from the inside out and write a composition as one expression.",
+      "$f(g(2))$ 从里往外算。若 $g(x) = 3x - 1$，$f(x) = x^2 + 4$：$g(2) = 5$，再算 $f(5) = 29$。\n\n检验：$f(g(x)) = (3x - 1)^2 + 4$，$x = 2$ 时为 $25 + 4 = 29$。\n\n本课我们从里往外计算复合函数，并把复合函数写成一个式子。",
+    ),
+    watch: t(
+      "The order matters: with the same $f$ and $g$, $g(f(2)) = g(8) = 23$, not $29$.",
+      "顺序很重要：同样的 $f$ 与 $g$，$g(f(2)) = g(8) = 23$，不是 $29$。",
+    ),
+    hardWatch: t(
+      "The outer coefficient multiplies the whole inner function: $g(x) = 4x - 3$ and $f(x) = 2x + 5$ give $g(f(x)) = 4(2x + 5) - 3 = 8x + 17$, not $8x + 2$.",
+      "外层的系数乘以整个内层函数：$g(x) = 4x - 3$，$f(x) = 2x + 5$ 时 $g(f(x)) = 4(2x + 5) - 3 = 8x + 17$，不是 $8x + 2$。",
+    ),
     tip: t(
       "Evaluate from the inside out: compute the inner function at the number, then feed the result to the outer one. With $f(x) = x^2 + 1$ and $g(x) = 2x - 1$: $g(3) = 5$, and $f(5) = 26$. Reversing the order, or multiplying the two values, gives wrong options.",
       "由内向外计算：先求内层函数在这个数处的值，再把结果代入外层函数。$f(x) = x^2 + 1$，$g(x) = 2x - 1$：$g(3) = 5$，$f(5) = 26$。顺序颠倒，或者把两个值相乘，都是错误选项。",
@@ -2405,6 +2906,18 @@ export const actExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "act-exam-writing-function-rules-from-data": {
+    intro: t(
+      "A table lists $x = 0, 1, 2, 3$ with $y = 10, 7, 4, 1$. The value at $0$ is $10$ and each step subtracts $3$, so $y = -3x + 10$. When the steps are not equal, the rule is not linear, and squares are the next thing to try.\n\nCheck: $-3(2) + 10 = 4$.\n\nIn this lesson we read a rule from a table and test it on every row.",
+      "一张表中 $x = 0, 1, 2, 3$ 对应 $y = 10, 7, 4, 1$。$x = 0$ 时为 $10$，每步减 $3$，所以 $y = -3x + 10$。若每步变化不相等，规则就不是线性的，下一步可以试平方。\n\n检验：$-3(2) + 10 = 4$。\n\n本课我们从表格读出规则，并在每一行上检验。",
+    ),
+    watch: t(
+      "A falling table has a negative rate: $y = 12, 8, 4$ at $x = 0, 1, 2$ fits $y = -4x + 12$, not $y = 4x + 12$.",
+      "递减的表格变化率为负：$x = 0, 1, 2$ 时 $y = 12, 8, 4$，符合 $y = -4x + 12$，不是 $y = 4x + 12$。",
+    ),
+    hardWatch: t(
+      "A rule must fit every row: $y = 5, 7, 13, 23$ at $x = 0, 1, 2, 3$ fits $y = 2x^2 + 5$; the line $y = 6x + 5$ fits $x = 0$ and $x = 3$ but gives $11$ at $x = 1$.",
+      "规则必须符合每一行：$x = 0, 1, 2, 3$ 时 $y = 5, 7, 13, 23$，符合 $y = 2x^2 + 5$；直线 $y = 6x + 5$ 符合 $x = 0$ 与 $x = 3$，但在 $x = 1$ 处给出 $11$。",
+    ),
     tip: t(
       "Read the value at $x = 0$ as the constant, and the steady change between rows as the slope. For $y$ values $6$, $4$, $2$ at $x = 0$, $1$, $2$: the constant is $6$ and the slope is $-2$, so $y = -2x + 6$. A falling table needs a negative slope. Check every row.",
       "把 $x = 0$ 处的值当作常数，把行与行之间的固定变化当作斜率。$x = 0$、$1$、$2$ 时 $y$ 为 $6$、$4$、$2$：常数是 $6$，斜率是 $-2$，所以 $y = -2x + 6$。下降的表格需要负斜率。每一行都要检查。",
@@ -2415,6 +2928,18 @@ export const actExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "act-exam-matching-functions-to-representations": {
+    intro: t(
+      "A graph shows a line crossing the $y$-axis at $-2$ and rising $3$ for each unit to the right, so its equation is $y = 3x - 2$. Reading the intercept and the slope from grid points matches a graph to its rule.\n\nCheck: the line passes through $(1, 1)$, and $3(1) - 2 = 1$.\n\nIn this lesson we read lines from graphs, match them to equations, and read values of a function from its graph.",
+      "一幅图中的直线与 $y$ 轴交于 $-2$，每向右一个单位上升 $3$，所以方程为 $y = 3x - 2$。从格点读出截距和斜率，就能把图象与规则对应起来。\n\n检验：直线过 $(1, 1)$，而 $3(1) - 2 = 1$。\n\n本课我们从图象读出直线，与方程配对，并从图象读出函数值。",
+    ),
+    watch: t(
+      "A line that falls to the right has a negative slope: falling $2$ per unit means $y = -2x + b$, not $y = 2x + b$.",
+      "向右下降的直线斜率为负：每个单位下降 $2$ 表示 $y = -2x + b$，不是 $y = 2x + b$。",
+    ),
+    hardWatch: t(
+      "$f(-3)$ is the height of the line above $x = -3$: for $y = 2x + 1$ it is $-5$, not $-3$, which is the input.",
+      "$f(-3)$ 是直线在 $x = -3$ 处的高度：对 $y = 2x + 1$ 它是 $-5$，不是输入 $-3$。",
+    ),
     tip: t(
       "Match a line by its $y$-intercept and slope. The intercept is where the line crosses the vertical axis, and the slope is rise over run between grid points. A line falling $2$ per $1$ to the right and crossing at $3$ is $y = -2x + 3$. A falling line needs a negative slope.",
       "用 $y$ 轴截距和斜率来匹配直线。截距是直线穿过竖直轴的位置，斜率是网格点之间的升高除以水平距离。向右每 $1$ 下降 $2$、在 $3$ 处穿过的直线是 $y = -2x + 3$。下降的直线需要负斜率。",
@@ -2425,6 +2950,18 @@ export const actExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "act-exam-determining-rates-of-change": {
+    intro: t(
+      "A plant grows from $12$ cm on day $2$ to $27$ cm on day $7$. Its average growth is $\\frac{27 - 12}{7 - 2} = \\frac{15}{5} = 3$ cm per day. For a curve, the same quotient gives the average rate between two points.\n\nCheck: $12 + 3 \\times 5 = 27$.\n\nIn this lesson we divide the change in output by the change in input, for data and for functions.",
+      "一株植物从第 $2$ 天的 $12$ 厘米长到第 $7$ 天的 $27$ 厘米。平均每天长 $\\frac{27 - 12}{7 - 2} = \\frac{15}{5} = 3$ 厘米。对曲线，同样的商给出两点之间的平均变化率。\n\n检验：$12 + 3 \\times 5 = 27$。\n\n本课我们用输出的变化除以输入的变化，处理数据和函数两种情形。",
+    ),
+    watch: t(
+      "Divide by the time that passed: growing $15$ cm in $5$ days is $3$ cm per day, not $15$.",
+      "要除以经过的时间：$5$ 天长 $15$ 厘米是每天 $3$ 厘米，不是 $15$。",
+    ),
+    hardWatch: t(
+      "Use both ends: for $f(x) = x^2$ from $x = 1$ to $x = 4$, the rate is $\\frac{16 - 1}{3} = 5$, not $\\frac{16}{4} = 4$.",
+      "两端都要用：$f(x) = x^2$ 从 $x = 1$ 到 $x = 4$ 的变化率为 $\\frac{16 - 1}{3} = 5$，不是 $\\frac{16}{4} = 4$。",
+    ),
     tip: t(
       "Average rate is change in value over change in time: subtract both, then divide. A tree that is $12$ feet tall in year $1$ and $32$ feet tall in year $5$ grows $\\frac{20}{4} = 5$ feet per year. Dividing by the final year rather than the elapsed time is the trap.",
       "平均变化率是值的变化除以时间的变化：两者都相减，再相除。第 $1$ 年高 $12$ 英尺、第 $5$ 年高 $32$ 英尺的树，每年长 $\\frac{20}{4} = 5$ 英尺。除以最后的年份而不是经过的时间，就是陷阱。",
@@ -2435,6 +2972,18 @@ export const actExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "act-exam-finding-extreme-values-of-quadratics": {
+    intro: t(
+      "The cost of a run is $C = 3(x - 4)^2 + 7$ hundred dollars. The square is never negative and is $0$ at $x = 4$, so the least cost is $7$. In standard form, the vertex is at $x = -\\frac{b}{2a}$.\n\nCheck: $C(5) = 10$ and $C(3) = 10$ are both above $7$.\n\nIn this lesson we read minimum and maximum values from vertex form and find where they occur from standard form.",
+      "一次生产的费用为 $C = 3(x - 4)^2 + 7$ 百美元。平方项不会为负，在 $x = 4$ 时为 $0$，所以最低费用为 $7$。在一般式中，顶点在 $x = -\\frac{b}{2a}$。\n\n检验：$C(5) = 10$，$C(3) = 10$，都大于 $7$。\n\n本课我们从顶点式读出最小值或最大值，并从一般式求出取得它的位置。",
+    ),
+    watch: t(
+      "The question may ask for the value or for where it occurs: $2(x - 3)^2 + 5$ has minimum value $5$, reached at $x = 3$.",
+      "题目可能问最值，也可能问取得最值的位置：$2(x - 3)^2 + 5$ 的最小值是 $5$，在 $x = 3$ 处取得。",
+    ),
+    hardWatch: t(
+      "Divide by $2a$ with the sign of $a$: $y = -x^2 + 6x + 1$ peaks at $x = -\\frac{6}{2(-1)} = 3$, not $-3$ or $6$.",
+      "除以 $2a$ 时带上 $a$ 的符号：$y = -x^2 + 6x + 1$ 在 $x = -\\frac{6}{2(-1)} = 3$ 处最高，不是 $-3$ 或 $6$。",
+    ),
     tip: t(
       "In vertex form $a(x - h)^2 + k$ with $a > 0$, the square is at least $0$, so the minimum value is $k$, reached at $x = h$. For $3(x + 2)^2 - 7$, the minimum is $-7$. The input $-2$ is where it occurs, and quoting that instead is the trap.",
       "顶点式 $a(x - h)^2 + k$ 中，$a > 0$ 时平方至少为 $0$，所以最小值是 $k$，在 $x = h$ 处取得。对 $3(x + 2)^2 - 7$，最小值是 $-7$。输入 $-2$ 是取得它的位置，答成这个就是陷阱。",
@@ -2445,6 +2994,18 @@ export const actExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "act-exam-locating-points-on-a-parabola": {
+    intro: t(
+      "A parabola is symmetric about its axis. If the axis is $x = 2$ and $(5, 9)$ is on the graph, then the point $3$ units to the left, $(-1, 9)$, is on it too. The axis also sits halfway between the $x$-intercepts.\n\nCheck: $5$ and $-1$ are both $3$ from $2$.\n\nIn this lesson we reflect points across the axis and use the intercepts to find the vertex.",
+      "抛物线关于对称轴对称。若对称轴为 $x = 2$，且 $(5, 9)$ 在图象上，那么向左 $3$ 个单位的点 $(-1, 9)$ 也在图象上。对称轴还位于两个 $x$ 轴截距的正中。\n\n检验：$5$ 和 $-1$ 到 $2$ 的距离都是 $3$。\n\n本课我们把点关于对称轴作对称，并用截距找出顶点。",
+    ),
+    watch: t(
+      "The reflected point keeps its height: across $x = 1$, the point $(4, 7)$ goes to $(-2, 7)$, not $(-2, -7)$.",
+      "对称点的高度不变：关于 $x = 1$，点 $(4, 7)$ 对应 $(-2, 7)$，不是 $(-2, -7)$。",
+    ),
+    hardWatch: t(
+      "The vertex lies on the axis halfway between the intercepts: intercepts $-1$ and $7$ put it at $x = 3$, where the value is the vertex height, not $0$.",
+      "顶点在两截距正中的对称轴上：截距为 $-1$ 和 $7$ 时顶点在 $x = 3$，那里的值是顶点高度，不是 $0$。",
+    ),
     tip: t(
       "A parabola is symmetric about its axis, so a point has a mirror image at the same height, the same distance on the other side. With axis $x = 2$ and a point $(5, 1)$: the point is $3$ to the right, so $(-1, 1)$ is on it too. Reflecting the $y$-coordinate is the slip.",
       "抛物线关于对称轴对称，所以一个点在另一侧相同距离处有一个高度相同的镜像点。对称轴 $x = 2$、点 $(5, 1)$：这点在右边 $3$ 处，所以 $(-1, 1)$ 也在抛物线上。把 $y$ 坐标对称过去是疏漏。",
@@ -2455,6 +3016,18 @@ export const actExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "act-exam-transforming-quadratic-functions": {
+    intro: t(
+      "Moving the graph of $y = x^2$ right $2$ and up $5$ gives $y = (x - 2)^2 + 5$, with its vertex at $(2, 5)$. A shift inside the square moves the graph sideways, and a number outside moves it up or down.\n\nCheck: at $x = 2$, $y = 0 + 5 = 5$, the lowest point.\n\nIn this lesson we write shifted quadratics and follow the vertex as the graph moves.",
+      "把 $y = x^2$ 的图象向右移 $2$、向上移 $5$，得 $y = (x - 2)^2 + 5$，顶点在 $(2, 5)$。平方里面的平移使图象左右移动，外面的数使它上下移动。\n\n检验：$x = 2$ 时 $y = 0 + 5 = 5$，是最低点。\n\n本课我们写出平移后的二次函数，并跟踪图象移动时的顶点。",
+    ),
+    watch: t(
+      "Inside the square the sign is opposite to the move: left $3$ is $(x + 3)^2$, not $(x - 3)^2$.",
+      "平方里面的符号与移动方向相反：向左 $3$ 是 $(x + 3)^2$，不是 $(x - 3)^2$。",
+    ),
+    hardWatch: t(
+      "Read the vertex first, then move it: $y = (x - 1)^2 + 4$ has vertex $(1, 4)$, and moving right $2$ and up $3$ gives $(3, 7)$, not $(-1, 7)$.",
+      "先读出顶点再移动：$y = (x - 1)^2 + 4$ 的顶点是 $(1, 4)$，向右移 $2$、向上移 $3$ 得 $(3, 7)$，不是 $(-1, 7)$。",
+    ),
     tip: t(
       "A horizontal shift goes inside the square with the opposite sign, and a vertical shift goes outside with the natural sign. Moving $y = x^2$ by $2$ right and $5$ up gives $y = (x - 2)^2 + 5$. Writing $x - 2$ for a move left is the classic trap, since left means adding inside.",
       "水平平移写在平方里面，符号相反；竖直平移写在外面，符号不变。把 $y = x^2$ 向右移 $2$、向上移 $5$，得到 $y = (x - 2)^2 + 5$。向左移却写成 $x - 2$ 是典型陷阱，因为向左是在里面做加法。",
@@ -2465,6 +3038,18 @@ export const actExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "act-exam-evaluating-exponential-functions": {
+    intro: t(
+      "If $f(x) = 5 \\cdot 3^x$, then $f(2) = 5 \\cdot 9 = 45$: only the base $3$ is raised to the power. A colony that doubles every $4$ hours has doubled twice after $8$ hours.\n\nCheck: $f(0) = 5$, and multiplying by $3$ twice gives $45$.\n\nIn this lesson we evaluate exponential functions and count growth periods in a situation.",
+      "若 $f(x) = 5 \\cdot 3^x$，则 $f(2) = 5 \\cdot 9 = 45$：只有底数 $3$ 取幂。每 $4$ 小时翻一番的菌落，$8$ 小时后翻了两番。\n\n检验：$f(0) = 5$，再乘两次 $3$ 得 $45$。\n\n本课我们计算指数函数的值，并在情境中数出增长周期的个数。",
+    ),
+    watch: t(
+      "The power applies to the base only: $4 \\cdot 2^3 = 4 \\cdot 8 = 32$, not $8^3 = 512$.",
+      "幂只作用于底数：$4 \\cdot 2^3 = 4 \\cdot 8 = 32$，不是 $8^3 = 512$。",
+    ),
+    hardWatch: t(
+      "Count periods, not hours: $300$ bacteria doubling every $3$ hours reach $300 \\cdot 2^4 = 4800$ after $12$ hours, not $300 \\cdot 2^{12}$.",
+      "数周期，不是数小时：$300$ 个细菌每 $3$ 小时翻一番，$12$ 小时后为 $300 \\cdot 2^4 = 4800$，不是 $300 \\cdot 2^{12}$。",
+    ),
     tip: t(
       "The exponent applies only to the base right below it, so compute the power first, then multiply by the coefficient. For $f(x) = 5 \\cdot 3^x$ at $2$: $3^2 = 9$, so $f(2) = 45$. Multiplying $5 \\cdot 3$ first and then squaring gives $225$, which is the trap.",
       "指数只作用在紧邻它下方的底数上，所以先算幂，再乘系数。$f(x) = 5 \\cdot 3^x$ 在 $2$ 处：$3^2 = 9$，所以 $f(2) = 45$。先算 $5 \\cdot 3$ 再平方得到 $225$，这就是陷阱。",
@@ -2475,6 +3060,18 @@ export const actExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "act-exam-constructing-exponential-models": {
+    intro: t(
+      "A savings account of $\\$2000$ grows $5\\%$ a year. Each year it keeps $100\\%$ and adds $5\\%$, a factor of $1.05$, so after $t$ years it holds $2000(1.05)^t$. A loss of $5\\%$ leaves $95\\%$, a factor of $0.95$.\n\nCheck: after one year, $2000 \\times 1.05 = 2100 = 2000 + 100$.\n\nIn this lesson we turn a percent change into a growth or decay factor and write the exponential model.",
+      "一个 $\\$2000$ 的储蓄账户每年增长 $5\\%$。每年保留 $100\\%$ 再加 $5\\%$，因子为 $1.05$，所以 $t$ 年后有 $2000(1.05)^t$。减少 $5\\%$ 则剩 $95\\%$，因子为 $0.95$。\n\n检验：一年后 $2000 \\times 1.05 = 2100 = 2000 + 100$。\n\n本课我们把百分比变化化为增长或衰减因子，写出指数模型。",
+    ),
+    watch: t(
+      "The factor is $1 + r$, not $r$: growing $10\\%$ a year multiplies by $1.1$, while multiplying by $0.1$ would leave a tenth.",
+      "因子是 $1 + r$，不是 $r$：每年增长 $10\\%$ 是乘以 $1.1$，乘以 $0.1$ 只剩十分之一。",
+    ),
+    hardWatch: t(
+      "Losing $20\\%$ keeps $80\\%$: the factor is $0.8$, not $0.2$, which would keep only a fifth each year.",
+      "损失 $20\\%$ 是保留 $80\\%$：因子是 $0.8$，不是 $0.2$；后者每年只剩五分之一。",
+    ),
     tip: t(
       "Steady percent growth multiplies by the same factor each period, so the model is start times $(1 + r)^t$, with $r$ as a decimal. A club of $2{,}000$ members growing $3\\%$ yearly has $2{,}000(1.03)^t$. Using $0.03$ as the base, or adding $0.03t$, describes a different pattern.",
       "固定百分比增长是每期乘同一个因子，所以模型是初始量乘 $(1 + r)^t$，$r$ 用小数表示。$2{,}000$ 名成员的俱乐部每年增长 $3\\%$，即 $2{,}000(1.03)^t$。用 $0.03$ 作底数，或者加上 $0.03t$，描述的都是别的规律。",
@@ -2485,6 +3082,18 @@ export const actExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "act-exam-identifying-features-of-exponential-functions": {
+    intro: t(
+      "The graph of $y = 4 \\cdot 2^x + 3$ crosses the $y$-axis at $4(1) + 3 = 7$, since $2^0 = 1$. As $x$ decreases, $4 \\cdot 2^x$ shrinks toward $0$, so the graph approaches the line $y = 3$.\n\nCheck: at $x = -10$, $y = \\frac{4}{1024} + 3$, just above $3$.\n\nIn this lesson we find intercepts and horizontal asymptotes of exponential functions from their equations and graphs.",
+      "$y = 4 \\cdot 2^x + 3$ 的图象与 $y$ 轴交于 $4(1) + 3 = 7$，因为 $2^0 = 1$。随着 $x$ 减小，$4 \\cdot 2^x$ 趋近 $0$，所以图象趋近直线 $y = 3$。\n\n检验：$x = -10$ 时 $y = \\frac{4}{1024} + 3$，略高于 $3$。\n\n本课我们从方程和图象找出指数函数的截距与水平渐近线。",
+    ),
+    watch: t(
+      "Any nonzero number to the power $0$ is $1$: $y = 6 \\cdot 5^x + 2$ has $y$-intercept $8$, not $2$.",
+      "任何非零数的 $0$ 次方都是 $1$：$y = 6 \\cdot 5^x + 2$ 的 $y$ 轴截距是 $8$，不是 $2$。",
+    ),
+    hardWatch: t(
+      "A constant added or subtracted moves the asymptote: $y = 3 \\cdot 2^x - 5$ approaches $y = -5$, not $y = 0$.",
+      "加减的常数会移动渐近线：$y = 3 \\cdot 2^x - 5$ 趋近 $y = -5$，不是 $y = 0$。",
+    ),
     tip: t(
       "The $y$-intercept comes from setting $x = 0$. Any nonzero base to the power $0$ is $1$, so $y = a \\cdot b^x + k$ crosses at $a + k$. For $y = 4 \\cdot 3^x + 2$, that is $6$. Reporting only the constant forgets the coefficient, which is what the wrong options count on.",
       "令 $x = 0$ 得到 $y$ 轴截距。任何非零底数的 $0$ 次方都是 $1$，所以 $y = a \\cdot b^x + k$ 在 $a + k$ 处穿过 $y$ 轴。$y = 4 \\cdot 3^x + 2$ 的截距是 $6$。只报常数就忘了系数，错误选项正是利用这一点。",
@@ -2495,6 +3104,18 @@ export const actExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "act-exam-finding-points-and-zeros-of-a-function": {
+    intro: t(
+      "The $x$-intercept of $y = 3x - 12$ is where $y = 0$: $3x = 12$, so $x = 4$. The $y$-intercept is where $x = 0$: here $y = -12$. For $g(x) = (x + 2)(x - 5)$, the $y$-intercept is $g(0) = (2)(-5) = -10$.\n\nCheck: $3(4) - 12 = 0$.\n\nIn this lesson we find the points where a graph meets each axis by setting the other coordinate to $0$.",
+      "$y = 3x - 12$ 的 $x$ 轴截距是 $y = 0$ 的地方：$3x = 12$，所以 $x = 4$。$y$ 轴截距是 $x = 0$ 的地方：这里 $y = -12$。对 $g(x) = (x + 2)(x - 5)$，$y$ 轴截距为 $g(0) = (2)(-5) = -10$。\n\n检验：$3(4) - 12 = 0$。\n\n本课我们令另一个坐标为 $0$，求出图象与两条坐标轴的交点。",
+    ),
+    watch: t(
+      "The $x$-intercept sets $y$ to $0$: for $y = 2x - 8$ it is $4$, while $-8$ is the $y$-intercept.",
+      "$x$ 轴截距是令 $y = 0$：对 $y = 2x - 8$ 它是 $4$，而 $-8$ 是 $y$ 轴截距。",
+    ),
+    hardWatch: t(
+      "A point on the $y$-axis has $x = 0$: for $(x + 3)(x - 4)$ that point is $(0, -12)$, while $(-3, 0)$ and $(4, 0)$ lie on the $x$-axis.",
+      "$y$ 轴上的点 $x = 0$：对 $(x + 3)(x - 4)$，该点为 $(0, -12)$，而 $(-3, 0)$ 与 $(4, 0)$ 在 $x$ 轴上。",
+    ),
     tip: t(
       "An $x$-intercept is where the graph meets the horizontal axis, so set $y = 0$ and solve. For $y = 3x - 12$: $3x = 12$, so $x = 4$. The constant $-12$ is the $y$-intercept, a different point, and it is the option most often chosen by mistake.",
       "$x$ 轴截距是图象与水平轴的交点，所以令 $y = 0$ 再求解。对 $y = 3x - 12$：$3x = 12$，所以 $x = 4$。常数 $-12$ 是 $y$ 轴截距，是另一个点，也是最常被误选的选项。",
@@ -2505,6 +3126,18 @@ export const actExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "act-exam-finding-angles-formed-by-intersecting-lines": {
+    intro: t(
+      "Two roads cross, and a map marks one corner as $70^\\circ$. The corner beside it shares a straight road, so it is $180 - 70 = 110^\\circ$; the corner across from it is a vertical angle, also $70^\\circ$.\n\nCheck: around the crossing, $70 + 110 + 70 + 110 = 360$.\n\nIn this lesson we find the angles at a crossing from one known angle or from an equation for a pair of vertical angles.",
+      "两条路相交，地图标出一个角为 $70^\\circ$。它旁边的角与它共用一条直路，所以是 $180 - 70 = 110^\\circ$；它对面的角是对顶角，也是 $70^\\circ$。\n\n检验：交点周围 $70 + 110 + 70 + 110 = 360$。\n\n本课我们由一个已知角，或由一对对顶角的等式，求出交点处的各个角。",
+    ),
+    watch: t(
+      "Angles beside each other on a line add to $180$; angles across from each other are equal. With $65^\\circ$ given, the neighbor is $115^\\circ$, not $65^\\circ$.",
+      "直线上相邻的角之和为 $180$；相对的角相等。已知 $65^\\circ$ 时，相邻的角是 $115^\\circ$，不是 $65^\\circ$。",
+    ),
+    hardWatch: t(
+      "When vertical angles are $(3x + 10)^\\circ$ and $70^\\circ$, the angle is $70^\\circ$ itself; $x = 20$ is only a step, and the neighbor is $110^\\circ$, not $180 - 20$.",
+      "对顶角为 $(3x + 10)^\\circ$ 和 $70^\\circ$ 时，这个角就是 $70^\\circ$；$x = 20$ 只是中间一步，相邻的角是 $110^\\circ$，不是 $180 - 20$。",
+    ),
     tip: t(
       "When two lines cross, angles next to each other lie on a straight line and add to $180^\\circ$, while opposite angles are equal. Given $70^\\circ$, the neighbor is $110^\\circ$ and the opposite one is $70^\\circ$. First look at where the marked angle sits, since that decides which rule applies.",
       "两条直线相交时，相邻的角在一条直线上，和为 $180^\\circ$；相对的角相等。已知 $70^\\circ$，相邻的角是 $110^\\circ$，相对的角是 $70^\\circ$。先看标记的角在什么位置，这决定用哪条规则。",
@@ -2515,6 +3148,18 @@ export const actExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "act-exam-finding-angles-with-parallel-lines": {
+    intro: t(
+      "Railroad tracks run parallel, and a road crosses them at $60^\\circ$. The angle in the same position at the second rail is also $60^\\circ$, and the angle between the rails on the same side of the road is $180 - 60 = 120^\\circ$.\n\nCheck: an acute angle and an obtuse angle at parallel lines always add to $180$: $60 + 120 = 180$.\n\nIn this lesson we use corresponding, alternate and same-side angles to find angles and unknowns at parallel lines.",
+      "铁轨平行，一条路以 $60^\\circ$ 与之相交。第二条铁轨处位置相同的角也是 $60^\\circ$，两轨之间、路同侧的角为 $180 - 60 = 120^\\circ$。\n\n检验：平行线处的一个锐角与一个钝角之和总是 $180$：$60 + 120 = 180$。\n\n本课我们用同位角、内错角和同旁内角，求平行线处的角和未知数。",
+    ),
+    watch: t(
+      "At parallel lines every angle equals either the given angle or its supplement. With $50^\\circ$ given, an obtuse angle in the figure is $130^\\circ$, never $50^\\circ$.",
+      "平行线处每个角要么等于已知角，要么等于它的补角。已知 $50^\\circ$ 时，图中的钝角是 $130^\\circ$，不可能是 $50^\\circ$。",
+    ),
+    hardWatch: t(
+      "Set corresponding angles equal before solving: $2x + 20 = 80$ gives $x = 30$, and $80$ is the angle, not $x$.",
+      "先令同位角相等再求解：$2x + 20 = 80$ 得 $x = 30$，$80$ 是角，不是 $x$。",
+    ),
     tip: t(
       "A line crossing two parallel lines repeats the same picture at both crossings. Angles in the same position are corresponding and equal, and alternate interior angles are also equal. So a $65^\\circ$ angle reappears as $65^\\circ$. Its supplement, $115^\\circ$, belongs to the neighboring position, so compare positions before answering.",
       "一条直线穿过两条平行线时，两个交点处的图形完全相同。位置相同的角是同位角，相等；内错角也相等。所以 $65^\\circ$ 的角会再次以 $65^\\circ$ 出现。它的补角 $115^\\circ$ 属于相邻的位置，所以回答前要比较位置。",
@@ -2525,6 +3170,18 @@ export const actExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "act-exam-problem-solving-with-parallel-lines": {
+    intro: t(
+      "A shelf $\\overline{DE}$ runs parallel to the floor $\\overline{BC}$ inside a triangular frame. Since $\\overline{AC}$ crosses both, angle $AED$ equals angle $ACB$, and angle $ADE$ equals angle $ABC$.\n\nCheck: the small triangle $ADE$ then has the same three angles as $ABC$, adding to $180$.\n\nIn this lesson we find angles in figures that hide parallel lines, and count the angles a crossing line makes.",
+      "三角形框架内，一块搁板 $\\overline{DE}$ 平行于底边 $\\overline{BC}$。因为 $\\overline{AC}$ 同时穿过两者，角 $AED$ 等于角 $ACB$，角 $ADE$ 等于角 $ABC$。\n\n检验：小三角形 $ADE$ 的三个角与 $ABC$ 相同，和为 $180$。\n\n本课我们在藏有平行线的图形中求角，并数出截线形成的各个角。",
+    ),
+    watch: t(
+      "Match each angle by its crossing line: angle $AED$ sits on $\\overline{AC}$, so it matches angle $C$, not angle $B$.",
+      "按截线对应各角：角 $AED$ 在 $\\overline{AC}$ 上，所以对应角 $C$，不是角 $B$。",
+    ),
+    hardWatch: t(
+      "A line crossing two parallel lines makes eight angles: four equal the given angle and four equal its supplement. With $70^\\circ$, the other four add to $4 \\times 110 = 440$.",
+      "一条直线截两条平行线形成八个角：四个等于已知角，四个等于它的补角。已知 $70^\\circ$ 时，另外四个之和为 $4 \\times 110 = 440$。",
+    ),
     tip: t(
       "A segment parallel to a triangle's side creates a smaller triangle with the same angles. In triangle $ABC$ with $\\overline{DE} \\parallel \\overline{BC}$, angle $ADE$ matches angle $B$ and angle $AED$ matches angle $C$. Match by position along the side: an angle at $E$ sits on $\\overline{AC}$, so it pairs with the angle at $C$. Swapping the pair is the trap.",
       "与三角形一边平行的线段形成一个角相同的小三角形。在三角形 $ABC$ 中，$\\overline{DE} \\parallel \\overline{BC}$，角 $ADE$ 对应角 $B$，角 $AED$ 对应角 $C$。按所在的边来对应：$E$ 处的角在 $\\overline{AC}$ 上，所以与 $C$ 处的角配对。配反了就是陷阱。",
@@ -2535,6 +3192,18 @@ export const actExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "act-exam-finding-interior-angles-of-triangles": {
+    intro: t(
+      "A roof truss is a triangle with angles $40^\\circ$ and $75^\\circ$ at its ends. The angle at the peak is $180 - 40 - 75 = 65^\\circ$, since the angles of any triangle add to $180^\\circ$.\n\nCheck: $40 + 75 + 65 = 180$.\n\nIn this lesson we find a missing angle of a triangle, and solve for angles given as expressions in $x$.",
+      "一个屋架是三角形，两端的角为 $40^\\circ$ 和 $75^\\circ$。顶角为 $180 - 40 - 75 = 65^\\circ$，因为任何三角形的内角和都是 $180^\\circ$。\n\n检验：$40 + 75 + 65 = 180$。\n\n本课我们求三角形缺少的角，并求解用 $x$ 表示的角。",
+    ),
+    watch: t(
+      "A triangle's angles add to $180$, not $360$: with $50^\\circ$ and $60^\\circ$, the third is $70^\\circ$, not $250^\\circ$.",
+      "三角形内角和为 $180$，不是 $360$：已知 $50^\\circ$ 和 $60^\\circ$ 时，第三个角是 $70^\\circ$，不是 $250^\\circ$。",
+    ),
+    hardWatch: t(
+      "After solving for $x$, answer what is asked: with angles $x$, $2x$ and $(3x + 30)$, $6x + 30 = 180$ gives $x = 25$, and the largest angle is $105^\\circ$, not $25$.",
+      "解出 $x$ 后要回答所问的量：三个角为 $x$、$2x$、$(3x + 30)$ 时，$6x + 30 = 180$ 得 $x = 25$，最大的角是 $105^\\circ$，不是 $25$。",
+    ),
     tip: t(
       "The three interior angles of any triangle total $180^\\circ$, so subtract the two known angles from it. Given $50^\\circ$ and $60^\\circ$, the third is $70^\\circ$. Adding the two and stopping gives their sum, not the missing angle, and this is the first thing to avoid.",
       "任何三角形的三个内角和都是 $180^\\circ$，所以从中减去两个已知角。已知 $50^\\circ$ 和 $60^\\circ$，第三个角是 $70^\\circ$。两角相加后就停下，得到的是它们的和，而不是所缺的角，这是首先要避免的。",
@@ -2545,6 +3214,18 @@ export const actExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "act-exam-finding-exterior-angles-of-triangles": {
+    intro: t(
+      "A ramp's side is a triangle, and the floor is extended past one corner. The outside angle there equals the sum of the two inside angles not next to it: with $35^\\circ$ and $80^\\circ$, it is $115^\\circ$.\n\nCheck: the inside angle at that corner is $180 - 35 - 80 = 65$, and $65 + 115 = 180$ along the floor.\n\nIn this lesson we find exterior angles, and work back from an exterior angle to the angles inside.",
+      "一个坡道的侧面是三角形，地面延伸过一个顶点。那里的外角等于两个不相邻内角之和：$35^\\circ$ 与 $80^\\circ$ 时为 $115^\\circ$。\n\n检验：该顶点处内角为 $180 - 35 - 80 = 65$，而沿地面 $65 + 115 = 180$。\n\n本课我们求外角，并由外角反推三角形内的角。",
+    ),
+    watch: t(
+      "The exterior angle is the sum of the two remote angles, not the angle next to it: with $40^\\circ$ and $70^\\circ$, it is $110^\\circ$, while the angle beside it is $70^\\circ$.",
+      "外角等于两个不相邻内角之和，不是与它相邻的内角：$40^\\circ$ 与 $70^\\circ$ 时外角为 $110^\\circ$，旁边的内角是 $70^\\circ$。",
+    ),
+    hardWatch: t(
+      "The interior angle next to an exterior angle is its supplement: an exterior angle of $130^\\circ$ sits beside $50^\\circ$, whatever the remote angles are.",
+      "与外角相邻的内角是它的补角：$130^\\circ$ 的外角旁边是 $50^\\circ$，与不相邻的内角无关。",
+    ),
     tip: t(
       "An exterior angle equals the sum of the two interior angles that do not touch it. With remote angles of $35^\\circ$ and $60^\\circ$, the exterior angle is $95^\\circ$. Subtracting their sum from $180^\\circ$ gives the interior angle next to it, which is the wrong one.",
       "外角等于与它不相邻的两个内角之和。不相邻的内角是 $35^\\circ$ 和 $60^\\circ$ 时，外角是 $95^\\circ$。用 $180^\\circ$ 减去它们的和，得到的是相邻的内角，那就答错了。",
@@ -2555,6 +3236,18 @@ export const actExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "act-exam-finding-angles-in-isosceles-triangles": {
+    intro: t(
+      "A tent's front is a triangle with two equal slanted sides, and each base angle is $55^\\circ$. Equal sides face equal angles, so both base angles are $55^\\circ$ and the top angle is $180 - 2(55) = 70^\\circ$.\n\nCheck: $55 + 55 + 70 = 180$.\n\nIn this lesson we use the equal base angles of an isosceles triangle, together with straight lines and exterior angles.",
+      "帐篷正面是两条斜边相等的三角形，每个底角为 $55^\\circ$。等边对等角，所以两个底角都是 $55^\\circ$，顶角为 $180 - 2(55) = 70^\\circ$。\n\n检验：$55 + 55 + 70 = 180$。\n\n本课我们用等腰三角形两底角相等，并结合平角与外角求角。",
+    ),
+    watch: t(
+      "Subtract both base angles: with base angles of $40^\\circ$, the top is $180 - 80 = 100^\\circ$, not $140^\\circ$.",
+      "两个底角都要减去：底角为 $40^\\circ$ 时，顶角为 $180 - 80 = 100^\\circ$，不是 $140^\\circ$。",
+    ),
+    hardWatch: t(
+      "Work through the straight line first: an exterior angle of $120^\\circ$ at the base gives a base angle of $60^\\circ$, and only then the top angle $180 - 120 = 60^\\circ$.",
+      "先经过平角：底边处外角为 $120^\\circ$ 时底角为 $60^\\circ$，然后才得顶角 $180 - 120 = 60^\\circ$。",
+    ),
     tip: t(
       "Congruent sides face equal angles, so the two base angles match. Double the known base angle and subtract from $180^\\circ$ to get the top. A base angle of $55^\\circ$ gives a top angle of $70^\\circ$. Subtracting just one base angle forgets its twin, and this produces the tempting $125^\\circ$.",
       "相等的边对着相等的角，所以两个底角相等。把已知底角加倍，再从 $180^\\circ$ 中减去，得到顶角。底角 $55^\\circ$ 时顶角是 $70^\\circ$。只减一个底角就忘了另一个，会得到诱人的 $125^\\circ$。",
@@ -2565,6 +3258,18 @@ export const actExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "act-exam-problem-solving-with-isosceles-triangles": {
+    intro: t(
+      "A brace $\\overline{AD}$ inside triangle $ABC$ has $AD = BD$, so triangle $ABD$ is isosceles. With angle $B = 35^\\circ$, angle $BAD$ is also $35^\\circ$, and the exterior angle $ADC$ is $35 + 35 = 70^\\circ$.\n\nCheck: angle $ADB$ is $180 - 70 = 110$, and $35 + 35 + 110 = 180$.\n\nIn this lesson we find isosceles triangles hidden in figures, and use equal sides to find lengths from a perimeter.",
+      "三角形 $ABC$ 内的一根支撑 $\\overline{AD}$ 满足 $AD = BD$，所以三角形 $ABD$ 是等腰的。角 $B = 35^\\circ$ 时，角 $BAD$ 也是 $35^\\circ$，外角 $ADC$ 为 $35 + 35 = 70^\\circ$。\n\n检验：角 $ADB$ 为 $180 - 70 = 110$，而 $35 + 35 + 110 = 180$。\n\n本课我们找出图形中藏着的等腰三角形，并用相等的边由周长求边长。",
+    ),
+    watch: t(
+      "The equal angles face the equal sides: $AD = BD$ makes angle $B$ equal angle $BAD$, the angles across from $AD$ and $BD$.",
+      "相等的角对着相等的边：$AD = BD$ 使角 $B$ 等于角 $BAD$，它们分别是 $AD$ 与 $BD$ 的对角。",
+    ),
+    hardWatch: t(
+      "Take the base out of the perimeter before halving: perimeter $30$ with base $8$ gives sides of $(30 - 8) \\div 2 = 11$, not $15$.",
+      "先从周长中减去底边再平分：周长 $30$、底边 $8$ 时腰长为 $(30 - 8) \\div 2 = 11$，不是 $15$。",
+    ),
     tip: t(
       "Equal segments reveal a hidden isosceles triangle, whose two angles opposite those segments match. Then use the exterior angle rule. If $AD = BD$ and angle $B$ is $40^\\circ$, angle $BAD$ is $40^\\circ$ too, so the exterior angle $ADC$ is $80^\\circ$. Reading angle $ADC$ as the supplement of only one angle is the slip.",
       "相等的线段揭示出隐藏的等腰三角形，这两条线段所对的两个角相等。然后用外角规则。若 $AD = BD$，角 $B$ 是 $40^\\circ$，则角 $BAD$ 也是 $40^\\circ$，所以外角 $ADC$ 是 $80^\\circ$。把角 $ADC$ 当作只与一个角互补是疏漏。",
@@ -2575,6 +3280,18 @@ export const actExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "act-exam-identifying-corresponding-parts-under-congruence": {
+    intro: t(
+      "Two identical brackets are labeled $ABC$ and $XYZ$, and the statement $\\triangle ABC \\cong \\triangle XYZ$ lists matching corners in order: $A$ with $X$, $B$ with $Y$, $C$ with $Z$. So side $\\overline{BC}$ matches $\\overline{YZ}$, and angle $B$ equals angle $Y$.\n\nCheck: $\\overline{BC}$ and $\\overline{YZ}$ are both the side opposite the first letter.\n\nIn this lesson we read matching sides and angles from the order of the letters, and use them to find measures.",
+      "两个相同的支架标为 $ABC$ 与 $XYZ$，$\\triangle ABC \\cong \\triangle XYZ$ 按顺序列出对应顶点：$A$ 对 $X$，$B$ 对 $Y$，$C$ 对 $Z$。所以边 $\\overline{BC}$ 对应 $\\overline{YZ}$，角 $B$ 等于角 $Y$。\n\n检验：$\\overline{BC}$ 与 $\\overline{YZ}$ 都是第一个字母的对边。\n\n本课我们从字母顺序读出对应边与对应角，并用它们求度量。",
+    ),
+    watch: t(
+      "Match by position in the name, not by the look of the figure: in $\\triangle PQR \\cong \\triangle LMN$, side $\\overline{PR}$ matches $\\overline{LN}$, the 1st and 3rd letters.",
+      "按名称中的位置对应，而不是看图形：在 $\\triangle PQR \\cong \\triangle LMN$ 中，边 $\\overline{PR}$ 对应 $\\overline{LN}$，即第 1、3 个字母。",
+    ),
+    hardWatch: t(
+      "To find a matching angle, first find it in the triangle where two angles are known: angle $Y$ equals angle $B$, which is $180$ minus the other two angles of $ABC$.",
+      "求对应角时，先在已知两个角的三角形中求出它：角 $Y$ 等于角 $B$，即 $180$ 减去 $ABC$ 的另两个角。",
+    ),
     tip: t(
       "A congruence statement lists matching vertices in order, so the first letter pairs with the first, and so on. In $\\triangle ABC \\cong \\triangle DEF$, side $\\overline{AC}$ matches $\\overline{DF}$ because $A$ pairs with $D$ and $C$ with $F$. Use the letters, not how the figures look, since the drawing may be rotated.",
       "全等式按顺序列出对应的顶点，第一个字母配第一个，依此类推。在 $\\triangle ABC \\cong \\triangle DEF$ 中，边 $\\overline{AC}$ 对应 $\\overline{DF}$，因为 $A$ 配 $D$，$C$ 配 $F$。要依据字母，而不是图形的样子，因为图可能被旋转过。",
@@ -2585,6 +3302,18 @@ export const actExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "act-exam-using-corresponding-parts-under-similarity": {
+    intro: t(
+      "A photo and its enlargement show similar triangles $KLM$ and $RST$. Matching angles are equal, and matching sides share one ratio: if $KL = 4$ and $RS = 12$, every side of $RST$ is $3$ times its partner.\n\nCheck: $LM = 5$ then gives $ST = 15$, and $\\frac{4}{12} = \\frac{5}{15}$.\n\nIn this lesson we use the order of the letters in a similarity to find equal angles and to scale sides.",
+      "一张照片与其放大图中有相似三角形 $KLM$ 与 $RST$。对应角相等，对应边比相同：若 $KL = 4$，$RS = 12$，则 $RST$ 的每条边都是对应边的 $3$ 倍。\n\n检验：$LM = 5$ 时 $ST = 15$，而 $\\frac{4}{12} = \\frac{5}{15}$。\n\n本课我们用相似式中字母的顺序找出相等的角，并按比例求边。",
+    ),
+    watch: t(
+      "Similar sides scale by a factor, not an added amount: if $4$ becomes $12$, then $5$ becomes $15$, not $13$.",
+      "相似图形的边按倍数缩放，不是加上同一个数：$4$ 变为 $12$ 时，$5$ 变为 $15$，不是 $13$。",
+    ),
+    hardWatch: t(
+      "Going from the larger triangle back to the smaller one divides: with factor $3$, $ST = 18$ gives $LM = 6$, not $54$.",
+      "从大三角形回到小三角形要除：比例因子为 $3$ 时，$ST = 18$ 得 $LM = 6$，不是 $54$。",
+    ),
     tip: t(
       "Similar triangles have equal matching angles, read from the order of the letters. Transfer the known angle to one triangle, then use the $180^\\circ$ sum. If $\\triangle ABC \\sim \\triangle DEF$, with angle $A$ at $50^\\circ$ and angle $E$ at $60^\\circ$, then angle $B$ is $60^\\circ$ and angle $C$ is $70^\\circ$. Sides change, but angles do not.",
       "相似三角形的对应角相等，按字母顺序读出。把已知角转到同一个三角形中，再用 $180^\\circ$ 的和。若 $\\triangle ABC \\sim \\triangle DEF$，角 $A$ 为 $50^\\circ$，角 $E$ 为 $60^\\circ$，则角 $B$ 是 $60^\\circ$，角 $C$ 是 $70^\\circ$。边会变，角不会变。",
@@ -2595,6 +3324,18 @@ export const actExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "act-exam-finding-corresponding-lengths-in-similar-figures": {
+    intro: t(
+      "A $4$ by $6$ inch photo is enlarged so its width is $12$ inches. The width tripled, and a similar shape triples every length, so the length becomes $18$ inches.\n\nCheck: $\\frac{4}{6} = \\frac{12}{18}$, so the shape is unchanged.\n\nIn this lesson we find a scale factor from one pair of matching lengths and use it on another, including shadows cast at the same moment.",
+      "一张 $4 \\times 6$ 英寸的照片放大后宽为 $12$ 英寸。宽变为三倍，相似图形的每个长度都变为三倍，所以长变为 $18$ 英寸。\n\n检验：$\\frac{4}{6} = \\frac{12}{18}$，形状不变。\n\n本课我们由一对对应长度求比例因子，再用到另一对上，包括同一时刻投下的影子。",
+    ),
+    watch: t(
+      "Multiply, do not add: widening $4$ to $12$ adds $8$, but the length $6$ becomes $18$, not $14$.",
+      "要乘，不要加：宽从 $4$ 到 $12$ 加了 $8$，但长 $6$ 变为 $18$，不是 $14$。",
+    ),
+    hardWatch: t(
+      "Shadows at the same moment make similar triangles, so height over shadow is the same for both: a $5$-foot post with a $2$-foot shadow means a $16$-foot shadow belongs to a $40$-foot tree.",
+      "同一时刻的影子构成相似三角形，高与影长之比相同：$5$ 英尺的柱子影长 $2$ 英尺，则影长 $16$ 英尺的树高 $40$ 英尺。",
+    ),
     tip: t(
       "A similar enlargement multiplies every length by one factor. Divide the new width by the old one, then multiply the old length by that. A $4$ by $6$ picture widened to $12$ has factor $3$, so its length is $18$. Adding the $8$ to the length keeps a wrong shape and is the trap.",
       "相似放大把每个长度都乘同一个因子。用新宽除以旧宽，再用这个因子乘旧长。$4$ 乘 $6$ 的图片宽度放大到 $12$，因子是 $3$，长度是 $18$。把长度也加上 $8$ 会使形状不对，这就是陷阱。",
@@ -2605,6 +3346,18 @@ export const actExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "act-exam-using-scale-factors-in-similar-figures": {
+    intro: t(
+      "A garden triangle with sides $3$, $4$ and $5$ meters is copied at scale factor $2$. Each side doubles, so the perimeter doubles too: $2 \\times 12 = 24$ meters.\n\nCheck: the new sides $6$, $8$ and $10$ add to $24$.\n\nIn this lesson we scale perimeters and lengths by a factor, and read map scales.",
+      "一块三边为 $3$、$4$、$5$ 米的三角形花园按比例因子 $2$ 复制。每条边加倍，周长也加倍：$2 \\times 12 = 24$ 米。\n\n检验：新的三边 $6$、$8$、$10$ 之和为 $24$。\n\n本课我们按比例因子缩放周长与长度，并读懂地图比例尺。",
+    ),
+    watch: t(
+      "Perimeter scales like a length, by the factor itself: factor $3$ triples the perimeter; it does not add $3$, and it does not multiply by $9$.",
+      "周长与长度一样，按比例因子本身缩放：因子 $3$ 使周长变为三倍，不是加 $3$，也不是乘 $9$。",
+    ),
+    hardWatch: t(
+      "To go from miles to map inches, divide by the miles per inch: at $1$ inch to $15$ miles, $60$ miles is $4$ inches, not $900$.",
+      "从英里换成地图上的英寸要除以每英寸的英里数：$1$ 英寸代表 $15$ 英里时，$60$ 英里是 $4$ 英寸，不是 $900$。",
+    ),
     tip: t(
       "A scale factor multiplies every side, so the perimeter scales by that same factor. Add the sides and multiply, or scale each side first. Sides $3$, $4$ and $5$ with factor $2$ give a perimeter of $24$. Squaring the factor applies to area, not to perimeter.",
       "比例因子乘每条边，所以周长也按同样的因子变化。把各边相加再乘，或者先把每条边放大。边长 $3$、$4$、$5$，因子 $2$，周长是 $24$。把因子平方适用于面积，不适用于周长。",
@@ -2615,6 +3368,18 @@ export const actExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "act-exam-finding-areas-of-similar-figures": {
+    intro: t(
+      "A rug of $6$ square feet is remade with every side $3$ times as long. Area uses two lengths, so it grows by $3^2 = 9$: the new rug has $54$ square feet.\n\nCheck: a $2$ by $3$ rug becomes $6$ by $9$, and $6 \\times 9 = 54$.\n\nIn this lesson we square the length factor to scale areas, and take square roots to go from areas back to lengths.",
+      "一块 $6$ 平方英尺的地毯重做，每条边都是原来的 $3$ 倍。面积涉及两个长度，所以扩大 $3^2 = 9$ 倍：新地毯有 $54$ 平方英尺。\n\n检验：$2 \\times 3$ 的地毯变为 $6 \\times 9$，而 $6 \\times 9 = 54$。\n\n本课我们把长度比例平方来缩放面积，并开平方由面积回到长度。",
+    ),
+    watch: t(
+      "Area scales by the square of the length factor: doubling every side makes the area $4$ times as large, not $2$ times.",
+      "面积按长度比例的平方缩放：每条边加倍，面积变为 $4$ 倍，不是 $2$ 倍。",
+    ),
+    hardWatch: t(
+      "From areas to lengths, take the square root: areas $5$ and $45$ have ratio $9$, so matching sides have ratio $3$, not $9$.",
+      "由面积求长度要开平方：面积 $5$ 与 $45$ 之比为 $9$，对应边之比为 $3$，不是 $9$。",
+    ),
     tip: t(
       "Area involves two lengths, so when lengths scale by $k$, area scales by $k^2$. A shape of area $5$ with sides $3$ times longer has area $5 \\cdot 9 = 45$. Multiplying just by $3$ is the trap, because it treats area like a length.",
       "面积涉及两个长度，所以长度按 $k$ 变化时，面积按 $k^2$ 变化。面积 $5$ 的图形，边长变为 $3$ 倍后，面积是 $5 \\cdot 9 = 45$。只乘 $3$ 就是陷阱，因为它把面积当成了长度。",
@@ -2625,6 +3390,18 @@ export const actExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "act-exam-applying-the-pythagorean-theorem": {
+    intro: t(
+      "A ladder's foot, the wall and the ground make a right triangle. If the legs are $6$ and $8$, the hypotenuse is $\\sqrt{36 + 64} = 10$; if the hypotenuse is $10$ and one leg $6$, the other leg is $\\sqrt{100 - 36} = 8$.\n\nCheck: $6^2 + 8^2 = 100 = 10^2$.\n\nIn this lesson we find a missing side of a right triangle and the distance between two points.",
+      "梯子、墙与地面构成直角三角形。直角边为 $6$ 和 $8$ 时，斜边为 $\\sqrt{36 + 64} = 10$；斜边为 $10$、一条直角边为 $6$ 时，另一条直角边为 $\\sqrt{100 - 36} = 8$。\n\n检验：$6^2 + 8^2 = 100 = 10^2$。\n\n本课我们求直角三角形缺少的边，以及两点间的距离。",
+    ),
+    watch: t(
+      "For a missing leg, subtract squares, not lengths: hypotenuse $13$ and leg $5$ give $\\sqrt{169 - 25} = 12$, not $13 - 5 = 8$.",
+      "求直角边时要把平方相减，而不是长度相减：斜边 $13$、直角边 $5$ 得 $\\sqrt{169 - 25} = 12$，不是 $13 - 5 = 8$。",
+    ),
+    hardWatch: t(
+      "The distance between two points is the hypotenuse of the changes in $x$ and $y$: from $(1, 2)$ to $(4, 6)$ it is $\\sqrt{9 + 16} = 5$, not $3 + 4 = 7$.",
+      "两点间的距离是 $x$、$y$ 变化量所构成直角三角形的斜边：从 $(1, 2)$ 到 $(4, 6)$ 为 $\\sqrt{9 + 16} = 5$，不是 $3 + 4 = 7$。",
+    ),
     tip: t(
       "The hypotenuse is opposite the right angle, and $a^2 + b^2 = c^2$. To find a leg, subtract: $b = \\sqrt{c^2 - a^2}$. With hypotenuse $10$ and leg $6$: $\\sqrt{100 - 36} = 8$. Adding the squares when the missing side is a leg gives a length longer than the hypotenuse, which cannot be right.",
       "斜边在直角的对面，$a^2 + b^2 = c^2$。求直角边要做减法：$b = \\sqrt{c^2 - a^2}$。斜边 $10$、直角边 $6$：$\\sqrt{100 - 36} = 8$。所求为直角边时却把平方相加，得到的长度比斜边还长，这不可能。",
@@ -2635,6 +3412,18 @@ export const actExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "act-exam-modeling-situations-using-the-pythagorean-theorem": {
+    intro: t(
+      "A walker goes $9$ blocks east and $12$ blocks north. East and north meet at a right angle, so the straight-line distance back is $\\sqrt{81 + 144} = 15$ blocks.\n\nCheck: $15$ is shorter than the $21$ blocks walked, as a shortcut must be.\n\nIn this lesson we turn paths, wires, ladders and poles into right triangles and find the missing length.",
+      "一个人向东走 $9$ 个街区，再向北走 $12$ 个街区。东与北成直角，所以回到起点的直线距离为 $\\sqrt{81 + 144} = 15$ 个街区。\n\n检验：$15$ 比走过的 $21$ 个街区短，捷径理应如此。\n\n本课我们把路径、拉线、梯子和杆子变成直角三角形，求出缺少的长度。",
+    ),
+    watch: t(
+      "Decide which length is the hypotenuse: it is the one across from the right angle, such as the wire or the shortcut, never the pole or the ground.",
+      "先判断哪个长度是斜边：它是直角所对的边，例如拉线或捷径，绝不是杆子或地面。",
+    ),
+    hardWatch: t(
+      "Answer the question asked: when it asks how much shorter the pole is than the wire, find the pole first and then subtract it from the wire.",
+      "回答题目所问：问杆比拉线短多少时，先求出杆高，再用拉线长去减。",
+    ),
     tip: t(
       "Perpendicular directions such as east and north form a right angle, so the straight route between the ends is the hypotenuse. A walk of $6$ blocks east and $8$ north has a direct distance of $\\sqrt{36 + 64} = 10$. The sum, $14$, is the walked route and not the shortcut.",
       "东和北这样互相垂直的方向构成直角，所以两端之间的直线路线是斜边。向东走 $6$ 个街区再向北走 $8$ 个，直线距离是 $\\sqrt{36 + 64} = 10$。和 $14$ 是走过的路程，不是捷径。",
@@ -2645,6 +3434,18 @@ export const actExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "act-exam-problem-solving-with-special-triangles": {
+    intro: t(
+      "A square tile has side $5$. Its diagonal splits it into two $45$-$45$-$90$ triangles, so the diagonal is $5\\sqrt{2}$. A ramp at $30^\\circ$ makes a $30$-$60$-$90$ triangle, where the rise is half the ramp.\n\nCheck: $5^2 + 5^2 = 50 = (5\\sqrt{2})^2$.\n\nIn this lesson we use the side ratios $1 : 1 : \\sqrt{2}$ and $1 : \\sqrt{3} : 2$ to find sides without a calculator.",
+      "一块正方形瓷砖边长 $5$。对角线把它分成两个 $45$-$45$-$90$ 三角形，所以对角线长 $5\\sqrt{2}$。倾角 $30^\\circ$ 的斜坡构成 $30$-$60$-$90$ 三角形，升高等于斜坡长的一半。\n\n检验：$5^2 + 5^2 = 50 = (5\\sqrt{2})^2$。\n\n本课我们用边长比 $1 : 1 : \\sqrt{2}$ 和 $1 : \\sqrt{3} : 2$，不用计算器求边长。",
+    ),
+    watch: t(
+      "$\\sqrt{2}$ goes with $45^\\circ$ and $\\sqrt{3}$ goes with $30^\\circ$ and $60^\\circ$: a square's diagonal is a side times $\\sqrt{2}$, not $\\sqrt{3}$.",
+      "$\\sqrt{2}$ 对应 $45^\\circ$，$\\sqrt{3}$ 对应 $30^\\circ$ 和 $60^\\circ$：正方形的对角线是边长乘 $\\sqrt{2}$，不是 $\\sqrt{3}$。",
+    ),
+    hardWatch: t(
+      "In a $30$-$60$-$90$ triangle the side opposite $30^\\circ$ is the shortest, half the hypotenuse: a ramp of $12$ rises $6$, and runs $6\\sqrt{3}$ along the ground.",
+      "在 $30$-$60$-$90$ 三角形中，$30^\\circ$ 的对边最短，等于斜边的一半：长 $12$ 的斜坡升高 $6$，地面长度为 $6\\sqrt{3}$。",
+    ),
     tip: t(
       "A square's diagonal creates two $45$-$45$-$90$ triangles, whose sides are in the ratio $1 : 1 : \\sqrt{2}$. So the diagonal is $s\\sqrt{2}$, and a square of side $7$ has diagonal $7\\sqrt{2}$. Doubling the side, or using $\\sqrt{3}$ from the other special triangle, gives the wrong options.",
       "正方形的对角线形成两个 $45$-$45$-$90$ 三角形，边长之比为 $1 : 1 : \\sqrt{2}$。所以对角线是 $s\\sqrt{2}$，边长 $7$ 的正方形对角线是 $7\\sqrt{2}$。把边长加倍，或者用另一种特殊三角形的 $\\sqrt{3}$，都是错误选项。",
@@ -2655,6 +3456,18 @@ export const actExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "act-exam-finding-trigonometric-ratios": {
+    intro: t(
+      "A right triangle has legs $6$ and $8$ and hypotenuse $10$. From the angle $A$ whose opposite leg is $6$: $\\sin A = \\frac{6}{10}$, $\\cos A = \\frac{8}{10}$ and $\\tan A = \\frac{6}{8}$.\n\nCheck: $\\left(\\frac{6}{10}\\right)^2 + \\left(\\frac{8}{10}\\right)^2 = 1$.\n\nIn this lesson we label the sides from a given angle and form sine, cosine and tangent, in a figure or from side names.",
+      "一个直角三角形直角边为 $6$ 和 $8$，斜边为 $10$。从对边为 $6$ 的角 $A$ 看：$\\sin A = \\frac{6}{10}$，$\\cos A = \\frac{8}{10}$，$\\tan A = \\frac{6}{8}$。\n\n检验：$\\left(\\frac{6}{10}\\right)^2 + \\left(\\frac{8}{10}\\right)^2 = 1$。\n\n本课我们从给定的角标出各边，在图中或由边名写出正弦、余弦和正切。",
+    ),
+    watch: t(
+      "Opposite and adjacent depend on the angle: the leg opposite $A$ is adjacent to the other acute angle. Label the sides from the angle asked about each time.",
+      "对边与邻边取决于是哪个角：$A$ 的对边是另一个锐角的邻边。每次都从所问的角出发标出各边。",
+    ),
+    hardWatch: t(
+      "With only vertex names, the side that does not touch the angle is opposite: in right triangle $RST$ with the right angle at $S$, $RS$ is opposite $T$.",
+      "只有顶点名称时，不经过该角的边是对边：在直角在 $S$ 的直角三角形 $RST$ 中，$RS$ 是 $T$ 的对边。",
+    ),
     tip: t(
       "Label the sides from the named angle: sine is opposite over hypotenuse, cosine is adjacent over hypotenuse, tangent is opposite over adjacent. In a $3$-$4$-$5$ triangle with the side $3$ opposite $A$, $\\cos A = \\frac{4}{5}$. Mixing the opposite and adjacent sides gives the sine instead.",
       "从所给的角来标记各边：正弦是对边比斜边，余弦是邻边比斜边，正切是对边比邻边。在 $3$-$4$-$5$ 三角形中，边 $3$ 与 $A$ 相对，$\\cos A = \\frac{4}{5}$。把对边和邻边弄混，得到的就是正弦了。",
@@ -2665,6 +3478,18 @@ export const actExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "act-exam-finding-a-trigonometric-ratio-from-other-ratios": {
+    intro: t(
+      "A ramp has $\\sin \\theta = \\frac{3}{5}$. Read it as a triangle with opposite leg $3$ and hypotenuse $5$; the other leg is $\\sqrt{25 - 9} = 4$, so $\\cos \\theta = \\frac{4}{5}$ and $\\tan \\theta = \\frac{3}{4}$.\n\nCheck: $3^2 + 4^2 = 5^2$.\n\nIn this lesson we build a triangle from one ratio to find the others, and choose signs by quadrant.",
+      "一个斜坡满足 $\\sin \\theta = \\frac{3}{5}$。把它看成对边 $3$、斜边 $5$ 的三角形；另一条直角边为 $\\sqrt{25 - 9} = 4$，所以 $\\cos \\theta = \\frac{4}{5}$，$\\tan \\theta = \\frac{3}{4}$。\n\n检验：$3^2 + 4^2 = 5^2$。\n\n本课我们由一个比值作出三角形，求出其余比值，并按象限确定符号。",
+    ),
+    watch: t(
+      "Tangent is opposite over adjacent, so it needs the missing leg: from $\\cos \\theta = \\frac{5}{13}$, find the opposite leg $12$ first, then $\\tan \\theta = \\frac{12}{5}$.",
+      "正切是对边比邻边，需要求出缺少的直角边：由 $\\cos \\theta = \\frac{5}{13}$ 先求对边 $12$，再得 $\\tan \\theta = \\frac{12}{5}$。",
+    ),
+    hardWatch: t(
+      "The triangle gives the size; the quadrant gives the sign. Between $180^\\circ$ and $270^\\circ$ both sine and cosine are negative, while tangent is positive.",
+      "三角形给出大小，象限给出符号。在 $180^\\circ$ 到 $270^\\circ$ 之间，正弦与余弦都为负，而正切为正。",
+    ),
     tip: t(
       "Turn the given ratio into a right triangle, find the third side with the Pythagorean theorem, then read off the requested ratio. For $\\cos \\theta = \\frac{8}{17}$: adjacent $8$, hypotenuse $17$, opposite $15$. So $\\tan \\theta = \\frac{15}{8}$. Inverting the fraction gives the tangent of the complementary angle.",
       "把给定的比值变成直角三角形，用勾股定理求第三边，再读出所求的比值。对 $\\cos \\theta = \\frac{8}{17}$：邻边 $8$，斜边 $17$，对边 $15$。所以 $\\tan \\theta = \\frac{15}{8}$。把分数颠倒，得到的是余角的正切。",
@@ -2675,6 +3500,18 @@ export const actExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "act-exam-using-cofunction-relationships": {
+    intro: t(
+      "In a right triangle with a $35^\\circ$ angle, the other acute angle is $55^\\circ$. The leg opposite $35^\\circ$ is next to $55^\\circ$, so $\\sin 35^\\circ = \\cos 55^\\circ$.\n\nCheck: $35 + 55 = 90$, and both ratios are the same leg over the same hypotenuse.\n\nIn this lesson we swap sine and cosine between complementary angles, with degrees or with the two acute angles of a triangle.",
+      "在含 $35^\\circ$ 角的直角三角形中，另一个锐角为 $55^\\circ$。$35^\\circ$ 的对边是 $55^\\circ$ 的邻边，所以 $\\sin 35^\\circ = \\cos 55^\\circ$。\n\n检验：$35 + 55 = 90$，两个比值都是同一条直角边比同一条斜边。\n\n本课我们在互余的两个角之间互换正弦与余弦，可以用度数，也可以用三角形的两个锐角。",
+    ),
+    watch: t(
+      "A cofunction swaps both the function and the angle: $\\sin 20^\\circ = \\cos 70^\\circ$, not $\\cos 20^\\circ$ and not $\\sin 70^\\circ$.",
+      "余函数关系要同时换函数和角：$\\sin 20^\\circ = \\cos 70^\\circ$，不是 $\\cos 20^\\circ$，也不是 $\\sin 70^\\circ$。",
+    ),
+    hardWatch: t(
+      "For the acute angles $A$ and $B$ of one right triangle, $\\sin A = \\cos B$ and $\\cos A = \\sin B$; the other leg over the hypotenuse is a different number.",
+      "对同一直角三角形的两个锐角 $A$、$B$，有 $\\sin A = \\cos B$，$\\cos A = \\sin B$；另一条直角边比斜边是另一个数。",
+    ),
     tip: t(
       "The sine of an angle equals the cosine of its complement: $\\sin \\theta = \\cos(90^\\circ - \\theta)$. So $\\sin 35^\\circ = \\cos 55^\\circ$. The change must happen in both the function and the angle: $\\cos 35^\\circ$ or $\\sin 55^\\circ$ alone is a different value.",
       "一个角的正弦等于它余角的余弦：$\\sin \\theta = \\cos(90^\\circ - \\theta)$。所以 $\\sin 35^\\circ = \\cos 55^\\circ$。函数和角度都要变：只有 $\\cos 35^\\circ$ 或 $\\sin 55^\\circ$ 都是另一个值。",
@@ -2685,6 +3522,18 @@ export const actExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "act-exam-finding-a-side-from-a-trigonometric-ratio": {
+    intro: t(
+      "A kite string $20$ meters long makes an angle $A$ with the ground, and $\\sin A = \\frac{3}{5}$. The height is opposite $A$ and the string is the hypotenuse, so height $= 20 \\cdot \\frac{3}{5} = 12$ meters.\n\nCheck: $\\frac{12}{20} = \\frac{3}{5}$.\n\nIn this lesson we pick the ratio that links the known side with the wanted side, and solve for the side.",
+      "一根长 $20$ 米的风筝线与地面成角 $A$，$\\sin A = \\frac{3}{5}$。高度是 $A$ 的对边，线是斜边，所以高度 $= 20 \\cdot \\frac{3}{5} = 12$ 米。\n\n检验：$\\frac{12}{20} = \\frac{3}{5}$。\n\n本课我们选出联系已知边与所求边的比值，再解出那条边。",
+    ),
+    watch: t(
+      "Multiply the known side by the ratio, not by its denominator: hypotenuse $26$ with $\\sin A = \\frac{5}{13}$ gives $26 \\cdot \\frac{5}{13} = 10$.",
+      "用已知边乘以比值，而不是乘它的分母：斜边 $26$、$\\sin A = \\frac{5}{13}$ 得 $26 \\cdot \\frac{5}{13} = 10$。",
+    ),
+    hardWatch: t(
+      "For an angle of elevation, the height is opposite and the ground distance is adjacent, so tangent links them: $h = 40 \\cdot \\frac{3}{4} = 30$.",
+      "仰角问题中高度是对边，地面距离是邻边，所以用正切联系：$h = 40 \\cdot \\frac{3}{4} = 30$。",
+    ),
     tip: t(
       "A ratio tells a proportion, not the actual lengths. Identify which side the ratio compares with the known side, then multiply. If $\\sin A = \\frac{3}{5}$ and the hypotenuse is $20$, the opposite side is $\\frac{3}{5}(20) = 12$. Reading off the numerator as the length ignores the true size.",
       "比值表示的是比例，而不是实际长度。判断这个比值把哪条边与已知边相比，再相乘。若 $\\sin A = \\frac{3}{5}$，斜边是 $20$，对边是 $\\frac{3}{5}(20) = 12$。直接把分子读作长度就忽略了实际大小。",
@@ -2695,6 +3544,18 @@ export const actExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "act-exam-finding-perimeters-of-figures": {
+    intro: t(
+      "A rectangular pen is $20$ feet long and $6$ feet wide. Fencing goes around all four sides: $2(20) + 2(6) = 52$ feet.\n\nCheck: $20 + 6 + 20 + 6 = 52$.\n\nIn this lesson we add up the sides of rectangles and regular polygons, and move between a side and a perimeter.",
+      "一个长方形围栏长 $20$ 英尺、宽 $6$ 英尺。栅栏围住四条边：$2(20) + 2(6) = 52$ 英尺。\n\n检验：$20 + 6 + 20 + 6 = 52$。\n\n本课我们把长方形与正多边形的边相加，并在边长与周长之间换算。",
+    ),
+    watch: t(
+      "Perimeter is a length around the edge, area is the space inside: a $20$ by $6$ pen has perimeter $52$ feet and area $120$ square feet.",
+      "周长是绕边一圈的长度，面积是内部的大小：$20 \\times 6$ 的围栏周长 $52$ 英尺，面积 $120$ 平方英尺。",
+    ),
+    hardWatch: t(
+      "Go through one side: a square of perimeter $36$ has side $9$, so a regular hexagon with that side has perimeter $6 \\times 9 = 54$.",
+      "先求一条边：周长 $36$ 的正方形边长为 $9$，边长相同的正六边形周长为 $6 \\times 9 = 54$。",
+    ),
     tip: t(
       "Perimeter is the distance around, so a rectangle uses $2\\ell + 2w$. A pen $9$ by $4$ needs $26$ units of fencing. The tempting wrong values are the area, $36$, and the sum of just one length and one width, $13$, which covers only half the way around.",
       "周长是绕一圈的距离，所以长方形用 $2\\ell + 2w$。$9$ 乘 $4$ 的围栏需要 $26$ 个单位。诱人的错误值是面积 $36$，以及只加一条长和一条宽的 $13$，那只走了半圈。",
@@ -2705,6 +3566,18 @@ export const actExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "act-exam-finding-areas-involving-circles": {
+    intro: t(
+      "A round table has radius $3$ feet. Its top has area $\\pi r^2 = 9\\pi$ square feet, while its edge has length $2\\pi r = 6\\pi$ feet.\n\nCheck: the table fits in a $6$ by $6$ square of area $36$, and $9\\pi \\approx 28$ is a bit more than three quarters of it.\n\nIn this lesson we find the area of a circle from its radius, its diameter or its circumference.",
+      "一张圆桌半径 $3$ 英尺。桌面面积为 $\\pi r^2 = 9\\pi$ 平方英尺，桌边长为 $2\\pi r = 6\\pi$ 英尺。\n\n检验：桌子可放进面积 $36$ 的 $6 \\times 6$ 正方形，而 $9\\pi \\approx 28$，略大于它的四分之三。\n\n本课我们由半径、直径或周长求圆的面积。",
+    ),
+    watch: t(
+      "Square the radius, not the diameter: a circle with diameter $10$ has area $25\\pi$, not $100\\pi$.",
+      "要把半径平方，而不是直径：直径 $10$ 的圆面积为 $25\\pi$，不是 $100\\pi$。",
+    ),
+    hardWatch: t(
+      "From a circumference, find the radius first: $2\\pi r = 14\\pi$ gives $r = 7$ and area $49\\pi$, not $196\\pi$.",
+      "由周长先求半径：$2\\pi r = 14\\pi$ 得 $r = 7$，面积为 $49\\pi$，不是 $196\\pi$。",
+    ),
     tip: t(
       "Area is $\\pi r^2$, using the radius. Check the figure: if a diameter is marked, halve it first. A radius of $5$ gives $25\\pi$. The value $10\\pi$ is the circumference, a common wrong option, and squaring a diameter without halving makes the area four times too large.",
       "面积是 $\\pi r^2$，用的是半径。看清图：如果标的是直径，先减半。半径 $5$ 时面积是 $25\\pi$。$10\\pi$ 是周长，这是常见的错误选项；不减半就把直径平方，面积会大到四倍。",
@@ -2715,6 +3588,18 @@ export const actExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "act-exam-finding-arc-length": {
+    intro: t(
+      "A pizza of radius $6$ inches is cut into a $60^\\circ$ slice. The whole crust is $2\\pi(6) = 12\\pi$ inches, and the slice takes $\\frac{60}{360} = \\frac{1}{6}$ of it: $2\\pi$ inches.\n\nCheck: six such slices give $6 \\times 2\\pi = 12\\pi$, the whole crust.\n\nIn this lesson we find arc lengths as a share of the circumference, and the distance a turning wheel rolls.",
+      "一个半径 $6$ 英寸的比萨切出 $60^\\circ$ 的一块。整圈饼边长 $2\\pi(6) = 12\\pi$ 英寸，这一块占 $\\frac{60}{360} = \\frac{1}{6}$：$2\\pi$ 英寸。\n\n检验：六块合起来 $6 \\times 2\\pi = 12\\pi$，正是整圈饼边。\n\n本课我们把弧长看作周长的一部分来求，并求转动的轮子走过的距离。",
+    ),
+    watch: t(
+      "Arc length is a share of the circumference $2\\pi r$, not of the area $\\pi r^2$: a $90^\\circ$ arc of radius $4$ is $2\\pi$, not $4\\pi$.",
+      "弧长是周长 $2\\pi r$ 的一部分，不是面积 $\\pi r^2$ 的一部分：半径 $4$ 的 $90^\\circ$ 弧长为 $2\\pi$，不是 $4\\pi$。",
+    ),
+    hardWatch: t(
+      "Count full turns and the extra angle separately: $3$ turns and $90^\\circ$ more on a wheel of circumference $8\\pi$ is $24\\pi + 2\\pi = 26\\pi$.",
+      "整圈与多转的角分开算：周长 $8\\pi$ 的轮子转 $3$ 圈又 $90^\\circ$，共 $24\\pi + 2\\pi = 26\\pi$。",
+    ),
     tip: t(
       "An arc is a fraction of the circumference: $\\frac{\\theta}{360} \\cdot 2\\pi r$. Reduce the fraction, then multiply. A $60^\\circ$ sector with radius $12$ has arc $\\frac{1}{6}(24\\pi) = 4\\pi$. Using $\\pi r^2$ gives the sector's area instead of the length around its edge.",
       "弧是周长的一部分：$\\frac{\\theta}{360} \\cdot 2\\pi r$。先约分，再相乘。圆心角 $60^\\circ$、半径 $12$ 的扇形，弧长是 $\\frac{1}{6}(24\\pi) = 4\\pi$。用 $\\pi r^2$ 得到的是扇形面积，而不是边缘的长度。",
@@ -2725,6 +3610,18 @@ export const actExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "act-exam-writing-the-equation-of-a-circle": {
+    intro: t(
+      "A sprinkler at $(2, -3)$ waters everything within $4$ meters. The edge of the wet circle is every point $4$ from the center: $(x - 2)^2 + (y + 3)^2 = 16$.\n\nCheck: the point $(6, -3)$ is $4$ to the right of the center, and $4^2 + 0 = 16$.\n\nIn this lesson we write the equation of a circle from its center and radius, or from its center and a point on it.",
+      "一个喷头位于 $(2, -3)$，浇湿 $4$ 米以内的一切。湿圆的边缘是到圆心距离为 $4$ 的所有点：$(x - 2)^2 + (y + 3)^2 = 16$。\n\n检验：点 $(6, -3)$ 在圆心右侧 $4$ 处，而 $4^2 + 0 = 16$。\n\n本课我们由圆心和半径，或由圆心和圆上一点，写出圆的等式。",
+    ),
+    watch: t(
+      "Subtract the center and square the radius: center $(-1, 5)$ and radius $3$ give $(x + 1)^2 + (y - 5)^2 = 9$, not $= 3$ and not $(x - 1)^2$.",
+      "减去圆心坐标，并把半径平方：圆心 $(-1, 5)$、半径 $3$ 得 $(x + 1)^2 + (y - 5)^2 = 9$，右边不是 $3$，也不是 $(x - 1)^2$。",
+    ),
+    hardWatch: t(
+      "A point on the circle gives the radius by the distance formula: from $(0, 0)$ to $(6, 8)$ the radius is $10$, so the right side is $100$, not $14$.",
+      "圆上一点用距离公式给出半径：从 $(0, 0)$ 到 $(6, 8)$ 半径为 $10$，所以右边是 $100$，不是 $14$。",
+    ),
     tip: t(
       "A circle with center $(h, k)$ and radius $r$ has the equation $(x - h)^2 + (y - k)^2 = r^2$. For center $(2, -5)$ and radius $4$: $(x - 2)^2 + (y + 5)^2 = 16$. Two traps appear: keeping the center's printed signs, and writing $r$ rather than $r^2$ on the right.",
       "圆心 $(h, k)$、半径 $r$ 的圆，方程是 $(x - h)^2 + (y - k)^2 = r^2$。圆心 $(2, -5)$、半径 $4$：$(x - 2)^2 + (y + 5)^2 = 16$。有两个陷阱：沿用圆心坐标原有的符号，以及右边写 $r$ 而不是 $r^2$。",
@@ -2735,6 +3632,18 @@ export const actExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "act-exam-problem-solving-with-circles": {
+    intro: t(
+      "A radar screen shows $(x - 3)^2 + (y + 1)^2 = 25$. The right side is $r^2$, so the radius is $5$, the area is $25\\pi$, and the rightmost point is $(3 + 5, -1) = (8, -1)$.\n\nCheck: $(8 - 3)^2 + 0 = 25$.\n\nIn this lesson we read the radius and center from an equation and use them for area and tangent lines.",
+      "一块雷达屏显示 $(x - 3)^2 + (y + 1)^2 = 25$。右边是 $r^2$，所以半径为 $5$，面积为 $25\\pi$，最右点为 $(3 + 5, -1) = (8, -1)$。\n\n检验：$(8 - 3)^2 + 0 = 25$。\n\n本课我们从等式读出半径与圆心，并用它们求面积和切线。",
+    ),
+    watch: t(
+      "The number on the right is already $r^2$: with $= 36$ the area is $36\\pi$, not $36^2\\pi$, and the radius is $6$.",
+      "右边的数已经是 $r^2$：$= 36$ 时面积为 $36\\pi$，不是 $36^2\\pi$，半径为 $6$。",
+    ),
+    hardWatch: t(
+      "A vertical tangent line sits one radius left or right of the center: for center $(2, 4)$ and radius $3$, the right tangent is $x = 5$ and the left one is $x = -1$.",
+      "竖直切线位于圆心左右一个半径处：圆心 $(2, 4)$、半径 $3$ 时，右切线为 $x = 5$，左切线为 $x = -1$。",
+    ),
     tip: t(
       "In standard form, the right side is already $r^2$. Since area is $\\pi r^2$, the area is simply that number times $\\pi$. For $(x - 1)^2 + (y + 2)^2 = 49$, the area is $49\\pi$. Squaring the $49$ again is the trap, and $14\\pi$ is the circumference.",
       "标准形式中，右边已经是 $r^2$。面积是 $\\pi r^2$，所以就是这个数乘 $\\pi$。$(x - 1)^2 + (y + 2)^2 = 49$ 的面积是 $49\\pi$。把 $49$ 再平方就是陷阱，$14\\pi$ 是周长。",
@@ -2745,6 +3654,18 @@ export const actExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "act-exam-further-problem-solving-with-circles": {
+    intro: t(
+      "A circle comes written out as $x^2 + y^2 - 6x - 4y - 12 = 0$. Halving $-6$ and $-4$ gives $(x - 3)^2 + (y - 2)^2 = 12 + 9 + 4 = 25$: center $(3, 2)$, radius $5$.\n\nCheck: $(x - 3)^2 = x^2 - 6x + 9$ and $(y - 2)^2 = y^2 - 4y + 4$ give back the terms.\n\nIn this lesson we complete the square in $x$ and in $y$ to find the center and radius of an expanded circle.",
+      "一个圆写成展开式 $x^2 + y^2 - 6x - 4y - 12 = 0$。把 $-6$ 和 $-4$ 减半，得 $(x - 3)^2 + (y - 2)^2 = 12 + 9 + 4 = 25$：圆心 $(3, 2)$，半径 $5$。\n\n检验：$(x - 3)^2 = x^2 - 6x + 9$，$(y - 2)^2 = y^2 - 4y + 4$，还原出原来的项。\n\n本课我们对 $x$ 和 $y$ 分别配方，求出展开式中圆的圆心与半径。",
+    ),
+    watch: t(
+      "The center has the opposite sign of the halved coefficient: $-8x$ halves to $-4$, which gives $(x - 4)^2$ and an $x$-coordinate of $4$, not $-4$.",
+      "圆心坐标与减半后的系数符号相反：$-8x$ 减半为 $-4$，得 $(x - 4)^2$，$x$ 坐标为 $4$，不是 $-4$。",
+    ),
+    hardWatch: t(
+      "Add the squares you created to both sides, then take the square root: the right side $25$ means a radius of $5$, not $25$.",
+      "把配方加上的平方数同时加到两边，再开平方：右边是 $25$ 意味着半径为 $5$，不是 $25$。",
+    ),
     tip: t(
       "Group each variable and complete the square: halve each linear coefficient. The center's coordinates are those halves with reversed signs. For $x^2 + y^2 - 4x + 10y + c = 0$: halves are $-2$ and $5$, so the center is $(2, -5)$. Keeping the halves' signs produces the mirror-image point, which is a likely wrong option.",
       "把每个变量分组并配方：把一次项系数减半。圆心坐标就是这两个一半，符号相反。对 $x^2 + y^2 - 4x + 10y + c = 0$：一半是 $-2$ 和 $5$，所以圆心是 $(2, -5)$。保留一半的符号会得到对称的点，这是很可能的错误选项。",
@@ -2755,6 +3676,18 @@ export const actExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "act-exam-using-slopes-of-parallel-lines": {
+    intro: t(
+      "Two parallel bike lanes are painted on a grid; one follows $y = 2x + 1$. A parallel lane has the same slope $2$, and through $(3, 4)$ it is $y = 2x - 2$, since $4 = 2(3) + b$ gives $b = -2$.\n\nCheck: $2(3) - 2 = 4$.\n\nIn this lesson we read the slope of a line in any form and write parallel lines through a point.",
+      "网格上画着两条平行的自行车道，一条沿 $y = 2x + 1$。平行车道斜率同为 $2$，过 $(3, 4)$ 时为 $y = 2x - 2$，因为 $4 = 2(3) + b$ 得 $b = -2$。\n\n检验：$2(3) - 2 = 4$。\n\n本课我们读出任意形式直线的斜率，并写出过某点的平行线。",
+    ),
+    watch: t(
+      "Solve for $y$ before reading the slope: $3x + 2y = 8$ becomes $y = -\\frac{3}{2}x + 4$, so the slope is $-\\frac{3}{2}$, not $3$ or $\\frac{3}{2}$.",
+      "先解出 $y$ 再读斜率：$3x + 2y = 8$ 化为 $y = -\\frac{3}{2}x + 4$，斜率为 $-\\frac{3}{2}$，不是 $3$，也不是 $\\frac{3}{2}$。",
+    ),
+    hardWatch: t(
+      "Parallel lines share the slope, not the intercept: find the new intercept from the point, $b = y - mx$.",
+      "平行线斜率相同，截距不同：用给定的点求新的截距，$b = y - mx$。",
+    ),
     tip: t(
       "Parallel lines share a slope, so rewrite the equation as $y = mx + b$ and read $m$. From $3x + 4y = 8$: $y = -\\frac{3}{4}x + 2$, so the slope is $-\\frac{3}{4}$. The common slips are reading the coefficient of $x$ directly, and dropping the sign when moving the term across.",
       "平行线斜率相同，所以把方程改写为 $y = mx + b$，读出 $m$。由 $3x + 4y = 8$：$y = -\\frac{3}{4}x + 2$，所以斜率是 $-\\frac{3}{4}$。常见疏漏是直接读 $x$ 的系数，以及移项时丢了符号。",
@@ -2765,6 +3698,18 @@ export const actExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "act-exam-using-slopes-of-perpendicular-lines": {
+    intro: t(
+      "A street runs with slope $\\frac{2}{3}$, and a cross street meets it at a right angle. Perpendicular slopes are negative reciprocals, so the cross street has slope $-\\frac{3}{2}$.\n\nCheck: $\\frac{2}{3} \\cdot \\left(-\\frac{3}{2}\\right) = -1$.\n\nIn this lesson we find perpendicular slopes and use them to write and evaluate perpendicular lines.",
+      "一条街的斜率为 $\\frac{2}{3}$，一条横街与它垂直相交。互相垂直的直线斜率互为负倒数，所以横街斜率为 $-\\frac{3}{2}$。\n\n检验：$\\frac{2}{3} \\cdot \\left(-\\frac{3}{2}\\right) = -1$。\n\n本课我们求垂直直线的斜率，并用它写出垂线、求出线上的值。",
+    ),
+    watch: t(
+      "Do both steps: flip the fraction and change the sign. The perpendicular of $\\frac{4}{5}$ is $-\\frac{5}{4}$, not $\\frac{5}{4}$ or $-\\frac{4}{5}$.",
+      "两步都要做：颠倒分数并变号。$\\frac{4}{5}$ 的垂线斜率是 $-\\frac{5}{4}$，不是 $\\frac{5}{4}$，也不是 $-\\frac{4}{5}$。",
+    ),
+    hardWatch: t(
+      "Use the new slope with the new intercept: perpendicular to $y = \\frac{1}{2}x + 1$ with intercept $3$ is $y = -2x + 3$, which is $-3$ at $x = 3$.",
+      "新斜率要配新截距：与 $y = \\frac{1}{2}x + 1$ 垂直、截距为 $3$ 的直线是 $y = -2x + 3$，在 $x = 3$ 时为 $-3$。",
+    ),
     tip: t(
       "Perpendicular slopes are negative reciprocals: flip the fraction and change the sign, so their product is $-1$. A slope of $\\frac{4}{5}$ pairs with $-\\frac{5}{4}$. Each option wrong in one way appears: $\\frac{5}{4}$ only flips, and $-\\frac{4}{5}$ only changes the sign. Both operations are required.",
       "垂直直线的斜率互为负倒数：颠倒分数并改变符号，所以它们的积是 $-1$。斜率 $\\frac{4}{5}$ 对应 $-\\frac{5}{4}$。每种只错一处的选项都会出现：$\\frac{5}{4}$ 只颠倒了，$-\\frac{4}{5}$ 只变了号。两步都要做。",
@@ -2775,6 +3720,18 @@ export const actExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "act-exam-writing-the-equation-of-a-line": {
+    intro: t(
+      "A phone plan's cost rises $\\$3$ per gigabyte, and $4$ gigabytes cost $\\$20$. The line has slope $3$, and $20 = 3(4) + b$ gives $b = 8$: $y = 3x + 8$.\n\nCheck: $3(4) + 8 = 20$.\n\nIn this lesson we write the equation of a line from a slope and a point, or from two points.",
+      "一个手机套餐每 GB 加 $\\$3$，$4$ GB 共 $\\$20$。直线斜率为 $3$，$20 = 3(4) + b$ 得 $b = 8$：$y = 3x + 8$。\n\n检验：$3(4) + 8 = 20$。\n\n本课我们由斜率和一点，或由两点，写出直线的等式。",
+    ),
+    watch: t(
+      "The intercept is where $x = 0$, not the $y$-coordinate of the given point: through $(2, 7)$ with slope $3$, $b = 7 - 6 = 1$, not $7$.",
+      "截距是 $x = 0$ 处的值，不是所给点的 $y$ 坐标：过 $(2, 7)$、斜率 $3$ 时 $b = 7 - 6 = 1$，不是 $7$。",
+    ),
+    hardWatch: t(
+      "From two points, find the slope first as rise over run, in the same order: $(1, 2)$ to $(3, 8)$ rises $6$ over a run of $2$, slope $3$.",
+      "由两点先求斜率，竖直变化比水平变化，顺序一致：从 $(1, 2)$ 到 $(3, 8)$ 竖直变化 $6$，水平变化 $2$，斜率为 $3$。",
+    ),
     tip: t(
       "With a slope and a point, write $y = mx + b$, substitute the point's coordinates, and solve for $b$. For slope $3$ through $(2, 1)$: $1 = 6 + b$, so $b = -5$ and $y = 3x - 5$. Using the point's $y$-coordinate as the intercept works only when $x = 0$.",
       "有斜率和一点时，写出 $y = mx + b$，代入点的坐标，解出 $b$。斜率 $3$、过 $(2, 1)$：$1 = 6 + b$，所以 $b = -5$，$y = 3x - 5$。把点的 $y$ 坐标当作截距，只在 $x = 0$ 时才成立。",
@@ -2785,6 +3742,18 @@ export const actExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "act-exam-interpreting-slope-and-its-changes": {
+    intro: t(
+      "A bakery's revenue is $R = 4n + 50$ dollars for $n$ loaves. The $4$ multiplies $n$, so each extra loaf adds $\\$4$; the $50$ is the revenue with no loaves sold.\n\nCheck: $n = 10$ gives $90$ and $n = 11$ gives $94$, a rise of $4$.\n\nIn this lesson we say what the slope and the intercept of a model mean, and how far the output moves when the input changes.",
+      "一家面包店卖 $n$ 个面包的收入为 $R = 4n + 50$ 美元。$4$ 乘以 $n$，所以每多卖一个面包增加 $\\$4$；$50$ 是一个都没卖时的收入。\n\n检验：$n = 10$ 时为 $90$，$n = 11$ 时为 $94$，增加了 $4$。\n\n本课我们说明模型中斜率与截距的含义，以及输入变化时输出变化多少。",
+    ),
+    watch: t(
+      "The slope is the number multiplying the input, a rate per unit; the constant is the starting value. In $C = 25 + 12h$, the rate is $12$ per hour.",
+      "斜率是乘以输入的那个数，表示每单位的变化率；常数是起始值。在 $C = 25 + 12h$ 中，变化率是每小时 $12$。",
+    ),
+    hardWatch: t(
+      "A change in the input changes the output by the slope times that change; the fixed amount does not repeat: $5$ more miles at $\\$2$ per mile adds $\\$10$.",
+      "输入变化时，输出变化量等于斜率乘以变化量；固定费用不会重复：每英里 $\\$2$，多 $5$ 英里增加 $\\$10$。",
+    ),
     tip: t(
       "In a linear model, the coefficient of the variable is the change per one unit of it, and the constant is the value when the variable is $0$. In $C = 12n + 30$, each extra item adds $12$, while $30$ is the fixed starting cost. Swapping those two meanings is the trap.",
       "线性模型中，变量的系数是变量每增加一个单位的变化，常数是变量为 $0$ 时的值。在 $C = 12n + 30$ 中，每多一件增加 $12$，而 $30$ 是固定的起始费用。把这两个含义调换就是陷阱。",
@@ -2795,6 +3764,18 @@ export const actExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "act-exam-finding-area-in-the-coordinate-plane": {
+    intro: t(
+      "A plot on a map has corners at $(-2, 1)$ and $(4, 5)$. Its width is $4 - (-2) = 6$ and its height is $5 - 1 = 4$, so its area is $24$ square units.\n\nCheck: counting the grid gives $4$ rows of $6$ squares.\n\nIn this lesson we find side lengths from coordinates and use them for the areas of rectangles and triangles.",
+      "地图上一块地的两个角在 $(-2, 1)$ 和 $(4, 5)$。宽为 $4 - (-2) = 6$，高为 $5 - 1 = 4$，所以面积为 $24$ 平方单位。\n\n检验：数网格得 $4$ 行，每行 $6$ 格。\n\n本课我们由坐标求边长，并用它们求长方形与三角形的面积。",
+    ),
+    watch: t(
+      "Subtracting a negative coordinate adds: from $x = -3$ to $x = 2$ the width is $2 - (-3) = 5$, not $-1$.",
+      "减去负的坐标等于加：从 $x = -3$ 到 $x = 2$，宽为 $2 - (-3) = 5$，不是 $-1$。",
+    ),
+    hardWatch: t(
+      "For a triangle with a horizontal base, the height is the vertical distance to the third point, wherever it sits left or right, and the area is half of base times height.",
+      "对底边水平的三角形，高是第三点到底边的竖直距离，与它偏左偏右无关，面积为底乘高的一半。",
+    ),
     tip: t(
       "A rectangle with sides parallel to the axes has side lengths equal to the coordinate differences between opposite vertices. From $(1, 2)$ to $(6, 5)$, the sides are $5$ and $3$, so the area is $15$. Treating the diagonal as a side, or adding instead of multiplying, misses it. Differences with negatives need care.",
       "边与坐标轴平行的长方形，边长等于相对顶点的坐标差。从 $(1, 2)$ 到 $(6, 5)$，边长是 $5$ 和 $3$，所以面积是 $15$。把对角线当作边，或者做加法而不是乘法，都错了。涉及负数的差要小心。",
@@ -2805,6 +3786,18 @@ export const actExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "act-exam-finding-volumes-of-prisms-and-cylinders": {
+    intro: t(
+      "A water tank is a cylinder with radius $2$ meters and height $5$ meters. Each meter of height holds a layer of $\\pi(2)^2 = 4\\pi$ cubic meters, so the tank holds $20\\pi$.\n\nCheck: base area times height, $4\\pi \\times 5 = 20\\pi$.\n\nIn this lesson we find the volume of prisms and cylinders as base area times height, whatever shape the base has.",
+      "一个水箱是半径 $2$ 米、高 $5$ 米的圆柱。每 $1$ 米高是一层 $\\pi(2)^2 = 4\\pi$ 立方米，所以水箱容积为 $20\\pi$。\n\n检验：底面积乘高，$4\\pi \\times 5 = 20\\pi$。\n\n本课我们把棱柱与圆柱的体积求为底面积乘高，无论底面是什么形状。",
+    ),
+    watch: t(
+      "A cylinder's volume is $\\pi r^2 h$; $2\\pi rh$ is its curved side: radius $3$ and height $4$ give $36\\pi$, not $24\\pi$.",
+      "圆柱体积是 $\\pi r^2 h$；$2\\pi rh$ 是侧面积：半径 $3$、高 $4$ 得 $36\\pi$，不是 $24\\pi$。",
+    ),
+    hardWatch: t(
+      "For a triangular prism, the base area needs its $\\frac{1}{2}$: legs $6$ and $4$ and height $10$ give $\\frac{1}{2}(6)(4)(10) = 120$, not $240$.",
+      "三棱柱的底面积要乘 $\\frac{1}{2}$：直角边 $6$、$4$，高 $10$ 得 $\\frac{1}{2}(6)(4)(10) = 120$，不是 $240$。",
+    ),
     tip: t(
       "Any straight solid has volume equal to base area times height. For a cylinder that is $\\pi r^2 h$. Radius $2$ and height $5$ give $20\\pi$. The expression $2\\pi r h$ is the side surface, not volume, and if a diameter is given, halve it before squaring.",
       "任何直柱体的体积都等于底面积乘高。圆柱就是 $\\pi r^2 h$。半径 $2$、高 $5$，体积是 $20\\pi$。$2\\pi r h$ 是侧面积，不是体积；如果给的是直径，平方前要先减半。",
@@ -2815,6 +3808,18 @@ export const actExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "act-exam-finding-volumes-of-pyramids-cones-and-spheres": {
+    intro: t(
+      "An ice cream cone has radius $3$ cm and height $6$ cm. A cylinder of the same base and height holds $\\pi(9)(6) = 54\\pi$, and a cone holds one third of that: $18\\pi$ cubic centimeters.\n\nCheck: $\\frac{1}{3}\\pi r^2 h = \\frac{1}{3}\\pi(9)(6) = 18\\pi$.\n\nIn this lesson we use the one-third rule for pyramids and cones and $\\frac{4}{3}\\pi r^3$ for spheres.",
+      "一个冰淇淋蛋筒半径 $3$ 厘米、高 $6$ 厘米。同底同高的圆柱体积为 $\\pi(9)(6) = 54\\pi$，圆锥是它的三分之一：$18\\pi$ 立方厘米。\n\n检验：$\\frac{1}{3}\\pi r^2 h = \\frac{1}{3}\\pi(9)(6) = 18\\pi$。\n\n本课我们对棱锥与圆锥用三分之一规则，对球用 $\\frac{4}{3}\\pi r^3$。",
+    ),
+    watch: t(
+      "A pyramid or cone holds one third of the prism or cylinder on the same base and height; leaving out the $\\frac{1}{3}$ triples the answer.",
+      "棱锥或圆锥的体积是同底同高棱柱或圆柱的三分之一；漏掉 $\\frac{1}{3}$ 会使答案变为三倍。",
+    ),
+    hardWatch: t(
+      "A sphere's volume cubes the radius: radius $3$ gives $\\frac{4}{3}\\pi(27) = 36\\pi$, while $4\\pi r^2 = 36\\pi$ is its surface area only by coincidence at $r = 3$.",
+      "球的体积要把半径立方：半径 $3$ 得 $\\frac{4}{3}\\pi(27) = 36\\pi$，而 $4\\pi r^2 = 36\\pi$ 是表面积，只在 $r = 3$ 时恰好相等。",
+    ),
     tip: t(
       "A cone holds one third of the cylinder with the same base and height: $V = \\frac{1}{3}\\pi r^2 h$. With radius $3$ and height $4$: $\\frac{1}{3}\\pi(9)(4) = 12\\pi$. Forgetting the $\\frac{1}{3}$ gives the cylinder's volume, and squaring the height instead of the radius is another trap.",
       "圆锥的体积是同底等高圆柱的三分之一：$V = \\frac{1}{3}\\pi r^2 h$。半径 $3$、高 $4$：$\\frac{1}{3}\\pi(9)(4) = 12\\pi$。忘了 $\\frac{1}{3}$ 得到的是圆柱的体积，把高而不是半径平方也是陷阱。",
@@ -2825,6 +3830,18 @@ export const actExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "act-exam-finding-the-surface-area-of-a-solid": {
+    intro: t(
+      "A gift box is $2$ by $3$ by $4$ inches. It has three pairs of faces: $2 \\times 3 = 6$, $3 \\times 4 = 12$ and $2 \\times 4 = 8$, so the paper covers $2(6 + 12 + 8) = 52$ square inches.\n\nCheck: top and bottom $12$, two sides $24$, front and back $16$: $52$ in all.\n\nIn this lesson we add the faces of boxes and cubes, and go from a cube's volume to its surface area.",
+      "一个礼盒为 $2 \\times 3 \\times 4$ 英寸。它有三对面：$2 \\times 3 = 6$，$3 \\times 4 = 12$，$2 \\times 4 = 8$，所以包装纸面积为 $2(6 + 12 + 8) = 52$ 平方英寸。\n\n检验：上下 $12$，两侧 $24$，前后 $16$：共 $52$。\n\n本课我们把长方体与立方体的各面相加，并由立方体的体积求表面积。",
+    ),
+    watch: t(
+      "A box has six faces in three matching pairs; adding only three faces gives half the surface area.",
+      "长方体有六个面，两两相同组成三对；只加三个面得到的是表面积的一半。",
+    ),
+    hardWatch: t(
+      "From a cube's volume, take the cube root for the edge first: volume $125$ gives edge $5$ and surface area $6 \\times 25 = 150$.",
+      "由立方体体积先开立方求棱长：体积 $125$ 得棱长 $5$，表面积 $6 \\times 25 = 150$。",
+    ),
     tip: t(
       "A box has three pairs of matching faces, so its surface area is $2(\\ell w + \\ell h + w h)$. A $3$ by $4$ by $5$ box has area $2(12 + 15 + 20) = 94$. The volume, $60$, is a likely wrong option, and so is leaving off the factor of $2$.",
       "长方体有三对相同的面，所以表面积是 $2(\\ell w + \\ell h + w h)$。$3$ 乘 $4$ 乘 $5$ 的盒子面积是 $2(12 + 15 + 20) = 94$。体积 $60$ 是很可能的错误选项，漏掉因数 $2$ 也是。",
@@ -2835,6 +3852,18 @@ export const actExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "act-exam-applying-volume-scale-factors": {
+    intro: t(
+      "A model car uses $5$ ounces of metal, and a similar model is twice as long. Volume uses three lengths, so it grows by $2^3 = 8$: the larger model uses $40$ ounces.\n\nCheck: a $1$ by $1$ by $1$ block becomes $2$ by $2$ by $2$, which holds $8$ blocks.\n\nIn this lesson we cube the length factor for volume, square it for area, and find it from a volume ratio.",
+      "一个模型车用 $5$ 盎司金属，一个相似模型长度是它的两倍。体积涉及三个长度，扩大 $2^3 = 8$ 倍：大模型用 $40$ 盎司。\n\n检验：$1 \\times 1 \\times 1$ 的小块变为 $2 \\times 2 \\times 2$，包含 $8$ 个小块。\n\n本课我们对体积用长度比例的立方，对面积用平方，并由体积比求出长度比例。",
+    ),
+    watch: t(
+      "Volume scales by the cube of the length factor: tripling every length makes the volume $27$ times as large, not $3$ or $9$ times.",
+      "体积按长度比例的立方缩放：每个长度变为三倍，体积变为 $27$ 倍，不是 $3$ 倍或 $9$ 倍。",
+    ),
+    hardWatch: t(
+      "From volumes to areas, go through the length factor: a volume ratio of $8$ means lengths scale by $2$ and surface areas by $4$, not $8$.",
+      "由体积到面积要经过长度比例：体积比为 $8$ 意味着长度比为 $2$，表面积比为 $4$，不是 $8$。",
+    ),
     tip: t(
       "Volume uses three lengths, so lengths scaled by $k$ make the volume scale by $k^3$. Anything proportional to volume, such as weight or material, scales the same way. A solid holding $5$ units that is made $3$ times as tall holds $5 \\cdot 27 = 135$. Multiplying by $3$ or $9$ is the trap.",
       "体积涉及三个长度，所以长度按 $k$ 变化时，体积按 $k^3$ 变化。与体积成正比的量，比如重量或材料，也一样。容纳 $5$ 个单位的立体，高变为 $3$ 倍后容纳 $5 \\cdot 27 = 135$。乘 $3$ 或 $9$ 就是陷阱。",
