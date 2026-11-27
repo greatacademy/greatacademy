@@ -34,6 +34,18 @@ export const taughtCourses: readonly string[] = [
   "linear-programming",
   "mathematics-for-machine-learning",
   "partial-differential-equations",
+  "algebra-foundations",
+  "integrated-math-i",
+  "integrated-math-ii",
+  "integrated-math-iii",
+  "integrated-math-i-honors",
+  "integrated-math-ii-honors",
+  "integrated-math-iii-honors",
+  "mathematical-foundations-i",
+  "mathematical-foundations-ii",
+  "mathematical-foundations-iii",
+  "mathematical-methods-for-the-physical-sciences-i",
+  "mathematical-methods-for-the-physical-sciences-ii",
 ];
 
 /**
