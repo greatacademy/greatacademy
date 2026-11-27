@@ -5,6 +5,18 @@ import type { ExamLesson } from "../exam.ts";
 /** satExamLessons are the lessons of the SAT exam topics, by topic id. */
 export const satExamLessons: Readonly<Record<string, ExamLesson>> = {
   "sat-exam-adding-polynomials": {
+    intro: t(
+      "A store tracks two product lines with $(2x^2 + 3x - 1)$ and $(x^2 - 5x + 4)$ items. The SAT asks for the total as one of four look-alike expressions, and adding like terms gives $3x^2 - 2x + 3$.\n\nCheck: at $x = 1$ the parts are $4$ and $0$, and $3 - 2 + 3 = 4$.\n\nIn this lesson we add and subtract polynomials by combining like terms, and check the result at $x = 1$.",
+      "商店用 $(2x^2 + 3x - 1)$ 和 $(x^2 - 5x + 4)$ 记录两类商品的件数。SAT 要在四个相似的式子中选出总数，合并同类项得 $3x^2 - 2x + 3$。\n\n检验：$x = 1$ 时两部分分别是 $4$ 和 $0$，而 $3 - 2 + 3 = 4$。\n\n本课我们通过合并同类项做多项式的加减，并用 $x = 1$ 检验结果。",
+    ),
+    watch: t(
+      "When the $x$ coefficients cancel, the $x$ term disappears: $(x^2 + 4x) + (2x^2 - 4x + 1) = 3x^2 + 1$.",
+      "一次项系数相互抵消时，一次项就消失了：$(x^2 + 4x) + (2x^2 - 4x + 1) = 3x^2 + 1$。",
+    ),
+    hardWatch: t(
+      "A minus sign in front of the parentheses flips the constant too: $(x^2 + 2) - (x^2 - 6) = 8$.",
+      "括号前的减号也会改变常数的符号：$(x^2 + 2) - (x^2 - 6) = 8$。",
+    ),
     tip: t(
       "To add polynomials, drop the parentheses and combine like terms: add the coefficients of each power of $x$ and keep the power unchanged. For example, $(2x^2 + x) + (x^2 + 5x) = 3x^2 + 6x$. A term whose coefficients cancel disappears, so do not leave a zero term behind.",
       "多项式相加时，去掉括号后合并同类项：把 $x$ 的同次幂系数相加，幂次不变。例如 $(2x^2 + x) + (x^2 + 5x) = 3x^2 + 6x$。如果某一项的系数相互抵消，这一项就消失了，不必保留零项。",
@@ -15,6 +27,18 @@ export const satExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "sat-exam-adding-polynomials-using-the-distributive-law": {
+    intro: t(
+      "A teacher hands out $3$ kits of $2x + 1$ pieces and $2$ kits of $x + 4$ pieces. The total is $3(2x + 1) + 2(x + 4) = 6x + 3 + 2x + 8 = 8x + 11$.\n\nCheck: at $x = 1$ the kits hold $3$ and $5$ pieces, $3 \\times 3 + 2 \\times 5 = 19$, and $8 + 11 = 19$.\n\nIn this lesson we distribute each factor through its parentheses and then combine like terms.",
+      "老师发了 $3$ 套每套 $2x + 1$ 件的材料和 $2$ 套每套 $x + 4$ 件的材料。总数为 $3(2x + 1) + 2(x + 4) = 6x + 3 + 2x + 8 = 8x + 11$。\n\n检验：$x = 1$ 时每套分别有 $3$ 件和 $5$ 件，$3 \\times 3 + 2 \\times 5 = 19$，而 $8 + 11 = 19$。\n\n本课我们把每个因数乘进它的括号，再合并同类项。",
+    ),
+    watch: t(
+      "A factor multiplies every term inside, including a negative one: $5(2 - x) = 10 - 5x$.",
+      "因数要乘括号内的每一项，包括负的那一项：$5(2 - x) = 10 - 5x$。",
+    ),
+    hardWatch: t(
+      "A minus sign alone in front of parentheses still flips every sign: $-(4 - x) = -4 + x$.",
+      "括号前只有一个负号时，括号内每一项照样要变号：$-(4 - x) = -4 + x$。",
+    ),
     tip: t(
       "First multiply each outside number through its parentheses, then add the two results by combining like terms. For example, $2(x + 5) + 4(x - 1) = 2x + 10 + 4x - 4 = 6x + 6$. The trap is multiplying only the first term inside a parenthesis.",
       "先把括号外的数分别乘进各自的括号，再把两个结果合并同类项。例如 $2(x + 5) + 4(x - 1) = 2x + 10 + 4x - 4 = 6x + 6$。容易犯的错误是只乘了括号里的第一项。",
@@ -25,6 +49,18 @@ export const satExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "sat-exam-multiplying-binomials": {
+    intro: t(
+      "A rectangle has sides $x + 3$ and $2x - 1$, so its area is $(x + 3)(2x - 1) = 2x^2 - x + 6x - 3 = 2x^2 + 5x - 3$.\n\nCheck: at $x = 2$ the sides are $5$ and $3$, the area is $15$, and $8 + 10 - 3 = 15$.\n\nIn this lesson we multiply binomials term by term, and use $x = 1$ to add the coefficients quickly.",
+      "一个长方形的边长是 $x + 3$ 和 $2x - 1$，面积为 $(x + 3)(2x - 1) = 2x^2 - x + 6x - 3 = 2x^2 + 5x - 3$。\n\n检验：$x = 2$ 时边长是 $5$ 和 $3$，面积为 $15$，而 $8 + 10 - 3 = 15$。\n\n本课我们逐项相乘展开二项式之积，并用 $x = 1$ 快速求系数之和。",
+    ),
+    watch: t(
+      "Squaring a binomial gives a middle term: $(x + 4)^2 = x^2 + 8x + 16$, not $x^2 + 16$.",
+      "二项式的平方有中间项：$(x + 4)^2 = x^2 + 8x + 16$，不是 $x^2 + 16$。",
+    ),
+    hardWatch: t(
+      "The sum of the coefficients is the value at $x = 1$, not at $x = 0$: $(x + 2)(x + 5)$ has coefficient sum $3 \\times 6 = 18$, while $x = 0$ gives only the constant $10$.",
+      "系数之和是 $x = 1$ 时的值，不是 $x = 0$ 时的值：$(x + 2)(x + 5)$ 的系数之和是 $3 \\times 6 = 18$，而 $x = 0$ 只给出常数项 $10$。",
+    ),
     tip: t(
       "Multiply each term of the first binomial by each term of the second, which makes four products, then combine the two middle ones. For example, $(x - 3)(4x - 1) = 4x^2 - x - 12x + 3 = 4x^2 - 13x + 3$. Watch the signs: two negatives multiply to a positive constant.",
       "把第一个二项式的每一项分别乘第二个二项式的每一项，共得四个乘积，再合并中间两项。例如 $(x - 3)(4x - 1) = 4x^2 - x - 12x + 3 = 4x^2 - 13x + 3$。注意符号：两个负数相乘，常数项为正。",
@@ -35,6 +71,18 @@ export const satExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "sat-exam-factoring-polynomials-using-the-gcf": {
+    intro: t(
+      "A garden has area $6x^2 + 9x$ square meters and width $3x$ meters. Its length is what remains after taking out $3x$: $6x^2 + 9x = 3x(2x + 3)$, so the length is $2x + 3$ meters.\n\nCheck: $3x \\times 2x + 3x \\times 3 = 6x^2 + 9x$.\n\nIn this lesson we factor out the greatest common factor, numbers and powers of $x$ together.",
+      "一块花园的面积是 $6x^2 + 9x$ 平方米，宽是 $3x$ 米。提出 $3x$ 后剩下的就是长：$6x^2 + 9x = 3x(2x + 3)$，所以长是 $2x + 3$ 米。\n\n检验：$3x \\times 2x + 3x \\times 3 = 6x^2 + 9x$。\n\n本课我们提取最大公因式，把数字和 $x$ 的幂一起提出。",
+    ),
+    watch: t(
+      "If a term equals the common factor itself, a $1$ stays inside: $4x^2 + 4x = 4x(x + 1)$.",
+      "如果某一项恰好等于公因式，括号里要留下 $1$：$4x^2 + 4x = 4x(x + 1)$。",
+    ),
+    hardWatch: t(
+      "The terms inside are the original terms divided by the factor: $10x^3 + 5x = 5x(2x^2 + 1)$, so the inside coefficients add to $3$.",
+      "括号内各项是原来各项除以公因式的结果：$10x^3 + 5x = 5x(2x^2 + 1)$，所以括号内系数之和是 $3$。",
+    ),
     tip: t(
       "Find the greatest common factor of the terms: the largest number dividing all coefficients, times the lowest power of $x$ present in every term. Divide each term by it and write the quotient in parentheses. For example, $10x^2 + 15x = 5x(2x + 3)$. Check by distributing back.",
       "先找各项的最大公因式：能整除所有系数的最大数，乘上每一项都含有的 $x$ 的最低次幂。用它去除每一项，把商写进括号。例如 $10x^2 + 15x = 5x(2x + 3)$。可以再分配回去检验。",
@@ -45,6 +93,18 @@ export const satExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "sat-exam-factoring-binomials-using-differences-of-squares": {
+    intro: t(
+      "A square tile of side $3x$ has a square hole of side $2$ cut out, leaving area $9x^2 - 4$. That difference of squares factors as $(3x - 2)(3x + 2)$.\n\nCheck: $(3x - 2)(3x + 2) = 9x^2 + 6x - 6x - 4 = 9x^2 - 4$.\n\nIn this lesson we spot differences of squares and factor them, and use the factored form to evaluate $x^2 - y^2$.",
+      "边长为 $3x$ 的正方形瓷砖挖去一个边长为 $2$ 的正方形孔，剩下的面积是 $9x^2 - 4$。这个平方差可以分解为 $(3x - 2)(3x + 2)$。\n\n检验：$(3x - 2)(3x + 2) = 9x^2 + 6x - 6x - 4 = 9x^2 - 4$。\n\n本课我们识别并分解平方差，并用分解后的形式求 $x^2 - y^2$ 的值。",
+    ),
+    watch: t(
+      "A sum of squares does not factor this way: $x^2 + 9$ is not $(x - 3)(x + 3)$, which equals $x^2 - 9$.",
+      "平方和不能这样分解：$x^2 + 9$ 不等于 $(x - 3)(x + 3)$，后者等于 $x^2 - 9$。",
+    ),
+    hardWatch: t(
+      "Only the product $(x + y)(x - y)$ gives $x^2 - y^2$; knowing $x + y = 6$ alone is not enough.",
+      "只有乘积 $(x + y)(x - y)$ 才等于 $x^2 - y^2$；只知道 $x + y = 6$ 是不够的。",
+    ),
     tip: t(
       "A difference of two perfect squares factors as $a^2 - b^2 = (a - b)(a + b)$. Write each term as a square, including the coefficient: $9x^2 - 4 = (3x)^2 - 2^2 = (3x - 2)(3x + 2)$. A sum of squares does not factor this way, and the coefficient must be square-rooted too.",
       "两个完全平方数之差可以分解为 $a^2 - b^2 = (a - b)(a + b)$。把每一项写成平方，系数也要写进去：$9x^2 - 4 = (3x)^2 - 2^2 = (3x - 2)(3x + 2)$。平方和不能这样分解，而且系数也要开方。",
@@ -55,6 +115,18 @@ export const satExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "sat-exam-factoring-trinomials": {
+    intro: t(
+      "A rectangle has area $x^2 + 7x + 12$, and its sides are binomials. They come from two numbers that multiply to $12$ and add to $7$, namely $3$ and $4$: $x^2 + 7x + 12 = (x + 3)(x + 4)$.\n\nCheck: $(x + 3)(x + 4) = x^2 + 4x + 3x + 12 = x^2 + 7x + 12$.\n\nIn this lesson we factor trinomials with leading coefficient $1$, and use a known factor to find a missing coefficient.",
+      "一个长方形的面积是 $x^2 + 7x + 12$，边长都是二项式。它们来自积为 $12$、和为 $7$ 的两个数，即 $3$ 和 $4$：$x^2 + 7x + 12 = (x + 3)(x + 4)$。\n\n检验：$(x + 3)(x + 4) = x^2 + 4x + 3x + 12 = x^2 + 7x + 12$。\n\n本课我们分解首项系数为 $1$ 的三项式，并用已知的因式求出缺少的系数。",
+    ),
+    watch: t(
+      "With a negative constant the two numbers have opposite signs: $x^2 - x - 6 = (x - 3)(x + 2)$.",
+      "常数项为负时，两个数异号：$x^2 - x - 6 = (x - 3)(x + 2)$。",
+    ),
+    hardWatch: t(
+      "The two numbers can be equal: $x^2 + 10x + 25 = (x + 5)^2$, so the middle coefficient is $5 + 5 = 10$.",
+      "两个数也可以相等：$x^2 + 10x + 25 = (x + 5)^2$，所以一次项系数是 $5 + 5 = 10$。",
+    ),
     tip: t(
       "To factor $x^2 + bx + c$, look for two numbers whose product is $c$ and whose sum is $b$. They become the constants in the factors. For $x^2 + 8x + 15$, the numbers $3$ and $5$ work, so it equals $(x + 3)(x + 5)$. Pairs with the right product but wrong sum are the usual distractors.",
       "分解 $x^2 + bx + c$ 时，找两个数，使它们的积为 $c$、和为 $b$，它们就是因式里的常数。对 $x^2 + 8x + 15$，$3$ 和 $5$ 符合，所以它等于 $(x + 3)(x + 5)$。积对而和不对的数对是常见的干扰项。",
@@ -65,6 +137,18 @@ export const satExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "sat-exam-factoring-higher-order-polynomials": {
+    intro: t(
+      "The expression $x^6 - 49$ looks hard, but $x^6 = (x^3)^2$ and $49 = 7^2$, so it is a difference of squares: $x^6 - 49 = (x^3 - 7)(x^3 + 7)$.\n\nCheck: $(x^3 - 7)(x^3 + 7) = x^6 + 7x^3 - 7x^3 - 49 = x^6 - 49$.\n\nIn this lesson we factor higher powers as differences of squares, taking out a common factor first when there is one.",
+      "式子 $x^6 - 49$ 看起来很难，但 $x^6 = (x^3)^2$，$49 = 7^2$，所以它是平方差：$x^6 - 49 = (x^3 - 7)(x^3 + 7)$。\n\n检验：$(x^3 - 7)(x^3 + 7) = x^6 + 7x^3 - 7x^3 - 49 = x^6 - 49$。\n\n本课我们把高次式当作平方差来分解，有公因式时先提出公因式。",
+    ),
+    watch: t(
+      "Only even powers are squares of whole powers: $x^5 - 4$ is not a difference of squares of polynomials.",
+      "只有偶次幂才是整数次幂的平方：$x^5 - 4$ 不是两个多项式的平方差。",
+    ),
+    hardWatch: t(
+      "Take out the common factor before the squares: $4x^3 - 9x = x(4x^2 - 9) = x(2x - 3)(2x + 3)$.",
+      "先提公因式，再用平方差：$4x^3 - 9x = x(4x^2 - 9) = x(2x - 3)(2x + 3)$。",
+    ),
     tip: t(
       "An even power is itself a square, because $x^{2n} = (x^n)^2$. So a high power minus a perfect square is still a difference of squares: $x^{6} - 49 = (x^{3} - 7)(x^{3} + 7)$. Halve the exponent, do not take its square root; that is the trap in the wrong options.",
       "偶次幂本身就是平方，因为 $x^{2n} = (x^n)^2$。所以高次幂减去一个完全平方数仍是平方差：$x^{6} - 49 = (x^{3} - 7)(x^{3} + 7)$。指数要减半，而不是开方，这正是错误选项设下的陷阱。",
@@ -75,6 +159,18 @@ export const satExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "sat-exam-simplifying-rational-expressions-by-factoring": {
+    intro: t(
+      "A crew shares $3x^2 - 12$ tasks among $x - 2$ equal teams. Factoring the numerator as $3(x - 2)(x + 2)$ shows that each team gets $3x + 6$ tasks, for $x > 2$.\n\nCheck: at $x = 3$, $\\frac{27 - 12}{1} = 15$ and $9 + 6 = 15$.\n\nIn this lesson we factor numerators and cancel common factors, keeping track of the excluded values.",
+      "一个小组把 $3x^2 - 12$ 项任务平均分给 $x - 2$ 个队。把分子分解为 $3(x - 2)(x + 2)$，可见当 $x > 2$ 时每队分到 $3x + 6$ 项。\n\n检验：$x = 3$ 时 $\\frac{27 - 12}{1} = 15$，而 $9 + 6 = 15$。\n\n本课我们分解分子、约去公因式，并留意被排除的取值。",
+    ),
+    watch: t(
+      "Only factors cancel, never single terms: $\\frac{x + 6}{x}$ is not $6$; it is $1 + \\frac{6}{x}$.",
+      "只能约去因式，不能约去单独的项：$\\frac{x + 6}{x}$ 不等于 $6$，而是 $1 + \\frac{6}{x}$。",
+    ),
+    hardWatch: t(
+      "Dividing a sum by a monomial divides every term: $\\frac{4x^2 + 2x}{2x} = 2x + 1$.",
+      "和除以单项式，每一项都要除：$\\frac{4x^2 + 2x}{2x} = 2x + 1$。",
+    ),
     tip: t(
       "Factor the numerator completely, first any common number and then any difference of squares, and cancel the factor that also appears in the denominator. For example, $\\frac{3x^2 - 27}{x - 3} = \\frac{3(x - 3)(x + 3)}{x - 3} = 3x + 9$. Only whole factors cancel, never single terms.",
       "把分子彻底分解：先提公因数，再用平方差公式，然后约去分母中也有的因式。例如 $\\frac{3x^2 - 27}{x - 3} = \\frac{3(x - 3)(x + 3)}{x - 3} = 3x + 9$。只能约去整个因式，不能约去单独的项。",
@@ -85,6 +181,18 @@ export const satExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "sat-exam-simplifying-rational-expressions-using-polynomial-factorization": {
+    intro: t(
+      "A tray of $x^2 + 5x + 6$ cookies is split into rows of $x + 3$. Since $x^2 + 5x + 6 = (x + 2)(x + 3)$, there are $x + 2$ rows.\n\nCheck: at $x = 1$, $\\frac{12}{4} = 3 = 1 + 2$.\n\nIn this lesson we factor numerator and denominator and cancel the common factor.",
+      "一盘 $x^2 + 5x + 6$ 块饼干，每行摆 $x + 3$ 块。因为 $x^2 + 5x + 6 = (x + 2)(x + 3)$，所以共有 $x + 2$ 行。\n\n检验：$x = 1$ 时 $\\frac{12}{4} = 3 = 1 + 2$。\n\n本课我们分别分解分子和分母，再约去公因式。",
+    ),
+    watch: t(
+      "Signs carry into the factors: $\\frac{x^2 - 9}{x - 3} = x + 3$, not $x - 3$.",
+      "符号会带进因式里：$\\frac{x^2 - 9}{x - 3} = x + 3$，不是 $x - 3$。",
+    ),
+    hardWatch: t(
+      "If no factor is shared, nothing cancels: $\\frac{x^2 + 3x + 2}{x^2 + 7x + 12} = \\frac{(x + 1)(x + 2)}{(x + 3)(x + 4)}$ stays as it is.",
+      "没有公因式就不能约分：$\\frac{x^2 + 3x + 2}{x^2 + 7x + 12} = \\frac{(x + 1)(x + 2)}{(x + 3)(x + 4)}$ 只能保持原样。",
+    ),
     tip: t(
       "Factor the trinomial on top into two binomials, using numbers with the right sum and product, then cancel the binomial equal to the denominator. For example, $\\frac{x^2 + 6x + 5}{x + 1} = \\frac{(x + 1)(x + 5)}{x + 1} = x + 5$. Do not cancel the $x$ terms individually.",
       "用和与积都符合的两个数，把分子的三项式分解成两个二项式，再约去与分母相同的那个。例如 $\\frac{x^2 + 6x + 5}{x + 1} = \\frac{(x + 1)(x + 5)}{x + 1} = x + 5$。不要把 $x$ 项单独约掉。",
@@ -95,6 +203,18 @@ export const satExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "sat-exam-adding-rational-expressions": {
+    intro: t(
+      "Two pipes fill $\\frac{3}{x}$ and $\\frac{2}{x}$ of a tank per hour. Together they fill $\\frac{5}{x}$, because fractions with the same denominator add their numerators.\n\nCheck: at $x = 10$, $0.3 + 0.2 = 0.5 = \\frac{5}{10}$.\n\nIn this lesson we add rational expressions, first over a shared denominator and then over a product of different ones.",
+      "两根水管每小时分别注满水池的 $\\frac{3}{x}$ 和 $\\frac{2}{x}$。合起来每小时注满 $\\frac{5}{x}$，因为同分母的分式相加时分子相加。\n\n检验：$x = 10$ 时 $0.3 + 0.2 = 0.5 = \\frac{5}{10}$。\n\n本课我们做分式的加法，先是同分母，再是分母不同、以乘积作公分母的情形。",
+    ),
+    watch: t(
+      "With different denominators, rewrite before adding: $\\frac{1}{x} + \\frac{1}{2x} = \\frac{2}{2x} + \\frac{1}{2x} = \\frac{3}{2x}$.",
+      "分母不同时，先通分再相加：$\\frac{1}{x} + \\frac{1}{2x} = \\frac{2}{2x} + \\frac{1}{2x} = \\frac{3}{2x}$。",
+    ),
+    hardWatch: t(
+      "Each numerator multiplies the other fraction's denominator: $\\frac{1}{x} + \\frac{1}{x + 1} = \\frac{(x + 1) + x}{x(x + 1)} = \\frac{2x + 1}{x(x + 1)}$.",
+      "每个分子都要乘另一个分式的分母：$\\frac{1}{x} + \\frac{1}{x + 1} = \\frac{(x + 1) + x}{x(x + 1)} = \\frac{2x + 1}{x(x + 1)}$。",
+    ),
     tip: t(
       "Fractions with the same denominator add by adding the numerators and keeping that denominator: $\\frac{2}{y} + \\frac{7}{y} = \\frac{9}{y}$. The denominator does not double. Options showing a doubled or squared denominator come from treating the bottoms like the tops.",
       "分母相同的分式相加，只把分子相加，分母不变：$\\frac{2}{y} + \\frac{7}{y} = \\frac{9}{y}$。分母不会变成两倍。选项中分母翻倍或变成平方的，都是把分母当成分子一样处理造成的。",
@@ -105,6 +225,18 @@ export const satExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "sat-exam-further-adding-rational-expressions": {
+    intro: t(
+      "To add $\\frac{1}{x - 3} + \\frac{2}{x^2 - 9}$, notice that $x^2 - 9 = (x - 3)(x + 3)$ already contains $x - 3$. Rewriting the first fraction as $\\frac{x + 3}{x^2 - 9}$ gives the sum $\\frac{x + 5}{x^2 - 9}$.\n\nCheck: at $x = 4$, $1 + \\frac{2}{7} = \\frac{9}{7}$, and $\\frac{4 + 5}{7} = \\frac{9}{7}$.\n\nIn this lesson we factor a denominator to find the least common denominator before adding.",
+      "计算 $\\frac{1}{x - 3} + \\frac{2}{x^2 - 9}$ 时，注意 $x^2 - 9 = (x - 3)(x + 3)$ 已经含有 $x - 3$。把第一个分式改写为 $\\frac{x + 3}{x^2 - 9}$，和就是 $\\frac{x + 5}{x^2 - 9}$。\n\n检验：$x = 4$ 时 $1 + \\frac{2}{7} = \\frac{9}{7}$，而 $\\frac{4 + 5}{7} = \\frac{9}{7}$。\n\n本课我们先分解分母找出最简公分母，再相加。",
+    ),
+    watch: t(
+      "The least common denominator of $\\frac{1}{x + 2}$ and $\\frac{1}{x^2 - 4}$ is $x^2 - 4$, not $(x + 2)(x^2 - 4)$.",
+      "$\\frac{1}{x + 2}$ 与 $\\frac{1}{x^2 - 4}$ 的最简公分母是 $x^2 - 4$，不是 $(x + 2)(x^2 - 4)$。",
+    ),
+    hardWatch: t(
+      "Scale the numerator by the same factor as the denominator: $\\frac{3}{x} = \\frac{12}{4x}$, so $\\frac{3}{x} + \\frac{1}{4x} = \\frac{13}{4x}$.",
+      "分子要和分母乘同一个数：$\\frac{3}{x} = \\frac{12}{4x}$，所以 $\\frac{3}{x} + \\frac{1}{4x} = \\frac{13}{4x}$。",
+    ),
     tip: t(
       "Factor the more complicated denominator first; it often already contains the simpler one, so it serves as the common denominator. For $\\frac{1}{x - 3} + \\frac{5}{x^2 - 9}$, multiply the first fraction's top and bottom by $x + 3$, giving $\\frac{x + 3 + 5}{x^2 - 9} = \\frac{x + 8}{x^2 - 9}$.",
       "先分解较复杂的分母，它往往已经含有较简单的分母，可以直接作公分母。对 $\\frac{1}{x - 3} + \\frac{5}{x^2 - 9}$，把第一个分式的分子分母同乘 $x + 3$，得到 $\\frac{x + 3 + 5}{x^2 - 9} = \\frac{x + 8}{x^2 - 9}$。",
@@ -115,6 +247,18 @@ export const satExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "sat-exam-fractions-of-fractions": {
+    intro: t(
+      "How many shifts of $\\frac{2}{x}$ hours fit into $5$ hours? The answer is $\\frac{5}{\\frac{2}{x}} = 5 \\times \\frac{x}{2} = \\frac{5x}{2}$.\n\nCheck: at $x = 2$ each shift lasts $1$ hour, and $\\frac{5 \\times 2}{2} = 5$ shifts.\n\nIn this lesson we simplify fractions of fractions by multiplying by the reciprocal.",
+      "$5$ 小时里能排多少个 $\\frac{2}{x}$ 小时的班次？答案是 $\\frac{5}{\\frac{2}{x}} = 5 \\times \\frac{x}{2} = \\frac{5x}{2}$。\n\n检验：$x = 2$ 时每班 $1$ 小时，而 $\\frac{5 \\times 2}{2} = 5$ 个班次。\n\n本课我们用乘以倒数的方法化简繁分式。",
+    ),
+    watch: t(
+      "Dividing by a fraction multiplies by its reciprocal, not by the fraction: $\\frac{1}{\\frac{1}{3}} = 3$, not $\\frac{1}{3}$.",
+      "除以一个分数等于乘以它的倒数，而不是乘以它本身：$\\frac{1}{\\frac{1}{3}} = 3$，不是 $\\frac{1}{3}$。",
+    ),
+    hardWatch: t(
+      "Add the inner fractions before taking the reciprocal: $\\frac{1}{\\frac{1}{2} + \\frac{1}{3}} = \\frac{1}{\\frac{5}{6}} = \\frac{6}{5}$, not $2 + 3$.",
+      "先把内层分式相加，再取倒数：$\\frac{1}{\\frac{1}{2} + \\frac{1}{3}} = \\frac{1}{\\frac{5}{6}} = \\frac{6}{5}$，不是 $2 + 3$。",
+    ),
     tip: t(
       "Dividing by a fraction is multiplying by its reciprocal, so a fraction inside a denominator flips: $\\frac{a}{\\frac{b}{x}} = a \\cdot \\frac{x}{b} = \\frac{ax}{b}$. For instance, $\\frac{3}{\\frac{5}{x}} = \\frac{3x}{5}$. The variable moves up into the numerator; options that keep it below have not flipped.",
       "除以一个分数就是乘它的倒数，所以分母里的分数要倒过来：$\\frac{a}{\\frac{b}{x}} = a \\cdot \\frac{x}{b} = \\frac{ax}{b}$。例如 $\\frac{3}{\\frac{5}{x}} = \\frac{3x}{5}$。变量移到了分子上，仍把它留在下面的选项就是没有取倒数。",
@@ -125,6 +269,18 @@ export const satExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "sat-exam-exponential-expressions": {
+    intro: t(
+      "A colony of cells grows by a factor of $x^3$ and then by a factor of $x^4$. Overall it grows by $x^3 \\times x^4 = x^7$, because the exponents count the factors of $x$.\n\nCheck: at $x = 2$, $8 \\times 16 = 128 = 2^7$.\n\nIn this lesson we multiply and divide powers of one base by adding and subtracting exponents.",
+      "一群细胞先增长为原来的 $x^3$ 倍，再增长为 $x^4$ 倍。总共增长为 $x^3 \\times x^4 = x^7$ 倍，因为指数数的是 $x$ 的因数个数。\n\n检验：$x = 2$ 时 $8 \\times 16 = 128 = 2^7$。\n\n本课我们用指数相加、相减来做同底数幂的乘除。",
+    ),
+    watch: t(
+      "The rule needs one base: $2^3 \\times 3^2 = 72$, which is not $6^5$.",
+      "这条法则要求底数相同：$2^3 \\times 3^2 = 72$，不等于 $6^5$。",
+    ),
+    hardWatch: t(
+      "A power with no exponent written has exponent one: $\\frac{x^5 \\times x}{x^2} = x^4$.",
+      "没有写指数的幂，指数是一：$\\frac{x^5 \\times x}{x^2} = x^4$。",
+    ),
     tip: t(
       "When powers of the same base are multiplied, keep the base and add the exponents: $y^{3} \\cdot y^{5} = y^{8}$. Three factors of $y$ and five more make eight in all. Multiplying the exponents, which would give $y^{15}$, is the standard wrong choice.",
       "同底数幂相乘，底数不变，指数相加：$y^{3} \\cdot y^{5} = y^{8}$。三个 $y$ 再加五个 $y$，一共八个。把指数相乘得到 $y^{15}$ 是典型的错误选项。",
@@ -135,6 +291,18 @@ export const satExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "sat-exam-simplifying-exponential-expressions": {
+    intro: t(
+      "A square of side $3x^2$ has area $(3x^2)^2 = 9x^4$: the coefficient is squared and the exponent is doubled.\n\nCheck: at $x = 2$ the side is $12$, the area is $144$, and $9 \\times 16 = 144$.\n\nIn this lesson we raise products to powers and rewrite roots as fractional exponents.",
+      "边长为 $3x^2$ 的正方形面积是 $(3x^2)^2 = 9x^4$：系数要平方，指数要加倍。\n\n检验：$x = 2$ 时边长为 $12$，面积为 $144$，而 $9 \\times 16 = 144$。\n\n本课我们求积的乘方，并把根式写成分数指数。",
+    ),
+    watch: t(
+      "A negative coefficient keeps its sign under an odd power: $(-2x)^3 = -8x^3$.",
+      "负系数取奇次方后仍是负的：$(-2x)^3 = -8x^3$。",
+    ),
+    hardWatch: t(
+      "When the power under the root is larger than the index, the exponent is more than one: $\\sqrt{x^3} = x^{\\frac{3}{2}}$, so $\\sqrt{x^3} \\times \\sqrt{x} = x^2$.",
+      "根号下的指数大于根指数时，结果的指数大于一：$\\sqrt{x^3} = x^{\\frac{3}{2}}$，所以 $\\sqrt{x^3} \\times \\sqrt{x} = x^2$。",
+    ),
     tip: t(
       "A power of a product applies to every factor: raise the coefficient to the power and multiply the exponents of the variable. So $(2y^{3})^{5} = 2^{5}y^{15} = 32y^{15}$. Common wrong answers multiply the coefficient by the outside exponent, or add the exponents instead of multiplying them.",
       "积的乘方要作用到每个因数上：系数乘方，变量的指数相乘。所以 $(2y^{3})^{5} = 2^{5}y^{15} = 32y^{15}$。常见的错误是把系数与外面的指数相乘，或者把指数相加而不是相乘。",
@@ -145,6 +313,18 @@ export const satExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "sat-exam-simplifying-exponential-expressions-using-the-distributive-law": {
+    intro: t(
+      "A company has $x^2$ teams, and each team gets $x^3 + 4$ tasks, so the total is $x^2(x^3 + 4) = x^5 + 4x^2$.\n\nCheck: at $x = 2$, $4 \\times 12 = 48$ and $32 + 16 = 48$.\n\nIn this lesson we distribute a power across a sum, and factor a common power out of a sum.",
+      "一家公司有 $x^2$ 个小组，每组分到 $x^3 + 4$ 项任务，总数为 $x^2(x^3 + 4) = x^5 + 4x^2$。\n\n检验：$x = 2$ 时 $4 \\times 12 = 48$，而 $32 + 16 = 48$。\n\n本课我们把幂分配到和的每一项，并从和中提出公共的幂。",
+    ),
+    watch: t(
+      "Unlike powers do not add: $x^3 + x^2$ is not $x^5$; it factors as $x^2(x + 1)$.",
+      "不同次的幂不能相加：$x^3 + x^2$ 不等于 $x^5$，它可以分解为 $x^2(x + 1)$。",
+    ),
+    hardWatch: t(
+      "Two equal powers add to twice one of them: $3^5 + 3^5 = 2 \\times 3^5$, not $3^{10}$.",
+      "两个相同的幂相加，等于其中一个的两倍：$3^5 + 3^5 = 2 \\times 3^5$，不是 $3^{10}$。",
+    ),
     tip: t(
       "Distribute the outside power to each term in the parentheses. On a term with the same base, add exponents; on a plain number, simply write the product. For example, $x^{3}(x^{5} + 2) = x^{8} + 2x^{3}$. Forgetting to multiply the constant term is the frequent slip here.",
       "把括号外的幂分配给括号里的每一项。遇到同底数的项，指数相加；遇到常数，直接写成乘积。例如 $x^{3}(x^{5} + 2) = x^{8} + 2x^{3}$。常见的疏漏是忘了乘常数项。",
@@ -155,6 +335,18 @@ export const satExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "sat-exam-perfect-square-quadratic-equations": {
+    intro: t(
+      "A square plot whose side is $x - 2$ meters has area $16$ square meters, so $(x - 2)^2 = 16$. Taking square roots gives $x - 2 = 4$ or $x - 2 = -4$, so $x = 6$ or $x = -2$, and only $x = 6$ gives a real side.\n\nCheck: $(6 - 2)^2 = 4^2 = 16$.\n\nIn this lesson we solve perfect square equations by taking both square roots.",
+      "一块正方形地的边长是 $x - 2$ 米，面积是 $16$ 平方米，所以 $(x - 2)^2 = 16$。开平方得 $x - 2 = 4$ 或 $x - 2 = -4$，即 $x = 6$ 或 $x = -2$，只有 $x = 6$ 能给出真实的边长。\n\n检验：$(6 - 2)^2 = 4^2 = 16$。\n\n本课我们取正负两个平方根来解完全平方方程。",
+    ),
+    watch: t(
+      "Both square roots count, and both solutions can be positive: $(x - 10)^2 = 1$ gives $x = 11$ and $x = 9$.",
+      "两个平方根都要考虑，而且两个解可能都是正数：$(x - 10)^2 = 1$ 得 $x = 11$ 和 $x = 9$。",
+    ),
+    hardWatch: t(
+      "The solutions add to twice the center, whatever the square equals: $(x - 3)^2 = 50$ has solutions $3 \\pm \\sqrt{50}$, which add to $6$.",
+      "无论平方等于多少，两个解之和都是中心的两倍：$(x - 3)^2 = 50$ 的解是 $3 \\pm \\sqrt{50}$，和为 $6$。",
+    ),
     tip: t(
       "If a squared expression equals a number, take square roots and keep both signs: $(x - 2)^2 = 9$ means $x - 2 = \\pm 3$, so $x = 5$ or $x = -1$. Then pick the one the question requests. Using only the positive root would miss a solution and could give the wrong one.",
       "平方式等于一个数时，两边开方并保留正负两个符号：$(x - 2)^2 = 9$ 即 $x - 2 = \\pm 3$，所以 $x = 5$ 或 $x = -1$。再按题目要求选取。只取正根会漏解，还可能选错。",
@@ -165,6 +357,18 @@ export const satExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "sat-exam-solving-quadratic-equations-using-the-zero-product-rule": {
+    intro: t(
+      "A machine stops when $(x - 4)(x + 7) = 0$. A product is zero only when one of its factors is zero, so this happens at $x = 4$ and at $x = -7$.\n\nCheck: $(4 - 4)(4 + 7) = 0$ and $(-7 - 4)(-7 + 7) = 0$.\n\nIn this lesson we solve factored equations by setting each factor equal to zero.",
+      "一台机器在 $(x - 4)(x + 7) = 0$ 时停止。乘积为零当且仅当某个因式为零，所以这发生在 $x = 4$ 和 $x = -7$ 时。\n\n检验：$(4 - 4)(4 + 7) = 0$，$(-7 - 4)(-7 + 7) = 0$。\n\n本课我们令每个因式为零来解已分解的方程。",
+    ),
+    watch: t(
+      "The rule needs a product equal to zero: $(x - 2)(x + 1) = 4$ does not give $x = 2$ or $x = -1$.",
+      "这条法则要求乘积等于零：$(x - 2)(x + 1) = 4$ 不能得出 $x = 2$ 或 $x = -1$。",
+    ),
+    hardWatch: t(
+      "Divide by the coefficient inside a factor: $7x - 21 = 0$ gives $x = 3$, not $21$.",
+      "因式里有系数时要除以它：$7x - 21 = 0$ 得 $x = 3$，不是 $21$。",
+    ),
     tip: t(
       "A product equals zero only if one of its factors is zero. So set each factor to zero and solve: $(x + 2)(x - 9) = 0$ gives $x = -2$ or $x = 9$. Notice the sign flips; offering the constants as they appear in the factors is the classic wrong answer.",
       "乘积为零，当且仅当至少一个因式为零。所以令每个因式为零再求解：$(x + 2)(x - 9) = 0$ 得 $x = -2$ 或 $x = 9$。注意符号相反；把因式里的常数原样当作解是典型的错误答案。",
@@ -175,6 +379,18 @@ export const satExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "sat-exam-solving-quadratic-equations-by-factoring": {
+    intro: t(
+      "A rectangle of area $24$ has sides $x$ and $x - 2$, so $x^2 - 2x = 24$. Moving $24$ across gives $x^2 - 2x - 24 = (x - 6)(x + 4) = 0$, and only $x = 6$ is a length.\n\nCheck: the sides are $6$ and $4$, and $6 \\times 4 = 24$.\n\nIn this lesson we move every term to one side, factor and solve.",
+      "面积为 $24$ 的长方形边长是 $x$ 和 $x - 2$，所以 $x^2 - 2x = 24$。移项得 $x^2 - 2x - 24 = (x - 6)(x + 4) = 0$，只有 $x = 6$ 能作长度。\n\n检验：边长是 $6$ 和 $4$，而 $6 \\times 4 = 24$。\n\n本课我们把各项移到一边，分解因式后求解。",
+    ),
+    watch: t(
+      "Move every term to one side first: $x^2 = 5x$ becomes $x(x - 5) = 0$, so $x = 0$ or $x = 5$; dividing by $x$ would lose $x = 0$.",
+      "先把各项移到一边：$x^2 = 5x$ 变成 $x(x - 5) = 0$，所以 $x = 0$ 或 $x = 5$；两边除以 $x$ 会丢掉 $x = 0$。",
+    ),
+    hardWatch: t(
+      "Answer the expression asked, not $x$: if $x = 6$ and the question asks for $x - 2$, the answer is $4$.",
+      "回答题目问的式子，而不是 $x$：若 $x = 6$，题目问 $x - 2$，答案是 $4$。",
+    ),
     tip: t(
       "Factor the trinomial into two binomials, set each to zero, and compare the solutions. For $x^2 - 9x + 20 = 0$, the numbers multiplying to $20$ and adding to $-9$ are $-4$ and $-5$, so $x = 4$ or $x = 5$. Answer only with the solution the question names, such as the greater one.",
       "把三项式分解成两个二项式，令每个为零，再比较两个解。对 $x^2 - 9x + 20 = 0$，积为 $20$、和为 $-9$ 的两个数是 $-4$ 和 $-5$，所以 $x = 4$ 或 $x = 5$。只回答题目指定的那个解，比如较大的解。",
@@ -185,6 +401,18 @@ export const satExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "sat-exam-solving-quadratic-equations-with-leading-coefficients-by-factoring": {
+    intro: t(
+      "A designer needs $2x^2 + x - 6 = 0$ to size a frame. It factors as $(2x - 3)(x + 2) = 0$, so $x = \\frac{3}{2}$ or $x = -2$.\n\nCheck: $2 \\times (-2)^2 + (-2) - 6 = 8 - 2 - 6 = 0$.\n\nIn this lesson we factor quadratics whose leading coefficient is not $1$ and solve each factor.",
+      "设计师要用 $2x^2 + x - 6 = 0$ 来确定画框的尺寸。它分解为 $(2x - 3)(x + 2) = 0$，所以 $x = \\frac{3}{2}$ 或 $x = -2$。\n\n检验：$2 \\times (-2)^2 + (-2) - 6 = 8 - 2 - 6 = 0$。\n\n本课我们分解首项系数不为 $1$ 的二次式，再分别解每个因式。",
+    ),
+    watch: t(
+      "A factor with a coefficient gives a fraction: $4x + 3 = 0$ gives $x = -\\frac{3}{4}$, not $-3$.",
+      "带系数的因式会给出分数解：$4x + 3 = 0$ 得 $x = -\\frac{3}{4}$，不是 $-3$。",
+    ),
+    hardWatch: t(
+      "Check the signs by expanding: $(2x - 1)(x + 3) = 2x^2 + 5x - 3$, so its negative solution is $-3$.",
+      "展开检查符号：$(2x - 1)(x + 3) = 2x^2 + 5x - 3$，所以它的负解是 $-3$。",
+    ),
     tip: t(
       "With a leading coefficient, try factors like $(ax + m)(x + n)$ whose outer and inner products add to the middle term, then set each to zero. For example, $3x^2 + x - 2 = (3x - 2)(x + 1)$, so $x = \\frac{2}{3}$ or $x = -1$. Check the middle term by expanding.",
       "有首项系数时，试写成 $(ax + m)(x + n)$ 的形式，使外项积与内项积之和等于中间项，再令每个因式为零。例如 $3x^2 + x - 2 = (3x - 2)(x + 1)$，所以 $x = \\frac{2}{3}$ 或 $x = -1$。展开检验中间项。",
@@ -195,6 +423,18 @@ export const satExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "sat-exam-solving-quadratic-equations-using-the-quadratic-formula": {
+    intro: t(
+      "An engineer needs the solutions of $x^2 - 4x + 1 = 0$, which does not factor over the integers. The formula $x = \\frac{-b \\pm \\sqrt{b^2 - 4ac}}{2a}$ gives $x = \\frac{4 \\pm \\sqrt{12}}{2} = 2 \\pm \\sqrt{3}$.\n\nCheck: the solutions add to $4$ and multiply to $4 - 3 = 1$, as $-\\frac{b}{a}$ and $\\frac{c}{a}$ require.\n\nIn this lesson we apply the quadratic formula and simplify the square root.",
+      "工程师要求 $x^2 - 4x + 1 = 0$ 的解，它在整数范围内不能分解。公式 $x = \\frac{-b \\pm \\sqrt{b^2 - 4ac}}{2a}$ 给出 $x = \\frac{4 \\pm \\sqrt{12}}{2} = 2 \\pm \\sqrt{3}$。\n\n检验：两个解之和为 $4$，之积为 $4 - 3 = 1$，与 $-\\frac{b}{a}$ 和 $\\frac{c}{a}$ 相符。\n\n本课我们使用求根公式，并化简其中的平方根。",
+    ),
+    watch: t(
+      "When $b$ is negative, $-b$ is positive, and the denominator is $2a$: for $2x^2 - 6x + 1 = 0$, $x = \\frac{6 \\pm \\sqrt{28}}{4}$.",
+      "$b$ 为负时 $-b$ 为正，分母是 $2a$：对 $2x^2 - 6x + 1 = 0$，$x = \\frac{6 \\pm \\sqrt{28}}{4}$。",
+    ),
+    hardWatch: t(
+      "$(r - s)^2$ is the discriminant divided by $a^2$: for $x^2 + 2x - 4 = 0$ it is $4 + 16 = 20$.",
+      "$(r - s)^2$ 等于判别式除以 $a^2$：对 $x^2 + 2x - 4 = 0$，它是 $4 + 16 = 20$。",
+    ),
     tip: t(
       "When factoring fails, use $x = \\frac{-b \\pm \\sqrt{b^2 - 4ac}}{2a}$. Identify $a$, $b$ and $c$ with signs, compute the discriminant, simplify the radical, and divide every term by $2a$. For $x^2 - 6x + 7 = 0$: $x = \\frac{6 \\pm \\sqrt{8}}{2} = 3 \\pm \\sqrt{2}$. Do not divide only the first term.",
       "无法分解时，用求根公式 $x = \\frac{-b \\pm \\sqrt{b^2 - 4ac}}{2a}$。带符号确定 $a$、$b$、$c$，算出判别式，化简根式，再把每一项都除以 $2a$。对 $x^2 - 6x + 7 = 0$：$x = \\frac{6 \\pm \\sqrt{8}}{2} = 3 \\pm \\sqrt{2}$。不要只除第一项。",
@@ -205,6 +445,18 @@ export const satExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "sat-exam-quadratic-equations-with-one-real-solution": {
+    intro: t(
+      "A ball's path touches the ground at exactly one point when its equation has one real solution. For $x^2 - 6x + c = 0$ that needs the discriminant $36 - 4c$ to be $0$, so $c = 9$.\n\nCheck: $x^2 - 6x + 9 = (x - 3)^2$, which is zero only at $x = 3$.\n\nIn this lesson we set the discriminant to zero to find a missing coefficient.",
+      "小球的轨迹恰好在一点接触地面时，方程恰有一个实数解。对 $x^2 - 6x + c = 0$，这要求判别式 $36 - 4c$ 为 $0$，所以 $c = 9$。\n\n检验：$x^2 - 6x + 9 = (x - 3)^2$，只在 $x = 3$ 时为零。\n\n本课我们令判别式为零来求缺少的系数。",
+    ),
+    watch: t(
+      "Include the leading coefficient in $4ac$: $7x^2 - 14x + c = 0$ needs $196 - 28c = 0$, so $c = 7$.",
+      "$4ac$ 中要算上首项系数：$7x^2 - 14x + c = 0$ 要求 $196 - 28c = 0$，所以 $c = 7$。",
+    ),
+    hardWatch: t(
+      "Both signs of $b$ make the discriminant zero: $b^2 = 36$ gives $b = 6$ or $b = -6$, and the condition on $b$ picks one.",
+      "$b$ 取正负两个值都能使判别式为零：$b^2 = 36$ 得 $b = 6$ 或 $b = -6$，由题目对 $b$ 的条件选出一个。",
+    ),
     tip: t(
       "Exactly one real solution means the discriminant is zero: $b^2 - 4ac = 0$. Substitute the known coefficients and solve for $c$. For $3x^2 - 12x + c = 0$: $144 - 12c = 0$, so $c = 12$. Keep the leading coefficient in $4ac$; leaving it out gives the distractor.",
       "恰有一个实数解意味着判别式为零：$b^2 - 4ac = 0$。代入已知系数，解出 $c$。对 $3x^2 - 12x + c = 0$：$144 - 12c = 0$，所以 $c = 12$。别把首项系数从 $4ac$ 中漏掉，否则会落入干扰项。",
@@ -215,6 +467,18 @@ export const satExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "sat-exam-quadratic-equations-with-two-real-solutions": {
+    intro: t(
+      "A designer wants a curve to cross a line twice. For $x^2 + 6x + c = 0$ that needs two real solutions, that is, $36 - 4c > 0$, or $c < 9$.\n\nCheck: $c = 8$ gives $x^2 + 6x + 8 = (x + 2)(x + 4)$, with solutions $-2$ and $-4$.\n\nIn this lesson we solve an inequality in the discriminant to find which parameter values give two solutions.",
+      "设计师希望曲线与直线相交两次。对 $x^2 + 6x + c = 0$，这需要两个实数解，即 $36 - 4c > 0$，也就是 $c < 9$。\n\n检验：$c = 8$ 时 $x^2 + 6x + 8 = (x + 2)(x + 4)$，解为 $-2$ 和 $-4$。\n\n本课我们解关于判别式的不等式，求出使方程有两个解的参数值。",
+    ),
+    watch: t(
+      "A negative leading coefficient changes the sign of $-4ac$: for $-2x^2 + 4x + c = 0$, $b^2 - 4ac = 16 + 8c$.",
+      "首项系数为负时 $-4ac$ 的符号会改变：对 $-2x^2 + 4x + c = 0$，$b^2 - 4ac = 16 + 8c$。",
+    ),
+    hardWatch: t(
+      "When the bound is not a whole number, round down: $c < \\frac{25}{4}$ allows at most $c = 6$.",
+      "界限不是整数时要向下取：$c < \\frac{25}{4}$ 时 $c$ 最大为 $6$。",
+    ),
     tip: t(
       "Two distinct real solutions require a positive discriminant, $b^2 - 4ac > 0$. Turn it into an inequality for the unknown, then test the options. For $x^2 + 6x + c = 0$: $36 - 4c > 0$, so $c < 9$. The boundary value itself gives just one solution, so it does not qualify.",
       "有两个不同实数解要求判别式为正，即 $b^2 - 4ac > 0$。把它化成关于未知数的不等式，再检验选项。对 $x^2 + 6x + c = 0$：$36 - 4c > 0$，所以 $c < 9$。边界值只给出一个解，不符合要求。",
@@ -225,6 +489,18 @@ export const satExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "sat-exam-quadratic-equations-with-no-real-solutions": {
+    intro: t(
+      "A curve misses a line entirely when their equation has no real solutions. For $x^2 + 4x + c = 0$ that needs $16 - 4c < 0$, that is, $c > 4$.\n\nCheck: $c = 5$ gives $x^2 + 4x + 5 = (x + 2)^2 + 1$, which is never $0$.\n\nIn this lesson we make the discriminant negative to find the parameter values with no real solutions.",
+      "曲线与直线完全不相交时，方程没有实数解。对 $x^2 + 4x + c = 0$，这要求 $16 - 4c < 0$，即 $c > 4$。\n\n检验：$c = 5$ 时 $x^2 + 4x + 5 = (x + 2)^2 + 1$，永远不为 $0$。\n\n本课我们令判别式为负，求出使方程没有实数解的参数值。",
+    ),
+    watch: t(
+      "A negative leading coefficient reverses the bound: $-x^2 + 2x + c = 0$ has no real solutions when $4 + 4c < 0$, that is, $c < -1$.",
+      "首项系数为负时界限的方向相反：$-x^2 + 2x + c = 0$ 在 $4 + 4c < 0$，即 $c < -1$ 时没有实数解。",
+    ),
+    hardWatch: t(
+      "When the bound is not a whole number, round up: $c > \\frac{9}{4}$ makes the least integer $c = 3$.",
+      "界限不是整数时要向上取：$c > \\frac{9}{4}$ 时最小的整数是 $c = 3$。",
+    ),
     tip: t(
       "No real solutions means the discriminant is negative, $b^2 - 4ac < 0$, so the graph never meets the $x$-axis. Solve for the unknown and pick the option satisfying it. For $x^2 + 4x + c = 0$: $16 - 4c < 0$, so $c > 4$. Check the direction of the inequality before choosing.",
       "没有实数解表示判别式为负，即 $b^2 - 4ac < 0$，图像与 $x$ 轴没有交点。解出未知数的范围，选出满足条件的选项。对 $x^2 + 4x + c = 0$：$16 - 4c < 0$，所以 $c > 4$。选择前先确认不等号的方向。",
@@ -235,6 +511,18 @@ export const satExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "sat-exam-counting-solutions-to-quadratic-equations": {
+    intro: t(
+      "Before solving $x^2 + 4x + 5 = 0$, a student checks whether there is anything to find. The discriminant is $16 - 20 = -4$, which is negative, so there are no real solutions.\n\nCheck: $x^2 + 4x + 5 = (x + 2)^2 + 1$ is never less than $1$.\n\nIn this lesson we read the number of real solutions from the sign of the discriminant.",
+      "在解 $x^2 + 4x + 5 = 0$ 之前，学生先看看有没有解。判别式为 $16 - 20 = -4$，是负的，所以没有实数解。\n\n检验：$x^2 + 4x + 5 = (x + 2)^2 + 1$ 永远不小于 $1$。\n\n本课我们根据判别式的符号判断实数解的个数。",
+    ),
+    watch: t(
+      "A missing $x$ term means $b = 0$: $x^2 + 9 = 0$ has discriminant $-36$, so it has no real solutions.",
+      "没有一次项意味着 $b = 0$：$x^2 + 9 = 0$ 的判别式为 $-36$，没有实数解。",
+    ),
+    hardWatch: t(
+      "Keep $a$ in $4ac$: $3x^2 + 10x + 9 = 0$ has discriminant $100 - 108 = -8$, not $100 - 36 = 64$.",
+      "$4ac$ 中要保留 $a$：$3x^2 + 10x + 9 = 0$ 的判别式是 $100 - 108 = -8$，不是 $100 - 36 = 64$。",
+    ),
     tip: t(
       "Compute the discriminant $b^2 - 4ac$ and look at its sign: positive means exactly two real solutions, zero means one, negative means none. For $x^2 + 6x + 2 = 0$, it is $36 - 8 = 28$, so there are two. You never have to find the solutions themselves.",
       "计算判别式 $b^2 - 4ac$ 并看它的符号：为正有两个实数解，为零有一个，为负没有。对 $x^2 + 6x + 2 = 0$，判别式是 $36 - 8 = 28$，所以有两个解。完全不必真的把解求出来。",
@@ -245,6 +533,18 @@ export const satExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "sat-exam-applying-vieta-s-formulas": {
+    intro: t(
+      "For $2x^2 - 7x + 3 = 0$, the solutions add to $-\\frac{b}{a} = \\frac{7}{2}$ and multiply to $\\frac{c}{a} = \\frac{3}{2}$, and the SAT often asks for one of these without the solutions themselves.\n\nCheck: the solutions are $3$ and $\\frac{1}{2}$, with sum $\\frac{7}{2}$ and product $\\frac{3}{2}$.\n\nIn this lesson we read the sum and the product of the solutions from the coefficients.",
+      "对 $2x^2 - 7x + 3 = 0$，两个解之和为 $-\\frac{b}{a} = \\frac{7}{2}$，之积为 $\\frac{c}{a} = \\frac{3}{2}$；SAT 常常只问其中之一，而不问解本身。\n\n检验：两个解是 $3$ 和 $\\frac{1}{2}$，和为 $\\frac{7}{2}$，积为 $\\frac{3}{2}$。\n\n本课我们从系数读出两个解的和与积。",
+    ),
+    watch: t(
+      "Rearrange into the form $ax^2 + bx + c = 0$ first: $x^2 = 5x - 6$ becomes $x^2 - 5x + 6 = 0$, so the sum is $5$.",
+      "先整理成 $ax^2 + bx + c = 0$ 的形式：$x^2 = 5x - 6$ 变成 $x^2 - 5x + 6 = 0$，所以和为 $5$。",
+    ),
+    hardWatch: t(
+      "The product is $\\frac{c}{a}$ with no minus sign: $x^2 + 3x - 10 = 0$ has product $-10$, the sign of $c$ itself.",
+      "积是 $\\frac{c}{a}$，不带负号：$x^2 + 3x - 10 = 0$ 的解之积是 $-10$，符号就是 $c$ 本身的符号。",
+    ),
     tip: t(
       "For $ax^2 + bx + c = 0$, the solutions add up to $-\\frac{b}{a}$, so you do not need to solve. First move everything to one side, then read the coefficients with signs. For $2x^2 - 5x + 1 = 0$, the sum is $\\frac{5}{2}$. Forgetting the negative sign or the division by $a$ produces the wrong options.",
       "对 $ax^2 + bx + c = 0$，两解之和是 $-\\frac{b}{a}$，所以不必解方程。先把所有项移到一边，再带符号读出系数。对 $2x^2 - 5x + 1 = 0$，两解之和为 $\\frac{5}{2}$。漏掉负号或忘了除以 $a$ 就会选到错误选项。",
@@ -255,6 +555,18 @@ export const satExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "sat-exam-solving-quadratic-equations-with-unknown-parameters": {
+    intro: t(
+      "A puzzle says that $3$ is a solution of $x^2 - kx + 12 = 0$. The solutions multiply to $12$, so the other one is $12 \\div 3 = 4$, and then $k = 3 + 4 = 7$.\n\nCheck: $9 - 21 + 12 = 0$ and $16 - 28 + 12 = 0$.\n\nIn this lesson we use one known solution to find the other one and the missing coefficient.",
+      "一道谜题说 $3$ 是 $x^2 - kx + 12 = 0$ 的解。两个解之积为 $12$，所以另一个解是 $12 \\div 3 = 4$，于是 $k = 3 + 4 = 7$。\n\n检验：$9 - 21 + 12 = 0$，$16 - 28 + 12 = 0$。\n\n本课我们用一个已知的解求出另一个解和缺少的系数。",
+    ),
+    watch: t(
+      "A negative product means opposite signs: if $2$ solves $x^2 - kx - 8 = 0$, the other solution is $-4$.",
+      "积为负说明两个解异号：若 $2$ 是 $x^2 - kx - 8 = 0$ 的解，另一个解是 $-4$。",
+    ),
+    hardWatch: t(
+      "Substituting also works: if $5$ solves $x^2 + kx + 10 = 0$, then $25 + 5k + 10 = 0$, so $k = -7$.",
+      "代入也可以：若 $5$ 是 $x^2 + kx + 10 = 0$ 的解，则 $25 + 5k + 10 = 0$，所以 $k = -7$。",
+    ),
     tip: t(
       "If one solution is known and the constant term is given, use the product of the solutions. In $x^2 - kx + 15 = 0$, the solutions multiply to $15$, so if one is $5$, the other is $3$. You do not need $k$ for this, and the sum formula would not help since it contains $k$.",
       "已知一个解和常数项时，用两解之积。在 $x^2 - kx + 15 = 0$ 中，两解之积为 $15$，若一个解是 $5$，另一个就是 $3$。这里不需要知道 $k$，而两解之和的公式含有 $k$，帮不上忙。",
@@ -265,6 +577,18 @@ export const satExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "sat-exam-quadratic-functions": {
+    intro: t(
+      "A company's cost for $x$ units is $f(x) = 2x^2 - 3x + 5$ dollars. Finding $f(4)$ means squaring first: $2 \\times 16 - 12 + 5 = 25$.\n\nCheck: $f(4) = 4 \\times (2 \\times 4 - 3) + 5 = 20 + 5 = 25$.\n\nIn this lesson we evaluate quadratic functions at positive and negative inputs.",
+      "某公司生产 $x$ 件产品的成本是 $f(x) = 2x^2 - 3x + 5$ 美元。求 $f(4)$ 要先算平方：$2 \\times 16 - 12 + 5 = 25$。\n\n检验：$f(4) = 4 \\times (2 \\times 4 - 3) + 5 = 20 + 5 = 25$。\n\n本课我们求二次函数在正数和负数输入处的值。",
+    ),
+    watch: t(
+      "The order of operations still applies when the leading coefficient is negative: for $f(x) = -x^2 + 1$, $f(3) = -9 + 1 = -8$, not $9 + 1$.",
+      "首项系数为负时，运算顺序照样适用：对 $f(x) = -x^2 + 1$，$f(3) = -9 + 1 = -8$，不是 $9 + 1$。",
+    ),
+    hardWatch: t(
+      "$-x^2$ and $(-x)^2$ differ: at $x = 3$ the first is $-9$ and the second is $9$.",
+      "$-x^2$ 与 $(-x)^2$ 不同：$x = 3$ 时前者是 $-9$，后者是 $9$。",
+    ),
     tip: t(
       "To evaluate a quadratic, replace $x$ with the input and follow the order of operations: square first, then multiply by the coefficient, then add. For $g(x) = 2x^2 - 3x + 1$ at $x = 3$: $2(9) - 9 + 1 = 10$. Multiplying before squaring, which would treat $2x^2$ as $(2x)^2$, gives the wrong value.",
       "求二次函数的值时，把 $x$ 换成输入值，按运算顺序来：先平方，再乘系数，最后相加减。对 $g(x) = 2x^2 - 3x + 1$，在 $x = 3$ 处：$2(9) - 9 + 1 = 10$。如果先乘后平方，把 $2x^2$ 当成 $(2x)^2$，结果就错了。",
@@ -275,6 +599,18 @@ export const satExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "sat-exam-graphs-of-quadratic-functions": {
+    intro: t(
+      "A designer reads a parabola off a screen: its lowest point is at $(2, -3)$, so its vertex is $(2, -3)$ and an equation is $y = (x - 2)^2 - 3$.\n\nCheck: at $x = 3$ the equation gives $1 - 3 = -2$, one unit above the vertex, as a parabola with leading coefficient $1$ should be.\n\nIn this lesson we read the vertex of a parabola from its graph and match the graph to an equation in vertex form.",
+      "设计师从屏幕上读一条抛物线：它的最低点在 $(2, -3)$，所以顶点是 $(2, -3)$，一个方程是 $y = (x - 2)^2 - 3$。\n\n检验：$x = 3$ 时方程给出 $1 - 3 = -2$，比顶点高一个单位，符合首项系数为 $1$ 的抛物线。\n\n本课我们从图象读出抛物线的顶点，并把图象与顶点式方程对应起来。",
+    ),
+    watch: t(
+      "A vertex on an axis has a zero coordinate: a parabola whose lowest point is $(0, 5)$ has vertex $(0, 5)$.",
+      "顶点在坐标轴上时有一个坐标为零：最低点是 $(0, 5)$ 的抛物线，顶点就是 $(0, 5)$。",
+    ),
+    hardWatch: t(
+      "A wider parabola has a leading coefficient between $-1$ and $1$: $y = \\frac{1}{2}(x - 1)^2$ rises only $\\frac{1}{2}$ one unit from its vertex.",
+      "更宽的抛物线首项系数在 $-1$ 与 $1$ 之间：$y = \\frac{1}{2}(x - 1)^2$ 离顶点一个单位时只上升 $\\frac{1}{2}$。",
+    ),
     tip: t(
       "The vertex is the turning point of a parabola: the lowest point when it opens up, the highest when it opens down. Find that point on the grid and read its coordinates, $x$ first and then $y$. Writing them in the opposite order, or using an intercept instead, is the typical mistake.",
       "顶点是抛物线的转折点：开口向上时是最低点，开口向下时是最高点。在网格上找到这个点，先读 $x$ 再读 $y$。把坐标顺序写反，或者误用截距，是典型的错误。",
@@ -285,6 +621,18 @@ export const satExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "sat-exam-finding-extreme-values-of-quadratic-functions-in-vertex-form": {
+    intro: t(
+      "A factory's cost per item is $f(x) = 3(x - 4)^2 + 7$ dollars when it runs $x$ machines. The square is never negative, so the least cost is $7$ dollars, with $4$ machines.\n\nCheck: $f(4) = 0 + 7 = 7$, while $f(5) = 3 + 7 = 10$.\n\nIn this lesson we read the maximum or minimum value, and where it occurs, from vertex form.",
+      "工厂开 $x$ 台机器时每件产品的成本是 $f(x) = 3(x - 4)^2 + 7$ 美元。平方永远不为负，所以最低成本是 $7$ 美元，此时开 $4$ 台机器。\n\n检验：$f(4) = 0 + 7 = 7$，而 $f(5) = 3 + 7 = 10$。\n\n本课我们从顶点式读出最大值或最小值，以及取得它的位置。",
+    ),
+    watch: t(
+      "A parabola that opens up has no maximum: $f(x) = 7(x - 1)^2 + 3$ has minimum $3$ and grows without bound.",
+      "开口向上的抛物线没有最大值：$f(x) = 7(x - 1)^2 + 3$ 的最小值是 $3$，而函数值可以无限增大。",
+    ),
+    hardWatch: t(
+      "Vertex form can hide a sign: $g(x) = -(x + 3)^2 + 2$ peaks at $x = -3$, because $x + 3 = x - (-3)$.",
+      "顶点式里可能藏着符号：$g(x) = -(x + 3)^2 + 2$ 在 $x = -3$ 处最大，因为 $x + 3 = x - (-3)$。",
+    ),
     tip: t(
       "In $f(x) = a(x - h)^2 + k$ with $a > 0$, the square is never negative, so the output is smallest when the square is zero. That least output is $k$. For example, $4(x - 1)^2 + 9$ has minimum value $9$. Do not answer with $h$, which is the input that produces it.",
       "在 $f(x) = a(x - h)^2 + k$ 中，若 $a > 0$，平方项不会为负，所以平方项为零时输出最小，最小值就是 $k$。例如 $4(x - 1)^2 + 9$ 的最小值是 $9$。不要回答 $h$，它只是取得最小值时的输入。",
@@ -295,6 +643,18 @@ export const satExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "sat-exam-using-standard-and-factored-forms-to-reason-about-quadratic-functions": {
+    intro: t(
+      "A designer models a curve with $f(x) = 2(x - 1)(x - 5)$. The factored form shows the zeros $1$ and $5$, and $x = 0$ gives the $y$-intercept: $2 \\times (-1) \\times (-5) = 10$.\n\nCheck: the standard form is $2x^2 - 12x + 10$, whose constant term is $10$.\n\nIn this lesson we move between factored and standard forms to read intercepts and coefficients.",
+      "设计师用 $f(x) = 2(x - 1)(x - 5)$ 表示一条曲线。因式式显示零点是 $1$ 和 $5$，令 $x = 0$ 得 $y$ 轴截距：$2 \\times (-1) \\times (-5) = 10$。\n\n检验：一般式是 $2x^2 - 12x + 10$，常数项为 $10$。\n\n本课我们在因式式与一般式之间转换，读出截距和系数。",
+    ),
+    watch: t(
+      "Without a leading factor there is nothing extra to multiply: $(x - 2)(x - 3)$ has $y$-intercept $6$.",
+      "没有首项因数时就不用再乘：$(x - 2)(x - 3)$ 的 $y$ 轴截距是 $6$。",
+    ),
+    hardWatch: t(
+      "In $(x + 2)(x - 5)$ the zeros are $-2$ and $5$, so $b = -(-2 + 5) = -3$.",
+      "在 $(x + 2)(x - 5)$ 中零点是 $-2$ 和 $5$，所以 $b = -(-2 + 5) = -3$。",
+    ),
     tip: t(
       "The $y$-intercept is the output at $x = 0$. In factored form, substitute zero and multiply everything, including the leading number. For $f(x) = 2(x + 3)(x - 4)$: $f(0) = 2(3)(-4) = -24$, so the intercept is $(0, -24)$. Do not confuse this with the $x$-intercepts, which come from the factors.",
       "$y$ 轴截距就是 $x = 0$ 时的输出。在因式形式中，代入零后把所有数相乘，包括最前面的系数。对 $f(x) = 2(x + 3)(x - 4)$：$f(0) = 2(3)(-4) = -24$，截距是 $(0, -24)$。别把它和 $x$ 轴截距混淆，后者来自各个因式。",
@@ -305,6 +665,18 @@ export const satExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "sat-exam-using-symmetry-to-reason-about-quadratic-functions": {
+    intro: t(
+      "A fountain's arc of water has the same height, $3$ meters, at $x = 1$ and at $x = 7$. By symmetry the top of the arc is halfway between, at $x = 4$.\n\nCheck: $4 - 1 = 3$ and $7 - 4 = 3$.\n\nIn this lesson we use the symmetry of a parabola to find its axis and matching points.",
+      "喷泉的水柱在 $x = 1$ 和 $x = 7$ 处高度相同，都是 $3$ 米。由对称性，水柱的最高点在两者正中间，即 $x = 4$。\n\n检验：$4 - 1 = 3$，$7 - 4 = 3$。\n\n本课我们利用抛物线的对称性求对称轴和对称点。",
+    ),
+    watch: t(
+      "The axis can fall between whole numbers: $f(2) = f(5)$ puts it at $x = 3.5$.",
+      "对称轴可能不在整数处：$f(2) = f(5)$ 说明对称轴是 $x = 3.5$。",
+    ),
+    hardWatch: t(
+      "A point to the right reflects to the left: if the axis is $x = 2$ and $(6, 9)$ is on the graph, so is $(-2, 9)$.",
+      "右边的点会对称到左边：若对称轴是 $x = 2$，且 $(6, 9)$ 在图象上，则 $(-2, 9)$ 也在图象上。",
+    ),
     tip: t(
       "A parabola is symmetric about the vertical line through its vertex, so two inputs with equal outputs sit equally far from that line. Therefore the vertex's $x$-coordinate is their average: if $f(1) = f(7)$, it is $\\frac{1 + 7}{2} = 4$. You do not need the equation of $f$.",
       "抛物线关于过顶点的竖直线对称，所以输出相等的两个输入到这条线的距离相等。因此顶点的 $x$ 坐标就是它们的平均数：若 $f(1) = f(7)$，则为 $\\frac{1 + 7}{2} = 4$。不需要知道 $f$ 的解析式。",
@@ -315,6 +687,18 @@ export const satExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "sat-exam-identifying-quadratic-functions-from-tabular-data": {
+    intro: t(
+      "A student records a quadratic's outputs $5, 2, 1, 2, 5$ for $x = -2$ to $2$. The outputs are symmetric about $x = 0$, where the least output $1$ occurs, and one step away they are $1$ more, so $f(x) = x^2 + 1$.\n\nCheck: $f(2) = 4 + 1 = 5$, as in the table.\n\nIn this lesson we find the vertex and the leading coefficient of a quadratic from a table of values.",
+      "学生记录了一个二次函数在 $x = -2$ 到 $2$ 处的输出 $5, 2, 1, 2, 5$。输出关于 $x = 0$ 对称，最小输出 $1$ 出现在那里，离开一步就多 $1$，所以 $f(x) = x^2 + 1$。\n\n检验：$f(2) = 4 + 1 = 5$，与表中一致。\n\n本课我们从数值表求二次函数的顶点和首项系数。",
+    ),
+    watch: t(
+      "A downward parabola has its greatest output at the vertex: outputs $3, 6, 7, 6, 3$ for $x = -2$ to $2$ give vertex $(0, 7)$ and leading coefficient $-1$.",
+      "开口向下的抛物线在顶点处输出最大：$x = -2$ 到 $2$ 处的输出 $3, 6, 7, 6, 3$ 给出顶点 $(0, 7)$，首项系数为 $-1$。",
+    ),
+    hardWatch: t(
+      "Values away from the vertex grow as squares, not in equal steps: with leading coefficient $5$ they are $5$, $20$ and $45$ above the vertex value.",
+      "离开顶点后的值按平方增长，而不是等量增长：首项系数为 $5$ 时，它们比顶点值分别大 $5$、$20$、$45$。",
+    ),
     tip: t(
       "In a table, the vertex is the input around which outputs mirror each other, with its output in the centre. Use $f(x) = a(x - h)^2 + k$: the output's change one step from the vertex equals $a$. If $f$ goes $7, 4, 3, 4, 7$ centred at $x = 1$, then $f(x) = (x - 1)^2 + 3$.",
       "在表格中，顶点是输出左右对称的中心输入，它的输出位于正中。用 $f(x) = a(x - h)^2 + k$：离顶点一步时输出的变化量就是 $a$。若输出依次为 $7, 4, 3, 4, 7$，中心在 $x = 1$，则 $f(x) = (x - 1)^2 + 3$。",
@@ -325,6 +709,18 @@ export const satExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "sat-exam-modeling-number-problems-with-quadratic-equations": {
+    intro: t(
+      "A rectangle's length is $3$ meters more than its width, and its area is $40$ square meters, so $x(x + 3) = 40$. Then $x^2 + 3x - 40 = (x - 5)(x + 8) = 0$, and the width is $5$ meters.\n\nCheck: $5 \\times 8 = 40$ and $8 - 5 = 3$.\n\nIn this lesson we turn number facts into quadratic equations and keep the solution that fits the context.",
+      "一个长方形的长比宽多 $3$ 米，面积是 $40$ 平方米，所以 $x(x + 3) = 40$。于是 $x^2 + 3x - 40 = (x - 5)(x + 8) = 0$，宽是 $5$ 米。\n\n检验：$5 \\times 8 = 40$，$8 - 5 = 3$。\n\n本课我们把数量关系写成二次方程，并保留符合情境的解。",
+    ),
+    watch: t(
+      "Both solutions can be integers: $x(x + 1) = 6$ gives $x = 2$ or $x = -3$, and only $2$ is positive.",
+      "两个解可能都是整数：$x(x + 1) = 6$ 得 $x = 2$ 或 $x = -3$，只有 $2$ 是正数。",
+    ),
+    hardWatch: t(
+      "The question may ask for either number: if the integers are $x$ and $x + 7$ and $x = 4$, the greater one is $11$.",
+      "题目可能问其中任一个数：若两个整数是 $x$ 和 $x + 7$，且 $x = 4$，则较大的是 $11$。",
+    ),
     tip: t(
       'Translate word by word. Name one number $x$, write the other in terms of it ("$3$ greater" becomes $x + 3$), and let "product" mean multiply. So a number and one $3$ greater with product $40$ give $x(x + 3) = 40$. Options that add the numbers misread "product".',
       "逐词翻译。设一个数为 $x$，用它表示另一个数（“大 $3$”写成 $x + 3$），“积”表示相乘。所以一个数与比它大 $3$ 的数之积为 $40$，就写成 $x(x + 3) = 40$。把两数相加的选项误读了“积”。",
@@ -335,6 +731,18 @@ export const satExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "sat-exam-solving-border-problems-with-quadratic-equations": {
+    intro: t(
+      "A $10$ by $6$ inch picture gets a frame of width $x$ inches, and the framed picture covers $96$ square inches, so $(10 + 2x)(6 + 2x) = 96$. The width $x = 1$ works, since $12 \\times 8 = 96$.\n\nCheck: $(10 + 2)(6 + 2) = 12 \\times 8 = 96$.\n\nIn this lesson we set up and solve border problems, adding $2x$ to each dimension.",
+      "一幅 $10$ 英寸乘 $6$ 英寸的画加上宽 $x$ 英寸的画框后，共占 $96$ 平方英寸，所以 $(10 + 2x)(6 + 2x) = 96$。宽度 $x = 1$ 符合，因为 $12 \\times 8 = 96$。\n\n检验：$(10 + 2)(6 + 2) = 12 \\times 8 = 96$。\n\n本课我们列出并解边框问题，长和宽各加 $2x$。",
+    ),
+    watch: t(
+      "A border on only two sides adds $x$, not $2x$: a strip along one length and one width of a $5$ by $3$ rug gives $(5 + x)(3 + x)$.",
+      "只有两边有边框时只加 $x$，不是 $2x$：沿 $5$ 乘 $3$ 的地毯的一条长边和一条宽边加一圈，得 $(5 + x)(3 + x)$。",
+    ),
+    hardWatch: t(
+      "Reject the negative solution: a width of $-9$ feet has no meaning, even when it satisfies the equation.",
+      "要舍去负解：宽度为 $-9$ 英尺没有意义，即使它满足方程。",
+    ),
     tip: t(
       "A border of width $x$ lies on both sides of the rectangle, so each dimension grows by $2x$, not $x$. The total area equals new length times new width: a $5$ by $3$ picture with a border and total area $35$ gives $(5 + 2x)(3 + 2x) = 35$. Options with a single $x$ forget the far side.",
       "宽度为 $x$ 的边框位于矩形的两侧，所以每条边增加 $2x$，而不是 $x$。总面积等于新长乘新宽：$5$ 乘 $3$ 的图片加边框后总面积为 $35$，则 $(5 + 2x)(3 + 2x) = 35$。只加一个 $x$ 的选项忘了另一侧。",
@@ -345,6 +753,18 @@ export const satExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "sat-exam-interpreting-quadratic-functions-in-modeling-contexts": {
+    intro: t(
+      "A theater's profit is $P(t) = -3(t - 4)^2 + 200$ dollars after it raises the price by $t$ dollars. The vertex $(4, 200)$ says that a raise of $4$ dollars gives the greatest profit, $200$ dollars.\n\nCheck: $P(3) = P(5) = -3 + 200 = 197$, less than $200$.\n\nIn this lesson we interpret the numbers in a quadratic model written in vertex form.",
+      "剧院把票价提高 $t$ 美元后的利润是 $P(t) = -3(t - 4)^2 + 200$ 美元。顶点 $(4, 200)$ 说明提价 $4$ 美元时利润最大，为 $200$ 美元。\n\n检验：$P(3) = P(5) = -3 + 200 = 197$，小于 $200$。\n\n本课我们解释顶点式二次模型中各个数的含义。",
+    ),
+    watch: t(
+      "In vertex form the constant outside is an output and the number inside is an input: in $-(t - 6)^2 + 50$, $50$ is a value of the model and $6$ is a value of $t$.",
+      "在顶点式中，外面的常数是输出，括号里的数是输入：在 $-(t - 6)^2 + 50$ 中，$50$ 是模型的值，$6$ 是 $t$ 的值。",
+    ),
+    hardWatch: t(
+      "The value at $t = 0$ is not the vertex value: $P(t) = -2(t - 3)^2 + 90$ gives $P(0) = 72$.",
+      "$t = 0$ 时的值不是顶点值：$P(t) = -2(t - 3)^2 + 90$ 给出 $P(0) = 72$。",
+    ),
     tip: t(
       "In $P(t) = a(t - h)^2 + k$ with $a < 0$, the squared term can only lower the output, so $k$ is the greatest value reached, in the units of the output. For $-3(t - 4)^2 + 90$ measuring earnings, $90$ is the highest earnings. It is not the starting value, which would be $P(0)$.",
       "在 $P(t) = a(t - h)^2 + k$ 中，若 $a < 0$，平方项只会使输出减小，所以 $k$ 是能达到的最大值，单位与输出相同。对表示收益的 $-3(t - 4)^2 + 90$，$90$ 就是最高收益。它不是起始值，起始值应为 $P(0)$。",
@@ -355,6 +775,18 @@ export const satExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "sat-exam-interpreting-graphs-of-quadratic-functions-in-modeling-contexts": {
+    intro: t(
+      "A graph shows a ball's height over time: it leaves the ground at $0$ seconds, peaks at $(3, 36)$ and lands at $6$ seconds. The peak gives the greatest height, $36$ feet, and the second zero gives the landing time.\n\nCheck: the peak at $3$ seconds is halfway between $0$ and $6$.\n\nIn this lesson we read heights, times and other features of a model from its graph.",
+      "一幅图显示球的高度随时间的变化：它在 $0$ 秒离开地面，在 $(3, 36)$ 处最高，在 $6$ 秒落地。最高点给出最大高度 $36$ 英尺，第二个零点给出落地时间。\n\n检验：最高点在 $3$ 秒，正在 $0$ 与 $6$ 中间。\n\n本课我们从图象读出模型的高度、时间等特征。",
+    ),
+    watch: t(
+      "A ball thrown from a height does not start at $0$: if the graph starts at $(0, 5)$, the starting height is $5$ feet.",
+      "从高处抛出的球不是从 $0$ 开始的：若图象从 $(0, 5)$ 开始，起始高度就是 $5$ 英尺。",
+    ),
+    hardWatch: t(
+      "Not every zero of a model is meaningful: if the model only applies for $x \\geq 0$, a negative zero of its equation is not a landing time.",
+      "模型的零点不一定都有意义：若模型只适用于 $x \\geq 0$，方程的负零点就不是落地时间。",
+    ),
     tip: t(
       "Connect the graph to the story: the horizontal axis gives time and the vertical axis gives height. The greatest height is the $y$-coordinate of the top point of the curve. If the peak is at $(2, 5)$, the object reaches height $5$ after $2$ seconds. Reading the wrong coordinate is the usual error.",
       "把图像与情境联系起来：横轴是时间，纵轴是高度。最大高度就是曲线最高点的 $y$ 坐标。若最高点是 $(2, 5)$，物体在 $2$ 秒后到达高度 $5$。读错坐标是常见的错误。",
@@ -365,6 +797,18 @@ export const satExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "sat-exam-modeling-planar-motion-using-quadratic-functions": {
+    intro: t(
+      "A ball thrown upward has height $h(t) = -16t^2 + 64t$ feet after $t$ seconds. Its peak is at $t = -\\frac{64}{2 \\times (-16)} = 2$ seconds, where $h(2) = -64 + 128 = 64$ feet.\n\nCheck: $h(1) = h(3) = 48$, symmetric about $t = 2$.\n\nIn this lesson we find the time and the height of the peak of a vertical motion model.",
+      "向上抛出的球 $t$ 秒后的高度为 $h(t) = -16t^2 + 64t$ 英尺。最高点在 $t = -\\frac{64}{2 \\times (-16)} = 2$ 秒，此时 $h(2) = -64 + 128 = 64$ 英尺。\n\n检验：$h(1) = h(3) = 48$，关于 $t = 2$ 对称。\n\n本课我们求竖直运动模型最高点的时间和高度。",
+    ),
+    watch: t(
+      "In meters the coefficient is about $-4.9$, not $-16$: $h(t) = -4.9t^2 + 9.8t$ peaks at $t = 1$.",
+      "用米作单位时系数约为 $-4.9$，不是 $-16$：$h(t) = -4.9t^2 + 9.8t$ 在 $t = 1$ 时最高。",
+    ),
+    hardWatch: t(
+      "The greatest height is the value at the peak time, not the time itself: for $h(t) = -16t^2 + 40t$ the peak is at $t = \\frac{5}{4}$, where the height is $25$.",
+      "最大高度是最高点时刻的函数值，不是时刻本身：对 $h(t) = -16t^2 + 40t$，最高点在 $t = \\frac{5}{4}$，此时高度为 $25$。",
+    ),
     tip: t(
       "The height function $h(t) = at^2 + bt + c$ with $a < 0$ peaks at its vertex, $t = -\\frac{b}{2a}$. Use it directly: for $h(t) = -16t^2 + 32t$, the peak is at $t = \\frac{32}{32} = 1$ second. Forgetting the factor $2$ in the denominator gives the landing time instead.",
       "高度函数 $h(t) = at^2 + bt + c$ 中 $a < 0$，在顶点 $t = -\\frac{b}{2a}$ 处达到最高。直接用公式：对 $h(t) = -16t^2 + 32t$，最高点在 $t = \\frac{32}{32} = 1$ 秒。忘了分母中的 $2$，算出的就成了落地时间。",
@@ -375,6 +819,15 @@ export const satExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "sat-exam-elementary-cubic-functions": {
+    intro: t(
+      "A cube-shaped box with edge $x$ inches holds $x^3$ cubic inches, so a box of $64$ cubic inches has edge $x = 4$, because $4^3 = 64$.\n\nCheck: $4 \\times 4 \\times 4 = 64$.\n\nIn this lesson we evaluate and solve simple cubic functions, with positive and negative inputs.",
+      "棱长为 $x$ 英寸的正方体盒子容积是 $x^3$ 立方英寸，所以容积为 $64$ 立方英寸的盒子棱长 $x = 4$，因为 $4^3 = 64$。\n\n检验：$4 \\times 4 \\times 4 = 64$。\n\n本课我们求简单三次函数在正负输入处的值，并解简单的三次方程。",
+    ),
+    watch: t("Cube roots of negative numbers are real: $x^3 = -27$ gives $x = -3$.", "负数的立方根是实数：$x^3 = -27$ 得 $x = -3$。"),
+    hardWatch: t(
+      "Divide out the coefficient before the cube root: $13x^3 = 104$ gives $x^3 = 8$, so $x = 2$.",
+      "先除掉系数再开立方：$13x^3 = 104$ 得 $x^3 = 8$，所以 $x = 2$。",
+    ),
     tip: t(
       "To evaluate a cubic, cube the input first, keeping its sign, since an odd power of a negative is negative. Then apply the coefficient and add the constant. For $g(x) = 2x^3 + 1$ at $x = -3$: $2(-27) + 1 = -53$. Mistaking the cube for a positive number gives a wrong option.",
       "求三次函数的值时，先把输入立方并保留符号，因为负数的奇次幂仍为负。再乘系数，加常数。对 $g(x) = 2x^3 + 1$，在 $x = -3$ 处：$2(-27) + 1 = -53$。把立方算成正数，就会选到错误选项。",
@@ -385,6 +838,18 @@ export const satExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "sat-exam-higher-degree-polynomials": {
+    intro: t(
+      "An engineer studies $f(x) = x(x - 2)(x + 3)^2$. Setting each factor to zero gives the zeros $0$, $2$ and $-3$, and the square repeats $-3$ without adding a new zero.\n\nCheck: $f$ has degree $4$, and $1 + 1 + 2 = 4$ counts each zero with its multiplicity.\n\nIn this lesson we find and count the zeros of polynomials in factored form.",
+      "工程师研究 $f(x) = x(x - 2)(x + 3)^2$。令每个因式为零得零点 $0$、$2$ 和 $-3$，平方只是重复 $-3$，没有新的零点。\n\n检验：$f$ 是 $4$ 次的，按重数计 $1 + 1 + 2 = 4$。\n\n本课我们求出并数清因式形式多项式的零点。",
+    ),
+    watch: t(
+      "A factor such as $x^2 + 4$ has no real zeros: $x(x^2 + 4)$ has only the real zero $0$.",
+      "像 $x^2 + 4$ 这样的因式没有实数零点：$x(x^2 + 4)$ 只有实数零点 $0$。",
+    ),
+    hardWatch: t(
+      "A factor with a coefficient still gives one zero: $2x - 3$ gives $x = \\frac{3}{2}$.",
+      "带系数的因式同样给出一个零点：$2x - 3$ 给出 $x = \\frac{3}{2}$。",
+    ),
     tip: t(
       "Set each factor to zero to list the zeros of a factored polynomial, and include any bare $x$, which gives zero. A repeated factor gives one distinct zero however high its power is. For $x^2(x - 4)(x + 3)^3$, the distinct zeros are $0$, $4$ and $-3$, so there are three.",
       "令每个因式为零，列出因式形式多项式的零点，单独的 $x$ 也要算，它给出零点 $0$。重复因式无论幂次多高，都只算一个不同的零点。对 $x^2(x - 4)(x + 3)^3$，不同的零点是 $0$、$4$ 和 $-3$，共三个。",
@@ -395,6 +860,18 @@ export const satExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "sat-exam-graphs-of-higher-degree-polynomials": {
+    intro: t(
+      "The graph of a cubic crosses the $x$-axis at $-2$, $0$ and $3$, so its factors include $x + 2$, $x$ and $x - 3$.\n\nCheck: each factor is $0$ at the matching crossing point.\n\nIn this lesson we read the zeros of a polynomial from its graph and turn them into factors.",
+      "一个三次函数的图象在 $-2$、$0$ 和 $3$ 处穿过 $x$ 轴，所以它的因式有 $x + 2$、$x$ 和 $x - 3$。\n\n检验：每个因式在对应的交点处都为 $0$。\n\n本课我们从图象读出多项式的零点，并把零点写成因式。",
+    ),
+    watch: t(
+      "A zero at a negative number gives a plus sign: crossing at $-4$ means the factor $x + 4$.",
+      "负数零点对应加号：在 $-4$ 处穿过意味着因式是 $x + 4$。",
+    ),
+    hardWatch: t(
+      "A graph that touches the axis without crossing it has a repeated zero: touching at $1$ points to the factor $(x - 1)^2$.",
+      "图象与 $x$ 轴相切而不穿过时，那是重根：在 $1$ 处相切说明有因式 $(x - 1)^2$。",
+    ),
     tip: t(
       "A graph's $x$-intercepts are the zeros, and each zero $a$ corresponds to a factor $x - a$. So an intercept at $x = 2$ means $x - 2$ is a factor, and one at $x = -3$ means $x + 3$. The sign flips between the graph's reading and the factor; that is what wrong options exploit.",
       "图像的 $x$ 轴截距就是零点，每个零点 $a$ 对应因式 $x - a$。所以截距在 $x = 2$ 表示 $x - 2$ 是因式，在 $x = -3$ 则表示 $x + 3$ 是因式。从图上读的数和因式里的符号相反，错误选项正是利用这一点。",
@@ -405,6 +882,18 @@ export const satExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "sat-exam-polynomial-transformations": {
+    intro: t(
+      "A designer moves the curve $y = x^3$ right $2$ units and up $5$ units, which gives $y = (x - 2)^3 + 5$. The point $(0, 0)$ moves to $(2, 5)$.\n\nCheck: at $x = 2$, $(2 - 2)^3 + 5 = 5$.\n\nIn this lesson we translate the graphs of polynomial functions and evaluate the translated functions.",
+      "设计师把曲线 $y = x^3$ 向右平移 $2$ 个单位、向上平移 $5$ 个单位，得 $y = (x - 2)^3 + 5$。点 $(0, 0)$ 移到 $(2, 5)$。\n\n检验：$x = 2$ 时 $(2 - 2)^3 + 5 = 5$。\n\n本课我们平移多项式函数的图象，并求平移后函数的值。",
+    ),
+    watch: t(
+      "Shifting left uses a plus sign: $y = x^3$ moved left $3$ units is $y = (x + 3)^3$.",
+      "左移用加号：$y = x^3$ 向左平移 $3$ 个单位得 $y = (x + 3)^3$。",
+    ),
+    hardWatch: t(
+      "A stretch multiplies the outputs: $g(x) = 2f(x)$ doubles each value, so $f(1) = 4$ gives $g(1) = 8$.",
+      "伸缩是把输出相乘：$g(x) = 2f(x)$ 使每个值加倍，所以 $f(1) = 4$ 时 $g(1) = 8$。",
+    ),
     tip: t(
       "A shift right by $h$ replaces $x$ with $x - h$, inside the power; a shift up by $k$ adds $k$ outside. So moving $y = x^3$ right $2$ and up $6$ gives $y = (x - 2)^3 + 6$. Right means minus, not plus, and the options swap exactly that sign or put the numbers in the wrong places.",
       "向右平移 $h$ 就是把 $x$ 换成 $x - h$，写在幂的里面；向上平移 $k$ 就是在外面加 $k$。所以把 $y = x^3$ 向右移 $2$、向上移 $6$，得 $y = (x - 2)^3 + 6$。向右是减号而不是加号，选项正是在这个符号或数字位置上做文章。",
@@ -415,6 +904,18 @@ export const satExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "sat-exam-further-polynomial-transformations": {
+    intro: t(
+      "A sound wave $f$ is zero at $x = 3$. The delayed and amplified wave $g(x) = 4f(x - 2)$ is zero where $x - 2 = 3$, at $x = 5$.\n\nCheck: $g(5) = 4f(3) = 4 \\times 0 = 0$.\n\nIn this lesson we track how zeros and extreme values move under shifts and stretches.",
+      "声波 $f$ 在 $x = 3$ 处为零。延迟并放大后的声波 $g(x) = 4f(x - 2)$ 在 $x - 2 = 3$，即 $x = 5$ 处为零。\n\n检验：$g(5) = 4f(3) = 4 \\times 0 = 0$。\n\n本课我们追踪零点和最值在平移和伸缩下如何变化。",
+    ),
+    watch: t(
+      "A shift up does not keep the zeros: $f(x) + 1$ is $1$, not $0$, where $f$ is zero.",
+      "上移不会保留零点：在 $f$ 为零的地方，$f(x) + 1$ 等于 $1$，不是 $0$。",
+    ),
+    hardWatch: t(
+      "A negative stretch turns a maximum into a minimum: if $f$ has maximum $5$, then $-2f(x)$ has minimum $-10$.",
+      "负的伸缩会把最大值变成最小值：若 $f$ 的最大值是 $5$，则 $-2f(x)$ 的最小值是 $-10$。",
+    ),
     tip: t(
       "To locate a zero of a transformed function, set the inside expression equal to the known zero of $f$ and solve. If $f(2) = 0$ and $g(x) = 5f(x + 3)$, then $x + 3 = 2$, so $x = -1$. A multiplier outside stretches the outputs, and a zero stays zero, so it does not matter.",
       "求变换后函数的零点，令括号内的表达式等于 $f$ 的已知零点，再解方程。若 $f(2) = 0$ 且 $g(x) = 5f(x + 3)$，则 $x + 3 = 2$，所以 $x = -1$。外面的倍数只拉伸输出，零乘任何数仍为零，所以不影响零点。",
@@ -425,6 +926,18 @@ export const satExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "sat-exam-using-the-factor-theorem-to-reason-about-polynomials": {
+    intro: t(
+      "A programmer checks that $p(3) = 0$ for $p(x) = x^2 - 5x + 6$. By the factor theorem $x - 3$ is a factor, and indeed $p(x) = (x - 3)(x - 2)$.\n\nCheck: $p(3) = 9 - 15 + 6 = 0$.\n\nIn this lesson we connect zeros to factors and use a known factor to find a missing coefficient.",
+      "程序员验证了 $p(x) = x^2 - 5x + 6$ 满足 $p(3) = 0$。由因式定理，$x - 3$ 是因式，确实 $p(x) = (x - 3)(x - 2)$。\n\n检验：$p(3) = 9 - 15 + 6 = 0$。\n\n本课我们把零点和因式联系起来，并用已知因式求缺少的系数。",
+    ),
+    watch: t(
+      "The factor theorem also works for fractional zeros: $p(\\frac{1}{2}) = 0$ means $2x - 1$ is a factor.",
+      "因式定理对分数零点同样适用：$p(\\frac{1}{2}) = 0$ 说明 $2x - 1$ 是因式。",
+    ),
+    hardWatch: t(
+      "A known factor fixes a coefficient in any position: if $x - 2$ is a factor of $x^2 + kx + 6$, then $4 + 2k + 6 = 0$, so $k = -5$.",
+      "已知因式可以确定任何位置的系数：若 $x - 2$ 是 $x^2 + kx + 6$ 的因式，则 $4 + 2k + 6 = 0$，所以 $k = -5$。",
+    ),
     tip: t(
       "The factor theorem says $p(a) = 0$ exactly when $x - a$ is a factor of $p(x)$. So a zero at $x = 6$ gives the factor $x - 6$, and a zero at $x = -1$ gives $x + 1$. The option with the opposite sign is the trap, so subtract the zero from $x$.",
       "因式定理指出：$p(a) = 0$ 当且仅当 $x - a$ 是 $p(x)$ 的因式。所以零点 $x = 6$ 对应因式 $x - 6$，零点 $x = -1$ 对应 $x + 1$。符号相反的选项是陷阱，要用 $x$ 减去零点。",
@@ -435,6 +948,18 @@ export const satExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "sat-exam-exponential-functions": {
+    intro: t(
+      "A video's views triple every day from $5$: after $3$ days the count is $f(3) = 5(3)^3 = 5 \\times 27 = 135$.\n\nCheck: day by day the views are $5, 15, 45, 135$.\n\nIn this lesson we evaluate exponential functions and find the exponent that gives a value.",
+      "某视频的播放量从 $5$ 开始每天变成三倍：$3$ 天后为 $f(3) = 5(3)^3 = 5 \\times 27 = 135$。\n\n检验：逐日的播放量为 $5, 15, 45, 135$。\n\n本课我们求指数函数的值，并找出给出某个值的指数。",
+    ),
+    watch: t(
+      "A negative exponent gives a fraction, not a negative number: for $f(x) = 8(2)^x$, $f(-1) = 8 \\times \\frac{1}{2} = 4$.",
+      "负指数给出的是分数，不是负数：对 $f(x) = 8(2)^x$，$f(-1) = 8 \\times \\frac{1}{2} = 4$。",
+    ),
+    hardWatch: t(
+      "Divide by the coefficient before matching powers: $10(2)^k = 320$ gives $2^k = 32$, so $k = 5$, not $\\log_2 320$.",
+      "先除以系数再比较幂：由 $10(2)^k = 320$ 得 $2^k = 32$，所以 $k = 5$，而不是 $\\log_2 320$。",
+    ),
     tip: t(
       "In $f(x) = a(b)^x$, compute the power first, then multiply by $a$. For $f(x) = 5(3)^x$: $f(2) = 5 \\cdot 9 = 45$. Multiplying $a$ and $b$ first, which would give $15^2$, is the mistake to avoid; the exponent applies only to the base, not to the coefficient.",
       "在 $f(x) = a(b)^x$ 中，先算幂，再乘 $a$。对 $f(x) = 5(3)^x$：$f(2) = 5 \\cdot 9 = 45$。先把 $a$ 和 $b$ 相乘、算成 $15^2$ 是要避免的错误；指数只作用于底数，不作用于系数。",
@@ -445,6 +970,18 @@ export const satExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "sat-exam-maxima-and-minima-of-exponential-functions": {
+    intro: t(
+      "A savings balance $f(x) = 100(2)^x$ grows over $0 \\le x \\le 3$, so its greatest value is at the end: $f(3) = 800$.\n\nCheck: $f(0) = 100$, $f(1) = 200$, $f(2) = 400$, $f(3) = 800$, rising each time.\n\nIn this lesson we find the greatest and least values of exponential functions on an interval.",
+      "存款余额 $f(x) = 100(2)^x$ 在 $0 \\le x \\le 3$ 上递增，所以最大值在终点：$f(3) = 800$。\n\n检验：$f(0) = 100$，$f(1) = 200$，$f(2) = 400$，$f(3) = 800$，逐次上升。\n\n本课我们求指数函数在区间上的最大值和最小值。",
+    ),
+    watch: t(
+      "On an interval that starts below zero, the left end is a negative input: for $f(x) = 4(2)^x$ on $-2 \\le x \\le 1$, the least value is $f(-2) = 1$.",
+      "区间从负数开始时，左端点是负的输入：对 $f(x) = 4(2)^x$，$-2 \\le x \\le 1$ 上的最小值是 $f(-2) = 1$。",
+    ),
+    hardWatch: t(
+      "A base between $0$ and $1$ written as a decimal still decreases: $f(x) = 50(0.2)^x$ is largest at the left end of any interval.",
+      "写成小数的、介于 $0$ 和 $1$ 之间的底数照样递减：$f(x) = 50(0.2)^x$ 在任何区间的左端点处最大。",
+    ),
     tip: t(
       "An exponential with base above $1$ and a positive coefficient always increases, so on an interval its greatest value is at the right endpoint. For $f(x) = 2(3)^x$ on $0 \\le x \\le 3$, that is $f(3) = 54$. There is no turning point inside, so evaluate only the endpoint.",
       "底数大于 $1$、系数为正的指数函数始终递增，所以在区间上，最大值出现在右端点。对 $f(x) = 2(3)^x$，$0 \\le x \\le 3$，最大值是 $f(3) = 54$。区间内部没有转折点，只需计算端点。",
@@ -455,6 +992,18 @@ export const satExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "sat-exam-exponential-functions-containing-unknown-parameters": {
+    intro: t(
+      "A lab knows a sample follows $f(x) = a(3)^x$ and measures $f(1) = 21$, so $3a = 21$ and $a = 7$.\n\nCheck: $f(1) = 7 \\times 3 = 21$.\n\nIn this lesson we find the coefficient or the base of an exponential function from its values.",
+      "实验室知道样品满足 $f(x) = a(3)^x$，并测得 $f(1) = 21$，所以 $3a = 21$，$a = 7$。\n\n检验：$f(1) = 7 \\times 3 = 21$。\n\n本课我们由函数值求指数函数的系数或底数。",
+    ),
+    watch: t(
+      "A value at a negative input also fixes the coefficient: if $f(x) = a(2)^x$ and $f(-1) = 6$, then $\\frac{a}{2} = 6$ and $a = 12$.",
+      "负输入处的值同样能确定系数：若 $f(x) = a(2)^x$ 且 $f(-1) = 6$，则 $\\frac{a}{2} = 6$，$a = 12$。",
+    ),
+    hardWatch: t(
+      "When the values are three steps apart, take a cube root: $f(0) = 2$ and $f(3) = 54$ give $b^3 = 27$, so $b = 3$.",
+      "两个值相隔三步时要开立方：$f(0) = 2$，$f(3) = 54$ 得 $b^3 = 27$，所以 $b = 3$。",
+    ),
     tip: t(
       "A known input and output give an equation for the coefficient. Substitute them into $f(x) = a(b)^x$, compute the power, and divide. If $f(x) = a(3)^x$ and $f(2) = 18$, then $9a = 18$, so $a = 2$. Do not assume the output at $x = 0$ when another input is given.",
       "已知一组输入和输出，就得到关于系数的方程。把它们代入 $f(x) = a(b)^x$，算出幂再相除。若 $f(x) = a(3)^x$ 且 $f(2) = 18$，则 $9a = 18$，所以 $a = 2$。给的不是 $x = 0$ 时，不要把它当作初始值。",
@@ -465,6 +1014,18 @@ export const satExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "sat-exam-constructing-exponential-functions-from-descriptions": {
+    intro: t(
+      "A rumor reaches $4$ people and each round of retelling doubles that number, so after $x$ rounds $f(x) = 4(2)^x$ people have heard it.\n\nCheck: $f(1) = 8$ and $f(2) = 16$, doubling each round.\n\nIn this lesson we write exponential functions from descriptions, including factors applied once every few units of time.",
+      "一个传言传到 $4$ 人，每轮转述人数翻倍，所以 $x$ 轮后听到的人数为 $f(x) = 4(2)^x$。\n\n检验：$f(1) = 8$，$f(2) = 16$，每轮翻倍。\n\n本课我们根据描述写出指数函数，包括每隔几个时间单位才乘一次的情况。",
+    ),
+    watch: t(
+      "A quantity that is halved each step has base $\\frac{1}{2}$: starting at $80$, it is $f(x) = 80\\left(\\frac{1}{2}\\right)^x$.",
+      "每一步减半的量底数为 $\\frac{1}{2}$：从 $80$ 开始，它是 $f(x) = 80\\left(\\frac{1}{2}\\right)^x$。",
+    ),
+    hardWatch: t(
+      "A factor applied several times per unit goes in the exponent as a product: tripling every half hour gives $f(t) = a(3)^{2t}$ for $t$ in hours.",
+      "每个单位内乘多次时，指数是乘积：每半小时变为三倍，以小时计 $t$ 时得 $f(t) = a(3)^{2t}$。",
+    ),
     tip: t(
       "A starting amount that is multiplied by a fixed number each step has the form $f(x) = (\\text{start})(\\text{factor})^x$. Starting at $5$ and tripling each step gives $f(x) = 5(3)^x$. The start goes in front and the factor is the base; options that swap them or use addition describe something else.",
       "初始量每步乘一个固定的数，形式就是 $f(x) = (\\text{start})(\\text{factor})^x$，其中 start 是初始量，factor 是倍数。从 $5$ 开始、每步变成三倍，就是 $f(x) = 5(3)^x$。初始量在前，倍数作底数；调换两者或写成加法的选项描述的是别的情形。",
@@ -475,6 +1036,18 @@ export const satExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "sat-exam-exponential-functions-expressed-in-equivalent-forms": {
+    intro: t(
+      "A bank writes growth as $f(x) = 3(2)^{2x}$ and a report as $f(x) = 3(4)^x$; they agree because $2^{2x} = (2^2)^x = 4^x$.\n\nCheck: at $x = 1$ both give $12$.\n\nIn this lesson we rewrite exponential functions with the power laws.",
+      "银行把增长写成 $f(x) = 3(2)^{2x}$，报告写成 $f(x) = 3(4)^x$；二者一致，因为 $2^{2x} = (2^2)^x = 4^x$。\n\n检验：$x = 1$ 时两者都等于 $12$。\n\n本课我们用幂的法则改写指数函数。",
+    ),
+    watch: t(
+      "A fraction in the exponent gives a root: $9^{x/2} = (9^{1/2})^x = 3^x$.",
+      "指数中的分数给出方根：$9^{x/2} = (9^{1/2})^x = 3^x$。",
+    ),
+    hardWatch: t(
+      "A subtracted constant in the exponent divides the coefficient: $6(2)^{x - 1} = 3(2)^x$.",
+      "指数中减去的常数会除到系数上：$6(2)^{x - 1} = 3(2)^x$。",
+    ),
     tip: t(
       "A number times $x$ in the exponent can be moved into the base with the power law, $b^{nx} = (b^{n})^x$. So $5(3)^{2x} = 5(9)^x$. The coefficient stays out of it. Options that multiply the base by the exponent's number, or that change the coefficient, are not equivalent.",
       "指数上 $x$ 的系数可以用幂的乘方法则移到底数上：$b^{nx} = (b^{n})^x$。所以 $5(3)^{2x} = 5(9)^x$，系数不受影响。把底数与指数的系数相乘，或者改变系数的选项，都不等价。",
@@ -485,6 +1058,18 @@ export const satExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "sat-exam-constructing-exponential-growth-models": {
+    intro: t(
+      "A city of $10{,}000$ grows $3\\%$ a year, so it keeps $100\\%$ and adds $3\\%$: $P(t) = 10000(1.03)^t$.\n\nCheck: after one year $3\\%$ of $10{,}000$ is $300$, and $10000 \\times 1.03 = 10300$.\n\nIn this lesson we build growth models from a percent rate and use them for compound interest.",
+      "一座 $10{,}000$ 人的城市每年增长 $3\\%$，即保留 $100\\%$ 再加 $3\\%$：$P(t) = 10000(1.03)^t$。\n\n检验：一年后 $10{,}000$ 的 $3\\%$ 是 $300$，而 $10000 \\times 1.03 = 10300$。\n\n本课我们由百分增长率建立增长模型，并用于复利。",
+    ),
+    watch: t(
+      "A rate above $100\\%$ still adds to the whole: growing $150\\%$ a year multiplies by $2.5$, not $1.5$.",
+      "增长率超过 $100\\%$ 时同样要加上原有的全部：每年增长 $150\\%$ 是乘以 $2.5$，不是 $1.5$。",
+    ),
+    hardWatch: t(
+      "Interest compounded more often than yearly uses the rate per period: $4\\%$ a year compounded twice a year is $(1.02)^{2t}$.",
+      "一年复利多次时，用每期的利率：年利率 $4\\%$、每年复利两次，是 $(1.02)^{2t}$。",
+    ),
     tip: t(
       "Growing by $r$ percent keeps the whole amount and adds that share, so the yearly factor is $1 + \\frac{r}{100}$. A value of $300$ growing $7\\%$ yearly is $300(1.07)^t$. Using $0.07$ alone as the base would shrink the amount, and multiplying by $t$ describes linear growth instead.",
       "增长 $r$ 个百分点，就是保留全部原有量再加上这一部分，所以每年的倍数是 $1 + \\frac{r}{100}$。$300$ 每年增长 $7\\%$，就是 $300(1.07)^t$。单用 $0.07$ 作底数会让数量变小，乘以 $t$ 描述的则是线性增长。",
@@ -495,6 +1080,18 @@ export const satExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "sat-exam-constructing-exponential-decay-models": {
+    intro: t(
+      "A phone worth $\\$900$ loses $20\\%$ of its value each year, so $80\\%$ remains: $V(t) = 900(0.8)^t$.\n\nCheck: after one year it loses $180$ and is worth $720$, which is $900 \\times 0.8$.\n\nIn this lesson we build decay models from a percent loss and from a half-life.",
+      "一部价值 $\\$900$ 的手机每年贬值 $20\\%$，剩下 $80\\%$：$V(t) = 900(0.8)^t$。\n\n检验：一年后贬值 $180$，剩 $720$，正是 $900 \\times 0.8$。\n\n本课我们由百分比减少量和半衰期建立衰减模型。",
+    ),
+    watch: t(
+      "A loss of a few percent leaves a factor just below $1$: losing $3\\%$ a year is $(0.97)^t$, not $(0.3)^t$ or $(0.03)^t$.",
+      "减少几个百分点时，倍数略小于 $1$：每年减少 $3\\%$ 是 $(0.97)^t$，不是 $(0.3)^t$ 或 $(0.03)^t$。",
+    ),
+    hardWatch: t(
+      "A time that is not a whole number of half-lives still counts in the exponent: after $15$ days with a $10$-day half-life, $\\left(\\frac{1}{2}\\right)^{1.5}$ of the sample remains.",
+      "时间不是半衰期的整数倍时同样放进指数：半衰期 $10$ 天，$15$ 天后剩下样品的 $\\left(\\frac{1}{2}\\right)^{1.5}$。",
+    ),
     tip: t(
       "Losing $r$ percent leaves $100 - r$ percent, and that remaining share is the base: a loss of $20\\%$ means the factor $0.8$. An item worth $900$ then follows $900(0.8)^t$. The usual wrong base is the lost share itself, $0.2$, or $1.2$, which would describe growth.",
       "减少 $r$ 个百分点，就剩下 $100 - r$ 个百分点，这个剩余比例就是底数：减少 $20\\%$ 意味着倍数是 $0.8$。价值 $900$ 的物品就遵循 $900(0.8)^t$。常见的错误底数是减少的比例 $0.2$，或者表示增长的 $1.2$。",
@@ -505,6 +1102,18 @@ export const satExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "sat-exam-determining-unknown-parameters-in-exponential-models": {
+    intro: t(
+      "A biologist knows a colony follows $N(t) = a(2)^t$ and counts $600$ cells after $1$ hour, so $2a = 600$ and the colony started with $a = 300$.\n\nCheck: $N(1) = 300 \\times 2 = 600$.\n\nIn this lesson we find the starting amount or the growth factor of a model from its values.",
+      "生物学家知道某菌落满足 $N(t) = a(2)^t$，$1$ 小时后数得 $600$ 个细胞，所以 $2a = 600$，开始时有 $a = 300$ 个。\n\n检验：$N(1) = 300 \\times 2 = 600$。\n\n本课我们由模型的值求起始量或增长倍数。",
+    ),
+    watch: t(
+      "A decay model works the same way with a factor below $1$: $N(t) = a(0.5)^t$ with $N(2) = 25$ gives $0.25a = 25$, so $a = 100$.",
+      "倍数小于 $1$ 的衰减模型做法相同：$N(t) = a(0.5)^t$ 且 $N(2) = 25$，得 $0.25a = 25$，所以 $a = 100$。",
+    ),
+    hardWatch: t(
+      "When the two known values are both after the start, divide them: $N(1) = 30$ and $N(3) = 270$ give $b^2 = 9$, so $b = 3$.",
+      "两个已知值都在开始之后时，把它们相除：$N(1) = 30$，$N(3) = 270$ 得 $b^2 = 9$，所以 $b = 3$。",
+    ),
     tip: t(
       "The coefficient $a$ in $N(t) = a(b)^t$ is the starting amount. Given a later count, substitute the time and the count, then divide by the power. If $N(t) = a(3)^t$ and there are $270$ after $2$ hours, then $9a = 270$, so it began with $30$. Do not divide by the time itself.",
       "$N(t) = a(b)^t$ 中的系数 $a$ 就是初始量。已知后来的数量时，代入时间和数量，再除以幂。若 $N(t) = a(3)^t$ 且 $2$ 小时后有 $270$，则 $9a = 270$，初始量是 $30$。不要直接除以时间。",
@@ -515,6 +1124,18 @@ export const satExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "sat-exam-interpreting-exponential-models": {
+    intro: t(
+      "An app's users follow $U(t) = 500(1.1)^t$ months after launch: $500$ is the number at launch, and $1.1$ means $10\\%$ growth each month.\n\nCheck: $U(0) = 500 \\times 1 = 500$ and $U(1) = 550$, which is $10\\%$ more.\n\nIn this lesson we interpret the coefficient and the factor of an exponential model.",
+      "某应用上线 $t$ 个月后的用户数为 $U(t) = 500(1.1)^t$：$500$ 是上线时的人数，$1.1$ 表示每月增长 $10\\%$。\n\n检验：$U(0) = 500 \\times 1 = 500$，$U(1) = 550$，多了 $10\\%$。\n\n本课我们解释指数模型的系数和倍数。",
+    ),
+    watch: t(
+      "A factor below $1$ means a decrease: $V(t) = 200(0.85)^t$ loses $15\\%$ each year.",
+      "倍数小于 $1$ 表示减少：$V(t) = 200(0.85)^t$ 每年减少 $15\\%$。",
+    ),
+    hardWatch: t(
+      "A fraction in the exponent changes the period: in $M(t) = 40(2)^{t/3}$ the amount doubles every $3$ years, not every year.",
+      "指数中的分数会改变周期：在 $M(t) = 40(2)^{t/3}$ 中，数量每 $3$ 年翻倍，而不是每年。",
+    ),
     tip: t(
       "In $M(t) = a(b)^t$, the coefficient $a$ is the value at $t = 0$, because any base to the power zero is $1$. So in a model of visitors $150(1.1)^t$, the $150$ is the visitor count at the start. It is not the amount of yearly growth and not a later value.",
       "在 $M(t) = a(b)^t$ 中，系数 $a$ 是 $t = 0$ 时的值，因为任何底数的零次幂都是 $1$。所以在访客模型 $150(1.1)^t$ 中，$150$ 是起始时的访客数。它既不是每年的增长量，也不是后来的某个值。",
@@ -525,6 +1146,18 @@ export const satExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "sat-exam-absolute-value-equations": {
+    intro: t(
+      "A thermostat allows $3$ degrees either way from $20$, so the limits solve $|x - 20| = 3$: $x = 17$ or $x = 23$.\n\nCheck: $|17 - 20| = 3$ and $|23 - 20| = 3$.\n\nIn this lesson we solve absolute value equations by splitting them into two cases.",
+      "恒温器允许偏离 $20$ 度上下 $3$ 度，所以界限满足 $|x - 20| = 3$：$x = 17$ 或 $x = 23$。\n\n检验：$|17 - 20| = 3$，$|23 - 20| = 3$。\n\n本课我们把绝对值方程分成两种情况来解。",
+    ),
+    watch: t(
+      "An absolute value can never be negative: $|x - 4| = -2$ has no solution at all.",
+      "绝对值不可能为负：$|x - 4| = -2$ 根本没有解。",
+    ),
+    hardWatch: t(
+      "A coefficient inside the bars divides both cases: $|2x - 6| = 4$ gives $2x = 10$ or $2x = 2$, so $x = 5$ or $x = 1$.",
+      "绝对值内的系数要除到两种情况中：$|2x - 6| = 4$ 得 $2x = 10$ 或 $2x = 2$，所以 $x = 5$ 或 $x = 1$。",
+    ),
     tip: t(
       "The equation $|A| = c$ with $c > 0$ splits in two: $A = c$ or $A = -c$, since both are at distance $c$ from zero. For $|x + 1| = 6$: $x = 5$ or $x = -7$. Geometrically, these are the points $6$ away from $-1$. Keep both solutions; the wrong options lose one or flip signs.",
       "当 $c > 0$ 时，方程 $|A| = c$ 分成两种情形：$A = c$ 或 $A = -c$，因为两者到零的距离都是 $c$。对 $|x + 1| = 6$：$x = 5$ 或 $x = -7$。从几何上看，它们是到 $-1$ 距离为 $6$ 的点。两个解都要保留，错误选项要么漏解，要么符号有误。",
@@ -535,6 +1168,18 @@ export const satExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "sat-exam-rational-equations": {
+    intro: t(
+      "A recipe makes $12$ cookies per batch, and $\\frac{48}{m} = 12$ asks how many batches give $48$: $m = 4$.\n\nCheck: $\\frac{48}{4} = 12$.\n\nIn this lesson we solve rational equations by clearing denominators and cross-multiplying.",
+      "一份配方每批做 $12$ 块饼干，$\\frac{48}{m} = 12$ 问几批能做 $48$ 块：$m = 4$。\n\n检验：$\\frac{48}{4} = 12$。\n\n本课我们通过去分母和交叉相乘解分式方程。",
+    ),
+    watch: t(
+      "A solution that makes a denominator zero must be thrown out: $\\frac{x}{x - 2} = \\frac{2}{x - 2}$ leads to $x = 2$, which is not allowed, so there is no solution.",
+      "使分母为零的解必须舍去：$\\frac{x}{x - 2} = \\frac{2}{x - 2}$ 得到 $x = 2$，这是不允许的，所以无解。",
+    ),
+    hardWatch: t(
+      "Cross-multiplying multiplies whole numerators and denominators: $\\frac{3}{x + 1} = \\frac{2}{x}$ gives $3x = 2(x + 1)$, so $x = 2$.",
+      "交叉相乘要用整个分子和分母：$\\frac{3}{x + 1} = \\frac{2}{x}$ 得 $3x = 2(x + 1)$，所以 $x = 2$。",
+    ),
     tip: t(
       "When the variable is in a denominator, multiply both sides by it to bring it up, then divide. For $\\frac{12}{y} = 3$: $12 = 3y$, so $y = 4$. Multiplying the number by the value on the right instead, which would give $36$, is the common mistake. Check by substituting.",
       "变量在分母时，两边同乘这个变量把它移上来，再做除法。对 $\\frac{12}{y} = 3$：$12 = 3y$，所以 $y = 4$。把两个数相乘得到 $36$ 是常见错误。可以代回去检验。",
@@ -545,6 +1190,18 @@ export const satExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "sat-exam-radical-equations": {
+    intro: t(
+      "A pendulum formula leads to $\\sqrt{x - 3} = 5$; squaring gives $x - 3 = 25$, so $x = 28$.\n\nCheck: $\\sqrt{28 - 3} = \\sqrt{25} = 5$.\n\nIn this lesson we solve equations with one square root by isolating it and squaring.",
+      "一个单摆公式化为 $\\sqrt{x - 3} = 5$；平方得 $x - 3 = 25$，所以 $x = 28$。\n\n检验：$\\sqrt{28 - 3} = \\sqrt{25} = 5$。\n\n本课我们通过单独放好根式再平方来解只含一个平方根的方程。",
+    ),
+    watch: t(
+      "Squaring can create a false solution: $\\sqrt{x} = -3$ squares to $x = 9$, but $\\sqrt{9} = 3$, so there is no solution.",
+      "平方可能产生增根：$\\sqrt{x} = -3$ 平方得 $x = 9$，但 $\\sqrt{9} = 3$，所以无解。",
+    ),
+    hardWatch: t(
+      "When $x$ also appears outside the root, squaring gives a quadratic: $\\sqrt{x + 6} = x$ gives $x^2 - x - 6 = 0$, and only $x = 3$ checks.",
+      "$x$ 也出现在根号外时，平方得到二次方程：$\\sqrt{x + 6} = x$ 得 $x^2 - x - 6 = 0$，只有 $x = 3$ 经检验成立。",
+    ),
     tip: t(
       "Squaring undoes a square root. Square both sides, including the number on the right, then solve the linear equation. For $\\sqrt{x + 3} = 5$: $x + 3 = 25$, so $x = 22$. Forgetting to square the right side is the main trap; substitute back to confirm the root checks.",
       "平方可以消去平方根。两边同时平方，包括右边的数，再解一次方程。对 $\\sqrt{x + 3} = 5$：$x + 3 = 25$，所以 $x = 22$。主要的陷阱是忘了给右边平方；可以代回去确认根号成立。",
@@ -555,6 +1212,18 @@ export const satExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "sat-exam-equations-containing-multiple-radicals": {
+    intro: t(
+      "Two plans cost $\\sqrt{3x - 2}$ and $\\sqrt{2x + 3}$; they match when $3x - 2 = 2x + 3$, at $x = 5$.\n\nCheck: both roots are $\\sqrt{13}$ at $x = 5$.\n\nIn this lesson we solve equations with two square roots, squaring once or twice.",
+      "两种方案的费用是 $\\sqrt{3x - 2}$ 和 $\\sqrt{2x + 3}$；当 $3x - 2 = 2x + 3$，即 $x = 5$ 时相等。\n\n检验：$x = 5$ 时两个根都是 $\\sqrt{13}$。\n\n本课我们解含两个平方根的方程，平方一次或两次。",
+    ),
+    watch: t(
+      "Equal radicands are not enough if they are negative: $\\sqrt{x - 5} = \\sqrt{2x - 3}$ gives $x = -2$, where both radicands are negative, so there is no solution.",
+      "被开方数相等还不够，它们还不能为负：$\\sqrt{x - 5} = \\sqrt{2x - 3}$ 得 $x = -2$，此时两个被开方数都为负，所以无解。",
+    ),
+    hardWatch: t(
+      "Squaring a sum makes a middle term: $(\\sqrt{x} + 2)^2 = x + 4\\sqrt{x} + 4$, not $x + 4$.",
+      "和的平方有中间项：$(\\sqrt{x} + 2)^2 = x + 4\\sqrt{x} + 4$，不是 $x + 4$。",
+    ),
     tip: t(
       "With a single radical on each side, squaring removes both, and the radicands are equal. Solve the resulting linear equation, then check that both radicands are non-negative. For $\\sqrt{3x + 2} = \\sqrt{2x + 7}$: $3x + 2 = 2x + 7$, so $x = 5$. No extra terms appear in this case.",
       "两边各只有一个根式时，平方后根号都消失，被开方数相等。解所得的一次方程，再确认两个被开方数都不为负。对 $\\sqrt{3x + 2} = \\sqrt{2x + 7}$：$3x + 2 = 2x + 7$，所以 $x = 5$。这种情况下不会出现多余的项。",
@@ -565,6 +1234,18 @@ export const satExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "sat-exam-absolute-value-functions": {
+    intro: t(
+      "A delivery drone's height follows a V-shaped graph with lowest point $(2, 1)$, so $f(x) = |x - 2| + 1$.\n\nCheck: at $x = 3$ the equation gives $|1| + 1 = 2$, one unit above the vertex.\n\nIn this lesson we match absolute value graphs to equations and find their minimum values.",
+      "一架送货无人机的高度图象呈 V 形，最低点为 $(2, 1)$，所以 $f(x) = |x - 2| + 1$。\n\n检验：$x = 3$ 时方程给出 $|1| + 1 = 2$，比顶点高一个单位。\n\n本课我们把绝对值图象与方程对应，并求其最小值。",
+    ),
+    watch: t(
+      "A coefficient in front changes the steepness, not the vertex: $f(x) = 2|x - 1| + 3$ still has its vertex at $(1, 3)$.",
+      "前面的系数改变陡峭程度，不改变顶点：$f(x) = 2|x - 1| + 3$ 的顶点仍在 $(1, 3)$。",
+    ),
+    hardWatch: t(
+      "A minus sign in front turns the minimum into a maximum: $f(x) = -|x| + 4$ has greatest value $4$ and no least value.",
+      "前面的负号把最小值变成最大值：$f(x) = -|x| + 4$ 的最大值是 $4$，没有最小值。",
+    ),
     tip: t(
       "The graph of $f(x) = |x - h| + k$ is a V with its corner at $(h, k)$. Read the corner from the grid, then build the equation, remembering the sign inside flips: a corner at $(-3, 1)$ gives $|x + 3| + 1$. A V opening down would need a negative in front.",
       "$f(x) = |x - h| + k$ 的图像是 V 形，拐角在 $(h, k)$。从网格读出拐角，再写方程，注意括号内符号相反：拐角 $(-3, 1)$ 对应 $|x + 3| + 1$。若 V 形开口向下，前面要有负号。",
@@ -575,16 +1256,40 @@ export const satExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "sat-exam-rational-functions": {
+    intro: t(
+      "An average cost $f(x) = \\frac{x - 6}{x + 2}$ is zero where the numerator is zero, at $x = 6$.\n\nCheck: $f(6) = \\frac{0}{8} = 0$.\n\nIn this lesson we find where a rational function is zero and where it is not defined.",
+      "平均费用 $f(x) = \\frac{x - 6}{x + 2}$ 在分子为零处等于零，即 $x = 6$。\n\n检验：$f(6) = \\frac{0}{8} = 0$。\n\n本课我们找出有理函数为零的点和没有定义的点。",
+    ),
+    watch: t(
+      "A factor shared by the numerator and denominator gives no zero: $\\frac{x - 3}{(x - 3)(x + 1)}$ is not defined at $x = 3$, so it is not zero there.",
+      "分子分母共有的因式不给出零点：$\\frac{x - 3}{(x - 3)(x + 1)}$ 在 $x = 3$ 处没有定义，所以那里不是零点。",
+    ),
+    hardWatch: t(
+      "A quadratic denominator can give two excluded values: $\\frac{5}{x^2 - 9}$ is not defined at $x = 3$ and at $x = -3$.",
+      "二次的分母可能排除两个值：$\\frac{5}{x^2 - 9}$ 在 $x = 3$ 和 $x = -3$ 处都没有定义。",
+    ),
     tip: t(
-      "A fraction is zero exactly when its numerator is zero and its denominator is not. So set the numerator to zero and solve. For $\\frac{x + 4}{x - 2}$, the zero is at $x = -4$. The value from the denominator, $x = 2$, is where the function is undefined, a tempting wrong option.",
+      "A fraction is zero exactly when its numerator is zero and its denominator is not. So set the numerator to zero and solve. For $\\frac{x + 4}{x - 2}$, the zero is at $x = -4$. The value from the denominator, $x = 2$, is where the function is not defined, a tempting wrong option.",
       "分式等于零，当且仅当分子为零且分母不为零。所以令分子为零并求解。对 $\\frac{x + 4}{x - 2}$，零点在 $x = -4$。由分母得到的 $x = 2$ 是函数没有定义的地方，是个诱人的错误选项。",
     ),
     hardTip: t(
-      "Division by zero has no meaning, so a rational function is undefined where its denominator is zero. Set the denominator to zero and solve for $x$. For $\\frac{7}{x + 5}$, it is undefined at $x = -5$. The sign flips from what appears in the denominator, and the numerator plays no part.",
+      "Division by zero has no meaning, so a rational function is not defined where its denominator is zero. Set the denominator to zero and solve for $x$. For $\\frac{7}{x + 5}$, it is not defined at $x = -5$. The sign flips from what appears in the denominator, and the numerator plays no part.",
       "除以零没有意义，所以有理函数在分母为零处没有定义。令分母为零，解出 $x$。对 $\\frac{7}{x + 5}$，在 $x = -5$ 处没有定义。结果的符号与分母中出现的相反，分子在这里不起作用。",
     ),
   },
   "sat-exam-solving-multivariable-equations": {
+    intro: t(
+      "A gym charges $y = 5x + 3w$ for $x$ classes and $w$ towels; to find the classes, subtract $3w$ and divide by $5$: $x = \\frac{y - 3w}{5}$.\n\nCheck: $5 \\times \\frac{y - 3w}{5} + 3w = y$.\n\nIn this lesson we solve formulas with several variables for one of them.",
+      "健身房对 $x$ 节课和 $w$ 条毛巾收费 $y = 5x + 3w$；要求课数，先减去 $3w$ 再除以 $5$：$x = \\frac{y - 3w}{5}$。\n\n检验：$5 \\times \\frac{y - 3w}{5} + 3w = y$。\n\n本课我们把含多个变量的公式解出其中一个变量。",
+    ),
+    watch: t(
+      "A negative coefficient flips the sign of the result: $y = 4 - 2x$ gives $x = \\frac{4 - y}{2}$.",
+      "负系数会改变结果的符号：$y = 4 - 2x$ 得 $x = \\frac{4 - y}{2}$。",
+    ),
+    hardWatch: t(
+      "When the variable appears twice, factor it out first: $A = p + prt$ gives $A = p(1 + rt)$, so $p = \\frac{A}{1 + rt}$.",
+      "变量出现两次时先提取它：$A = p + prt$ 得 $A = p(1 + rt)$，所以 $p = \\frac{A}{1 + rt}$。",
+    ),
     tip: t(
       "To isolate one variable, treat the others like numbers and undo operations in reverse order: first remove added terms, then divide by the coefficient. From $m = 3k + 5n$: $k = \\frac{m - 5n}{3}$. The whole difference goes over the coefficient; dividing only one term is the usual error.",
       "要孤立一个变量，把其他变量当作数，按相反顺序撤销运算：先去掉相加的项，再除以系数。由 $m = 3k + 5n$ 得 $k = \\frac{m - 5n}{3}$。整个差都要除以系数，只除一项是常见错误。",
@@ -595,6 +1300,18 @@ export const satExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "sat-exam-further-multivariable-equations": {
+    intro: t(
+      "A shop's total is $3x + 2y = z$; solving for $y$ means subtracting $3x$ and dividing by $2$: $y = \\frac{z - 3x}{2}$.\n\nCheck: $3x + 2 \\times \\frac{z - 3x}{2} = z$.\n\nIn this lesson we rearrange formulas, including ones where the variable appears on both sides.",
+      "商店的总价为 $3x + 2y = z$；解出 $y$ 要减去 $3x$ 再除以 $2$：$y = \\frac{z - 3x}{2}$。\n\n检验：$3x + 2 \\times \\frac{z - 3x}{2} = z$。\n\n本课我们整理公式，包括变量出现在两边的情况。",
+    ),
+    watch: t(
+      "A variable in a denominator is cleared first: $\\frac{2}{y} = z$ gives $y = \\frac{2}{z}$, not $y = 2z$.",
+      "分母中的变量要先去掉：$\\frac{2}{y} = z$ 得 $y = \\frac{2}{z}$，不是 $y = 2z$。",
+    ),
+    hardWatch: t(
+      "With letters as coefficients, keep the factored form: $ax - 5 = bx$ gives $x(a - b) = 5$, so $x = \\frac{5}{a - b}$.",
+      "系数是字母时保留提取后的形式：$ax - 5 = bx$ 得 $x(a - b) = 5$，所以 $x = \\frac{5}{a - b}$。",
+    ),
     tip: t(
       "Solve for the requested letter as in any linear equation. Move the other variable's term across, changing its sign, then divide everything by the coefficient. From $5a + 3b = c$: $3b = c - 5a$, so $b = \\frac{c - 5a}{3}$. Be careful which letter is asked for and which term changes sign.",
       "像解一次方程一样解出所求字母。把另一个变量的项移过去并变号，再把所有项除以系数。由 $5a + 3b = c$ 得 $3b = c - 5a$，所以 $b = \\frac{c - 5a}{3}$。注意问的是哪个字母，以及哪一项要变号。",
@@ -605,6 +1322,18 @@ export const satExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "sat-exam-solving-multivariable-rational-equations": {
+    intro: t(
+      "Speed is $s = \\frac{d}{t}$; multiplying by $t$ and dividing by $s$ gives the time, $t = \\frac{d}{s}$.\n\nCheck: $\\frac{d}{d / s} = s$.\n\nIn this lesson we solve formulas with fractions for a variable, including sums of fractions.",
+      "速度为 $s = \\frac{d}{t}$；乘以 $t$ 再除以 $s$ 得时间 $t = \\frac{d}{s}$。\n\n检验：$\\frac{d}{d / s} = s$。\n\n本课我们把含分式的公式解出某个变量，包括分式之和。",
+    ),
+    watch: t(
+      "A sum in the denominator stays together: $p = \\frac{3}{q + r}$ gives $q + r = \\frac{3}{p}$, so $r = \\frac{3}{p} - q$.",
+      "分母中的和要作为整体：$p = \\frac{3}{q + r}$ 得 $q + r = \\frac{3}{p}$，所以 $r = \\frac{3}{p} - q$。",
+    ),
+    hardWatch: t(
+      "The reciprocal of a sum is not a sum of reciprocals: $\\frac{1}{x} + \\frac{1}{y} = \\frac{1}{z}$ gives $z = \\frac{xy}{x + y}$, not $x + y$.",
+      "和的倒数不是倒数的和：$\\frac{1}{x} + \\frac{1}{y} = \\frac{1}{z}$ 得 $z = \\frac{xy}{x + y}$，不是 $x + y$。",
+    ),
     tip: t(
       "If the target is in a denominator, multiply both sides by that denominator to bring it up, then divide by whatever accompanies it. From $m = \\frac{6n}{5w}$: $5wm = 6n$, so $w = \\frac{6n}{5m}$. The other letter ends up below the target's coefficient; options leaving it above skipped a step.",
       "目标在分母时，两边同乘这个分母把它移上来，再除以与它相乘的量。由 $m = \\frac{6n}{5w}$ 得 $5wm = 6n$，所以 $w = \\frac{6n}{5m}$。另一个字母最后落到分母上，仍留在分子上的选项漏了一步。",
@@ -615,6 +1344,18 @@ export const satExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "sat-exam-solving-multivariable-nonlinear-equations": {
+    intro: t(
+      "A cylinder holds $V = \\pi r^2h$; solving for the radius means dividing by $\\pi h$ and taking the positive root: $r = \\sqrt{\\frac{V}{\\pi h}}$.\n\nCheck: $\\pi \\times \\frac{V}{\\pi h} \\times h = V$.\n\nIn this lesson we solve formulas with squares and square roots for a variable.",
+      "圆柱体积为 $V = \\pi r^2h$；求半径要除以 $\\pi h$ 再取正根：$r = \\sqrt{\\frac{V}{\\pi h}}$。\n\n检验：$\\pi \\times \\frac{V}{\\pi h} \\times h = V$。\n\n本课我们把含平方和平方根的公式解出某个变量。",
+    ),
+    watch: t(
+      "A cube is undone by a cube root: $V = 2s^3$ gives $s = \\sqrt[3]{\\frac{V}{2}}$.",
+      "立方要用立方根还原：$V = 2s^3$ 得 $s = \\sqrt[3]{\\frac{V}{2}}$。",
+    ),
+    hardWatch: t(
+      "A root over a sum squares to the whole sum: $c = \\sqrt{a^2 + b^2}$ gives $b^2 = c^2 - a^2$, not $b = c - a$.",
+      "和的平方根平方后得到整个和：$c = \\sqrt{a^2 + b^2}$ 得 $b^2 = c^2 - a^2$，不是 $b = c - a$。",
+    ),
     tip: t(
       "If the target is squared, peel away everything else first in reverse order of operations, and take the square root last, over the whole expression. From $E = 3m^2 c + 1$: $m^2 = \\frac{E - 1}{3c}$, so $m = \\sqrt{\\frac{E - 1}{3c}}$ for $m > 0$. The added constant must be subtracted before any division.",
       "目标变量带平方时，先按运算的相反顺序去掉其他部分，最后再对整个表达式开方。由 $E = 3m^2 c + 1$ 得 $m^2 = \\frac{E - 1}{3c}$，所以当 $m > 0$ 时 $m = \\sqrt{\\frac{E - 1}{3c}}$。要先减去加上的常数，再做除法。",
@@ -625,6 +1366,18 @@ export const satExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "sat-exam-identifying-intercepts-of-functions-from-graphs": {
+    intro: t(
+      "A ball's height graph crosses the $y$-axis at $(0, 6)$, so it started $6$ feet up, and meets the $x$-axis at $(3, 0)$, when it lands.\n\nCheck: the $y$-intercept has $x = 0$ and the $x$-intercept has $y = 0$.\n\nIn this lesson we read the intercepts of a graph and tell the two kinds apart.",
+      "一个球的高度图象与 $y$ 轴交于 $(0, 6)$，所以它从 $6$ 英尺高处出发，与 $x$ 轴交于 $(3, 0)$，即落地时刻。\n\n检验：$y$ 轴截距的 $x = 0$，$x$ 轴截距的 $y = 0$。\n\n本课我们从图象读出截距，并区分两种截距。",
+    ),
+    watch: t(
+      "A graph can touch the $x$-axis without crossing it: $y = (x - 2)^2$ has a single $x$-intercept at $(2, 0)$.",
+      "图象可以碰到 $x$ 轴而不穿过：$y = (x - 2)^2$ 只有一个 $x$ 轴截距 $(2, 0)$。",
+    ),
+    hardWatch: t(
+      "A parabola opening up with its vertex above the $x$-axis, such as $y = x^2 + 1$, has no $x$-intercept at all.",
+      "开口向上且顶点在 $x$ 轴上方的抛物线，如 $y = x^2 + 1$，根本没有 $x$ 轴截距。",
+    ),
     tip: t(
       "The $y$-intercept is where the graph crosses the vertical axis, so its $x$-coordinate is $0$. Find that crossing on the grid and read its height, then write the point as $(0, b)$. If the curve crosses at height $-3$, the point is $(0, -3)$. Do not reverse the coordinates.",
       "$y$ 轴截距是图像与竖直轴的交点，所以它的 $x$ 坐标是 $0$。在网格上找到这个交点并读出高度，写成 $(0, b)$。若曲线在高度 $-3$ 处相交，这个点就是 $(0, -3)$。不要把坐标写反。",
@@ -635,6 +1388,18 @@ export const satExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "sat-exam-interpreting-graph-properties-in-modeling-contexts": {
+    intro: t(
+      "A phone's battery graph starts at $(0, 100)$ and reaches $(20, 0)$: it is fully charged at the start and empty after $20$ hours.\n\nCheck: falling $100$ percent in $20$ hours is $5$ percent per hour, the slope's size.\n\nIn this lesson we say what the intercepts and slope of a graph mean in a situation.",
+      "手机电量图象从 $(0, 100)$ 开始，到达 $(20, 0)$：开始时充满，$20$ 小时后耗尽。\n\n检验：$20$ 小时下降 $100$ 个百分点，每小时 $5$ 个百分点，正是斜率的大小。\n\n本课我们说明图象的截距和斜率在情境中的含义。",
+    ),
+    watch: t(
+      "In a graph of distance from home, the $y$-intercept is the starting distance, which need not be $0$: a walk graph starting at $(0, 2)$ begins $2$ miles away.",
+      "在离家距离的图象中，$y$ 轴截距是起始距离，不一定为 $0$：从 $(0, 2)$ 开始的步行图象表示起点离家 $2$ 英里。",
+    ),
+    hardWatch: t(
+      "A rising graph's $x$-intercept can lie at a negative time, before the situation starts, so it may have no meaning there.",
+      "上升图象的 $x$ 轴截距可能在负的时间上，即情境开始之前，那样它就可能没有实际意义。",
+    ),
     tip: t(
       "In a context graph, the $y$-intercept is the output when the input is zero, so it describes the starting situation. If a graph shows fuel left in a truck against hours driven, it is the fuel at the moment driving begins. It is not a rate, and it is not the end of the process.",
       "在情境图中，$y$ 轴截距是输入为零时的输出，所以它描述的是初始状态。若图像表示卡车剩余燃油随行驶时间的变化，它就是开始行驶那一刻的燃油量。它不是变化率，也不是过程的终点。",
@@ -645,6 +1410,18 @@ export const satExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "sat-exam-solving-linear-quadratic-systems-of-equations": {
+    intro: t(
+      "A path $y = x^2$ and a fence $y = 3x - 2$ meet where $x^2 = 3x - 2$, so $x^2 - 3x + 2 = 0$ and $x = 1$ or $x = 2$.\n\nCheck: at $x = 2$ both give $y = 4$.\n\nIn this lesson we solve systems of a line and a parabola by setting them equal.",
+      "一条路 $y = x^2$ 与一道篱笆 $y = 3x - 2$ 相交于 $x^2 = 3x - 2$ 处，即 $x^2 - 3x + 2 = 0$，$x = 1$ 或 $x = 2$。\n\n检验：$x = 2$ 时两者都给出 $y = 4$。\n\n本课我们通过令两式相等来解直线与抛物线的方程组。",
+    ),
+    watch: t(
+      "A line can meet a parabola only once, where it is tangent: $y = x^2$ and $y = 2x - 1$ give $(x - 1)^2 = 0$, so $x = 1$ only.",
+      "直线可能只与抛物线相交一次，即相切：$y = x^2$ 和 $y = 2x - 1$ 得 $(x - 1)^2 = 0$，只有 $x = 1$。",
+    ),
+    hardWatch: t(
+      "When the solutions are not whole numbers, the sum still comes from the coefficient: $x^2 - 5x + 1 = 0$ has solutions adding to $5$.",
+      "解不是整数时，和仍由系数得出：$x^2 - 5x + 1 = 0$ 的两解之和为 $5$。",
+    ),
     tip: t(
       "When both equations give $y$, set the right sides equal, move everything to one side, and factor. The zeros are the $x$-values of the solutions. For $y = x^2 + 3$ and $y = 4x$: $x^2 - 4x + 3 = 0$, so $x = 1$ or $x = 3$. Do not forget to combine the constants before factoring.",
       "两个方程都给出 $y$ 时，令右边相等，把所有项移到一边，再分解。其零点就是解的 $x$ 值。对 $y = x^2 + 3$ 和 $y = 4x$：$x^2 - 4x + 3 = 0$，所以 $x = 1$ 或 $x = 3$。分解前别忘了合并常数。",
@@ -655,6 +1432,18 @@ export const satExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "sat-exam-solving-challenging-linear-quadratic-systems-of-equations": {
+    intro: t(
+      "A light beam $y = 8x$ meets a mirror curve $y = 2x^2 + 6$ where $2x^2 - 8x + 6 = 0$, or $x^2 - 4x + 3 = 0$, so $x = 1$ or $x = 3$.\n\nCheck: at $x = 3$ the curve gives $18 + 6 = 24$ and the line gives $24$.\n\nIn this lesson we solve line and parabola systems whose quadratic needs dividing before it factors.",
+      "光线 $y = 8x$ 与镜面曲线 $y = 2x^2 + 6$ 相交于 $2x^2 - 8x + 6 = 0$ 处，即 $x^2 - 4x + 3 = 0$，$x = 1$ 或 $x = 3$。\n\n检验：$x = 3$ 时曲线给出 $18 + 6 = 24$，直线也给出 $24$。\n\n本课我们解需要先相除才能因式分解的直线与抛物线方程组。",
+    ),
+    watch: t(
+      "A line with a negative slope can meet a parabola at negative $x$: $y = x^2$ and $y = -x + 2$ meet at $x = -2$ and $x = 1$.",
+      "斜率为负的直线可能在 $x$ 为负处与抛物线相交：$y = x^2$ 与 $y = -x + 2$ 交于 $x = -2$ 和 $x = 1$。",
+    ),
+    hardWatch: t(
+      "Find $y$ from the line, which is simpler, and confirm on the curve: for $y = 3x$ and $y = x^2 + 2$, $x = 2$ gives $y = 6$ on both.",
+      "用较简单的直线求 $y$，再在曲线上确认：对 $y = 3x$ 和 $y = x^2 + 2$，$x = 2$ 时两者都是 $y = 6$。",
+    ),
     tip: t(
       "Equate the two expressions for $y$, collect terms, and divide by any common factor before factoring. A solution of a system is a pair, so substitute each $x$ into the linear equation to find its $y$. For $y = 3x^2 + 6$ and $y = 9x$: $x^2 - 3x + 2 = 0$, giving $(1, 9)$ and $(2, 18)$.",
       "令两个 $y$ 的表达式相等，合并同类项，分解前先除以公因数。方程组的解是有序数对，所以要把每个 $x$ 代入一次方程求出 $y$。对 $y = 3x^2 + 6$ 和 $y = 9x$：$x^2 - 3x + 2 = 0$，解为 $(1, 9)$ 和 $(2, 18)$。",
@@ -665,6 +1454,18 @@ export const satExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "sat-exam-exploiting-structure-to-solve-nonlinear-systems-of-equations": {
+    intro: t(
+      "Two plots have side lengths $x$ and $y$ with $x + y = 10$ and areas differing by $x^2 - y^2 = 40$; since $x^2 - y^2 = (x + y)(x - y)$, $x - y = 4$.\n\nCheck: $10 \\times 4 = 40$.\n\nIn this lesson we use factoring patterns to find expressions without solving for each variable.",
+      "两块地的边长为 $x$ 和 $y$，$x + y = 10$，面积之差 $x^2 - y^2 = 40$；因为 $x^2 - y^2 = (x + y)(x - y)$，所以 $x - y = 4$。\n\n检验：$10 \\times 4 = 40$。\n\n本课我们利用因式分解的模式求式子的值，而不必解出每个变量。",
+    ),
+    watch: t(
+      "The square of a difference also gives $x^2 + y^2$: $(x - y)^2 = x^2 - 2xy + y^2$, so $x^2 + y^2 = (x - y)^2 + 2xy$.",
+      "差的平方也能给出 $x^2 + y^2$：$(x - y)^2 = x^2 - 2xy + y^2$，所以 $x^2 + y^2 = (x - y)^2 + 2xy$。",
+    ),
+    hardWatch: t(
+      "A sum of squares does not factor like a difference: $x^2 + y^2$ is not $(x + y)(x - y)$.",
+      "平方和不能像平方差那样分解：$x^2 + y^2$ 不等于 $(x + y)(x - y)$。",
+    ),
     tip: t(
       "When you see a difference of squares with the sum or difference given, factor rather than solve: $a^2 - b^2 = (a + b)(a - b)$. Divide the known product by the known factor. If $a + b = 4$ and $a^2 - b^2 = 28$, then $a - b = 7$. Finding each variable separately is unnecessary work.",
       "看到平方差且已知和或差时，要分解而不是求解：$a^2 - b^2 = (a + b)(a - b)$。用已知的积除以已知的因式。若 $a + b = 4$ 且 $a^2 - b^2 = 28$，则 $a - b = 7$。分别求出每个变量是多余的。",
@@ -675,6 +1476,18 @@ export const satExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "sat-exam-linear-quadratic-systems-with-one-solution": {
+    intro: t(
+      "A ramp $y = 2x + c$ just touches a curve $y = x^2 + 3$ when $x^2 - 2x + 3 - c = 0$ has discriminant $0$: $4 - 4(3 - c) = 0$, so $c = 2$.\n\nCheck: then $x^2 - 2x + 1 = (x - 1)^2$, one solution.\n\nIn this lesson we find the parameter that makes a line and a parabola meet exactly once.",
+      "斜坡 $y = 2x + c$ 恰好碰到曲线 $y = x^2 + 3$，要求 $x^2 - 2x + 3 - c = 0$ 的判别式为 $0$：$4 - 4(3 - c) = 0$，所以 $c = 2$。\n\n检验：此时 $x^2 - 2x + 1 = (x - 1)^2$，只有一个解。\n\n本课我们求使直线与抛物线恰好相交一次的参数。",
+    ),
+    watch: t(
+      "A parabola opening down works the same way: $y = -x^2$ and $y = 2x + c$ give $x^2 + 2x + c = 0$, so $c = 1$.",
+      "开口向下的抛物线做法相同：$y = -x^2$ 和 $y = 2x + c$ 得 $x^2 + 2x + c = 0$，所以 $c = 1$。",
+    ),
+    hardWatch: t(
+      "An unknown slope can have two answers of opposite sign: $y = x^2 + 4$ and $y = kx$ give $k^2 = 16$, so $k = 4$ or $k = -4$.",
+      "未知斜率可能有两个符号相反的答案：$y = x^2 + 4$ 和 $y = kx$ 得 $k^2 = 16$，所以 $k = 4$ 或 $k = -4$。",
+    ),
     tip: t(
       "The line and parabola touch once exactly when the combined quadratic has one solution. Equate them, collect everything on one side, and set the discriminant to zero. For $y = x^2 + 2$ and $y = 2x + c$: $x^2 - 2x + 2 - c = 0$, so $4 - 4(2 - c) = 0$ and $c = 1$. The whole constant term is $2 - c$.",
       "直线与抛物线恰好相切一次，就是合并后的二次方程只有一个解。令两式相等，全部移到一边，再令判别式为零。对 $y = x^2 + 2$ 和 $y = 2x + c$：$x^2 - 2x + 2 - c = 0$，所以 $4 - 4(2 - c) = 0$，$c = 1$。整个常数项是 $2 - c$。",
@@ -685,6 +1498,18 @@ export const satExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "sat-exam-linear-quadratic-systems-with-zero-or-two-solutions": {
+    intro: t(
+      "A drone's path $y = 4x + 1$ misses a hill $y = x^2 + c$ when $x^2 - 4x + c - 1 = 0$ has a negative discriminant: $16 - 4(c - 1) < 0$, so $c > 5$.\n\nCheck: at $c = 6$ the discriminant is $16 - 20 = -4$.\n\nIn this lesson we find the parameters that give a line and a parabola no meeting point or two.",
+      "无人机的航线 $y = 4x + 1$ 与山丘 $y = x^2 + c$ 不相交，要求 $x^2 - 4x + c - 1 = 0$ 的判别式为负：$16 - 4(c - 1) < 0$，所以 $c > 5$。\n\n检验：$c = 6$ 时判别式为 $16 - 20 = -4$。\n\n本课我们求使直线与抛物线没有交点或有两个交点的参数。",
+    ),
+    watch: t(
+      "The boundary value itself gives one solution, not zero or two: in that example, $c = 5$ makes the discriminant exactly $0$.",
+      "界限值本身给出一个解，不是零个也不是两个：在这个例子中，$c = 5$ 使判别式恰好为 $0$。",
+    ),
+    hardWatch: t(
+      "For a parabola opening down, the inequality flips: $y = -x^2 + c$ and $y = 1$ meet twice when $c > 1$ and never when $c < 1$.",
+      "抛物线开口向下时不等号反向：$y = -x^2 + c$ 与 $y = 1$ 在 $c > 1$ 时交两次，在 $c < 1$ 时不相交。",
+    ),
     tip: t(
       "No solution means the line misses the parabola, so the combined quadratic's discriminant is negative. Equate, collect, and solve the inequality, then test the options. For $y = x^2 + c$ and $y = 2x + 3$: $x^2 - 2x + c - 3 = 0$, and $4 - 4(c - 3) < 0$ gives $c > 4$. Treat $c - 3$ as one constant.",
       "无解表示直线与抛物线不相交，即合并后二次方程的判别式为负。令两式相等、合并，解不等式，再检验选项。对 $y = x^2 + c$ 和 $y = 2x + 3$：$x^2 - 2x + c - 3 = 0$，由 $4 - 4(c - 3) < 0$ 得 $c > 4$。把 $c - 3$ 当作一个常数。",
@@ -695,6 +1520,18 @@ export const satExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "sat-exam-other-systems-of-nonlinear-equations": {
+    intro: t(
+      "A garden has $x^2 + y = 30$ and $y = 5$, so $x^2 = 25$ and the positive side is $x = 5$.\n\nCheck: $25 + 5 = 30$.\n\nIn this lesson we solve nonlinear systems by substituting one equation into the other.",
+      "一个花园满足 $x^2 + y = 30$ 和 $y = 5$，所以 $x^2 = 25$，正的边长为 $x = 5$。\n\n检验：$25 + 5 = 30$。\n\n本课我们通过把一个方程代入另一个来解非线性方程组。",
+    ),
+    watch: t(
+      "Without the condition $x > 0$, both roots count: $x^2 = 25$ gives $x = 5$ and $x = -5$.",
+      "没有 $x > 0$ 的条件时两个根都算：$x^2 = 25$ 得 $x = 5$ 和 $x = -5$。",
+    ),
+    hardWatch: t(
+      "A system with a product can be solved by substitution too: $xy = 12$ and $y = x + 1$ give $x^2 + x - 12 = 0$, so $x = 3$ or $x = -4$.",
+      "含乘积的方程组也能用代入法解：$xy = 12$ 和 $y = x + 1$ 得 $x^2 + x - 12 = 0$，所以 $x = 3$ 或 $x = -4$。",
+    ),
     tip: t(
       "Substitute the known variable into the nonlinear equation, simplify, and solve. If $y$ is given, $x^2 + y = c$ becomes $x^2 = c - y$. For $x^2 + y = 12$ and $y = 3$: $x^2 = 9$, so $x = \\pm 3$. Use the stated condition to select the sign that the problem allows.",
       "把已知的变量代入非线性方程，化简后求解。已知 $y$ 时，$x^2 + y = c$ 就变成 $x^2 = c - y$。对 $x^2 + y = 12$ 和 $y = 3$：$x^2 = 9$，所以 $x = \\pm 3$。用题目给出的条件选定符号。",

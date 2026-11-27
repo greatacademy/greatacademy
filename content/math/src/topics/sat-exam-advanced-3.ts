@@ -1,7 +1,7 @@
 import { t } from "@ga/content";
 
 import type { ExamSpec } from "../exam.ts";
-import { curveFigure, mc, mcExact, sg, spec, spr, words } from "../exam.ts";
+import { curveFigure, cx, mc, mcExact, par, sg, spec, spr, step, tx, words, worked } from "../exam.ts";
 
 // SAT Math Prep, Advanced Math: exponential functions and models, nonlinear equations, multivariable equations, graphs and nonlinear systems.
 
@@ -9,15 +9,43 @@ import { curveFigure, mc, mcExact, sg, spec, spr, words } from "../exam.ts";
 export const satExamAdvanced3: ExamSpec[] = [
   spec("Exponential Functions", "指数函数", ["exponential-functions"], (rng, hard) => {
     const [a, b, n] = [rng.int(2, 9), rng.int(2, 4), rng.int(2, 4)];
+    const chain = Array.from({ length: n + 1 }, (_, i) => a * b ** i).join(", ");
     if (!hard)
       return mc(
         rng,
         t(`If $f(x) = ${a}(${b})^x$, what is the value of $f(${n})$?`, `若 $f(x) = ${a}(${b})^x$，则 $f(${n})$ 的值是多少？`),
         a * b ** n,
         [(a * b) ** n, a * b * n, a + b ** n],
-        t(
-          `Apply the power before multiplying: $${a} \\cdot ${b ** n} = ${a * b ** n}$.`,
-          `先算幂再相乘：$${a} \\cdot ${b ** n} = ${a * b ** n}$。`,
+        worked(
+          [
+            step(
+              "Raise the base to the power",
+              "先算幂",
+              `Only the base is raised to the power: $${b}^{${n}} = ${b ** n}$.`,
+              `只有底数取幂：$${b}^{${n}} = ${b ** n}$。`,
+            ),
+            step(
+              "Multiply by the coefficient",
+              "再乘系数",
+              `$f(${n}) = ${a} \\times ${b ** n} = ${a * b ** n}$.`,
+              `$f(${n}) = ${a} \\times ${b ** n} = ${a * b ** n}$。`,
+            ),
+          ],
+          t(
+            `Start from $f(0) = ${a}$ and multiply by $${b}$ once per step: $${chain}$. The last value is $${a * b ** n}$.`,
+            `从 $f(0) = ${a}$ 开始，每一步乘以 $${b}$：$${chain}$。最后一个值是 $${a * b ** n}$。`,
+          ),
+          [
+            t(
+              `This raises $${a} \\times ${b}$ to the power, but the exponent belongs to the base $${b}$ only.`,
+              `这是把 $${a} \\times ${b}$ 整个取幂了，但指数只作用于底数 $${b}$。`,
+            ),
+            t(
+              `This multiplies by the exponent $${n}$ instead of raising $${b}$ to it.`,
+              `这是乘以指数 $${n}$，而不是把 $${b}$ 取 $${n}$ 次幂。`,
+            ),
+            t(`This adds the coefficient $${a}$ instead of multiplying by it.`, `这是加上了系数 $${a}$，而不是乘以它。`),
+          ],
         ),
       );
     return spr(
@@ -27,7 +55,37 @@ export const satExamAdvanced3: ExamSpec[] = [
       ),
       n,
       [b ** n, n + 1, a * n],
-      t(`Divide by $${a}$: $${b}^k = ${b ** n}$, so $k = ${n}$.`, `除以 $${a}$：$${b}^k = ${b ** n}$，所以 $k = ${n}$。`),
+      worked(
+        [
+          step(
+            "Divide by the coefficient",
+            "除以系数",
+            `$${a}(${b})^k = ${a * b ** n}$ gives $${b}^k = ${b ** n}$.`,
+            `由 $${a}(${b})^k = ${a * b ** n}$ 得 $${b}^k = ${b ** n}$。`,
+          ),
+          step(
+            "Write the number as a power of the base",
+            "把这个数写成底数的幂",
+            `$${b ** n} = ${b}^{${n}}$, so $k = ${n}$.`,
+            `$${b ** n} = ${b}^{${n}}$，所以 $k = ${n}$。`,
+          ),
+        ],
+        t(
+          `$f(${n}) = ${a} \\times ${b}^{${n}} = ${a} \\times ${b ** n} = ${a * b ** n}$.`,
+          `$f(${n}) = ${a} \\times ${b}^{${n}} = ${a} \\times ${b ** n} = ${a * b ** n}$。`,
+        ),
+        [
+          t(`This is the value of $${b}^k$, not the exponent $k$.`, `这是 $${b}^k$ 的值，不是指数 $k$。`),
+          t(
+            `This is one step too many: $f(${n + 1}) = ${a * b ** (n + 1)}$, not $${a * b ** n}$.`,
+            `这多算了一步：$f(${n + 1}) = ${a * b ** (n + 1)}$，不是 $${a * b ** n}$。`,
+          ),
+          t(
+            `This multiplies the exponent by the coefficient $${a}$; the coefficient only scales the output.`,
+            `这是把指数乘以系数 $${a}$；系数只放大输出。`,
+          ),
+        ],
+      ),
     );
   }),
   spec("Maxima and Minima of Exponential Functions", "指数函数的最大值和最小值", ["extrema-of-exponential-functions"], (rng, hard) => {
@@ -41,9 +99,36 @@ export const satExamAdvanced3: ExamSpec[] = [
         ),
         a * b ** hi,
         [a, a * b, (a * b) ** hi],
-        t(
-          `With $${b} > 1$ the function increases, so the greatest value is at $x = ${hi}$: $${a * b ** hi}$.`,
-          `因为 $${b} > 1$，函数递增，所以最大值在 $x = ${hi}$ 处：$${a * b ** hi}$。`,
+        worked(
+          [
+            step(
+              "Decide the direction",
+              "判断增减",
+              `The base $${b}$ is greater than $1$, so $f$ increases and its greatest value is at the right end, $x = ${hi}$.`,
+              `底数 $${b}$ 大于 $1$，所以 $f$ 递增，最大值在右端点 $x = ${hi}$ 处。`,
+            ),
+            step(
+              "Evaluate at the right end",
+              "求右端点的值",
+              `$f(${hi}) = ${a} \\times ${b}^{${hi}} = ${a} \\times ${b ** hi} = ${a * b ** hi}$.`,
+              `$f(${hi}) = ${a} \\times ${b}^{${hi}} = ${a} \\times ${b ** hi} = ${a * b ** hi}$。`,
+            ),
+          ],
+          t(
+            `At the left end $f(0) = ${a}$, which is smaller, so the greatest value is $${a * b ** hi}$.`,
+            `左端点 $f(0) = ${a}$ 更小，所以最大值是 $${a * b ** hi}$。`,
+          ),
+          [
+            t(
+              `This is $f(0)$, the least value: the function increases, so the greatest value is at $x = ${hi}$.`,
+              `这是 $f(0)$，是最小值：函数递增，最大值在 $x = ${hi}$ 处。`,
+            ),
+            t(`This is $f(1)$, not the value at the right end $x = ${hi}$.`, `这是 $f(1)$，不是右端点 $x = ${hi}$ 处的值。`),
+            t(
+              `This raises $${a} \\times ${b}$ to the power, but the exponent belongs to the base $${b}$ only.`,
+              `这是把 $${a} \\times ${b}$ 整个取幂了，但指数只作用于底数 $${b}$。`,
+            ),
+          ],
         ),
       );
     return spr(
@@ -53,9 +138,36 @@ export const satExamAdvanced3: ExamSpec[] = [
       ),
       a,
       [a * b ** hi, a * b, 0],
-      t(
-        `With a base below 1 the function decreases, so the least value is at $x = ${hi}$: $\\frac{${a * b ** hi}}{${b ** hi}} = ${a}$.`,
-        `底数小于 1 时函数递减，所以最小值在 $x = ${hi}$ 处：$\\frac{${a * b ** hi}}{${b ** hi}} = ${a}$。`,
+      worked(
+        [
+          step(
+            "Decide the direction",
+            "判断增减",
+            `The base $\\frac{1}{${b}}$ is less than $1$, so $f$ decreases and its least value is at the right end, $x = ${hi}$.`,
+            `底数 $\\frac{1}{${b}}$ 小于 $1$，所以 $f$ 递减，最小值在右端点 $x = ${hi}$ 处。`,
+          ),
+          step(
+            "Evaluate at the right end",
+            "求右端点的值",
+            `$f(${hi}) = ${a * b ** hi} \\times \\frac{1}{${b ** hi}} = ${a}$.`,
+            `$f(${hi}) = ${a * b ** hi} \\times \\frac{1}{${b ** hi}} = ${a}$。`,
+          ),
+        ],
+        t(
+          `One step earlier, $f(${hi - 1}) = ${a * b}$, which is larger, so the values are still falling at $x = ${hi}$.`,
+          `前一步 $f(${hi - 1}) = ${a * b}$ 更大，所以函数值到 $x = ${hi}$ 仍在下降。`,
+        ),
+        [
+          t(
+            `This is $f(0)$, the greatest value: the function decreases, so the least value is at $x = ${hi}$.`,
+            `这是 $f(0)$，是最大值：函数递减，最小值在 $x = ${hi}$ 处。`,
+          ),
+          t(`This is $f(${hi - 1})$, one step short of the right end.`, `这是 $f(${hi - 1})$，差一步才到右端点。`),
+          t(
+            `An exponential function never reaches $0$; on this interval it stops at $f(${hi}) = ${a}$.`,
+            `指数函数永远不会等于 $0$；在这个区间上它到 $f(${hi}) = ${a}$ 为止。`,
+          ),
+        ],
       ),
     );
   }),
@@ -73,7 +185,23 @@ export const satExamAdvanced3: ExamSpec[] = [
           ),
           a,
           [a * b, a * b * b, b],
-          t(`Substitute: $a \\cdot ${b} = ${a * b}$, so $a = ${a}$.`, `代入：$a \\cdot ${b} = ${a * b}$，所以 $a = ${a}$。`),
+          worked(
+            [
+              step(
+                "Substitute the input",
+                "代入输入",
+                `At $x = 1$: $a \\times ${b} = ${a * b}$.`,
+                `当 $x = 1$ 时：$a \\times ${b} = ${a * b}$。`,
+              ),
+              step("Divide by the base", "除以底数", `$a = \\frac{${a * b}}{${b}} = ${a}$.`, `$a = \\frac{${a * b}}{${b}} = ${a}$。`),
+            ],
+            t(`$f(1) = ${a} \\times ${b} = ${a * b}$.`, `$f(1) = ${a} \\times ${b} = ${a * b}$。`),
+            [
+              t(`This is $f(1)$ itself; it still has to be divided by $${b}$.`, `这是 $f(1)$ 本身；还要除以 $${b}$。`),
+              t(`This multiplies by $${b}$ instead of dividing by it.`, `这是乘以 $${b}$，而不是除以它。`),
+              t(`This is the base, not the coefficient $a$.`, `这是底数，不是系数 $a$。`),
+            ],
+          ),
         );
       return spr(
         t(
@@ -82,9 +210,25 @@ export const satExamAdvanced3: ExamSpec[] = [
         ),
         b,
         [b * b, a, a * b],
-        t(
-          `$f(0) = a = ${a}$. Then $${a}b^2 = ${a * b * b}$ gives $b^2 = ${b * b}$, so $b = ${b}$.`,
-          `$f(0) = a = ${a}$。于是 $${a}b^2 = ${a * b * b}$ 得 $b^2 = ${b * b}$，所以 $b = ${b}$。`,
+        worked(
+          [
+            step("Use the value at zero", "利用零处的值", `$b^0 = 1$, so $f(0) = a = ${a}$.`, `$b^0 = 1$，所以 $f(0) = a = ${a}$。`),
+            step(
+              "Use the second value",
+              "利用第二个值",
+              `$${a}b^2 = ${a * b * b}$ gives $b^2 = ${b * b}$, and since $b > 0$, $b = ${b}$.`,
+              `由 $${a}b^2 = ${a * b * b}$ 得 $b^2 = ${b * b}$，又 $b > 0$，所以 $b = ${b}$。`,
+            ),
+          ],
+          t(
+            `$f(2) = ${a} \\times ${b}^2 = ${a} \\times ${b * b} = ${a * b * b}$.`,
+            `$f(2) = ${a} \\times ${b}^2 = ${a} \\times ${b * b} = ${a * b * b}$。`,
+          ),
+          [
+            t(`This is $b^2$; take its positive square root.`, `这是 $b^2$；要取它的正平方根。`),
+            t(`This is $a = f(0)$, the coefficient, not the base.`, `这是 $a = f(0)$，是系数，不是底数。`),
+            t(`This is $f(1) = ab$, a value of the function, not the base.`, `这是 $f(1) = ab$，是函数值，不是底数。`),
+          ],
         ),
       );
     },
@@ -105,7 +249,38 @@ export const satExamAdvanced3: ExamSpec[] = [
           ),
           `f(x) = ${a}(${b})^x`,
           [`f(x) = ${b}(${a})^x`, `f(x) = ${a} + ${b}x`, `f(x) = ${a}x^${b}`, `f(x) = (${a * b})^x`],
-          t(`The start is the coefficient and the repeated factor is the base.`, `起始值是系数，重复的倍数是底数。`),
+          worked(
+            [
+              step(
+                "Find the starting value",
+                "找出起始值",
+                `After $0$ steps the quantity is $${a}$, so $${a}$ is the coefficient.`,
+                `$0$ 步后的量是 $${a}$，所以 $${a}$ 是系数。`,
+              ),
+              step(
+                "Find the repeated factor",
+                "找出重复的倍数",
+                `Each step multiplies by $${b}$, so after $x$ steps the quantity is $${a}(${b})^x$.`,
+                `每一步乘以 $${b}$，所以 $x$ 步后的量是 $${a}(${b})^x$。`,
+              ),
+            ],
+            t(
+              `$f(1) = ${a} \\times ${b} = ${a * b}$ and $f(2) = ${a * b} \\times ${b} = ${a * b * b}$: one and two multiplications by $${b}$.`,
+              `$f(1) = ${a} \\times ${b} = ${a * b}$，$f(2) = ${a * b} \\times ${b} = ${a * b * b}$：分别乘了一次和两次 $${b}$。`,
+            ),
+            [
+              t(`This swaps the starting value and the factor.`, `这是把起始值和倍数对调了。`),
+              t(
+                `This adds $${b}$ each step, which is linear growth, not repeated multiplication.`,
+                `这是每一步加 $${b}$，是线性增长，不是重复相乘。`,
+              ),
+              t(`This puts $x$ in the base; the number of steps must be the exponent.`, `这是把 $x$ 放进了底数；步数应当是指数。`),
+              t(
+                `This multiplies the start into the base, so $f(0)$ would be $1$ instead of $${a}$.`,
+                `这是把起始值乘进了底数，那样 $f(0)$ 会是 $1$，而不是 $${a}$。`,
+              ),
+            ],
+          ),
         );
       return mc(
         rng,
@@ -115,9 +290,34 @@ export const satExamAdvanced3: ExamSpec[] = [
         ),
         `f(t) = ${a}(${b})^{t/${p}}`,
         [`f(t) = ${a}(${b})^{${p}t}`, `f(t) = ${a}(${b * p})^{t}`, `f(t) = ${a}(${b})^{t}`, `f(t) = ${p}(${b})^{t/${a}}`],
-        t(
-          `The number of multiplications after $t$ hours is $\\frac{t}{${p}}$, so that is the exponent.`,
-          `$t$ 小时内乘了 $\\frac{t}{${p}}$ 次，所以这就是指数。`,
+        worked(
+          [
+            step(
+              "Count the multiplications",
+              "数出相乘的次数",
+              `One multiplication happens every $${p}$ hours, so in $t$ hours there are $\\frac{t}{${p}}$ of them.`,
+              `每 $${p}$ 小时乘一次，所以 $t$ 小时内乘了 $\\frac{t}{${p}}$ 次。`,
+            ),
+            step(
+              "Write the function",
+              "写出函数",
+              `The start $${a}$ is the coefficient and $\\frac{t}{${p}}$ is the exponent: $f(t) = ${a}(${b})^{t/${p}}$.`,
+              `起始值 $${a}$ 是系数，$\\frac{t}{${p}}$ 是指数：$f(t) = ${a}(${b})^{t/${p}}$。`,
+            ),
+          ],
+          t(
+            `At $t = ${p}$ the exponent is $\\frac{${p}}{${p}} = 1$, so the function gives $${a} \\times ${b} = ${a * b}$: exactly one multiplication after $${p}$ hours.`,
+            `当 $t = ${p}$ 时指数为 $\\frac{${p}}{${p}} = 1$，函数给出 $${a} \\times ${b} = ${a * b}$：$${p}$ 小时后恰好乘了一次。`,
+          ),
+          [
+            t(
+              `This multiplies $${p}$ times every hour, not once every $${p}$ hours.`,
+              `这是每小时乘 $${p}$ 次，而不是每 $${p}$ 小时乘一次。`,
+            ),
+            t(`This multiplies the factor by $${p}$; the period belongs in the exponent.`, `这是把倍数乘以 $${p}$；周期应当放进指数。`),
+            t(`This multiplies by $${b}$ every hour, not every $${p}$ hours.`, `这是每小时乘以 $${b}$，而不是每 $${p}$ 小时。`),
+            t(`This swaps the starting value $${a}$ and the period $${p}$.`, `这是把起始值 $${a}$ 和周期 $${p}$ 对调了。`),
+          ],
         ),
       );
     },
@@ -137,9 +337,45 @@ export const satExamAdvanced3: ExamSpec[] = [
           `f(x) = ${a + 1}(${b ** k})^x`,
           `f(x) = ${a}(${b ** k + 1})^x`,
         ],
-        t(
-          `By the power law, $${b}^{${k}x} = (${b}^{${k}})^x = ${b ** k}^x$.`,
-          `由幂的法则，$${b}^{${k}x} = (${b}^{${k}})^x = ${b ** k}^x$。`,
+        worked(
+          [
+            step(
+              "Use the power law",
+              "用幂的法则",
+              `A product in the exponent is a power of a power: $${b}^{${k}x} = (${b}^{${k}})^x$.`,
+              `指数是乘积时，可写成幂的幂：$${b}^{${k}x} = (${b}^{${k}})^x$。`,
+            ),
+            step(
+              "Evaluate the new base",
+              "求出新底数",
+              `$${b}^{${k}} = ${b ** k}$, so $f(x) = ${a}(${b ** k})^x$.`,
+              `$${b}^{${k}} = ${b ** k}$，所以 $f(x) = ${a}(${b ** k})^x$。`,
+            ),
+          ],
+          t(
+            `At $x = 1$ the original gives $${a} \\times ${b}^{${k}} = ${a * b ** k}$, and the new form gives $${a} \\times ${b ** k} = ${a * b ** k}$.`,
+            `当 $x = 1$ 时原式给出 $${a} \\times ${b}^{${k}} = ${a * b ** k}$，新形式给出 $${a} \\times ${b ** k} = ${a * b ** k}$。`,
+          ),
+          [
+            t(
+              `This moves one factor of $${b}$ into the coefficient, which is $${a}(${b})^{x + 1}$, not $${a}(${b})^{${k}x}$.`,
+              `这是把一个 $${b}$ 移进了系数，等于 $${a}(${b})^{x + 1}$，不是 $${a}(${b})^{${k}x}$。`,
+            ),
+            t(
+              `This multiplies $${b}$ by $${k}$; the power law gives $${b}^{${k}}$.`,
+              `这是用 $${b}$ 乘 $${k}$；幂的法则给出的是 $${b}^{${k}}$。`,
+            ),
+            t(
+              `This raises the coefficient to the power $${k}$, but the exponent applies only to $${b}$.`,
+              `这是把系数取了 $${k}$ 次幂，但指数只作用于 $${b}$。`,
+            ),
+            t(
+              `This adds $${k}$ to the base; the power law gives $${b}^{${k}}$.`,
+              `这是把 $${k}$ 加到底数上；幂的法则给出的是 $${b}^{${k}}$。`,
+            ),
+            t(`The base is right, but the coefficient must stay $${a}$.`, `底数对了，但系数应当保持 $${a}$。`),
+            t(`The base must be $${b ** k}$, not one more.`, `底数应当是 $${b ** k}$，不是多 $1$。`),
+          ],
         ),
       );
     return spr(
@@ -149,9 +385,30 @@ export const satExamAdvanced3: ExamSpec[] = [
       ),
       a * b ** k,
       [a, a * k, a + b ** k],
-      t(
-        `Split the exponent: $${b}^{x + ${k}} = ${b}^x \\cdot ${b ** k}$. So $c = ${a} \\cdot ${b ** k} = ${a * b ** k}$.`,
-        `拆开指数：$${b}^{x + ${k}} = ${b}^x \\cdot ${b ** k}$。所以 $c = ${a} \\cdot ${b ** k} = ${a * b ** k}$。`,
+      worked(
+        [
+          step(
+            "Split the exponent",
+            "拆开指数",
+            `A sum in the exponent is a product of powers: $${b}^{x + ${k}} = ${b}^x \\times ${b}^{${k}} = ${b}^x \\times ${b ** k}$.`,
+            `指数是和时，可写成幂的乘积：$${b}^{x + ${k}} = ${b}^x \\times ${b}^{${k}} = ${b}^x \\times ${b ** k}$。`,
+          ),
+          step(
+            "Collect the coefficient",
+            "合并系数",
+            `$c = ${a} \\times ${b ** k} = ${a * b ** k}$.`,
+            `$c = ${a} \\times ${b ** k} = ${a * b ** k}$。`,
+          ),
+        ],
+        t(
+          `At $x = 0$ the original gives $${a} \\times ${b}^{${k}} = ${a * b ** k}$, and $c(${b})^0 = c$.`,
+          `当 $x = 0$ 时原式给出 $${a} \\times ${b}^{${k}} = ${a * b ** k}$，而 $c(${b})^0 = c$。`,
+        ),
+        [
+          t(`This drops the factor $${b}^{${k}}$ that comes out of the exponent.`, `这是漏掉了从指数中分出来的因数 $${b}^{${k}}$。`),
+          t(`This multiplies $${a}$ by $${k}$ instead of by $${b}^{${k}}$.`, `这是用 $${a}$ 乘 $${k}$，而不是乘 $${b}^{${k}}$。`),
+          t(`This adds $${b}^{${k}}$ to $${a}$ instead of multiplying.`, `这是把 $${b}^{${k}}$ 加到 $${a}$ 上，而不是相乘。`),
+        ],
       ),
     );
   }),
@@ -159,6 +416,7 @@ export const satExamAdvanced3: ExamSpec[] = [
     const a = rng.pick([200, 500, 800, 1000, 1500]);
     const r = rng.pick([2, 3, 4, 5, 6, 8, 10, 12, 15]);
     const f = (100 + r) / 100;
+    const y1 = (a * (100 + r)) / 100;
     if (!hard)
       return mc(
         rng,
@@ -173,8 +431,43 @@ export const satExamAdvanced3: ExamSpec[] = [
           `P(t) = ${a} + ${r}t`,
           `P(t) = ${a}(${r})^t`,
         ],
-        t(`Keeping the whole and adding $${r}\\%$ multiplies by $${f}$ each year.`, `保留全部再增加 $${r}\\%$，相当于每年乘以 $${f}$。`),
+        worked(
+          [
+            step(
+              "Find the growth factor",
+              "求增长倍数",
+              `Each year keeps $100\\%$ of the population and adds $${r}\\%$, so it is multiplied by $${100 + r}\\% = ${f}$.`,
+              `每年保留 $100\\%$ 的人口并增加 $${r}\\%$，所以乘以 $${100 + r}\\% = ${f}$。`,
+            ),
+            step(
+              "Write the model",
+              "写出模型",
+              `The start $${a}$ is the coefficient and the factor is applied once per year: $P(t) = ${a}(${f})^t$.`,
+              `起始值 $${a}$ 是系数，每年乘一次倍数：$P(t) = ${a}(${f})^t$。`,
+            ),
+          ],
+          t(
+            `After one year, $${r}\\%$ of $${a}$ is $${(a * r) / 100}$, and $${a} + ${(a * r) / 100} = ${y1}$, which is $${a} \\times ${f}$.`,
+            `一年后，$${a}$ 的 $${r}\\%$ 是 $${(a * r) / 100}$，$${a} + ${(a * r) / 100} = ${y1}$，正是 $${a} \\times ${f}$。`,
+          ),
+          [
+            t(
+              `This factor is below $1$, so the population would shrink by $${r}\\%$ each year.`,
+              `这个倍数小于 $1$，人口会每年减少 $${r}\\%$。`,
+            ),
+            t(
+              `This keeps only the $${r}\\%$ that is added and drops the $100\\%$ already there.`,
+              `这是只保留了增加的 $${r}\\%$，漏掉了原有的 $100\\%$。`,
+            ),
+            t(`This adds $${r}$ residents a year, a linear model, not $${r}\\%$.`, `这是每年增加 $${r}$ 人，是线性模型，不是 $${r}\\%$。`),
+            t(
+              `This multiplies the population by $${r}$ every year, far more than $${r}\\%$ growth.`,
+              `这是每年把人口乘以 $${r}$，远多于 $${r}\\%$ 的增长。`,
+            ),
+          ],
+        ),
       );
+    const v2 = (a * (100 + r) ** 2) / 10000;
     return spr(
       t(
         `An account opens with $\\$${a}$ and earns $${r}\\%$ interest per year, compounded yearly. To the nearest dollar, how much is in the account after $2$ years?`,
@@ -182,9 +475,34 @@ export const satExamAdvanced3: ExamSpec[] = [
       ),
       Math.round(a * f * f),
       [a + 2 * Math.round((a * r) / 100), Math.round(a * f), Math.round(a * f * f) + 10],
-      t(
-        `Multiply by $${f}$ twice: $${a}(${f})^2 \\approx ${Math.round(a * f * f)}$.`,
-        `乘以 $${f}$ 两次：$${a}(${f})^2 \\approx ${Math.round(a * f * f)}$。`,
+      worked(
+        [
+          step(
+            "Find the yearly factor",
+            "求每年的倍数",
+            `Adding $${r}\\%$ each year multiplies by $${f}$.`,
+            `每年增加 $${r}\\%$，相当于乘以 $${f}$。`,
+          ),
+          step("Apply it for the first year", "算第一年", `$${a} \\times ${f} = ${y1}$.`, `$${a} \\times ${f} = ${y1}$。`),
+          step(
+            "Apply it again and round",
+            "再算一年并取整",
+            `$${y1} \\times ${f} = ${v2} \\approx ${Math.round(a * f * f)}$.`,
+            `$${y1} \\times ${f} = ${v2} \\approx ${Math.round(a * f * f)}$。`,
+          ),
+        ],
+        t(
+          `The interest is $${(a * r) / 100}$ the first year and $${(y1 * r) / 100}$ the second, and $${a} + ${(a * r) / 100} + ${(y1 * r) / 100} = ${v2}$.`,
+          `第一年利息 $${(a * r) / 100}$，第二年利息 $${(y1 * r) / 100}$，$${a} + ${(a * r) / 100} + ${(y1 * r) / 100} = ${v2}$。`,
+        ),
+        [
+          t(
+            `This adds the first year's interest twice, which is simple interest; compounding also earns interest on the interest.`,
+            `这是把第一年的利息加了两次，是单利；复利还要对利息计息。`,
+          ),
+          t(`This is the amount after $1$ year, not $2$.`, `这是 $1$ 年后的金额，不是 $2$ 年后。`),
+          t(`This is $\\$10$ more than $${a}(${f})^2$; recheck the multiplication.`, `这比 $${a}(${f})^2$ 多了 $\\$10$；请重新核对乘法。`),
+        ],
       ),
     );
   }),
@@ -206,9 +524,34 @@ export const satExamAdvanced3: ExamSpec[] = [
           `V(t) = ${a * 10} - ${r}t`,
           `V(t) = ${r}(${a * 10})^t`,
         ],
-        t(
-          `Losing $${r}\\%$ leaves $${100 - r}\\%$, so the factor is $${f}$.`,
-          `减少 $${r}\\%$ 后剩下 $${100 - r}\\%$，所以倍数是 $${f}$。`,
+        worked(
+          [
+            step(
+              "Find the decay factor",
+              "求衰减倍数",
+              `Losing $${r}\\%$ leaves $100\\% - ${r}\\% = ${100 - r}\\%$ of the value, so the factor is $${f}$.`,
+              `减少 $${r}\\%$ 后剩下 $100\\% - ${r}\\% = ${100 - r}\\%$，所以倍数是 $${f}$。`,
+            ),
+            step(
+              "Write the model",
+              "写出模型",
+              `The start $${a * 10}$ is the coefficient: $V(t) = ${a * 10}(${f})^t$.`,
+              `起始值 $${a * 10}$ 是系数：$V(t) = ${a * 10}(${f})^t$。`,
+            ),
+          ],
+          t(
+            `After one year the car loses $${(a * 10 * r) / 100}$, leaving $${a * 10} - ${(a * 10 * r) / 100} = ${(a * 10 * (100 - r)) / 100}$, which is $${a * 10} \\times ${f}$.`,
+            `一年后汽车贬值 $${(a * 10 * r) / 100}$，剩下 $${a * 10} - ${(a * 10 * r) / 100} = ${(a * 10 * (100 - r)) / 100}$，正是 $${a * 10} \\times ${f}$。`,
+          ),
+          [
+            t(
+              `This keeps only the $${r}\\%$ that is lost, not the $${100 - r}\\%$ that is left.`,
+              `这是只保留了失去的 $${r}\\%$，而不是剩下的 $${100 - r}\\%$。`,
+            ),
+            t(`This factor is above $1$, so the value would grow by $${r}\\%$ each year.`, `这个倍数大于 $1$，价值会每年增长 $${r}\\%$。`),
+            t(`This subtracts $${r}$ dollars a year, not $${r}\\%$ of the value.`, `这是每年减少 $${r}$ 美元，而不是价值的 $${r}\\%$。`),
+            t(`This swaps the starting value and the percent.`, `这是把起始值和百分数对调了。`),
+          ],
         ),
       );
     return spr(
@@ -218,9 +561,33 @@ export const satExamAdvanced3: ExamSpec[] = [
       ),
       a / 8,
       [(3 * a) / 8, a / 2, a / 4],
-      t(
-        `$${3 * r}$ days is $3$ half-lives: $${a} \\cdot \\left(\\frac{1}{2}\\right)^3 = ${a / 8}$.`,
-        `$${3 * r}$ 天是 $3$ 个半衰期：$${a} \\cdot \\left(\\frac{1}{2}\\right)^3 = ${a / 8}$。`,
+      worked(
+        [
+          step(
+            "Count the half-lives",
+            "数出半衰期的个数",
+            `$\\frac{${3 * r}}{${r}} = 3$ half-lives.`,
+            `$\\frac{${3 * r}}{${r}} = 3$ 个半衰期。`,
+          ),
+          step(
+            "Halve three times",
+            "减半三次",
+            `$${a} \\to ${a / 2} \\to ${a / 4} \\to ${a / 8}$.`,
+            `$${a} \\to ${a / 2} \\to ${a / 4} \\to ${a / 8}$。`,
+          ),
+        ],
+        t(
+          `$${a} \\times \\left(\\frac{1}{2}\\right)^3 = \\frac{${a}}{8} = ${a / 8}$.`,
+          `$${a} \\times \\left(\\frac{1}{2}\\right)^3 = \\frac{${a}}{8} = ${a / 8}$。`,
+        ),
+        [
+          t(
+            `This takes $3 \\times \\frac{1}{8}$ of the sample; the halving repeats, so $\\left(\\frac{1}{2}\\right)^3 = \\frac{1}{8}$ of it remains.`,
+            `这是取了样品的 $3 \\times \\frac{1}{8}$；减半是重复的，剩下 $\\left(\\frac{1}{2}\\right)^3 = \\frac{1}{8}$。`,
+          ),
+          t(`This is what remains after one half-life, $${r}$ days.`, `这是一个半衰期（$${r}$ 天）后剩下的量。`),
+          t(`This is what remains after two half-lives, $${2 * r}$ days.`, `这是两个半衰期（$${2 * r}$ 天）后剩下的量。`),
+        ],
       ),
     );
   }),
@@ -238,7 +605,31 @@ export const satExamAdvanced3: ExamSpec[] = [
           ),
           a,
           [a * b, a * b * b, b],
-          t(`Substitute: $a \\cdot ${b} = ${a * b}$, so $a = ${a}$.`, `代入：$a \\cdot ${b} = ${a * b}$，所以 $a = ${a}$。`),
+          worked(
+            [
+              step(
+                "Substitute the time",
+                "代入时间",
+                `At $t = 1$: $a \\times ${b} = ${a * b}$.`,
+                `当 $t = 1$ 时：$a \\times ${b} = ${a * b}$。`,
+              ),
+              step(
+                "Divide by the base",
+                "除以底数",
+                `$a = \\frac{${a * b}}{${b}} = ${a}$, the number at $t = 0$.`,
+                `$a = \\frac{${a * b}}{${b}} = ${a}$，即 $t = 0$ 时的数量。`,
+              ),
+            ],
+            t(`$N(1) = ${a} \\times ${b} = ${a * b}$.`, `$N(1) = ${a} \\times ${b} = ${a * b}$。`),
+            [
+              t(`This is the number after $1$ hour, not at the start.`, `这是 $1$ 小时后的数量，不是开始时的。`),
+              t(
+                `This multiplies by $${b}$ again instead of dividing; it is the number after $2$ hours.`,
+                `这是又乘了 $${b}$ 而不是除以它；这是 $2$ 小时后的数量。`,
+              ),
+              t(`This is the hourly factor, not the starting number.`, `这是每小时的倍数，不是起始数量。`),
+            ],
+          ),
         );
       return spr(
         t(
@@ -247,9 +638,28 @@ export const satExamAdvanced3: ExamSpec[] = [
         ),
         b,
         [b * b, a, 2 * b],
-        t(
-          `$${a}b^2 = ${a * b * b}$ gives $b^2 = ${b * b}$, so $b = ${b}$.`,
-          `$${a}b^2 = ${a * b * b}$ 得 $b^2 = ${b * b}$，所以 $b = ${b}$。`,
+        worked(
+          [
+            step(
+              "Substitute the time",
+              "代入时间",
+              `At $t = 2$: $${a}b^2 = ${a * b * b}$, so $b^2 = \\frac{${a * b * b}}{${a}} = ${b * b}$.`,
+              `当 $t = 2$ 时：$${a}b^2 = ${a * b * b}$，所以 $b^2 = \\frac{${a * b * b}}{${a}} = ${b * b}$。`,
+            ),
+            step("Take the positive root", "取正根", `Since $b > 0$, $b = ${b}$.`, `因为 $b > 0$，所以 $b = ${b}$。`),
+          ],
+          t(
+            `$N(2) = ${a} \\times ${b}^2 = ${a} \\times ${b * b} = ${a * b * b}$.`,
+            `$N(2) = ${a} \\times ${b}^2 = ${a} \\times ${b * b} = ${a * b * b}$。`,
+          ),
+          [
+            t(`This is $b^2$, the growth over $2$ hours; take its square root.`, `这是 $b^2$，是 $2$ 小时的增长倍数；要开平方。`),
+            t(`This is the starting number, not the hourly factor.`, `这是起始数量，不是每小时的倍数。`),
+            t(
+              `This takes the growth over $2$ hours as $2 \\times b$; the factor is applied twice, giving $b^2$.`,
+              `这是把 $2$ 小时的增长当成了 $2 \\times b$；倍数乘了两次，应为 $b^2$。`,
+            ),
+          ],
         ),
       );
     },
@@ -258,6 +668,7 @@ export const satExamAdvanced3: ExamSpec[] = [
     const a = rng.pick([120, 180, 240, 300, 450, 600, 700, 900]);
     const r = rng.pick([4, 6, 8, 12, 20]);
     const f = (100 + r) / 100;
+    const [d1, d2] = [(a * r) / 100, (a * (100 + r) * r) / 10000];
     if (!hard)
       return words(
         rng,
@@ -271,7 +682,34 @@ export const satExamAdvanced3: ExamSpec[] = [
           t("The number of members after one year", "一年后的会员数"),
           t("The greatest number of members", "最多的会员数"),
         ],
-        t(`At $t = 0$ the power equals $1$, so $M(0) = ${a}$.`, `当 $t = 0$ 时幂等于 $1$，所以 $M(0) = ${a}$。`),
+        worked(
+          [
+            step(
+              "Substitute zero",
+              "代入零",
+              `At $t = 0$ the power is $(${f})^0 = 1$, so $M(0) = ${a}$.`,
+              `当 $t = 0$ 时幂为 $(${f})^0 = 1$，所以 $M(0) = ${a}$。`,
+            ),
+            step(
+              "Interpret",
+              "解释含义",
+              `$t = 0$ is the year the club opened, so $${a}$ is the number of members then.`,
+              `$t = 0$ 是俱乐部成立的那年，所以 $${a}$ 是那时的会员数。`,
+            ),
+          ],
+          t(
+            `A year later the model gives $M(1) = ${a} \\times ${f} = ${(a * (100 + r)) / 100}$, already different from $${a}$.`,
+            `一年后模型给出 $M(1) = ${a} \\times ${f} = ${(a * (100 + r)) / 100}$，已经不是 $${a}$ 了。`,
+          ),
+          [
+            t(`The yearly change is a percent of the members, $${r}\\%$, not $${a}$.`, `每年的变化是会员数的 $${r}\\%$，不是 $${a}$。`),
+            t(`After one year the number is $${a} \\times ${f}$, not $${a}$.`, `一年后的人数是 $${a} \\times ${f}$，不是 $${a}$。`),
+            t(
+              `The factor $${f}$ is above $1$, so the number keeps growing and $${a}$ is the least value, not the greatest.`,
+              `倍数 $${f}$ 大于 $1$，人数一直增长，$${a}$ 是最小值，不是最大值。`,
+            ),
+          ],
+        ),
       );
     return words(
       rng,
@@ -285,9 +723,36 @@ export const satExamAdvanced3: ExamSpec[] = [
         t(`It increases by $${100 + r}\\%$ each year.`, `每年增长 $${100 + r}\\%$。`),
         t(`It decreases by $${r}\\%$ each year.`, `每年减少 $${r}\\%$。`),
       ],
-      t(
-        `A factor of $${f}$ keeps $100\\%$ and adds $${r}\\%$, so the change is a percent of the current number.`,
-        `倍数 $${f}$ 保留 $100\\%$ 并增加 $${r}\\%$，所以变化是当前数量的百分比。`,
+      worked(
+        [
+          step(
+            "Split the factor",
+            "拆开倍数",
+            `$${f} = 1 + ${r / 100}$: each year keeps $100\\%$ of the members and adds $${r}\\%$.`,
+            `$${f} = 1 + ${r / 100}$：每年保留 $100\\%$ 的会员并增加 $${r}\\%$。`,
+          ),
+          step(
+            "Describe the change",
+            "描述变化",
+            `So membership increases by $${r}\\%$ of its current size each year.`,
+            `所以会员数每年增长当前人数的 $${r}\\%$。`,
+          ),
+        ],
+        t(
+          `The first year adds $${d1}$ members and the second adds $${d2}$: the amount grows, while the percent stays $${r}\\%$.`,
+          `第一年增加 $${d1}$ 人，第二年增加 $${d2}$ 人：增加的人数在变大，百分比保持 $${r}\\%$。`,
+        ),
+        [
+          t(
+            `A fixed number of new members is linear growth; here the increase is a percent and grows each year.`,
+            `每年增加固定人数是线性增长；这里增加的是百分比，人数逐年变大。`,
+          ),
+          t(
+            `The factor $${f}$ includes the $100\\%$ kept; the increase is only $${r}\\%$.`,
+            `倍数 $${f}$ 包含保留的 $100\\%$；增加的只有 $${r}\\%$。`,
+          ),
+          t(`The factor $${f}$ is above $1$, so membership increases.`, `倍数 $${f}$ 大于 $1$，所以会员数增加。`),
+        ],
       ),
     );
   }),
@@ -299,18 +764,61 @@ export const satExamAdvanced3: ExamSpec[] = [
         t(`What are the solutions of $|x - ${b}| = ${k}$?`, `$|x - ${b}| = ${k}$ 的解是什么？`),
         `x = ${b - k}, x = ${b + k}`,
         [`x = ${b + k}`, `x = ${b - k}`, `x = ${k - b}, x = ${-k - b}`, `x = ${-b - k}, x = ${-b + k + 1}`],
-        t(
-          `The expression inside is $${k}$ or $-${k}$, so $x = ${b + k}$ or $x = ${b - k}$.`,
-          `绝对值内的式子是 $${k}$ 或 $-${k}$，所以 $x = ${b + k}$ 或 $x = ${b - k}$。`,
+        worked(
+          [
+            step(
+              "Split into two cases",
+              "分成两种情况",
+              `The expression inside is $${k}$ units from $0$: $x - ${b} = ${k}$ or $x - ${b} = -${k}$.`,
+              `绝对值内的式子与 $0$ 相距 $${k}$：$x - ${b} = ${k}$ 或 $x - ${b} = -${k}$。`,
+            ),
+            step("Solve each case", "分别求解", `$x = ${b + k}$ or $x = ${b - k}$.`, `$x = ${b + k}$ 或 $x = ${b - k}$。`),
+          ],
+          t(
+            `$|${b + k} - ${b}| = ${k}$ and $|${b - k} - ${b}| = |-${k}| = ${k}$.`,
+            `$|${b + k} - ${b}| = ${k}$，$|${b - k} - ${b}| = |-${k}| = ${k}$。`,
+          ),
+          [
+            t(
+              `This keeps only the case $x - ${b} = ${k}$; the case $x - ${b} = -${k}$ also works.`,
+              `这是只保留了 $x - ${b} = ${k}$ 的情况；$x - ${b} = -${k}$ 也成立。`,
+            ),
+            t(
+              `This keeps only the case $x - ${b} = -${k}$; the case $x - ${b} = ${k}$ also works.`,
+              `这是只保留了 $x - ${b} = -${k}$ 的情况；$x - ${b} = ${k}$ 也成立。`,
+            ),
+            t(`These solve $|x + ${b}| = ${k}$: the sign of $${b}$ is flipped.`, `这是 $|x + ${b}| = ${k}$ 的解：把 $${b}$ 的符号弄反了。`),
+            t(
+              `This takes the center as $-${b}$ instead of $${b}$, and its second value is not $-${b} + ${k}$ either.`,
+              `这是把中心当成了 $-${b}$ 而不是 $${b}$，而且第二个值也不是 $-${b} + ${k}$。`,
+            ),
+          ],
         ),
       );
     return spr(
       t(`What is the sum of the solutions of $${a}|x - ${b}| + 1 = ${a * k + 1}$?`, `$${a}|x - ${b}| + 1 = ${a * k + 1}$ 的解之和是多少？`),
       2 * b,
       [b, 2 * k, 2 * (b + k)],
-      t(
-        `Isolate: $|x - ${b}| = ${k}$. The solutions are $${b} \\pm ${k}$, so the sum is $${2 * b}$.`,
-        `单独放好：$|x - ${b}| = ${k}$。解为 $${b} \\pm ${k}$，所以和为 $${2 * b}$。`,
+      worked(
+        [
+          step(
+            "Isolate the absolute value",
+            "单独放好绝对值",
+            `Subtract $1$: $${a}|x - ${b}| = ${a * k}$. Divide by $${a}$: $|x - ${b}| = ${k}$.`,
+            `减去 $1$：$${a}|x - ${b}| = ${a * k}$。除以 $${a}$：$|x - ${b}| = ${k}$。`,
+          ),
+          step("Solve the two cases", "解两种情况", `$x = ${b + k}$ or $x = ${b - k}$.`, `$x = ${b + k}$ 或 $x = ${b - k}$。`),
+          step("Add", "相加", `$${b + k} + ${par(b - k)} = ${2 * b}$.`, `$${b + k} + ${par(b - k)} = ${2 * b}$。`),
+        ],
+        t(
+          `At $x = ${b + k}$: $${a} \\times ${k} + 1 = ${a * k + 1}$. The two solutions sit $${k}$ on either side of $${b}$, so they add to $2 \\times ${b}$.`,
+          `当 $x = ${b + k}$ 时：$${a} \\times ${k} + 1 = ${a * k + 1}$。两个解在 $${b}$ 两侧各相距 $${k}$，所以和为 $2 \\times ${b}$。`,
+        ),
+        [
+          t(`This is the midpoint $${b}$ of the two solutions, not their sum.`, `这是两个解的中点 $${b}$，不是它们的和。`),
+          t(`This is the distance between the two solutions, not their sum.`, `这是两个解之间的距离，不是它们的和。`),
+          t(`This adds $${b + k}$ twice; the other solution is $${b - k}$.`, `这是把 $${b + k}$ 加了两次；另一个解是 $${b - k}$。`),
+        ],
       ),
     );
   }),
@@ -321,7 +829,18 @@ export const satExamAdvanced3: ExamSpec[] = [
         t(`What value of $m$ satisfies $\\frac{${a * x}}{m} = ${a}$?`, `哪个 $m$ 值满足 $\\frac{${a * x}}{m} = ${a}$？`),
         x,
         [a, a * x, a * a * x],
-        t(`Multiply by $m$ and divide by $${a}$: $m = ${x}$.`, `两边乘以 $m$ 再除以 $${a}$：$m = ${x}$。`),
+        worked(
+          [
+            step("Clear the fraction", "去分母", `Multiply both sides by $m$: $${a * x} = ${a}m$.`, `两边乘以 $m$：$${a * x} = ${a}m$。`),
+            step("Divide", "相除", `$m = \\frac{${a * x}}{${a}} = ${x}$.`, `$m = \\frac{${a * x}}{${a}} = ${x}$。`),
+          ],
+          t(`$\\frac{${a * x}}{${x}} = ${a}$.`, `$\\frac{${a * x}}{${x}} = ${a}$。`),
+          [
+            t(`This is the right side of the equation, not $m$.`, `这是方程的右边，不是 $m$。`),
+            t(`This is the numerator; it still has to be divided by $${a}$.`, `这是分子；还要除以 $${a}$。`),
+            t(`This multiplies the numerator by $${a}$ instead of dividing.`, `这是用 $${a}$ 乘分子，而不是相除。`),
+          ],
+        ),
       );
     const k = a + 1;
     return spr(
@@ -331,9 +850,33 @@ export const satExamAdvanced3: ExamSpec[] = [
       ),
       x,
       [b, a + b, x + b],
-      t(
-        `Cross-multiply: $${a}(${k * (x + b)}) = ${a * k}(x + ${b})$, so $x + ${b} = ${x + b}$ and $x = ${x}$.`,
-        `交叉相乘：$${a}(${k * (x + b)}) = ${a * k}(x + ${b})$，所以 $x + ${b} = ${x + b}$，$x = ${x}$。`,
+      worked(
+        [
+          step(
+            "Cross-multiply",
+            "交叉相乘",
+            `$${a} \\times ${k * (x + b)} = ${a * k}(x + ${b})$, so $${a * k * (x + b)} = ${a * k}(x + ${b})$.`,
+            `$${a} \\times ${k * (x + b)} = ${a * k}(x + ${b})$，即 $${a * k * (x + b)} = ${a * k}(x + ${b})$。`,
+          ),
+          step(
+            "Divide and solve",
+            "相除并求解",
+            `Divide by $${a * k}$: $x + ${b} = ${x + b}$, so $x = ${x}$.`,
+            `除以 $${a * k}$：$x + ${b} = ${x + b}$，所以 $x = ${x}$。`,
+          ),
+        ],
+        t(
+          `At $x = ${x}$ the left side is $\\frac{${a}}{${x + b}}$, and the right side $\\frac{${a * k}}{${k * (x + b)}}$ reduces by $${k}$ to the same fraction.`,
+          `当 $x = ${x}$ 时左边是 $\\frac{${a}}{${x + b}}$，右边 $\\frac{${a * k}}{${k * (x + b)}}$ 约去 $${k}$ 后是同一个分数。`,
+        ),
+        [
+          t(`This is the constant in the denominator, not $x$.`, `这是分母中的常数，不是 $x$。`),
+          t(
+            `This adds the numerator $${a}$ to $${b}$; the numerators only cancel, and the equation fixes $x + ${b} = ${x + b}$.`,
+            `这是把分子 $${a}$ 加到 $${b}$ 上；分子只会约去，方程确定的是 $x + ${b} = ${x + b}$。`,
+          ),
+          t(`This is the value of $x + ${b}$; subtract $${b}$ to get $x$.`, `这是 $x + ${b}$ 的值；还要减去 $${b}$ 才得到 $x$。`),
+        ],
       ),
     );
   }),
@@ -345,7 +888,21 @@ export const satExamAdvanced3: ExamSpec[] = [
         t(`What value of $x$ satisfies $\\sqrt{x - ${b}} = ${k}$?`, `哪个 $x$ 值满足 $\\sqrt{x - ${b}} = ${k}$？`),
         k * k + b,
         [k + b, k * k - b, 2 * k + b],
-        t(`Square both sides: $x - ${b} = ${k * k}$, so $x = ${k * k + b}$.`, `两边平方：$x - ${b} = ${k * k}$，所以 $x = ${k * k + b}$。`),
+        worked(
+          [
+            step("Square both sides", "两边平方", `$x - ${b} = ${k}^2 = ${k * k}$.`, `$x - ${b} = ${k}^2 = ${k * k}$。`),
+            step("Solve", "求解", `Add $${b}$: $x = ${k * k + b}$.`, `加上 $${b}$：$x = ${k * k + b}$。`),
+          ],
+          t(`$\\sqrt{${k * k + b} - ${b}} = \\sqrt{${k * k}} = ${k}$.`, `$\\sqrt{${k * k + b} - ${b}} = \\sqrt{${k * k}} = ${k}$。`),
+          [
+            t(
+              `This adds $${b}$ to $${k}$ without squaring; the square root is undone by squaring.`,
+              `这是没有平方就把 $${b}$ 加到 $${k}$ 上；去根号要平方。`,
+            ),
+            t(`This subtracts $${b}$; undoing $x - ${b}$ means adding $${b}$.`, `这是减去了 $${b}$；要还原 $x - ${b}$ 应当加上 $${b}$。`),
+            t(`This doubles $${k}$ instead of squaring it.`, `这是把 $${k}$ 乘以 $2$，而不是平方。`),
+          ],
+        ),
       );
     return spr(
       t(
@@ -354,9 +911,33 @@ export const satExamAdvanced3: ExamSpec[] = [
       ),
       k * k - b,
       [k * k + b, k - b, a * a * k * k - b],
-      t(
-        `Isolate the root: $\\sqrt{x + ${b}} = ${k}$. Squaring gives $x = ${k * k - b}$.`,
-        `单独放好根式：$\\sqrt{x + ${b}} = ${k}$。平方得 $x = ${k * k - b}$。`,
+      worked(
+        [
+          step(
+            "Isolate the root",
+            "单独放好根式",
+            `Add $1$: $${a}\\sqrt{x + ${b}} = ${a * k}$. Divide by $${a}$: $\\sqrt{x + ${b}} = ${k}$.`,
+            `加上 $1$：$${a}\\sqrt{x + ${b}} = ${a * k}$。除以 $${a}$：$\\sqrt{x + ${b}} = ${k}$。`,
+          ),
+          step(
+            "Square and solve",
+            "平方并求解",
+            `$x + ${b} = ${k * k}$, so $x = ${k * k - b}$.`,
+            `$x + ${b} = ${k * k}$，所以 $x = ${k * k - b}$。`,
+          ),
+        ],
+        t(
+          `$${a}\\sqrt{${k * k - b} + ${b}} - 1 = ${a} \\times ${k} - 1 = ${a * k - 1}$.`,
+          `$${a}\\sqrt{${k * k - b} + ${b}} - 1 = ${a} \\times ${k} - 1 = ${a * k - 1}$。`,
+        ),
+        [
+          t(`This adds $${b}$; undoing $x + ${b}$ means subtracting $${b}$.`, `这是加上了 $${b}$；要还原 $x + ${b}$ 应当减去 $${b}$。`),
+          t(`This forgets to square $${k}$ before subtracting $${b}$.`, `这是减去 $${b}$ 之前忘了把 $${k}$ 平方。`),
+          t(
+            `This squares before dividing by $${a}$, so the $${a}$ is squared into the answer.`,
+            `这是先平方再除以 $${a}$，把 $${a}$ 也平方进了答案。`,
+          ),
+        ],
       ),
     );
   }),
@@ -364,7 +945,12 @@ export const satExamAdvanced3: ExamSpec[] = [
     const x = rng.int(2, 12);
     const c = rng.int(1, x - 1);
     const a = rng.int(2, 5);
-    if (!hard)
+    if (!hard) {
+      const off = (w: number) =>
+        t(
+          `At $x = ${w}$ the left radicand is $${(a + 1) * w - c}$ and the right is $${a * w + x - c}$; they are not equal.`,
+          `当 $x = ${w}$ 时左边被开方数是 $${(a + 1) * w - c}$，右边是 $${a * w + x - c}$，二者不相等。`,
+        );
       return spr(
         t(
           `What value of $x$ satisfies $\\sqrt{${a + 1}x - ${c}} = \\sqrt{${a}x + ${x - c}}$?`,
@@ -372,13 +958,32 @@ export const satExamAdvanced3: ExamSpec[] = [
         ),
         x,
         [x + c, x - c, 2 * x],
-        t(
-          `Square both sides and solve the linear equation: $${a + 1}x - ${c} = ${a}x + ${x - c}$ gives $x = ${x}$.`,
-          `两边平方后解一次方程：$${a + 1}x - ${c} = ${a}x + ${x - c}$ 得 $x = ${x}$。`,
+        worked(
+          [
+            step(
+              "Square both sides",
+              "两边平方",
+              `Equal square roots have equal radicands: $${a + 1}x - ${c} = ${a}x + ${x - c}$.`,
+              `平方根相等，被开方数就相等：$${a + 1}x - ${c} = ${a}x + ${x - c}$。`,
+            ),
+            step(
+              "Solve the linear equation",
+              "解一次方程",
+              `Subtract $${a}x$ and add $${c}$: $x = ${x - c} + ${c} = ${x}$.`,
+              `减去 $${a}x$ 再加上 $${c}$：$x = ${x - c} + ${c} = ${x}$。`,
+            ),
+          ],
+          t(
+            `At $x = ${x}$ both radicands are $${(a + 1) * x - c}$, which is positive, so both roots exist and are equal.`,
+            `当 $x = ${x}$ 时两个被开方数都是 $${(a + 1) * x - c}$，是正数，所以两个根都存在且相等。`,
+          ),
+          [off(x + c), t(`This forgets to add back the $${c}$ from the left side.`, `这是忘了把左边的 $${c}$ 加回去。`), off(2 * x)],
         ),
       );
+    }
     const r = rng.int(2, 8);
     const q = rng.int(1, 4);
+    const n = 2 * r * q + q * q;
     return spr(
       t(
         `What value of $x$ satisfies $\\sqrt{x + ${2 * r * q + q * q}} = \\sqrt{x} + ${q}$?`,
@@ -386,9 +991,31 @@ export const satExamAdvanced3: ExamSpec[] = [
       ),
       r * r,
       [r, 2 * r, (r + q) ** 2],
-      t(
-        `Square both sides: $x + ${2 * r * q + q * q} = x + ${2 * q}\\sqrt{x} + ${q * q}$. So $\\sqrt{x} = ${r}$ and $x = ${r * r}$.`,
-        `两边平方：$x + ${2 * r * q + q * q} = x + ${2 * q}\\sqrt{x} + ${q * q}$。所以 $\\sqrt{x} = ${r}$，$x = ${r * r}$。`,
+      worked(
+        [
+          step(
+            "Square both sides",
+            "两边平方",
+            `$x + ${n} = x + ${2 * q}\\sqrt{x} + ${q * q}$.`,
+            `$x + ${n} = x + ${2 * q}\\sqrt{x} + ${q * q}$。`,
+          ),
+          step(
+            "Isolate the root",
+            "单独放好根式",
+            `The $x$ terms cancel: $${2 * q}\\sqrt{x} = ${n} - ${q * q} = ${2 * r * q}$, so $\\sqrt{x} = ${r}$.`,
+            `$x$ 项抵消：$${2 * q}\\sqrt{x} = ${n} - ${q * q} = ${2 * r * q}$，所以 $\\sqrt{x} = ${r}$。`,
+          ),
+          step("Square again", "再平方", `$x = ${r}^2 = ${r * r}$.`, `$x = ${r}^2 = ${r * r}$。`),
+        ],
+        t(
+          `$\\sqrt{${r * r} + ${n}} = \\sqrt{${(r + q) ** 2}} = ${r + q}$, and $\\sqrt{${r * r}} + ${q} = ${r + q}$.`,
+          `$\\sqrt{${r * r} + ${n}} = \\sqrt{${(r + q) ** 2}} = ${r + q}$，且 $\\sqrt{${r * r}} + ${q} = ${r + q}$。`,
+        ),
+        [
+          t(`This is $\\sqrt{x}$; square it to get $x$.`, `这是 $\\sqrt{x}$；要平方才得到 $x$。`),
+          t(`This doubles $\\sqrt{x}$ instead of squaring it.`, `这是把 $\\sqrt{x}$ 乘以 $2$，而不是平方。`),
+          t(`This is the left radicand $x + ${n}$, not $x$.`, `这是左边的被开方数 $x + ${n}$，不是 $x$。`),
+        ],
       ),
     );
   }),
@@ -399,6 +1026,7 @@ export const satExamAdvanced3: ExamSpec[] = [
       { x: [h - 5, h + 5], y: [k - 2, k + 6], dx: 1, dy: 2 },
       t("A graph on a coordinate grid.", "坐标网格上的一个图象。"),
     );
+    const f = `|x ${sg(-h)}| ${sg(k)}`;
     if (!hard)
       return mc(
         rng,
@@ -413,7 +1041,38 @@ export const satExamAdvanced3: ExamSpec[] = [
           `f(x) = |x ${sg(h)}| ${sg(-k)}`,
           `f(x) = -|x ${sg(-h)}| ${sg(k)}`,
         ],
-        t(`The lowest point $(${h}, ${k})$ gives $|x ${sg(-h)}| ${sg(k)}$.`, `最低点 $(${h}, ${k})$ 给出 $|x ${sg(-h)}| ${sg(k)}$。`),
+        worked(
+          [
+            step(
+              "Read the vertex",
+              "读出顶点",
+              `The graph opens up and its lowest point is $(${h}, ${k})$.`,
+              `图象开口向上，最低点是 $(${h}, ${k})$。`,
+            ),
+            step(
+              "Write the equation",
+              "写出方程",
+              `$|x - h| + k$ has its vertex at $(h, k)$, so $f(x) = ${f}$.`,
+              `$|x - h| + k$ 的顶点在 $(h, k)$，所以 $f(x) = ${f}$。`,
+            ),
+          ],
+          t(
+            `At $x = ${h + 1}$ the equation gives $|1| ${sg(k)} = ${k + 1}$, and the graph passes through $(${h + 1}, ${k + 1})$.`,
+            `当 $x = ${h + 1}$ 时方程给出 $|1| ${sg(k)} = ${k + 1}$，图象也经过 $(${h + 1}, ${k + 1})$。`,
+          ),
+          [
+            t(
+              `This puts the vertex at $x = ${-h}$; $|x - h|$ is smallest at $x = h$.`,
+              `这是把顶点放在 $x = ${-h}$；$|x - h|$ 在 $x = h$ 处最小。`,
+            ),
+            t(
+              `This puts the vertex at height $${-k}$, but the lowest point is at height $${k}$.`,
+              `这是把顶点放在高度 $${-k}$，但最低点的高度是 $${k}$。`,
+            ),
+            t(`This flips both coordinates of the vertex.`, `这是把顶点的两个坐标的符号都弄反了。`),
+            t(`This graph opens down, but the vertex of the graph shown is its lowest point.`, `这个图象开口向下，但图中顶点是最低点。`),
+          ],
+        ),
         fig,
       );
     return spr(
@@ -423,9 +1082,33 @@ export const satExamAdvanced3: ExamSpec[] = [
       ),
       k + n,
       [h + n, k, h + k + n + 1],
-      t(
-        `The absolute value is at least $0$, so the least value of $f(x)$ is $${k}$. Adding $${n}$ raises it to $${k + n}$.`,
-        `绝对值至少为 $0$，所以 $f(x)$ 的最小值是 $${k}$。加上 $${n}$ 后变为 $${k + n}$。`,
+      worked(
+        [
+          step(
+            "Find the minimum of the inner function",
+            "求原函数的最小值",
+            `$|x ${sg(-h)}| \\ge 0$, with $0$ at $x = ${h}$, so the least value of $f(x)$ is $${k}$.`,
+            `$|x ${sg(-h)}| \\ge 0$，在 $x = ${h}$ 处为 $0$，所以 $f(x)$ 的最小值是 $${k}$。`,
+          ),
+          step(
+            "Shift up",
+            "向上平移",
+            `Adding $${n}$ raises every value: $${k} + ${n} = ${k + n}$.`,
+            `加上 $${n}$ 使每个值都升高：$${k} + ${n} = ${k + n}$。`,
+          ),
+        ],
+        t(
+          `$g(${h}) = 0 ${sg(k)} + ${n} = ${k + n}$, and $g(${h + 1}) = ${k + n + 1}$ is larger.`,
+          `$g(${h}) = 0 ${sg(k)} + ${n} = ${k + n}$，而 $g(${h + 1}) = ${k + n + 1}$ 更大。`,
+        ),
+        [
+          t(`This uses the $x$-coordinate of the vertex; the minimum value is a height.`, `这是用了顶点的横坐标；最小值是高度。`),
+          t(`This is the minimum of $f$, before adding $${n}$.`, `这是 $f$ 的最小值，还没有加上 $${n}$。`),
+          t(
+            `This mixes in the $x$-coordinate $${h}$; the minimum value is the height $${k + n}$ only.`,
+            `这是混进了横坐标 $${h}$；最小值只是高度 $${k + n}$。`,
+          ),
+        ],
       ),
     );
   }),
@@ -440,9 +1123,33 @@ export const satExamAdvanced3: ExamSpec[] = [
         ),
         r,
         [-r, s, -s],
-        t(
-          `A fraction is zero when its numerator is zero and its denominator is not, so $x = ${r}$.`,
-          `分子为零且分母不为零时分式为零，所以 $x = ${r}$。`,
+        worked(
+          [
+            step(
+              "Set the numerator to zero",
+              "令分子为零",
+              `A fraction is zero when its numerator is zero: $x - ${r} = 0$, so $x = ${r}$.`,
+              `分子为零时分式为零：$x - ${r} = 0$，所以 $x = ${r}$。`,
+            ),
+            step(
+              "Check the denominator",
+              "检查分母",
+              `At $x = ${r}$ the denominator is $${r} + ${s} = ${r + s}$, not $0$.`,
+              `当 $x = ${r}$ 时分母是 $${r} + ${s} = ${r + s}$，不为 $0$。`,
+            ),
+          ],
+          t(`$f(${r}) = \\frac{0}{${r + s}} = 0$.`, `$f(${r}) = \\frac{0}{${r + s}} = 0$。`),
+          [
+            t(
+              `At $x = ${-r}$ the numerator is $${-2 * r}$, not $0$: the sign is flipped.`,
+              `当 $x = ${-r}$ 时分子是 $${-2 * r}$，不是 $0$：符号弄反了。`,
+            ),
+            t(
+              `This reads the number in the denominator; only the numerator decides where $f$ is zero.`,
+              `这是读了分母中的数；$f$ 在哪里为零只由分子决定。`,
+            ),
+            t(`This makes the denominator zero, where $f$ is not defined at all.`, `这使分母为零，$f$ 在那里根本没有定义。`),
+          ],
         ),
       );
     return spr(
@@ -452,7 +1159,26 @@ export const satExamAdvanced3: ExamSpec[] = [
       ),
       s,
       [-s, r, r + s],
-      t(`The function is not defined where the denominator is zero: $c = ${s}$.`, `分母为零处函数无定义：$c = ${s}$。`),
+      worked(
+        [
+          step(
+            "Find where the denominator is zero",
+            "找出分母为零处",
+            `Division by zero is not defined, so solve $x - ${s} = 0$.`,
+            `除以零没有定义，所以解 $x - ${s} = 0$。`,
+          ),
+          step("Solve", "求解", `$x = ${s}$, so $c = ${s}$.`, `$x = ${s}$，所以 $c = ${s}$。`),
+        ],
+        t(
+          `At $x = ${s}$ the fraction is $\\frac{${r}}{0}$, while at $x = ${s + 1}$ it is $\\frac{${r}}{1} = ${r}$, which is defined.`,
+          `当 $x = ${s}$ 时分式是 $\\frac{${r}}{0}$，而 $x = ${s + 1}$ 时是 $\\frac{${r}}{1} = ${r}$，有定义。`,
+        ),
+        [
+          t(`This makes $x + ${s}$ zero, but the denominator is $x - ${s}$.`, `这使 $x + ${s}$ 为零，但分母是 $x - ${s}$。`),
+          t(`This is the numerator; only a zero denominator leaves the function without a value.`, `这是分子，分子不会使函数无定义。`),
+          t(`This adds the numerator to $${s}$; only the denominator matters.`, `这是把分子加到 $${s}$ 上；只有分母有关。`),
+        ],
+      ),
     );
   }),
   spec("Solving Multivariable Equations", "解多元方程", ["many-variable-equations"], (rng, hard) => {
@@ -466,7 +1192,30 @@ export const satExamAdvanced3: ExamSpec[] = [
         ),
         `x = \\frac{y - ${c}w}{${a}}`,
         [`x = \\frac{y + ${c}w}{${a}}`, `x = \\frac{y}{${a}} - ${c}w`, `x = ${a}(y - ${c}w)`, `x = y - ${a * c}w`],
-        t(`Subtract $${c}w$, then divide by $${a}$.`, `先减去 $${c}w$，再除以 $${a}$。`),
+        worked(
+          [
+            step("Move the other term", "移走另一项", `Subtract $${c}w$: $y - ${c}w = ${a}x$.`, `减去 $${c}w$：$y - ${c}w = ${a}x$。`),
+            step(
+              "Divide",
+              "相除",
+              `Divide both sides by $${a}$: $x = \\frac{y - ${c}w}{${a}}$.`,
+              `两边除以 $${a}$：$x = \\frac{y - ${c}w}{${a}}$。`,
+            ),
+          ],
+          t(
+            `Substituting back: $${a} \\times \\frac{y - ${c}w}{${a}} + ${c}w = y - ${c}w + ${c}w = y$.`,
+            `代回：$${a} \\times \\frac{y - ${c}w}{${a}} + ${c}w = y - ${c}w + ${c}w = y$。`,
+          ),
+          [
+            t(`This adds $${c}w$ instead of subtracting it.`, `这是加上了 $${c}w$，而不是减去。`),
+            t(
+              `This divides only $y$ by $${a}$; all of $y - ${c}w$ must be divided.`,
+              `这是只把 $y$ 除以 $${a}$；整个 $y - ${c}w$ 都要除。`,
+            ),
+            t(`This multiplies by $${a}$ instead of dividing.`, `这是乘以 $${a}$，而不是除以。`),
+            t(`This multiplies $${c}$ by $${a}$ and never divides by $${a}$.`, `这是用 $${a}$ 乘 $${c}$，却没有除以 $${a}$。`),
+          ],
+        ),
       );
     return mc(
       rng,
@@ -476,7 +1225,30 @@ export const satExamAdvanced3: ExamSpec[] = [
       ),
       `b = \\frac{${a}A}{${c}h} - d`,
       [`b = \\frac{${a}A - d}{${c}h}`, `b = \\frac{${a}A}{${c}h} + d`, `b = \\frac{${c}h}{${a}A} - d`, `b = ${a}A - ${c}h - d`],
-      t(`Divide by $${c}h$ first, then subtract $d$.`, `先除以 $${c}h$，再减去 $d$。`),
+      worked(
+        [
+          step(
+            "Divide first",
+            "先相除",
+            `Divide by $${c}h$: $\\frac{${a}A}{${c}h} = b + d$.`,
+            `除以 $${c}h$：$\\frac{${a}A}{${c}h} = b + d$。`,
+          ),
+          step("Subtract", "再相减", `Subtract $d$: $b = \\frac{${a}A}{${c}h} - d$.`, `减去 $d$：$b = \\frac{${a}A}{${c}h} - d$。`),
+        ],
+        t(
+          `Substituting back: $b + d = \\frac{${a}A}{${c}h}$, and $${c}h \\times \\frac{${a}A}{${c}h} = ${a}A$.`,
+          `代回：$b + d = \\frac{${a}A}{${c}h}$，且 $${c}h \\times \\frac{${a}A}{${c}h} = ${a}A$。`,
+        ),
+        [
+          t(
+            `This subtracts $d$ before dividing; $d$ is inside the parentheses, so divide by $${c}h$ first.`,
+            `这是先减 $d$ 再除；$d$ 在括号内，要先除以 $${c}h$。`,
+          ),
+          t(`This adds $d$ instead of subtracting it.`, `这是加上了 $d$，而不是减去。`),
+          t(`This turns the fraction upside down.`, `这是把分数倒过来了。`),
+          t(`This subtracts $${c}h$ instead of dividing by it.`, `这是减去 $${c}h$，而不是除以它。`),
+        ],
+      ),
     );
   }),
   spec("Further Multivariable Equations", "进一步的多元方程", ["rearranging-formulas"], (rng, hard) => {
@@ -490,7 +1262,30 @@ export const satExamAdvanced3: ExamSpec[] = [
         ),
         `\\frac{z - ${a}x}{${b}}`,
         [`\\frac{z + ${a}x}{${b}}`, `z - \\frac{${a}x}{${b}}`, `\\frac{${b}}{z - ${a}x}`, `\\frac{z - ${b}x}{${a + b}}`],
-        t(`Subtract $${a}x$, then divide everything by $${b}$.`, `减去 $${a}x$，再把全部除以 $${b}$。`),
+        worked(
+          [
+            step("Move the other term", "移走另一项", `Subtract $${a}x$: $${b}y = z - ${a}x$.`, `减去 $${a}x$：$${b}y = z - ${a}x$。`),
+            step(
+              "Divide",
+              "相除",
+              `Divide everything by $${b}$: $y = \\frac{z - ${a}x}{${b}}$.`,
+              `全部除以 $${b}$：$y = \\frac{z - ${a}x}{${b}}$。`,
+            ),
+          ],
+          t(
+            `Substituting back: $${a}x + ${b} \\times \\frac{z - ${a}x}{${b}} = ${a}x + z - ${a}x = z$.`,
+            `代回：$${a}x + ${b} \\times \\frac{z - ${a}x}{${b}} = ${a}x + z - ${a}x = z$。`,
+          ),
+          [
+            t(`This adds $${a}x$ instead of subtracting it.`, `这是加上了 $${a}x$，而不是减去。`),
+            t(
+              `This divides only $${a}x$ by $${b}$; all of $z - ${a}x$ must be divided.`,
+              `这是只把 $${a}x$ 除以 $${b}$；整个 $z - ${a}x$ 都要除。`,
+            ),
+            t(`This turns the fraction upside down.`, `这是把分数倒过来了。`),
+            t(`This mixes up the coefficients and divides by their sum.`, `这是把系数弄混了，还除以了它们的和。`),
+          ],
+        ),
       );
     return mc(
       rng,
@@ -500,9 +1295,31 @@ export const satExamAdvanced3: ExamSpec[] = [
       ),
       `\\frac{${d}}{a - c}`,
       [`\\frac{${d}}{c - a}`, `\\frac{${d}}{a + c}`, `${d}(a - c)`, `\\frac{a - c}{${d}}`],
-      t(
-        `Collect the $x$ terms on the left and the numbers on the right: $x(a - c) = ${d}$. Divide by $a - c$.`,
-        `把含 $x$ 的项移到左边，数移到右边：$x(a - c) = ${d}$。除以 $a - c$。`,
+      worked(
+        [
+          step(
+            "Collect the terms",
+            "整理各项",
+            `Subtract $cx$ and $${b}$: $ax - cx = ${b + d} - ${b} = ${d}$.`,
+            `减去 $cx$ 和 $${b}$：$ax - cx = ${b + d} - ${b} = ${d}$。`,
+          ),
+          step(
+            "Factor and divide",
+            "提取公因式并相除",
+            `$x(a - c) = ${d}$, and $a - c \\ne 0$, so $x = \\frac{${d}}{a - c}$.`,
+            `$x(a - c) = ${d}$，且 $a - c \\ne 0$，所以 $x = \\frac{${d}}{a - c}$。`,
+          ),
+        ],
+        t(
+          `The two sides differ by $(a - c)x - ${d}$, and with $x = \\frac{${d}}{a - c}$ this is $${d} - ${d} = 0$.`,
+          `两边之差为 $(a - c)x - ${d}$，当 $x = \\frac{${d}}{a - c}$ 时它等于 $${d} - ${d} = 0$。`,
+        ),
+        [
+          t(`This drops a sign: collecting on the right gives $(c - a)x = -${d}$.`, `这是丢了一个负号：移到右边得 $(c - a)x = -${d}$。`),
+          t(`This adds $cx$ instead of subtracting it.`, `这是加上了 $cx$，而不是减去。`),
+          t(`This multiplies by $a - c$ instead of dividing.`, `这是乘以 $a - c$，而不是除以。`),
+          t(`This turns the fraction upside down.`, `这是把分数倒过来了。`),
+        ],
       ),
     );
   }),
@@ -519,7 +1336,27 @@ export const satExamAdvanced3: ExamSpec[] = [
         ),
         `r = \\frac{${a}q}{${d}p}`,
         [`r = \\frac{${d}p}{${a}q}`, `r = \\frac{${a}pq}{${d}}`, `r = \\frac{${d}q}{${a}p}`, `r = p - \\frac{${a}q}{${d}}`],
-        t(`Multiply by $${d}r$, then divide by $${d}p$.`, `乘以 $${d}r$，再除以 $${d}p$。`),
+        worked(
+          [
+            step(
+              "Clear the fraction",
+              "去分母",
+              `Multiply both sides by $${d}r$: $${d}pr = ${a}q$.`,
+              `两边乘以 $${d}r$：$${d}pr = ${a}q$。`,
+            ),
+            step("Divide", "相除", `Divide by $${d}p$: $r = \\frac{${a}q}{${d}p}$.`, `除以 $${d}p$：$r = \\frac{${a}q}{${d}p}$。`),
+          ],
+          t(
+            `Substituting back: $${d}r = ${d} \\times \\frac{${a}q}{${d}p} = \\frac{${a}q}{p}$, and $\\frac{${a}q}{${a}q / p} = p$.`,
+            `代回：$${d}r = ${d} \\times \\frac{${a}q}{${d}p} = \\frac{${a}q}{p}$，而 $\\frac{${a}q}{${a}q / p} = p$。`,
+          ),
+          [
+            t(`This turns the answer upside down.`, `这是把答案倒过来了。`),
+            t(`This multiplies by $p$ instead of dividing by it.`, `这是乘以 $p$，而不是除以它。`),
+            t(`This swaps the coefficients $${a}$ and $${d}$.`, `这是把系数 $${a}$ 和 $${d}$ 对调了。`),
+            t(`This subtracts instead of clearing the fraction.`, `这是用了减法，而不是去分母。`),
+          ],
+        ),
       );
     return mc(
       rng,
@@ -529,9 +1366,33 @@ export const satExamAdvanced3: ExamSpec[] = [
       ),
       `\\frac{xy}{${d}y + ${a}x}`,
       [`\\frac{x}{${d}} + \\frac{y}{${a}}`, `\\frac{${d}y + ${a}x}{xy}`, `\\frac{xy}{${d}x + ${a}y}`, `\\frac{${a * d}xy}{x + y}`],
-      t(
-        `Add the fractions: $\\frac{${d}y + ${a}x}{xy} = \\frac{1}{z}$. Then take reciprocals.`,
-        `分式相加：$\\frac{${d}y + ${a}x}{xy} = \\frac{1}{z}$。再取倒数。`,
+      worked(
+        [
+          step(
+            "Use a common denominator",
+            "通分",
+            `$\\frac{${d}}{x} = \\frac{${d}y}{xy}$ and $\\frac{${a}}{y} = \\frac{${a}x}{xy}$.`,
+            `$\\frac{${d}}{x} = \\frac{${d}y}{xy}$，$\\frac{${a}}{y} = \\frac{${a}x}{xy}$。`,
+          ),
+          step("Add", "相加", `$\\frac{${d}y + ${a}x}{xy} = \\frac{1}{z}$.`, `$\\frac{${d}y + ${a}x}{xy} = \\frac{1}{z}$。`),
+          step("Take reciprocals", "取倒数", `$z = \\frac{xy}{${d}y + ${a}x}$.`, `$z = \\frac{xy}{${d}y + ${a}x}$。`),
+        ],
+        t(
+          `Try $x = ${d}$ and $y = ${a}$: the left side is $1 + 1 = 2$, so $z = \\frac{1}{2}$, and the answer gives $\\frac{${a * d}}{${a * d} + ${a * d}} = \\frac{1}{2}$.`,
+          `取 $x = ${d}$，$y = ${a}$：左边为 $1 + 1 = 2$，所以 $z = \\frac{1}{2}$，答案给出 $\\frac{${a * d}}{${a * d} + ${a * d}} = \\frac{1}{2}$。`,
+        ),
+        [
+          t(
+            `This takes reciprocals term by term; the reciprocal of a sum is not the sum of the reciprocals.`,
+            `这是逐项取倒数；和的倒数不等于倒数的和。`,
+          ),
+          t(`This is $\\frac{1}{z}$, not $z$.`, `这是 $\\frac{1}{z}$，不是 $z$。`),
+          t(
+            `This pairs each numerator with the wrong variable: $\\frac{${d}}{x}$ becomes $\\frac{${d}y}{xy}$, not $\\frac{${d}x}{xy}$.`,
+            `这是把分子配错了变量：$\\frac{${d}}{x}$ 应化为 $\\frac{${d}y}{xy}$，不是 $\\frac{${d}x}{xy}$。`,
+          ),
+          t(`This multiplies the numerators instead of adding the fractions.`, `这是把分子相乘，而不是把分式相加。`),
+        ],
       ),
     );
   }),
@@ -551,7 +1412,28 @@ export const satExamAdvanced3: ExamSpec[] = [
           `r = \\frac{\\sqrt{V - ${d}}}{${a}h}`,
           `r = \\sqrt{${a}h(V - ${d})}`,
         ],
-        t(`Subtract $${d}$, divide by $${a}h$, then take the positive square root.`, `减去 $${d}$，除以 $${a}h$，再取正平方根。`),
+        worked(
+          [
+            step("Subtract the constant", "减去常数", `$V - ${d} = ${a}r^2h$.`, `$V - ${d} = ${a}r^2h$。`),
+            step("Divide", "相除", `$r^2 = \\frac{V - ${d}}{${a}h}$.`, `$r^2 = \\frac{V - ${d}}{${a}h}$。`),
+            step(
+              "Take the positive root",
+              "取正根",
+              `Since $r > 0$, $r = \\sqrt{\\frac{V - ${d}}{${a}h}}$.`,
+              `因为 $r > 0$，$r = \\sqrt{\\frac{V - ${d}}{${a}h}}$。`,
+            ),
+          ],
+          t(
+            `Substituting back: $r^2 = \\frac{V - ${d}}{${a}h}$, so $${a}r^2h + ${d} = V - ${d} + ${d} = V$.`,
+            `代回：$r^2 = \\frac{V - ${d}}{${a}h}$，所以 $${a}r^2h + ${d} = V - ${d} + ${d} = V$。`,
+          ),
+          [
+            t(`This is $r^2$; the square root is missing.`, `这是 $r^2$；缺了平方根。`),
+            t(`This subtracts $${d}$ after taking the root; it must be subtracted first.`, `这是开方后才减 $${d}$；应当先减。`),
+            t(`This takes the root of the numerator only.`, `这是只对分子开方。`),
+            t(`This multiplies by $${a}h$ instead of dividing.`, `这是乘以 $${a}h$，而不是除以。`),
+          ],
+        ),
       );
     // The denominator stays coprime to the coefficient, so the answer needs no reducing.
     const e = rng.pick(
@@ -569,9 +1451,27 @@ export const satExamAdvanced3: ExamSpec[] = [
       ),
       `L = \\frac{${e}gT^2}{${a * a}}`,
       [`L = \\frac{${e}gT}{${a}}`, `L = \\frac{T^2}{${a * a * e}g}`, `L = ${a * a * e}gT^2`, `L = \\frac{${e}gT^2}{${a}}`],
-      t(
-        `Divide by $${a}$ and square: $\\frac{T^2}{${a * a}} = \\frac{L}{${e}g}$. Multiply by $${e}g$.`,
-        `除以 $${a}$ 再平方：$\\frac{T^2}{${a * a}} = \\frac{L}{${e}g}$。再乘以 $${e}g$。`,
+      worked(
+        [
+          step("Divide", "相除", `$\\frac{T}{${a}} = \\sqrt{\\frac{L}{${e}g}}$.`, `$\\frac{T}{${a}} = \\sqrt{\\frac{L}{${e}g}}$。`),
+          step("Square", "平方", `$\\frac{T^2}{${a * a}} = \\frac{L}{${e}g}$.`, `$\\frac{T^2}{${a * a}} = \\frac{L}{${e}g}$。`),
+          step(
+            "Multiply",
+            "相乘",
+            `Multiply by $${e}g$: $L = \\frac{${e}gT^2}{${a * a}}$.`,
+            `乘以 $${e}g$：$L = \\frac{${e}gT^2}{${a * a}}$。`,
+          ),
+        ],
+        t(
+          `Substituting back: $\\frac{L}{${e}g} = \\frac{T^2}{${a * a}}$, whose square root is $\\frac{T}{${a}}$, and $${a} \\times \\frac{T}{${a}} = T$.`,
+          `代回：$\\frac{L}{${e}g} = \\frac{T^2}{${a * a}}$，其平方根为 $\\frac{T}{${a}}$，而 $${a} \\times \\frac{T}{${a}} = T$。`,
+        ),
+        [
+          t(`This never squares, so the square root is not undone.`, `这是没有平方，根号没有去掉。`),
+          t(`This divides by $${e}g$ instead of multiplying by it.`, `这是除以 $${e}g$，而不是乘以它。`),
+          t(`This multiplies by $${a * a}$ instead of dividing.`, `这是乘以 $${a * a}$，而不是除以。`),
+          t(`This squares $T$ but not $${a}$.`, `这是只把 $T$ 平方，没有把 $${a}$ 平方。`),
+        ],
       ),
     );
   }),
@@ -588,6 +1488,13 @@ export const satExamAdvanced3: ExamSpec[] = [
         { x: [-7, 7], y: [-14, 14], dx: 1, dy: 2 },
         t("A parabola on a coordinate grid.", "坐标网格上的一条抛物线。"),
       );
+      const y0 = -a * r * s;
+      const eq = `${a === 1 ? "" : "-"}(x + ${r})(x - ${s})`;
+      const up = a > 0;
+      const shape = t(
+        `The parabola crosses the $x$-axis at $x = ${-r}$ and $x = ${s}$ and opens ${up ? "up" : "down"}, so it is $y = ${eq}$.`,
+        `抛物线与 $x$ 轴交于 $x = ${-r}$ 和 $x = ${s}$，开口向${up ? "上" : "下"}，所以它是 $y = ${eq}$。`,
+      );
       if (!hard)
         return mc(
           rng,
@@ -597,14 +1504,58 @@ export const satExamAdvanced3: ExamSpec[] = [
           ),
           `(0, ${-a * r * s})`,
           [`(${s}, 0)`, `(${-r}, 0)`, `(0, ${r + s})`, `(0, ${a * r * s})`],
-          t(`The graph meets the $y$-axis at height $${-a * r * s}$.`, `图象在高度 $${-a * r * s}$ 处与 $y$ 轴相交。`),
+          worked(
+            [
+              step(
+                "Find the y-axis",
+                "找到纵轴",
+                `The $y$-intercept is where the graph meets the $y$-axis, the line $x = 0$.`,
+                `$y$ 轴截距是图象与 $y$ 轴（直线 $x = 0$）的交点。`,
+              ),
+              step(
+                "Read the height",
+                "读出高度",
+                `There the graph is at height $${y0}$, so the $y$-intercept is $(0, ${y0})$.`,
+                `图象在那里的高度是 $${y0}$，所以 $y$ 轴截距是 $(0, ${y0})$。`,
+              ),
+            ],
+            t(`${shape.en} At $x = 0$ this is $${y0}$.`, `${shape["zh-CN"]}当 $x = 0$ 时它等于 $${y0}$。`),
+            [
+              t(`This is an $x$-intercept, where the graph meets the $x$-axis.`, `这是 $x$ 轴截距，是图象与 $x$ 轴的交点。`),
+              t(`This is an $x$-intercept, where the graph meets the $x$-axis.`, `这是 $x$ 轴截距，是图象与 $x$ 轴的交点。`),
+              t(
+                `This adds the distances to the two $x$-intercepts; the height at $x = 0$ is $${y0}$.`,
+                `这是把到两个 $x$ 轴截距的距离相加；$x = 0$ 处的高度是 $${y0}$。`,
+              ),
+              t(
+                `This has the right size but the wrong sign: the graph crosses the $y$-axis ${y0 < 0 ? "below" : "above"} the $x$-axis.`,
+                `大小对了但符号错了：图象在 $x$ 轴${y0 < 0 ? "下" : "上"}方穿过 $y$ 轴。`,
+              ),
+            ],
+          ),
           fig,
         );
       return spr(
         t(`The graph of $y = f(x)$ is shown. What is the positive $x$-intercept?`, `图中是 $y = f(x)$ 的图象。正的 $x$ 轴截距是多少？`),
         s,
         [-r, r * s, r + s],
-        t(`The graph crosses the $x$-axis on the positive side at $x = ${s}$.`, `图象在正半轴的 $x = ${s}$ 处穿过 $x$ 轴。`),
+        worked(
+          [
+            step(
+              "Find the x-intercepts",
+              "找出横轴截距",
+              `The graph meets the $x$-axis at $x = ${-r}$ and $x = ${s}$.`,
+              `图象与 $x$ 轴交于 $x = ${-r}$ 和 $x = ${s}$。`,
+            ),
+            step("Pick the positive one", "选出正的那个", `The positive $x$-intercept is $${s}$.`, `正的 $x$ 轴截距是 $${s}$。`),
+          ],
+          t(`${shape.en} At $x = ${s}$ the factor $x - ${s}$ is $0$.`, `${shape["zh-CN"]}当 $x = ${s}$ 时因式 $x - ${s}$ 为 $0$。`),
+          [
+            t(`This is the negative $x$-intercept.`, `这是负的 $x$ 轴截距。`),
+            t(`This is the size of the $y$-intercept, a height on the $y$-axis.`, `这是 $y$ 轴截距的大小，是 $y$ 轴上的高度。`),
+            t(`This adds the distances to both $x$-intercepts.`, `这是把到两个 $x$ 轴截距的距离相加。`),
+          ],
+        ),
         fig,
       );
     },
@@ -621,6 +1572,10 @@ export const satExamAdvanced3: ExamSpec[] = [
         { x: [0, hours + 2], y: [0, full + 4], dx: Math.ceil(hours / 6) || 1, dy: 4 },
         t(`A line falling from $(0, ${full})$ to $(${hours}, 0)$.`, `从 $(0, ${full})$ 下降到 $(${hours}, 0)$ 的直线。`),
       );
+      const check = t(
+        `The line falls $${full}$ gallons over $${hours}$ hours, $${rate}$ per hour, from $${full}$ at $x = 0$ to $0$ at $x = ${hours}$.`,
+        `直线在 $${hours}$ 小时内下降 $${full}$ 加仑，每小时 $${rate}$ 加仑，从 $x = 0$ 时的 $${full}$ 降到 $x = ${hours}$ 时的 $0$。`,
+      );
       if (!hard)
         return words(
           rng,
@@ -634,7 +1589,31 @@ export const satExamAdvanced3: ExamSpec[] = [
             t("The rate at which the tank drains", "水箱排水的速率"),
             t("The amount of water left after one hour", "一小时后剩余的水量"),
           ],
-          t(`The $y$-intercept is the amount at $x = 0$, before any time has passed.`, `$y$ 轴截距是 $x = 0$ 时的量，此时还没有经过时间。`),
+          worked(
+            [
+              step(
+                "Read the intercept",
+                "读出截距",
+                `The graph meets the $y$-axis at $(0, ${full})$.`,
+                `图象与 $y$ 轴交于 $(0, ${full})$。`,
+              ),
+              step(
+                "Interpret",
+                "解释含义",
+                `$x = 0$ means no time has passed, so $${full}$ gallons is the water in the tank before draining starts.`,
+                `$x = 0$ 表示还没有经过时间，所以 $${full}$ 加仑是开始排水前水箱中的水量。`,
+              ),
+            ],
+            check,
+            [
+              t(`The time to empty the tank is the $x$-intercept, $${hours}$ hours.`, `排空所需的时间是 $x$ 轴截距，$${hours}$ 小时。`),
+              t(`The rate is the slope of the line, $${rate}$ gallons per hour.`, `速率是直线的斜率，每小时 $${rate}$ 加仑。`),
+              t(
+                `After one hour the water left is $${full - rate}$ gallons, the height at $x = 1$.`,
+                `一小时后剩余 $${full - rate}$ 加仑，是 $x = 1$ 处的高度。`,
+              ),
+            ],
+          ),
           fig,
         );
       return words(
@@ -649,9 +1628,33 @@ export const satExamAdvanced3: ExamSpec[] = [
           t("The rate at which the tank drains", "水箱排水的速率"),
           t("The amount of water drained in one hour", "一小时排出的水量"),
         ],
-        t(
-          `At the $x$-intercept the water left is zero, so that time is when the tank is empty.`,
-          `在 $x$ 轴截距处剩余水量为零，所以这是水箱变空的时间。`,
+        worked(
+          [
+            step(
+              "Read the intercept",
+              "读出截距",
+              `The graph meets the $x$-axis at $(${hours}, 0)$.`,
+              `图象与 $x$ 轴交于 $(${hours}, 0)$。`,
+            ),
+            step(
+              "Interpret",
+              "解释含义",
+              `There the water left is $0$ gallons, so $${hours}$ hours is when the tank becomes empty.`,
+              `那里剩余水量为 $0$ 加仑，所以 $${hours}$ 小时是水箱变空的时间。`,
+            ),
+          ],
+          t(
+            `${check.en} So $${full}$ gallons last $\\frac{${full}}{${rate}} = ${hours}$ hours.`,
+            `${check["zh-CN"]}所以 $${full}$ 加仑可排 $\\frac{${full}}{${rate}} = ${hours}$ 小时。`,
+          ),
+          [
+            t(`The water in the full tank is the $y$-intercept, $${full}$ gallons.`, `满箱时的水量是 $y$ 轴截距，$${full}$ 加仑。`),
+            t(`The rate is the slope of the line, $${rate}$ gallons per hour.`, `速率是直线的斜率，每小时 $${rate}$ 加仑。`),
+            t(
+              `One hour drains $${rate}$ gallons, the drop from $x = 0$ to $x = 1$.`,
+              `一小时排出 $${rate}$ 加仑，是从 $x = 0$ 到 $x = 1$ 的下降量。`,
+            ),
+          ],
         ),
         fig,
       );
@@ -667,15 +1670,40 @@ export const satExamAdvanced3: ExamSpec[] = [
       const m = r + s;
       const sys = (c: number) => `y = x^2 ${sg(c)} \\text{ and } y = ${m}x ${sg(c - r * s)}`;
       const c = rng.nonZero(-5, 5);
+      const combine = step(
+        "Set the right sides equal",
+        "令右边相等",
+        `$x^2 ${sg(c)} = ${m}x ${sg(c - r * s)}$; the $${c}$ cancels, leaving $x^2 - ${m}x + ${r * s} = 0$.`,
+        `$x^2 ${sg(c)} = ${m}x ${sg(c - r * s)}$；$${c}$ 抵消，得 $x^2 - ${m}x + ${r * s} = 0$。`,
+      );
+      const factor = step(
+        "Factor",
+        "因式分解",
+        `$(x - ${r})(x - ${s}) = 0$, so $x = ${r}$ or $x = ${s}$.`,
+        `$(x - ${r})(x - ${s}) = 0$，所以 $x = ${r}$ 或 $x = ${s}$。`,
+      );
       if (!hard)
         return mcExact(
           rng,
           t(`Which value of $x$ is part of a solution of the system $${sys(c)}$?`, `哪个 $x$ 值是方程组 $${sys(c)}$ 的解的一部分？`),
           s,
           [-s, m, r === 1 ? -r : r * s],
-          t(
-            `Set the right sides equal: $x^2 - ${m}x + ${r * s} = 0$, so $x = ${r}$ or $x = ${s}$.`,
-            `令右边相等：$x^2 - ${m}x + ${r * s} = 0$，所以 $x = ${r}$ 或 $x = ${s}$。`,
+          worked(
+            [combine, factor, step("Match the options", "对照选项", `Of the two, $${s}$ is listed.`, `两个值中，选项里有 $${s}$。`)],
+            t(
+              `$${s}^2 - ${m} \\times ${s} + ${r * s} = ${s * s} - ${m * s} + ${r * s} = 0$.`,
+              `$${s}^2 - ${m} \\times ${s} + ${r * s} = ${s * s} - ${m * s} + ${r * s} = 0$。`,
+            ),
+            [
+              t(
+                `This flips the sign: the factors are $x - ${r}$ and $x - ${s}$, so both solutions are positive.`,
+                `这是把符号弄反了：因式是 $x - ${r}$ 和 $x - ${s}$，两个解都是正的。`,
+              ),
+              t(`This is the sum of the two solutions, not a solution.`, `这是两个解之和，不是解。`),
+              r === 1
+                ? t(`This flips the sign of the solution $1$.`, `这是把解 $1$ 的符号弄反了。`)
+                : t(`This is the product of the two solutions, not a solution.`, `这是两个解之积，不是解。`),
+            ],
           ),
         );
       return spr(
@@ -685,9 +1713,20 @@ export const satExamAdvanced3: ExamSpec[] = [
         ),
         m,
         [r * s, -m, c],
-        t(
-          `The combined equation is $x^2 - ${m}x + ${r * s} = 0$, so the sum of the solutions is $${m}$.`,
-          `合并后的方程是 $x^2 - ${m}x + ${r * s} = 0$，所以解之和为 $${m}$。`,
+        worked(
+          [combine, factor, step("Add", "相加", `$x_1 + x_2 = ${r} + ${s} = ${m}$.`, `$x_1 + x_2 = ${r} + ${s} = ${m}$。`)],
+          t(
+            `For $x^2 + Bx + C = 0$ the solutions add to $-B$, and here $-B = ${m}$.`,
+            `对 $x^2 + Bx + C = 0$，两解之和为 $-B$，这里 $-B = ${m}$。`,
+          ),
+          [
+            t(`This is the product of the solutions, not their sum.`, `这是两个解之积，不是和。`),
+            t(
+              `This keeps the sign of the $x$ coefficient; the sum of the solutions is its opposite.`,
+              `这是保留了一次项系数的符号；解之和是它的相反数。`,
+            ),
+            t(`This is the constant $${c}$ from the system, which cancels.`, `这是方程组中的常数 $${c}$，它会抵消。`),
+          ],
         ),
       );
     },
@@ -701,6 +1740,20 @@ export const satExamAdvanced3: ExamSpec[] = [
       const s = r + rng.int(1, 4);
       const c = a * r * s;
       const b = a * (r + s);
+      const solve = [
+        step(
+          "Set the right sides equal",
+          "令右边相等",
+          `$${a}x^2 + ${c} = ${b}x$, so $${a}x^2 - ${b}x + ${c} = 0$.`,
+          `$${a}x^2 + ${c} = ${b}x$，即 $${a}x^2 - ${b}x + ${c} = 0$。`,
+        ),
+        step(
+          "Divide and factor",
+          "相除并因式分解",
+          `Divide by $${a}$: $x^2 - ${r + s}x + ${r * s} = 0$, so $(x - ${r})(x - ${s}) = 0$ and $x = ${r}$ or $x = ${s}$.`,
+          `除以 $${a}$：$x^2 - ${r + s}x + ${r * s} = 0$，即 $(x - ${r})(x - ${s}) = 0$，$x = ${r}$ 或 $x = ${s}$。`,
+        ),
+      ];
       if (!hard)
         return mc(
           rng,
@@ -710,9 +1763,29 @@ export const satExamAdvanced3: ExamSpec[] = [
           ),
           `(${r}, ${b * r})`,
           [`(${r}, ${a * r * r})`, `(${-r}, ${-b * r})`, `(${r + s}, ${b * r})`, `(${s}, ${b * r})`],
-          t(
-            `Equate: $${a}x^2 - ${b}x + ${c} = 0$, so $x^2 - ${r + s}x + ${r * s} = 0$ and $x = ${r}$ or $${s}$. Then $y = ${b}x$.`,
-            `令相等：$${a}x^2 - ${b}x + ${c} = 0$，即 $x^2 - ${r + s}x + ${r * s} = 0$，$x = ${r}$ 或 $${s}$。再由 $y = ${b}x$ 求 $y$。`,
+          worked(
+            [
+              ...solve,
+              step(
+                "Find y",
+                "求纵坐标",
+                `At $x = ${r}$: $y = ${b} \\times ${r} = ${b * r}$.`,
+                `当 $x = ${r}$ 时：$y = ${b} \\times ${r} = ${b * r}$。`,
+              ),
+            ],
+            t(
+              `The parabola gives $${a} \\times ${r * r} + ${c} = ${a * r * r + c}$ at $x = ${r}$, the same as the line.`,
+              `抛物线在 $x = ${r}$ 处给出 $${a} \\times ${r * r} + ${c} = ${a * r * r + c}$，与直线相同。`,
+            ),
+            [
+              t(`This drops the constant $${c}$ when finding $y$ on the parabola.`, `这是在抛物线上求 $y$ 时漏掉了常数 $${c}$。`),
+              t(`This flips the signs; both solutions have positive $x$.`, `这是把符号弄反了；两个解的 $x$ 都是正的。`),
+              t(`This uses the sum of the two $x$-values as $x$.`, `这是把两个 $x$ 值之和当成了 $x$。`),
+              t(
+                `$${s}$ is the other $x$-value, but there the line gives $y = ${b * s}$, not $${b * r}$.`,
+                `$${s}$ 是另一个 $x$ 值，但直线在那里给出 $y = ${b * s}$，不是 $${b * r}$。`,
+              ),
+            ],
           ),
         );
       return spr(
@@ -722,9 +1795,25 @@ export const satExamAdvanced3: ExamSpec[] = [
         ),
         b * s,
         [b * r, s, c],
-        t(
-          `The $x$-values are $${r}$ and $${s}$. The greater $y$ is $${b}(${s}) = ${b * s}$.`,
-          `$x$ 的值为 $${r}$ 和 $${s}$。较大的 $y$ 为 $${b}(${s}) = ${b * s}$。`,
+        worked(
+          [
+            ...solve,
+            step(
+              "Find the greater y",
+              "求较大的纵坐标",
+              `The line rises, so the greater $y$ is at $x = ${s}$: $${b} \\times ${s} = ${b * s}$.`,
+              `直线上升，所以较大的 $y$ 在 $x = ${s}$ 处：$${b} \\times ${s} = ${b * s}$。`,
+            ),
+          ],
+          t(
+            `The parabola gives $${a} \\times ${s * s} + ${c} = ${a * s * s + c}$ at $x = ${s}$, the same as the line.`,
+            `抛物线在 $x = ${s}$ 处给出 $${a} \\times ${s * s} + ${c} = ${a * s * s + c}$，与直线相同。`,
+          ),
+          [
+            t(`This is the $y$-value at $x = ${r}$, the smaller one.`, `这是 $x = ${r}$ 处的 $y$ 值，是较小的。`),
+            t(`This is the $x$-value, not $y$.`, `这是 $x$ 值，不是 $y$。`),
+            t(`This is the constant $${c}$ of the parabola.`, `这是抛物线的常数 $${c}$。`),
+          ],
         ),
       );
     },
@@ -744,7 +1833,28 @@ export const satExamAdvanced3: ExamSpec[] = [
           ),
           u,
           [(p + q) * u, p + q, u - p - q],
-          t(`Since $x^2 - y^2 = (x + y)(x - y)$, divide: $x - y = ${u}$.`, `因为 $x^2 - y^2 = (x + y)(x - y)$，相除得 $x - y = ${u}$。`),
+          worked(
+            [
+              step(
+                "Factor the difference of squares",
+                "分解平方差",
+                `$x^2 - y^2 = (x + y)(x - y)$, so $${p + q}(x - y) = ${(p + q) * u}$.`,
+                `$x^2 - y^2 = (x + y)(x - y)$，所以 $${p + q}(x - y) = ${(p + q) * u}$。`,
+              ),
+              step(
+                "Divide",
+                "相除",
+                `$x - y = \\frac{${(p + q) * u}}{${p + q}} = ${u}$.`,
+                `$x - y = \\frac{${(p + q) * u}}{${p + q}} = ${u}$。`,
+              ),
+            ],
+            t(`$${p + q} \\times ${u} = ${(p + q) * u}$.`, `$${p + q} \\times ${u} = ${(p + q) * u}$。`),
+            [
+              t(`This is $x^2 - y^2$, not $x - y$.`, `这是 $x^2 - y^2$，不是 $x - y$。`),
+              t(`This is $x + y$, not $x - y$.`, `这是 $x + y$，不是 $x - y$。`),
+              t(`This subtracts $x + y$ instead of dividing by it.`, `这是减去 $x + y$，而不是除以它。`),
+            ],
+          ),
         );
       return spr(
         t(
@@ -753,9 +1863,30 @@ export const satExamAdvanced3: ExamSpec[] = [
         ),
         p * p + q * q,
         [(p + q) ** 2, (p + q) ** 2 + 2 * p * q, p + q],
-        t(
-          `$x^2 + y^2 = (x + y)^2 - 2xy = ${(p + q) ** 2} - ${2 * p * q} = ${p * p + q * q}$.`,
-          `$x^2 + y^2 = (x + y)^2 - 2xy = ${(p + q) ** 2} - ${2 * p * q} = ${p * p + q * q}$。`,
+        worked(
+          [
+            step(
+              "Expand the square of the sum",
+              "展开和的平方",
+              `$(x + y)^2 = x^2 + 2xy + y^2$, so $x^2 + y^2 = (x + y)^2 - 2xy$.`,
+              `$(x + y)^2 = x^2 + 2xy + y^2$，所以 $x^2 + y^2 = (x + y)^2 - 2xy$。`,
+            ),
+            step(
+              "Substitute",
+              "代入",
+              `$${p + q}^2 - 2 \\times ${p * q} = ${(p + q) ** 2} - ${2 * p * q} = ${p * p + q * q}$.`,
+              `$${p + q}^2 - 2 \\times ${p * q} = ${(p + q) ** 2} - ${2 * p * q} = ${p * p + q * q}$。`,
+            ),
+          ],
+          t(
+            `$x = ${p}$ and $y = ${q}$ fit both equations, and $${p}^2 + ${q}^2 = ${p * p} + ${q * q} = ${p * p + q * q}$.`,
+            `$x = ${p}$，$y = ${q}$ 满足两个方程，且 $${p}^2 + ${q}^2 = ${p * p} + ${q * q} = ${p * p + q * q}$。`,
+          ),
+          [
+            t(`This is $(x + y)^2$, which still contains $2xy$.`, `这是 $(x + y)^2$，其中还含有 $2xy$。`),
+            t(`This adds $2xy$ instead of subtracting it.`, `这是加上了 $2xy$，而不是减去。`),
+            t(`This is $x + y$, not $x^2 + y^2$.`, `这是 $x + y$，不是 $x^2 + y^2$。`),
+          ],
         ),
       );
     },
@@ -768,7 +1899,8 @@ export const satExamAdvanced3: ExamSpec[] = [
       const m = rng.int(1, 6) * 2;
       const d = rng.int(1, 9);
       const [q, a] = [rng.int(1, 3), rng.int(2, 12)];
-      if (!hard)
+      if (!hard) {
+        const c = d - (m * m) / 4;
         return spr(
           t(
             `The system $y = x^2 + ${d}$ and $y = ${m}x + c$ has exactly one solution, where $c$ is a constant. What is the value of $c$?`,
@@ -776,11 +1908,42 @@ export const satExamAdvanced3: ExamSpec[] = [
           ),
           d - (m * m) / 4,
           [d + (m * m) / 4, (m * m) / 4, m + d],
-          t(
-            `$x^2 - ${m}x + ${d} - c = 0$ needs discriminant zero: $${m * m} - 4(${d} - c) = 0$, so $c = ${d - (m * m) / 4}$.`,
-            `$x^2 - ${m}x + ${d} - c = 0$ 的判别式必须为零：$${m * m} - 4(${d} - c) = 0$，所以 $c = ${d - (m * m) / 4}$。`,
+          worked(
+            [
+              step(
+                "Set the right sides equal",
+                "令右边相等",
+                `$x^2 + ${d} = ${m}x + c$, so $x^2 - ${m}x + ${d} - c = 0$.`,
+                `$x^2 + ${d} = ${m}x + c$，即 $x^2 - ${m}x + ${d} - c = 0$。`,
+              ),
+              step(
+                "Make the discriminant zero",
+                "令判别式为零",
+                `One solution needs $${m}^2 - 4(${d} - c) = 0$, so $${d} - c = \\frac{${m * m}}{4} = ${(m * m) / 4}$.`,
+                `恰有一个解要求 $${m}^2 - 4(${d} - c) = 0$，所以 $${d} - c = \\frac{${m * m}}{4} = ${(m * m) / 4}$。`,
+              ),
+              step("Solve", "求解", `$c = ${d} - ${(m * m) / 4} = ${c}$.`, `$c = ${d} - ${(m * m) / 4} = ${c}$。`),
+            ],
+            t(
+              `With this $c$ the equation is $x^2 - ${m}x + ${(m * m) / 4} = (x - ${m / 2})^2 = 0$, which has the single solution $x = ${m / 2}$.`,
+              `取这个 $c$，方程为 $x^2 - ${m}x + ${(m * m) / 4} = (x - ${m / 2})^2 = 0$，只有一个解 $x = ${m / 2}$。`,
+            ),
+            [
+              t(
+                `This adds $${(m * m) / 4}$ to $${d}$; solving $${d} - c = ${(m * m) / 4}$ subtracts it.`,
+                `这是把 $${(m * m) / 4}$ 加到 $${d}$ 上；由 $${d} - c = ${(m * m) / 4}$ 应当减去它。`,
+              ),
+              t(`This is $${d} - c$, not $c$.`, `这是 $${d} - c$，不是 $c$。`),
+              t(
+                `This adds $${m}$ and $${d}$; the condition comes from the discriminant.`,
+                `这是把 $${m}$ 和 $${d}$ 相加；条件来自判别式。`,
+              ),
+            ],
           ),
         );
+      }
+      const qx = cx(q, "x^2");
+      const four = q === 1 ? `4 \\times ${q * a * a}` : `4 \\times ${q} \\times ${q * a * a}`;
       return spr(
         t(
           `The system $y = ${q === 1 ? "" : q}x^2 + ${q * a * a}$ and $y = kx$ has exactly one solution, and $k > 0$. What is the value of $k$?`,
@@ -788,9 +1951,29 @@ export const satExamAdvanced3: ExamSpec[] = [
         ),
         2 * q * a,
         [q * a, q * a * a, 4 * q * q * a * a],
-        t(
-          `$${q === 1 ? "" : q}x^2 - kx + ${q * a * a} = 0$ needs $k^2 = ${4 * q * q * a * a}$, so the positive value is $k = ${2 * q * a}$.`,
-          `$${q === 1 ? "" : q}x^2 - kx + ${q * a * a} = 0$ 要求 $k^2 = ${4 * q * q * a * a}$，所以正值 $k = ${2 * q * a}$。`,
+        worked(
+          [
+            step("Set the right sides equal", "令右边相等", `$${qx} - kx + ${q * a * a} = 0$.`, `$${qx} - kx + ${q * a * a} = 0$。`),
+            step(
+              "Make the discriminant zero",
+              "令判别式为零",
+              `$k^2 - ${four} = 0$, so $k^2 = ${4 * q * q * a * a}$.`,
+              `$k^2 - ${four} = 0$，所以 $k^2 = ${4 * q * q * a * a}$。`,
+            ),
+            step("Take the positive root", "取正根", `Since $k > 0$, $k = ${2 * q * a}$.`, `因为 $k > 0$，$k = ${2 * q * a}$。`),
+          ],
+          t(
+            `With $k = ${2 * q * a}$ the equation is $${qx} - ${2 * q * a}x + ${q * a * a} = ${q === 1 ? "" : q}(x - ${a})^2 = 0$, with the single solution $x = ${a}$.`,
+            `取 $k = ${2 * q * a}$，方程为 $${qx} - ${2 * q * a}x + ${q * a * a} = ${q === 1 ? "" : q}(x - ${a})^2 = 0$，只有一个解 $x = ${a}$。`,
+          ),
+          [
+            t(
+              `This leaves out the factor $2$: $k^2 = ${4 * q * q * a * a}$ gives $k = ${2 * q * a}$.`,
+              `这是漏掉了因数 $2$：$k^2 = ${4 * q * q * a * a}$ 得 $k = ${2 * q * a}$。`,
+            ),
+            t(`This is the constant term, not $k$.`, `这是常数项，不是 $k$。`),
+            t(`This is $k^2$; take its positive square root.`, `这是 $k^2$；要取它的正平方根。`),
+          ],
         ),
       );
     },
@@ -803,36 +1986,87 @@ export const satExamAdvanced3: ExamSpec[] = [
       const m = rng.int(1, 5) * 2;
       const d = rng.int(1, 9);
       const lim = (m * m) / 4 + d;
+      const one = (v: number) =>
+        t(`At $c = ${v}$ the discriminant is $0$, so the system has one solution.`, `当 $c = ${v}$ 时判别式为 $0$，方程组有一个解。`);
       if (!hard && rng.bool()) {
         const under = d - (m * m) / 4;
+        const ans = under - rng.int(1, 4);
+        const two = (v: number) =>
+          t(
+            `At $c = ${v}$, above $${under}$, the discriminant is positive, so there are two solutions.`,
+            `当 $c = ${v}$（大于 $${under}$）时判别式为正，有两个解。`,
+          );
         return mcExact(
           rng,
           t(
             `For which value of $c$ does the system $y = -x^2 + c$ and $y = ${m}x + ${d}$ have no solution?`,
             `$c$ 取何值时，方程组 $y = -x^2 + c$ 和 $y = ${m}x + ${d}$ 无解？`,
           ),
-          under - rng.int(1, 4),
+          ans,
           [under, under + 1, under + 3],
-          t(
-            `$x^2 + ${m}x + ${d} - c = 0$ has discriminant $${m * m} - 4(${d} - c)$, which is negative when $c < ${under}$.`,
-            `$x^2 + ${m}x + ${d} - c = 0$ 的判别式为 $${m * m} - 4(${d} - c)$，当 $c < ${under}$ 时为负。`,
+          worked(
+            [
+              step(
+                "Set the right sides equal",
+                "令右边相等",
+                `$-x^2 + c = ${m}x + ${d}$, so $x^2 + ${m}x + ${d} - c = 0$.`,
+                `$-x^2 + c = ${m}x + ${d}$，即 $x^2 + ${m}x + ${d} - c = 0$。`,
+              ),
+              step(
+                "Make the discriminant negative",
+                "令判别式为负",
+                `$${m}^2 - 4(${d} - c) < 0$ means $${d} - c > ${(m * m) / 4}$, so $c < ${under}$.`,
+                `$${m}^2 - 4(${d} - c) < 0$ 即 $${d} - c > ${(m * m) / 4}$，所以 $c < ${under}$。`,
+              ),
+              step("Match the options", "对照选项", `Only $${ans}$ is less than $${under}$.`, `只有 $${ans}$ 小于 $${under}$。`),
+            ],
+            t(
+              `At $c = ${ans}$ the discriminant is $${m * m} - 4(${d} - ${par(ans)}) = ${m * m - 4 * (d - ans)}$, which is negative.`,
+              `当 $c = ${ans}$ 时判别式为 $${m * m} - 4(${d} - ${par(ans)}) = ${m * m - 4 * (d - ans)}$，是负数。`,
+            ),
+            [one(under), two(under + 1), two(under + 3)],
           ),
         );
       }
-      if (!hard)
+      if (!hard) {
+        const ans = lim + rng.int(1, 4);
+        const two = (v: number) =>
+          t(
+            `At $c = ${v}$, below $${lim}$, the discriminant is positive, so there are two solutions.`,
+            `当 $c = ${v}$（小于 $${lim}$）时判别式为正，有两个解。`,
+          );
         return mcExact(
           rng,
           t(
             `For which value of $c$ does the system $y = x^2 + c$ and $y = ${m}x + ${d}$ have no solution?`,
             `$c$ 取何值时，方程组 $y = x^2 + c$ 和 $y = ${m}x + ${d}$ 无解？`,
           ),
-          lim + rng.int(1, 4),
+          ans,
           [lim, lim - 1, lim - 3],
-          t(
-            `$x^2 - ${m}x + c - ${d} = 0$ has discriminant $${m * m} - 4(c - ${d})$, which is negative when $c > ${lim}$.`,
-            `$x^2 - ${m}x + c - ${d} = 0$ 的判别式为 $${m * m} - 4(c - ${d})$，当 $c > ${lim}$ 时为负。`,
+          worked(
+            [
+              step(
+                "Set the right sides equal",
+                "令右边相等",
+                `$x^2 + c = ${m}x + ${d}$, so $x^2 - ${m}x + c - ${d} = 0$.`,
+                `$x^2 + c = ${m}x + ${d}$，即 $x^2 - ${m}x + c - ${d} = 0$。`,
+              ),
+              step(
+                "Make the discriminant negative",
+                "令判别式为负",
+                `$${m}^2 - 4(c - ${d}) < 0$ means $c - ${d} > ${(m * m) / 4}$, so $c > ${lim}$.`,
+                `$${m}^2 - 4(c - ${d}) < 0$ 即 $c - ${d} > ${(m * m) / 4}$，所以 $c > ${lim}$。`,
+              ),
+              step("Match the options", "对照选项", `Only $${ans}$ is greater than $${lim}$.`, `只有 $${ans}$ 大于 $${lim}$。`),
+            ],
+            t(
+              `At $c = ${ans}$ the discriminant is $${m * m} - 4(${ans} - ${d}) = ${m * m - 4 * (ans - d)}$, which is negative.`,
+              `当 $c = ${ans}$ 时判别式为 $${m * m} - 4(${ans} - ${d}) = ${m * m - 4 * (ans - d)}$，是负数。`,
+            ),
+            [one(lim), two(lim - 1), two(lim - 3)],
           ),
         );
+      }
       return spr(
         t(
           `The system $y = x^2 + c$ and $y = ${m}x + ${d}$ has two solutions, and $c$ is an integer. What is the greatest possible value of $c$?`,
@@ -840,9 +2074,31 @@ export const satExamAdvanced3: ExamSpec[] = [
         ),
         lim - 1,
         [lim, lim + 1, m + d],
-        t(
-          `The discriminant $${m * m} - 4(c - ${d})$ must be positive, so $c < ${lim}$, and the greatest integer is $${lim - 1}$.`,
-          `判别式 $${m * m} - 4(c - ${d})$ 必须为正，所以 $c < ${lim}$，最大整数是 $${lim - 1}$。`,
+        worked(
+          [
+            step("Set the right sides equal", "令右边相等", `$x^2 - ${m}x + c - ${d} = 0$.`, `$x^2 - ${m}x + c - ${d} = 0$。`),
+            step(
+              "Make the discriminant positive",
+              "令判别式为正",
+              `$${m}^2 - 4(c - ${d}) > 0$ means $c - ${d} < ${(m * m) / 4}$, so $c < ${lim}$.`,
+              `$${m}^2 - 4(c - ${d}) > 0$ 即 $c - ${d} < ${(m * m) / 4}$，所以 $c < ${lim}$。`,
+            ),
+            step(
+              "Take the greatest integer",
+              "取最大整数",
+              `The greatest integer below $${lim}$ is $${lim - 1}$.`,
+              `小于 $${lim}$ 的最大整数是 $${lim - 1}$。`,
+            ),
+          ],
+          t(
+            `At $c = ${lim - 1}$ the discriminant is $${m * m} - 4(${lim - 1} - ${d}) = 4$, positive, while at $c = ${lim}$ it is $0$.`,
+            `当 $c = ${lim - 1}$ 时判别式为 $${m * m} - 4(${lim - 1} - ${d}) = 4$，为正；而 $c = ${lim}$ 时为 $0$。`,
+          ),
+          [
+            one(lim),
+            t(`At $c = ${lim + 1}$ the discriminant is negative, so there is no solution.`, `当 $c = ${lim + 1}$ 时判别式为负，没有解。`),
+            t(`This adds $${m}$ and $${d}$; the boundary comes from the discriminant.`, `这是把 $${m}$ 和 $${d}$ 相加；界限来自判别式。`),
+          ],
         ),
       );
     },
@@ -859,7 +2115,23 @@ export const satExamAdvanced3: ExamSpec[] = [
         ),
         x,
         [x * x, x * x + y, x + y],
-        t(`Substitute: $x^2 = ${x * x}$, and the positive root is $${x}$.`, `代入：$x^2 = ${x * x}$，正根为 $${x}$。`),
+        worked(
+          [
+            step(
+              "Substitute",
+              "代入",
+              `$x^2 + ${y} = ${x * x + y}$, so $x^2 = ${x * x}$.`,
+              `$x^2 + ${y} = ${x * x + y}$，所以 $x^2 = ${x * x}$。`,
+            ),
+            step("Take the positive root", "取正根", `Since $x > 0$, $x = ${x}$.`, `因为 $x > 0$，$x = ${x}$。`),
+          ],
+          t(`$${x}^2 + ${y} = ${x * x} + ${y} = ${x * x + y}$.`, `$${x}^2 + ${y} = ${x * x} + ${y} = ${x * x + y}$。`),
+          [
+            t(`This is $x^2$; take its positive square root.`, `这是 $x^2$；要取它的正平方根。`),
+            t(`This is the right side of the first equation, not $x$.`, `这是第一个方程的右边，不是 $x$。`),
+            t(`This adds $x$ and $y$.`, `这是把 $x$ 和 $y$ 相加。`),
+          ],
+        ),
       );
     return spr(
       t(
@@ -868,9 +2140,28 @@ export const satExamAdvanced3: ExamSpec[] = [
       ),
       y,
       [x, x * y, x + y],
-      t(
-        `Substitute and clear the fraction: $x(x ${sg(y - x)}) = ${x * y}$. The positive solution is $x = ${x}$, so $y = ${y}$.`,
-        `代入并去分母：$x(x ${sg(y - x)}) = ${x * y}$。正解为 $x = ${x}$，所以 $y = ${y}$。`,
+      worked(
+        [
+          step(
+            "Substitute and clear the fraction",
+            "代入并去分母",
+            `$x ${sg(y - x)} = \\frac{${x * y}}{x}$, so $x(x ${sg(y - x)}) = ${x * y}$ and $x^2 ${tx(y - x)} - ${x * y} = 0$.`,
+            `$x ${sg(y - x)} = \\frac{${x * y}}{x}$，所以 $x(x ${sg(y - x)}) = ${x * y}$，即 $x^2 ${tx(y - x)} - ${x * y} = 0$。`,
+          ),
+          step(
+            "Factor",
+            "因式分解",
+            `$(x - ${x})(x + ${y}) = 0$, and the positive solution is $x = ${x}$.`,
+            `$(x - ${x})(x + ${y}) = 0$，正解为 $x = ${x}$。`,
+          ),
+          step("Find y", "求纵坐标", `$y = ${x} ${sg(y - x)} = ${y}$.`, `$y = ${x} ${sg(y - x)} = ${y}$。`),
+        ],
+        t(`$\\frac{${x * y}}{${x}} = ${y}$, which matches.`, `$\\frac{${x * y}}{${x}} = ${y}$，一致。`),
+        [
+          t(`This is the value of $x$, not $y$.`, `这是 $x$ 的值，不是 $y$。`),
+          t(`This is the numerator $xy$, not $y$.`, `这是分子 $xy$，不是 $y$。`),
+          t(`This adds $x$ and $y$.`, `这是把 $x$ 和 $y$ 相加。`),
+        ],
       ),
     );
   }),

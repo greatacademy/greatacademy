@@ -704,8 +704,8 @@ export const satExamAlgebra4: ExamSpec[] = [
             ? `y = ${cx(m)} ${sg(b + 2)}`
             : kind === 1
               ? `${k}y = ${cx(k * m)} ${sg(k * b)}`
-              : `y = ${cx(m + (m === -1 ? 2 : 1))} ${sg(b)}`;
-        const m2 = kind === 2 ? m + (m === -1 ? 2 : 1) : m;
+              : `y = ${cx(m === -1 ? 2 : m + 1)} ${sg(b)}`;
+        const m2 = kind === 2 ? (m === -1 ? 2 : m + 1) : m;
         const ans = [
           t("The lines are parallel and do not meet", "两直线平行，不相交"),
           t("The lines are the same line", "两直线重合"),
@@ -784,15 +784,10 @@ export const satExamAlgebra4: ExamSpec[] = [
                       ? kind === 0
                         ? t(`Lines with equal slopes and different intercepts never cross.`, `斜率相等、截距不同的直线永不相交。`)
                         : t(`The lines share every point, not exactly one.`, `两直线有所有的公共点，而不是恰好一个。`)
-                      : m * m2 === -1
-                        ? t(
-                            `These lines are in fact perpendicular, since $${m} \\times ${m2} = -1$; but what the question asks is how they meet, and they cross at exactly one point.`,
-                            `这两条直线其实也互相垂直，因为 $${m} \\times ${m2} = -1$；但题目问的是它们如何相交，答案是恰好交于一点。`,
-                          )
-                        : t(
-                            `Perpendicular slopes multiply to $-1$, but here the product is $${m} \\times ${par(m2)} = ${m * m2}$.`,
-                            `垂直直线的斜率之积为 $-1$，而这里的积是 $${m} \\times ${par(m2)} = ${m * m2}$。`,
-                          ),
+                      : t(
+                          `Perpendicular slopes multiply to $-1$, but here the product is $${m} \\times ${par(m2)} = ${m * m2}$.`,
+                          `垂直直线的斜率之积为 $-1$，而这里的积是 $${m} \\times ${par(m2)} = ${m * m2}$。`,
+                        ),
               ),
           ),
         );
