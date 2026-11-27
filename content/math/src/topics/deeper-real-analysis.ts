@@ -8,6 +8,7 @@ import { numberProblem, why } from "../problems.ts";
 
 import { ask, point } from "../university-kit.ts";
 import { type Step, walked } from "./calculus-i-differentiation.ts";
+import { solution, solved } from "./real-analysis.ts";
 
 /** frac builds a rational number with a positive denominator. */
 const frac = (n: number, d: number) => (d < 0 ? Q.of(-n, -d) : Q.of(n, d));
@@ -103,8 +104,8 @@ const limsup = point(
   "limit-superior-and-inferior",
   ["Limit superior and inferior", "上极限与下极限"],
   [
-    "A bounded sequence may have no limit, yet it always has a largest and a smallest limit of subsequences. These are the limit superior and the limit inferior. The sequence converges exactly when the two are equal. For $a + b (-1)^n + \\frac{c}{n}$, the last term dies away and the first two leave two limit points.",
-    "有界数列可能没有极限，但子数列的极限总有最大值和最小值，分别称为上极限和下极限。数列收敛当且仅当两者相等。对 $a + b (-1)^n + \\frac{c}{n}$，最后一项趋于零，前两项留下两个极限点。",
+    "A bounded sequence may have no limit, yet it always has a largest and a smallest limit of subsequences. These are the limit superior and the limit inferior. The sequence converges exactly when the two are equal. For $a + b (-1)^n + \\frac{c}{n}$, the last term dies away and the first two leave two limit points.\n\nFor $x_n = 1 + 3 (-1)^n + \\frac{2}{n}$, the even terms tend to $1 + 3 = 4$ and the odd terms to $1 - 3 = -2$. So the limit superior is $4$ and the limit inferior is $-2$.\n\nCheck: $x_{100} = 4.02$ and $x_{101} = -2 + \\frac{2}{101} \\approx -1.98$, close to the two limits, and every index is even or odd, so no other limit point exists.\n\n> **Watch out.** The limit superior is not the largest term. Here $x_2 = 5$ is bigger than $4$, but finitely many early terms do not affect the limit superior.",
+    "有界数列可能没有极限，但子数列的极限总有最大值和最小值，分别称为上极限和下极限。数列收敛当且仅当两者相等。对 $a + b (-1)^n + \\frac{c}{n}$，最后一项趋于零，前两项留下两个极限点。\n\n对 $x_n = 1 + 3 (-1)^n + \\frac{2}{n}$，偶数项趋于 $1 + 3 = 4$，奇数项趋于 $1 - 3 = -2$。所以上极限是 $4$，下极限是 $-2$。\n\n检验：$x_{100} = 4.02$，$x_{101} = -2 + \\frac{2}{101} \\approx -1.98$，都接近这两个极限；每个下标不是偶数就是奇数，所以没有别的极限点。\n\n> **注意。** 上极限不是最大的项。这里 $x_2 = 5$ 比 $4$ 大，但有限个前面的项不影响上极限。",
   ],
   (rng) => {
     const a = rng.nonZero(-6, 6);
@@ -112,17 +113,60 @@ const limsup = point(
     const c = rng.int(1, 9);
     const sup = rng.bool();
     const answer = sup ? a + b : a - b;
-    return ask(
+    const other = sup ? a - b : a + b;
+    return solved(
       [
         `What is the limit ${sup ? "superior" : "inferior"} of $x_n = ${a} + ${coef(b, "(-1)^n")} + \\frac{${c}}{n}$?`,
         `$x_n = ${a} + ${coef(b, "(-1)^n")} + \\frac{${c}}{n}$ 的${sup ? "上" : "下"}极限是多少？`,
       ],
       answer,
-      [sup ? a - b : a + b, a, answer + c, b].filter((v) => v !== answer),
       [
-        `The term $\\frac{${c}}{n}$ tends to 0, so the subsequences tend to $${a} + ${b}$ and $${a} - ${b}$. The ${sup ? "larger" : "smaller"} is ${answer}.`,
-        `$\\frac{${c}}{n}$ 趋于 0，所以子数列分别趋于 $${a} + ${b}$ 和 $${a} - ${b}$。较${sup ? "大" : "小"}的是 ${answer}。`,
+        why(
+          other,
+          `That is the limit ${sup ? "inferior" : "superior"}, the ${sup ? "smaller" : "larger"} of the two subsequential limits.`,
+          `这是${sup ? "下" : "上"}极限，即两个子数列极限中较${sup ? "小" : "大"}的一个。`,
+        ),
+        why(
+          a,
+          `That is the midpoint of the two limits; the terms keep jumping between them and never settle at $${a}$.`,
+          `这是两个极限的中点；各项在两者之间来回跳动，从不停在 $${a}$。`,
+        ),
+        why(
+          answer + c,
+          `That keeps $\\frac{${c}}{n}$ at $n = 1$; this term tends to 0, and early terms do not affect the limit ${sup ? "superior" : "inferior"}.`,
+          `这保留了 $n = 1$ 时的 $\\frac{${c}}{n}$；这一项趋于 0，前面的项不影响${sup ? "上" : "下"}极限。`,
+        ),
+        why(b, `That is only the size of the oscillation; it leaves out the constant $${a}$.`, `这只是振荡的幅度；漏掉了常数 $${a}$。`),
       ],
+      solution(
+        [
+          [
+            ["Drop the vanishing term", "去掉趋于零的项"],
+            [
+              `The term $\\frac{${c}}{n}$ tends to 0, so it does not change any subsequential limit.`,
+              `$\\frac{${c}}{n}$ 趋于 0，所以它不改变任何子数列的极限。`,
+            ],
+          ],
+          [
+            ["Split even and odd indices", "按下标奇偶分开"],
+            [
+              `For even $n$ the terms tend to $${a} + ${b} = ${a + b}$, and for odd $n$ to $${a} - ${b} = ${a - b}$.`,
+              `$n$ 为偶数时各项趋于 $${a} + ${b} = ${a + b}$，$n$ 为奇数时趋于 $${a} - ${b} = ${a - b}$。`,
+            ],
+          ],
+          [
+            [`Take the ${sup ? "larger" : "smaller"} limit`, sup ? "取较大的极限" : "取较小的极限"],
+            [
+              `The limit ${sup ? "superior" : "inferior"} is the ${sup ? "larger" : "smaller"} of the two, $${answer}$.`,
+              `${sup ? "上" : "下"}极限是两者中较${sup ? "大" : "小"}的，即 $${answer}$。`,
+            ],
+          ],
+        ],
+        [
+          `Every index is even or odd, so every convergent subsequence tends to $${a + b}$ or $${a - b}$, and $${answer}$ is the ${sup ? "largest" : "smallest"} of these.`,
+          `每个下标不是偶数就是奇数，所以每个收敛子数列都趋于 $${a + b}$ 或 $${a - b}$，而 $${answer}$ 是其中${sup ? "最大" : "最小"}的。`,
+        ],
+      ),
     );
   },
 );
@@ -208,27 +252,74 @@ const discreteBall = point(
   "balls-in-the-discrete-metric",
   ["Balls in the discrete metric", "离散度量中的球"],
   [
-    "The discrete metric sets the distance between two different points to 1. So an open ball of radius at most 1 contains only its center, and a ball of larger radius contains the whole space. Every subset is therefore open, which shows how strongly topology depends on the metric.",
-    "离散度量把两个不同点的距离定为 1。所以半径不超过 1 的开球只含球心，半径更大的开球含整个空间。因此每个子集都是开集，这说明拓扑多么依赖度量。",
+    "The discrete metric sets the distance between two different points to 1. So an open ball of radius at most 1 contains only its center, and a ball of larger radius contains the whole space. Every subset is therefore open, which shows how strongly topology depends on the metric.\n\nOn a set of four points $p, q, s, u$ with the discrete metric, the ball of radius $\\frac{1}{2}$ about $p$ is $\\{p\\}$, and so is the ball of radius $1$. The ball of radius $\\frac{3}{2}$ is the whole set of four points.\n\nCheck: $d(p, q) = 1$, which is not less than $1$ but is less than $\\frac{3}{2}$, and the same holds for $s$ and $u$.\n\n> **Watch out.** A radius of exactly $1$ still gives only the center, because an open ball needs a distance strictly less than the radius.",
+    "离散度量把两个不同点的距离定为 1。所以半径不超过 1 的开球只含球心，半径更大的开球含整个空间。因此每个子集都是开集，这说明拓扑多么依赖度量。\n\n在带离散度量的四点集 $p, q, s, u$ 上，以 $p$ 为心、半径 $\\frac{1}{2}$ 的球是 $\\{p\\}$，半径 $1$ 的球也是。半径 $\\frac{3}{2}$ 的球是整个四点集。\n\n检验：$d(p, q) = 1$，它不小于 $1$，但小于 $\\frac{3}{2}$；$s$ 和 $u$ 也一样。\n\n> **注意。** 半径恰好为 $1$ 时球中仍只有球心，因为开球要求距离严格小于半径。",
   ],
   (rng) => {
     const size = rng.int(3, 20);
     const small = rng.bool();
     const r = small ? frac(rng.int(1, 9), 10) : frac(rng.int(11, 40), 10);
     const answer = small ? 1 : size;
-    return ask(
+    return solved(
       [
         `A set with ${size} points has the discrete metric. How many points lie in an open ball of radius $${r.toLatex()}$?`,
         `有 ${size} 个点的集合带离散度量。半径为 $${r.toLatex()}$ 的开球中有多少个点？`,
       ],
       answer,
-      [small ? size : 1, size - 1, 2, 0].filter((v) => v !== answer),
       [
         small
-          ? "Other points are at distance 1, which is too far, so only the center is inside."
-          : "Every other point is at distance 1, which is less than the radius, so the whole set is inside.",
-        small ? "其他点的距离是 1，太远了，所以只有球心在内。" : "其他每个点的距离都是 1，小于半径，所以整个集合都在球内。",
+          ? why(
+              size,
+              `That counts every point, but the other points are at distance 1, which is not less than $${r.toLatex()}$.`,
+              `这数了所有的点，但其他点的距离是 1，并不小于 $${r.toLatex()}$。`,
+            )
+          : why(
+              1,
+              `That counts only the center, but the radius $${r.toLatex()}$ is more than 1, so the points at distance 1 are inside too.`,
+              `这只数了球心，但半径 $${r.toLatex()}$ 大于 1，所以距离为 1 的点也在球内。`,
+            ),
+        why(
+          size - 1,
+          small
+            ? "That counts the other points instead of the center; they are too far, while the center, at distance 0, is inside."
+            : "That leaves out the center, which is at distance 0 and always lies in its own ball.",
+          small ? "这数的是其他点而不是球心；它们太远了，而距离为 0 的球心在球内。" : "这漏掉了球心，它的距离是 0，总在自己的球内。",
+        ),
+        why(
+          2,
+          "That counts the center and one other point; all other points are at the same distance 1, so they are all inside or all outside.",
+          "这数了球心和另一个点；其他点的距离都是 1，所以要么全在球内，要么全在球外。",
+        ),
+        why(0, "An open ball always contains its center, which is at distance 0.", "开球总含球心，球心的距离是 0。"),
       ],
+      solution(
+        [
+          [
+            ["Compare the distances with the radius", "把距离与半径比较"],
+            [
+              `The center is at distance 0 and every other point at distance 1, while the radius is $${r.toLatex()}$, ${small ? "less" : "more"} than 1.`,
+              `球心的距离是 0，其他每个点的距离是 1，而半径 $${r.toLatex()}$ ${small ? "小于" : "大于"} 1。`,
+            ],
+          ],
+          [
+            ["Count the points inside", "数球内的点"],
+            [
+              small
+                ? "Only the center has distance less than the radius, so the ball holds 1 point."
+                : `Every point has distance less than the radius, so the ball holds all ${size} points.`,
+              small ? "只有球心的距离小于半径，所以球中有 1 个点。" : `每个点的距离都小于半径，所以球中有全部 ${size} 个点。`,
+            ],
+          ],
+        ],
+        [
+          small
+            ? `$1 < ${r.toLatex()}$ is false, so no point other than the center is inside, and the center itself is.`
+            : `$1 < ${r.toLatex()}$ holds, so the ${size - 1} other points and the center are all inside, ${size} in all.`,
+          small
+            ? `$1 < ${r.toLatex()}$ 不成立，所以除球心外没有点在球内，而球心本身在内。`
+            : `$1 < ${r.toLatex()}$ 成立，所以其他 ${size - 1} 个点和球心都在球内，共 ${size} 个。`,
+        ],
+      ),
     );
   },
 );
@@ -237,8 +328,8 @@ const boundaryPoints = point(
   "counting-boundary-points",
   ["Counting boundary points", "数边界点"],
   [
-    "A boundary point has both points of the set and points of its complement in every neighborhood. For a finite union of separated intervals and single points, the boundary consists of the endpoints of the intervals and the isolated points. Whether an endpoint belongs to the set makes no difference.",
-    "边界点的每个邻域中都既有集合中的点，也有补集中的点。对若干分离的区间和单点的有限并，边界由各区间的端点和孤立点组成。端点是否属于这个集合没有影响。",
+    "A boundary point has both points of the set and points of its complement in every neighborhood. For a finite union of separated intervals and single points, the boundary consists of the endpoints of the intervals and the isolated points. Whether an endpoint belongs to the set makes no difference.\n\nThe set $[0, 2) \\cup \\{5\\}$ has the boundary $\\{0, 2, 5\\}$, so it has 3 boundary points.\n\nCheck: every neighborhood of $2$ holds points of $[0, 2)$ and points above $2$, and every neighborhood of $5$ holds $5$ and points near $5$ outside the set. A point such as $1$ has the neighborhood $(\\frac{1}{2}, \\frac{3}{2})$ inside the set, so it is not a boundary point.\n\n> **Watch out.** Do not leave out an endpoint because it belongs to the set: $[0, 2]$ and $(0, 2)$ have the same boundary $\\{0, 2\\}$.",
+    "边界点的每个邻域中都既有集合中的点，也有补集中的点。对若干分离的区间和单点的有限并，边界由各区间的端点和孤立点组成。端点是否属于这个集合没有影响。\n\n集合 $[0, 2) \\cup \\{5\\}$ 的边界是 $\\{0, 2, 5\\}$，所以它有 3 个边界点。\n\n检验：$2$ 的每个邻域都含 $[0, 2)$ 中的点和大于 $2$ 的点，$5$ 的每个邻域都含 $5$ 以及 $5$ 附近不在集合中的点。像 $1$ 这样的点有包含在集合内的邻域 $(\\frac{1}{2}, \\frac{3}{2})$，所以不是边界点。\n\n> **注意。** 不要因为端点属于集合就把它漏掉：$[0, 2]$ 和 $(0, 2)$ 的边界都是 $\\{0, 2\\}$。",
   ],
   (rng) => {
     const [a, b, c, d, e] = [rng.int(-9, -5), rng.int(-4, -2), rng.int(0, 3), rng.int(4, 7), rng.int(8, 12)];
@@ -251,14 +342,86 @@ const boundaryPoints = point(
     ];
     const answer = [3, 4, 5, 4][kind] as number;
     const text = texts[kind] as string;
-    return ask(
+    const ends = (
+      [
+        [a, b],
+        [a, b, c, d],
+        [a, b, c, d],
+        [d, e],
+      ][kind] ?? []
+    ).join(", ");
+    const isolated = ([[c], [], [e], [a, c]][kind] ?? []).join(", ");
+    const all = (
+      [
+        [a, b, c],
+        [a, b, c, d],
+        [a, b, c, d, e],
+        [a, c, d, e],
+      ][kind] ?? []
+    ).join(", ");
+    return solved(
       [`How many boundary points does the set $${text}$ have?`, `集合 $${text}$ 有多少个边界点？`],
       answer,
-      [answer - 1, answer + 1, 2, 0, 6].filter((v) => v !== answer),
       [
-        "Count the two endpoints of each interval, and add each isolated point. These are the points whose neighborhoods meet both the set and its complement.",
-        "数出每个区间的两个端点，再加上每个孤立点。这些点的邻域既与集合相交，也与补集相交。",
+        isolated === ""
+          ? why(
+              answer - 1,
+              "That leaves out an endpoint that belongs to the set; it is still a boundary point, since points of the complement lie just beside it.",
+              "这漏掉了属于集合的端点；它仍是边界点，因为紧挨着它就有补集中的点。",
+            )
+          : why(
+              answer - 1,
+              "That leaves out an isolated point; every neighborhood of it meets the complement, so it is a boundary point.",
+              "这漏掉了孤立点；它的每个邻域都与补集相交，所以它是边界点。",
+            ),
+        isolated === ""
+          ? why(
+              answer + 1,
+              "That counts a point that is not on the boundary; an interior point of an interval has a neighborhood inside the set.",
+              "这数了不在边界上的点；区间的内点有包含在集合内的邻域。",
+            )
+          : why(
+              answer + 1,
+              "That gives an isolated point two endpoints, as if it were an interval; it is a single boundary point.",
+              "这把孤立点当作区间，给了它两个端点；它只是一个边界点。",
+            ),
+        why(
+          2,
+          "That counts only the endpoints of one piece; every piece of the set adds its own boundary points.",
+          "这只数了一部分的端点；集合的每一部分都有自己的边界点。",
+        ),
+        why(
+          0,
+          "That treats the set as having no boundary; only the empty set and the whole line have no boundary points.",
+          "这把集合当作没有边界；只有空集和整条直线没有边界点。",
+        ),
+        why(
+          6,
+          "That counts points that are not on the boundary; the boundary holds only the endpoints of the intervals and the isolated points.",
+          "这数了不在边界上的点；边界只含区间的端点和孤立点。",
+        ),
       ],
+      solution(
+        [
+          [
+            ["Take the endpoints of the intervals", "取区间的端点"],
+            [
+              `Each interval gives its two endpoints, whether or not they belong to the set: $${ends}$.`,
+              `每个区间给出两个端点，不管它们是否属于集合：$${ends}$。`,
+            ],
+          ],
+          [
+            ["Add the isolated points", "加上孤立点"],
+            isolated === ""
+              ? ["The set has no isolated points.", "这个集合没有孤立点。"]
+              : [`Each isolated point is a boundary point too: $${isolated}$.`, `每个孤立点也是边界点：$${isolated}$。`],
+          ],
+        ],
+        [
+          `The boundary is $\\{${all}\\}$, with ${answer} points. Any other point has a small neighborhood lying wholly inside the set or wholly outside it.`,
+          `边界是 $\\{${all}\\}$，共 ${answer} 个点。其他任何点都有一个小邻域完全在集合内或完全在集合外。`,
+        ],
+      ),
     );
   },
 );
@@ -267,21 +430,67 @@ const oddSquare = point(
   "the-derivative-of-x-times-its-absolute-value",
   ["The derivative of x times its absolute value", "x 乘其绝对值的导数"],
   [
-    "The function $x |x|$ equals $x^2$ for positive $x$ and $-x^2$ for negative $x$. Both one-sided derivatives at 0 are 0, so it is differentiable there, and its derivative is $2 |x|$. That derivative has a corner at 0, so this is a differentiable function whose derivative is not differentiable.",
-    "函数 $x |x|$ 在 $x$ 为正时等于 $x^2$，为负时等于 $-x^2$。在 0 处两个单侧导数都是 0，所以它在那里可导，导数是 $2 |x|$。这个导数在 0 处有尖点，所以这是一个可导但导数不可导的函数。",
+    "The function $x |x|$ equals $x^2$ for positive $x$ and $-x^2$ for negative $x$. Both one-sided derivatives at 0 are 0, so it is differentiable there, and its derivative is $2 |x|$. That derivative has a corner at 0, so this is a differentiable function whose derivative is not differentiable.\n\nFor $f(x) = 3x |x|$, the derivative is $6 |x|$, so $f'(-2) = 12$.\n\nCheck: for $x < 0$ the function is $-3x^2$, whose derivative $-6x$ is $12$ at $x = -2$.\n\n> **Watch out.** For negative $x$ the derivative is $-2x$ times the coefficient, not $2x$ times it, so $f'$ is never negative when the coefficient is positive.",
+    "函数 $x |x|$ 在 $x$ 为正时等于 $x^2$，为负时等于 $-x^2$。在 0 处两个单侧导数都是 0，所以它在那里可导，导数是 $2 |x|$。这个导数在 0 处有尖点，所以这是一个可导但导数不可导的函数。\n\n对 $f(x) = 3x |x|$，导数是 $6 |x|$，所以 $f'(-2) = 12$。\n\n检验：$x < 0$ 时函数是 $-3x^2$，它的导数 $-6x$ 在 $x = -2$ 处等于 $12$。\n\n> **注意。** 对负的 $x$，导数是系数乘 $-2x$，而不是乘 $2x$，所以系数为正时 $f'$ 从不为负。",
   ],
   (rng) => {
     const c = rng.int(1, 9);
     const a = rng.pick([-7, -5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5, 6]);
     const answer = 2 * c * Math.abs(a);
-    return ask(
+    const h = 0.001;
+    const quotient = (c * (a + h) * Math.abs(a + h) - c * a * Math.abs(a)) / h;
+    return solved(
       [`If $f(x) = ${coef(c, "x |x|")}$, what is $f'(${a})$?`, `若 $f(x) = ${coef(c, "x |x|")}$，$f'(${a})$ 是多少？`],
       answer,
-      [2 * c * a, c * Math.abs(a), c * a * Math.abs(a), answer + 2].filter((v) => v !== answer),
       [
-        `The derivative is $${2 * c} |x|$, including at 0 where both sides agree. At $x = ${a}$ this is ${answer}.`,
-        `导数是 $${2 * c} |x|$，在 0 处两侧也一致。在 $x = ${a}$ 处它等于 ${answer}。`,
+        why(
+          2 * c * a,
+          `That uses $${2 * c}x$, the derivative of $${coef(c, "x^2")}$; for negative $x$ the function is $-${coef(c, "x^2")}$, whose derivative is $-${2 * c}x$.`,
+          `这用的是 $${2 * c}x$，即 $${coef(c, "x^2")}$ 的导数；$x$ 为负时函数是 $-${coef(c, "x^2")}$，导数是 $-${2 * c}x$。`,
+        ),
+        why(c * Math.abs(a), "That forgets the factor 2 that comes from differentiating the square.", "这忘了对平方求导得到的因子 2。"),
+        why(
+          c * a * Math.abs(a),
+          `That is $f(${a})$ itself, the value of the function, not its slope.`,
+          `这是函数值 $f(${a})$ 本身，而不是斜率。`,
+        ),
+        why(
+          answer + 2,
+          "That adds an extra 2; by the product rule $(x |x|)' = |x| + |x| = 2 |x|$, with nothing added.",
+          "这多加了 2；由乘积法则 $(x |x|)' = |x| + |x| = 2 |x|$，没有别的项。",
+        ),
+        why(
+          2 * c,
+          `That drops the factor $|x|$; the derivative $${2 * c} |x|$ depends on $x$.`,
+          `这丢掉了因子 $|x|$；导数 $${2 * c} |x|$ 依赖于 $x$。`,
+        ),
       ],
+      solution(
+        [
+          [
+            ["Split by sign", "按符号分段"],
+            [
+              `For $x > 0$, $f(x) = ${coef(c, "x^2")}$, and for $x < 0$, $f(x) = -${coef(c, "x^2")}$.`,
+              `$x > 0$ 时 $f(x) = ${coef(c, "x^2")}$，$x < 0$ 时 $f(x) = -${coef(c, "x^2")}$。`,
+            ],
+          ],
+          [
+            ["Differentiate each piece", "对每一段求导"],
+            [
+              `The derivative is $${2 * c}x$ for $x > 0$ and $-${2 * c}x$ for $x < 0$, so $f'(x) = ${2 * c} |x|$. At 0 both one-sided derivatives are 0, so the formula holds there too.`,
+              `$x > 0$ 时导数是 $${2 * c}x$，$x < 0$ 时是 $-${2 * c}x$，所以 $f'(x) = ${2 * c} |x|$。在 0 处两个单侧导数都是 0，所以公式在那里也成立。`,
+            ],
+          ],
+          [
+            ["Evaluate", "计算"],
+            [`$f'(${a}) = ${2 * c} |${a}| = ${answer}$.`, `$f'(${a}) = ${2 * c} |${a}| = ${answer}$。`],
+          ],
+        ],
+        [
+          `The difference quotient $\\frac{f(${a} + h) - f(${a})}{h}$ at $h = 0.001$ is about $${quotient.toFixed(3)}$, close to $${answer}$.`,
+          `差商 $\\frac{f(${a} + h) - f(${a})}{h}$ 在 $h = 0.001$ 时约为 $${quotient.toFixed(3)}$，接近 $${answer}$。`,
+        ],
+      ),
     );
   },
 );
@@ -394,8 +603,8 @@ const iterationsNeeded = point(
   "how-many-iterations-are-enough",
   ["How many iterations are enough", "迭代多少次才够"],
   [
-    "For a contraction with constant $L$, the error after $n$ steps is at most $\\frac{L^n}{1 - L} |x_1 - x_0|$. Since this bound uses only the first step, it can tell in advance how many iterations will reach a desired accuracy. Choose the smallest $n$ that brings it below the tolerance.",
-    "对常数为 $L$ 的压缩映射，$n$ 步后的误差不超过 $\\frac{L^n}{1 - L} |x_1 - x_0|$。这个界只用到第一步，所以能预先知道多少次迭代才能达到所需精度。选择使它低于容差的最小 $n$。",
+    "For a contraction with constant $L$, the error after $n$ steps is at most $\\frac{L^n}{1 - L} |x_1 - x_0|$. Since this bound uses only the first step, it can tell in advance how many iterations will reach a desired accuracy. Choose the smallest $n$ that brings it below the tolerance.\n\nFor $L = \\frac{1}{2}$ and $|x_1 - x_0| = 3$, the bound is $\\frac{6}{2^n}$. It falls below $\\frac{1}{100}$ when $2^n > 600$, and $2^9 = 512$ while $2^{10} = 1024$, so $n = 10$.\n\nCheck: $\\frac{6}{1024} \\approx 0.0059 < 0.01$, while $\\frac{6}{512} \\approx 0.0117 > 0.01$.\n\n> **Watch out.** Keep the factor $\\frac{1}{1 - L}$. Without it the bound would be $\\frac{3}{2^n}$, which gives $n = 9$, too few steps for the guarantee.",
+    "对常数为 $L$ 的压缩映射，$n$ 步后的误差不超过 $\\frac{L^n}{1 - L} |x_1 - x_0|$。这个界只用到第一步，所以能预先知道多少次迭代才能达到所需精度。选择使它低于容差的最小 $n$。\n\n对 $L = \\frac{1}{2}$，$|x_1 - x_0| = 3$，界是 $\\frac{6}{2^n}$。它低于 $\\frac{1}{100}$ 当且仅当 $2^n > 600$，而 $2^9 = 512$，$2^{10} = 1024$，所以 $n = 10$。\n\n检验：$\\frac{6}{1024} \\approx 0.0059 < 0.01$，而 $\\frac{6}{512} \\approx 0.0117 > 0.01$。\n\n> **注意。** 要保留因子 $\\frac{1}{1 - L}$。没有它，界就成了 $\\frac{3}{2^n}$，得到 $n = 9$，步数不足以保证精度。",
   ],
   (rng) => {
     const denominator = rng.pick([2, 3, 4, 5]);
@@ -403,17 +612,73 @@ const iterationsNeeded = point(
     const k = rng.pick([10, 20, 50, 100, 200, 500, 1000]);
     let n = 1;
     while ((d * denominator) / (denominator - 1) >= denominator ** n / k) n++;
-    return ask(
+    let short = 0;
+    while (d >= denominator ** short / k) short++;
+    const front = frac(d * denominator, denominator - 1).toLatex();
+    const target = frac(d * denominator * k, denominator - 1).toLatex();
+    const bound = (m: number) => frac(d * denominator, (denominator - 1) * denominator ** m).toLatex();
+    const powers = n === 1 ? `${target} < ${denominator}` : `${denominator ** (n - 1)} \\le ${target} < ${denominator ** n}`;
+    return solved(
       [
         `A contraction has constant $L = \\frac{1}{${denominator}}$ and $|x_1 - x_0| = ${d}$. What is the smallest $n$ for which the bound $\\frac{L^n}{1 - L} |x_1 - x_0|$ falls below $\\frac{1}{${k}}$?`,
         `压缩映射的常数 $L = \\frac{1}{${denominator}}$，$|x_1 - x_0| = ${d}$。使界 $\\frac{L^n}{1 - L} |x_1 - x_0|$ 低于 $\\frac{1}{${k}}$ 的最小 $n$ 是多少？`,
       ],
       n,
-      [n + 1, n - 1 > 0 ? n - 1 : n + 2, n + 2 === k ? n + 3 : n + 3, k].filter((v) => v !== n),
       [
-        `The bound is $${frac(d * denominator, denominator - 1).toLatex()} \\cdot \\frac{1}{${denominator}^n}$. It first falls below $\\frac{1}{${k}}$ at $n = ${n}$.`,
-        `这个界是 $${frac(d * denominator, denominator - 1).toLatex()} \\cdot \\frac{1}{${denominator}^n}$。它第一次低于 $\\frac{1}{${k}}$ 是在 $n = ${n}$。`,
+        why(
+          n + 1,
+          `That is one step more than needed; at $n = ${n}$ the bound is already $${bound(n)}$, below $\\frac{1}{${k}}$.`,
+          `这比所需多一步；$n = ${n}$ 时界已经是 $${bound(n)}$，低于 $\\frac{1}{${k}}$。`,
+        ),
+        n - 1 > 0
+          ? why(
+              n - 1,
+              `That stops one step early; at $n = ${n - 1}$ the bound is $${bound(n - 1)}$, which is not below $\\frac{1}{${k}}$.`,
+              `这早停了一步；$n = ${n - 1}$ 时界是 $${bound(n - 1)}$，并不低于 $\\frac{1}{${k}}$。`,
+            )
+          : why(
+              n + 2,
+              `That is two steps more than needed; the question asks for the smallest $n$, and $n = ${n}$ already works.`,
+              `这比所需多两步；题目要的是最小的 $n$，而 $n = ${n}$ 已经满足。`,
+            ),
+        why(
+          n + 3,
+          `That is three steps more than needed; the question asks for the smallest $n$, and $n = ${n}$ already works.`,
+          `这比所需多三步；题目要的是最小的 $n$，而 $n = ${n}$ 已经满足。`,
+        ),
+        why(
+          k,
+          `That is the denominator of the tolerance $\\frac{1}{${k}}$, not a number of steps.`,
+          `这是容差 $\\frac{1}{${k}}$ 的分母，而不是步数。`,
+        ),
+        why(
+          short,
+          "That leaves out the factor $\\frac{1}{1 - L}$; without it the estimate is too small, so too few steps seem enough.",
+          "这漏掉了因子 $\\frac{1}{1 - L}$；没有它估计值偏小，看起来较少的步数就够了。",
+        ),
       ],
+      solution(
+        [
+          [
+            ["Write the bound", "写出误差界"],
+            [
+              `With $L = \\frac{1}{${denominator}}$, $\\frac{1}{1 - L} = ${frac(denominator, denominator - 1).toLatex()}$, so the bound is $${front} \\cdot \\frac{1}{${denominator}^n}$.`,
+              `$L = \\frac{1}{${denominator}}$ 时 $\\frac{1}{1 - L} = ${frac(denominator, denominator - 1).toLatex()}$，所以界是 $${front} \\cdot \\frac{1}{${denominator}^n}$。`,
+            ],
+          ],
+          [
+            ["Compare with the tolerance", "与容差比较"],
+            [
+              `The bound is below $\\frac{1}{${k}}$ when $${denominator}^n > ${target}$. Since $${powers}$, the smallest such $n$ is $${n}$.`,
+              `当 $${denominator}^n > ${target}$ 时界低于 $\\frac{1}{${k}}$。由于 $${powers}$，满足条件的最小 $n$ 是 $${n}$。`,
+            ],
+          ],
+        ],
+        [
+          `At $n = ${n}$ the bound is $${bound(n)} < \\frac{1}{${k}}$, while at $n = ${n - 1}$ it is $${bound(n - 1)}$, which is not below $\\frac{1}{${k}}$.`,
+          `$n = ${n}$ 时界是 $${bound(n)} < \\frac{1}{${k}}$，而 $n = ${n - 1}$ 时是 $${bound(n - 1)}$，并不低于 $\\frac{1}{${k}}$。`,
+        ],
+      ),
     );
   },
 );

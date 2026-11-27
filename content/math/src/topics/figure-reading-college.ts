@@ -696,8 +696,8 @@ const epsilonBand: KnowledgePointDef = {
   id: "the-index-that-enters-an-epsilon-band",
   title: t("The index that enters an epsilon band", "进入 epsilon 带的下标"),
   explanation: t(
-    "The definition of a limit says that for each $\\varepsilon$ there is an $N$ past which every term stays within $\\varepsilon$ of the limit. In a plot this is a horizontal band around the limit. The point is the word every: a term inside the band proves nothing if a later term leaves, so read from the right and find the last term outside.",
-    "极限的定义说：对每个 $\\varepsilon$，都有一个 $N$，此后的每一项与极限的距离都小于 $\\varepsilon$。在图上这是绕着极限的一条水平带。关键在于“每一项”：某一项在带内并不说明什么，如果后面还有项跑出去。所以要从右往左读，找到最后一个在带外的项。",
+    "The definition of a limit says that for each $\\varepsilon$ there is an $N$ past which every term stays within $\\varepsilon$ of the limit. In a plot this is a horizontal band around the limit. The point is the word every: a term inside the band proves nothing if a later term leaves, so read from the right and find the last term outside.\n\nFor $a_n = 5 + \\frac{12}{n}$ and $\\varepsilon = 2$, the band runs from 3 to 7. The term $a_6 = 7$ sits on the upper edge, not inside, and $a_7 = 5 + \\frac{12}{7} \\approx 6.71$ is inside, so $N = 7$.\n\nCheck: the distance $\\frac{12}{n}$ only shrinks as $n$ grows, so every term after $a_7$ is closer to 5 than $a_7$ is.\n\n> **Watch out.** The answer is the index after the last term outside the band, not that term's own index, and a term inside the band counts for nothing if a later term leaves it.",
+    "极限的定义说：对每个 $\\varepsilon$，都有一个 $N$，此后的每一项与极限的距离都小于 $\\varepsilon$。在图上这是绕着极限的一条水平带。关键在于“每一项”：某一项在带内并不说明什么，如果后面还有项跑出去。所以要从右往左读，找到最后一个在带外的项。\n\n对 $a_n = 5 + \\frac{12}{n}$ 和 $\\varepsilon = 2$，带从 3 到 7。$a_6 = 7$ 在上边缘上而不在带内，$a_7 = 5 + \\frac{12}{7} \\approx 6.71$ 在带内，所以 $N = 7$。\n\n检验：距离 $\\frac{12}{n}$ 随 $n$ 增大只会减小，所以 $a_7$ 之后的每一项都比 $a_7$ 更接近 5。\n\n> **注意。** 答案是最后一个带外项之后的下标，而不是那一项本身的下标；如果后面还有项跑出带外，某一项在带内也不算数。",
   ),
   generate(rng) {
     const { c, epsilon, entry } = rng.pick(bandCases);
@@ -714,10 +714,35 @@ const epsilonBand: KnowledgePointDef = {
         `圆点是极限为 ${limit} 的数列的项 $a_n$，虚线是 ${limit} $\\pm$ ${epsilon}。使得对每个 $n \\ge N$，$a_n$ 都在带内的最小 $N$ 是多少？`,
       ),
       entry,
-      [entry - 1, entry + 1, entry - 2, epsilon],
-      t(
-        `The last term outside the band is $a_{${entry - 1}}$, and every term after it stays inside. So the smallest such $N$ is ${entry}.`,
-        `最后一个在带外的项是 $a_{${entry - 1}}$，它之后的每一项都在带内。所以最小的 $N$ 是 ${entry}。`,
+      [],
+      walked(
+        [
+          [
+            ["Read from the right", "从右往左读"],
+            t(
+              `Far to the right the dots crowd around ${limit}, well inside the band from ${limit - epsilon} to ${limit + epsilon}.`,
+              `在最右边，圆点聚集在 ${limit} 附近，都在从 ${limit - epsilon} 到 ${limit + epsilon} 的带内。`,
+            ),
+          ],
+          [
+            ["Find the last dot outside", "找最后一个带外的点"],
+            t(
+              `Moving left, the first dot outside the band is $a_{${entry - 1}}$, at height about ${term(entry - 1).toFixed(2)}, ${term(entry - 1) > limit ? "above" : "below"} the line at ${term(entry - 1) > limit ? limit + epsilon : limit - epsilon}.`,
+              `向左看，第一个在带外的点是 $a_{${entry - 1}}$，高度约为 ${term(entry - 1).toFixed(2)}，在 ${term(entry - 1) > limit ? limit + epsilon : limit - epsilon} 那条线的${term(entry - 1) > limit ? "上方" : "下方"}。`,
+            ),
+          ],
+          [
+            ["Take the next index", "取下一个下标"],
+            t(
+              `Every term from $a_{${entry}}$ on stays inside, so the smallest such $N$ is ${entry}.`,
+              `从 $a_{${entry}}$ 起每一项都在带内，所以最小的 $N$ 是 ${entry}。`,
+            ),
+          ],
+        ],
+        t(
+          `The distance from ${limit} shrinks as $n$ grows: $a_{${entry - 1}}$ is about ${(c / (entry - 1)).toFixed(2)} away, more than ${epsilon}, and $a_{${entry}}$ is about ${(c / entry).toFixed(2)} away, less than ${epsilon}.`,
+          `与 ${limit} 的距离随 $n$ 增大而减小：$a_{${entry - 1}}$ 约相距 ${(c / (entry - 1)).toFixed(2)}，大于 ${epsilon}；$a_{${entry}}$ 约相距 ${(c / entry).toFixed(2)}，小于 ${epsilon}。`,
+        ),
       ),
       drawn(
         { xMin: 0, xMax: 14, yMin: 0, yMax: 14, labelEvery: 2, xName: "n", yName: "a" },
@@ -732,6 +757,28 @@ const epsilonBand: KnowledgePointDef = {
         ),
       ),
       "integer",
+      [
+        why(
+          entry - 1,
+          `That is the index of the last term outside the band; $a_{${entry - 1}}$ itself is outside, so $N$ is the next index.`,
+          `这是最后一个带外项的下标；$a_{${entry - 1}}$ 本身在带外，所以 $N$ 是下一个下标。`,
+        ),
+        why(
+          entry + 1,
+          `That is one index too late; $a_{${entry}}$ already lies inside the band, and so does every later term.`,
+          `这晚了一个下标；$a_{${entry}}$ 已经在带内，之后的每一项也都在。`,
+        ),
+        why(
+          entry - 2,
+          `That is too early; from $n = ${entry - 2}$ on, the term $a_{${entry - 1}}$ still lies outside the band.`,
+          `这太早了；从 $n = ${entry - 2}$ 起，$a_{${entry - 1}}$ 仍在带外。`,
+        ),
+        why(
+          epsilon,
+          `That is the half-width $\\varepsilon = ${epsilon}$ of the band, not an index of the sequence.`,
+          `这是带的半宽 $\\varepsilon = ${epsilon}$，而不是数列的下标。`,
+        ),
+      ],
     );
   },
 };
@@ -740,8 +787,8 @@ const limsupFromPlot: KnowledgePointDef = {
   id: "limsup-and-liminf-from-a-plot",
   title: t("Limit superior and inferior from a plot", "由图读上极限和下极限"),
   explanation: t(
-    "The limit superior is the largest value that some subsequence approaches, and the limit inferior is the smallest. Neither is the largest or smallest term of the sequence: early terms may stick out past them and then never return. Look at where the dots settle on the far right of the plot, ignoring the first few.",
-    "上极限是某个子列趋近的最大值，下极限是最小值。它们都不是数列的最大项或最小项：前面的项可能超出去，之后再也不回来。要看图最右边圆点稳定在哪里，不管开头那几项。",
+    "The limit superior is the largest value that some subsequence approaches, and the limit inferior is the smallest. Neither is the largest or smallest term of the sequence: early terms may stick out past them and then never return. Look at where the dots settle on the far right of the plot, ignoring the first few.\n\nSuppose the even terms are $8 + \\frac{6}{n}$ and the odd terms are $3 - \\frac{4}{n}$. Then $a_2 = 11$ and $a_1 = -1$ stick out, but the even dots settle at 8 and the odd dots at 3, so the limit superior is 8 and the limit inferior is 3.\n\nCheck: $a_{20} = 8.3$ and $a_{21} = 3 - \\frac{4}{21} \\approx 2.81$, already close to the two levels.\n\n> **Watch out.** Do not read off the highest or lowest dot. Those are early terms, and the limit superior and inferior depend only on where the dots end up.",
+    "上极限是某个子列趋近的最大值，下极限是最小值。它们都不是数列的最大项或最小项：前面的项可能超出去，之后再也不回来。要看图最右边圆点稳定在哪里，不管开头那几项。\n\n设偶数项是 $8 + \\frac{6}{n}$，奇数项是 $3 - \\frac{4}{n}$。那么 $a_2 = 11$ 和 $a_1 = -1$ 超了出去，但偶数项的圆点稳定在 8，奇数项的圆点稳定在 3，所以上极限是 8，下极限是 3。\n\n检验：$a_{20} = 8.3$，$a_{21} = 3 - \\frac{4}{21} \\approx 2.81$，已经接近这两个高度。\n\n> **注意。** 不要读最高或最低的圆点。那些是开头的项，上极限和下极限只取决于圆点最后停在哪里。",
   ),
   generate(rng) {
     const upper = rng.int(6, 10);
@@ -761,10 +808,35 @@ const limsupFromPlot: KnowledgePointDef = {
         `圆点是数列的项 $a_n$，规律一直延续。$${name}_{n \\to \\infty} a_n$ 是多少？`,
       ),
       answer,
-      [askUpper ? lower : upper, askUpper ? upper + c / 2 : lower - c, Q.of(upper + lower, 2), askUpper ? upper - c / 2 : lower + c],
-      t(
-        `The even terms approach ${upper} and the odd terms approach ${lower}, and these are the only values a subsequence can approach. The ${askUpper ? "largest" : "smallest"} of them is ${answer}, whatever the first few terms do.`,
-        `偶数项趋近 ${upper}，奇数项趋近 ${lower}，子列只可能趋近这两个值。其中${askUpper ? "最大" : "最小"}的是 ${answer}，与开头几项无关。`,
+      [],
+      walked(
+        [
+          [
+            ["Split even and odd terms", "把偶数项和奇数项分开"],
+            t(
+              `The even terms settle at ${upper} and the odd terms at ${lower}; these are the only values a subsequence can approach.`,
+              `偶数项稳定在 ${upper}，奇数项稳定在 ${lower}；子列只可能趋近这两个值。`,
+            ),
+          ],
+          [
+            ["Ignore the early terms", "不管开头的项"],
+            t(
+              `The first dots, such as $a_1$ and $a_2$, lie away from these levels, but finitely many terms do not change a limit.`,
+              `开头的圆点，例如 $a_1$ 和 $a_2$，离这两个高度较远，但有限个项不改变极限。`,
+            ),
+          ],
+          [
+            [`Take the ${askUpper ? "larger" : "smaller"} level`, askUpper ? "取较大的高度" : "取较小的高度"],
+            t(
+              `The ${askUpper ? "limit superior is the larger" : "limit inferior is the smaller"} of the two, ${answer}.`,
+              `${askUpper ? "上极限是两者中较大的" : "下极限是两者中较小的"}，即 ${answer}。`,
+            ),
+          ],
+        ],
+        t(
+          `Far to the right, $a_{24}$ is about ${term(24).toFixed(2)} and $a_{23}$ about ${term(23).toFixed(2)}, close to ${upper} and ${lower}, and the ${askUpper ? "larger" : "smaller"} of these levels is ${answer}.`,
+          `在最右边，$a_{24}$ 约为 ${term(24).toFixed(2)}，$a_{23}$ 约为 ${term(23).toFixed(2)}，接近 ${upper} 和 ${lower}，其中较${askUpper ? "大" : "小"}的高度是 ${answer}。`,
+        ),
       ),
       drawn(
         { xMin: 0, xMax: 24, yMin: -3, yMax: 15, step: 1, labelEvery: 2, xName: "n", yName: "a" },
@@ -772,6 +844,56 @@ const limsupFromPlot: KnowledgePointDef = {
         t("Terms of a sequence for $n$ up to 24, alternating between two levels.", "$n$ 到 24 的数列各项，在两个高度之间交替。"),
       ),
       "integer",
+      [
+        why(
+          askUpper ? lower : upper,
+          `That is the limit ${askUpper ? "inferior" : "superior"}, where the ${askUpper ? "odd" : "even"} terms settle; the ${askUpper ? "larger" : "smaller"} level is wanted.`,
+          `这是${askUpper ? "下" : "上"}极限，即${askUpper ? "奇" : "偶"}数项稳定的高度；题目要的是较${askUpper ? "大" : "小"}的高度。`,
+        ),
+        askUpper
+          ? why(
+              upper + c / 2,
+              outward
+                ? `That is $a_2$, the highest dot; the even terms come down to ${upper} and never return to it.`
+                : `That is not where the even terms settle; they rise toward ${upper} from below and stay below it.`,
+              outward
+                ? `这是最高的圆点 $a_2$；偶数项降到 ${upper}，再也不回到那里。`
+                : `偶数项不是稳定在这里；它们从下方升向 ${upper}，并一直在它下面。`,
+            )
+          : why(
+              lower - c,
+              outward
+                ? `That is $a_1$, the lowest term; the odd terms rise back to ${lower} and never return to it.`
+                : `That is not where the odd terms settle; they fall toward ${lower} from above and stay above it.`,
+              outward
+                ? `这是最低的项 $a_1$；奇数项回升到 ${lower}，再也不回到那里。`
+                : `奇数项不是稳定在这里；它们从上方降向 ${lower}，并一直在它上面。`,
+            ),
+        why(
+          Q.of(upper + lower, 2),
+          "That is the midpoint of the two levels; the terms keep jumping between the levels, so no subsequence approaches it.",
+          "这是两个高度的中点；各项一直在两个高度之间跳动，所以没有子列趋近它。",
+        ),
+        askUpper
+          ? why(
+              upper - c / 2,
+              outward
+                ? `That is not where the even terms settle; they come down toward ${upper} from above and stay above it.`
+                : `That is $a_2$, the first even term; the even terms keep rising toward ${upper}.`,
+              outward
+                ? `偶数项不是稳定在这里；它们从上方降向 ${upper}，并一直在它上面。`
+                : `这是第一个偶数项 $a_2$；偶数项一直升向 ${upper}。`,
+            )
+          : why(
+              lower + c,
+              outward
+                ? `That is not where the odd terms settle; they rise toward ${lower} from below and stay below it.`
+                : `That is $a_1$, the first odd term; the odd terms keep falling toward ${lower}.`,
+              outward
+                ? `奇数项不是稳定在这里；它们从下方升向 ${lower}，并一直在它下面。`
+                : `这是第一个奇数项 $a_1$；奇数项一直降向 ${lower}。`,
+            ),
+      ],
     );
   },
 };
@@ -896,8 +1018,8 @@ const deltaFromLine: KnowledgePointDef = {
   id: "reading-delta-from-a-line",
   title: t("Reading delta from a line", "由直线读 delta"),
   explanation: t(
-    "For a line through $(a, L)$ with slope $m$, the height differs from $L$ by exactly $|m|$ times the horizontal distance from $a$. So staying within $\\varepsilon$ of $L$ means staying within $\\varepsilon / |m|$ of $a$. A steep line needs a small $\\delta$, and a shallow line allows a large one, because $\\delta$ is measured across and $\\varepsilon$ up.",
-    "对经过 $(a, L)$、斜率为 $m$ 的直线，高度与 $L$ 的差恰好是水平距离的 $|m|$ 倍。所以要与 $L$ 相差不到 $\\varepsilon$，就要与 $a$ 相差不到 $\\varepsilon / |m|$。直线越陡，$\\delta$ 越小；越平，$\\delta$ 越大，因为 $\\delta$ 是横向量的，$\\varepsilon$ 是纵向量的。",
+    "For a line through $(a, L)$ with slope $m$, the height differs from $L$ by exactly $|m|$ times the horizontal distance from $a$. So staying within $\\varepsilon$ of $L$ means staying within $\\varepsilon / |m|$ of $a$. A steep line needs a small $\\delta$, and a shallow line allows a large one, because $\\delta$ is measured across and $\\varepsilon$ up.\n\nFor the line through $(5, 4)$ with slope $2$ and $\\varepsilon = 3$, the largest $\\delta$ is $\\frac{3}{2}$.\n\nCheck: at $x = 5 + \\frac{3}{2}$ the height is $4 + 2 \\cdot \\frac{3}{2} = 7$, exactly on the upper dashed line $y = 4 + 3$.\n\n> **Watch out.** Divide $\\varepsilon$ by the steepness; do not multiply. A slope of $-2$ gives the same $\\delta$ as a slope of $2$, since only $|m|$ matters.",
+    "对经过 $(a, L)$、斜率为 $m$ 的直线，高度与 $L$ 的差恰好是水平距离的 $|m|$ 倍。所以要与 $L$ 相差不到 $\\varepsilon$，就要与 $a$ 相差不到 $\\varepsilon / |m|$。直线越陡，$\\delta$ 越小；越平，$\\delta$ 越大，因为 $\\delta$ 是横向量的，$\\varepsilon$ 是纵向量的。\n\n对经过 $(5, 4)$、斜率为 $2$ 的直线和 $\\varepsilon = 3$，最大的 $\\delta$ 是 $\\frac{3}{2}$。\n\n检验：在 $x = 5 + \\frac{3}{2}$ 处高度是 $4 + 2 \\cdot \\frac{3}{2} = 7$，恰好在上面的虚线 $y = 4 + 3$ 上。\n\n> **注意。** 要用 $\\varepsilon$ 除以陡度，而不是乘。斜率 $-2$ 与斜率 $2$ 给出相同的 $\\delta$，因为只有 $|m|$ 起作用。",
   ),
   generate(rng) {
     const [mn, md, epsilonDoubled] = rng.pick([
@@ -926,10 +1048,28 @@ const deltaFromLine: KnowledgePointDef = {
         `直线经过 $(${a}, ${L})$，虚线在 $y = ${L} \\pm ${epsilon.toLatex()}$ 处。使 $|x - ${a}| < \\delta$ 时直线都在虚线之间的最大 $\\delta$ 是多少？`,
       ),
       delta,
-      [epsilon, epsilon.mul(Q.of(mn, md)), delta.div(Q.of(2, 1)), delta.mul(Q.of(2, 1)), Q.of(mn, md)],
-      t(
-        `The grid shows slope $${slope.toLatex()}$. The line leaves the band when its height has changed by $${epsilon.toLatex()}$, which takes a horizontal distance of $${epsilon.toLatex()} \\div ${Q.of(mn, md).toLatex()} = ${delta.toLatex()}$.`,
-        `由方格读出斜率是 $${slope.toLatex()}$。高度变化 $${epsilon.toLatex()}$ 时直线离开带，这需要的水平距离是 $${epsilon.toLatex()} \\div ${Q.of(mn, md).toLatex()} = ${delta.toLatex()}$。`,
+      [],
+      walked(
+        [
+          [
+            ["Read the slope", "读出斜率"],
+            t(
+              `The grid shows slope $${slope.toLatex()}$, so the height changes by $${Q.of(mn, md).toLatex()}$ for each unit across.`,
+              `由方格读出斜率是 $${slope.toLatex()}$，所以每向右一个单位，高度变化 $${Q.of(mn, md).toLatex()}$。`,
+            ),
+          ],
+          [
+            ["Divide the tolerance by the steepness", "用误差除以陡度"],
+            t(
+              `The line leaves the band when its height has changed by $${epsilon.toLatex()}$, which takes a horizontal distance of $${epsilon.toLatex()} \\div ${Q.of(mn, md).toLatex()} = ${delta.toLatex()}$.`,
+              `高度变化 $${epsilon.toLatex()}$ 时直线离开带，这需要的水平距离是 $${epsilon.toLatex()} \\div ${Q.of(mn, md).toLatex()} = ${delta.toLatex()}$。`,
+            ),
+          ],
+        ],
+        t(
+          `At $x = ${a} + ${delta.toLatex()}$ the height of the line is $${Q.of(L).add(slope.mul(delta)).toLatex()}$, exactly on a dashed line, and every $x$ closer to ${a} keeps the line strictly between.`,
+          `在 $x = ${a} + ${delta.toLatex()}$ 处直线的高度是 $${Q.of(L).add(slope.mul(delta)).toLatex()}$，恰好在一条虚线上；更接近 ${a} 的每个 $x$ 都使直线严格在两线之间。`,
+        ),
       ),
       drawn(
         { xMin: 0, xMax: 10, yMin: 0, yMax: 10 },
@@ -944,6 +1084,34 @@ const deltaFromLine: KnowledgePointDef = {
           `一条直线经过标出的点 $(${a}, ${L})$，穿过两条水平虚线。`,
         ),
       ),
+      "number",
+      [
+        why(
+          epsilon,
+          `That is $\\varepsilon$ itself; $\\delta$ is measured across, and the line rises or falls $${Q.of(mn, md).toLatex()}$ for each unit across, so divide by it.`,
+          `这是 $\\varepsilon$ 本身；$\\delta$ 是横向量的，而直线每向右一个单位升降 $${Q.of(mn, md).toLatex()}$，所以要除以它。`,
+        ),
+        why(
+          epsilon.mul(Q.of(mn, md)),
+          "That multiplies $\\varepsilon$ by the steepness instead of dividing by it.",
+          "这把 $\\varepsilon$ 乘以陡度，而不是除以它。",
+        ),
+        why(
+          delta.div(Q.of(2, 1)),
+          `That is half of the largest $\\delta$; it works, but a $\\delta$ up to $${delta.toLatex()}$ works too.`,
+          `这是最大 $\\delta$ 的一半；它可以，但直到 $${delta.toLatex()}$ 的 $\\delta$ 也都可以。`,
+        ),
+        why(
+          delta.mul(Q.of(2, 1)),
+          "That uses the full width $2\\varepsilon$ of the band; the line may move only $\\varepsilon$ up or down from its height at the marked point.",
+          "这用了带的全宽 $2\\varepsilon$；直线从标出点的高度只能向上或向下移动 $\\varepsilon$。",
+        ),
+        why(
+          Q.of(mn, md),
+          "That is the steepness of the line, a rise per unit across, not a horizontal distance.",
+          "这是直线的陡度，即每横向一个单位的升降，而不是水平距离。",
+        ),
+      ],
     );
   },
 };
@@ -953,8 +1121,8 @@ const secantSlope: KnowledgePointDef = {
   figure: analysisDrawings1["bounds-from-the-mean-value-theorem#the-slope-guaranteed-by-a-graph"],
   title: t("The slope the theorem guarantees", "定理保证的斜率"),
   explanation: t(
-    "The Mean Value Theorem promises a point between $a$ and $b$ where the tangent is parallel to the chord joining the endpoints. So the guaranteed derivative is the chord's slope: rise over run between the two endpoints only. What the curve does in between does not change this value, though it may change how many such points there are.",
-    "中值定理保证 $a$ 和 $b$ 之间有一点，那里的切线平行于连接两端点的弦。所以定理保证的导数值就是弦的斜率：只看两端点之间的升高除以水平距离。曲线中间怎么走不改变这个值，只可能改变这样的点有几个。",
+    "The Mean Value Theorem promises a point between $a$ and $b$ where the tangent is parallel to the chord joining the endpoints. So the guaranteed derivative is the chord's slope: rise over run between the two endpoints only. What the curve does in between does not change this value, though it may change how many such points there are.\n\nIf the endpoints are $(1, 2)$ and $(5, 8)$, the chord has slope $\\frac{8 - 2}{5 - 1} = \\frac{3}{2}$, so some $c$ between 1 and 5 has $f'(c) = \\frac{3}{2}$.\n\nCheck: starting at height 2 and going 4 across at slope $\\frac{3}{2}$ reaches $2 + \\frac{3}{2} \\cdot 4 = 8$, the other endpoint.\n\n> **Watch out.** Use the two endpoints only. The highest point of the curve, or a slope read somewhere in the middle, is not what the theorem guarantees.",
+    "中值定理保证 $a$ 和 $b$ 之间有一点，那里的切线平行于连接两端点的弦。所以定理保证的导数值就是弦的斜率：只看两端点之间的升高除以水平距离。曲线中间怎么走不改变这个值，只可能改变这样的点有几个。\n\n若端点是 $(1, 2)$ 和 $(5, 8)$，弦的斜率是 $\\frac{8 - 2}{5 - 1} = \\frac{3}{2}$，所以 1 和 5 之间有某个 $c$ 使 $f'(c) = \\frac{3}{2}$。\n\n检验：从高度 2 出发，以斜率 $\\frac{3}{2}$ 横向走 4，到达 $2 + \\frac{3}{2} \\cdot 4 = 8$，正是另一个端点。\n\n> **注意。** 只用两个端点。曲线的最高点，或在中间某处读出的斜率，都不是定理所保证的。",
   ),
   generate(rng) {
     const a = rng.int(1, 3);
@@ -972,10 +1140,25 @@ const secantSlope: KnowledgePointDef = {
         `曲线是可导函数 $f$ 的图像，$x = ${a}$ 和 $x = ${b}$ 处的端点已标出。中值定理保证两点之间有一点 $c$，使 $f'(c)$ 等于多少？`,
       ),
       slope,
-      [Q.of(yb - ya, 1), Q.of(b - a, yb - ya), slope.neg(), Q.of(yb + ya, 2)],
-      t(
-        `The endpoints are $(${a}, ${ya})$ and $(${b}, ${yb})$, so the chord has slope $\\frac{${yb} - ${ya}}{${b} - ${a}} = ${slope.toLatex()}$. The theorem guarantees a tangent with that same slope.`,
-        `端点是 $(${a}, ${ya})$ 和 $(${b}, ${yb})$，所以弦的斜率是 $\\frac{${yb} - ${ya}}{${b} - ${a}} = ${slope.toLatex()}$。定理保证有一条切线的斜率与它相同。`,
+      [],
+      walked(
+        [
+          [
+            ["Read the endpoints", "读出端点"],
+            t(`The marked endpoints are $(${a}, ${ya})$ and $(${b}, ${yb})$.`, `标出的端点是 $(${a}, ${ya})$ 和 $(${b}, ${yb})$。`),
+          ],
+          [
+            ["Take the slope of the chord", "求弦的斜率"],
+            t(
+              `The chord has slope $\\frac{${yb} - ${ya}}{${b} - ${a}} = ${slope.toLatex()}$, and the theorem guarantees a tangent with that same slope.`,
+              `弦的斜率是 $\\frac{${yb} - ${ya}}{${b} - ${a}} = ${slope.toLatex()}$，定理保证有一条切线的斜率与它相同。`,
+            ),
+          ],
+        ],
+        t(
+          `Going ${b - a} across at slope $${slope.toLatex()}$ changes the height by ${yb - ya}, from ${ya} to ${yb}, so the chord does join the two endpoints.`,
+          `以斜率 $${slope.toLatex()}$ 横向走 ${b - a}，高度改变 ${yb - ya}，从 ${ya} 到 ${yb}，所以这条弦确实连接两个端点。`,
+        ),
       ),
       drawn(
         { xMin: 0, xMax: 10, yMin: 0, yMax: 10 },
@@ -989,6 +1172,29 @@ const secantSlope: KnowledgePointDef = {
           `一条光滑曲线，连接标出的点 $(${a}, ${ya})$ 和 $(${b}, ${yb})$。`,
         ),
       ),
+      "number",
+      [
+        why(
+          Q.of(yb - ya, 1),
+          `That is the rise alone; divide it by the run $${b} - ${a} = ${b - a}$.`,
+          `这只是升高量；要除以水平距离 $${b} - ${a} = ${b - a}$。`,
+        ),
+        why(
+          Q.of(b - a, yb - ya),
+          "That is run over rise, upside down; slope is rise over run.",
+          "这是水平距离除以升高，颠倒了；斜率是升高除以水平距离。",
+        ),
+        why(
+          slope.neg(),
+          `That has the wrong sign; the curve goes from height ${ya} ${yb > ya ? "up" : "down"} to ${yb}.`,
+          `这符号错了；曲线从高度 ${ya} ${yb > ya ? "升" : "降"}到 ${yb}。`,
+        ),
+        why(
+          Q.of(yb + ya, 2),
+          "That is the average height of the endpoints, a value of $f$, not a slope.",
+          "这是两端点高度的平均值，是 $f$ 的值，而不是斜率。",
+        ),
+      ],
     );
   },
 };
@@ -997,8 +1203,8 @@ const darbouxFromDrawing: KnowledgePointDef = {
   id: "darboux-sums-from-a-drawing",
   title: t("Darboux sums from a drawing", "由图算达布和"),
   explanation: t(
-    "On each piece of a partition, the upper sum uses the largest value of the function and the lower sum uses the smallest. For a monotonic function these lie at the ends of the piece. The pieces need not have equal widths, so multiply each height by its own width. The upper sum minus the lower sum measures the gap left by the partition.",
-    "在分割的每一段上，上和取函数的最大值，下和取最小值。单调函数的最大值和最小值都在这一段的端点上。各段宽度不一定相等，所以每个高度要乘自己那一段的宽度。上和减下和就是这个分割留下的差距。",
+    "On each piece of a partition, the upper sum uses the largest value of the function and the lower sum uses the smallest. For a monotonic function these lie at the ends of the piece. The pieces need not have equal widths, so multiply each height by its own width. The upper sum minus the lower sum measures the gap left by the partition.\n\nFor an increasing $f$ with $f(0) = 2$, $f(2) = 3$ and $f(6) = 11$, the partition $0, 2, 6$ gives $U(P) = 2 \\times 3 + 4 \\times 11 = 50$ and $L(P) = 2 \\times 2 + 4 \\times 3 = 16$, so $U(P) - L(P) = 34$.\n\nCheck: for an increasing function the gap is a sum of width times rise, $2 \\times (3 - 2) + 4 \\times (11 - 3) = 34$.\n\n> **Watch out.** Multiply each height by the width of its own piece. Adding the heights alone, or using one common width, gives a wrong sum when the pieces differ in width.",
+    "在分割的每一段上，上和取函数的最大值，下和取最小值。单调函数的最大值和最小值都在这一段的端点上。各段宽度不一定相等，所以每个高度要乘自己那一段的宽度。上和减下和就是这个分割留下的差距。\n\n对递增的 $f$，$f(0) = 2$，$f(2) = 3$，$f(6) = 11$，分割 $0, 2, 6$ 给出 $U(P) = 2 \\times 3 + 4 \\times 11 = 50$，$L(P) = 2 \\times 2 + 4 \\times 3 = 16$，所以 $U(P) - L(P) = 34$。\n\n检验：对递增函数，差距是各段宽度乘升高之和，$2 \\times (3 - 2) + 4 \\times (11 - 3) = 34$。\n\n> **注意。** 每个高度要乘它自己那一段的宽度。只把高度相加，或者用同一个宽度，在各段宽度不同时都会算错。",
   ),
   generate(rng) {
     const points = rng.pick([
@@ -1041,17 +1247,54 @@ const darbouxFromDrawing: KnowledgePointDef = {
       ],
       dashed: true,
     }));
-    const sum = (key: "high" | "low") => pieces.map((p) => `${p.width} \\cdot ${p[key]}`).join(" + ");
+    const sum = (key: "high" | "low") => pieces.map((p) => `${p.width} \\times ${p[key]}`).join(" + ");
+    const widths = pieces.map((p) => p.width).join(", ");
+    const rise = pieces.map((p) => `${p.width} \\times ${p.high - p.low}`).join(" + ");
+    const highs = pieces.reduce((s, p) => s + p.high, 0);
+    const lows = pieces.reduce((s, p) => s + p.low, 0);
+    const named = {
+      upper: ["the upper sum $U(P)$", "上和 $U(P)$"],
+      lower: ["the lower sum $L(P)$", "下和 $L(P)$"],
+      gap: ["the gap $U(P) - L(P)$", "差 $U(P) - L(P)$"],
+    } as const;
+    const instead = (other: keyof typeof named) =>
+      why(
+        { upper, lower, gap: upper - lower }[other],
+        `That is ${named[other][0]}, not ${question.en}.`,
+        `这是${named[other][1]}，而不是${question["zh-CN"]}。`,
+      );
     return numeric(
       t(
         `The curve is a monotonic function $f$ on $[0, 6]$. The shaded rectangles are the lower sum and the dashed rectangles are the upper sum of a partition $P$. Find ${question.en}.`,
         `曲线是 $[0, 6]$ 上的单调函数 $f$。对分割 $P$，阴影矩形是下和，虚线矩形是上和。求${question["zh-CN"]}。`,
       ),
       answer,
-      [upper, lower, upper - lower, upper + lower, pieces.reduce((s, p) => s + p.high, 0), pieces.reduce((s, p) => s + p.low, 0)],
-      t(
-        `Reading the widths and heights, $U(P) = ${sum("high")} = ${upper}$ and $L(P) = ${sum("low")} = ${lower}$. So ${question.en} is ${answer}.`,
-        `读出宽和高，$U(P) = ${sum("high")} = ${upper}$，$L(P) = ${sum("low")} = ${lower}$。所以${question["zh-CN"]}是 ${answer}。`,
+      [],
+      walked(
+        [
+          [
+            ["Read the pieces", "读出各段"],
+            t(
+              `The partition cuts $[0, 6]$ at $${points.join(", ")}$, so the widths are $${widths}$. Since $f$ is ${increasing ? "increasing" : "decreasing"}, its largest value on each piece is at the ${increasing ? "right" : "left"} end.`,
+              `分割在 $${points.join(", ")}$ 处切开 $[0, 6]$，所以各段宽度是 $${widths}$。因为 $f$ ${increasing ? "递增" : "递减"}，它在每段上的最大值在${increasing ? "右" : "左"}端。`,
+            ),
+          ],
+          [
+            ["Add the dashed rectangles", "把虚线矩形加起来"],
+            t(`$U(P) = ${sum("high")} = ${upper}$.`, `$U(P) = ${sum("high")} = ${upper}$。`),
+          ],
+          [
+            ["Add the shaded rectangles", "把阴影矩形加起来"],
+            t(
+              `$L(P) = ${sum("low")} = ${lower}$${ask === "gap" ? `, so $U(P) - L(P) = ${upper} - ${lower} = ${answer}$` : ""}.`,
+              `$L(P) = ${sum("low")} = ${lower}$${ask === "gap" ? `，所以 $U(P) - L(P) = ${upper} - ${lower} = ${answer}$` : ""}。`,
+            ),
+          ],
+        ],
+        t(
+          `The gap is also width times rise on each piece, $${rise} = ${upper - lower}$, which matches $${upper} - ${lower}$. So ${question.en} is ${answer}.`,
+          `差距也等于各段宽度乘升降之和，$${rise} = ${upper - lower}$，与 $${upper} - ${lower}$ 一致。所以${question["zh-CN"]}是 ${answer}。`,
+        ),
       ),
       drawn(
         { xMin: -1, xMax: 7, yMin: -1, yMax: 13 },
@@ -1062,6 +1305,24 @@ const darbouxFromDrawing: KnowledgePointDef = {
         ),
       ),
       "integer",
+      [
+        ...(["upper", "lower", "gap"] as const).filter((k) => k !== ask).map(instead),
+        why(
+          upper + lower,
+          "That adds the two sums; the upper and lower sums are separate estimates of the area, and their gap is a difference.",
+          "这把两个和加了起来；上和与下和是面积的两个估计，差距是它们的差。",
+        ),
+        why(
+          highs,
+          `That adds the largest heights without multiplying each by the width of its piece, $${widths}$.`,
+          `这只把最大高度相加，没有乘各自那一段的宽度 $${widths}$。`,
+        ),
+        why(
+          lows,
+          `That adds the smallest heights without multiplying each by the width of its piece, $${widths}$.`,
+          `这只把最小高度相加，没有乘各自那一段的宽度 $${widths}$。`,
+        ),
+      ],
     );
   },
 };
@@ -1070,8 +1331,8 @@ const stepGap: KnowledgePointDef = {
   id: "the-gap-at-a-jump",
   title: t("The gap at a jump", "跳跃处的差距"),
   explanation: t(
-    "A function with one jump is still Riemann integrable. On every piece of a partition that misses the jump, the largest and smallest values agree and contribute nothing to the upper sum minus the lower sum. Only the piece holding the jump contributes: its width times the size of the jump, and this shrinks to zero as the partition gets finer.",
-    "只有一个跳跃的函数仍然黎曼可积。分割中不含跳跃的每一段上，最大值和最小值相同，对上和减下和没有贡献。只有含跳跃的那一段有贡献：它的宽度乘跳跃的大小，分割越细，这个值越趋近于零。",
+    "A function with one jump is still Riemann integrable. On every piece of a partition that misses the jump, the largest and smallest values agree and contribute nothing to the upper sum minus the lower sum. Only the piece holding the jump contributes: its width times the size of the jump, and this shrinks to zero as the partition gets finer.\n\nLet $f = 2$ on $[0, 3)$ and $f = 5$ on $[3, 8]$, with a partition into pieces of width 2. Only the piece $[2, 4]$ holds the jump, and it contributes $2 \\times (5 - 2) = 6$, so $U(P) - L(P) = 6$.\n\nCheck: on $[2, 4]$ the upper sum uses 5 and the lower sum uses 2, giving $2 \\times 5 - 2 \\times 2 = 6$, and every other piece gives the same value to both sums.\n\n> **Watch out.** Multiply the width of the one piece by the size of the jump, the difference of the two values. Neither the sum of the values nor the whole length of the interval enters.",
+    "只有一个跳跃的函数仍然黎曼可积。分割中不含跳跃的每一段上，最大值和最小值相同，对上和减下和没有贡献。只有含跳跃的那一段有贡献：它的宽度乘跳跃的大小，分割越细，这个值越趋近于零。\n\n设 $f$ 在 $[0, 3)$ 上等于 2，在 $[3, 8]$ 上等于 5，分割的每段宽 2。只有 $[2, 4]$ 这一段含跳跃，它贡献 $2 \\times (5 - 2) = 6$，所以 $U(P) - L(P) = 6$。\n\n检验：在 $[2, 4]$ 上，上和用 5，下和用 2，得 $2 \\times 5 - 2 \\times 2 = 6$；其他每一段给两个和的值相同。\n\n> **注意。** 要用那一段的宽度乘跳跃的大小，即两个函数值之差。函数值之和与整个区间的长度都不参与计算。",
   ),
   generate(rng) {
     const width = rng.pick([1, 2, 4]);
@@ -1092,10 +1353,35 @@ const stepGap: KnowledgePointDef = {
         `$[0, 8]$ 上的阶梯函数跳跃一次，虚线标出分割 $P$。$U(P) - L(P)$ 是多少？`,
       ),
       size * width,
-      [size, 8 * size, width, (left + right) * width],
-      t(
-        `Away from the jump the largest and smallest values on a piece agree. The piece holding the jump has width ${width} and values ${left} and ${right}, so it contributes $${width} \\cdot ${size} = ${size * width}$.`,
-        `离开跳跃处，每一段上的最大值和最小值相同。含跳跃的那一段宽 ${width}，函数值是 ${left} 和 ${right}，所以贡献 $${width} \\cdot ${size} = ${size * width}$。`,
+      [],
+      walked(
+        [
+          [
+            ["Pieces away from the jump", "不含跳跃的段"],
+            t(
+              "On every piece that misses the jump the function is constant, so its largest and smallest values agree and the piece adds nothing to $U(P) - L(P)$.",
+              "在不含跳跃的每一段上函数是常数，所以最大值和最小值相同，这一段对 $U(P) - L(P)$ 没有贡献。",
+            ),
+          ],
+          [
+            ["The piece holding the jump", "含跳跃的那一段"],
+            t(
+              `That piece has width ${width} and values ${left} and ${right}, so the jump has size $${Math.max(left, right)} - ${Math.min(left, right)} = ${size}$.`,
+              `那一段宽 ${width}，函数值是 ${left} 和 ${right}，所以跳跃的大小是 $${Math.max(left, right)} - ${Math.min(left, right)} = ${size}$。`,
+            ),
+          ],
+          [
+            ["Multiply", "相乘"],
+            t(
+              `It contributes $${width} \\times ${size} = ${size * width}$, and this is $U(P) - L(P)$.`,
+              `它贡献 $${width} \\times ${size} = ${size * width}$，这就是 $U(P) - L(P)$。`,
+            ),
+          ],
+        ],
+        t(
+          `With pieces of half the width, ${width / 2}, the gap would be ${(width / 2) * size}: it shrinks with the width, as it must for an integrable function.`,
+          `如果每段宽度减半为 ${width / 2}，差距就是 ${(width / 2) * size}：它随宽度一起缩小，可积函数理应如此。`,
+        ),
       ),
       drawn(
         { xMin: 0, xMax: 8, yMin: 0, yMax: 8 },
@@ -1112,6 +1398,24 @@ const stepGap: KnowledgePointDef = {
         ),
       ),
       "integer",
+      [
+        why(
+          size,
+          `That is the size of the jump alone; multiply it by the width ${width} of the piece holding it.`,
+          `这只是跳跃的大小；要乘含跳跃那一段的宽度 ${width}。`,
+        ),
+        why(
+          8 * size,
+          "That multiplies by the whole length 8; only the one piece holding the jump contributes.",
+          "这乘了整个长度 8；只有含跳跃的那一段有贡献。",
+        ),
+        why(width, `That is the width alone; multiply it by the size ${size} of the jump.`, `这只是宽度；要乘跳跃的大小 ${size}。`),
+        why(
+          (left + right) * width,
+          `That adds the two values; the contribution uses their difference, ${size}, not their sum.`,
+          `这把两个函数值相加；贡献用的是它们的差 ${size}，而不是和。`,
+        ),
+      ],
     );
   },
 };
@@ -1121,8 +1425,8 @@ const convergenceFromGraphs: KnowledgePointDef = {
   figure: analysisDrawings1["pointwise-and-uniform-convergence#the-kind-of-convergence-from-graphs"],
   title: t("The kind of convergence from graphs", "由图判断收敛类型"),
   explanation: t(
-    "Pointwise convergence fixes one $x$ and watches the values $f_n(x)$. Uniform convergence asks that the largest distance from the limit, over all $x$ at once, go to zero. A hump of fixed height that slides away passes every fixed point in the end, so it converges pointwise, but its height never shrinks, so the convergence is not uniform.",
-    "逐点收敛是固定一个 $x$，看 $f_n(x)$ 的值。一致收敛要求对所有 $x$ 同时取的最大距离趋于零。高度不变、不断滑走的驼峰，最后会离开每个固定点，所以逐点收敛；但它的高度不减小，所以不是一致收敛。",
+    "Pointwise convergence fixes one $x$ and watches the values $f_n(x)$. Uniform convergence asks that the largest distance from the limit, over all $x$ at once, go to zero. A hump of fixed height that slides away passes every fixed point in the end, so it converges pointwise, but its height never shrinks, so the convergence is not uniform.\n\nFor $f_n(x) = \\frac{x}{n}$ on $[0, 8]$, the largest distance from 0 is $\\frac{8}{n}$, which tends to 0, so the convergence is uniform. For a hump of height 5 that slides toward 0, the largest distance stays 5, so that convergence is only pointwise.\n\nCheck: $f_{100}(8) = 0.08$, and every other value of $f_{100}$ is smaller, so all values are small at once.\n\n> **Watch out.** Converging at every point does not make the convergence uniform. Look at the largest distance over all $x$ for each $n$, not at one $x$ at a time.",
+    "逐点收敛是固定一个 $x$，看 $f_n(x)$ 的值。一致收敛要求对所有 $x$ 同时取的最大距离趋于零。高度不变、不断滑走的驼峰，最后会离开每个固定点，所以逐点收敛；但它的高度不减小，所以不是一致收敛。\n\n对 $[0, 8]$ 上的 $f_n(x) = \\frac{x}{n}$，与 0 的最大距离是 $\\frac{8}{n}$，它趋于 0，所以一致收敛。对高度为 5、向 0 滑去的驼峰，最大距离一直是 5，所以只是逐点收敛。\n\n检验：$f_{100}(8) = 0.08$，$f_{100}$ 的其他值都更小，所以所有的值同时都很小。\n\n> **注意。** 在每一点都收敛并不意味着一致收敛。对每个 $n$ 要看所有 $x$ 上的最大距离，而不是一次只看一个 $x$。",
   ),
   generate(rng) {
     const height = rng.int(4, 6);
@@ -1158,35 +1462,126 @@ const convergenceFromGraphs: KnowledgePointDef = {
       shrink: t("They converge uniformly to 0", "它们一致收敛到 0"),
       flip: t("They fail to converge at some points", "它们在某些点上不收敛"),
     };
-    const why = {
-      slide: t(
-        `The hump keeps its height ${height} while sliding toward 0. Any fixed $x > 0$ is left behind in the end, and $f_n(0) = 0$, so the limit is 0 at every point. But the largest distance from 0 stays ${height}, so the convergence is not uniform.`,
-        `驼峰保持高度 ${height}，向 0 滑去。任何固定的 $x > 0$ 最后都会被甩在后面，而 $f_n(0) = 0$，所以每一点的极限都是 0。但与 0 的最大距离一直是 ${height}，所以不是一致收敛。`,
+    const walks = {
+      slide: walked(
+        [
+          [
+            ["Fix a point", "固定一点"],
+            t(
+              `The hump keeps its height ${height} while sliding toward 0. Any fixed $x > 0$ is left behind in the end, and $f_n(0) = 0$, so the limit is 0 at every point.`,
+              `驼峰保持高度 ${height}，向 0 滑去。任何固定的 $x > 0$ 最后都会被甩在后面，而 $f_n(0) = 0$，所以每一点的极限都是 0。`,
+            ),
+          ],
+          [
+            ["Find the largest distance", "求最大距离"],
+            t(
+              `But the largest distance from 0 over all $x$ stays ${height}, so it does not tend to 0, and the convergence is not uniform.`,
+              `但对所有 $x$ 取的与 0 的最大距离一直是 ${height}，不趋于 0，所以不是一致收敛。`,
+            ),
+          ],
+        ],
+        t(
+          `For each $n$ the point under the peak, $x = \\frac{${center}}{n}$, has $f_n(x) = ${height}$, so no single $n$ makes every value small at once.`,
+          `对每个 $n$，峰顶下方的点 $x = \\frac{${center}}{n}$ 满足 $f_n(x) = ${height}$，所以没有哪个 $n$ 能使所有的值同时变小。`,
+        ),
       ),
-      shrink: t(
-        `The height halves each time $n$ doubles, so the largest distance from 0 over all $x$ goes to 0. That is exactly uniform convergence.`,
-        `$n$ 每翻一倍，高度就减半，所以对所有 $x$ 取的最大距离趋于 0。这正是一致收敛。`,
+      shrink: walked(
+        [
+          [
+            ["Fix a point", "固定一点"],
+            t(
+              "At each $x$ the value halves each time $n$ doubles, so it tends to 0.",
+              "在每个 $x$ 处，$n$ 每翻一倍，函数值就减半，所以它趋于 0。",
+            ),
+          ],
+          [
+            ["Find the largest distance", "求最大距离"],
+            t(
+              `The largest value is the peak, $\\frac{${height}}{n}$, which tends to 0. So the largest distance from 0 over all $x$ goes to 0, and that is exactly uniform convergence.`,
+              `最大值是峰顶 $\\frac{${height}}{n}$，它趋于 0。所以对所有 $x$ 取的与 0 的最大距离趋于 0，这正是一致收敛。`,
+            ),
+          ],
+        ],
+        t(
+          `For $n = 4$ the peak is already $${Q.of(height, 4).toLatex()}$, and every value of $f_4$ lies below it.`,
+          `$n = 4$ 时峰顶已经是 $${Q.of(height, 4).toLatex()}$，$f_4$ 的每个值都在它之下。`,
+        ),
       ),
-      flip: t(
-        `At $x = ${center}$ the values alternate between ${height} and ${-height}, so that sequence of numbers has no limit.`,
-        `在 $x = ${center}$ 处，函数值在 ${height} 和 ${-height} 之间交替，这个数列没有极限。`,
+      flip: walked(
+        [
+          [
+            ["Fix the center", "固定中心点"],
+            t(
+              `At $x = ${center}$ the values are ${height}, ${-height}, ${height}, and so on, alternating.`,
+              `在 $x = ${center}$ 处，函数值依次是 ${height}，${-height}，${height}，如此交替。`,
+            ),
+          ],
+          [
+            ["Decide about the limit", "判断极限"],
+            t(
+              "A sequence of numbers that keeps jumping between two different values has no limit, so the functions do not converge at that point.",
+              "在两个不同的值之间来回跳动的数列没有极限，所以函数列在该点不收敛。",
+            ),
+          ],
+        ],
+        t(
+          `The odd functions have $f_n(${center}) = ${height}$ and the even ones $f_n(${center}) = ${-height}$; the difference ${2 * height} between neighbours never shrinks.`,
+          `奇数号函数满足 $f_n(${center}) = ${height}$，偶数号函数满足 $f_n(${center}) = ${-height}$；相邻两项的差 ${2 * height} 从不缩小。`,
+        ),
       ),
     };
+    const reasons = {
+      slide: [
+        [
+          options.shrink.en,
+          `The height does not shrink; it stays ${height}, so the largest distance from 0 never goes to 0.`,
+          `高度没有缩小；它一直是 ${height}，所以与 0 的最大距离不趋于 0。`,
+        ],
+        [
+          options.flip.en,
+          "The hump passes every fixed point in the end, so the values there settle at 0; nothing keeps oscillating.",
+          "驼峰最后会离开每个固定点，所以那里的值稳定在 0；没有一直振荡的点。",
+        ],
+      ],
+      shrink: [
+        [
+          options.slide.en,
+          `The hump does not slide away; it shrinks in place, and its height $\\frac{${height}}{n}$ goes to 0 everywhere at once.`,
+          `驼峰没有滑走；它在原地缩小，高度 $\\frac{${height}}{n}$ 在各处同时趋于 0。`,
+        ],
+        [options.flip.en, "At each point the values shrink toward 0; they do not alternate.", "在每一点函数值都缩小趋于 0；它们并不交替。"],
+      ],
+      flip: [
+        [
+          options.slide.en,
+          `The values at $x = ${center}$ alternate between ${height} and ${-height}, so they do not converge to 0 there.`,
+          `$x = ${center}$ 处的值在 ${height} 和 ${-height} 之间交替，所以在那里不收敛到 0。`,
+        ],
+        [
+          options.shrink.en,
+          `The height stays ${height} and only flips sign, so the functions do not even converge at $x = ${center}$.`,
+          `高度一直是 ${height}，只是变号，所以函数列在 $x = ${center}$ 处甚至不收敛。`,
+        ],
+      ],
+    } as const;
     const { [kind]: correct, ...others } = options;
-    return pickChoice(
-      rng,
-      t(
-        "The graphs show some of the functions $f_n$ on $[0, 8]$, each labelled with its $n$, and the pattern continues as $n$ grows. What can you say about the sequence?",
-        "图中是 $[0, 8]$ 上的一部分函数 $f_n$，每个图像标有它的 $n$，随着 $n$ 增大规律一直延续。关于这个函数列，可以得出什么结论？",
+    return reasoned(
+      pickChoice(
+        rng,
+        t(
+          "The graphs show some of the functions $f_n$ on $[0, 8]$, each labelled with its $n$, and the pattern continues as $n$ grows. What can you say about the sequence?",
+          "图中是 $[0, 8]$ 上的一部分函数 $f_n$，每个图像标有它的 $n$，随着 $n$ 增大规律一直延续。关于这个函数列，可以得出什么结论？",
+        ),
+        correct,
+        Object.values(others),
+        walks[kind],
+        drawn(
+          { xMin: 0, xMax: 8, yMin: kind === "flip" ? -7 : -1, yMax: 7 },
+          marks,
+          t("Tent-shaped graphs of several functions in a sequence, labelled by $n$.", "函数列中几个函数的帐篷形图像，标有 $n$。"),
+        ),
       ),
-      correct,
-      Object.values(others),
-      why[kind],
-      drawn(
-        { xMin: 0, xMax: 8, yMin: kind === "flip" ? -7 : -1, yMax: 7 },
-        marks,
-        t("Tent-shaped graphs of several functions in a sequence, labelled by $n$.", "函数列中几个函数的帐篷形图像，标有 $n$。"),
-      ),
+      reasons[kind],
     );
   },
 };

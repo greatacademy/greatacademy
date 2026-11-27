@@ -10,11 +10,13 @@ import { calculusDrawings2 } from "../explanation-drawings-calculus-2.ts";
 import { calculusDrawings3 } from "../explanation-drawings-calculus-3.ts";
 import { analysisDrawings1 } from "../explanation-drawings-real-analysis-1.ts";
 
+import { why } from "../problems.ts";
 import { stepLabel } from "../solution-kit.ts";
 import { ask, choose, observed, type Pair, point } from "../university-kit.ts";
 import { reasoned } from "../wrong-reasons.ts";
 import { table } from "./calculus-common.ts";
 import { drawn, label } from "./figure-reading-more.ts";
+import { solved } from "./real-analysis.ts";
 
 /** fig wraps marks in a figure with its description in both languages. */
 const fig = (v: PlaneView, marks: readonly PlaneMark[], [en, zh]: Pair) => drawn(v, marks, t(en, zh));
@@ -55,8 +57,8 @@ const epsilonBand = point(
   "the-index-from-a-drawn-epsilon-band",
   ["The index from a drawn epsilon band", "由图中的 epsilon 带读下标"],
   [
-    "The definition of a limit asks for an index $N$ after which every term stays within $\\varepsilon$ of the limit. On a plot this is a band around the limit, and $N$ is the first position from which no dot lies outside. One dot inside the band is not enough, because all the later dots must stay inside too.",
-    "极限的定义要求存在下标 $N$，使其后每一项都与极限相差不到 $\\varepsilon$。在图上这是极限周围的一条带，$N$ 是从它开始不再有点落在带外的第一个位置。一个点在带内还不够，后面所有的点都必须留在带内。",
+    "The definition of a limit asks for an index $N$ after which every term stays within $\\varepsilon$ of the limit. On a plot this is a band around the limit, and $N$ is the first position from which no dot lies outside. One dot inside the band is not enough, because all the later dots must stay inside too.\n\nFor dots at $a_n = \\frac{6}{n}$ tending to 0 and a band of half-width $1.75$, the condition $\\frac{6}{n} < 1.75$ means $n > 3.43$, so $N = 4$.\n\nCheck: $a_3 = 2$ lies outside the band, while $a_4 = 1.5$ lies inside, and the later dots are closer still.\n\n> **Watch out.** When the dots alternate above and below the limit, an early dot may sit inside the band while a later one is outside. Find the last dot outside and take the next position.",
+    "极限的定义要求存在下标 $N$，使其后每一项都与极限相差不到 $\\varepsilon$。在图上这是极限周围的一条带，$N$ 是从它开始不再有点落在带外的第一个位置。一个点在带内还不够，后面所有的点都必须留在带内。\n\n对趋向 0 的点 $a_n = \\frac{6}{n}$ 和半宽为 $1.75$ 的带，条件 $\\frac{6}{n} < 1.75$ 就是 $n > 3.43$，所以 $N = 4$。\n\n检验：$a_3 = 2$ 在带外，而 $a_4 = 1.5$ 在带内，后面的点更接近极限。\n\n> **注意。** 当点在极限上下交替时，前面的某个点可能在带内，而后面的点却在带外。要找到最后一个带外的点，再取下一个位置。",
   ],
   (rng) => {
     const L = rng.int(-1, 2);
@@ -65,17 +67,51 @@ const epsilonBand = point(
     const value = (n: number) => L + (form === 0 ? (n % 2 === 0 ? 6 : -6) : 6 * form) / n;
     const values = Array.from({ length: 12 }, (_, i) => value(i + 1));
     const N = Math.floor(6 / eps) + 1;
-    return ask(
+    const [before, at] = [num(6 / (N - 1)), num(6 / N)];
+    const worked = walk(
+      [
+        [
+          "Find the last dot outside",
+          "找最后一个带外的点",
+          `The dot at position $${N - 1}$ is about $${before}$ from the limit $${L}$, more than the half-width $${eps}$, so it lies outside the band.`,
+          `位置 $${N - 1}$ 的点与极限 $${L}$ 相距约 $${before}$，大于半宽 $${eps}$，所以在带外。`,
+        ],
+        [
+          "Take the next position",
+          "取下一个位置",
+          `The dot at position $${N}$ is about $${at}$ away, less than $${eps}$, and the distance keeps shrinking, so every later dot is inside too. So $N = ${N}$.`,
+          `位置 $${N}$ 的点相距约 $${at}$，小于 $${eps}$，而距离不断缩小，所以后面的每个点也都在带内。所以 $N = ${N}$。`,
+        ],
+      ],
+      [
+        `The band runs from $${num(L - eps)}$ to $${num(L + eps)}$. The dot at $${N - 1}$ has height about $${num(value(N - 1))}$, outside it, and the dot at $${N}$ has height about $${num(value(N))}$, inside it.`,
+        `带从 $${num(L - eps)}$ 到 $${num(L + eps)}$。位置 $${N - 1}$ 的点高度约为 $${num(value(N - 1))}$，在带外；位置 $${N}$ 的点高度约为 $${num(value(N))}$，在带内。`,
+      ],
+    );
+    return solved(
       [
         "The dots show a sequence tending to the solid line, and the dashed lines bound a band around that limit. What is the smallest $N$ such that every term with $n \\geq N$ lies inside the band?",
         "图中的点是趋向实线的数列，虚线围成极限周围的带。使所有满足 $n \\geq N$ 的项都落在带内的最小 $N$ 是多少？",
       ],
       N,
-      [N - 1, N + 1, N + 2],
       [
-        `The dot at position $${N - 1}$ is still outside the band, while the dot at $${N}$ and all those after it are inside, because the distance to the limit keeps shrinking.`,
-        `位置 $${N - 1}$ 的点仍在带外，而位置 $${N}$ 及其后的所有点都在带内，因为与极限的距离不断缩小。`,
+        why(
+          N - 1,
+          `That is the position of the last dot outside the band; that dot is about $${before}$ from the limit, more than $${eps}$.`,
+          `这是最后一个带外点的位置；那个点与极限相距约 $${before}$，大于 $${eps}$。`,
+        ),
+        why(
+          N + 1,
+          `That is one position too late; the dot at $${N}$ is already inside, about $${at}$ from the limit.`,
+          `这晚了一个位置；位置 $${N}$ 的点已经在带内，与极限相距约 $${at}$。`,
+        ),
+        why(
+          N + 2,
+          `That is two positions too late; it works, but the question asks for the smallest $N$, which is $${N}$.`,
+          `这晚了两个位置；它也满足，但题目要的是最小的 $N$，即 $${N}$。`,
+        ),
       ],
+      t(worked[0], worked[1]),
       fig(
         { xMin: 0, xMax: 13, yMin: L - 7, yMax: L + 7, xName: "n" },
         [
@@ -97,8 +133,8 @@ const limsupPlot = point(
   "limit-superior-from-a-plot",
   ["Limit superior from a plot", "由图读上极限"],
   [
-    "The limit superior of a sequence is the largest value that a subsequence approaches, and the limit inferior is the smallest. They ignore any finite number of early terms. So a tall first dot may be the supremum of the sequence and still have nothing to do with the limit superior, which depends only on the long-run behaviour.",
-    "数列的上极限是子列能趋向的最大值，下极限是最小值。它们不考虑前面有限多项。所以很高的第一个点可能是数列的上确界，却与上极限无关，上极限只取决于长期行为。",
+    "The limit superior of a sequence is the largest value that a subsequence approaches, and the limit inferior is the smallest. They ignore any finite number of early terms. So a tall first dot may be the supremum of the sequence and still have nothing to do with the limit superior, which depends only on the long-run behaviour.\n\nIf the odd terms are $2 + \\frac{3}{n}$ and the even terms are $-1 - \\frac{3}{n}$, the first dot $a_1 = 5$ is the largest term, but the limit superior is 2 and the limit inferior is $-1$.\n\nCheck: far along, $a_{13} \\approx 2.23$ and $a_{14} \\approx -1.21$, already close to 2 and $-1$.\n\n> **Watch out.** The supremum of the terms and the limit superior are different things. Read where the branches level off, not the highest dot.",
+    "数列的上极限是子列能趋向的最大值，下极限是最小值。它们不考虑前面有限多项。所以很高的第一个点可能是数列的上确界，却与上极限无关，上极限只取决于长期行为。\n\n若奇数项是 $2 + \\frac{3}{n}$，偶数项是 $-1 - \\frac{3}{n}$，第一个点 $a_1 = 5$ 是最大的项，但上极限是 2，下极限是 $-1$。\n\n检验：往后看，$a_{13} \\approx 2.23$，$a_{14} \\approx -1.21$，已经接近 2 和 $-1$。\n\n> **注意。** 各项的上确界与上极限是不同的东西。要读两支最终稳定的高度，而不是最高的点。",
   ],
   (rng) => {
     const up = rng.int(1, 4);
@@ -108,17 +144,62 @@ const limsupPlot = point(
     const values = Array.from({ length: 14 }, (_, i) => value(i + 1));
     const right = askUp ? up : down;
     const name = askUp ? "\\limsup" : "\\liminf";
-    return ask(
+    const worked = walk(
+      [
+        [
+          "Follow the two branches",
+          "看两支",
+          `The odd terms settle at $${up}$ and the even terms at $${down}$, so these are the only limits of subsequences.`,
+          `奇数项稳定在 $${up}$，偶数项稳定在 $${down}$，所以子列的极限只有这两个。`,
+        ],
+        [
+          "Ignore the early dots",
+          "不管前面的点",
+          `The first dots, such as $a_1 = ${up + 3}$, stick out beyond the branches, but finitely many terms do not change a limit of a subsequence.`,
+          `前面的点，例如 $a_1 = ${up + 3}$，超出了两支，但有限多项不改变子列的极限。`,
+        ],
+        [
+          `Take the ${askUp ? "larger" : "smaller"} limit`,
+          askUp ? "取较大的极限" : "取较小的极限",
+          `The ${askUp ? "larger" : "smaller"} of $${up}$ and $${down}$ is $${right}$.`,
+          `$${up}$ 和 $${down}$ 中较${askUp ? "大" : "小"}的是 $${right}$。`,
+        ],
+      ],
+      [
+        `Far along, $a_{13} \\approx ${num(value(13))}$ and $a_{14} \\approx ${num(value(14))}$, already close to $${up}$ and $${down}$.`,
+        `往后看，$a_{13} \\approx ${num(value(13))}$，$a_{14} \\approx ${num(value(14))}$，已经接近 $${up}$ 和 $${down}$。`,
+      ],
+    );
+    return solved(
       [
         `The dots show a sequence, and the pattern continues in the same way. What is $${name} a_n$?`,
         `图中的点是一个数列，规律一直持续。$${name} a_n$ 是多少？`,
       ],
       right,
-      [askUp ? down : up, askUp ? up + 3 : down - 3, Q.of(up + down + (up + down === 0 ? 1 : 0), 2)],
       [
-        `The odd terms settle at $${up}$ and the even terms at $${down}$, so these are the only limits of subsequences. The ${askUp ? "larger" : "smaller"} is $${right}$, and the early terms do not matter.`,
-        `奇数项稳定在 $${up}$，偶数项稳定在 $${down}$，所以子列的极限只有这两个。其中${askUp ? "较大" : "较小"}的是 $${right}$，前面的项无关紧要。`,
+        why(
+          askUp ? down : up,
+          `That is the limit ${askUp ? "inferior" : "superior"}, where the ${askUp ? "even" : "odd"} terms settle; the ${askUp ? "larger" : "smaller"} limit is wanted.`,
+          `这是${askUp ? "下" : "上"}极限，即${askUp ? "偶" : "奇"}数项稳定的高度；题目要的是较${askUp ? "大" : "小"}的极限。`,
+        ),
+        askUp
+          ? why(
+              up + 3,
+              `That is the first dot $a_1$, the largest term; the odd terms come down to $${up}$, and one early term does not count.`,
+              `这是第一个点 $a_1$，即最大的项；奇数项降到 $${up}$，一个前面的项不算数。`,
+            )
+          : why(
+              down - 3,
+              `That pushes the lower branch down by the overshoot 3 of the first dot; the even terms come up to $${down}$, and early terms do not count.`,
+              `这把下面一支按第一个点超出的 3 往下推了；偶数项升到 $${down}$，前面的项不算数。`,
+            ),
+        why(
+          Q.of(up + down + (up + down === 0 ? 1 : 0), 2),
+          "That lies between the two branches; the terms keep jumping from one branch to the other, so no subsequence approaches it.",
+          "这在两支之间；各项一直在两支之间跳动，所以没有子列趋向它。",
+        ),
       ],
+      t(worked[0], worked[1]),
       fig({ xMin: 0, xMax: 15, yMin: -7, yMax: 8, xName: "n" }, dots(values), [
         "A plot of a sequence whose dots alternate between an upper branch and a lower branch.",
         "一个数列的图，点在上下两支之间交替。",
@@ -131,8 +212,8 @@ const clusterCount = point(
   "counting-subsequential-limits-on-a-plot",
   ["Counting subsequential limits on a plot", "在图上数子列极限"],
   [
-    "A bounded sequence always has a convergent subsequence, by the Bolzano-Weierstrass theorem, and it may have several limits of subsequences. On a plot, each height that the dots keep returning to forever is one such limit. Count the heights, and note that the dots need not settle in order for a height to count.",
-    "由波尔查诺-魏尔斯特拉斯定理，有界数列总有收敛子列，并且子列极限可能不止一个。在图上，点无限次回到的每个高度都是一个这样的极限。数一数这些高度，注意点不必依次稳定，这个高度也算。",
+    "A bounded sequence always has a convergent subsequence, by the Bolzano-Weierstrass theorem, and it may have several limits of subsequences. On a plot, each height that the dots keep returning to forever is one such limit. Count the heights, and note that the dots need not settle in order for a height to count.\n\nIf the terms cycle through heights near 1, 4 and $-2$, getting closer each time, the sequence has 3 limits of subsequences: 1, 4 and $-2$.\n\nCheck: $a_1, a_4, a_7, \\dots$ approach 1, $a_2, a_5, a_8, \\dots$ approach 4 and $a_3, a_6, a_9, \\dots$ approach $-2$, and any convergent subsequence has infinitely many terms in one of these classes, so its limit is one of the three.\n\n> **Watch out.** Count heights, not dots. The early dots sit a little off their heights, and they do not add limits of their own.",
+    "由波尔查诺-魏尔斯特拉斯定理，有界数列总有收敛子列，并且子列极限可能不止一个。在图上，点无限次回到的每个高度都是一个这样的极限。数一数这些高度，注意点不必依次稳定，这个高度也算。\n\n若各项轮流靠近 1、4 和 $-2$，并且一次比一次更近，那么数列有 3 个子列极限：1、4 和 $-2$。\n\n检验：$a_1, a_4, a_7, \\dots$ 趋向 1，$a_2, a_5, a_8, \\dots$ 趋向 4，$a_3, a_6, a_9, \\dots$ 趋向 $-2$；任何收敛子列都有无限多项落在其中一类里，所以它的极限是这三个之一。\n\n> **注意。** 要数高度，不是数点。前面的点稍稍偏离各自的高度，它们不会带来新的极限。",
   ],
   (rng) => {
     const k = rng.int(2, 5);
@@ -141,17 +222,56 @@ const clusterCount = point(
       const h = heights[i % k] as number;
       return h + 0.8 / (i + 1);
     });
-    return ask(
+    const levels = [...heights].sort((a, b) => a - b).join(", ");
+    const worked = walk(
+      [
+        [
+          "Find the heights",
+          "找出高度",
+          `Far to the right the dots keep returning to the heights $${levels}$, one after another in a repeating pattern of ${k} terms.`,
+          `在右边，点按 ${k} 项一组的规律不断回到高度 $${levels}$。`,
+        ],
+        [
+          "Count them",
+          "数一数",
+          `Each height is the limit of the subsequence of terms approaching it, so there are $${k}$ different limits.`,
+          `每个高度都是趋向它的那些项组成的子列的极限，所以共有 $${k}$ 个不同的极限。`,
+        ],
+      ],
+      [
+        `The terms $a_1, a_{${k + 1}}, a_{${2 * k + 1}}, \\dots$ approach $${heights[0]}$, and so on for each starting term up to $a_{${k}}$. Every term lies in one of these ${k} subsequences, so any convergent subsequence has a limit among the ${k} heights.`,
+        `$a_1, a_{${k + 1}}, a_{${2 * k + 1}}, \\dots$ 趋向 $${heights[0]}$，从 $a_{${k}}$ 以前的每一项开始都类似。每一项都属于这 ${k} 个子列之一，所以任何收敛子列的极限都在这 ${k} 个高度之中。`,
+      ],
+    );
+    return solved(
       [
         "The dots show a sequence, whose pattern repeats and settles. How many different limits do its convergent subsequences have?",
         "图中的点是一个数列，其规律重复并逐渐稳定。它的收敛子列有多少个不同的极限？",
       ],
       k,
-      [k - 1, k + 1, 1, 0],
       [
-        `The dots return forever to $${k}$ different heights, and each height is the limit of the subsequence of terms approaching it. Any other convergent subsequence must end up among these.`,
-        `点无限次回到 $${k}$ 个不同的高度，每个高度都是趋向它的那些项组成的子列的极限。其他收敛子列最终也只能落在这些高度之中。`,
+        why(
+          k - 1,
+          `That leaves out one height; the dots return to ${k} different heights, $${levels}$.`,
+          `这漏掉了一个高度；点回到 ${k} 个不同的高度：$${levels}$。`,
+        ),
+        why(
+          k + 1,
+          "That counts an extra height, such as the first dot's; early dots sit a little above their heights and do not form a height of their own.",
+          "这多数了一个高度，比如第一个点的高度；前面的点稍稍高于各自的高度，并不构成新的高度。",
+        ),
+        why(
+          1,
+          `That treats the sequence as convergent; it keeps returning to ${k} different heights, so it has ${k} limits of subsequences and does not converge.`,
+          `这把数列当作收敛的；它不断回到 ${k} 个不同的高度，所以有 ${k} 个子列极限，并不收敛。`,
+        ),
+        why(
+          0,
+          "A bounded sequence always has a convergent subsequence, by the Bolzano-Weierstrass theorem, so there is at least one limit.",
+          "由波尔查诺-魏尔斯特拉斯定理，有界数列总有收敛子列，所以至少有一个极限。",
+        ),
       ],
+      t(worked[0], worked[1]),
       fig({ xMin: 0, xMax: 21, yMin: -7, yMax: 8, xName: "n" }, dots(values), [
         "A plot of a sequence whose dots keep returning to certain heights as n grows.",
         "一个数列的图，随着 n 增大，点不断回到某些高度。",
@@ -598,8 +718,8 @@ const darboux = point(
   "a-darboux-sum-on-a-drawn-partition",
   ["A Darboux sum on a drawn partition", "图中分割上的达布和"],
   [
-    "An upper Darboux sum multiplies the width of each piece of a partition by the largest value of the function on that piece, and a lower sum uses the smallest. For an increasing function, the largest value on a piece is at its right end, and for a decreasing function it is at its left end.",
-    "达布上和把分割每一段的宽度乘以函数在该段上的最大值，下和则用最小值。对于增函数，一段上的最大值在右端；对于减函数，则在左端。",
+    "An upper Darboux sum multiplies the width of each piece of a partition by the largest value of the function on that piece, and a lower sum uses the smallest. For an increasing function, the largest value on a piece is at its right end, and for a decreasing function it is at its left end.\n\nFor $f(x) = x + 1$ on $[0, 3]$ with the cuts $0, 1, 3$, the upper sum is $1 \\times 2 + 2 \\times 4 = 10$ and the lower sum is $1 \\times 1 + 2 \\times 2 = 5$.\n\nCheck: the exact area under the line is $\\frac{(1 + 4) \\times 3}{2} = 7.5$, which lies between the lower sum 5 and the upper sum 10.\n\n> **Watch out.** For a decreasing function the ends swap: the largest value on a piece is at its left end. Read the direction of the line before choosing the heights.",
+    "达布上和把分割每一段的宽度乘以函数在该段上的最大值，下和则用最小值。对于增函数，一段上的最大值在右端；对于减函数，则在左端。\n\n对 $[0, 3]$ 上的 $f(x) = x + 1$ 和分割点 $0, 1, 3$，上和是 $1 \\times 2 + 2 \\times 4 = 10$，下和是 $1 \\times 1 + 2 \\times 2 = 5$。\n\n检验：直线下方的准确面积是 $\\frac{(1 + 4) \\times 3}{2} = 7.5$，介于下和 5 与上和 10 之间。\n\n> **注意。** 对于减函数，两端要对调：一段上的最大值在左端。选高度之前先看直线的方向。",
   ],
   (rng) => {
     const up = rng.bool();
@@ -617,7 +737,7 @@ const darboux = point(
       const [hi, lo] = [Math.max(f(p), f(q)), Math.min(f(p), f(q))];
       U += hi * (q - p);
       L += lo * (q - p);
-      parts.push(`${q - p} \\cdot ${upper ? hi : lo}`);
+      parts.push(`${q - p} \\times ${upper ? hi : lo}`);
     }
     const end = cuts[3] as number;
     const exact = Q.of((f(0) + f(end)) * end, 2);
@@ -626,17 +746,64 @@ const darboux = point(
       { kind: "curve", f, from: 0, to: end, accent: true },
       ...cuts.map((c): PlaneMark => ({ kind: "segment", a: [c, 0], b: [c, f(c)], dashed: true })),
     ];
-    return ask(
+    const widths = cuts.slice(1).map((c, i) => c - (cuts[i] as number));
+    const side = (up ? upper : !upper) ? "right" : "left";
+    const worked = walk(
+      [
+        [
+          "Read the partition",
+          "读出分割",
+          `The cuts are at $${cuts.join(", ")}$, so the pieces have widths $${widths.join(", ")}$.`,
+          `分割点是 $${cuts.join(", ")}$，所以各段宽度是 $${widths.join(", ")}$。`,
+        ],
+        [
+          "Pick the heights",
+          "选高度",
+          `The line is ${up ? "increasing" : "decreasing"}, so the ${upper ? "largest" : "smallest"} value on each piece is at its ${side} end.`,
+          `直线${up ? "递增" : "递减"}，所以每段上的${upper ? "最大" : "最小"}值在它的${side === "right" ? "右" : "左"}端。`,
+        ],
+        [
+          "Add the pieces",
+          "把各段加起来",
+          `Each piece contributes its width times that height: $${parts.join(" + ")} = ${answer}$.`,
+          `每段贡献其宽度乘以这个高度：$${parts.join(" + ")} = ${answer}$。`,
+        ],
+      ],
+      [
+        `The exact integral is the average of the end heights times the length, $\\frac{${f(0) + f(end)} \\times ${end}}{2} = ${exact.toLatex()}$, and the ${upper ? "upper" : "lower"} sum $${answer}$ lies ${upper ? "above" : "below"} it, as it must.`,
+        `准确的积分是两端高度的平均值乘长度，$\\frac{${f(0) + f(end)} \\times ${end}}{2} = ${exact.toLatex()}$，而${upper ? "上" : "下"}和 $${answer}$ 在它的${upper ? "上方" : "下方"}，理应如此。`,
+      ],
+    );
+    return solved(
       [
         `The dashed lines mark a partition of the interval for the increasing or decreasing function drawn. What is the ${upper ? "upper" : "lower"} Darboux sum for this partition?`,
         `虚线标出图中单调函数所在区间的一个分割。这个分割的达布${upper ? "上" : "下"}和是多少？`,
       ],
       answer,
-      [upper ? L : U, exact.eq(Q.of(answer, 1)) ? answer + 1 : exact, answer + 2],
       [
-        `Each piece contributes its width times the ${upper ? "largest" : "smallest"} height on it: $${parts.join(" + ")} = ${answer}$.`,
-        `每段贡献其宽度乘以其上${upper ? "最大" : "最小"}的高度：$${parts.join(" + ")} = ${answer}$。`,
+        why(
+          upper ? L : U,
+          `That is the ${upper ? "lower" : "upper"} sum, which uses the ${upper ? "smallest" : "largest"} height on each piece.`,
+          `这是${upper ? "下" : "上"}和，它用的是每段上${upper ? "最小" : "最大"}的高度。`,
+        ),
+        exact.eq(Q.of(answer, 1))
+          ? why(
+              answer + 1,
+              `That is one more than the sum; recheck each width times height, $${parts.join(" + ")}$.`,
+              `这比和多一；重新检查每段的宽度乘高度：$${parts.join(" + ")}$。`,
+            )
+          : why(
+              exact,
+              `That is the exact integral of the line; the ${upper ? "upper" : "lower"} sum lies ${upper ? "above" : "below"} it.`,
+              `这是直线的准确积分；${upper ? "上" : "下"}和在它的${upper ? "上方" : "下方"}。`,
+            ),
+        why(
+          answer + 2,
+          `That misreads a width or a height; the widths are $${widths.join(", ")}$ and the heights come from the ${side} ends.`,
+          `这读错了某个宽度或高度；各段宽度是 $${widths.join(", ")}$，高度取自${side === "right" ? "右" : "左"}端。`,
+        ),
       ],
+      t(worked[0], worked[1]),
       fig({ xMin: -1, xMax: 8, yMin: -1, yMax: 8 }, marks, [
         `A straight line from height ${f(0)} at x = 0 to height ${f(end)} at x = ${end}, with partition points ${cuts.join(", ")}.`,
         `一条直线，从 x = 0 处高度 ${f(0)} 到 x = ${end} 处高度 ${f(end)}，分割点为 ${cuts.join("，")}。`,
@@ -871,8 +1038,8 @@ const uniformGap = {
     "the-uniform-distance-from-a-graph",
     ["The uniform distance from a graph", "由图读一致距离"],
     [
-      "Uniform convergence measures the largest vertical distance between $f_n$ and $f$ over the whole interval, and this distance must tend to zero. A moving bump is the standard warning: at each fixed point the functions eventually settle, yet the height of the bump stays the same, and so the convergence is not uniform.",
-      "一致收敛度量的是 $f_n$ 与 $f$ 在整个区间上的最大竖直距离，这个距离必须趋于零。移动的凸起是典型的警示：在每个固定点上函数最终都会稳定，但凸起的高度不变，所以收敛不一致。",
+      "Uniform convergence measures the largest vertical distance between $f_n$ and $f$ over the whole interval, and this distance must tend to zero. A moving bump is the standard warning: at each fixed point the functions eventually settle, yet the height of the bump stays the same, and so the convergence is not uniform.\n\nIf $f = 1$ and $f_n$ follows it except for a bump reaching height 4, then $\\sup_x |f_n(x) - f(x)| = 4 - 1 = 3$.\n\nCheck: away from the bump the gap is 0, and halfway up the bump it is $1.5$, so the tip gives the largest gap.\n\n> **Watch out.** Measure the gap from the dashed line $f$, not from the $x$-axis. The height of the tip is the gap only when $f = 0$.",
+      "一致收敛度量的是 $f_n$ 与 $f$ 在整个区间上的最大竖直距离，这个距离必须趋于零。移动的凸起是典型的警示：在每个固定点上函数最终都会稳定，但凸起的高度不变，所以收敛不一致。\n\n若 $f = 1$，$f_n$ 除了一个达到高度 4 的凸起外都与它重合，那么 $\\sup_x |f_n(x) - f(x)| = 4 - 1 = 3$。\n\n检验：凸起之外距离是 0，在凸起的半高处距离是 $1.5$，所以顶端给出最大距离。\n\n> **注意。** 距离要从虚线 $f$ 量起，而不是从 $x$ 轴量起。只有当 $f = 0$ 时，顶端的高度才等于距离。",
     ],
     (rng) => {
       const k = rng.int(-2, 2);
@@ -882,17 +1049,58 @@ const uniformGap = {
       const sign = rng.sign();
       const tent = (x: number) => k + sign * h * Math.max(0, 1 - Math.abs(x - c) / w);
       const tip = k + sign * h;
-      return ask(
+      const worked = walk(
+        [
+          [
+            "Where the graphs agree",
+            "两图重合的地方",
+            `Outside the bump the solid graph lies on the dashed line at height $${k}$, so the gap there is 0.`,
+            `在凸起之外，实线落在高度 $${k}$ 的虚线上，所以那里的距离是 0。`,
+          ],
+          [
+            "Measure at the tip",
+            "在顶端量",
+            `The bump reaches height $${tip}$ at $x = ${c}$, so the gap there is $|${tip} - ${k < 0 ? `(${k})` : k}| = ${h}$.`,
+            `凸起在 $x = ${c}$ 处达到高度 $${tip}$，所以那里的距离是 $|${tip} - ${k < 0 ? `(${k})` : k}| = ${h}$。`,
+          ],
+        ],
+        [
+          `Halfway between the tip and the edge of the bump the gap is $${num(h / 2)}$, smaller than at the tip, so the largest gap is $${h}$.`,
+          `在顶端与凸起边缘的中间，距离是 $${num(h / 2)}$，比顶端小，所以最大距离是 $${h}$。`,
+        ],
+      );
+      return solved(
         [
           "The solid graph is $f_n$ and the dashed line is $f$. What is $\\sup_x |f_n(x) - f(x)|$ on the interval shown?",
           "实线是 $f_n$，虚线是 $f$。在所示区间上 $\\sup_x |f_n(x) - f(x)|$ 是多少？",
         ],
         h,
-        [Math.abs(tip) === h ? h + 1 : Math.abs(tip), 2 * h, w === h ? h + 2 : w],
         [
-          `The two graphs agree outside the bump. The largest gap is at the tip of the bump, at height $${tip}$, and that is $${h}$ away from the line at height $${k}$.`,
-          `两个图在凸起之外重合。最大距离在凸起的顶端，高度为 $${tip}$，与高度 $${k}$ 的直线相距 $${h}$。`,
+          Math.abs(tip) === h
+            ? why(h + 1, `That is more than the gap at the tip, which is exactly $${h}$.`, `这比顶端的距离大，顶端的距离恰好是 $${h}$。`)
+            : why(
+                Math.abs(tip),
+                `That measures the tip from the $x$-axis; measure from the dashed line at height $${k}$ instead.`,
+                `这是从 $x$ 轴量的顶端高度；应该从高度 $${k}$ 的虚线量起。`,
+              ),
+          why(
+            2 * h,
+            "That doubles the gap, as if going up the bump and back down; the supremum is a single vertical distance.",
+            "这把距离加倍了，好像算了上去再下来；上确界是单个竖直距离。",
+          ),
+          w === h
+            ? why(
+                h + 2,
+                `That is more than the largest gap; the tip is only $${h}$ away from the line.`,
+                `这比最大距离大；顶端离直线只有 $${h}$。`,
+              )
+            : why(
+                w,
+                "That is the half-width of the bump, a horizontal distance; the uniform distance is measured vertically.",
+                "这是凸起的半宽，是水平距离；一致距离是竖直量的。",
+              ),
         ],
+        t(worked[0], worked[1]),
         fig(
           { xMin: -7, xMax: 7, yMin: -7, yMax: 7 },
           [
@@ -915,8 +1123,8 @@ const cobweb = {
     "the-fixed-point-of-a-drawn-cobweb",
     ["The fixed point of a drawn cobweb", "图中蛛网的不动点"],
     [
-      "Iterating a contraction from any start converges to its unique fixed point, which is where the graph meets the line $y = x$. A cobweb draws the iteration by bouncing between the graph and that line. It tightens around the fixed point, so the limit can be read from the drawing without following any of the steps.",
-      "从任意起点迭代压缩映射，都收敛到唯一的不动点，也就是图与直线 $y = x$ 的交点。蛛网图通过在图和这条直线之间来回反弹表示迭代。它在不动点周围收紧，所以不必跟踪每一步，就能从图中读出极限。",
+      "Iterating a contraction from any start converges to its unique fixed point, which is where the graph meets the line $y = x$. A cobweb draws the iteration by bouncing between the graph and that line. It tightens around the fixed point, so the limit can be read from the drawing without following any of the steps.\n\nFor $f(x) = 2 + 0.5 (x - 2)$ started at $x_0 = 6$, the iterates are $4, 3, 2.5, 2.25, \\dots$, closing in on 2, where the graph meets $y = x$.\n\nCheck: $f(2) = 2 + 0.5 \\cdot 0 = 2$, so 2 is indeed fixed, and each step halves the distance to it.\n\n> **Watch out.** The limit is the crossing with $y = x$, not the starting point or the first bounce of the cobweb.",
+      "从任意起点迭代压缩映射，都收敛到唯一的不动点，也就是图与直线 $y = x$ 的交点。蛛网图通过在图和这条直线之间来回反弹表示迭代。它在不动点周围收紧，所以不必跟踪每一步，就能从图中读出极限。\n\n对 $f(x) = 2 + 0.5 (x - 2)$，从 $x_0 = 6$ 开始，迭代值是 $4, 3, 2.5, 2.25, \\dots$，逐渐逼近 2，即图与 $y = x$ 的交点。\n\n检验：$f(2) = 2 + 0.5 \\cdot 0 = 2$，所以 2 确实是不动点，而每一步都使到它的距离减半。\n\n> **注意。** 极限是与 $y = x$ 的交点，而不是起点，也不是蛛网的第一次反弹。",
     ],
     (rng) => {
       const p = rng.int(-3, 3);
@@ -932,17 +1140,57 @@ const cobweb = {
       }
       const first = f(x0);
       const round = Math.round(first);
-      return ask(
+      const wrong = p + (p === 0 ? 2 : -2 * Math.sign(p));
+      const worked = walk(
+        [
+          [
+            "Find the crossing",
+            "找交点",
+            `The graph of $f$ meets the line $y = x$ at $x = ${p}$, where $f(${p}) = ${p}$, so ${p} is the fixed point.`,
+            `$f$ 的图与直线 $y = x$ 交于 $x = ${p}$，那里 $f(${p}) = ${p}$，所以 ${p} 是不动点。`,
+          ],
+          [
+            "Follow the cobweb",
+            "跟着蛛网走",
+            `Each bounce brings the iterate closer to the crossing, by the factor $${num(Math.abs(m))}$, so the iteration converges to $${p}$.`,
+            `每次反弹都使迭代值更接近交点，距离乘以 $${num(Math.abs(m))}$，所以迭代收敛到 $${p}$。`,
+          ],
+        ],
+        [
+          `From $x_0 = ${x0}$, the first step gives $x_1 \\approx ${num(first)}$, which is $${num(Math.abs(first - p))}$ from ${p}, closer than the start at distance $${Math.abs(x0 - p)}$.`,
+          `从 $x_0 = ${x0}$ 出发，第一步得 $x_1 \\approx ${num(first)}$，与 ${p} 相距 $${num(Math.abs(first - p))}$，比起点的距离 $${Math.abs(x0 - p)}$ 更近。`,
+        ],
+      );
+      return solved(
         [
           "The solid straight line is the graph of a contraction $f$, and the thin line is $y = x$. The cobweb shows the iteration $x_{k+1} = f(x_k)$. What does the iteration converge to?",
           "粗直线是压缩映射 $f$ 的图，细线是 $y = x$。蛛网图表示迭代 $x_{k+1} = f(x_k)$。迭代收敛到什么值？",
         ],
         p,
-        [x0, round === p ? p + 1 : round, p + (p === 0 ? 2 : -2 * Math.sign(p))],
         [
-          `The cobweb closes in on the point where the graph meets $y = x$, which is at $x = ${p}$. There $f(x) = x$, so it is the fixed point and the limit.`,
-          `蛛网收紧到图与 $y = x$ 的交点，即 $x = ${p}$。那里 $f(x) = x$，所以它是不动点，也是极限。`,
+          why(
+            x0,
+            "That is the starting point of the cobweb; the iteration moves away from it toward the crossing.",
+            "这是蛛网的起点；迭代离开它，向交点移动。",
+          ),
+          round === p
+            ? why(
+                p + 1,
+                `That is next to the crossing; at $x = ${p + 1}$ the graph is at height $${num(f(p + 1))}$, not on $y = x$.`,
+                `这在交点旁边；在 $x = ${p + 1}$ 处图的高度是 $${num(f(p + 1))}$，不在 $y = x$ 上。`,
+              )
+            : why(
+                round,
+                `That is about the first iterate $x_1 \\approx ${num(first)}$; the cobweb keeps going past it toward the crossing.`,
+                `这大约是第一个迭代值 $x_1 \\approx ${num(first)}$；蛛网继续越过它，向交点前进。`,
+              ),
+          why(
+            wrong,
+            `That is not where the lines cross; at $x = ${wrong}$ the graph is at height $${num(f(wrong))}$, not $${wrong}$.`,
+            `这不是两条线的交点；在 $x = ${wrong}$ 处图的高度是 $${num(f(wrong))}$，而不是 $${wrong}$。`,
+          ),
         ],
+        t(worked[0], worked[1]),
         fig(
           { xMin: -8, xMax: 8, yMin: -8, yMax: 8 },
           [
@@ -965,8 +1213,8 @@ const openClosed = point(
   "open-or-closed-on-a-drawn-line",
   ["Open or closed on a drawn line", "在图中数轴上判断开闭"],
   [
-    "A set of reals is open when each of its points has a small interval around it inside the set, and closed when it contains all its limit points. An interval is open when neither end belongs, closed when both ends belong, and neither when only one end belongs. A set made of several intervals needs every end to agree.",
-    "实数集是开集，当它的每一点都有一个小区间包含在集合内；是闭集，当它包含所有极限点。区间两端都不属于时是开的，都属于时是闭的，只有一端属于时既不开也不闭。由几个区间组成的集合要求所有端点都一致。",
+    "A set of reals is open when each of its points has a small interval around it inside the set, and closed when it contains all its limit points. An interval is open when neither end belongs, closed when both ends belong, and neither when only one end belongs. A set made of several intervals needs every end to agree.\n\nThe set $[1, 3) \\cup (5, 6)$ is neither open nor closed: the filled end 1 belongs to it, and the open ends 3, 5 and 6 do not.\n\nCheck: every interval around 1 reaches points below 1, outside the set, so the set is not open; and the points $2.9, 2.99, \\dots$ of the set approach 3, which is missing, so it is not closed.\n\n> **Watch out.** Not open does not mean closed. A set with one filled end and one open end is neither.",
+    "实数集是开集，当它的每一点都有一个小区间包含在集合内；是闭集，当它包含所有极限点。区间两端都不属于时是开的，都属于时是闭的，只有一端属于时既不开也不闭。由几个区间组成的集合要求所有端点都一致。\n\n集合 $[1, 3) \\cup (5, 6)$ 既不是开集也不是闭集：实心端点 1 属于它，空心端点 3、5、6 不属于它。\n\n检验：1 周围的每个区间都含有小于 1 的点，它们在集合外，所以这个集合不是开集；集合中的点 $2.9, 2.99, \\dots$ 趋向 3，而 3 不在集合中，所以它不是闭集。\n\n> **注意。** 不是开集并不意味着是闭集。一端实心、一端空心的集合既不开也不闭。",
   ],
   (rng) => {
     const count = rng.int(1, 2);
@@ -992,33 +1240,88 @@ const openClosed = point(
       neither: ["Neither open nor closed", "既不是开集也不是闭集"],
       both: ["Both open and closed", "既是开集也是闭集"],
     };
-    const reason: Pair =
-      mode === "open"
-        ? ["No end point belongs to the set, so each point has room around it", "端点都不属于集合，所以每一点周围都有空间"]
-        : mode === "closed"
-          ? ["Every end point belongs to the set, so it holds all its limit points", "每个端点都属于集合，所以它包含所有极限点"]
+    const openList = ends.filter((_, i) => !flags[i]);
+    const filledList = ends.filter((_, i) => flags[i]);
+    const openEnds = openList.join(", ");
+    const filledEnds = filledList.join(", ");
+    const both: Pair = [
+      "Only the empty set and the whole line are both open and closed, and this set is neither of those.",
+      "只有空集和整条直线既是开集又是闭集，而这个集合两者都不是。",
+    ];
+    const notOpen: Pair = [
+      filledList.length > 1
+        ? `The filled end points at ${filledEnds} belong to the set, but every interval around them reaches outside, so the set is not open.`
+        : `The filled end point at ${filledEnds} belongs to the set, but every interval around it reaches outside, so the set is not open.`,
+      `实心端点 ${filledList.join("、")} 属于集合，但它周围的每个区间都伸到集合外，所以这个集合不是开集。`,
+    ];
+    const notClosed: Pair = [
+      openList.length > 1
+        ? `The open end points at ${openEnds} are limit points of the set that are missing from it, so the set is not closed.`
+        : `The open end point at ${openEnds} is a limit point of the set that is missing from it, so the set is not closed.`,
+      `空心端点 ${openList.join("、")} 是集合的极限点，却不在集合中，所以这个集合不是闭集。`,
+    ];
+    const reasons: Record<string, Pair> = {
+      open: notOpen,
+      closed: notClosed,
+      neither:
+        mode === "open"
+          ? [
+              "Every point of the set has room around it inside the set, so the set is open.",
+              "集合的每一点周围都有包含在集合内的空间，所以这个集合是开集。",
+            ]
           : [
-              "A filled end point has no room around it, and an open end point is a limit point that is missing",
-              "实心端点周围没有空间，空心端点是缺失的极限点",
-            ];
-    return choose(
-      rng,
+              "Every end point belongs to the set, so it holds all its limit points and is closed.",
+              "每个端点都属于集合，所以它包含所有极限点，是闭集。",
+            ],
+      both,
+    };
+    const worked = walk(
       [
-        "The thick segments show a set of reals, with filled circles for points in the set and open circles for points outside it. What kind of set is it?",
-        "粗线段表示一个实数集，实心圆是集合中的点，空心圆是集合外的点。这是哪种集合？",
+        openEnds === ""
+          ? [
+              "Check the open circles",
+              "看空心圆",
+              "There are no open circles: every end point belongs to the set, so no limit point is missing and the set is closed.",
+              "没有空心圆：每个端点都属于集合，所以没有缺失的极限点，这个集合是闭集。",
+            ]
+          : ["Check the open circles", "看空心圆", notClosed[0], notClosed[1]],
+        filledEnds === ""
+          ? [
+              "Check the filled circles",
+              "看实心圆",
+              "There are no filled circles: every point of the set lies strictly inside a segment and has room around it, so the set is open.",
+              "没有实心圆：集合的每一点都严格在某条线段内部，周围有空间，所以这个集合是开集。",
+            ]
+          : ["Check the filled circles", "看实心圆", notOpen[0], notOpen[1]],
       ],
-      names[mode] as Pair,
+      [
+        `So the set is ${(names[mode] as Pair)[0].toLowerCase()}. It cannot be both, since only the empty set and the whole line are both open and closed.`,
+        `所以这个集合${(names[mode] as Pair)[1]}。它不可能两者都是，因为只有空集和整条直线既是开集又是闭集。`,
+      ],
+    );
+    return reasoned(
+      choose(
+        rng,
+        [
+          "The thick segments show a set of reals, with filled circles for points in the set and open circles for points outside it. What kind of set is it?",
+          "粗线段表示一个实数集，实心圆是集合中的点，空心圆是集合外的点。这是哪种集合？",
+        ],
+        names[mode] as Pair,
+        Object.keys(names)
+          .filter((n) => n !== mode)
+          .map((n) => names[n] as Pair),
+        worked,
+        {
+          svg: svgDocument(90, body),
+          alt: t(
+            `A set on a number line with end points ${ends.join(", ")}. ${mode === "open" ? "No end point belongs to the set" : mode === "closed" ? "Every end point belongs to the set" : "Some end points are filled and others are open"}.`,
+            `数轴上的集合，端点为 ${ends.join("，")}。${mode === "open" ? "端点都不属于集合" : mode === "closed" ? "每个端点都属于集合" : "有的端点是实心，有的是空心"}。`,
+          ),
+        },
+      ),
       Object.keys(names)
         .filter((n) => n !== mode)
-        .map((n) => names[n] as Pair),
-      [`${reason[0]}. So the set is ${(names[mode] as Pair)[0].toLowerCase()}.`, `${reason[1]}。所以这个集合${(names[mode] as Pair)[1]}。`],
-      {
-        svg: svgDocument(90, body),
-        alt: t(
-          `A set on a number line with end points ${ends.join(", ")}. ${mode === "open" ? "No end point belongs to the set" : mode === "closed" ? "Every end point belongs to the set" : "Some end points are filled and others are open"}.`,
-          `数轴上的集合，端点为 ${ends.join("，")}。${mode === "open" ? "端点都不属于集合" : mode === "closed" ? "每个端点都属于集合" : "有的端点是实心，有的是空心"}。`,
-        ),
-      },
+        .map((n) => [(names[n] as Pair)[0], ...(reasons[n] as Pair)] as const),
     );
   },
 );
