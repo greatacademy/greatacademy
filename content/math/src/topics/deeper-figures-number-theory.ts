@@ -12,6 +12,7 @@ import { say, withMistakes } from "../problems.ts";
 import { ask, choose, type Pair, point, same } from "../university-kit.ts";
 import { reasoned } from "../wrong-reasons.ts";
 import { drawn, label } from "./figure-reading-more.ts";
+import { type Miss, until, worked } from "./number-theory-course.ts";
 
 /** fig draws a plane figure with its description in both locales. */
 const fig = (v: PlaneView, marks: readonly PlaneMark[], [en, zh]: Pair) => drawn(v, marks, t(en, zh));
@@ -101,34 +102,63 @@ const circleThroughLatticePoint = {
     "the-sum-of-two-squares-on-a-circle",
     ["The sum of two squares on a circle", "圆上的两平方和"],
     [
-      "Writing $n = a^2 + b^2$ means that the circle of radius $\\sqrt{n}$ around the origin passes through the lattice point $(a, b)$. So a lattice point on such a circle shows at once which number the circle stands for. Signs and the order of the coordinates do not change the sum, which is why these points come in symmetric groups.",
-      "写成 $n = a^2 + b^2$ 意味着以原点为中心、半径为 $\\sqrt{n}$ 的圆经过格点 $(a, b)$。所以这样的圆上的一个格点立即说明这个圆代表哪个数。符号和坐标的顺序不改变和，所以这些点成对称的组出现。",
+      "Writing $n = a^2 + b^2$ means that the circle of radius $\\sqrt{n}$ around the origin passes through the lattice point $(a, b)$. So a lattice point on such a circle shows at once which number the circle stands for. Signs and the order of the coordinates do not change the sum, which is why these points come in symmetric groups. The circle of radius $\\sqrt{13}$ passes through $(2, 3)$, since $2^2 + 3^2 = 4 + 9 = 13$, so it stands for $13$.\n\nCheck: changing signs and swapping the coordinates gives the eight points $(\\pm 2, \\pm 3)$ and $(\\pm 3, \\pm 2)$, and each of them gives $4 + 9 = 13$.\n\n> **Watch out.** Square each coordinate before adding: $(2 + 3)^2 = 25$ is not $2^2 + 3^2$, and a negative coordinate squares to a positive number.",
+      "写成 $n = a^2 + b^2$ 意味着以原点为中心、半径为 $\\sqrt{n}$ 的圆经过格点 $(a, b)$。所以这样的圆上的一个格点立即说明这个圆代表哪个数。符号和坐标的顺序不改变和，所以这些点成对称的组出现。半径为 $\\sqrt{13}$ 的圆经过 $(2, 3)$，因为 $2^2 + 3^2 = 4 + 9 = 13$，所以它代表 $13$。\n\n检验：改变符号和交换坐标得到八个点 $(\\pm 2, \\pm 3)$ 和 $(\\pm 3, \\pm 2)$，每一个都给出 $4 + 9 = 13$。\n\n> **注意。** 先把每个坐标平方再相加：$(2 + 3)^2 = 25$ 不等于 $2^2 + 3^2$，而负坐标的平方是正数。",
     ],
     (rng) => {
       const [a, b] = [rng.int(1, 6), rng.int(1, 6)];
       const [sx, sy] = [rng.sign(), rng.sign()];
       const n = a * a + b * b;
-      return ask(
+      const big = Math.max(a, b);
+      const misses: Miss[] = [
+        [a + b, "That adds the coordinates without squaring them.", "那是把坐标直接相加，没有平方。"],
         [
-          "The circle around the origin passes through the marked lattice point. For which whole number $n$ is it the circle $x^2 + y^2 = n$?",
-          "以原点为中心的圆经过标记的格点。它是哪个整数 $n$ 对应的圆 $x^2 + y^2 = n$？",
+          (a + b) * (a + b),
+          `That squares the sum: $(${a} + ${b})^2$ also contains the cross term $2 \\cdot ${a} \\cdot ${b} = ${2 * a * b}$.`,
+          `那是把和平方了：$(${a} + ${b})^2$ 还含有交叉项 $2 \\cdot ${a} \\cdot ${b} = ${2 * a * b}$。`,
         ],
-        n,
-        [a + b, (a + b) * (a + b), n + 1, Math.max(a, b) * Math.max(a, b)],
         [
-          `The marked point has coordinates $(${sx * a}, ${sy * b})$, and the point lies on the circle, so $n = ${a}^2 + ${b}^2 = ${n}$.`,
-          `标记点的坐标是 $(${sx * a}, ${sy * b})$，它在圆上，所以 $n = ${a}^2 + ${b}^2 = ${n}$。`,
+          big * big,
+          `That squares only the larger coordinate, $${big}$; both coordinates count.`,
+          `那只平方了较大的坐标 $${big}$；两个坐标都要算。`,
         ],
-        fig(
-          { xMin: -9, xMax: 9, yMin: -9, yMax: 9, xName: "x", yName: "y" },
+      ];
+      return until(() =>
+        worked(
           [
-            { kind: "circle", center: [0, 0], r: Math.sqrt(n) },
-            { kind: "point", at: [sx * a, sy * b], accent: true },
+            "The circle around the origin passes through the marked lattice point. For which whole number $n$ is it the circle $x^2 + y^2 = n$?",
+            "以原点为中心的圆经过标记的格点。它是哪个整数 $n$ 对应的圆 $x^2 + y^2 = n$？",
+          ],
+          n,
+          misses,
+          [
+            [
+              ["Read the point", "读出格点"],
+              [`The marked point is $(${sx * a}, ${sy * b})$.`, `标记点是 $(${sx * a}, ${sy * b})$。`],
+            ],
+            [
+              ["Square and add", "平方后相加"],
+              [
+                `$(${sx * a})^2 + (${sy * b})^2 = ${a * a} + ${b * b} = ${n}$.`,
+                `$(${sx * a})^2 + (${sy * b})^2 = ${a * a} + ${b * b} = ${n}$。`,
+              ],
+            ],
           ],
           [
-            `A circle around the origin through the lattice point (${sx * a}, ${sy * b}).`,
-            `以原点为中心、过格点 (${sx * a}, ${sy * b}) 的圆。`,
+            `The circle crosses the $x$-axis at about $\\pm ${Math.sqrt(n).toFixed(2)}$, and $${Math.sqrt(n).toFixed(2)}^2 \\approx ${n}$, as the radius $\\sqrt{${n}}$ requires.`,
+            `圆与 $x$ 轴大约交于 $\\pm ${Math.sqrt(n).toFixed(2)}$，而 $${Math.sqrt(n).toFixed(2)}^2 \\approx ${n}$，正符合半径 $\\sqrt{${n}}$。`,
           ],
+          fig(
+            { xMin: -9, xMax: 9, yMin: -9, yMax: 9, xName: "x", yName: "y" },
+            [
+              { kind: "circle", center: [0, 0], r: Math.sqrt(n) },
+              { kind: "point", at: [sx * a, sy * b], accent: true },
+            ],
+            [
+              `A circle around the origin through the lattice point (${sx * a}, ${sy * b}).`,
+              `以原点为中心、过格点 (${sx * a}, ${sy * b}) 的圆。`,
+            ],
+          ),
         ),
       );
     },

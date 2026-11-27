@@ -15,6 +15,7 @@ import { reasoned } from "../wrong-reasons.ts";
 import { table } from "./calculus-common.ts";
 import { walked } from "./calculus-i-differentiation.ts";
 import { arrowLine, drawn, label, node, numeric, pickChoice, ring } from "./figure-reading-more.ts";
+import { chosen, type Miss, type Slip, until, worked } from "./number-theory-course.ts";
 
 /** math writes the same formula as an option in both languages. */
 const math = (latex: string): Text => t(`$${latex}$`, `$${latex}$`);
@@ -75,33 +76,63 @@ const sieveLeftover: KnowledgePointDef = {
   id: "reading-a-partly-finished-sieve",
   title: t("Reading a partly finished sieve", "读未完成的筛表"),
   explanation: t(
-    "A number that survives the crossing out of the multiples of 2, 3 and 5 is not yet proved prime. It has no factor among those three, but it may still be a product of larger primes, such as $7 \\times 7$ or $7 \\times 11$. The sieve only finishes once it has used every prime up to the square root of the largest number in the table.",
-    "划掉 2、3、5 的倍数后留下的数，还不能说一定是质数。它没有这三个因数，却可能是更大质数的积，比如 $7 \\times 7$ 或 $7 \\times 11$。只有用完不超过表中最大数平方根的所有质数，筛法才算结束。",
+    "A number that survives the crossing out of the multiples of 2, 3 and 5 is not yet proved prime. It has no factor among those three, but it may still be a product of larger primes, such as $7 \\times 7$ or $7 \\times 11$. The sieve only finishes once it has used every prime up to the square root of the largest number in the table. From $41$ to $50$, the numbers left standing are $41, 43, 47, 49$, and $49 = 7 \\times 7$ is not prime.\n\nCheck: $\\sqrt{50} < 8$, so crossing out the multiples of $7$ as well finishes the sieve there; it removes only $49$, and $41, 43, 47$ are prime.\n\n> **Watch out.** Surviving 2, 3 and 5 is not the same as being prime: the first such survivors that are composite are $49 = 7 \\times 7$, $77 = 7 \\times 11$ and $91 = 7 \\times 13$.",
+    "划掉 2、3、5 的倍数后留下的数，还不能说一定是质数。它没有这三个因数，却可能是更大质数的积，比如 $7 \\times 7$ 或 $7 \\times 11$。只有用完不超过表中最大数平方根的所有质数，筛法才算结束。从 $41$ 到 $50$，留下的数是 $41, 43, 47, 49$，而 $49 = 7 \\times 7$ 不是质数。\n\n检验：$\\sqrt{50} < 8$，所以再划掉 $7$ 的倍数，那一段的筛法就结束了；它只划掉 $49$，而 $41, 43, 47$ 都是质数。\n\n> **注意。** 没被 2、3、5 筛掉并不等于是质数：这样留下的合数中，最先出现的是 $49 = 7 \\times 7$、$77 = 7 \\times 11$ 和 $91 = 7 \\times 13$。",
   ),
   generate(rng) {
     const start = rng.int(21, 150);
     const numbers = Array.from({ length: 30 }, (_, i) => start + i);
     const crossed = (n: number) => n % 2 === 0 || n % 3 === 0 || n % 5 === 0;
     const standing = numbers.filter((n) => !crossed(n));
-    const answer = rng.pick(standing.filter((n) => !isPrime(n)));
+    const composites = standing.filter((n) => !isPrime(n));
+    const answer = rng.pick(composites);
     const factor = [7, 11, 13].find((p) => answer % p === 0) as number;
     const cells = numbers.map((n, i) => {
       const [x, y] = [50 + (i % 6) * 44, 20 + Math.floor(i / 6) * 28];
       const strike = crossed(n) ? `<line x1="${x - 15}" y1="${y + 5}" x2="${x + 15}" y2="${y - 9}" stroke-width="1"/>` : "";
       return label(x, y, String(n)) + strike;
     });
-    return pickChoice(
+    const small = (n: number) => [7, 11, 13].filter((p) => p * p <= n);
+    const wrong: Slip[] = rng.sample(standing.filter(isPrime), 3).map((n): Slip => {
+      const tests = small(n);
+      return [
+        [`$${n}$`, `$${n}$`],
+        tests.length === 0
+          ? `$${n}$ is prime: it is below $49 = 7 \\times 7$, so a factor would have to be 2, 3 or 5, and those are crossed out.`
+          : `$${n}$ is prime: besides 2, 3 and 5, the primes up to $\\sqrt{${n}}$ are $${tests.join(", ")}$, and none of them divides it.`,
+        tests.length === 0
+          ? `$${n}$ 是质数：它小于 $49 = 7 \\times 7$，所以因数只能是 2、3 或 5，而这些的倍数都已划掉。`
+          : `$${n}$ 是质数：除了 2、3、5，不超过 $\\sqrt{${n}}$ 的质数是 $${tests.join(", ")}$，它们都不整除它。`,
+      ];
+    });
+    return chosen(
       rng,
-      t(
+      [
         "In this stretch of a sieve, every multiple of 2, 3 and 5 has been crossed out. Which number still standing is not prime?",
         "在筛表的这一段里，2、3、5 的倍数都已划掉。还留着的数中，哪一个不是质数？",
-      ),
-      math(String(answer)),
-      rng.sample(standing.filter(isPrime), 3).map((n) => math(String(n))),
-      t(
-        `$${answer} = ${factor} \\times ${answer / factor}$. Its smallest prime factor is ${factor}, which is larger than 5, so the sieve has not reached it yet. The other options have no factor other than 1 and themselves.`,
-        `$${answer} = ${factor} \\times ${answer / factor}$。它最小的质因数是 ${factor}，比 5 大，所以筛法还没有筛到它。其他选项除了 1 和自身没有别的因数。`,
-      ),
+      ],
+      [`$${answer}$`, `$${answer}$`],
+      wrong,
+      [
+        [
+          ["Read the survivors", "读出留下的数"],
+          [
+            `The numbers left standing are $${standing.join(", ")}$; none has a factor 2, 3 or 5.`,
+            `留下的数是 $${standing.join(", ")}$；它们都没有因数 2、3、5。`,
+          ],
+        ],
+        [
+          ["Test the next primes", "用后面的质数检验"],
+          [
+            `Trying 7, 11 and 13 finds $${answer} = ${factor} \\times ${answer / factor}$, so its smallest prime factor is ${factor}, larger than 5, and the sieve has not reached it yet.`,
+            `用 7、11、13 去试，得到 $${answer} = ${factor} \\times ${answer / factor}$，所以它最小的质因数是 ${factor}，比 5 大，筛法还没有筛到它。`,
+          ],
+        ],
+      ],
+      [
+        `$14 \\times 14 = 196 > ${start + 29}$, so crossing out the multiples of 7, 11 and 13 finishes the sieve; it removes $${composites.join(", ")}$ and nothing else.`,
+        `$14 \\times 14 = 196 > ${start + 29}$，所以再划掉 7、11、13 的倍数，筛法就结束了；它划掉的是 $${composites.join(", ")}$，没有别的。`,
+      ],
       {
         svg: svgDocument(156, cells.join("")),
         alt: t(
@@ -199,38 +230,63 @@ const orderFromCycle: KnowledgePointDef = {
   id: "the-order-from-a-cycle-of-arrows",
   title: t("The order from a cycle of arrows", "由箭头环读阶"),
   explanation: t(
-    "Repeated multiplication by $a$ modulo a prime walks through residues and eventually returns to 1. The order of $a$ is the number of steps in that closed walk. It counts arrows, not the size of the whole number system, and it always divides $p - 1$, which is a quick check on the count.",
-    "模质数反复乘 $a$，会依次走过一些余数，最后回到 1。$a$ 的阶就是这条闭合路线的步数。要数的是箭头，不是整个余数系的大小，而且阶总能整除 $p - 1$，可以用来快速检验。",
+    "Repeated multiplication by $a$ modulo a prime walks through residues and eventually returns to 1. The order of $a$ is the number of steps in that closed walk. It counts arrows, not the size of the whole number system, and it always divides $p - 1$, which is a quick check on the count. Modulo $13$, multiplying by $3$ walks $1 \\to 3 \\to 9 \\to 1$, three arrows, so the order of $3$ is $3$.\n\nCheck: $3^{3} = 27 = 2 \\times 13 + 1$, and $3$ divides $12$.\n\n> **Watch out.** Count the arrows of the closed walk, not the residues on the whole circle, and do not count the $1$ at the start and the $1$ at the end as two stops.",
+    "模质数反复乘 $a$，会依次走过一些余数，最后回到 1。$a$ 的阶就是这条闭合路线的步数。要数的是箭头，不是整个余数系的大小，而且阶总能整除 $p - 1$，可以用来快速检验。模 $13$ 时，反复乘 $3$ 走过 $1 \\to 3 \\to 9 \\to 1$，共三个箭头，所以 $3$ 的阶是 $3$。\n\n检验：$3^{3} = 27 = 2 \\times 13 + 1$，而 $3$ 整除 $12$。\n\n> **注意。** 数的是闭合路线上的箭头，而不是整个圆上的余数；也不要把起点的 $1$ 和终点的 $1$ 算成两站。",
   ),
   generate(rng) {
-    const p = rng.pick([7, 11, 13, 17]);
-    const a = rng.int(2, p - 2);
-    const orbit = [1];
-    while (((orbit.at(-1) as number) * a) % p !== 1) orbit.push(((orbit.at(-1) as number) * a) % p);
-    const order = orbit.length;
-    const at = ring(p - 1, 85);
-    const names = Array.from({ length: p - 1 }, (_, i) => String(i + 1));
-    const arrows = orbit.map((x, i) => arrowLine(at[x - 1] as Point, at[(orbit[(i + 1) % order] as number) - 1] as Point));
-    return numeric(
-      t(
-        `The arrows show repeated multiplication by ${a} modulo ${p}, starting at 1. What is the order of ${a} modulo ${p}?`,
-        `箭头表示从 1 出发，模 ${p} 反复乘 ${a}。${a} 模 ${p} 的阶是多少？`,
-      ),
-      order,
-      [p - 1, order + 1, order - 1, a],
-      t(
-        `The walk goes ${[...orbit, 1].join(", ")}. It first returns to 1 after ${order} arrows, so $${a}^{${order}} \\equiv 1 \\pmod{${p}}$ and no smaller power does.`,
-        `路线是 ${[...orbit, 1].join("、")}。走过 ${order} 个箭头后第一次回到 1，所以 $${a}^{${order}} \\equiv 1 \\pmod{${p}}$，更小的乘方都不行。`,
-      ),
-      {
-        svg: svgDocument(220, arrows.join("") + names.map((name, i) => node(at[i] as Point, name)).join("")),
-        alt: t(
-          `The residues from 1 to ${p - 1} on a circle, with a closed walk of arrows starting at 1.`,
-          `1 到 ${p - 1} 的余数排在圆上，箭头构成从 1 出发的闭合路线。`,
-        ),
-      },
-      "integer",
-    );
+    return until(() => {
+      const p = rng.pick([7, 11, 13, 17]);
+      const a = rng.int(2, p - 2);
+      const orbit = [1];
+      while (((orbit.at(-1) as number) * a) % p !== 1) orbit.push(((orbit.at(-1) as number) * a) % p);
+      const order = orbit.length;
+      const last = orbit.at(-1) as number;
+      const at = ring(p - 1, 85);
+      const names = Array.from({ length: p - 1 }, (_, i) => String(i + 1));
+      const arrows = orbit.map((x, i) => arrowLine(at[x - 1] as Point, at[(orbit[(i + 1) % order] as number) - 1] as Point));
+      const misses: Miss[] = [
+        [
+          p - 1,
+          `$${p - 1}$ is the number of residues on the circle; the walk passes through only $${order}$ of them.`,
+          `$${p - 1}$ 是圆上余数的个数；路线只经过其中 $${order}$ 个。`,
+        ],
+        [order + 1, "That counts the $1$ at the start and the $1$ at the end as two stops.", "那把起点的 $1$ 和终点的 $1$ 算成了两站。"],
+        [order - 1, "That leaves out the last arrow, the one that leads back to $1$.", "那漏掉了最后一个箭头，即回到 $1$ 的那一个。"],
+        [a, `$${a}$ is the multiplier, not the number of arrows.`, `$${a}$ 是乘数，不是箭头的个数。`],
+      ];
+      return worked(
+        [
+          `The arrows show repeated multiplication by ${a} modulo ${p}, starting at 1. What is the order of ${a} modulo ${p}?`,
+          `箭头表示从 1 出发，模 ${p} 反复乘 ${a}。${a} 模 ${p} 的阶是多少？`,
+        ],
+        order,
+        misses,
+        [
+          [
+            ["Follow the arrows", "沿箭头走"],
+            [`The walk goes $${[...orbit, 1].join(" \\to ")}$.`, `路线是 $${[...orbit, 1].join(" \\to ")}$。`],
+          ],
+          [
+            ["Count the arrows", "数箭头"],
+            [
+              `It first returns to $1$ after $${order}$ arrows, so the order is $${order}$.`,
+              `走过 $${order}$ 个箭头后第一次回到 $1$，所以阶是 $${order}$。`,
+            ],
+          ],
+        ],
+        [
+          `The last arrow is $${last} \\times ${a} = ${last * a} = ${Math.floor((last * a) / p)} \\times ${p} + 1$, so $${a}^{${order}} \\equiv 1$; and $${order}$ divides $${p - 1}$, as an order must.`,
+          `最后一个箭头是 $${last} \\times ${a} = ${last * a} = ${Math.floor((last * a) / p)} \\times ${p} + 1$，所以 $${a}^{${order}} \\equiv 1$；而 $${order}$ 整除 $${p - 1}$，阶理应如此。`,
+        ],
+        {
+          svg: svgDocument(220, arrows.join("") + names.map((name, i) => node(at[i] as Point, name)).join("")),
+          alt: t(
+            `The residues from 1 to ${p - 1} on a circle, with a closed walk of arrows starting at 1.`,
+            `1 到 ${p - 1} 的余数排在圆上，箭头构成从 1 出发的闭合路线。`,
+          ),
+        },
+      );
+    });
   },
 };
 
@@ -550,33 +606,72 @@ const fractionFromSquares: KnowledgePointDef = {
   figure: numberTheoryDrawings1["continued-fractions#a-continued-fraction-from-squares"],
   title: t("A continued fraction from squares", "由正方形读连分数"),
   explanation: t(
-    "Cutting a rectangle into the largest possible squares reads off a continued fraction. The number of squares of the largest size is the first entry, the number of the next size is the second entry, and so on. In the notation $[q_0; q_1, q_2]$ the first entry is the whole part of the ratio of the sides.",
-    "把长方形切成尽可能大的正方形，就能读出连分数。最大一种正方形的个数是第一项，次大一种的个数是第二项，依此类推。在记号 $[q_0; q_1, q_2]$ 中，第一项是两边之比的整数部分。",
+    "Cutting a rectangle into the largest possible squares reads off a continued fraction. The number of squares of the largest size is the first entry, the number of the next size is the second entry, and so on. In the notation $[q_0; q_1, q_2]$ the first entry is the whole part of the ratio of the sides. A 30 by 13 rectangle holds 2 squares of side 13, then 3 of side 4, then 4 of side 1, so $\\frac{30}{13} = [2; 3, 4]$.\n\nCheck: $2 + \\frac{1}{3 + \\frac{1}{4}} = 2 + \\frac{4}{13} = \\frac{30}{13}$.\n\n> **Watch out.** Read the sizes from the largest down: the first entry counts the largest squares and is the whole part of the ratio, here $2$, since $26 \\le 30 < 39$.",
+    "把长方形切成尽可能大的正方形，就能读出连分数。最大一种正方形的个数是第一项，次大一种的个数是第二项，依此类推。在记号 $[q_0; q_1, q_2]$ 中，第一项是两边之比的整数部分。30 乘 13 的长方形放下 2 个边长 13 的正方形，然后 3 个边长 4 的，再然后 4 个边长 1 的，所以 $\\frac{30}{13} = [2; 3, 4]$。\n\n检验：$2 + \\frac{1}{3 + \\frac{1}{4}} = 2 + \\frac{4}{13} = \\frac{30}{13}$。\n\n> **注意。** 要从最大的正方形读起：第一项数的是最大的正方形，它是两边之比的整数部分，这里是 $2$，因为 $26 \\le 30 < 39$。",
   ),
   generate(rng) {
     const [p, q] = rng.pick(euclidPairs);
     const g = rng.int(1, 3);
     const [a, b] = [p * g, q * g];
     const qs = quotients(a, b);
-    const cf = (list: readonly number[]) => math(`[${list[0]}; ${list.slice(1).join(", ")}]`);
+    const cf = (list: readonly number[]): [string, string] => {
+      const s = `$[${list[0]}; ${list.slice(1).join(", ")}]$`;
+      return [s, s];
+    };
     const [first, ...rest] = qs as [number, ...number[]];
-    return pickChoice(
+    const lines: string[] = [];
+    for (let [x, y] = [a, b]; y > 0; [x, y] = [y, x % y]) lines.push(`${x} = ${Math.floor(x / y)} \\times ${y} + ${x % y}`);
+    const back = qs.slice(0, -1).reduceRight((v, k) => Q.of(k).add(Q.one.div(v)), Q.of(qs[qs.length - 1] as number));
+    const seen = new Set([cf(qs)[0]]);
+    const wrong: Slip[] = (
+      [
+        [
+          cf([...qs].reverse()),
+          "That reads the squares from the smallest to the largest; the first entry counts the largest squares.",
+          "那是从最小的正方形读到最大的；第一项数的是最大的正方形。",
+        ],
+        [
+          cf([first + 1, ...rest]),
+          `That counts one more of the largest squares than fit: only $${first}$ squares of side $${b}$ fit along $${a}$.`,
+          `那多数了一个最大的正方形：沿 $${a}$ 只能放下 $${first}$ 个边长 $${b}$ 的正方形。`,
+        ],
+        [
+          cf([first, ...rest.map((v, i) => (i === 0 ? v + 1 : v))]),
+          "That counts one more square of the second size than the drawing shows.",
+          "那比图中多数了一个第二种大小的正方形。",
+        ],
+        [
+          cf([first, ...rest.map((v, i) => (i === rest.length - 1 ? v + 1 : v))]),
+          "That counts one more of the smallest squares than the drawing shows.",
+          "那比图中多数了一个最小的正方形。",
+        ],
+      ] as Slip[]
+    ).filter(([[en]]) => !seen.has(en) && Boolean(seen.add(en)));
+    return chosen(
       rng,
-      t(
+      [
         `This ${a} by ${b} rectangle has been cut into squares, always taking the largest that fits. Which continued fraction equals $\\frac{${a}}{${b}}$?`,
         `这个 ${a} 乘 ${b} 的长方形被切成正方形，每次都切下能放下的最大的正方形。哪个连分数等于 $\\frac{${a}}{${b}}$？`,
-      ),
-      cf(qs),
-      [
-        cf([...qs].reverse()),
-        cf([first + 1, ...rest]),
-        cf([first, ...rest.map((v, i) => (i === 0 ? v + 1 : v))]),
-        cf([first, ...rest.map((v, i) => (i === rest.length - 1 ? v + 1 : v))]),
       ],
-      t(
-        `Reading the sizes from largest to smallest, the numbers of squares are ${qs.join(", ")}. These are the quotients of the Euclidean algorithm, so $\\frac{${a}}{${b}} = [${first}; ${rest.join(", ")}]$.`,
-        `从大到小，各种正方形的个数依次是 ${qs.join("、")}。这些正是欧几里得算法的商，所以 $\\frac{${a}}{${b}} = [${first}; ${rest.join(", ")}]$。`,
-      ),
+      cf(qs),
+      wrong,
+      [
+        [
+          ["Cut the squares", "切正方形"],
+          [`Each round is one division: $${lines.join("$, $")}$.`, `每一轮对应一次除法：$${lines.join("$，$")}$。`],
+        ],
+        [
+          ["Read the counts", "读出个数"],
+          [
+            `From the largest size to the smallest, the numbers of squares are ${qs.join(", ")}, so $\\frac{${a}}{${b}} = [${first}; ${rest.join(", ")}]$.`,
+            `从大到小，各种正方形的个数依次是 ${qs.join("、")}，所以 $\\frac{${a}}{${b}} = [${first}; ${rest.join(", ")}]$。`,
+          ],
+        ],
+      ],
+      [
+        `Working the continued fraction back from its last entry gives $${back.toLatex()}$${g > 1 ? `, and $\\frac{${a}}{${b}} = ${back.toLatex()}$ after cancelling $${g}$` : ""}.`,
+        `从最后一项往回算连分数，得到 $${back.toLatex()}$${g > 1 ? `，而 $\\frac{${a}}{${b}}$ 约去 $${g}$ 后正是 $${back.toLatex()}$` : ""}。`,
+      ],
       squaresFigure(
         a,
         b,

@@ -34,4 +34,31 @@ export const taughtCourses: readonly string[] = [
  * taughtTopics lists further topics written to the standard while their course is still being rewritten; once the
  * course is listed in taughtCourses, its topics leave this list.
  */
-export const taughtTopics: readonly string[] = [];
+export const taughtTopics: readonly string[] = [
+  "counting-divisors",
+  "the-sum-of-divisors-function",
+  "perfect-numbers",
+  "the-sieve-of-eratosthenes",
+  "the-distribution-of-primes",
+  "powers-modulo-n",
+  "using-fermats-little-theorem",
+  "computing-and-counting-with-the-totient",
+  "reducing-exponents-with-eulers-theorem",
+  "wilsons-theorem",
+  "the-order-of-an-integer-modulo-n",
+  "primitive-roots",
+  "discrete-logarithms",
+  "quadratic-residues",
+  "the-legendre-symbol",
+  "eulers-criterion",
+  "quadratic-reciprocity",
+  "sums-of-two-squares",
+  "pythagorean-triples",
+  "multiplicative-functions",
+  "the-mobius-function",
+  "continued-fractions",
+  "pells-equation",
+  "p-adic-numbers",
+  "elliptic-curves-modulo-a-prime",
+  "adding-points-on-an-elliptic-curve",
+];

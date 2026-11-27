@@ -11,6 +11,7 @@ import { numberTheoryDrawings1 } from "../explanation-drawings-number-theory-1.t
 import { pdeDrawings1 } from "../explanation-drawings-partial-differential-equations-1.ts";
 
 import { ask, choose, type Pair, point, powMod, primesUpTo, same, topic } from "../university-kit.ts";
+import { chosen, lesson, type Miss, pw, type Slip, until, worked } from "./number-theory-course.ts";
 
 /** curvePoints lists the affine points of y^2 = x^3 + ax + b modulo a prime. */
 function curvePoints(a: number, b: number, p: number): [number, number][] {
@@ -42,7 +43,7 @@ const mod = (v: number, p: number) => ((v % p) + p) % p;
 const inverse = (v: number, p: number) => powMod(mod(v, p), p - 2, p);
 
 /** curveLatex writes the equation of a curve modulo a prime. */
-const curveLatex = (a: number, b: number) => `y^{2} = x^{3} + ${a}x + ${b}`;
+const curveLatex = (a: number, b: number) => `y^{2} = x^{3} + ${a === 1 ? "" : a}x + ${b}`;
 
 const pAdicNumbers = topic(
   "p-adic-numbers",
@@ -55,76 +56,187 @@ const pAdicNumbers = topic(
       "the-p-adic-absolute-value",
       ["The p-adic absolute value", "p 进绝对值"],
       [
-        "Write a nonzero rational as $p^{k} \\cdot \\frac{m}{n}$ with $m$ and $n$ not divisible by $p$. Its $p$-adic absolute value is $|x|_{p} = p^{-k}$. High powers of $p$ make a number small, and powers of $p$ in the denominator make it large.",
-        "把非零有理数写成 $p^{k} \\cdot \\frac{m}{n}$，其中 $m$ 和 $n$ 不被 $p$ 整除。它的 $p$ 进绝对值是 $|x|_{p} = p^{-k}$。$p$ 的高次幂让数变小，分母中的 $p$ 让数变大。",
+        "Write a nonzero rational as $p^{k} \\cdot \\frac{m}{n}$ with $m$ and $n$ not divisible by $p$. Its $p$-adic absolute value is $|x|_{p} = p^{-k}$. High powers of $p$ make a number small, and powers of $p$ in the denominator make it large. For $\\frac{7}{12}$ and $p = 2$: $12 = 2^{2} \\cdot 3$, so $\\frac{7}{12} = 2^{-2} \\cdot \\frac{7}{3}$ and $\\left|\\frac{7}{12}\\right|_{2} = 2^{2} = 4$.\n\nCheck: the reciprocal $\\frac{12}{7} = 2^{2} \\cdot \\frac{3}{7}$ has $\\left|\\frac{12}{7}\\right|_{2} = \\frac{1}{4}$, and $4 \\cdot \\frac{1}{4} = 1$, as for any number and its reciprocal.\n\n> **Watch out.** A factor of $p$ in the denominator makes $k$ negative and the absolute value large; a factor of $p$ in the numerator makes it small.",
+        "把非零有理数写成 $p^{k} \\cdot \\frac{m}{n}$，其中 $m$ 和 $n$ 不被 $p$ 整除。它的 $p$ 进绝对值是 $|x|_{p} = p^{-k}$。$p$ 的高次幂让数变小，分母中的 $p$ 让数变大。对 $\\frac{7}{12}$ 和 $p = 2$：$12 = 2^{2} \\cdot 3$，所以 $\\frac{7}{12} = 2^{-2} \\cdot \\frac{7}{3}$，$\\left|\\frac{7}{12}\\right|_{2} = 2^{2} = 4$。\n\n检验：倒数 $\\frac{12}{7} = 2^{2} \\cdot \\frac{3}{7}$ 的 $\\left|\\frac{12}{7}\\right|_{2} = \\frac{1}{4}$，而 $4 \\cdot \\frac{1}{4} = 1$，任何数与其倒数都是如此。\n\n> **注意。** 分母中的 $p$ 使 $k$ 为负，绝对值变大；分子中的 $p$ 使它变小。",
       ],
-      (rng) => {
-        const p = rng.pick([2, 3, 5, 7]);
-        const m = rng.pick([1, 2, 3, 5, 7, 11, 13].filter((v) => v % p !== 0));
-        const n = rng.pick([1, 2, 3, 5, 7, 11, 13].filter((v) => v % p !== 0 && v !== m));
-        const k = rng.int(1, 3);
-        const below = rng.bool();
-        const latex = below ? `\\frac{${m}}{${p ** k * n}}` : `\\frac{${p ** k * m}}{${n}}`;
-        const shown = n === 1 && !below ? `${p ** k * m}` : latex;
-        const answer = below ? Q.of(p ** k, 1) : Q.of(1, p ** k);
-        const wrong = below ? Q.of(1, p ** k) : Q.of(p ** k, 1);
-        const v = below ? `-${k}` : `${k}`;
-        return ask(
-          [`What is $|${shown}|_{${p}}$?`, `$|${shown}|_{${p}}$ 是多少？`],
-          answer,
-          [wrong, Q.of(1, p), Q.of(p ** k * m, n)],
-          [
-            `The power of ${p} in the number is ${v}, so the absolute value is $${p}^{${below ? k : `-${k}`}}$.`,
-            `这个数中 ${p} 的幂次是 ${v}，所以绝对值是 $${p}^{${below ? k : `-${k}`}}$。`,
-          ],
-        );
-      },
+      (rng) =>
+        until(() => {
+          const p = rng.pick([2, 3, 5, 7]);
+          const m = rng.pick([1, 2, 3, 5, 7, 11, 13].filter((v) => v % p !== 0));
+          const n = rng.pick([1, 2, 3, 5, 7, 11, 13].filter((v) => v % p !== 0 && v !== m));
+          const k = rng.int(1, 3);
+          const below = rng.bool();
+          const latex = below ? `\\frac{${m}}{${p ** k * n}}` : `\\frac{${p ** k * m}}{${n}}`;
+          const shown = n === 1 && !below ? `${p ** k * m}` : latex;
+          const answer = below ? Q.of(p ** k, 1) : Q.of(1, p ** k);
+          const wrong = below ? Q.of(1, p ** k) : Q.of(p ** k, 1);
+          const itself = below ? Q.of(m, p ** k * n) : Q.of(p ** k * m, n);
+          const rest = Q.of(m, n);
+          const power = below ? pw(p, k) : `${p}^{-${k}}`;
+          const value = power === answer.toLatex() ? power : `${power} = ${answer.toLatex()}`;
+          const misses: Miss[] = [
+            [
+              wrong,
+              `That takes the sign of the exponent the wrong way round: ${below ? "a factor of $p$ in the denominator makes the number large" : "a factor of $p$ in the numerator makes the number small"}.`,
+              `那把指数的符号弄反了：${below ? "分母中的 $p$ 使数变大" : "分子中的 $p$ 使数变小"}。`,
+            ],
+            [
+              Q.of(1, p),
+              `That uses only one factor of $${p}$; the number has $${p}$ to the power $${k}$.`,
+              `那只用了一个因子 $${p}$；这个数含 $${p}$ 的 $${k}$ 次幂。`,
+            ],
+            [
+              itself,
+              "That is the ordinary size of the number, not its $p$-adic absolute value.",
+              "那是这个数的普通大小，不是它的 $p$ 进绝对值。",
+            ],
+          ];
+          return worked(
+            [`What is $|${shown}|_{${p}}$?`, `$|${shown}|_{${p}}$ 是多少？`],
+            answer,
+            misses,
+            [
+              [
+                ["Take out the powers of p", "提出 p 的幂"],
+                [
+                  `$${shown} = ${below ? `${p}^{-${k}}` : pw(p, k)} \\cdot ${rest.toLatex()}$, and $${p}$ divides neither $${m}$ nor $${n}$.`,
+                  `$${shown} = ${below ? `${p}^{-${k}}` : pw(p, k)} \\cdot ${rest.toLatex()}$，而 $${p}$ 既不整除 $${m}$ 也不整除 $${n}$。`,
+                ],
+              ],
+              [
+                ["Flip the exponent", "指数变号"],
+                [
+                  `So $k = ${below ? `-${k}` : k}$ and $|x|_{${p}} = ${value}$.`,
+                  `所以 $k = ${below ? `-${k}` : k}$，$|x|_{${p}} = ${value}$。`,
+                ],
+              ],
+            ],
+            [
+              `The reciprocal has the opposite power of $${p}$, so its absolute value is $${wrong.toLatex()}$, and $${answer.toLatex()} \\cdot ${wrong.toLatex()} = 1$.`,
+              `倒数中 $${p}$ 的幂次相反，所以它的绝对值是 $${wrong.toLatex()}$，而 $${answer.toLatex()} \\cdot ${wrong.toLatex()} = 1$。`,
+            ],
+          );
+        }),
     ),
     point(
       "the-strong-triangle-inequality",
       ["The strong triangle inequality", "强三角不等式"],
       [
-        "The $p$-adic absolute value satisfies $|x + y|_{p} \\le \\max(|x|_{p}, |y|_{p})$, and equality holds when the two sizes differ. Adding a smaller number cannot change the size of a larger one.",
-        "$p$ 进绝对值满足 $|x + y|_{p} \\le \\max(|x|_{p}, |y|_{p})$，两个大小不同时等号成立。加上一个较小的数不会改变较大数的大小。",
+        "The $p$-adic absolute value satisfies $|x + y|_{p} \\le \\max(|x|_{p}, |y|_{p})$, and equality holds when the two sizes differ. Adding a smaller number cannot change the size of a larger one. For $p = 3$, $x = 3$ and $y = 27$: $|x|_{3} = \\frac{1}{3}$ and $|y|_{3} = \\frac{1}{27}$, and $x + y = 30 = 3 \\cdot 10$ with $3$ not dividing $10$, so $|x + y|_{3} = \\frac{1}{3}$, the larger of the two.\n\nCheck: $30 = 3 \\cdot (1 + 9)$, and $1 + 9$ leaves remainder $1$ on division by $3$, so only one factor of $3$ survives.\n\n> **Watch out.** When the two sizes are equal the sum can be smaller: $|1|_{3} = |2|_{3} = 1$ but $|1 + 2|_{3} = \\frac{1}{3}$.",
+        "$p$ 进绝对值满足 $|x + y|_{p} \\le \\max(|x|_{p}, |y|_{p})$，两个大小不同时等号成立。加上一个较小的数不会改变较大数的大小。对 $p = 3$、$x = 3$、$y = 27$：$|x|_{3} = \\frac{1}{3}$，$|y|_{3} = \\frac{1}{27}$，而 $x + y = 30 = 3 \\cdot 10$，$3$ 不整除 $10$，所以 $|x + y|_{3} = \\frac{1}{3}$，即两者中较大的那个。\n\n检验：$30 = 3 \\cdot (1 + 9)$，而 $1 + 9$ 除以 $3$ 余 $1$，所以只剩一个因子 $3$。\n\n> **注意。** 两个大小相等时，和可能更小：$|1|_{3} = |2|_{3} = 1$，但 $|1 + 2|_{3} = \\frac{1}{3}$。",
       ],
-      (rng) => {
-        const p = rng.pick([2, 3, 5, 7]);
-        const i = rng.int(0, 2);
-        const j = i + rng.int(1, 3);
-        return ask(
-          [
-            `If $|x|_{${p}} = ${Q.of(1, p ** i).toLatex()}$ and $|y|_{${p}} = \\frac{1}{${p ** j}}$, what is $|x + y|_{${p}}$?`,
-            `如果 $|x|_{${p}} = ${Q.of(1, p ** i).toLatex()}$ 且 $|y|_{${p}} = \\frac{1}{${p ** j}}$，那么 $|x + y|_{${p}}$ 是多少？`,
-          ],
-          Q.of(1, p ** i),
-          [Q.of(1, p ** j), Q.of(1, p ** i).add(Q.of(1, p ** j)), Q.of(1, p ** (i + j))],
-          [
-            `The sizes differ, so the sum has the larger size, $${Q.of(1, p ** i).toLatex()}$.`,
-            `两个大小不同，所以和的大小等于较大者 $${Q.of(1, p ** i).toLatex()}$。`,
-          ],
-        );
-      },
+      (rng) =>
+        until(() => {
+          const p = rng.pick([2, 3, 5, 7]);
+          const i = rng.int(0, 2);
+          const j = i + rng.int(1, 3);
+          const big = Q.of(1, p ** i);
+          const small = Q.of(1, p ** j);
+          const x = p ** i;
+          const y = p ** j;
+          const split = i === 0 ? `${x + y}` : `${x + y} = ${x} \\cdot ${1 + y / x}`;
+          const misses: Miss[] = [
+            [small, "That is the smaller of the two sizes; the sum keeps the larger one.", "那是两个大小中较小的那个；和保留较大的那个。"],
+            [
+              big.add(small),
+              "That adds the sizes as in the ordinary triangle inequality; the $p$-adic size of a sum is at most the larger size.",
+              "那像普通三角不等式一样把大小相加了；和的 $p$ 进大小至多是较大的那个。",
+            ],
+            [
+              Q.of(1, p ** (i + j)),
+              "That multiplies the sizes, which is the rule for a product, not a sum.",
+              "那把大小相乘了，这是乘积的规则，不是和的规则。",
+            ],
+          ];
+          return worked(
+            [
+              `If $|x|_{${p}} = ${big.toLatex()}$ and $|y|_{${p}} = ${small.toLatex()}$, what is $|x + y|_{${p}}$?`,
+              `如果 $|x|_{${p}} = ${big.toLatex()}$ 且 $|y|_{${p}} = ${small.toLatex()}$，那么 $|x + y|_{${p}}$ 是多少？`,
+            ],
+            big,
+            misses,
+            [
+              [
+                ["Compare the sizes", "比较大小"],
+                [
+                  `$${big.toLatex()} > ${small.toLatex()}$, so the sizes differ and $|x|_{${p}}$ is the larger.`,
+                  `$${big.toLatex()} > ${small.toLatex()}$，两个大小不同，$|x|_{${p}}$ 较大。`,
+                ],
+              ],
+              [
+                ["Apply the strong triangle inequality", "用强三角不等式"],
+                [
+                  `With different sizes equality holds, so $|x + y|_{${p}} = ${big.toLatex()}$.`,
+                  `大小不同时等号成立，所以 $|x + y|_{${p}} = ${big.toLatex()}$。`,
+                ],
+              ],
+            ],
+            [
+              `Take $x = ${x}$ and $y = ${y}$: $x + y = ${split}$, and $${p}$ does not divide $${1 + y / x}$, so $|x + y|_{${p}} = ${big.toLatex()}$.`,
+              `取 $x = ${x}$、$y = ${y}$：$x + y = ${split}$，而 $${p}$ 不整除 $${1 + y / x}$，所以 $|x + y|_{${p}} = ${big.toLatex()}$。`,
+            ],
+          );
+        }),
     ),
     point(
       "a-series-that-converges-p-adically",
       ["A series that converges p-adically", "p 进收敛的级数"],
       [
-        "Powers of $p$ tend to $0$ in the $p$-adic absolute value, so $1 + p + p^{2} + \\dots$ converges in the $p$-adic numbers. The geometric series formula still gives its sum, $\\frac{1}{1 - p}$.",
-        "在 $p$ 进绝对值下，$p$ 的幂趋于 $0$，所以 $1 + p + p^{2} + \\dots$ 在 $p$ 进数中收敛。几何级数公式仍然给出它的和 $\\frac{1}{1 - p}$。",
+        "Powers of $p$ tend to $0$ in the $p$-adic absolute value, so $1 + p + p^{2} + \\dots$ converges in the $p$-adic numbers. The geometric series formula still gives its sum, $\\frac{1}{1 - p}$. For $2 + 2 \\cdot 3 + 2 \\cdot 3^{2} + \\dots$ in the $3$-adic numbers the first term is $2$ and the ratio is $3$, so the sum is $\\frac{2}{1 - 3} = -1$.\n\nCheck: the partial sums are $2, 8, 26, 80$, and adding $1$ gives $3, 9, 27, 81$, powers of $3$ that tend to $0$ $3$-adically, so the partial sums tend to $-1$.\n\n> **Watch out.** The sum is negative even though every term is positive: the formula is $\\frac{a}{1 - r}$, not $\\frac{a}{r - 1}$.",
+        "在 $p$ 进绝对值下，$p$ 的幂趋于 $0$，所以 $1 + p + p^{2} + \\dots$ 在 $p$ 进数中收敛。几何级数公式仍然给出它的和 $\\frac{1}{1 - p}$。对 $3$ 进数中的 $2 + 2 \\cdot 3 + 2 \\cdot 3^{2} + \\dots$，首项是 $2$，公比是 $3$，所以和是 $\\frac{2}{1 - 3} = -1$。\n\n检验：部分和是 $2, 8, 26, 80$，各加 $1$ 得 $3, 9, 27, 81$，这些 $3$ 的幂在 $3$ 进意义下趋于 $0$，所以部分和趋于 $-1$。\n\n> **注意。** 虽然每一项都是正的，和却是负的：公式是 $\\frac{a}{1 - r}$，不是 $\\frac{a}{r - 1}$。",
       ],
-      (rng) => {
-        const p = rng.pick([2, 3, 5, 7, 11]);
-        const c = rng.int(2, 9);
-        return ask(
-          [
-            `What is the sum of $${c} + ${c} \\cdot ${p} + ${c} \\cdot ${p}^{2} + \\dots$ in the ${p}-adic numbers?`,
-            `$${c} + ${c} \\cdot ${p} + ${c} \\cdot ${p}^{2} + \\dots$ 在 ${p} 进数中的和是多少？`,
-          ],
-          Q.of(c, 1 - p),
-          [Q.of(c, p - 1), Q.of(c * p, 1 - p), Q.of(1, 1 - p)],
-          [`The ratio is ${p}, so the sum is $\\frac{${c}}{1 - ${p}}$.`, `公比是 ${p}，所以和是 $\\frac{${c}}{1 - ${p}}$。`],
-        );
-      },
+      (rng) =>
+        until(() => {
+          const p = rng.pick([2, 3, 5, 7, 11]);
+          const c = rng.int(2, 9);
+          const sum = Q.of(c, 1 - p);
+          const misses: Miss[] = [
+            [
+              Q.of(c, p - 1),
+              "That uses $\\frac{a}{r - 1}$; the geometric series formula is $\\frac{a}{1 - r}$, which is negative here.",
+              "那用了 $\\frac{a}{r - 1}$；几何级数公式是 $\\frac{a}{1 - r}$，这里是负数。",
+            ],
+            [
+              Q.of(c * p, 1 - p),
+              `That starts the series at $${c} \\cdot ${p}$; the first term is $${c}$.`,
+              `那把级数从 $${c} \\cdot ${p}$ 开始了；首项是 $${c}$。`,
+            ],
+            [
+              Q.of(1, 1 - p),
+              `That drops the first term $${c}$ and sums $1 + ${p} + ${p}^{2} + \\dots$ instead.`,
+              `那丢掉了首项 $${c}$，求的是 $1 + ${p} + ${p}^{2} + \\dots$。`,
+            ],
+          ];
+          const second = c + c * p;
+          return worked(
+            [
+              `What is the sum of $${c} + ${c} \\cdot ${p} + ${c} \\cdot ${p}^{2} + \\dots$ in the ${p}-adic numbers?`,
+              `$${c} + ${c} \\cdot ${p} + ${c} \\cdot ${p}^{2} + \\dots$ 在 ${p} 进数中的和是多少？`,
+            ],
+            sum,
+            misses,
+            [
+              [
+                ["Check convergence", "检验收敛"],
+                [
+                  `The terms $${c} \\cdot ${p}^{n}$ have size $${p}^{-n}$, which tends to $0$, so the series converges ${p}-adically.`,
+                  `各项 $${c} \\cdot ${p}^{n}$ 的大小是 $${p}^{-n}$，趋于 $0$，所以级数 ${p} 进收敛。`,
+                ],
+              ],
+              [
+                ["Use the formula", "用公式"],
+                [
+                  `First term $${c}$, ratio $${p}$: the sum is $\\frac{${c}}{1 - ${p}} = ${sum.toLatex()}$.`,
+                  `首项 $${c}$，公比 $${p}$：和是 $\\frac{${c}}{1 - ${p}} = ${sum.toLatex()}$。`,
+                ],
+              ],
+            ],
+            [
+              `The partial sum $${c} + ${c * p} = ${second}$ differs from $${sum.toLatex()}$ by $${Q.of(second, 1).sub(sum).toLatex()}$, whose numerator is divisible by $${p}^{2}$, and later partial sums come closer still.`,
+              `部分和 $${c} + ${c * p} = ${second}$ 与 $${sum.toLatex()}$ 相差 $${Q.of(second, 1).sub(sum).toLatex()}$，其分子被 $${p}^{2}$ 整除，后面的部分和更接近。`,
+            ],
+          );
+        }),
     ),
   ],
 );
@@ -140,26 +252,53 @@ const ellipticCurves = topic(
       "points-on-the-curve",
       ["Points on the curve", "曲线上的点"],
       [
-        "An elliptic curve modulo $p$ is the set of solutions of $y^{2} = x^{3} + ax + b$ modulo $p$, together with one extra point at infinity, where $4a^{3} + 27b^{2}$ is not $0$ modulo $p$. To test a point, compute both sides modulo $p$.",
-        "模 $p$ 的椭圆曲线是 $y^{2} = x^{3} + ax + b$ 模 $p$ 的解集，再加上一个无穷远点，其中 $4a^{3} + 27b^{2}$ 模 $p$ 不为 $0$。要检验一个点，就在模 $p$ 下计算等式两边。",
+        "An elliptic curve modulo $p$ is the set of solutions of $y^{2} = x^{3} + ax + b$ modulo $p$, together with one extra point at infinity, where $4a^{3} + 27b^{2}$ is not $0$ modulo $p$. To test a point, compute both sides modulo $p$. On $y^{2} = x^{3} + x + 1$ modulo $5$, test $(2, 1)$: the right side is $8 + 2 + 1 = 11$, which is $1$ modulo $5$, and $1^{2} = 1$, so the point lies on the curve. For $(1, 2)$ the right side is $3$ but $2^{2} = 4$, so it does not.\n\nCheck: $4 \\cdot 1^{3} + 27 \\cdot 1^{2} = 31$, which is $1$ modulo $5$, so the curve is nonsingular; and $(2, 4)$ lies on it too, since $4^{2} = 16$ is also $1$ modulo $5$.\n\n> **Watch out.** Reduce both sides modulo $p$ before comparing; $11$ and $1$ are different integers but the same residue.",
+        "模 $p$ 的椭圆曲线是 $y^{2} = x^{3} + ax + b$ 模 $p$ 的解集，再加上一个无穷远点，其中 $4a^{3} + 27b^{2}$ 模 $p$ 不为 $0$。要检验一个点，就在模 $p$ 下计算等式两边。在模 $5$ 的 $y^{2} = x^{3} + x + 1$ 上检验 $(2, 1)$：右边是 $8 + 2 + 1 = 11$，模 $5$ 为 $1$，而 $1^{2} = 1$，所以这个点在曲线上。对 $(1, 2)$，右边是 $3$，但 $2^{2} = 4$，所以不在。\n\n检验：$4 \\cdot 1^{3} + 27 \\cdot 1^{2} = 31$，模 $5$ 为 $1$，所以曲线非奇异；$(2, 4)$ 也在曲线上，因为 $4^{2} = 16$ 模 $5$ 也是 $1$。\n\n> **注意。** 比较之前要把两边都模 $p$ 约化；$11$ 和 $1$ 是不同的整数，却是相同的余数。",
       ],
       (rng) => {
         const { p, a, b, points } = pickCurve(rng, 2);
         const [x, y] = rng.pick(points);
-        const off: Pair[] = [];
+        const right = mod(x * x * x + a * x + b, p);
+        const off: Slip[] = [];
         for (const dy of [1, 2, 3, 4, 5]) {
           const yy = mod(y + dy, p);
-          if (!points.some(([u, v]) => u === x && v === yy)) off.push(same(`(${x}, ${yy})`));
+          if (!points.some(([u, v]) => u === x && v === yy))
+            off.push([
+              same(`(${x}, ${yy})`),
+              `There $${yy}^{2}$ is ${mod(yy * yy, p)} modulo ${p}, but the right side at $x = ${x}$ is ${right}.`,
+              `这里 $${yy}^{2}$ 模 ${p} 是 ${mod(yy * yy, p)}，但 $x = ${x}$ 时右边是 ${right}。`,
+            ]);
         }
-        return choose(
+        return chosen(
           rng,
           [`Which point lies on $${curveLatex(a, b)}$ modulo ${p}?`, `哪个点在模 ${p} 的曲线 $${curveLatex(a, b)}$ 上？`],
           same(`(${x}, ${y})`),
           off.slice(0, 3),
           [
-            `At $x = ${x}$ the right side is ${mod(x * x * x + a * x + b, p)} modulo ${p}, and $${y}^{2}$ gives the same residue.`,
-            `当 $x = ${x}$ 时，右边模 ${p} 等于 ${mod(x * x * x + a * x + b, p)}，$${y}^{2}$ 也给出相同的余数。`,
+            [
+              ["Compute the right side", "计算右边"],
+              [
+                `At $x = ${x}$: $${x}^{3} + ${a} \\cdot ${x} + ${b} = ${x * x * x + a * x + b}$, which is ${right} modulo ${p}.`,
+                `当 $x = ${x}$：$${x}^{3} + ${a} \\cdot ${x} + ${b} = ${x * x * x + a * x + b}$，模 ${p} 为 ${right}。`,
+              ],
+            ],
+            [
+              ["Square each y", "平方每个 y"],
+              [
+                `$${y}^{2} = ${y * y}$, which is ${mod(y * y, p)} modulo ${p}, the same residue, so $(${x}, ${y})$ is on the curve; the other choices square to other residues.`,
+                `$${y}^{2} = ${y * y}$，模 ${p} 为 ${mod(y * y, p)}，余数相同，所以 $(${x}, ${y})$ 在曲线上；其他选项平方后余数不同。`,
+              ],
+            ],
           ],
+          y === 0
+            ? [
+                `Here the right side is $0$, and $y = 0$ is its only square root modulo ${p}, so $(${x}, 0)$ is the one point with $x = ${x}$.`,
+                `这里右边是 $0$，模 ${p} 时它唯一的平方根是 $y = 0$，所以 $(${x}, 0)$ 是 $x = ${x}$ 时唯一的点。`,
+              ]
+            : [
+                `The point $(${x}, ${mod(-y, p)})$ lies on the curve as well, because $${mod(-y, p)}^{2} = ${mod(-y, p) ** 2}$ is also ${right} modulo ${p}.`,
+                `点 $(${x}, ${mod(-y, p)})$ 也在曲线上，因为 $${mod(-y, p)}^{2} = ${mod(-y, p) ** 2}$ 模 ${p} 也是 ${right}。`,
+              ],
         );
       },
     ),
@@ -167,55 +306,130 @@ const ellipticCurves = topic(
       "counting-the-points",
       ["Counting the points", "数点的个数"],
       [
-        "For each $x$, the right side is a residue, $0$ or a nonresidue. These give two values of $y$, one value and no value. Add up the counts and then add $1$ for the point at infinity.",
-        "对每个 $x$，右边是二次剩余、$0$ 或非剩余，分别给出 $y$ 的两个值、一个值和没有值。把个数相加，再为无穷远点加 $1$。",
+        "For each $x$, the right side is a residue, $0$ or a nonresidue. These give two values of $y$, one value and no value. Add up the counts and then add $1$ for the point at infinity. On $y^{2} = x^{3} + x + 1$ modulo $5$ the squares are $0, 1, 4$. For $x = 0, 1, 2, 3, 4$ the right side is $1, 3, 1, 1, 4$: four residues and one nonresidue, so there are $2 + 0 + 2 + 2 + 2 = 8$ affine points and $9$ points in all.\n\nCheck: Hasse's bound allows $|N - 6| \\le 2\\sqrt{5} \\approx 4.47$, and $|9 - 6| = 3$ fits.\n\n> **Watch out.** Do not forget the point at infinity, and count an $x$ whose right side is $0$ only once.",
+        "对每个 $x$，右边是二次剩余、$0$ 或非剩余，分别给出 $y$ 的两个值、一个值和没有值。把个数相加，再为无穷远点加 $1$。在模 $5$ 的 $y^{2} = x^{3} + x + 1$ 上，平方数是 $0, 1, 4$。对 $x = 0, 1, 2, 3, 4$，右边是 $1, 3, 1, 1, 4$：四个剩余、一个非剩余，所以有 $2 + 0 + 2 + 2 + 2 = 8$ 个仿射点，共 $9$ 个点。\n\n检验：哈塞界允许 $|N - 6| \\le 2\\sqrt{5} \\approx 4.47$，而 $|9 - 6| = 3$ 符合。\n\n> **注意。** 不要忘记无穷远点；右边为 $0$ 的 $x$ 只算一个点。",
       ],
-      (rng) => {
-        const p = rng.pick([5, 7, 11]);
-        let a = rng.int(1, p - 1);
-        let b = rng.int(1, p - 1);
-        while ((4 * a * a * a + 27 * b * b) % p === 0) {
-          a = rng.int(1, p - 1);
-          b = rng.int(1, p - 1);
-        }
-        const affine = curvePoints(a, b, p).length;
-        return ask(
-          [
-            `How many points, including the point at infinity, does $${curveLatex(a, b)}$ have modulo ${p}?`,
-            `模 ${p} 时，$${curveLatex(a, b)}$ 有多少个点（包括无穷远点）？`,
-          ],
-          affine + 1,
-          [affine, p + 1 === affine + 1 ? p + 2 : p + 1, affine + 2],
-          [
-            `Going through $x = 0, \\dots, ${p - 1}$ gives ${affine} points, and infinity makes ${affine + 1}.`,
-            `依次取 $x = 0, \\dots, ${p - 1}$，得 ${affine} 个点，加上无穷远点共 ${affine + 1} 个。`,
-          ],
-        );
-      },
+      (rng) =>
+        until(() => {
+          const p = rng.pick([5, 7, 11]);
+          let a = rng.int(1, p - 1);
+          let b = rng.int(1, p - 1);
+          while ((4 * a * a * a + 27 * b * b) % p === 0) {
+            a = rng.int(1, p - 1);
+            b = rng.int(1, p - 1);
+          }
+          const points = curvePoints(a, b, p);
+          const affine = points.length;
+          const xs = Array.from({ length: p }, (_, x) => x);
+          const counts = xs.map((x) => points.filter(([u]) => u === x).length);
+          const rights = xs.map((x) => mod(x * x * x + a * x + b, p));
+          const hit = counts.filter((v) => v > 0).length;
+          const zeros = counts.filter((v, x) => v === 1 && rights[x] === 0).length;
+          const misses: Miss[] = [
+            [affine, "That leaves out the point at infinity.", "那漏掉了无穷远点。"],
+            [
+              hit + 1,
+              "That counts each $x$ that gives a point once, but a nonzero residue has two square roots $y$ and $-y$.",
+              "那把每个有点的 $x$ 只算了一次，但非零剩余有两个平方根 $y$ 和 $-y$。",
+            ],
+            [
+              affine + 1 + zeros,
+              "That counts $y = 0$ twice where the right side is $0$; there $y$ and $-y$ are the same.",
+              "那在右边为 $0$ 处把 $y = 0$ 算了两次；那里 $y$ 与 $-y$ 相同。",
+            ],
+            [
+              p + 1,
+              `That is only the average $p + 1 = ${p + 1}$; the true count must be found by going through the values of $x$.`,
+              `那只是平均值 $p + 1 = ${p + 1}$；真正的个数要逐个检查 $x$ 才能得到。`,
+            ],
+          ];
+          const N = affine + 1;
+          return worked(
+            [
+              `How many points, including the point at infinity, does $${curveLatex(a, b)}$ have modulo ${p}?`,
+              `模 ${p} 时，$${curveLatex(a, b)}$ 有多少个点（包括无穷远点）？`,
+            ],
+            N,
+            misses,
+            [
+              [
+                ["Evaluate the right side", "计算右边"],
+                [
+                  `For $x = 0, \\dots, ${p - 1}$ the right side is $${rights.join(", ")}$ modulo ${p}.`,
+                  `对 $x = 0, \\dots, ${p - 1}$，右边模 ${p} 依次是 $${rights.join(", ")}$。`,
+                ],
+              ],
+              [
+                ["Count the square roots", "数平方根"],
+                [
+                  `These give $${counts.join(" + ")} = ${affine}$ values of $y$, so there are ${affine} affine points.`,
+                  `这些给出 $${counts.join(" + ")} = ${affine}$ 个 $y$ 值，所以有 ${affine} 个仿射点。`,
+                ],
+              ],
+              [
+                ["Add infinity", "加上无穷远点"],
+                [`With the point at infinity, $N = ${affine} + 1 = ${N}$.`, `加上无穷远点，$N = ${affine} + 1 = ${N}$。`],
+              ],
+            ],
+            [
+              `Hasse's bound allows $|N - ${p + 1}| \\le 2\\sqrt{${p}}$, about ${(2 * Math.sqrt(p)).toFixed(2)}, and $|${N} - ${p + 1}| = ${Math.abs(N - p - 1)}$ fits.`,
+              `哈塞界允许 $|N - ${p + 1}| \\le 2\\sqrt{${p}}$，约为 ${(2 * Math.sqrt(p)).toFixed(2)}，而 $|${N} - ${p + 1}| = ${Math.abs(N - p - 1)}$ 符合。`,
+            ],
+          );
+        }),
     ),
     point(
       "the-size-of-the-group",
       ["The size of the group", "群的大小"],
       [
-        "Hasse's theorem says that the number $N$ of points satisfies $|N - (p + 1)| \\le 2\\sqrt{p}$. About half the values of $x$ give two points, so $N$ stays close to $p + 1$.",
-        "哈塞定理说，点的个数 $N$ 满足 $|N - (p + 1)| \\le 2\\sqrt{p}$。大约一半的 $x$ 给出两个点，所以 $N$ 接近 $p + 1$。",
+        "Hasse's theorem says that the number $N$ of points satisfies $|N - (p + 1)| \\le 2\\sqrt{p}$. About half the values of $x$ give two points, so $N$ stays close to $p + 1$. For $p = 101$: $2\\sqrt{101} = \\sqrt{404}$, and $20^{2} = 400 \\le 404 < 441 = 21^{2}$, so $N$ lies between $102 - 20 = 82$ and $102 + 20 = 122$.\n\nCheck: the curve modulo $5$ with $9$ points has $|9 - 6| = 3$, inside the bound $2\\sqrt{5} \\approx 4.47$.\n\n> **Watch out.** The centre is $p + 1$, not $p$, and the bound is $2\\sqrt{p}$ rounded down, since $N$ is a whole number.",
+        "哈塞定理说，点的个数 $N$ 满足 $|N - (p + 1)| \\le 2\\sqrt{p}$。大约一半的 $x$ 给出两个点，所以 $N$ 接近 $p + 1$。对 $p = 101$：$2\\sqrt{101} = \\sqrt{404}$，而 $20^{2} = 400 \\le 404 < 441 = 21^{2}$，所以 $N$ 介于 $102 - 20 = 82$ 与 $102 + 20 = 122$ 之间。\n\n检验：模 $5$ 时有 $9$ 个点的曲线满足 $|9 - 6| = 3$，在界 $2\\sqrt{5} \\approx 4.47$ 之内。\n\n> **注意。** 中心是 $p + 1$，不是 $p$；界 $2\\sqrt{p}$ 要向下取整，因为 $N$ 是整数。",
       ],
-      (rng) => {
-        const p = rng.pick(primesUpTo(1000).filter((v) => v > 100));
-        const widest = Math.floor(2 * Math.sqrt(p));
-        return ask(
-          [
-            `Hasse's theorem bounds the number of points of an elliptic curve modulo ${p}. What is the largest whole number it allows?`,
-            `哈塞定理限制了模 ${p} 的椭圆曲线的点数。它允许的最大整数是多少？`,
-          ],
-          p + 1 + widest,
-          [p + widest, p + 1 - widest, p + 1 + 2 * widest],
-          [
-            `Since $2\\sqrt{${p}}$ lies between ${widest} and ${widest + 1}, the bound is $${p} + 1 + ${widest}$.`,
-            `因为 $2\\sqrt{${p}}$ 在 ${widest} 和 ${widest + 1} 之间，所以上界是 $${p} + 1 + ${widest}$。`,
-          ],
-        );
-      },
+      (rng) =>
+        until(() => {
+          const p = rng.pick(primesUpTo(1000).filter((v) => v > 100));
+          const widest = Math.floor(2 * Math.sqrt(p));
+          const top = p + 1 + widest;
+          const misses: Miss[] = [
+            [p + widest, "That centres the bound at $p$; the centre is $p + 1$.", "那把中心放在 $p$；中心是 $p + 1$。"],
+            [p + 1 - widest, "That is the smallest count allowed, not the largest.", "那是允许的最小点数，不是最大点数。"],
+            [
+              p + 1 + 2 * widest,
+              "That doubles the bound twice; the allowed distance is $2\\sqrt{p}$, not $4\\sqrt{p}$.",
+              "那把界加倍了两次；允许的距离是 $2\\sqrt{p}$，不是 $4\\sqrt{p}$。",
+            ],
+            [
+              top + 1,
+              `That rounds $2\\sqrt{${p}}$ up; since $N$ is whole the distance can be at most ${widest}.`,
+              `那把 $2\\sqrt{${p}}$ 向上取整了；因为 $N$ 是整数，距离至多是 ${widest}。`,
+            ],
+          ];
+          return worked(
+            [
+              `Hasse's theorem bounds the number of points of an elliptic curve modulo ${p}. What is the largest whole number it allows?`,
+              `哈塞定理限制了模 ${p} 的椭圆曲线的点数。它允许的最大整数是多少？`,
+            ],
+            top,
+            misses,
+            [
+              [
+                ["Size up the bound", "估计界"],
+                [
+                  `$2\\sqrt{${p}} = \\sqrt{${4 * p}}$, and $${widest}^{2} = ${widest * widest} \\le ${4 * p} < ${(widest + 1) ** 2} = ${widest + 1}^{2}$, so the distance from $p + 1$ is at most ${widest}.`,
+                  `$2\\sqrt{${p}} = \\sqrt{${4 * p}}$，而 $${widest}^{2} = ${widest * widest} \\le ${4 * p} < ${(widest + 1) ** 2} = ${widest + 1}^{2}$，所以与 $p + 1$ 的距离至多是 ${widest}。`,
+                ],
+              ],
+              [
+                ["Add it to the centre", "加到中心上"],
+                [`$N \\le ${p} + 1 + ${widest} = ${top}$.`, `$N \\le ${p} + 1 + ${widest} = ${top}$。`],
+              ],
+            ],
+            [
+              `The other end is $${p + 1} - ${widest} = ${p + 1 - widest}$, and the window from ${p + 1 - widest} to ${top} is centred on $${p + 1}$.`,
+              `另一端是 $${p + 1} - ${widest} = ${p + 1 - widest}$，从 ${p + 1 - widest} 到 ${top} 的区间以 $${p + 1}$ 为中心。`,
+            ],
+          );
+        }),
     ),
   ],
 );
@@ -231,61 +445,142 @@ const curveAddition = topic(
       "the-slope-of-a-chord",
       ["The slope of a chord", "弦的斜率"],
       [
-        "The line through $P = (x_{1}, y_{1})$ and $Q = (x_{2}, y_{2})$ with $x_{1} \\ne x_{2}$ has slope $m = (y_{2} - y_{1})(x_{2} - x_{1})^{-1}$ modulo $p$. Division is not available modulo a prime, so dividing means multiplying by a modular inverse. Find that inverse first, and then multiply it by the difference of the second coordinates.",
-        "过 $P = (x_{1}, y_{1})$ 和 $Q = (x_{2}, y_{2})$（$x_{1} \\ne x_{2}$）的直线斜率是模 $p$ 下的 $m = (y_{2} - y_{1})(x_{2} - x_{1})^{-1}$。模素数时没有普通的除法，除以一个数就是乘以它的模逆元。先求出逆元，再乘以第二个坐标的差。",
+        "The line through $P = (x_{1}, y_{1})$ and $Q = (x_{2}, y_{2})$ with $x_{1} \\ne x_{2}$ has slope $m = (y_{2} - y_{1})(x_{2} - x_{1})^{-1}$ modulo $p$. Division is not available modulo a prime, so dividing means multiplying by a modular inverse. Find that inverse first, and then multiply it by the difference of the second coordinates. Modulo $11$, through $(2, 3)$ and $(5, 9)$: the differences are $3$ and $6$, the inverse of $3$ is $4$ because $3 \\cdot 4 = 12$ is $1$ modulo $11$, and $6 \\cdot 4 = 24$ is $2$ modulo $11$, so $m = 2$.\n\nCheck: $m \\cdot 3 = 6$, the difference of the second coordinates, as a slope must satisfy.\n\n> **Watch out.** Subtract in the same order on top and bottom; mixing $y_{2} - y_{1}$ with $x_{1} - x_{2}$ gives $-m$.",
+        "过 $P = (x_{1}, y_{1})$ 和 $Q = (x_{2}, y_{2})$（$x_{1} \\ne x_{2}$）的直线斜率是模 $p$ 下的 $m = (y_{2} - y_{1})(x_{2} - x_{1})^{-1}$。模素数时没有普通的除法，除以一个数就是乘以它的模逆元。先求出逆元，再乘以第二个坐标的差。模 $11$ 时过 $(2, 3)$ 和 $(5, 9)$：两个差是 $3$ 和 $6$，$3$ 的逆元是 $4$，因为 $3 \\cdot 4 = 12$ 模 $11$ 为 $1$，而 $6 \\cdot 4 = 24$ 模 $11$ 为 $2$，所以 $m = 2$。\n\n检验：$m \\cdot 3 = 6$，正是第二个坐标的差，斜率本应满足这一点。\n\n> **注意。** 分子分母要按同样的顺序相减；把 $y_{2} - y_{1}$ 与 $x_{1} - x_{2}$ 混用会得到 $-m$。",
       ],
-      (rng) => {
-        const p = rng.pick([11, 13, 17, 19, 23]);
-        const x1 = rng.int(0, p - 2);
-        const x2 = rng.int(x1 + 1, p - 1);
-        const y1 = rng.int(0, p - 1);
-        const y2 = rng.int(0, p - 1);
-        const m = mod((y2 - y1) * inverse(x2 - x1, p), p);
-        return ask(
-          [
-            `Modulo ${p}, what is the slope of the line through $(${x1}, ${y1})$ and $(${x2}, ${y2})$? Give a residue from 0 to ${p - 1}.`,
-            `模 ${p} 时，过 $(${x1}, ${y1})$ 和 $(${x2}, ${y2})$ 的直线斜率是多少？给出 0 到 ${p - 1} 之间的余数。`,
-          ],
-          m,
-          [mod(y2 - y1, p), inverse(x2 - x1, p), mod((y1 - y2) * inverse(x2 - x1, p), p)],
-          [
-            `The inverse of ${mod(x2 - x1, p)} is ${inverse(x2 - x1, p)}, and ${mod(y2 - y1, p)} times it is ${m} modulo ${p}.`,
-            `${mod(x2 - x1, p)} 的逆元是 ${inverse(x2 - x1, p)}，${mod(y2 - y1, p)} 乘以它模 ${p} 等于 ${m}。`,
-          ],
-        );
-      },
+      (rng) =>
+        until(() => {
+          const p = rng.pick([11, 13, 17, 19, 23]);
+          const x1 = rng.int(0, p - 2);
+          const x2 = rng.int(x1 + 1, p - 1);
+          const y1 = rng.int(0, p - 1);
+          const y2 = rng.int(0, p - 1);
+          const dx = mod(x2 - x1, p);
+          const dy = mod(y2 - y1, p);
+          const inv = inverse(dx, p);
+          const m = mod(dy * inv, p);
+          const misses: Miss[] = [
+            [
+              dy,
+              "That is only the rise; it still has to be multiplied by the inverse of the run.",
+              "那只是纵向的差；还要乘以横向差的逆元。",
+            ],
+            [
+              inv,
+              "That is only the inverse of the run; it still has to be multiplied by the rise.",
+              "那只是横向差的逆元；还要乘以纵向的差。",
+            ],
+            [
+              mod(-dy * inv, p),
+              "That subtracts in opposite orders on top and bottom, which gives $-m$.",
+              "那在分子分母中按相反顺序相减，得到 $-m$。",
+            ],
+            [mod(dy * dx, p), "That multiplies by the run instead of by its inverse.", "那乘以横向差本身，而不是它的逆元。"],
+          ];
+          return worked(
+            [
+              `Modulo ${p}, what is the slope of the line through $(${x1}, ${y1})$ and $(${x2}, ${y2})$? Give a residue from 0 to ${p - 1}.`,
+              `模 ${p} 时，过 $(${x1}, ${y1})$ 和 $(${x2}, ${y2})$ 的直线斜率是多少？给出 0 到 ${p - 1} 之间的余数。`,
+            ],
+            m,
+            misses,
+            [
+              [
+                ["Take the differences", "求差"],
+                [
+                  `$x_{2} - x_{1} = ${dx}$ and $y_{2} - y_{1}$ is ${dy} modulo ${p}.`,
+                  `$x_{2} - x_{1} = ${dx}$，$y_{2} - y_{1}$ 模 ${p} 为 ${dy}。`,
+                ],
+              ],
+              [
+                ["Invert the run", "求逆元"],
+                [
+                  `$${dx} \\cdot ${inv} = ${dx * inv}$, which is $1$ modulo ${p}, so the inverse of ${dx} is ${inv}.`,
+                  `$${dx} \\cdot ${inv} = ${dx * inv}$，模 ${p} 为 $1$，所以 ${dx} 的逆元是 ${inv}。`,
+                ],
+              ],
+              [
+                ["Multiply", "相乘"],
+                [
+                  `$${dy} \\cdot ${inv} = ${dy * inv}$, which is ${m} modulo ${p}.`,
+                  `$${dy} \\cdot ${inv} = ${dy * inv}$，模 ${p} 为 ${m}。`,
+                ],
+              ],
+            ],
+            [
+              `$${m} \\cdot ${dx} = ${m * dx}$, which is ${dy} modulo ${p}, the rise, as it should be.`,
+              `$${m} \\cdot ${dx} = ${m * dx}$，模 ${p} 为 ${dy}，正是纵向的差。`,
+            ],
+          );
+        }),
     ),
     {
       ...point(
         "adding-two-different-points",
         ["Adding two different points", "两个不同点相加"],
         [
-          "With slope $m$ through $P$ and $Q$, the sum has first coordinate $x_{3} = m^{2} - x_{1} - x_{2}$. The line meets the curve at a third point, and reflecting that point gives the sum, so $y_{3} = m(x_{1} - x_{3}) - y_{1}$.",
-          "设过 $P$ 和 $Q$ 的斜率为 $m$，和的第一个坐标是 $x_{3} = m^{2} - x_{1} - x_{2}$。直线与曲线交于第三点，把它反射就得到和，所以 $y_{3} = m(x_{1} - x_{3}) - y_{1}$。",
+          "With slope $m$ through $P$ and $Q$, the sum has first coordinate $x_{3} = m^{2} - x_{1} - x_{2}$. The line meets the curve at a third point, and reflecting that point gives the sum, so $y_{3} = m(x_{1} - x_{3}) - y_{1}$. On $y^{2} = x^{3} - x + 1$ take $P = (0, 1)$ and $Q = (1, 1)$: the slope is $m = \\frac{1 - 1}{1 - 0} = 0$, so $x_{3} = 0 - 0 - 1 = -1$. The line $y = 1$ meets the curve again at $(-1, 1)$, and reflecting gives $P + Q = (-1, -1)$, since $y_{3} = 0 \\cdot (0 + 1) - 1 = -1$.\n\nCheck: $(-1)^{3} - (-1) + 1 = 1 = (-1)^{2}$, so $(-1, -1)$ lies on the curve.\n\n> **Watch out.** The third point on the line is not the sum; the sum is its reflection, with the sign of $y$ changed.",
+          "设过 $P$ 和 $Q$ 的斜率为 $m$，和的第一个坐标是 $x_{3} = m^{2} - x_{1} - x_{2}$。直线与曲线交于第三点，把它反射就得到和，所以 $y_{3} = m(x_{1} - x_{3}) - y_{1}$。在 $y^{2} = x^{3} - x + 1$ 上取 $P = (0, 1)$、$Q = (1, 1)$：斜率 $m = \\frac{1 - 1}{1 - 0} = 0$，所以 $x_{3} = 0 - 0 - 1 = -1$。直线 $y = 1$ 与曲线再交于 $(-1, 1)$，反射得 $P + Q = (-1, -1)$，因为 $y_{3} = 0 \\cdot (0 + 1) - 1 = -1$。\n\n检验：$(-1)^{3} - (-1) + 1 = 1 = (-1)^{2}$，所以 $(-1, -1)$ 在曲线上。\n\n> **注意。** 直线上的第三个交点不是和；和是它的反射，$y$ 要变号。",
         ],
-        (rng) => {
-          for (;;) {
+        (rng) =>
+          until(() => {
             const { p, a, b, points } = pickCurve(rng, 2);
             const [x1, y1] = rng.pick(points);
             const others = points.filter(([x]) => x !== x1);
-            if (others.length === 0) continue;
+            if (others.length === 0) return undefined;
             const [x2, y2] = rng.pick(others);
-            const m = mod((y2 - y1) * inverse(x2 - x1, p), p);
+            const dx = mod(x2 - x1, p);
+            const dy = mod(y2 - y1, p);
+            const m = mod(dy * inverse(dx, p), p);
             const x3 = mod(m * m - x1 - x2, p);
-            return ask(
+            const y3 = mod(m * (x1 - x3) - y1, p);
+            const misses: Miss[] = [
+              [
+                mod(x1 + x2, p),
+                "That adds the first coordinates; points on a curve do not add coordinate by coordinate.",
+                "那把第一个坐标相加了；曲线上的点不是逐坐标相加的。",
+              ],
+              [
+                mod(m * m, p),
+                "That stops at $m^{2}$ and forgets to subtract $x_{1}$ and $x_{2}$.",
+                "那停在 $m^{2}$，忘了减去 $x_{1}$ 和 $x_{2}$。",
+              ],
+              [mod(m - x1 - x2, p), "That uses $m$ instead of $m^{2}$.", "那用了 $m$ 而不是 $m^{2}$。"],
+              [
+                mod(m * m + x1 + x2, p),
+                "That adds $x_{1}$ and $x_{2}$ to $m^{2}$ instead of subtracting them.",
+                "那把 $x_{1}$ 和 $x_{2}$ 加到 $m^{2}$ 上，而不是减去。",
+              ],
+            ];
+            return worked(
               [
                 `On $${curveLatex(a, b)}$ modulo ${p}, what is the first coordinate of $(${x1}, ${y1}) + (${x2}, ${y2})$?`,
                 `在模 ${p} 的 $${curveLatex(a, b)}$ 上，$(${x1}, ${y1}) + (${x2}, ${y2})$ 的第一个坐标是多少？`,
               ],
               x3,
-              [mod(x1 + x2, p), mod(m * m, p), mod(m - x1 - x2, p)],
+              misses,
               [
-                `The slope is ${m}, so $x_{3} = ${m}^{2} - ${x1} - ${x2}$, which is ${x3} modulo ${p}.`,
-                `斜率是 ${m}，所以 $x_{3} = ${m}^{2} - ${x1} - ${x2}$，模 ${p} 等于 ${x3}。`,
+                [
+                  ["Find the slope", "求斜率"],
+                  [
+                    `The differences are ${dx} and ${dy}, the inverse of ${dx} is ${inverse(dx, p)}, and $m = ${dy} \\cdot ${inverse(dx, p)}$, which is ${m} modulo ${p}.`,
+                    `两个差是 ${dx} 和 ${dy}，${dx} 的逆元是 ${inverse(dx, p)}，$m = ${dy} \\cdot ${inverse(dx, p)}$，模 ${p} 为 ${m}。`,
+                  ],
+                ],
+                [
+                  ["Apply the formula", "代入公式"],
+                  [
+                    `$x_{3} = ${m}^{2} - ${x1} - ${x2} = ${m * m - x1 - x2}$, which is ${x3} modulo ${p}.`,
+                    `$x_{3} = ${m}^{2} - ${x1} - ${x2} = ${m * m - x1 - x2}$，模 ${p} 为 ${x3}。`,
+                  ],
+                ],
+              ],
+              [
+                `Then $y_{3} = ${m} \\cdot (${x1} - ${x3}) - ${y1}$, which is ${y3} modulo ${p}, and $${y3}^{2}$ and $${x3}^{3} + ${a} \\cdot ${x3} + ${b}$ are both ${mod(y3 * y3, p)} modulo ${p}, so the sum lies on the curve.`,
+                `于是 $y_{3} = ${m} \\cdot (${x1} - ${x3}) - ${y1}$，模 ${p} 为 ${y3}；$${y3}^{2}$ 与 $${x3}^{3} + ${a} \\cdot ${x3} + ${b}$ 模 ${p} 都是 ${mod(y3 * y3, p)}，所以和在曲线上。`,
               ],
             );
-          }
-        },
+          }),
       ),
       figure: numberTheoryDrawings1["adding-points-on-an-elliptic-curve#adding-two-different-points"],
     },
@@ -293,27 +588,66 @@ const curveAddition = topic(
       "doubling-a-point",
       ["Doubling a point", "点的倍乘"],
       [
-        "To add $P$ to itself, use the tangent line. Implicit differentiation gives the slope $m = (3x_{1}^{2} + a)(2y_{1})^{-1}$ modulo $p$, and then $x_{3} = m^{2} - 2x_{1}$.",
-        "要把 $P$ 与自身相加，就用切线。隐函数求导给出斜率 $m = (3x_{1}^{2} + a)(2y_{1})^{-1}$（模 $p$），然后 $x_{3} = m^{2} - 2x_{1}$。",
+        "To add $P$ to itself, use the tangent line. Implicit differentiation gives the slope $m = (3x_{1}^{2} + a)(2y_{1})^{-1}$ modulo $p$, and then $x_{3} = m^{2} - 2x_{1}$. On $y^{2} = x^{3} + x + 1$ modulo $5$ with $P = (0, 1)$: $3 \\cdot 0^{2} + 1 = 1$ and $2 \\cdot 1 = 2$, whose inverse is $3$, so $m = 3$ and $x_{3} = 9 - 0 = 9$, which is $4$ modulo $5$. Then $y_{3} = 3 \\cdot (0 - 4) - 1 = -13$, which is $2$ modulo $5$, so $2P = (4, 2)$.\n\nCheck: $4^{3} + 4 + 1 = 69$ is $4$ modulo $5$, and $2^{2} = 4$, so $(4, 2)$ lies on the curve.\n\n> **Watch out.** Include the $a$ in $3x_{1}^{2} + a$, and subtract $2x_{1}$, not $x_{1}$; a point with $y_{1} = 0$ has a vertical tangent and doubles to the point at infinity.",
+        "要把 $P$ 与自身相加，就用切线。隐函数求导给出斜率 $m = (3x_{1}^{2} + a)(2y_{1})^{-1}$（模 $p$），然后 $x_{3} = m^{2} - 2x_{1}$。在模 $5$ 的 $y^{2} = x^{3} + x + 1$ 上取 $P = (0, 1)$：$3 \\cdot 0^{2} + 1 = 1$，$2 \\cdot 1 = 2$，它的逆元是 $3$，所以 $m = 3$，$x_{3} = 9 - 0 = 9$，模 $5$ 为 $4$。于是 $y_{3} = 3 \\cdot (0 - 4) - 1 = -13$，模 $5$ 为 $2$，所以 $2P = (4, 2)$。\n\n检验：$4^{3} + 4 + 1 = 69$ 模 $5$ 为 $4$，而 $2^{2} = 4$，所以 $(4, 2)$ 在曲线上。\n\n> **注意。** $3x_{1}^{2} + a$ 中不要漏掉 $a$，要减去 $2x_{1}$ 而不是 $x_{1}$；$y_{1} = 0$ 的点切线竖直，倍乘得到无穷远点。",
       ],
-      (rng) => {
-        const { p, a, b, points } = pickCurve(rng, 1);
-        const [x, y] = rng.pick(points.filter(([, v]) => v !== 0));
-        const m = mod((3 * x * x + a) * inverse(2 * y, p), p);
-        const x3 = mod(m * m - 2 * x, p);
-        return ask(
-          [
-            `On $${curveLatex(a, b)}$ modulo ${p}, what is the first coordinate of $2 \\cdot (${x}, ${y})$?`,
-            `在模 ${p} 的 $${curveLatex(a, b)}$ 上，$2 \\cdot (${x}, ${y})$ 的第一个坐标是多少？`,
-          ],
-          x3,
-          [mod(2 * x, p), mod(m * m, p), mod(m * m - x, p)],
-          [
-            `The tangent has slope ${m}, so $x_{3} = ${m}^{2} - 2 \\cdot ${x}$, which is ${x3} modulo ${p}.`,
-            `切线斜率是 ${m}，所以 $x_{3} = ${m}^{2} - 2 \\cdot ${x}$，模 ${p} 等于 ${x3}。`,
-          ],
-        );
-      },
+      (rng) =>
+        until(() => {
+          const { p, a, b, points } = pickCurve(rng, 1);
+          const [x, y] = rng.pick(points.filter(([, v]) => v !== 0));
+          const top = mod(3 * x * x + a, p);
+          const inv = inverse(2 * y, p);
+          const m = mod(top * inv, p);
+          const x3 = mod(m * m - 2 * x, p);
+          const y3 = mod(m * (x - x3) - y, p);
+          const bare = mod(3 * x * x * inv, p);
+          const misses: Miss[] = [
+            [
+              mod(2 * x, p),
+              "That doubles the first coordinate; doubling a point is not doubling its coordinates.",
+              "那把第一个坐标加倍了；点的倍乘不是坐标加倍。",
+            ],
+            [mod(m * m, p), "That stops at $m^{2}$ and forgets to subtract $2x_{1}$.", "那停在 $m^{2}$，忘了减去 $2x_{1}$。"],
+            [
+              mod(m * m - x, p),
+              "That subtracts $x_{1}$ once; the tangent touches at $P$ twice, so subtract $2x_{1}$.",
+              "那只减了一次 $x_{1}$；切线在 $P$ 处相切算两次，所以要减 $2x_{1}$。",
+            ],
+            [
+              mod(bare * bare - 2 * x, p),
+              "That leaves the $a$ out of the slope $(3x_{1}^{2} + a)(2y_{1})^{-1}$.",
+              "那在斜率 $(3x_{1}^{2} + a)(2y_{1})^{-1}$ 中漏掉了 $a$。",
+            ],
+          ];
+          return worked(
+            [
+              `On $${curveLatex(a, b)}$ modulo ${p}, what is the first coordinate of $2 \\cdot (${x}, ${y})$?`,
+              `在模 ${p} 的 $${curveLatex(a, b)}$ 上，$2 \\cdot (${x}, ${y})$ 的第一个坐标是多少？`,
+            ],
+            x3,
+            misses,
+            [
+              [
+                ["Find the tangent slope", "求切线斜率"],
+                [
+                  `$3 \\cdot ${x}^{2} + ${a} = ${3 * x * x + a}$, which is ${top} modulo ${p}, and $2 \\cdot ${y} = ${2 * y}$ has inverse ${inv}, so $m = ${top} \\cdot ${inv}$, which is ${m} modulo ${p}.`,
+                  `$3 \\cdot ${x}^{2} + ${a} = ${3 * x * x + a}$，模 ${p} 为 ${top}；$2 \\cdot ${y} = ${2 * y}$ 的逆元是 ${inv}，所以 $m = ${top} \\cdot ${inv}$，模 ${p} 为 ${m}。`,
+                ],
+              ],
+              [
+                ["Apply the formula", "代入公式"],
+                [
+                  `$x_{3} = ${m}^{2} - 2 \\cdot ${x} = ${m * m - 2 * x}$, which is ${x3} modulo ${p}.`,
+                  `$x_{3} = ${m}^{2} - 2 \\cdot ${x} = ${m * m - 2 * x}$，模 ${p} 为 ${x3}。`,
+                ],
+              ],
+            ],
+            [
+              `Then $y_{3} = ${m} \\cdot (${x} - ${x3}) - ${y}$, which is ${y3} modulo ${p}, and $${y3}^{2}$ and $${x3}^{3} + ${a} \\cdot ${x3} + ${b}$ are both ${mod(y3 * y3, p)} modulo ${p}, so $2P$ lies on the curve.`,
+              `于是 $y_{3} = ${m} \\cdot (${x} - ${x3}) - ${y}$，模 ${p} 为 ${y3}；$${y3}^{2}$ 与 $${x3}^{3} + ${a} \\cdot ${x3} + ${b}$ 模 ${p} 都是 ${mod(y3 * y3, p)}，所以 $2P$ 在曲线上。`,
+            ],
+          );
+        }),
     ),
   ],
 );
@@ -1388,7 +1722,53 @@ const finiteElements = topic(
 );
 
 /** numberTheoryOutlineTopics holds the Number Theory topics added from the course outline. */
-export const numberTheoryOutlineTopics: readonly TopicDef[] = [pAdicNumbers, ellipticCurves, curveAddition];
+export const numberTheoryOutlineTopics: readonly TopicDef[] = [
+  lesson(
+    pAdicNumbers,
+    [
+      "In the $5$-adic absolute value, $|50|_{5} = \\frac{1}{25}$ because $50 = 5^{2} \\cdot 2$, while $\\left|\\frac{1}{5}\\right|_{5} = 5$: divisibility by $5$, not size, makes a number small.",
+      "在 $5$ 进绝对值下，$|50|_{5} = \\frac{1}{25}$，因为 $50 = 5^{2} \\cdot 2$；而 $\\left|\\frac{1}{5}\\right|_{5} = 5$：让数变小的是被 $5$ 整除的程度，而不是数的大小。",
+    ],
+    [
+      "$50 \\cdot \\frac{1}{5} = 10 = 5 \\cdot 2$ has $|10|_{5} = \\frac{1}{5}$, and $\\frac{1}{25} \\cdot 5 = \\frac{1}{5}$, so the absolute value of a product is the product of the absolute values.",
+      "$50 \\cdot \\frac{1}{5} = 10 = 5 \\cdot 2$，$|10|_{5} = \\frac{1}{5}$，而 $\\frac{1}{25} \\cdot 5 = \\frac{1}{5}$，所以乘积的绝对值等于绝对值的乘积。",
+    ],
+    [
+      "define $|x|_{p}$, use the strong triangle inequality, and sum geometric series that converge $p$-adically.",
+      "定义 $|x|_{p}$，使用强三角不等式，并求 $p$ 进收敛的几何级数的和。",
+    ],
+  ),
+  lesson(
+    ellipticCurves,
+    [
+      "Modulo $5$, the curve $y^{2} = x^{3} + x + 1$ has the points $(0, 1), (0, 4), (2, 1), (2, 4), (3, 1), (3, 4), (4, 2), (4, 3)$ and the point at infinity, $9$ in all.",
+      "模 $5$ 时，曲线 $y^{2} = x^{3} + x + 1$ 有点 $(0, 1), (0, 4), (2, 1), (2, 4), (3, 1), (3, 4), (4, 2), (4, 3)$ 和无穷远点，共 $9$ 个。",
+    ],
+    [
+      "for $(4, 3)$, $3^{2} = 9$ and $4^{3} + 4 + 1 = 69$ are both $4$ modulo $5$; and $|9 - 6| = 3$ is within Hasse's bound $2\\sqrt{5} \\approx 4.47$.",
+      "对 $(4, 3)$，$3^{2} = 9$ 与 $4^{3} + 4 + 1 = 69$ 模 $5$ 都是 $4$；而 $|9 - 6| = 3$ 在哈塞界 $2\\sqrt{5} \\approx 4.47$ 之内。",
+    ],
+    [
+      "test points on a curve modulo a prime, count them, and bound the count with Hasse's theorem.",
+      "检验模素数曲线上的点，数出点的个数，并用哈塞定理估计这个个数。",
+    ],
+  ),
+  lesson(
+    curveAddition,
+    [
+      "On $y^{2} = x^{3} + x + 1$ modulo $5$, add $P = (0, 1)$ and $Q = (2, 1)$: the slope is $0$, so $x_{3} = 0 - 0 - 2 = -2$, which is $3$, and $y_{3} = 0 \\cdot (0 - 3) - 1 = -1$, which is $4$, so $P + Q = (3, 4)$.",
+      "在模 $5$ 的 $y^{2} = x^{3} + x + 1$ 上，把 $P = (0, 1)$ 与 $Q = (2, 1)$ 相加：斜率是 $0$，所以 $x_{3} = 0 - 0 - 2 = -2$，即 $3$；$y_{3} = 0 \\cdot (0 - 3) - 1 = -1$，即 $4$，所以 $P + Q = (3, 4)$。",
+    ],
+    [
+      "$4^{2} = 16$ and $3^{3} + 3 + 1 = 31$ are both $1$ modulo $5$, so $(3, 4)$ is on the curve.",
+      "$4^{2} = 16$ 与 $3^{3} + 3 + 1 = 31$ 模 $5$ 都是 $1$，所以 $(3, 4)$ 在曲线上。",
+    ],
+    [
+      "find slopes with modular inverses, add two different points, and double a point with the tangent line.",
+      "用模逆元求斜率，把两个不同的点相加，并用切线把一个点倍乘。",
+    ],
+  ),
+];
 
 /** realAnalysisOutlineTopics holds the Real Analysis topics added from the course outline. */
 export const realAnalysisOutlineTopics: readonly TopicDef[] = [measurableFunctions, convergenceTheorems, stoneWeierstrass];

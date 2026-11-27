@@ -266,6 +266,7 @@ Stages 4 and 5 were reopened on 2026-11-25 and are written by whoever coordinate
 | `abstract-algebra-actions.ts` | 13 | done | coordinator, helper B | group actions, orbits, stabilizers, the orbit-stabilizer theorem, Burnside's lemma, the class equation, conjugacy, cycle types and colorings of necklaces |
 | `abstract-algebra-polynomials.ts` | 13 | done | coordinator, helper B | polynomial rings, division and Euclidean algorithms, irreducibility over the reals, rationals and finite fields, quaternions and vector spaces over finite fields |
 | `abstract-algebra-sylow.ts` | 4 | done | coordinator, helper B | p-groups and the three Sylow theorems, with third points for these three files in `deeper-abstract-algebra.ts`, `deeper-abstract-algebra-third.ts`, `deeper-abstract-algebra-third-2.ts`, `deeper-figures-abstract-algebra.ts` and `deeper-figures-proofs-algebra-numbers.ts` |
+| `number-theory-course.ts` | 26 | done | coordinator, helper A | divisor functions, perfect numbers, primes and sieves, Fermat, Euler and Wilson, orders and primitive roots, discrete logarithms, quadratic residues and reciprocity, sums of two squares, Pythagorean triples, multiplicative and Möbius functions, continued fractions, Pell's equation, p-adic numbers and elliptic curves, with third points in `deeper-number-theory.ts`, `deeper-number-theory-third.ts`, `deeper-figures-number-theory.ts`, `deeper-figures-proofs-algebra-numbers.ts`, `figure-reading-college.ts` and `university-outline-additions.ts` |
 
 ## Open Gaps
 
