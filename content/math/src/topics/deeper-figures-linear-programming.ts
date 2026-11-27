@@ -7,7 +7,7 @@ import type { PlaneMark, PlaneView, Point } from "@ga/subject-math";
 import { gcd, Q, svgDocument } from "@ga/subject-math";
 import { linearProgrammingDrawings1 } from "../explanation-drawings-linear-programming-1.ts";
 
-import { ask, type Pair, point, same } from "../university-kit.ts";
+import { type Pair, point, same } from "../university-kit.ts";
 import { arrowLine, drawn, label, node } from "./figure-reading-more.ts";
 import { solved } from "./linear-programming.ts";
 import { chosen, type Slip } from "./number-theory-course.ts";
@@ -258,8 +258,8 @@ const extremeCount = {
     "counting-extreme-points-in-a-drawing",
     ["Counting extreme points in a drawing", "数图中的极点"],
     [
-      "An extreme point of a polyhedron is a point that does not lie in the middle of any segment within the set. For a polygon, these are the corners where the boundary really turns. A marked point on the middle of an edge is not extreme, even when a constraint line passes through it, because it lies between two corners.",
-      "多面体的极点是不位于集合内任何线段中间的点。对多边形来说，这些就是边界真正转弯的顶点。标在边中间的点不是极点，即使有约束线经过它，因为它位于两个顶点之间。",
+      "An extreme point of a polyhedron is a point that does not lie in the middle of any segment within the set. For a polygon, these are the corners where the boundary really turns. A marked point on the middle of an edge is not extreme, even when a constraint line passes through it, because it lies between two corners.\n\nOn the rectangle with corners $(0, 0)$, $(4, 0)$, $(4, 3)$ and $(0, 3)$, with one more point marked at $(2, 0)$, five points are marked and four of them are extreme.\n\nCheck: $(2, 0)$ is the midpoint of $(0, 0)$ and $(4, 0)$, so it lies in the middle of a segment within the set.\n\n> **Watch out.** Count only the points where the boundary turns; a marked point on a straight stretch of the boundary is not a corner.",
+      "多面体的极点是不位于集合内任何线段中间的点。对多边形来说，这些就是边界真正转弯的顶点。标在边中间的点不是极点，即使有约束线经过它，因为它位于两个顶点之间。\n\n在顶点为 $(0, 0)$、$(4, 0)$、$(4, 3)$ 和 $(0, 3)$ 的矩形上，再在 $(2, 0)$ 标一个点，共标出五个点，其中四个是极点。\n\n检验：$(2, 0)$ 是 $(0, 0)$ 和 $(4, 0)$ 的中点，所以它位于集合内一条线段的中间。\n\n> **注意。** 只数边界转弯的点；标在边界直的部分上的点不是顶点。",
     ],
     (rng) => {
       const pts = rng.pick(feasiblePolygons);
@@ -274,20 +274,48 @@ const extremeCount = {
         return [(p[0] + q[0]) / 2, (p[1] + q[1]) / 2];
       });
       const all = [...pts, ...onEdges];
-      return ask(
+      return solved(
         [
           "Several points on the boundary of the shaded feasible region are marked. How many of the marked points are extreme points of the region?",
           "阴影可行域的边界上标出了若干点。标出的点中有多少是该区域的极点？",
         ],
         n,
-        [all.length === n ? n + 1 : all.length, n - 1, n + 2],
         [
-          extras === 0
-            ? `Each marked point is a corner where the boundary turns, so all $${n}$ are extreme.`
-            : `The boundary turns at $${n}$ of the marked points. The other $${extras}$ lie in the middle of edges, so they are between two points of the region and are not extreme.`,
-          extras === 0
-            ? `标出的每个点都是边界转弯的顶点，所以 $${n}$ 个都是极点。`
-            : `边界在标出的 $${n}$ 个点处转弯。另外 $${extras}$ 个点在边的中间，位于区域内两点之间，所以不是极点。`,
+          [all.length, "That counts every marked point, including those in the middle of edges.", "这数了所有标出的点，包括边中间的点。"],
+          [
+            n - 1,
+            "That leaves out a corner; every point where the boundary turns is extreme.",
+            "这漏掉了一个顶点；边界转弯的每个点都是极点。",
+          ],
+          [
+            extras,
+            "That counts the points in the middle of edges, which are exactly the ones that are not extreme.",
+            "这数的是边中间的点，而它们恰好不是极点。",
+          ],
+        ],
+        [
+          [
+            ["Find the corners", "找顶点"],
+            [
+              `The boundary turns at ${n} of the ${all.length} marked points, the corners ${pts.map((p) => `$(${p[0]}, ${p[1]})$`).join(", ")}.`,
+              `边界在标出的 ${all.length} 个点中的 ${n} 个处转弯，即顶点 ${pts.map((p) => `$(${p[0]}, ${p[1]})$`).join("、")}。`,
+            ],
+          ],
+          [
+            ["Set aside the edge points", "排除边上的点"],
+            [
+              extras === 0
+                ? `No marked point lies in the middle of an edge, so all ${n} marked points are extreme.`
+                : `The other ${extras} lie in the middle of edges, between two corners, so they are not extreme, which leaves ${n}.`,
+              extras === 0
+                ? `没有标出的点在边的中间，所以标出的 ${n} 个点都是极点。`
+                : `另外 ${extras} 个点在边的中间，位于两个顶点之间，所以不是极点，剩下 ${n} 个。`,
+            ],
+          ],
+        ],
+        [
+          `The ${n} extreme points plus the ${extras} edge points make up all ${all.length} marked points.`,
+          `${n} 个极点加上 ${extras} 个边上的点，正好是标出的全部 ${all.length} 个点。`,
         ],
         fig(
           quadrant,
@@ -625,8 +653,8 @@ const rangingCoefficient = point(
   "how-far-an-objective-can-tilt",
   ["How far an objective can tilt", "目标函数可以倾斜多少"],
   [
-    "A corner stays optimal while the level lines of the objective lie between the slopes of the two edges at that corner. Changing a coefficient tilts the level lines. So the range of a coefficient comes from the slopes of the neighboring edges, and when the objective matches an edge, the optimum is about to change to the next corner.",
-    "只要目标函数的等值线处在该顶点两条边的斜率之间，顶点就保持最优。改变系数会使等值线倾斜。所以系数的范围来自相邻边的斜率，当目标函数与一条边相符时，最优点就要变到下一个顶点。",
+    "A corner stays optimal while the level lines of the objective lie between the slopes of the two edges at that corner. Changing a coefficient tilts the level lines. So the range of a coefficient comes from the slopes of the neighboring edges, and when the objective matches an edge, the optimum is about to change to the next corner.\n\nOn the polygon with corners $(0, 0)$, $(4, 0)$, $(3, 2)$ and $(0, 3)$, the edges at $(3, 2)$ have slopes $-2$ and $-\\frac{1}{3}$. The level lines of $cx + y$ have slope $-c$, so $(3, 2)$ stays optimal for $\\frac{1}{3} \\le c \\le 2$, and the largest value is 2.\n\nCheck: at $c = 2$ the corners $(3, 2)$ and $(4, 0)$ both give $2(3) + 2 = 2(4) = 8$.\n\n> **Watch out.** The slope of the level lines is $-c$, so $c$ is the negative of the edge's slope, not its reciprocal.",
+    "只要目标函数的等值线处在该顶点两条边的斜率之间，顶点就保持最优。改变系数会使等值线倾斜。所以系数的范围来自相邻边的斜率，当目标函数与一条边相符时，最优点就要变到下一个顶点。\n\n在顶点为 $(0, 0)$、$(4, 0)$、$(3, 2)$ 和 $(0, 3)$ 的多边形上，$(3, 2)$ 处两条边的斜率是 $-2$ 和 $-\\frac{1}{3}$。$cx + y$ 的等值线斜率为 $-c$，所以 $\\frac{1}{3} \\le c \\le 2$ 时 $(3, 2)$ 保持最优，最大值是 2。\n\n检验：$c = 2$ 时，顶点 $(3, 2)$ 和 $(4, 0)$ 都给出 $2(3) + 2 = 2(4) = 8$。\n\n> **注意。** 等值线的斜率是 $-c$，所以 $c$ 是边的斜率的相反数，而不是它的倒数。",
   ],
   (rng) => {
     const [h, k] = [rng.int(2, 5), rng.int(2, 5)];
@@ -643,16 +671,45 @@ const rangingCoefficient = point(
     // For the objective c x + y, the corner stays optimal when drop / h <= c <= k / run.
     const low = Q.of(drop, h);
     const high = Q.of(k, run);
-    return ask(
+    const tie = Q.of(k * (h + run), run);
+    return solved(
       [
         "The corner where the two slanted edges meet is the optimal point for maximizing $cx + y$ over the shaded region. What is the largest value of $c$ for which this stays true?",
         "两条斜边相交的顶点是在阴影区域上最大化 $cx + y$ 的最优点。这一结论成立时，$c$ 的最大值是多少？",
       ],
       high,
-      [low.eq(high) ? high.add(Q.of(1, 1)) : low, Q.of(run, k), high.add(Q.of(1, 1)), high.add(Q.of(2, 1))],
       [
-        `The steeper edge has slope $${high.neg().toLatex()}$. The level lines of $cx + y$ have slope $-c$, and once they get steeper than that edge, the next corner is better. So the largest value is $${high.toLatex()}$.`,
-        `较陡的边斜率为 $${high.neg().toLatex()}$。$cx + y$ 的等值线斜率为 $-c$，一旦比这条边更陡，下一个顶点就更好。所以最大值是 $${high.toLatex()}$。`,
+        [low, "That is the smallest value of $c$, set by the flatter edge.", "这是 $c$ 的最小值，由较平的边决定。"],
+        [
+          Q.of(run, k),
+          "That is the reciprocal of the steeper edge's slope, without the sign; $c$ is the negative of the slope.",
+          "这是较陡边斜率的倒数，去掉了符号；$c$ 是斜率的相反数。",
+        ],
+        [
+          high.neg(),
+          "That is the slope of the steeper edge itself; the level lines have slope $-c$.",
+          "这是较陡边本身的斜率；等值线的斜率是 $-c$。",
+        ],
+      ],
+      [
+        [
+          ["Read the steeper edge", "读出较陡的边"],
+          [
+            `The edge from $(${h}, ${k})$ down to $(${h + run}, 0)$ has slope $${high.neg().toLatex()}$.`,
+            `从 $(${h}, ${k})$ 到 $(${h + run}, 0)$ 的边斜率为 $${high.neg().toLatex()}$。`,
+          ],
+        ],
+        [
+          ["Match the level lines", "使等值线重合"],
+          [
+            `The level lines of $cx + y$ have slope $-c$; once they get steeper than that edge, the next corner is better, so the largest value is $c = ${high.toLatex()}$.`,
+            `$cx + y$ 的等值线斜率为 $-c$；一旦比这条边更陡，下一个顶点就更好，所以最大值是 $c = ${high.toLatex()}$。`,
+          ],
+        ],
+      ],
+      [
+        `At $c = ${high.toLatex()}$ the corners $(${h}, ${k})$ and $(${h + run}, 0)$ give the same value $${tie.toLatex()}$, so the optimum is about to move.`,
+        `$c = ${high.toLatex()}$ 时，顶点 $(${h}, ${k})$ 和 $(${h + run}, 0)$ 给出相同的值 $${tie.toLatex()}$，所以最优点就要移动。`,
       ],
       fig(quadrant, region(pts), [
         `A polygon with corners ${pts.map((p) => `(${p[0]}, ${p[1]})`).join(", ")}.`,
@@ -666,8 +723,8 @@ const shadowFromMovedLine = point(
   "a-shadow-price-from-a-moved-constraint",
   ["A shadow price from a moved constraint", "由移动的约束读影子价格"],
   [
-    "The shadow price of a constraint is the gain in the optimal value per unit of extra resource, while the same constraints stay active. A drawing can show this directly: the solid boundary is the original constraint, and the dashed one is the constraint after the extra resource. Comparing the two optimal corners gives the change in the objective.",
-    "约束的影子价格是在同样的约束保持起作用时，每增加一单位资源带来的最优值增量。图可以直接显示这一点：实线边界是原约束，虚线是增加资源后的约束。比较两个最优顶点就得到目标函数的变化。",
+    "The shadow price of a constraint is the gain in the optimal value per unit of extra resource, while the same constraints stay active. A drawing can show this directly: the solid boundary is the original constraint, and the dashed one is the constraint after the extra resource. Comparing the two optimal corners gives the change in the objective.\n\nOn the rectangle up to $x = 4$ and $y = 3$, the maximum of $2x + 3y$ is at $(4, 3)$. If the top edge moves up to $y = 5$, the best corner becomes $(4, 5)$ and the maximum rises by $3(2) = 6$, a shadow price of 3 per unit.\n\nCheck: $2(4) + 3(5) = 23$ and $2(4) + 3(3) = 17$, and $23 - 17 = 6$.\n\n> **Watch out.** Only $y$ moves, so use the coefficient of $y$; the coefficient of $x$ plays no part.",
+    "约束的影子价格是在同样的约束保持起作用时，每增加一单位资源带来的最优值增量。图可以直接显示这一点：实线边界是原约束，虚线是增加资源后的约束。比较两个最优顶点就得到目标函数的变化。\n\n在到 $x = 4$ 和 $y = 3$ 的矩形上，$2x + 3y$ 的最大值在 $(4, 3)$ 处。若顶边上移到 $y = 5$，最优顶点变成 $(4, 5)$，最大值增加 $3(2) = 6$，影子价格是每单位 3。\n\n检验：$2(4) + 3(5) = 23$，$2(4) + 3(3) = 17$，而 $23 - 17 = 6$。\n\n> **注意。** 只有 $y$ 移动，所以要用 $y$ 的系数；$x$ 的系数不起作用。",
   ],
   (rng) => {
     const b = rng.int(2, 5);
@@ -684,20 +741,41 @@ const shadowFromMovedLine = point(
       [0, b],
     ];
     const gain = objectiveY * extra;
-    return ask(
+    const top = a + 3;
+    return solved(
       [
         `The solid region is limited by $y \\leq k$, shown as the top edge. The dashed line shows that limit after more resource is provided. By how much does the maximum of $${objective(objectiveX, objectiveY)}$ rise when the top edge moves up to the dashed line?`,
         `实线区域受 $y \\leq k$ 的限制，即顶边。虚线表示提供更多资源后的限制。顶边移到虚线时，$${objective(objectiveX, objectiveY)}$ 的最大值增加多少？`,
       ],
       gain,
       [
-        objectiveY === gain ? gain + 1 : objectiveY,
-        extra === gain ? gain + 2 : extra,
-        objectiveX * extra === gain ? gain + 3 : objectiveX * extra,
+        [objectiveY, `That is the gain per unit; the edge moves up ${extra}.`, `这是每单位的增量；顶边上移了 ${extra}。`],
+        [
+          extra,
+          "That is how far $y$ moves, without its coefficient in the objective.",
+          "这是 $y$ 移动的距离，没有乘它在目标函数中的系数。",
+        ],
+        [objectiveX * extra, "That uses the coefficient of $x$, but only $y$ changes.", "这用了 $x$ 的系数，但只有 $y$ 改变。"],
       ],
       [
-        `The best corner moves straight up from $(${a + 3}, ${b})$ to $(${a + 3}, ${b + extra})$. Only $y$ changes, by $${extra}$, so the objective rises by $${objectiveY} \\cdot ${extra} = ${gain}$.`,
-        `最优顶点从 $(${a + 3}, ${b})$ 竖直上移到 $(${a + 3}, ${b + extra})$。只有 $y$ 改变了 $${extra}$，所以目标函数增加 $${objectiveY} \\cdot ${extra} = ${gain}$。`,
+        [
+          ["Follow the best corner", "跟踪最优顶点"],
+          [
+            `The best corner moves straight up from $(${top}, ${b})$ to $(${top}, ${b + extra})$, so only $y$ changes, by ${extra}.`,
+            `最优顶点从 $(${top}, ${b})$ 竖直上移到 $(${top}, ${b + extra})$，所以只有 $y$ 改变了 ${extra}。`,
+          ],
+        ],
+        [
+          ["Multiply by the coefficient", "乘系数"],
+          [
+            `The coefficient of $y$ is ${objectiveY}, so the objective rises by $${objectiveY}(${extra}) = ${gain}$.`,
+            `$y$ 的系数是 ${objectiveY}，所以目标函数增加 $${objectiveY}(${extra}) = ${gain}$。`,
+          ],
+        ],
+      ],
+      [
+        `The maximum goes from $${objectiveX}(${top}) + ${objectiveY}(${b}) = ${objectiveX * top + objectiveY * b}$ to $${objectiveX}(${top}) + ${objectiveY}(${b + extra}) = ${objectiveX * top + objectiveY * (b + extra)}$, a rise of ${gain}.`,
+        `最大值从 $${objectiveX}(${top}) + ${objectiveY}(${b}) = ${objectiveX * top + objectiveY * b}$ 变成 $${objectiveX}(${top}) + ${objectiveY}(${b + extra}) = ${objectiveX * top + objectiveY * (b + extra)}$，增加 ${gain}。`,
       ],
       fig(
         quadrant,
@@ -917,8 +995,8 @@ const integerBest = point(
   "the-best-integer-point-in-a-drawing",
   ["The best integer point in a drawing", "图中最好的整数点"],
   [
-    "An integer program allows only the lattice points of the feasible region. The optimum of the relaxation is at a corner, which need not be a lattice point, and rounding it may leave the region. So compare the lattice points inside the region near the best corner, and take the one with the largest objective value.",
-    "整数规划只允许可行域内的格点。松弛问题的最优点在顶点，它不一定是格点，把它取整可能会离开区域。所以要比较区域内最优顶点附近的格点，取目标值最大的一个。",
+    "An integer program allows only the lattice points of the feasible region. The optimum of the relaxation is at a corner, which need not be a lattice point, and rounding it may leave the region. So compare the lattice points inside the region near the best corner, and take the one with the largest objective value.\n\nOn the triangle with corners $(0, 0)$, $(3.5, 0)$ and $(0, 3.5)$, the relaxation of $x + 2y$ has its maximum 7 at $(0, 3.5)$. Rounding up gives $(0, 4)$, outside the region, while the lattice point $(0, 3)$ gives 6, the best integer value.\n\nCheck: every lattice point inside has $x + y \\le 3$, so $x + 2y \\le 3 + y \\le 6$.\n\n> **Watch out.** Rounding the best corner can leave the region; check that the lattice point you choose is inside.",
+    "整数规划只允许可行域内的格点。松弛问题的最优点在顶点，它不一定是格点，把它取整可能会离开区域。所以要比较区域内最优顶点附近的格点，取目标值最大的一个。\n\n在顶点为 $(0, 0)$、$(3.5, 0)$ 和 $(0, 3.5)$ 的三角形上，$x + 2y$ 的松弛最大值是 7，在 $(0, 3.5)$ 处。向上取整得 $(0, 4)$，在区域之外，而格点 $(0, 3)$ 给出 6，是最好的整数值。\n\n检验：区域内的每个格点都有 $x + y \\le 3$，所以 $x + 2y \\le 3 + y \\le 6$。\n\n> **注意。** 把最优顶点取整可能会离开区域；要检查所选的格点在区域内。",
   ],
   (rng) => {
     const pts = slantedPolygon(rng);
@@ -929,16 +1007,48 @@ const integerBest = point(
     const bestPoint = lattice[values.indexOf(best)] as Point;
     const relaxed = Math.max(...pts.map(([x, y]) => a * x + b * y));
     const distinct = [...new Set(values)].sort((u, v) => v - u);
-    return ask(
+    return solved(
       [
         `The dots are the integer points of the plane. What is the maximum of $${objective(a, b)}$ over the integer points of the shaded region?`,
         `这些点是平面上的整数点。$${objective(a, b)}$ 在阴影区域的整数点上的最大值是多少？`,
       ],
       best,
-      [distinct[1] ?? best - 1, Math.ceil(relaxed) === best ? best + 1 : Math.ceil(relaxed), best + a + b],
       [
-        `Among the dots inside the region, the objective is largest at $(${bestPoint[0]}, ${bestPoint[1]})$, where it equals $${best}$. The best corner of the region is not an integer point, so it is not allowed.`,
-        `在区域内的点中，目标函数在 $(${bestPoint[0]}, ${bestPoint[1]})$ 处最大，等于 $${best}$。区域的最优顶点不是整数点，所以不允许。`,
+        [
+          distinct[1] ?? best - 1,
+          "That is the value at another integer point inside, which is smaller.",
+          "这是区域内另一个整数点的值，比最大值小。",
+        ],
+        [
+          Math.ceil(relaxed),
+          "That rounds up the relaxation's maximum, which no integer point inside reaches.",
+          "这是把松弛最大值向上取整，区域内没有整数点达到它。",
+        ],
+        [
+          best + a + b,
+          `That is the value at $(${bestPoint[0] + 1}, ${bestPoint[1] + 1})$, which lies outside the region.`,
+          `这是 $(${bestPoint[0] + 1}, ${bestPoint[1] + 1})$ 处的值，而它在区域之外。`,
+        ],
+      ],
+      [
+        [
+          ["List the integer points", "列出整数点"],
+          [
+            "Only the dots inside the shaded region count; the best corner of the region is not an integer point, so it is not allowed.",
+            "只有阴影区域内的点才算；区域的最优顶点不是整数点，所以不允许。",
+          ],
+        ],
+        [
+          ["Take the largest value", "取最大值"],
+          [
+            `Among those dots the objective is largest at $(${bestPoint[0]}, ${bestPoint[1]})$, where it equals $${best}$.`,
+            `在这些点中，目标函数在 $(${bestPoint[0]}, ${bestPoint[1]})$ 处最大，等于 $${best}$。`,
+          ],
+        ],
+      ],
+      [
+        `The value ${best} is at most the relaxation's maximum $${relaxed}$, as it must be, since the integer points are part of the region.`,
+        `值 ${best} 不超过松弛最大值 $${relaxed}$，这是必然的，因为整数点都在区域内。`,
       ],
       fig(
         quadrant,

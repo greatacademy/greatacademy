@@ -31,41 +31,11 @@ export const taughtCourses: readonly string[] = [
   "number-theory",
   "real-analysis",
   "complex-analysis",
+  "linear-programming",
 ];
 
 /**
  * taughtTopics lists further topics written to the standard while their course is still being rewritten; once the
  * course is listed in taughtCourses, its topics leave this list.
  */
-export const taughtTopics: readonly string[] = [
-  "formulating-linear-programs",
-  "the-graphical-method-for-linear-programs",
-  "standard-form-and-slack-variables",
-  "basic-feasible-solutions",
-  "the-simplex-tableau",
-  "pivoting-in-the-simplex-method",
-  "the-two-phase-method",
-  "unboundedness-and-degeneracy",
-  "the-dual-of-a-linear-program",
-  "weak-duality",
-  "strong-duality-and-complementary-slackness",
-  "sensitivity-analysis",
-  "the-transportation-problem",
-  "improving-a-transportation-plan",
-  "the-assignment-problem",
-  "maximum-flow-and-minimum-cut",
-  "integer-programming",
-  "matrix-games",
-  "alternative-optimal-solutions",
-  "convex-sets-and-convex-combinations",
-  "gomory-cutting-planes",
-  "infeasible-programs-and-farkas-lemma",
-  "minimization-and-surplus-variables",
-  "minimum-cost-flow",
-  "reduced-costs",
-  "right-hand-side-ranging",
-  "shortest-paths-as-linear-programs",
-  "the-big-m-method",
-  "the-dual-simplex-method",
-  "the-revised-simplex-method",
-];
+export const taughtTopics: readonly string[] = [];

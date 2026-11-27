@@ -1821,7 +1821,11 @@ const ellipsoidMethod = topic(
           m,
           [
             [m - 1, `That stops one step early, at length ${2 * e}.`, `这早停了一步，长度还是 ${2 * e}。`],
-            [m + 1, `That halves once too often, down to length $${Q.of(e, 2).toLatex()}$.`, `这多减半了一次，长度变成 $${Q.of(e, 2).toLatex()}$。`],
+            [
+              m + 1,
+              `That halves once too often, down to length $${Q.of(e, 2).toLatex()}$.`,
+              `这多减半了一次，长度变成 $${Q.of(e, 2).toLatex()}$。`,
+            ],
             [2 ** m, "That is the factor by which the length shrinks, not the number of halvings.", "这是长度缩小的倍数，不是减半的次数。"],
           ],
           [
@@ -2031,7 +2035,11 @@ const interiorPoint = topic(
           ],
           s,
           [
-            [Q.of(mu, other), "That uses $x_{2}$; the slack $s_{1}$ pairs with $x_{1}$.", "这用了 $x_{2}$；松弛变量 $s_{1}$ 与 $x_{1}$ 配对。"],
+            [
+              Q.of(mu, other),
+              "That uses $x_{2}$; the slack $s_{1}$ pairs with $x_{1}$.",
+              "这用了 $x_{2}$；松弛变量 $s_{1}$ 与 $x_{1}$ 配对。",
+            ],
             [Q.of(x, mu), "That is $\\frac{x_{1}}{\\mu}$, the ratio turned upside down.", "这是 $\\frac{x_{1}}{\\mu}$，比值颠倒了。"],
             [Q.of(mu * x, 1), "That multiplies $\\mu$ by $x_{1}$ instead of dividing.", "这把 $\\mu$ 乘以 $x_{1}$，而不是除以 $x_{1}$。"],
           ],
@@ -2076,15 +2084,15 @@ const interiorPoint = topic(
           gap,
           [
             [now, `That is $\\mu$ itself; the gap is ${n} times $\\mu$.`, `这是 $\\mu$ 本身；间隙是 $\\mu$ 的 ${n} 倍。`],
-            [Q.of(n * mu, 2 * k), `That divides by $2(${k})$ instead of $2^{${k}}$.`, `这除以了 $2(${k})$，而不是 $2^{${k}}$。`],
+            [Q.of(n * mu, 2 * k), `That divides by $2(${k})$ instead of ${2 ** k}.`, `这除以了 $2(${k})$，而不是 ${2 ** k}。`],
             [Q.of(n * mu, 1), "That is the gap at the start, before any halving.", "这是开始时的间隙，还没有减半。"],
           ],
           [
             [
               ["Halve the parameter", "把参数减半"],
               [
-                `After ${k} halvings, $\\mu = \\frac{${mu}}{2^{${k}}} = ${now.toLatex()}$.`,
-                `减半 ${k} 次后，$\\mu = \\frac{${mu}}{2^{${k}}} = ${now.toLatex()}$。`,
+                `After ${k} halvings, $\\mu = \\frac{${mu}}{${2 ** k}} = ${now.toLatex()}$.`,
+                `减半 ${k} 次后，$\\mu = \\frac{${mu}}{${2 ** k}} = ${now.toLatex()}$。`,
               ],
             ],
             [
@@ -2096,8 +2104,8 @@ const interiorPoint = topic(
             ],
           ],
           [
-            `The starting gap is $${n}(${mu}) = ${n * mu}$, and dividing it by $2^{${k}} = ${2 ** k}$ also gives $${gap.toLatex()}$.`,
-            `起始间隙是 $${n}(${mu}) = ${n * mu}$，把它除以 $2^{${k}} = ${2 ** k}$ 也得 $${gap.toLatex()}$。`,
+            `The starting gap is $${n}(${mu}) = ${n * mu}$, and halving it ${k} times, a division by ${2 ** k}, also gives $${gap.toLatex()}$.`,
+            `起始间隙是 $${n}(${mu}) = ${n * mu}$，把它减半 ${k} 次，即除以 ${2 ** k}，也得 $${gap.toLatex()}$。`,
           ],
         );
       },
@@ -2607,7 +2615,35 @@ export const complexAnalysisOutlineTopics: readonly TopicDef[] = [
 ];
 
 /** linearProgrammingOutlineTopics holds the Linear Programming topics added from the course outline. */
-export const linearProgrammingOutlineTopics: readonly TopicDef[] = [ellipsoidMethod, interiorPoint];
+export const linearProgrammingOutlineTopics: readonly TopicDef[] = [
+  lesson(
+    ellipsoidMethod,
+    [
+      "Bisection is the ellipsoid method in one dimension: an interval of length 16 halved 4 times has length 1. In dimension 2, shrinking the volume by a factor of $e^{10}$ takes at most $2(2 + 1)(10) = 60$ steps.",
+      "二分法就是一维的椭球法：长度为 16 的区间减半 4 次后长度为 1。在 2 维中，把体积缩小 $e^{10}$ 倍至多需要 $2(2 + 1)(10) = 60$ 步。",
+    ],
+    ["$\\frac{16}{2^{4}} = 1$, and $\\frac{60}{2(3)} = 10$.", "$\\frac{16}{2^{4}} = 1$，而 $\\frac{60}{2(3)} = 10$。"],
+    [
+      "count the halvings of an interval, find the constraint that cuts at the center, and bound the number of iterations.",
+      "数区间减半的次数，找出在中心处给出割的约束，并估计迭代次数的上界。",
+    ],
+  ),
+  lesson(
+    interiorPoint,
+    [
+      "Minimizing $4x - 2 \\ln x$ over $x > 0$ gives $x = \\frac{2}{4} = \\frac{1}{2}$. On the central path with $\\mu = 2$, a variable $x_{1} = 4$ has the slack $s_{1} = \\frac{2}{4} = \\frac{1}{2}$, and with 10 variables the gap is $10(2) = 20$.",
+      "在 $x > 0$ 上最小化 $4x - 2 \\ln x$ 得 $x = \\frac{2}{4} = \\frac{1}{2}$。在 $\\mu = 2$ 的中心路径上，变量 $x_{1} = 4$ 的松弛变量是 $s_{1} = \\frac{2}{4} = \\frac{1}{2}$，有 10 个变量时间隙是 $10(2) = 20$。",
+    ],
+    [
+      "$4 - \\frac{2}{1/2} = 0$, and $4\\left(\\frac{1}{2}\\right) = 2 = \\mu$.",
+      "$4 - \\frac{2}{1/2} = 0$，而 $4\\left(\\frac{1}{2}\\right) = 2 = \\mu$。",
+    ],
+    [
+      "minimize a barrier function, find a slack on the central path, and follow the duality gap as $\\mu$ shrinks.",
+      "最小化障碍函数，求中心路径上的松弛变量，并跟踪 $\\mu$ 缩小时的对偶间隙。",
+    ],
+  ),
+];
 
 /** partialDifferentialEquationsOutlineTopics holds the PDE topics added from the course outline. */
 export const partialDifferentialEquationsOutlineTopics: readonly TopicDef[] = [
