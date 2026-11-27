@@ -1929,55 +1929,93 @@ const rhoDrawn = point(
   "the-shape-of-a-drawn-rho",
   ["The shape of a drawn rho", "所画 rho 形路径的形状"],
   [
-    "Iterating $x \\mapsto x^2 + c$ modulo $n$ must repeat eventually, since there are finitely many residues. The path then looks like the letter rho: a tail that is never revisited, followed by a closed loop. Pollard's method looks for this repeat modulo a hidden factor.",
-    "由于剩余类有限，模 $n$ 迭代 $x \\mapsto x^2 + c$ 最终必然重复。路径看起来像希腊字母 $\\rho$：一段不再经过的尾巴，接一个闭合的环。波拉德方法就是寻找模某个隐藏因子的这种重复。",
+    "Iterating $x \\mapsto x^2 + c$ modulo $n$ must repeat eventually, since there are finitely many residues. The path then looks like the letter rho: a tail that is never revisited, followed by a closed loop. Pollard's method looks for this repeat modulo a hidden factor. Modulo 23 from 2 with $c = 1$ the path is $2, 5, 3, 10, 9, 13$, and then $13^2 + 1 = 170 = 7 \\cdot 23 + 9$ returns to 9. So the tail is $2, 5, 3, 10$, with 4 residues, and the loop is $9, 13$, with 2.\n\nCheck: $9^2 + 1 = 82 = 3 \\cdot 23 + 13$, so $9 \\to 13 \\to 9$ really closes, and $4 + 2 = 6$ is the number of different values visited.\n\n> **Watch out.** The value the path returns to belongs to the loop, not to the tail, and it is counted once. The tail ends just before the first value that is visited twice.",
+    "由于剩余类有限，模 $n$ 迭代 $x \\mapsto x^2 + c$ 最终必然重复。路径看起来像希腊字母 $\\rho$：一段不再经过的尾巴，接一个闭合的环。波拉德方法就是寻找模某个隐藏因子的这种重复。模 23、从 2 出发、取 $c = 1$，路径是 $2, 5, 3, 10, 9, 13$，然后 $13^2 + 1 = 170 = 7 \\cdot 23 + 9$ 回到 9。所以尾巴是 $2, 5, 3, 10$，有 4 个剩余类；环是 $9, 13$，有 2 个。\n\n检验：$9^2 + 1 = 82 = 3 \\cdot 23 + 13$，所以 $9 \\to 13 \\to 9$ 确实闭合，而 $4 + 2 = 6$ 正是经过的不同值的个数。\n\n> **注意。** 路径回到的那个值属于环，不属于尾巴，而且只数一次。尾巴在第一个被经过两次的值之前结束。",
   ],
-  (rng) => {
-    let walk = rhoWalk(2, 1, 13);
-    let c = 1;
-    let n = 13;
-    let start = 2;
-    for (let tries = 0; tries < 200; tries++) {
-      n = rng.pick([17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61]);
-      c = rng.int(1, 5);
-      start = rng.int(0, n - 1);
-      walk = rhoWalk(start, c, n);
-      if (walk.tail >= 1 && walk.tail <= 4 && walk.loop >= 2 && walk.loop <= 7) break;
-    }
-    const { values, tail, loop } = walk;
-    const _loopValues = values.slice(tail);
-    const spots = ring(loop, 58, 220, 100);
-    const tailSpots: Point[] = values.slice(0, tail).map((_, i): Point => [20 + ((i + 0.2) * 100) / Math.max(tail, 1), 100]);
-    const position = (i: number): Point => (i < tail ? (tailSpots[i] as Point) : (spots[i - tail] as Point));
-    let body = values.map((v, i) => node(position(i), String(v))).join("");
-    values.forEach((_, i) => {
-      const to = i + 1 < values.length ? i + 1 : tail;
-      body += arrowLine(position(i), position(to), 14, true);
-    });
-    const kind = rng.bool();
-    const answer = kind ? loop : tail;
-    return ask(
-      kind
+  (rng) =>
+    until(() => {
+      const n = rng.pick([17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61]);
+      const c = rng.int(1, 5);
+      const start = rng.int(0, n - 1);
+      const kind = rng.bool();
+      const { values, tail, loop } = rhoWalk(start, c, n);
+      if (tail < 1 || tail > 4 || loop < 2 || loop > 7) return undefined;
+      const spots = ring(loop, 58, 220, 100);
+      const tailSpots: Point[] = values.slice(0, tail).map((_, i): Point => [20 + ((i + 0.2) * 100) / Math.max(tail, 1), 100]);
+      const position = (i: number): Point => (i < tail ? (tailSpots[i] as Point) : (spots[i - tail] as Point));
+      let body = values.map((v, i) => node(position(i), String(v))).join("");
+      values.forEach((_, i) => {
+        const to = i + 1 < values.length ? i + 1 : tail;
+        body += arrowLine(position(i), position(to), 14, true);
+      });
+      const answer = kind ? loop : tail;
+      const last = values[values.length - 1] as number;
+      const back = values[tail] as number;
+      const misses: Miss[] = kind
         ? [
-            `The arrows show $x \\mapsto x^2 + ${c}$ modulo $${n}$, starting at $${start}$. How many residues are in the closed loop?`,
-            `箭头表示模 $${n}$ 的 $x \\mapsto x^2 + ${c}$，从 $${start}$ 出发。闭合的环中有多少个剩余类？`,
+            [
+              tail + loop,
+              "That counts the whole path, tail included; only the residues that come round again form the loop.",
+              "那数了整条路径，包括尾巴；只有会再次经过的剩余类才构成环。",
+            ],
+            [tail, "That counts the tail instead of the loop.", "那数的是尾巴，而不是环。"],
+            [
+              loop + 1,
+              `That counts $${back}$ twice, at the start of the loop and again when the path returns to it.`,
+              `那把 $${back}$ 数了两次：环的起点一次，路径回到它时又一次。`,
+            ],
           ]
         : [
-            `The arrows show $x \\mapsto x^2 + ${c}$ modulo $${n}$, starting at $${start}$. How many residues are on the tail, before the path enters the closed loop?`,
-            `箭头表示模 $${n}$ 的 $x \\mapsto x^2 + ${c}$，从 $${start}$ 出发。在进入闭合的环之前，尾巴上有多少个剩余类？`,
+            [loop, "That counts the loop instead of the tail.", "那数的是环，而不是尾巴。"],
+            [tail + loop, "That counts the whole path; the tail stops where the loop begins.", "那数了整条路径；尾巴在环开始处结束。"],
+            [
+              tail + 1,
+              `That puts $${back}$ on the tail, but the path comes back to it, so it lies on the loop.`,
+              `那把 $${back}$ 算在尾巴上，但路径会回到它，所以它在环上。`,
+            ],
+          ];
+      return worked(
+        kind
+          ? [
+              `The arrows show $x \\mapsto x^2 + ${c}$ modulo $${n}$, starting at $${start}$. How many residues are in the closed loop?`,
+              `箭头表示模 $${n}$ 的 $x \\mapsto x^2 + ${c}$，从 $${start}$ 出发。闭合的环中有多少个剩余类？`,
+            ]
+          : [
+              `The arrows show $x \\mapsto x^2 + ${c}$ modulo $${n}$, starting at $${start}$. How many residues are on the tail, before the path enters the closed loop?`,
+              `箭头表示模 $${n}$ 的 $x \\mapsto x^2 + ${c}$，从 $${start}$ 出发。在进入闭合的环之前，尾巴上有多少个剩余类？`,
+            ],
+        answer,
+        misses,
+        [
+          [
+            ["Follow the arrows", "沿箭头走"],
+            [`The path passes $${values.join(", ")}$.`, `路径经过 $${values.join(", ")}$。`],
           ],
-      answer,
-      [kind ? tail + loop : loop, kind ? tail : tail + loop, answer + 1, n - answer],
-      [
-        `The path passes $${values.join(", ")}$, then returns to $${values[tail]}$. So the tail has $${tail}$ residue${tail > 1 ? "s" : ""}, and the loop has $${loop}$.`,
-        `路径经过 $${values.join("$、$")}$，然后回到 $${values[tail]}$。所以尾巴有 $${tail}$ 个剩余类，环有 $${loop}$ 个。`,
-      ],
-      figureOf(svgDocument(210, body), [
-        `A path through ${values.join(", ")}, and from the last value back to ${values[tail]}.`,
-        `路径经过 ${values.join("、")}，并从最后一个值回到 ${values[tail]}。`,
-      ]),
-    );
-  },
+          [
+            ["Find the first repeat", "找第一次重复"],
+            [
+              `From $${last}$ the next value is $${pw(last, 2)} + ${c} \\equiv ${back} \\pmod{${n}}$, already visited, so the loop starts at $${back}$.`,
+              `从 $${last}$ 出发，下一个值是 $${pw(last, 2)} + ${c} \\equiv ${back} \\pmod{${n}}$，已经经过，所以环从 $${back}$ 开始。`,
+            ],
+          ],
+          [
+            ["Count", "计数"],
+            [
+              `Before $${back}$ come ${tail} residues, the tail; from $${back}$ to $${last}$ there are ${loop}, the loop. So the answer is ${answer}.`,
+              `$${back}$ 之前有 ${tail} 个剩余类，是尾巴；从 $${back}$ 到 $${last}$ 有 ${loop} 个，是环。所以答案是 ${answer}。`,
+            ],
+          ],
+        ],
+        [
+          `The path visits ${values.length} different residues in all, and the tail and the loop share them out: $${tail} + ${loop} = ${values.length}$.`,
+          `路径共经过 ${values.length} 个不同的剩余类，尾巴和环把它们分开：$${tail} + ${loop} = ${values.length}$。`,
+        ],
+        figureOf(svgDocument(210, body), [
+          `A path through ${values.join(", ")}, and from the last value back to ${values[tail]}.`,
+          `路径经过 ${values.join("、")}，并从最后一个值回到 ${values[tail]}。`,
+        ]),
+      );
+    }),
 );
 
 const SLOPES: readonly (readonly [number, number])[] = [
@@ -2209,37 +2247,78 @@ const latticeCircle = {
     "lattice-points-on-a-drawn-circle",
     ["Lattice points on a drawn circle", "所画圆上的格点"],
     [
-      "The sum-of-squares function $r_2(n)$ counts the integer solutions of $x^2 + y^2 = n$, including signs and order. These are the lattice points on the circle of radius $\\sqrt{n}$, and the symmetry of the circle means they usually come in groups of eight or four.",
-      "平方和函数 $r_2(n)$ 统计 $x^2 + y^2 = n$ 的整数解，符号和顺序不同算不同解。这些解就是半径为 $\\sqrt{n}$ 的圆上的格点，由于圆的对称性，它们通常八个或四个一组。",
+      "The sum-of-squares function $r_2(n)$ counts the integer solutions of $x^2 + y^2 = n$, including signs and order. These are the lattice points on the circle of radius $\\sqrt{n}$, and the symmetry of the circle means they come in groups of eight or four. For $n = 25$ the circle of radius 5 passes through the 4 points $(\\pm 5, 0)$, $(0, \\pm 5)$ and the 8 points $(\\pm 3, \\pm 4)$, $(\\pm 4, \\pm 3)$, so $r_2(25) = 4 + 8 = 12$.\n\nCheck: the divisors $1, 5, 25$ of 25 are all 1 modulo 4, and $4(3 - 0) = 12$.\n\n> **Watch out.** A solution with a zero coordinate, or with equal coordinates, gives only 4 points, because changing a sign or swapping changes nothing; every other solution gives 8.",
+      "平方和函数 $r_2(n)$ 统计 $x^2 + y^2 = n$ 的整数解，符号和顺序不同算不同解。这些解就是半径为 $\\sqrt{n}$ 的圆上的格点，由于圆的对称性，它们八个或四个一组。对 $n = 25$，半径为 5 的圆经过 $(\\pm 5, 0)$、$(0, \\pm 5)$ 这 4 个点和 $(\\pm 3, \\pm 4)$、$(\\pm 4, \\pm 3)$ 这 8 个点，所以 $r_2(25) = 4 + 8 = 12$。\n\n检验：25 的除数 $1, 5, 25$ 都模 4 余 1，而 $4(3 - 0) = 12$。\n\n> **注意。** 有一个坐标为零或两个坐标相等的解只给出 4 个点，因为改变符号或交换坐标不产生新点；其他每个解给出 8 个点。",
     ],
-    (rng) => {
-      const n = rng.pick(SUMS_OF_TWO_SQUARES);
-      const R = Math.sqrt(n);
-      const solutions: Point[] = [];
-      for (let x = -8; x <= 8; x++) for (let y = -8; y <= 8; y++) if (x * x + y * y === n) solutions.push([x, y]);
-      const answer = solutions.length;
-      const first = solutions.filter(([x, y]) => x >= 0 && y >= 0 && x >= y)[0] as Point;
-      return ask(
-        [
-          `The drawing shows the circle $x^2 + y^2 = ${n}$ on a grid. Find $r_2(${n})$, the number of lattice points on the circle.`,
-          `图中是网格上的圆 $x^2 + y^2 = ${n}$。求 $r_2(${n})$，即圆上格点的个数。`,
-        ],
-        answer,
-        [answer / 2, answer + 4, answer === 4 ? 8 : 4, 2 * answer],
-        [
-          `One solution is $(${first[0]}, ${first[1]})$. All the sign changes and swaps of its coordinates give the $${answer}$ lattice points on the circle.`,
-          `一个解是 $(${first[0]}, ${first[1]})$。改变坐标的符号和交换坐标，得到圆上全部 $${answer}$ 个格点。`,
-        ],
-        drawn(
-          { xMin: -8, xMax: 8, yMin: -8, yMax: 8 },
-          [{ kind: "circle", center: [0, 0], r: R }],
-          t(
-            `A circle about the origin with radius squared ${n}. It passes through the grid points ${solutions.map((p) => `(${p[0]}, ${p[1]})`).join(", ")}.`,
-            `以原点为圆心、半径平方为 ${n} 的圆。它经过格点 ${solutions.map((p) => `(${p[0]}, ${p[1]})`).join("、")}。`,
+    (rng) =>
+      until(() => {
+        const n = rng.pick(SUMS_OF_TWO_SQUARES);
+        const R = Math.sqrt(n);
+        const solutions: Point[] = [];
+        for (let x = -8; x <= 8; x++) for (let y = -8; y <= 8; y++) if (x * x + y * y === n) solutions.push([x, y]);
+        const answer = solutions.length;
+        const basic = solutions.filter(([x, y]) => x > 0 && y >= 0 && x >= y);
+        const groups = basic.map(([x, y]) => (y === 0 || x === y ? 4 : 8));
+        let d1 = 0;
+        let d3 = 0;
+        for (let d = 1; d <= n; d++) {
+          if (n % d === 0 && d % 4 === 1) d1 += 1;
+          if (n % d === 0 && d % 4 === 3) d3 += 1;
+        }
+        const sum = groups.length > 1 ? `${groups.join(" + ")} = ${answer}` : `${answer}`;
+        return worked(
+          [
+            `The drawing shows the circle $x^2 + y^2 = ${n}$ on a grid. Find $r_2(${n})$, the number of lattice points on the circle.`,
+            `图中是网格上的圆 $x^2 + y^2 = ${n}$。求 $r_2(${n})$，即圆上格点的个数。`,
+          ],
+          answer,
+          [
+            [
+              answer / 4,
+              "That counts one quarter of the circle only; quarter turns give four times as many.",
+              "那只数了四分之一个圆；转四分之一圈得到四倍的点。",
+            ],
+            [
+              basic.length,
+              "That counts the essentially different ways, ignoring signs and order.",
+              "那数的是本质不同的方式，忽略了符号和顺序。",
+            ],
+            [
+              8 * basic.length,
+              "That gives every way 8 points, but a way with a zero or with equal coordinates gives only 4.",
+              "那给每种方式 8 个点，但有零坐标或坐标相等的方式只给出 4 个。",
+            ],
+          ],
+          [
+            [
+              ["Read the basic solutions", "读出基本解"],
+              [
+                `With $x > 0$ and $0 \\le y \\le x$ the circle passes through $${basic.map(([x, y]) => `(${x}, ${y})`).join(", ")}$.`,
+                `在 $x > 0$、$0 \\le y \\le x$ 的范围内，圆经过 $${basic.map(([x, y]) => `(${x}, ${y})`).join(", ")}$。`,
+              ],
+            ],
+            [
+              ["Add the copies", "加上各自的副本"],
+              [
+                `Each gives 8 points by signs and swaps, or 4 if a coordinate is 0 or the two are equal: $${sum}$.`,
+                `每个解经改变符号和交换给出 8 个点，若有坐标为 0 或两坐标相等则给出 4 个：$${sum}$。`,
+              ],
+            ],
+          ],
+          [
+            `${n} has ${d1} divisor${d1 === 1 ? "" : "s"} that ${d1 === 1 ? "is" : "are"} 1 modulo 4 and ${d3} that ${d3 === 1 ? "is" : "are"} 3 modulo 4, and $4(${d1} - ${d3}) = ${answer}$.`,
+            `${n} 有 ${d1} 个模 4 余 1 的除数和 ${d3} 个模 4 余 3 的除数，而 $4(${d1} - ${d3}) = ${answer}$。`,
+          ],
+          drawn(
+            { xMin: -8, xMax: 8, yMin: -8, yMax: 8 },
+            [{ kind: "circle", center: [0, 0], r: R }],
+            t(
+              `A circle about the origin with radius squared ${n}. It passes through the grid points ${solutions.map((p) => `(${p[0]}, ${p[1]})`).join(", ")}.`,
+              `以原点为圆心、半径平方为 ${n} 的圆。它经过格点 ${solutions.map((p) => `(${p[0]}, ${p[1]})`).join("、")}。`,
+            ),
           ),
-        ),
-      );
-    },
+        );
+      }),
   ),
   figure: numberTheoryDrawings1["the-sum-of-squares-function#lattice-points-on-a-drawn-circle"],
 };
