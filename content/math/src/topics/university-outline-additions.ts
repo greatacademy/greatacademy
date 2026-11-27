@@ -11,6 +11,7 @@ import { numberTheoryDrawings1 } from "../explanation-drawings-number-theory-1.t
 import { pdeDrawings1 } from "../explanation-drawings-partial-differential-equations-1.ts";
 
 import { ask, choose, type Pair, point, powMod, primesUpTo, same, topic } from "../university-kit.ts";
+import { solved } from "./linear-programming.ts";
 import { chosen, lesson, type Miss, pw, type Slip, until, worked } from "./number-theory-course.ts";
 
 /** curvePoints lists the affine points of y^2 = x^3 + ax + b modulo a prime. */
@@ -1229,44 +1230,113 @@ const normalFamilies = topic(
       "bounds-give-equicontinuity",
       ["Bounds give equicontinuity", "有界推出等度连续"],
       [
-        "Cauchy's estimate bounds a derivative by a bound on the function: if $|f| \\le M$ on $|z| < R$, then $|f'(z_{0})| \\le \\frac{M}{R - |z_{0}|}$. A uniform bound on $f$ therefore makes the family equicontinuous on smaller discs.",
-        "柯西估计用函数的界来界定导数：如果在 $|z| < R$ 上 $|f| \\le M$，那么 $|f'(z_{0})| \\le \\frac{M}{R - |z_{0}|}$。所以 $f$ 的一致界使函数族在较小的圆盘上等度连续。",
+        "Cauchy's estimate bounds a derivative by a bound on the function: if $|f| \\le M$ on $|z| < R$, then $|f'(z_{0})| \\le \\frac{M}{R - |z_{0}|}$. A uniform bound on $f$ therefore makes the family equicontinuous on smaller discs. For example, if every $f$ satisfies $|f| \\le 6$ on $|z| < 4$, then at $|z_{0}| = 1$ the disc about $z_{0}$ of radius $4 - 1 = 3$ fits inside, and $|f'(z_{0})| \\le \\frac{6}{3} = 2$ for the whole family at once.\n\nCheck: the disc fits, because $|z - z_{0}| < 3$ gives $|z| \\le |z_{0}| + |z - z_{0}| < 1 + 3 = 4$; a radius larger than $3$ would reach past $|z| = 4$ in the direction of $z_{0}$.\n\n> **Watch out.** The radius is the distance from $z_{0}$ to the edge, $R - |z_{0}|$, not $R$ itself; the bound grows as $z_{0}$ nears the boundary.",
+        "柯西估计用函数的界来界定导数：如果在 $|z| < R$ 上 $|f| \\le M$，那么 $|f'(z_{0})| \\le \\frac{M}{R - |z_{0}|}$。所以 $f$ 的一致界使函数族在较小的圆盘上等度连续。例如，如果每个 $f$ 在 $|z| < 4$ 上满足 $|f| \\le 6$，那么在 $|z_{0}| = 1$ 处，以 $z_{0}$ 为心、半径 $4 - 1 = 3$ 的圆盘在区域内，于是对整个函数族同时有 $|f'(z_{0})| \\le \\frac{6}{3} = 2$。\n\n检验：这个圆盘确实在区域内，因为 $|z - z_{0}| < 3$ 推出 $|z| \\le |z_{0}| + |z - z_{0}| < 1 + 3 = 4$；半径若大于 $3$，在 $z_{0}$ 的方向上就会越过 $|z| = 4$。\n\n> **注意。** 半径是 $z_{0}$ 到边界的距离 $R - |z_{0}|$，不是 $R$ 本身；$z_{0}$ 越靠近边界，界越大。",
       ],
-      (rng) => {
-        const m = rng.int(2, 30);
-        const r0 = rng.int(1, 6);
-        const R = r0 + rng.int(1, 6);
-        return ask(
-          [
-            `Every $f$ in a family satisfies $|f| \\le ${m}$ on $|z| < ${R}$. What bound does Cauchy's estimate give for $|f'(z_{0})|$ when $|z_{0}| = ${r0}$?`,
-            `函数族中每个 $f$ 在 $|z| < ${R}$ 上满足 $|f| \\le ${m}$。当 $|z_{0}| = ${r0}$ 时，柯西估计给出 $|f'(z_{0})|$ 的什么界？`,
-          ],
-          Q.of(m, R - r0),
-          [Q.of(m, R), Q.of(m, r0), Q.of(m, R + r0)],
-          [
-            `The largest disc about $z_{0}$ inside has radius $${R} - ${r0}$, so the bound is $\\frac{${m}}{${R - r0}}$.`,
-            `以 $z_{0}$ 为心、在区域内的最大圆盘半径是 $${R} - ${r0}$，所以界是 $\\frac{${m}}{${R - r0}}$。`,
-          ],
-        );
-      },
+      (rng) =>
+        until(() => {
+          const m = rng.int(2, 30);
+          const r0 = rng.int(1, 6);
+          const R = r0 + rng.int(1, 6);
+          const d = R - r0;
+          const bound = Q.of(m, d);
+          const misses: Miss[] = [
+            [
+              Q.of(m, R),
+              `That uses the radius $${R}$ of the whole disc; the disc about $z_{0}$ only has room for radius $${R} - ${r0}$.`,
+              `那用了整个圆盘的半径 $${R}$；以 $z_{0}$ 为心的圆盘只容得下半径 $${R} - ${r0}$。`,
+            ],
+            [
+              Q.of(m, r0),
+              `That divides by $|z_{0}| = ${r0}$, the distance to the centre, not to the edge.`,
+              `那除以 $|z_{0}| = ${r0}$，这是到圆心的距离，不是到边界的距离。`,
+            ],
+            [
+              Q.of(m, R + r0),
+              `That adds $|z_{0}|$ to $${R}$; the room left about $z_{0}$ is $${R} - ${r0}$.`,
+              `那把 $|z_{0}|$ 加到了 $${R}$ 上；$z_{0}$ 周围剩下的空间是 $${R} - ${r0}$。`,
+            ],
+          ];
+          return worked(
+            [
+              `Every $f$ in a family satisfies $|f| \\le ${m}$ on $|z| < ${R}$. What bound does Cauchy's estimate give for $|f'(z_{0})|$ when $|z_{0}| = ${r0}$?`,
+              `函数族中每个 $f$ 在 $|z| < ${R}$ 上满足 $|f| \\le ${m}$。当 $|z_{0}| = ${r0}$ 时，柯西估计给出 $|f'(z_{0})|$ 的什么界？`,
+            ],
+            bound,
+            misses,
+            [
+              [
+                ["Find the radius", "求半径"],
+                [
+                  `The largest disc about $z_{0}$ inside $|z| < ${R}$ has radius $r = ${R} - ${r0} = ${d}$.`,
+                  `以 $z_{0}$ 为心、在 $|z| < ${R}$ 内的最大圆盘半径是 $r = ${R} - ${r0} = ${d}$。`,
+                ],
+              ],
+              [
+                ["Apply Cauchy's estimate", "用柯西估计"],
+                [
+                  `$|f'(z_{0})| \\le \\frac{M}{r}$ with $M = ${m}$ and $r = ${d}$, so the bound is $${bound.toLatex()}$.`,
+                  `$|f'(z_{0})| \\le \\frac{M}{r}$，其中 $M = ${m}$，$r = ${d}$，所以界是 $${bound.toLatex()}$。`,
+                ],
+              ],
+            ],
+            [
+              `The disc fits: $|z - z_{0}| < ${d}$ gives $|z| < ${r0} + ${d} = ${R}$. Multiplying back, $${bound.toLatex()} \\cdot ${d} = ${m}$, the bound on $|f|$.`,
+              `这个圆盘在区域内：$|z - z_{0}| < ${d}$ 推出 $|z| < ${r0} + ${d} = ${R}$。反乘回去，$${bound.toLatex()} \\cdot ${d} = ${m}$，正是 $|f|$ 的界。`,
+            ],
+          );
+        }),
     ),
     point(
       "which-family-montel-covers",
       ["Which family Montel covers", "蒙特尔定理适用的函数族"],
       [
-        "Montel's theorem says that a family of analytic functions bounded uniformly on each compact subset is normal: every sequence in it has a subsequence converging uniformly on compact subsets.",
-        "蒙特尔定理说，在每个紧子集上一致有界的解析函数族是正规族：其中每个序列都有在紧子集上一致收敛的子列。",
+        "Montel's theorem says that a family of analytic functions bounded uniformly on each compact subset is normal: every sequence in it has a subsequence converging uniformly on compact subsets. For example, on the unit disc every $z^{n}$ satisfies $|z^{n}| \\le 1$, one bound for the whole family, so $\\{z^{n}\\}$ is normal. The family $\\{nz\\}$ is not covered: at $z = \\frac{1}{2}$ its values $\\frac{n}{2}$ grow without bound.\n\nCheck: $\\{z^{n}\\}$ really has a convergent subsequence, since on $|z| \\le r < 1$ we have $|z^{n}| \\le r^{n} \\to 0$, so the whole sequence tends to $0$ on compact subsets.\n\n> **Watch out.** Each single function $nz$ is bounded on the disc; Montel needs one bound that holds for every member of the family at once.",
+        "蒙特尔定理说，在每个紧子集上一致有界的解析函数族是正规族：其中每个序列都有在紧子集上一致收敛的子列。例如，在单位圆盘上每个 $z^{n}$ 都满足 $|z^{n}| \\le 1$，整个函数族共用一个界，所以 $\\{z^{n}\\}$ 是正规族。函数族 $\\{nz\\}$ 不在定理范围内：在 $z = \\frac{1}{2}$ 处它的值 $\\frac{n}{2}$ 无界增长。\n\n检验：$\\{z^{n}\\}$ 确实有收敛子列，因为在 $|z| \\le r < 1$ 上 $|z^{n}| \\le r^{n} \\to 0$，所以整个序列在紧子集上趋于 $0$。\n\n> **注意。** 每个单独的函数 $nz$ 在圆盘上都有界；蒙特尔定理需要的是对函数族所有成员同时成立的一个界。",
       ],
       (rng) => {
         const c = rng.int(2, 60);
-        return choose(
+        const slips: Slip[] = [
+          [
+            same(`\\{${c}nz : n \\ge 1\\}`),
+            `At $z = \\frac{1}{2}$ its values are $\\frac{${c}n}{2}$, which grow without bound as $n$ grows.`,
+            `在 $z = \\frac{1}{2}$ 处它的值是 $\\frac{${c}n}{2}$，随 $n$ 增大而无界增长。`,
+          ],
+          [
+            same(`\\{${c}n + z : n \\ge 1\\}`),
+            `At $z = 0$ its values are $${c}n$, which grow without bound as $n$ grows.`,
+            `在 $z = 0$ 处它的值是 $${c}n$，随 $n$ 增大而无界增长。`,
+          ],
+          [
+            same(`\\{e^{${c}nz} : n \\ge 1\\}`),
+            `At $z = \\frac{1}{2}$ its values are $e^{\\frac{${c}n}{2}}$, which grow without bound as $n$ grows.`,
+            `在 $z = \\frac{1}{2}$ 处它的值是 $e^{\\frac{${c}n}{2}}$，随 $n$ 增大而无界增长。`,
+          ],
+        ];
+        return chosen(
           rng,
           [`To which family on the unit disc does Montel's theorem apply?`, `蒙特尔定理适用于单位圆盘上的哪一族函数？`],
           same(`\\{${c}z^{n} : n \\ge 1\\}`),
-          [same(`\\{${c}nz : n \\ge 1\\}`), same(`\\{${c}n + z : n \\ge 1\\}`), same(`\\{e^{${c}nz} : n \\ge 1\\}`)],
+          slips,
           [
-            `On the unit disc $|${c}z^{n}| \\le ${c}$. The others grow without bound on compact subsets.`,
-            `在单位圆盘上 $|${c}z^{n}| \\le ${c}$。其余几族在紧子集上无界增长。`,
+            [
+              ["State what Montel needs", "说出蒙特尔定理的条件"],
+              [
+                "One bound on each compact subset that holds for every member of the family at once.",
+                "在每个紧子集上有一个对函数族所有成员同时成立的界。",
+              ],
+            ],
+            [
+              ["Bound the powers", "估计幂函数"],
+              [
+                `For $|z| < 1$, $|${c}z^{n}| = ${c}|z|^{n} \\le ${c}$ for every $n$, so this family qualifies.`,
+                `当 $|z| < 1$ 时，对每个 $n$ 都有 $|${c}z^{n}| = ${c}|z|^{n} \\le ${c}$，所以这一族符合条件。`,
+              ],
+            ],
+          ],
+          [
+            `Each other family has a single point, $z = 0$ or $z = \\frac{1}{2}$, where its values grow with $n$, so no bound holds even on that one-point compact set.`,
+            `其余每一族都有一个点（$z = 0$ 或 $z = \\frac{1}{2}$），在那里它的值随 $n$ 增长，所以即使在这个单点紧集上也没有界。`,
           ],
         );
       },
@@ -1275,26 +1345,58 @@ const normalFamilies = topic(
       "a-subsequence-limit",
       ["A subsequence limit", "子列的极限"],
       [
-        "On a smaller closed disc $|z| \\le r$ with $r < 1$, the supremum of $|z^{n}|$ is $r^{n}$, which tends to $0$. So $z^{n}$ tends to $0$ uniformly on compact subsets of the unit disc, though not on the whole disc.",
-        "在较小的闭圆盘 $|z| \\le r$（$r < 1$）上，$|z^{n}|$ 的上确界是 $r^{n}$，它趋于 $0$。所以 $z^{n}$ 在单位圆盘的紧子集上一致趋于 $0$，但在整个圆盘上并非如此。",
+        "On a smaller closed disc $|z| \\le r$ with $r < 1$, the supremum of $|z^{n}|$ is $r^{n}$, which tends to $0$. So $z^{n}$ tends to $0$ uniformly on compact subsets of the unit disc, though not on the whole disc. For example, on $|z| \\le \\frac{1}{2}$ the supremum of $|z^{3}|$ is $(\\frac{1}{2})^{3} = \\frac{1}{8}$, taken on the circle $|z| = \\frac{1}{2}$.\n\nCheck: $|z^{3}| = |z|^{3}$ grows with $|z|$, and at $z = -\\frac{1}{2}$ we get $|-\\frac{1}{8}| = \\frac{1}{8}$, the same value.\n\n> **Watch out.** On the whole open disc the supremum of $|z^{n}|$ is $1$ for every $n$, so the convergence to $0$ is not uniform there; only compact subsets give it.",
+        "在较小的闭圆盘 $|z| \\le r$（$r < 1$）上，$|z^{n}|$ 的上确界是 $r^{n}$，它趋于 $0$。所以 $z^{n}$ 在单位圆盘的紧子集上一致趋于 $0$，但在整个圆盘上并非如此。例如，在 $|z| \\le \\frac{1}{2}$ 上 $|z^{3}|$ 的上确界是 $(\\frac{1}{2})^{3} = \\frac{1}{8}$，在圆周 $|z| = \\frac{1}{2}$ 上取到。\n\n检验：$|z^{3}| = |z|^{3}$ 随 $|z|$ 增大，而在 $z = -\\frac{1}{2}$ 处得 $|-\\frac{1}{8}| = \\frac{1}{8}$，值相同。\n\n> **注意。** 在整个开圆盘上，对每个 $n$，$|z^{n}|$ 的上确界都是 $1$，所以那里趋于 $0$ 不是一致的；只有紧子集上才是。",
       ],
-      (rng) => {
-        const c = rng.int(2, 9);
-        const q = rng.int(2, 5);
-        const n = rng.int(2, 4);
-        return ask(
-          [
-            `What is the supremum of $|${c}z^{${n}}|$ on $|z| \\le \\frac{1}{${q}}$?`,
-            `$|${c}z^{${n}}|$ 在 $|z| \\le \\frac{1}{${q}}$ 上的上确界是多少？`,
-          ],
-          Q.of(c, q ** n),
-          [Q.of(c, q), Q.of(1, q ** n), Q.of(c * n, q)],
-          [
-            `The maximum is on the boundary, so it is $${c} \\cdot (\\frac{1}{${q}})^{${n}}$.`,
-            `最大值在边界上取到，所以是 $${c} \\cdot (\\frac{1}{${q}})^{${n}}$。`,
-          ],
-        );
-      },
+      (rng) =>
+        until(() => {
+          const c = rng.int(2, 9);
+          const q = rng.int(2, 5);
+          const n = rng.int(2, 4);
+          const sup = Q.of(c, q ** n);
+          const raw = `\\frac{${c}}{${q ** n}}`;
+          const misses: Miss[] = [
+            [
+              Q.of(c, q),
+              `That forgets the power: $|z|$ is raised to the ${n === 2 ? "second" : n === 3 ? "third" : "fourth"} power.`,
+              `那漏掉了幂：$|z|$ 要取 ${n} 次方。`,
+            ],
+            [Q.of(1, q ** n), `That drops the factor $${c}$ in front.`, `那丢掉了前面的系数 $${c}$。`],
+            [
+              Q.of(c * n, q),
+              `That multiplies by the exponent $${n}$ instead of raising to it.`,
+              `那是乘以指数 $${n}$，而不是取 ${n} 次方。`,
+            ],
+          ];
+          return worked(
+            [
+              `What is the supremum of $|${c}z^{${n}}|$ on $|z| \\le \\frac{1}{${q}}$?`,
+              `$|${c}z^{${n}}|$ 在 $|z| \\le \\frac{1}{${q}}$ 上的上确界是多少？`,
+            ],
+            sup,
+            misses,
+            [
+              [
+                ["Locate the maximum", "找最大值的位置"],
+                [
+                  `$|${c}z^{${n}}| = ${c}|z|^{${n}}$ grows with $|z|$, so the largest value is on the circle $|z| = \\frac{1}{${q}}$.`,
+                  `$|${c}z^{${n}}| = ${c}|z|^{${n}}$ 随 $|z|$ 增大，所以最大值在圆周 $|z| = \\frac{1}{${q}}$ 上。`,
+                ],
+              ],
+              [
+                ["Evaluate", "求值"],
+                [
+                  `$${c} \\cdot (\\frac{1}{${q}})^{${n}} = \\frac{${c}}{${q ** n}}${raw === sup.toLatex() ? "" : ` = ${sup.toLatex()}`}$.`,
+                  `$${c} \\cdot (\\frac{1}{${q}})^{${n}} = \\frac{${c}}{${q ** n}}${raw === sup.toLatex() ? "" : ` = ${sup.toLatex()}`}$。`,
+                ],
+              ],
+            ],
+            [
+              `At the point $z = \\frac{1}{${q}}$ itself, $${c}z^{${n}} = \\frac{${c}}{${q ** n}}$, so the value is attained, and every smaller $|z|$ gives less.`,
+              `在点 $z = \\frac{1}{${q}}$ 处，$${c}z^{${n}} = \\frac{${c}}{${q ** n}}$，所以这个值能取到，而更小的 $|z|$ 给出的值更小。`,
+            ],
+          );
+        }),
     ),
   ],
 );
@@ -1310,54 +1412,123 @@ const mittagLeffler = topic(
       "a-function-from-its-poles",
       ["A function from its poles", "由极点得到函数"],
       [
-        "A rational function that vanishes at infinity is determined by its principal parts: if its only poles are simple, then it is the sum of $\\frac{r_{k}}{z - a_{k}}$ over its poles $a_{k}$ with residues $r_{k}$.",
-        "在无穷远处为零的有理函数由它的主部决定：如果它只有单极点，它就等于各极点 $a_{k}$ 处 $\\frac{r_{k}}{z - a_{k}}$ 的和，其中 $r_{k}$ 是留数。",
+        "A rational function that vanishes at infinity is determined by its principal parts: if its only poles are simple, then it is the sum of $\\frac{r_{k}}{z - a_{k}}$ over its poles $a_{k}$ with residues $r_{k}$. For example, with a pole at $0$ of residue $2$ and a pole at $1$ of residue $3$, the function is $f(z) = \\frac{2}{z} + \\frac{3}{z - 1}$, and $f(2) = 1 + 3 = 4$.\n\nCheck: over a common denominator $f(z) = \\frac{5z - 2}{z(z - 1)}$, which vanishes at infinity and at $z = 2$ gives $\\frac{8}{2} = 4$.\n\n> **Watch out.** Every pole contributes at every point: the value at $z = 2$ is the sum of both terms, not just the term of the nearest pole.",
+        "在无穷远处为零的有理函数由它的主部决定：如果它只有单极点，它就等于各极点 $a_{k}$ 处 $\\frac{r_{k}}{z - a_{k}}$ 的和，其中 $r_{k}$ 是留数。例如，$0$ 处有留数为 $2$ 的极点、$1$ 处有留数为 $3$ 的极点，这个函数就是 $f(z) = \\frac{2}{z} + \\frac{3}{z - 1}$，而 $f(2) = 1 + 3 = 4$。\n\n检验：通分得 $f(z) = \\frac{5z - 2}{z(z - 1)}$，它在无穷远处为零，在 $z = 2$ 处得 $\\frac{8}{2} = 4$。\n\n> **注意。** 每个极点在每一点都有贡献：$z = 2$ 处的值是两项之和，不只是最近那个极点的项。",
       ],
-      (rng) => {
-        const a = rng.int(-6, 2);
-        const b = a + rng.int(1, 6);
-        const w = b + rng.int(1, 6);
-        const r = rng.int(1, 9);
-        const s = rng.int(1, 9);
-        const value = Q.of(r, w - a).add(Q.of(s, w - b));
-        return ask(
-          [
-            `A rational function vanishes at infinity, and its only poles are simple, at $z = ${a}$ with residue ${r} and at $z = ${b}$ with residue ${s}. What is its value at $z = ${w}$?`,
-            `一个有理函数在无穷远处为零，它只有单极点：$z = ${a}$ 处留数为 ${r}，$z = ${b}$ 处留数为 ${s}。它在 $z = ${w}$ 处的值是多少？`,
-          ],
-          value,
-          [Q.of(r, w - a), Q.of(s, w - b), Q.of(r + s, 2 * w - a - b)],
-          [
-            `It equals $\\frac{${r}}{z - ${a < 0 ? `(${a})` : a}} + \\frac{${s}}{z - ${b < 0 ? `(${b})` : b}}$, and substituting gives the value.`,
-            `它等于 $\\frac{${r}}{z - ${a < 0 ? `(${a})` : a}} + \\frac{${s}}{z - ${b < 0 ? `(${b})` : b}}$，代入即得。`,
-          ],
-        );
-      },
+      (rng) =>
+        until(() => {
+          const a = rng.int(-6, 2);
+          const b = a + rng.int(1, 6);
+          const w = b + rng.int(1, 6);
+          const r = rng.int(1, 9);
+          const s = rng.int(1, 9);
+          const first = Q.of(r, w - a);
+          const second = Q.of(s, w - b);
+          const value = first.add(second);
+          const less = (p: number) => (p < 0 ? `z + ${-p}` : p === 0 ? "z" : `z - ${p}`);
+          const top = (r + s) * w - r * b - s * a;
+          const bottom = (w - a) * (w - b);
+          const whole = `\\frac{${top}}{${bottom}}`;
+          const misses: Miss[] = [
+            [
+              first,
+              `That keeps only the pole at $${a}$; the pole at $${b}$ adds $${second.toLatex()}$.`,
+              `那只保留了 $${a}$ 处的极点；$${b}$ 处的极点还要加上 $${second.toLatex()}$。`,
+            ],
+            [
+              second,
+              `That keeps only the pole at $${b}$; the pole at $${a}$ adds $${first.toLatex()}$.`,
+              `那只保留了 $${b}$ 处的极点；$${a}$ 处的极点还要加上 $${first.toLatex()}$。`,
+            ],
+            [
+              Q.of(r + s, 2 * w - a - b),
+              "That adds the numerators and the denominators separately, which is not how fractions add.",
+              "那把分子和分母分别相加，分数不是这样相加的。",
+            ],
+          ];
+          return worked(
+            [
+              `A rational function vanishes at infinity, and its only poles are simple, at $z = ${a}$ with residue ${r} and at $z = ${b}$ with residue ${s}. What is its value at $z = ${w}$?`,
+              `一个有理函数在无穷远处为零，它只有单极点：$z = ${a}$ 处留数为 ${r}，$z = ${b}$ 处留数为 ${s}。它在 $z = ${w}$ 处的值是多少？`,
+            ],
+            value,
+            misses,
+            [
+              [
+                ["Write the principal parts", "写出主部"],
+                [
+                  `$f(z) = \\frac{${r}}{${less(a)}} + \\frac{${s}}{${less(b)}}$.`,
+                  `$f(z) = \\frac{${r}}{${less(a)}} + \\frac{${s}}{${less(b)}}$。`,
+                ],
+              ],
+              [
+                ["Substitute", "代入"],
+                [
+                  `At $z = ${w}$ the terms are $${first.toLatex()}$ and $${second.toLatex()}$, so $f(${w}) = ${value.toLatex()}$.`,
+                  `在 $z = ${w}$ 处两项分别是 $${first.toLatex()}$ 和 $${second.toLatex()}$，所以 $f(${w}) = ${value.toLatex()}$。`,
+                ],
+              ],
+            ],
+            [
+              `Over a common denominator, the numerator at $z = ${w}$ is $${r}(${w - b}) + ${s}(${w - a}) = ${top}$ and the denominator is $${w - a} \\cdot ${w - b} = ${bottom}$, giving $\\frac{${top}}{${bottom}}${whole === value.toLatex() ? "" : ` = ${value.toLatex()}`}$ again.`,
+              `通分后，$z = ${w}$ 处分子是 $${r}(${w - b}) + ${s}(${w - a}) = ${top}$，分母是 $${w - a} \\cdot ${w - b} = ${bottom}$，同样得到 $\\frac{${top}}{${bottom}}${whole === value.toLatex() ? "" : ` = ${value.toLatex()}`}$。`,
+            ],
+          );
+        }),
     ),
     point(
       "terms-that-make-it-converge",
       ["Terms that make it converge", "使级数收敛的项"],
       [
-        "With infinitely many poles the sum of principal parts may diverge. Mittag-Leffler's theorem subtracts a polynomial from each term to force convergence. For poles at the integers, adding $\\frac{1}{n}$ to $\\frac{1}{z - n}$ leaves a term of size about $\\frac{1}{n^{2}}$.",
-        "有无穷多个极点时，主部的和可能发散。米塔格-莱夫勒定理从每一项减去一个多项式来保证收敛。极点在整数处时，给 $\\frac{1}{z - n}$ 加上 $\\frac{1}{n}$，剩下的项大小约为 $\\frac{1}{n^{2}}$。",
+        "With infinitely many poles the sum of principal parts may diverge. Mittag-Leffler's theorem subtracts a polynomial from each term to force convergence. For poles at the integers, adding $\\frac{1}{n}$ to $\\frac{1}{z - n}$ leaves a term of size about $\\frac{1}{n^{2}}$. For example, with $z = 1$ and $n = 3$, $\\frac{1}{1 - 3} + \\frac{1}{3} = -\\frac{1}{2} + \\frac{1}{3} = -\\frac{1}{6}$; in general the two combine to $\\frac{z}{n(z - n)}$, which for large $|n|$ is about $-\\frac{z}{n^{2}}$, and $\\sum \\frac{1}{n^{2}}$ converges.\n\nCheck: the combined form at $z = 1$, $n = 3$ is $\\frac{1}{3 \\cdot (-2)} = -\\frac{1}{6}$, the same value.\n\n> **Watch out.** The sign of the added term matters: $\\frac{1}{z - n}$ is about $-\\frac{1}{n}$, so subtracting $\\frac{1}{n}$ makes it about $-\\frac{2}{n}$, and $\\sum \\frac{1}{n}$ diverges.",
+        "有无穷多个极点时，主部的和可能发散。米塔格-莱夫勒定理从每一项减去一个多项式来保证收敛。极点在整数处时，给 $\\frac{1}{z - n}$ 加上 $\\frac{1}{n}$，剩下的项大小约为 $\\frac{1}{n^{2}}$。例如，取 $z = 1$、$n = 3$，$\\frac{1}{1 - 3} + \\frac{1}{3} = -\\frac{1}{2} + \\frac{1}{3} = -\\frac{1}{6}$；一般地两项合并为 $\\frac{z}{n(z - n)}$，当 $|n|$ 很大时约为 $-\\frac{z}{n^{2}}$，而 $\\sum \\frac{1}{n^{2}}$ 收敛。\n\n检验：合并后的形式在 $z = 1$、$n = 3$ 处是 $\\frac{1}{3 \\cdot (-2)} = -\\frac{1}{6}$，值相同。\n\n> **注意。** 所加项的符号很重要：$\\frac{1}{z - n}$ 约为 $-\\frac{1}{n}$，所以减去 $\\frac{1}{n}$ 会使它约为 $-\\frac{2}{n}$，而 $\\sum \\frac{1}{n}$ 发散。",
       ],
       (rng) => {
         const a = rng.int(2, 60);
-        return choose(
+        const slips: Slip[] = [
+          [
+            same(`\\sum_{n \\ne 0} \\left(\\frac{1}{z - ${a}n} - \\frac{1}{${a}n}\\right)`),
+            `Here the terms are about $-\\frac{2}{${a}n}$ for large $|n|$, so the part over positive $n$ diverges like $\\sum \\frac{1}{n}$, and so does the part over negative $n$.`,
+            `这里当 $|n|$ 很大时各项约为 $-\\frac{2}{${a}n}$，所以正 $n$ 的部分像 $\\sum \\frac{1}{n}$ 一样发散，负 $n$ 的部分也一样。`,
+          ],
+          [
+            same(`\\sum_{n \\ge 1} \\left(\\frac{1}{z - ${a}n} + \\frac{1}{z}\\right)`),
+            "Each term tends to $\\frac{1}{z}$, not to $0$, so the series diverges; it also misses the negative multiples.",
+            "每一项趋于 $\\frac{1}{z}$ 而不是 $0$，所以级数发散；它也漏掉了负的倍数。",
+          ],
+          [
+            same(`\\sum_{n \\ge 1} \\frac{1}{z - ${a}n}`),
+            `Its terms are about $-\\frac{1}{${a}n}$, so it diverges like the harmonic series; it also misses the negative multiples.`,
+            `它的各项约为 $-\\frac{1}{${a}n}$，所以像调和级数一样发散；它也漏掉了负的倍数。`,
+          ],
+        ];
+        return chosen(
           rng,
           [
             `Which series converges to a function with simple poles at the nonzero multiples of ${a}?`,
             `哪个级数收敛到在 ${a} 的非零倍数处有单极点的函数？`,
           ],
           same(`\\sum_{n \\ne 0} \\left(\\frac{1}{z - ${a}n} + \\frac{1}{${a}n}\\right)`),
+          slips,
           [
-            same(`\\sum_{n \\ne 0} \\left(\\frac{1}{z - ${a}n} - \\frac{1}{${a}n}\\right)`),
-            same(`\\sum_{n \\ge 1} \\left(\\frac{1}{z - ${a}n} + \\frac{1}{z}\\right)`),
-            same(`\\sum_{n \\ge 1} \\frac{1}{z - ${a}n}`),
+            [
+              ["Combine each term", "合并每一项"],
+              [
+                `$\\frac{1}{z - ${a}n} + \\frac{1}{${a}n} = \\frac{${a}n + z - ${a}n}{${a}n(z - ${a}n)} = \\frac{z}{${a}n(z - ${a}n)}$.`,
+                `$\\frac{1}{z - ${a}n} + \\frac{1}{${a}n} = \\frac{${a}n + z - ${a}n}{${a}n(z - ${a}n)} = \\frac{z}{${a}n(z - ${a}n)}$。`,
+              ],
+            ],
+            [
+              ["Compare with a convergent series", "与收敛级数比较"],
+              [
+                `For large $|n|$ the term is about $-\\frac{z}{${a * a}n^{2}}$, and $\\sum \\frac{1}{n^{2}}$ converges, uniformly for $z$ in any bounded set away from the poles.`,
+                `当 $|n|$ 很大时这一项约为 $-\\frac{z}{${a * a}n^{2}}$，而 $\\sum \\frac{1}{n^{2}}$ 收敛，对远离极点的任何有界集中的 $z$ 都一致收敛。`,
+              ],
+            ],
           ],
           [
-            `Combining gives $\\frac{z}{${a}n(z - ${a}n)}$, which is of size $\\frac{1}{n^{2}}$, and the series converges.`,
-            `合并得 $\\frac{z}{${a}n(z - ${a}n)}$，大小为 $\\frac{1}{n^{2}}$，所以级数收敛。`,
+            `Read off the poles: the $n$-th term blows up only at $z = ${a}n$, with residue $1$, and $n$ runs over every nonzero integer, so the poles are exactly the nonzero multiples of ${a}.`,
+            `看极点：第 $n$ 项只在 $z = ${a}n$ 处趋于无穷，留数为 $1$，而 $n$ 取遍所有非零整数，所以极点恰好是 ${a} 的非零倍数。`,
           ],
         );
       },
@@ -1366,30 +1537,69 @@ const mittagLeffler = topic(
       "the-expansion-of-a-trigonometric-function",
       ["The expansion of a trigonometric function", "三角函数的展开"],
       [
-        "Comparing principal parts shows that $\\frac{\\pi^{2}}{\\sin^{2} \\pi z} = \\sum_{n \\in \\mathbb{Z}} \\frac{1}{(z - n)^{2}}$. Evaluating at a rational point turns this into the value of a series.",
-        "比较主部可知 $\\frac{\\pi^{2}}{\\sin^{2} \\pi z} = \\sum_{n \\in \\mathbb{Z}} \\frac{1}{(z - n)^{2}}$。在有理点取值，就得到一个级数的值。",
+        "Comparing principal parts shows that $\\frac{\\pi^{2}}{\\sin^{2} \\pi z} = \\sum_{n \\in \\mathbb{Z}} \\frac{1}{(z - n)^{2}}$. Evaluating at a rational point turns this into the value of a series. For example, at $z = \\frac{1}{2}$ the left side is $\\frac{\\pi^{2}}{\\sin^{2} \\frac{\\pi}{2}} = \\pi^{2}$, so $\\sum_{n \\in \\mathbb{Z}} \\frac{1}{(\\frac{1}{2} - n)^{2}} = \\pi^{2}$.\n\nCheck: each term is $\\frac{4}{(2n - 1)^{2}}$, and every odd number $2n - 1$ appears twice up to sign, so the sum is $8 \\sum_{m \\text{ odd}} \\frac{1}{m^{2}} = 8 \\cdot \\frac{\\pi^{2}}{8} = \\pi^{2}$.\n\n> **Watch out.** The sine sits in the denominator: at $z = \\frac{1}{6}$, $\\sin^{2} \\frac{\\pi}{6} = \\frac{1}{4}$, so the sum is $4\\pi^{2}$, not $\\frac{\\pi^{2}}{4}$.",
+        "比较主部可知 $\\frac{\\pi^{2}}{\\sin^{2} \\pi z} = \\sum_{n \\in \\mathbb{Z}} \\frac{1}{(z - n)^{2}}$。在有理点取值，就得到一个级数的值。例如，在 $z = \\frac{1}{2}$ 处左边是 $\\frac{\\pi^{2}}{\\sin^{2} \\frac{\\pi}{2}} = \\pi^{2}$，所以 $\\sum_{n \\in \\mathbb{Z}} \\frac{1}{(\\frac{1}{2} - n)^{2}} = \\pi^{2}$。\n\n检验：每一项是 $\\frac{4}{(2n - 1)^{2}}$，每个奇数 $2n - 1$ 连同符号出现两次，所以和是 $8 \\sum_{m \\text{ 为奇数}} \\frac{1}{m^{2}} = 8 \\cdot \\frac{\\pi^{2}}{8} = \\pi^{2}$。\n\n> **注意。** 正弦在分母上：在 $z = \\frac{1}{6}$ 处 $\\sin^{2} \\frac{\\pi}{6} = \\frac{1}{4}$，所以和是 $4\\pi^{2}$，不是 $\\frac{\\pi^{2}}{4}$。",
       ],
-      (rng) => {
-        const [den, k] = rng.pick([
-          [2, Q.of(1, 1)],
-          [3, Q.of(4, 3)],
-          [4, Q.of(2, 1)],
-          [6, Q.of(4, 1)],
-        ] as const);
-        const c = rng.int(1, 9);
-        return ask(
-          [
-            `The series $\\sum_{n \\in \\mathbb{Z}} \\frac{${c}}{(\\frac{1}{${den}} - n)^{2}}$ equals $k\\pi^{2}$. What is $k$?`,
-            `级数 $\\sum_{n \\in \\mathbb{Z}} \\frac{${c}}{(\\frac{1}{${den}} - n)^{2}}$ 等于 $k\\pi^{2}$。$k$ 是多少？`,
-          ],
-          k.mul(Q.of(c, 1)),
-          [Q.of(c, den), Q.of(c, 1), k],
-          [
-            `It equals $\\frac{${c}\\pi^{2}}{\\sin^{2}(\\pi / ${den})}$, and $\\frac{1}{\\sin^{2}(\\pi / ${den})} = ${k.toLatex()}$.`,
-            `它等于 $\\frac{${c}\\pi^{2}}{\\sin^{2}(\\pi / ${den})}$，而 $\\frac{1}{\\sin^{2}(\\pi / ${den})} = ${k.toLatex()}$。`,
-          ],
-        );
-      },
+      (rng) =>
+        until(() => {
+          const [den, k, sine, square, size] = rng.pick([
+            [2, Q.of(1, 1), "1", "1", 1],
+            [3, Q.of(4, 3), "\\frac{\\sqrt{3}}{2}", "\\frac{3}{4}", 4 / 3],
+            [4, Q.of(2, 1), "\\frac{\\sqrt{2}}{2}", "\\frac{1}{2}", 2],
+            [6, Q.of(4, 1), "\\frac{1}{2}", "\\frac{1}{4}", 4],
+          ] as const);
+          const c = rng.int(1, 9);
+          const answer = k.mul(Q.of(c, 1));
+          const piTimes = answer.eq(Q.of(1, 1)) ? "\\pi^{2}" : `${answer.toLatex()}\\pi^{2}`;
+          const near = Q.of(c * den * den, 1).add(Q.of(c * den * den, (den - 1) ** 2));
+          const approx = (size * c * Math.PI ** 2).toFixed(2);
+          const misses: Miss[] = [
+            [
+              Q.of(c, den),
+              `That uses $\\frac{1}{${den}}$ in place of $\\frac{1}{\\sin^{2}(\\pi / ${den})}$.`,
+              `那用 $\\frac{1}{${den}}$ 代替了 $\\frac{1}{\\sin^{2}(\\pi / ${den})}$。`,
+            ],
+            [
+              Q.of(c, 1),
+              `That drops the factor $\\frac{1}{\\sin^{2}(\\pi / ${den})} = ${k.toLatex()}$.`,
+              `那丢掉了因子 $\\frac{1}{\\sin^{2}(\\pi / ${den})} = ${k.toLatex()}$。`,
+            ],
+            [k, `That drops the numerator $${c}$ of every term.`, `那丢掉了每一项的分子 $${c}$。`],
+            [
+              Q.of(c, 1).div(k),
+              `That multiplies by $\\sin^{2}(\\pi / ${den}) = ${square}$ instead of dividing by it.`,
+              `那是乘以 $\\sin^{2}(\\pi / ${den}) = ${square}$，而不是除以它。`,
+            ],
+          ];
+          return worked(
+            [
+              `The series $\\sum_{n \\in \\mathbb{Z}} \\frac{${c}}{(\\frac{1}{${den}} - n)^{2}}$ equals $k\\pi^{2}$. What is $k$?`,
+              `级数 $\\sum_{n \\in \\mathbb{Z}} \\frac{${c}}{(\\frac{1}{${den}} - n)^{2}}$ 等于 $k\\pi^{2}$。$k$ 是多少？`,
+            ],
+            answer,
+            misses,
+            [
+              [
+                ["Use the expansion", "用展开式"],
+                [
+                  `At $z = \\frac{1}{${den}}$ the series is $${c === 1 ? "" : `${c} \\cdot `}\\frac{\\pi^{2}}{\\sin^{2}(\\pi / ${den})}$.`,
+                  `在 $z = \\frac{1}{${den}}$ 处级数等于 $${c === 1 ? "" : `${c} \\cdot `}\\frac{\\pi^{2}}{\\sin^{2}(\\pi / ${den})}$。`,
+                ],
+              ],
+              [
+                ["Evaluate the sine", "求正弦值"],
+                [
+                  `$\\sin(\\pi / ${den}) = ${sine}$, so $\\sin^{2}(\\pi / ${den}) = ${square}$ and the series is $${piTimes}$, giving $k = ${answer.toLatex()}$.`,
+                  `$\\sin(\\pi / ${den}) = ${sine}$，所以 $\\sin^{2}(\\pi / ${den}) = ${square}$，级数等于 $${piTimes}$，即 $k = ${answer.toLatex()}$。`,
+                ],
+              ],
+            ],
+            [
+              `The two nearest terms, $n = 0$ and $n = 1$, already give $${near.toLatex()}$, a little under $${piTimes} \\approx ${approx}$, as they must, since every other term is positive and small.`,
+              `最近的两项 $n = 0$ 和 $n = 1$ 已经给出 $${near.toLatex()}$，略小于 $${piTimes} \\approx ${approx}$，理应如此，因为其余各项都是正的小量。`,
+            ],
+          );
+        }),
     ),
   ],
 );
@@ -1406,27 +1616,56 @@ const schwarzChristoffel = topic(
         "the-exponent-at-a-vertex",
         ["The exponent at a vertex", "顶点处的指数"],
         [
-          "A map of the upper half plane onto a polygon has $f'(z) = A \\prod (z - x_{k})^{\\alpha_{k} - 1}$, where the polygon's interior angle at the image of $x_{k}$ is $\\alpha_{k}\\pi$. Each factor bends the boundary by the right amount.",
-          "把上半平面映到多边形的映射满足 $f'(z) = A \\prod (z - x_{k})^{\\alpha_{k} - 1}$，其中多边形在 $x_{k}$ 的像处的内角是 $\\alpha_{k}\\pi$。每个因子让边界转过恰当的角度。",
+          "A map of the upper half plane onto a polygon has $f'(z) = A \\prod (z - x_{k})^{\\alpha_{k} - 1}$, where the polygon's interior angle at the image of $x_{k}$ is $\\alpha_{k}\\pi$. Each factor bends the boundary by the right amount. In the drawing, the right triangle has angles $\\frac{\\pi}{2}$, $\\frac{\\pi}{4}$ and $\\frac{\\pi}{4}$, so $\\alpha = \\frac{1}{2}, \\frac{1}{4}, \\frac{1}{4}$ and the exponents at $x_{1}$, $x_{2}$, $x_{3}$ are $\\frac{1}{2} - 1 = -\\frac{1}{2}$, $\\frac{1}{4} - 1 = -\\frac{3}{4}$ and $-\\frac{3}{4}$.\n\nCheck: as $z$ passes $x_{k}$ along the real axis, the factor's argument jumps by $-(\\alpha_{k} - 1)\\pi$, the turn at that corner: $\\frac{\\pi}{2}$ at the right angle and $\\frac{3\\pi}{4}$ at each other corner, which add to $2\\pi$, one full turn.\n\n> **Watch out.** The exponent is $\\alpha - 1$, not $\\alpha$: a corner with interior angle $\\frac{\\pi}{2}$ has exponent $-\\frac{1}{2}$, and a straight side, $\\alpha = 1$, has exponent $0$ and no factor at all.",
+          "把上半平面映到多边形的映射满足 $f'(z) = A \\prod (z - x_{k})^{\\alpha_{k} - 1}$，其中多边形在 $x_{k}$ 的像处的内角是 $\\alpha_{k}\\pi$。每个因子让边界转过恰当的角度。图中直角三角形的三个角是 $\\frac{\\pi}{2}$、$\\frac{\\pi}{4}$ 和 $\\frac{\\pi}{4}$，所以 $\\alpha = \\frac{1}{2}, \\frac{1}{4}, \\frac{1}{4}$，$x_{1}$、$x_{2}$、$x_{3}$ 处的指数是 $\\frac{1}{2} - 1 = -\\frac{1}{2}$、$\\frac{1}{4} - 1 = -\\frac{3}{4}$ 和 $-\\frac{3}{4}$。\n\n检验：$z$ 沿实轴经过 $x_{k}$ 时，该因子的辐角跳变 $-(\\alpha_{k} - 1)\\pi$，即那个角处的转角：直角处 $\\frac{\\pi}{2}$，另两个角处各 $\\frac{3\\pi}{4}$，加起来是 $2\\pi$，恰好转一整圈。\n\n> **注意。** 指数是 $\\alpha - 1$，不是 $\\alpha$：内角 $\\frac{\\pi}{2}$ 的角指数是 $-\\frac{1}{2}$；而平直的边（$\\alpha = 1$）指数为 $0$，根本没有因子。",
         ],
-        (rng) => {
-          const q = rng.int(2, 12);
-          const start = rng.int(1, 2 * q - 2);
-          const p = start === q ? 2 * q - 1 : start;
-          const alpha = Q.of(p, q);
-          return ask(
-            [
-              `A polygon has interior angle $${alpha.toLatex()}\\pi$ at a vertex. What is the exponent of the matching factor of $f'(z)$?`,
-              `多边形在一个顶点的内角是 $${alpha.toLatex()}\\pi$。$f'(z)$ 中相应因子的指数是多少？`,
-            ],
-            alpha.sub(Q.of(1, 1)),
-            [alpha, Q.of(1, 1).sub(alpha), alpha.add(Q.of(1, 1))],
-            [
-              `An interior angle $\\alpha\\pi$ matches the factor $(z - x_k)^{\\alpha - 1}$, so the exponent is $${alpha.toLatex()} - 1 = ${alpha.sub(Q.of(1, 1)).toLatex()}$.`,
-              `内角 $\\alpha\\pi$ 对应因子 $(z - x_k)^{\\alpha - 1}$，所以指数是 $${alpha.toLatex()} - 1 = ${alpha.sub(Q.of(1, 1)).toLatex()}$。`,
-            ],
-          );
-        },
+        (rng) =>
+          until(() => {
+            const q = rng.int(2, 12);
+            const start = rng.int(1, 2 * q - 2);
+            const p = start === q ? 2 * q - 1 : start;
+            const alpha = Q.of(p, q);
+            const one = Q.of(1, 1);
+            const exponent = alpha.sub(one);
+            const turn = one.sub(alpha);
+            const misses: Miss[] = [
+              [alpha, "That is $\\alpha$ itself; the exponent is $\\alpha - 1$.", "那是 $\\alpha$ 本身；指数是 $\\alpha - 1$。"],
+              [
+                turn,
+                "That is $1 - \\alpha$, the turn at the corner; the exponent has the opposite sign.",
+                "那是 $1 - \\alpha$，即该角处的转角；指数的符号与它相反。",
+              ],
+              [alpha.add(one), "That adds $1$ to $\\alpha$ instead of subtracting it.", "那是给 $\\alpha$ 加 $1$，而不是减 $1$。"],
+            ];
+            return worked(
+              [
+                `A polygon has interior angle $${alpha.toLatex()}\\pi$ at a vertex. What is the exponent of the matching factor of $f'(z)$?`,
+                `多边形在一个顶点的内角是 $${alpha.toLatex()}\\pi$。$f'(z)$ 中相应因子的指数是多少？`,
+              ],
+              exponent,
+              misses,
+              [
+                [
+                  ["Read off alpha", "读出 alpha"],
+                  [
+                    `The angle is $\\alpha\\pi$ with $\\alpha = ${alpha.toLatex()}$.`,
+                    `内角是 $\\alpha\\pi$，其中 $\\alpha = ${alpha.toLatex()}$。`,
+                  ],
+                ],
+                [
+                  ["Subtract one", "减去一"],
+                  [
+                    `The factor is $(z - x_{k})^{\\alpha - 1}$, so the exponent is $${alpha.toLatex()} - 1 = ${exponent.toLatex()}$.`,
+                    `因子是 $(z - x_{k})^{\\alpha - 1}$，所以指数是 $${alpha.toLatex()} - 1 = ${exponent.toLatex()}$。`,
+                  ],
+                ],
+              ],
+              [
+                `The boundary turns by $(1 - \\alpha)\\pi = ${turn.toLatex()}\\pi$ at this corner, and the exponent is minus that turn: $-(${turn.toLatex()}) = ${exponent.toLatex()}$.`,
+                `边界在这个角处转过 $(1 - \\alpha)\\pi = ${turn.toLatex()}\\pi$，指数是这个转角的相反数：$-(${turn.toLatex()}) = ${exponent.toLatex()}$。`,
+              ],
+            );
+          }),
       ),
       figure: complexDrawings2["the-schwarz-christoffel-formula#the-exponent-at-a-vertex"],
     },
@@ -1435,29 +1674,64 @@ const schwarzChristoffel = topic(
         "exponents-add-to-minus-two",
         ["Exponents add to minus two", "指数和为负二"],
         [
-          "The exterior angles of a polygon add to $2\\pi$, and the exterior angle at a vertex is $(1 - \\alpha_{k})\\pi$. So the exponents $\\alpha_{k} - 1$ always add to $-2$.",
-          "多边形的外角和是 $2\\pi$，一个顶点的外角是 $(1 - \\alpha_{k})\\pi$。所以指数 $\\alpha_{k} - 1$ 的和总是 $-2$。",
+          "The exterior angles of a polygon add to $2\\pi$, and the exterior angle at a vertex is $(1 - \\alpha_{k})\\pi$. So the exponents $\\alpha_{k} - 1$ always add to $-2$. In the drawing, the right triangle's exterior angles are $\\frac{\\pi}{2}$, $\\frac{3\\pi}{4}$ and $\\frac{3\\pi}{4}$, which add to $2\\pi$, and its exponents $-\\frac{1}{2}$, $-\\frac{3}{4}$ and $-\\frac{3}{4}$ add to $-2$.\n\nCheck: the interior angles $\\frac{\\pi}{2} + \\frac{\\pi}{4} + \\frac{\\pi}{4} = \\pi$ give the triangle's angle sum, so $\\sum \\alpha_{k} = 1$ and $\\sum (\\alpha_{k} - 1) = 1 - 3 = -2$.\n\n> **Watch out.** The total $-2$ holds for every polygon, whatever its number of sides; it is the interior angles whose sum, $(n - 2)\\pi$, depends on $n$.",
+          "多边形的外角和是 $2\\pi$，一个顶点的外角是 $(1 - \\alpha_{k})\\pi$。所以指数 $\\alpha_{k} - 1$ 的和总是 $-2$。图中直角三角形的外角是 $\\frac{\\pi}{2}$、$\\frac{3\\pi}{4}$ 和 $\\frac{3\\pi}{4}$，加起来是 $2\\pi$；它的指数 $-\\frac{1}{2}$、$-\\frac{3}{4}$ 和 $-\\frac{3}{4}$ 加起来是 $-2$。\n\n检验：内角 $\\frac{\\pi}{2} + \\frac{\\pi}{4} + \\frac{\\pi}{4} = \\pi$ 正是三角形内角和，所以 $\\sum \\alpha_{k} = 1$，$\\sum (\\alpha_{k} - 1) = 1 - 3 = -2$。\n\n> **注意。** 总和 $-2$ 对每个多边形都成立，不论边数多少；依赖于 $n$ 的是内角和 $(n - 2)\\pi$。",
         ],
-        (rng) => {
-          const n = rng.pick([6, 8, 9, 10, 12, 15]);
-          const a = rng.int(1, n - 2);
-          const b = rng.int(1, n - a - 1);
-          const e1 = Q.of(a, n).sub(Q.of(1, 1));
-          const e2 = Q.of(b, n).sub(Q.of(1, 1));
-          const e3 = Q.of(-2, 1).sub(e1).sub(e2);
-          return ask(
-            [
-              `A triangle's map has exponents $${e1.toLatex()}$ and $${e2.toLatex()}$ at two vertices. What is the exponent at the third?`,
-              `三角形的映射在两个顶点的指数是 $${e1.toLatex()}$ 和 $${e2.toLatex()}$。第三个顶点的指数是多少？`,
-            ],
-            e3,
-            [e3.add(Q.of(1, 1)), e3.sub(Q.of(1, 1)), e1.add(e2)],
-            [
-              `The three exponents add to $-2$, so the third is $-2 - (${e1.toLatex()}) - (${e2.toLatex()})$.`,
-              `三个指数的和是 $-2$，所以第三个是 $-2 - (${e1.toLatex()}) - (${e2.toLatex()})$。`,
-            ],
-          );
-        },
+        (rng) =>
+          until(() => {
+            const n = rng.pick([6, 8, 9, 10, 12, 15]);
+            const a = rng.int(1, n - 2);
+            const b = rng.int(1, n - a - 1);
+            const one = Q.of(1, 1);
+            const e1 = Q.of(a, n).sub(one);
+            const e2 = Q.of(b, n).sub(one);
+            const e3 = Q.of(-2, 1).sub(e1).sub(e2);
+            const misses: Miss[] = [
+              [
+                e3.add(one),
+                "That takes the total to be $-1$; the exponents of a polygon add to $-2$.",
+                "那把总和当成了 $-1$；多边形的指数之和是 $-2$。",
+              ],
+              [
+                e3.sub(one),
+                "That takes the total to be $-3$; the exponents add to $-2$, not to minus the number of vertices.",
+                "那把总和当成了 $-3$；指数之和是 $-2$，不是顶点数的相反数。",
+              ],
+              [
+                e1.add(e2),
+                "That adds the two given exponents instead of taking what is left of $-2$.",
+                "那把已知的两个指数相加了，而不是求 $-2$ 剩下的部分。",
+              ],
+            ];
+            return worked(
+              [
+                `A triangle's map has exponents $${e1.toLatex()}$ and $${e2.toLatex()}$ at two vertices. What is the exponent at the third?`,
+                `三角形的映射在两个顶点的指数是 $${e1.toLatex()}$ 和 $${e2.toLatex()}$。第三个顶点的指数是多少？`,
+              ],
+              e3,
+              misses,
+              [
+                [
+                  ["Use the total", "用总和"],
+                  [
+                    "The exterior angles add to $2\\pi$, so the three exponents add to $-2$.",
+                    "外角和是 $2\\pi$，所以三个指数之和是 $-2$。",
+                  ],
+                ],
+                [
+                  ["Solve for the third", "求第三个"],
+                  [
+                    `$-2 - (${e1.toLatex()}) - (${e2.toLatex()}) = ${e3.toLatex()}$.`,
+                    `$-2 - (${e1.toLatex()}) - (${e2.toLatex()}) = ${e3.toLatex()}$。`,
+                  ],
+                ],
+              ],
+              [
+                `Through the angles: $\\alpha = ${Q.of(a, n).toLatex()}$, $${Q.of(b, n).toLatex()}$ and $${e3.add(one).toLatex()}$, which add to $1$, the triangle's angle sum $\\pi$ divided by $\\pi$.`,
+                `用内角验证：$\\alpha = ${Q.of(a, n).toLatex()}$、$${Q.of(b, n).toLatex()}$ 和 $${e3.add(one).toLatex()}$，加起来是 $1$，即三角形内角和 $\\pi$ 除以 $\\pi$。`,
+              ],
+            );
+          }),
       ),
       figure: complexDrawings2["the-schwarz-christoffel-formula#exponents-add-to-minus-two"],
     },
@@ -1466,21 +1740,56 @@ const schwarzChristoffel = topic(
         "a-regular-polygon",
         ["A regular polygon", "正多边形"],
         [
-          "The interior angle of a regular $n$-gon is $\\frac{n - 2}{n}\\pi$, so each factor has exponent $-\\frac{2}{n}$. The disc maps onto the polygon by $f'(z) = \\left(1 - z^{n}\\right)^{-2/n}$, with vertices at the $n$th roots of unity.",
-          "正 $n$ 边形的内角是 $\\frac{n - 2}{n}\\pi$，所以每个因子的指数是 $-\\frac{2}{n}$。圆盘到多边形的映射满足 $f'(z) = \\left(1 - z^{n}\\right)^{-2/n}$，顶点对应 $n$ 次单位根。",
+          "The interior angle of a regular $n$-gon is $\\frac{n - 2}{n}\\pi$, so each factor has exponent $-\\frac{2}{n}$. The disc maps onto the polygon by $f'(z) = \\left(1 - z^{n}\\right)^{-2/n}$, with vertices at the $n$th roots of unity. In the drawing, $n = 6$: the hexagon's interior angle is $\\frac{4}{6}\\pi = \\frac{2\\pi}{3}$, and the exponent is $\\frac{2}{3} - 1 = -\\frac{1}{3}$, which is $-\\frac{2}{6}$.\n\nCheck: the six equal exponents add to $6 \\cdot (-\\frac{1}{3}) = -2$, as the exponents of every polygon must.\n\n> **Watch out.** The exponent is $-\\frac{2}{n}$, not the angle fraction $\\frac{n - 2}{n}$; for large $n$ the corners flatten and the exponent tends to $0$.",
+          "正 $n$ 边形的内角是 $\\frac{n - 2}{n}\\pi$，所以每个因子的指数是 $-\\frac{2}{n}$。圆盘到多边形的映射满足 $f'(z) = \\left(1 - z^{n}\\right)^{-2/n}$，顶点对应 $n$ 次单位根。图中 $n = 6$：正六边形的内角是 $\\frac{4}{6}\\pi = \\frac{2\\pi}{3}$，指数是 $\\frac{2}{3} - 1 = -\\frac{1}{3}$，即 $-\\frac{2}{6}$。\n\n检验：六个相等的指数之和是 $6 \\cdot (-\\frac{1}{3}) = -2$，正符合每个多边形指数之和的要求。\n\n> **注意。** 指数是 $-\\frac{2}{n}$，不是内角的系数 $\\frac{n - 2}{n}$；$n$ 很大时角趋于平直，指数趋于 $0$。",
         ],
-        (rng) => {
-          const n = rng.int(3, 60);
-          return ask(
-            [`What is the exponent of each factor in the formula for a regular ${n}-gon?`, `正 ${n} 边形的公式中，每个因子的指数是多少？`],
-            Q.of(-2, n),
-            [Q.of(2, n), Q.of(-1, n), Q.of(n - 2, n)],
-            [
-              `The interior angle is $\\frac{${n - 2}}{${n}}\\pi$, and $\\frac{${n - 2}}{${n}} - 1 = -\\frac{2}{${n}}$.`,
-              `内角是 $\\frac{${n - 2}}{${n}}\\pi$，而 $\\frac{${n - 2}}{${n}} - 1 = -\\frac{2}{${n}}$。`,
-            ],
-          );
-        },
+        (rng) =>
+          until(() => {
+            const n = rng.int(3, 60);
+            const exponent = Q.of(-2, n);
+            const angle = Q.of(n - 2, n);
+            const misses: Miss[] = [
+              [Q.of(2, n), "That has the wrong sign: a convex corner gives a negative exponent.", "那符号错了：凸角给出的指数是负的。"],
+              [
+                Q.of(-1, n),
+                "That shares a total of $-1$ among the corners; the exponents add to $-2$.",
+                "那是把总和 $-1$ 分给各个角；指数之和是 $-2$。",
+              ],
+              [
+                angle,
+                `That is the angle fraction $\\alpha = ${angle.toLatex()}$; the exponent is $\\alpha - 1$.`,
+                `那是内角的系数 $\\alpha = ${angle.toLatex()}$；指数是 $\\alpha - 1$。`,
+              ],
+            ];
+            return worked(
+              [
+                `What is the exponent of each factor in the formula for a regular ${n}-gon?`,
+                `正 ${n} 边形的公式中，每个因子的指数是多少？`,
+              ],
+              exponent,
+              misses,
+              [
+                [
+                  ["Find the interior angle", "求内角"],
+                  [
+                    `The interior angles of a ${n}-gon add to $${n - 2}\\pi$, so each is $\\frac{${n - 2}}{${n}}\\pi$.`,
+                    `${n} 边形的内角和是 $${n - 2}\\pi$，所以每个内角是 $\\frac{${n - 2}}{${n}}\\pi$。`,
+                  ],
+                ],
+                [
+                  ["Subtract one", "减去一"],
+                  [
+                    `$\\frac{${n - 2}}{${n}} - 1 = -\\frac{2}{${n}}${n % 2 === 0 ? ` = ${exponent.toLatex()}` : ""}$.`,
+                    `$\\frac{${n - 2}}{${n}} - 1 = -\\frac{2}{${n}}${n % 2 === 0 ? ` = ${exponent.toLatex()}` : ""}$。`,
+                  ],
+                ],
+              ],
+              [
+                `The ${n} equal exponents add to $${n} \\cdot (${exponent.toLatex()}) = -2$, as the exponents of every polygon must.`,
+                `${n} 个相等的指数之和是 $${n} \\cdot (${exponent.toLatex()}) = -2$，正符合每个多边形指数之和的要求。`,
+              ],
+            );
+          }),
       ),
       figure: complexDrawings2["the-schwarz-christoffel-formula#a-regular-polygon"],
     },
@@ -1498,20 +1807,40 @@ const ellipsoidMethod = topic(
       "halving-in-one-dimension",
       ["Halving in one dimension", "一维情形的减半"],
       [
-        "In one dimension an ellipsoid is an interval. Test its midpoint: if the midpoint violates a constraint, the feasible set lies on one side, so half the interval is discarded. This is bisection.",
-        "一维情形下椭球就是区间。检验它的中点：如果中点违反某个约束，可行集就在一侧，于是丢掉一半区间。这就是二分法。",
+        "In one dimension an ellipsoid is an interval. Test its midpoint: if the midpoint violates a constraint, the feasible set lies on one side, so half the interval is discarded. This is bisection.\n\nAn interval of length 48 becomes 24, 12, 6 and then 3, so it reaches length 3 after 4 steps, since $\\frac{48}{3} = 16 = 2^{4}$.\n\nCheck: $3(2^{4}) = 48$.\n\n> **Watch out.** Count the halvings, which is the exponent of 2, not the factor $2^{m}$ itself.",
+        "一维情形下椭球就是区间。检验它的中点：如果中点违反某个约束，可行集就在一侧，于是丢掉一半区间。这就是二分法。\n\n长度为 48 的区间依次变成 24、12、6、3，所以 4 步之后长度为 3，因为 $\\frac{48}{3} = 16 = 2^{4}$。\n\n检验：$3(2^{4}) = 48$。\n\n> **注意。** 要数减半的次数，即 2 的指数，而不是倍数 $2^{m}$ 本身。",
       ],
       (rng) => {
         const m = rng.int(3, 12);
         const e = rng.int(1, 5);
-        return ask(
+        return solved(
           [
             `An interval of length ${2 ** m * e} is halved at each step. After how many steps is its length ${e}?`,
             `长度为 ${2 ** m * e} 的区间每一步减半。多少步之后它的长度是 ${e}？`,
           ],
           m,
-          [m - 1, m + 1, 2 ** m],
-          [`The length is divided by $2^{${m}}$, so ${m} steps are needed.`, `长度要除以 $2^{${m}}$，所以需要 ${m} 步。`],
+          [
+            [m - 1, `That stops one step early, at length ${2 * e}.`, `这早停了一步，长度还是 ${2 * e}。`],
+            [m + 1, `That halves once too often, down to length $${Q.of(e, 2).toLatex()}$.`, `这多减半了一次，长度变成 $${Q.of(e, 2).toLatex()}$。`],
+            [2 ** m, "That is the factor by which the length shrinks, not the number of halvings.", "这是长度缩小的倍数，不是减半的次数。"],
+          ],
+          [
+            [
+              ["Find the factor", "求倍数"],
+              [
+                `The length must shrink by the factor $\\frac{${2 ** m * e}}{${e}} = ${2 ** m} = 2^{${m}}$.`,
+                `长度要缩小的倍数是 $\\frac{${2 ** m * e}}{${e}} = ${2 ** m} = 2^{${m}}$。`,
+              ],
+            ],
+            [
+              ["Count the halvings", "数减半的次数"],
+              [`Each step divides the length by 2, so $2^{${m}}$ takes ${m} steps.`, `每一步把长度除以 2，所以 $2^{${m}}$ 需要 ${m} 步。`],
+            ],
+          ],
+          [
+            `Halving ${m} times gives $\\frac{${2 ** m * e}}{2^{${m}}} = ${e}$, while ${m - 1} halvings leave ${2 * e}.`,
+            `减半 ${m} 次得 $\\frac{${2 ** m * e}}{2^{${m}}} = ${e}$，而减半 ${m - 1} 次还剩 ${2 * e}。`,
+          ],
         );
       },
     ),
@@ -1519,8 +1848,8 @@ const ellipsoidMethod = topic(
       "finding-a-separating-constraint",
       ["Finding a separating constraint", "找到分离约束"],
       [
-        "At each step the method tests the center of the ellipsoid. A violated constraint cuts through or beyond the center, so the feasible region lies in one half of the ellipsoid, and a smaller ellipsoid is drawn around that half.",
-        "每一步都检验椭球的中心。被违反的约束穿过或越过中心，所以可行域位于椭球的一半之内，然后围绕这一半画一个更小的椭球。",
+        "At each step the method tests the center of the ellipsoid. A violated constraint cuts through or beyond the center, so the feasible region lies in one half of the ellipsoid, and a smaller ellipsoid is drawn around that half.\n\nWith the center $(3, 4)$, the constraint $x + y \\le 9$ holds there, since $3 + 4 = 7$, but $x \\le 2$ fails, since $3 > 2$. So $x \\le 2$ gives the cut, and the next ellipsoid surrounds the half with $x \\le 3$.\n\nCheck: every feasible point has $x \\le 2 < 3$, so none is lost.\n\n> **Watch out.** A constraint that holds at the center does not cut; only a violated one separates the center from the feasible set.",
+        "每一步都检验椭球的中心。被违反的约束穿过或越过中心，所以可行域位于椭球的一半之内，然后围绕这一半画一个更小的椭球。\n\n中心为 $(3, 4)$ 时，约束 $x + y \\le 9$ 在该点成立，因为 $3 + 4 = 7$；但 $x \\le 2$ 不成立，因为 $3 > 2$。所以 $x \\le 2$ 给出割，下一个椭球围住 $x \\le 3$ 的那一半。\n\n检验：每个可行点都有 $x \\le 2 < 3$，所以没有丢掉可行点。\n\n> **注意。** 在中心成立的约束不能作割；只有被违反的约束才把中心与可行集分开。",
       ],
       (rng) => {
         const x = rng.int(1, 9);
@@ -1540,15 +1869,43 @@ const ellipsoidMethod = topic(
           same(`x - y \\le ${x - y - over}`),
         ];
         const i = rng.int(0, 3);
-        const wrong = all.filter((_, k) => k !== i);
-        return choose(
+        const sides = [x + y, x, y, x - y];
+        const bounds = [x + y - over, x - over, y - over, x - y - over];
+        const wrong: Slip[] = all.flatMap((option, k): Slip[] =>
+          k === i
+            ? []
+            : [
+                [
+                  option,
+                  `At the center the left side is ${sides[k]}, within the bound ${(sides[k] ?? 0) + room}, so the center satisfies it.`,
+                  `在中心处左边是 ${sides[k]}，不超过界 ${(sides[k] ?? 0) + room}，所以中心满足它。`,
+                ],
+              ],
+        );
+        return chosen(
           rng,
           [`The center of the ellipsoid is $(${x}, ${y})$. Which constraint gives a cut?`, `椭球的中心是 $(${x}, ${y})$。哪个约束给出割？`],
           cuts[i] as Pair,
           wrong,
           [
-            `Substitute the center into each constraint. Only this constraint fails there, so it separates the center from the feasible set.`,
-            `把中心代入每个约束。只有这个约束在该点不成立，所以它把中心与可行集分开。`,
+            [
+              ["Substitute the center", "代入中心"],
+              [
+                `Put $(${x}, ${y})$ into each constraint; the other three hold there, each with room ${room} to spare.`,
+                `把 $(${x}, ${y})$ 代入每个约束；其余三个在该点都成立，各有 ${room} 的余量。`,
+              ],
+            ],
+            [
+              ["Find the violated one", "找被违反的约束"],
+              [
+                `In $${cuts[i]?.[0]}$ the left side is ${sides[i]}, more than the bound ${bounds[i]}, so this constraint fails at the center.`,
+                `在 $${cuts[i]?.[1]}$ 中左边是 ${sides[i]}，超过界 ${bounds[i]}，所以这个约束在中心不成立。`,
+              ],
+            ],
+          ],
+          [
+            `The violated constraint separates the center from the feasible set, since ${sides[i]} exceeds ${bounds[i]} by ${over}.`,
+            `被违反的约束把中心与可行集分开，因为 ${sides[i]} 比 ${bounds[i]} 大 ${over}。`,
           ],
         );
       },
@@ -1557,22 +1914,43 @@ const ellipsoidMethod = topic(
       "counting-the-iterations",
       ["Counting the iterations", "估计迭代次数"],
       [
-        "In dimension $n$, each step shrinks the volume by a factor of at most $e^{-1/(2(n + 1))}$. Reducing the volume by a factor of $e^{k}$ thus takes at most $2(n + 1)k$ steps, a polynomial bound.",
-        "在 $n$ 维中，每一步把体积至少缩小为原来的 $e^{-1/(2(n + 1))}$ 倍。所以把体积缩小 $e^{k}$ 倍最多需要 $2(n + 1)k$ 步，这是一个多项式上界。",
+        "In dimension $n$, each step shrinks the volume by a factor of at most $e^{-1/(2(n + 1))}$. Reducing the volume by a factor of $e^{k}$ thus takes at most $2(n + 1)k$ steps, a polynomial bound.\n\nIn dimension 2, reducing the volume by a factor of $e^{10}$ takes at most $2(2 + 1)(10) = 60$ steps.\n\nCheck: 60 steps multiply the volume by at most $e^{-60/6} = e^{-10}$.\n\n> **Watch out.** The factor is $2(n + 1)$, with $n + 1$ and not $n$, and it multiplies $k$ rather than being added to it.",
+        "在 $n$ 维中，每一步把体积至少缩小为原来的 $e^{-1/(2(n + 1))}$ 倍。所以把体积缩小 $e^{k}$ 倍最多需要 $2(n + 1)k$ 步，这是一个多项式上界。\n\n在 2 维中，把体积缩小 $e^{10}$ 倍至多需要 $2(2 + 1)(10) = 60$ 步。\n\n检验：60 步至多把体积乘以 $e^{-60/6} = e^{-10}$。\n\n> **注意。** 因子是 $2(n + 1)$，用 $n + 1$ 而不是 $n$，而且它乘 $k$，而不是加到 $k$ 上。",
       ],
       (rng) => {
         const n = rng.int(2, 30);
         const k = rng.int(5, 40);
-        return ask(
+        const bound = 2 * (n + 1) * k;
+        return solved(
           [
             `In dimension ${n}, what is the bound on the number of steps that reduce the volume by a factor of $e^{${k}}$?`,
             `在 ${n} 维中，把体积缩小 $e^{${k}}$ 倍所需步数的上界是多少？`,
           ],
-          2 * (n + 1) * k,
-          [(n + 1) * k, 2 * n * k, 2 * (n + 1) + k],
+          bound,
           [
-            `Each step multiplies the volume by at most $e^{-1/(2(n + 1))}$, so a factor of $e^{${k}}$ takes at most $2(n + 1) \\cdot ${k}$ steps: $2(${n} + 1) \\cdot ${k} = ${2 * (n + 1) * k}$.`,
-            `每一步至多把体积乘以 $e^{-1/(2(n + 1))}$，所以缩小 $e^{${k}}$ 倍至多需要 $2(n + 1) \\cdot ${k}$ 步：$2(${n} + 1) \\cdot ${k} = ${2 * (n + 1) * k}$。`,
+            [(n + 1) * k, "That drops the factor 2 in $2(n + 1)$.", "这漏掉了 $2(n + 1)$ 中的因子 2。"],
+            [2 * n * k, "That uses $n$ in place of $n + 1$.", "这用 $n$ 代替了 $n + 1$。"],
+            [2 * (n + 1) + k, "That adds $k$ instead of multiplying by it.", "这加上了 $k$，而不是乘以 $k$。"],
+          ],
+          [
+            [
+              ["Shrink per step", "每步的缩小"],
+              [
+                `Each step multiplies the volume by at most $e^{-1/(2(${n} + 1))} = e^{-1/${2 * (n + 1)}}$.`,
+                `每一步至多把体积乘以 $e^{-1/(2(${n} + 1))} = e^{-1/${2 * (n + 1)}}$。`,
+              ],
+            ],
+            [
+              ["Multiply by the exponent", "乘以指数"],
+              [
+                `A factor of $e^{${k}}$ then takes at most $2(${n} + 1)(${k}) = ${bound}$ steps.`,
+                `于是缩小 $e^{${k}}$ 倍至多需要 $2(${n} + 1)(${k}) = ${bound}$ 步。`,
+              ],
+            ],
+          ],
+          [
+            `After ${bound} steps the volume is multiplied by at most $e^{-${bound}/${2 * (n + 1)}} = e^{-${k}}$.`,
+            `${bound} 步之后体积至多乘以 $e^{-${bound}/${2 * (n + 1)}} = e^{-${k}}$。`,
           ],
         );
       },
@@ -1591,24 +1969,45 @@ const interiorPoint = topic(
       "the-logarithmic-barrier",
       ["The logarithmic barrier", "对数障碍"],
       [
-        "Interior-point methods replace $x \\ge 0$ with a penalty $-\\mu \\ln x$ that grows without bound near the wall. Minimizing $cx - \\mu \\ln x$ for $c > 0$ sets the derivative $c - \\frac{\\mu}{x}$ to zero, which gives $x = \\frac{\\mu}{c}$.",
-        "内点法把 $x \\ge 0$ 换成罚项 $-\\mu \\ln x$，它在靠近边界时无限增大。对 $c > 0$ 最小化 $cx - \\mu \\ln x$，令导数 $c - \\frac{\\mu}{x}$ 为零，得 $x = \\frac{\\mu}{c}$。",
+        "Interior-point methods replace $x \\ge 0$ with a penalty $-\\mu \\ln x$ that grows without bound near the wall. Minimizing $cx - \\mu \\ln x$ for $c > 0$ sets the derivative $c - \\frac{\\mu}{x}$ to zero, which gives $x = \\frac{\\mu}{c}$.\n\nFor $4x - 2 \\ln x$, the derivative $4 - \\frac{2}{x}$ is zero at $x = \\frac{2}{4} = \\frac{1}{2}$.\n\nCheck: $4 - \\frac{2}{1/2} = 4 - 4 = 0$, and the second derivative $\\frac{2}{x^{2}}$ is positive, so this is a minimum.\n\n> **Watch out.** The minimizer is $\\frac{\\mu}{c}$, not $\\frac{c}{\\mu}$: a smaller $\\mu$ moves the point toward the wall $x = 0$.",
+        "内点法把 $x \\ge 0$ 换成罚项 $-\\mu \\ln x$，它在靠近边界时无限增大。对 $c > 0$ 最小化 $cx - \\mu \\ln x$，令导数 $c - \\frac{\\mu}{x}$ 为零，得 $x = \\frac{\\mu}{c}$。\n\n对 $4x - 2 \\ln x$，导数 $4 - \\frac{2}{x}$ 在 $x = \\frac{2}{4} = \\frac{1}{2}$ 处为零。\n\n检验：$4 - \\frac{2}{1/2} = 4 - 4 = 0$，二阶导数 $\\frac{2}{x^{2}}$ 为正，所以这是最小值点。\n\n> **注意。** 最小值点是 $\\frac{\\mu}{c}$，不是 $\\frac{c}{\\mu}$：$\\mu$ 越小，点越靠近边界 $x = 0$。",
       ],
       (rng) => {
         const c = rng.int(2, 12);
         const mu = rng.int(1, 9);
         const q = rng.pick([1, 2, 4, 5, 10]);
         const m = Q.of(mu, q);
-        return ask(
+        const at = m.div(Q.of(c, 1));
+        return solved(
           [
             `For $x > 0$, where is $${c}x - ${m.toLatex()} \\ln x$ smallest?`,
             `当 $x > 0$ 时，$${c}x - ${m.toLatex()} \\ln x$ 在何处最小？`,
           ],
-          m.div(Q.of(c, 1)),
-          [Q.of(c, 1).div(m), m, m.mul(Q.of(c, 1))],
+          at,
           [
-            `Set $${c} - \\frac{\\mu}{x} = 0$ with $\\mu = ${m.toLatex()}$.`,
-            `令 $${c} - \\frac{\\mu}{x} = 0$，其中 $\\mu = ${m.toLatex()}$。`,
+            [Q.of(c, 1).div(m), "That is $\\frac{c}{\\mu}$, the ratio turned upside down.", "这是 $\\frac{c}{\\mu}$，比值颠倒了。"],
+            [m, `That is $\\mu$ itself, without dividing by ${c}.`, `这是 $\\mu$ 本身，没有除以 ${c}。`],
+            [m.mul(Q.of(c, 1)), `That multiplies $\\mu$ by ${c} instead of dividing.`, `这把 $\\mu$ 乘以 ${c}，而不是除以 ${c}。`],
+          ],
+          [
+            [
+              ["Differentiate", "求导"],
+              [
+                `With $\\mu = ${m.toLatex()}$, the derivative is $${c} - \\frac{\\mu}{x}$.`,
+                `取 $\\mu = ${m.toLatex()}$，导数是 $${c} - \\frac{\\mu}{x}$。`,
+              ],
+            ],
+            [
+              ["Set it to zero", "令导数为零"],
+              [
+                `The derivative is zero at $x = \\frac{\\mu}{${c}} = ${at.toLatex()}$.`,
+                `导数在 $x = \\frac{\\mu}{${c}} = ${at.toLatex()}$ 处为零。`,
+              ],
+            ],
+          ],
+          [
+            `At $x = ${at.toLatex()}$ we have $${c}x = ${m.toLatex()} = \\mu$, so the derivative is 0, and the second derivative $\\frac{\\mu}{x^{2}}$ is positive.`,
+            `在 $x = ${at.toLatex()}$ 处 $${c}x = ${m.toLatex()} = \\mu$，所以导数为 0，而二阶导数 $\\frac{\\mu}{x^{2}}$ 为正。`,
           ],
         );
       },
@@ -1617,23 +2016,41 @@ const interiorPoint = topic(
       "a-point-on-the-central-path",
       ["A point on the central path", "中心路径上的点"],
       [
-        "The central path relaxes complementary slackness: primal and dual slack variables satisfy $x_{i}s_{i} = \\mu$ for every $i$, with the same $\\mu$. As $\\mu \\to 0$, the conditions become the optimality conditions.",
-        "中心路径放宽了互补松弛：原始变量与对偶松弛变量对每个 $i$ 都满足 $x_{i}s_{i} = \\mu$，其中 $\\mu$ 相同。当 $\\mu \\to 0$ 时，这些条件变成最优性条件。",
+        "The central path relaxes complementary slackness: primal and dual slack variables satisfy $x_{i}s_{i} = \\mu$ for every $i$, with the same $\\mu$. As $\\mu \\to 0$, the conditions become the optimality conditions.\n\nWith $\\mu = 6$ and $x_{1} = 4$, the slack is $s_{1} = \\frac{6}{4} = \\frac{3}{2}$.\n\nCheck: $4\\left(\\frac{3}{2}\\right) = 6 = \\mu$.\n\n> **Watch out.** Pair each slack with its own variable: $s_{1}$ comes from $x_{1}$, and the other variables play no part.",
+        "中心路径放宽了互补松弛：原始变量与对偶松弛变量对每个 $i$ 都满足 $x_{i}s_{i} = \\mu$，其中 $\\mu$ 相同。当 $\\mu \\to 0$ 时，这些条件变成最优性条件。\n\n当 $\\mu = 6$，$x_{1} = 4$ 时，松弛变量 $s_{1} = \\frac{6}{4} = \\frac{3}{2}$。\n\n检验：$4\\left(\\frac{3}{2}\\right) = 6 = \\mu$。\n\n> **注意。** 每个松弛变量要和自己的变量配对：$s_{1}$ 由 $x_{1}$ 决定，其他变量不起作用。",
       ],
       (rng) => {
         const x = rng.int(2, 12);
         const mu = rng.int(1, 12);
         const other = rng.int(2, 12);
-        return ask(
+        const s = Q.of(mu, x);
+        return solved(
           [
             `At a point on the central path with $\\mu = ${mu}$, $x_{1} = ${x}$ and $x_{2} = ${other}$. What is $s_{1}$?`,
             `在 $\\mu = ${mu}$ 的中心路径点上，$x_{1} = ${x}$，$x_{2} = ${other}$。$s_{1}$ 是多少？`,
           ],
-          Q.of(mu, x),
-          [Q.of(mu, other), Q.of(x, mu), Q.of(mu * x, 1)],
+          s,
           [
-            `Since $x_{1}s_{1} = ${mu}$, we get $s_{1} = \\frac{${mu}}{${x}}$.`,
-            `因为 $x_{1}s_{1} = ${mu}$，所以 $s_{1} = \\frac{${mu}}{${x}}$。`,
+            [Q.of(mu, other), "That uses $x_{2}$; the slack $s_{1}$ pairs with $x_{1}$.", "这用了 $x_{2}$；松弛变量 $s_{1}$ 与 $x_{1}$ 配对。"],
+            [Q.of(x, mu), "That is $\\frac{x_{1}}{\\mu}$, the ratio turned upside down.", "这是 $\\frac{x_{1}}{\\mu}$，比值颠倒了。"],
+            [Q.of(mu * x, 1), "That multiplies $\\mu$ by $x_{1}$ instead of dividing.", "这把 $\\mu$ 乘以 $x_{1}$，而不是除以 $x_{1}$。"],
+          ],
+          [
+            [
+              ["Write the path condition", "写出路径条件"],
+              [`On the central path, $x_{1}s_{1} = \\mu = ${mu}$.`, `在中心路径上，$x_{1}s_{1} = \\mu = ${mu}$。`],
+            ],
+            [
+              ["Divide", "相除"],
+              [
+                `With $x_{1} = ${x}$, $s_{1} = \\frac{${mu}}{${x}} = ${s.toLatex()}$.`,
+                `由 $x_{1} = ${x}$ 得 $s_{1} = \\frac{${mu}}{${x}} = ${s.toLatex()}$。`,
+              ],
+            ],
+          ],
+          [
+            `Then $x_{1}s_{1} = ${x}\\left(${s.toLatex()}\\right) = ${mu}$, which is $\\mu$.`,
+            `于是 $x_{1}s_{1} = ${x}\\left(${s.toLatex()}\\right) = ${mu}$，正是 $\\mu$。`,
           ],
         );
       },
@@ -1642,23 +2059,45 @@ const interiorPoint = topic(
       "the-gap-along-the-path",
       ["The gap along the path", "路径上的对偶间隙"],
       [
-        "The duality gap is $c^{T}x - b^{T}y = x^{T}s$, so at a point on the central path with $n$ variables the gap is exactly $n\\mu$. Shrinking $\\mu$ by a fixed factor at each step shrinks the gap geometrically.",
-        "对偶间隙是 $c^{T}x - b^{T}y = x^{T}s$，所以在有 $n$ 个变量的中心路径点上，间隙恰好是 $n\\mu$。每一步把 $\\mu$ 缩小固定倍数，间隙就按几何级数缩小。",
+        "The duality gap is $c^{T}x - b^{T}y = x^{T}s$, so at a point on the central path with $n$ variables the gap is exactly $n\\mu$. Shrinking $\\mu$ by a fixed factor at each step shrinks the gap geometrically.\n\nWith 10 variables, starting at $\\mu = 8$ and halving twice gives $\\mu = \\frac{8}{4} = 2$, so the gap is $10(2) = 20$.\n\nCheck: the starting gap $10(8) = 80$, halved twice, is $\\frac{80}{4} = 20$.\n\n> **Watch out.** After $k$ halvings $\\mu$ is divided by $2^{k}$, not by $2k$.",
+        "对偶间隙是 $c^{T}x - b^{T}y = x^{T}s$，所以在有 $n$ 个变量的中心路径点上，间隙恰好是 $n\\mu$。每一步把 $\\mu$ 缩小固定倍数，间隙就按几何级数缩小。\n\n有 10 个变量时，从 $\\mu = 8$ 开始减半两次得 $\\mu = \\frac{8}{4} = 2$，所以间隙是 $10(2) = 20$。\n\n检验：起始间隙 $10(8) = 80$，减半两次得 $\\frac{80}{4} = 20$。\n\n> **注意。** 减半 $k$ 次后 $\\mu$ 被除以 $2^{k}$，而不是 $2k$。",
       ],
       (rng) => {
         const n = rng.int(3, 40);
         const mu = rng.int(1, 16);
         const k = rng.int(1, 5);
-        return ask(
+        const now = Q.of(mu, 2 ** k);
+        const gap = Q.of(n * mu, 2 ** k);
+        return solved(
           [
             `A central-path method with ${n} variables starts at $\\mu = ${mu}$ and halves $\\mu$ at each step. What is the duality gap after ${k} steps?`,
             `有 ${n} 个变量的中心路径法从 $\\mu = ${mu}$ 开始，每一步把 $\\mu$ 减半。${k} 步之后对偶间隙是多少？`,
           ],
-          Q.of(n * mu, 2 ** k),
-          [Q.of(mu, 2 ** k), Q.of(n * mu, 2 * k), Q.of(n * mu, 1)],
+          gap,
           [
-            `After ${k} steps $\\mu = \\frac{${mu}}{${2 ** k}}$, and the gap is ${n} times that.`,
-            `${k} 步之后 $\\mu = \\frac{${mu}}{${2 ** k}}$，间隙是它的 ${n} 倍。`,
+            [now, `That is $\\mu$ itself; the gap is ${n} times $\\mu$.`, `这是 $\\mu$ 本身；间隙是 $\\mu$ 的 ${n} 倍。`],
+            [Q.of(n * mu, 2 * k), `That divides by $2(${k})$ instead of $2^{${k}}$.`, `这除以了 $2(${k})$，而不是 $2^{${k}}$。`],
+            [Q.of(n * mu, 1), "That is the gap at the start, before any halving.", "这是开始时的间隙，还没有减半。"],
+          ],
+          [
+            [
+              ["Halve the parameter", "把参数减半"],
+              [
+                `After ${k} halvings, $\\mu = \\frac{${mu}}{2^{${k}}} = ${now.toLatex()}$.`,
+                `减半 ${k} 次后，$\\mu = \\frac{${mu}}{2^{${k}}} = ${now.toLatex()}$。`,
+              ],
+            ],
+            [
+              ["Multiply by the count", "乘以变量个数"],
+              [
+                `The gap is $n\\mu$ with $n = ${n}$, which gives ${n} times $${now.toLatex()}$, or $${gap.toLatex()}$.`,
+                `间隙是 $n\\mu$，其中 $n = ${n}$，即 $${now.toLatex()}$ 的 ${n} 倍，为 $${gap.toLatex()}$。`,
+              ],
+            ],
+          ],
+          [
+            `The starting gap is $${n}(${mu}) = ${n * mu}$, and dividing it by $2^{${k}} = ${2 ** k}$ also gives $${gap.toLatex()}$.`,
+            `起始间隙是 $${n}(${mu}) = ${n * mu}$，把它除以 $2^{${k}} = ${2 ** k}$ 也得 $${gap.toLatex()}$。`,
           ],
         );
       },
@@ -2119,7 +2558,53 @@ export const realAnalysisOutlineTopics: readonly TopicDef[] = [
 ];
 
 /** complexAnalysisOutlineTopics holds the Complex Analysis topics added from the course outline. */
-export const complexAnalysisOutlineTopics: readonly TopicDef[] = [normalFamilies, mittagLeffler, schwarzChristoffel];
+export const complexAnalysisOutlineTopics: readonly TopicDef[] = [
+  lesson(
+    normalFamilies,
+    [
+      "The functions $z^{n}$ on the unit disc never escape the bound $1$, yet they do not converge on the whole disc: at points near the edge they stay close to size $1$ for a long time. Still, on every smaller disc they shrink to $0$.",
+      "单位圆盘上的函数 $z^{n}$ 永远不超过界 $1$，但它们在整个圆盘上并不收敛：在靠近边界的点，它们很久都保持接近 $1$ 的大小。不过在每个较小的圆盘上，它们都缩小到 $0$。",
+    ],
+    [
+      "On $|z| \\le \\frac{1}{2}$, $|z^{n}| \\le (\\frac{1}{2})^{n}$, which is below $\\frac{1}{1000}$ once $n \\ge 10$.",
+      "在 $|z| \\le \\frac{1}{2}$ 上，$|z^{n}| \\le (\\frac{1}{2})^{n}$，当 $n \\ge 10$ 时它小于 $\\frac{1}{1000}$。",
+    ],
+    [
+      "turn a uniform bound into a bound on derivatives with Cauchy's estimate, decide which families Montel's theorem covers, and compute the supremum that shows a subsequence converging on a compact set.",
+      "用柯西估计把一致界变成导数的界，判断蒙特尔定理适用于哪些函数族，并计算上确界来说明子列在紧集上收敛。",
+    ],
+  ),
+  lesson(
+    mittagLeffler,
+    [
+      "Residues tell us how a function blows up at each pole. With finitely many poles, adding the principal parts rebuilds a rational function; with infinitely many, such as a pole at every integer, the plain sum diverges and needs correcting terms.",
+      "留数告诉我们函数在每个极点处怎样趋于无穷。极点有限时，把主部加起来就重建了有理函数；极点无穷多时，比如每个整数处都有极点，直接求和会发散，需要修正项。",
+    ],
+    [
+      "$\\frac{1}{z} + \\frac{1}{z - 1}$ at $z = 2$ is $\\frac{1}{2} + 1 = \\frac{3}{2}$, and over a common denominator $\\frac{2z - 1}{z(z - 1)}$ gives $\\frac{3}{2}$ too.",
+      "$\\frac{1}{z} + \\frac{1}{z - 1}$ 在 $z = 2$ 处是 $\\frac{1}{2} + 1 = \\frac{3}{2}$，通分后 $\\frac{2z - 1}{z(z - 1)}$ 也给出 $\\frac{3}{2}$。",
+    ],
+    [
+      "rebuild a rational function from its poles and residues, choose the correcting terms that make an infinite sum of principal parts converge, and sum series from the expansion of $\\frac{\\pi^{2}}{\\sin^{2} \\pi z}$.",
+      "由极点和留数重建有理函数，选出使主部的无穷和收敛的修正项，并由 $\\frac{\\pi^{2}}{\\sin^{2} \\pi z}$ 的展开求级数的和。",
+    ],
+  ),
+  lesson(
+    schwarzChristoffel,
+    [
+      "The upper half plane has a straight boundary, and a polygon has corners. A map from one to the other must bend the real axis at a few chosen points by exactly the polygon's turning angles, and the Schwarz-Christoffel formula does this with one power factor per corner.",
+      "上半平面的边界是直的，而多边形有角。从前者到后者的映射必须在实轴上几个选定的点处，恰好按多边形的转角把边界折弯；施瓦茨-克里斯托费尔公式用每个角一个幂因子做到这一点。",
+    ],
+    [
+      "A square has four corners of angle $\\frac{\\pi}{2}$, so each exponent is $\\frac{1}{2} - 1 = -\\frac{1}{2}$, and the four add to $-2$.",
+      "正方形有四个 $\\frac{\\pi}{2}$ 的角，所以每个指数是 $\\frac{1}{2} - 1 = -\\frac{1}{2}$，四个加起来是 $-2$。",
+    ],
+    [
+      "find the exponent that each interior angle calls for, use the fact that the exponents add to $-2$, and write the exponents for a regular polygon.",
+      "求出每个内角所需的指数，利用指数之和为 $-2$ 这一事实，并写出正多边形的指数。",
+    ],
+  ),
+];
 
 /** linearProgrammingOutlineTopics holds the Linear Programming topics added from the course outline. */
 export const linearProgrammingOutlineTopics: readonly TopicDef[] = [ellipsoidMethod, interiorPoint];
