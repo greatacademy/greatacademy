@@ -6,7 +6,7 @@ import { t } from "@ga/content";
 import { Q } from "@ga/subject-math";
 import { numberProblem, why } from "../problems.ts";
 
-import { ask, point } from "../university-kit.ts";
+import { point } from "../university-kit.ts";
 import { type Step, walked } from "./calculus-i-differentiation.ts";
 import { solution, solved } from "./real-analysis.ts";
 
@@ -23,8 +23,8 @@ const supremumOfSums = point(
   "the-supremum-of-a-sum-of-sets",
   ["The supremum of a sum of sets", "集合之和的上确界"],
   [
-    "The sum set $A + B$ holds every $a + b$ with $a$ in $A$ and $b$ in $B$. Its supremum is $\\sup A + \\sup B$, whether or not those values are attained. The proof is an approximation: take elements of $A$ and $B$ within $\\frac{\\varepsilon}{2}$ of their suprema.",
-    "和集 $A + B$ 包含所有 $a + b$，其中 $a$ 属于 $A$，$b$ 属于 $B$。它的上确界是 $\\sup A + \\sup B$，不管这些值是否取到。证明用的是逼近：在 $A$ 和 $B$ 中取距各自上确界不超过 $\\frac{\\varepsilon}{2}$ 的元素。",
+    "The sum set $A + B$ holds every $a + b$ with $a$ in $A$ and $b$ in $B$. Its supremum is $\\sup A + \\sup B$, whether or not those values are attained. The proof is an approximation: take elements of $A$ and $B$ within $\\frac{\\varepsilon}{2}$ of their suprema.\n\nFor $A = (1, 4)$ and $B = (-2, 3)$, $\\sup (A + B) = 4 + 3 = 7$ and $\\inf (A + B) = 1 - 2 = -1$, though neither $7$ nor $-1$ is a sum of elements.\n\nCheck: every sum $a + b$ lies strictly between $-1$ and $7$, and sums such as $3.9 + 2.9 = 6.8$ come as close to $7$ as we like, so $A + B = (-1, 7)$.\n\n> **Watch out.** The infimum of $A + B$ adds the two lower ends and the supremum adds the two upper ends; a lower end of one set and an upper end of the other give neither.",
+    "和集 $A + B$ 包含所有 $a + b$，其中 $a$ 属于 $A$，$b$ 属于 $B$。它的上确界是 $\\sup A + \\sup B$，不管这些值是否取到。证明用的是逼近：在 $A$ 和 $B$ 中取距各自上确界不超过 $\\frac{\\varepsilon}{2}$ 的元素。\n\n对 $A = (1, 4)$ 和 $B = (-2, 3)$，$\\sup (A + B) = 4 + 3 = 7$，$\\inf (A + B) = 1 - 2 = -1$，尽管 $7$ 和 $-1$ 都不是元素之和。\n\n检验：每个和 $a + b$ 都严格在 $-1$ 与 $7$ 之间，而像 $3.9 + 2.9 = 6.8$ 这样的和可以任意接近 $7$，所以 $A + B = (-1, 7)$。\n\n> **注意。** $A + B$ 的下确界是两个下端之和，上确界是两个上端之和；一个集合的下端加另一个集合的上端，两者都不是。",
   ],
   (rng) => {
     const [a, b] = [rng.int(-9, 5), rng.int(1, 8)];
@@ -32,17 +32,51 @@ const supremumOfSums = point(
     const [top1, top2] = [a + b, c + d];
     const inf = rng.bool();
     const answer = inf ? a + c : top1 + top2;
-    return ask(
+    const [en, zh] = inf ? ["infimum", "下确界"] : ["supremum", "上确界"];
+    return solved(
       [
         `$A$ is the open interval $(${a}, ${top1})$ and $B$ is the open interval $(${c}, ${top2})$. What is the ${inf ? "infimum" : "supremum"} of $A + B$?`,
         `$A$ 是开区间 $(${a}, ${top1})$，$B$ 是开区间 $(${c}, ${top2})$。$A + B$ 的${inf ? "下确界" : "上确界"}是多少？`,
       ],
       answer,
-      [inf ? top1 + top2 : a + c, top1 + c, a + top2, answer + 1].filter((v) => v !== answer),
       [
-        inf ? `Infimums add: $(${a}) + (${c}) = ${answer}$.` : `Suprema add: $(${top1}) + (${top2}) = ${answer}$.`,
-        inf ? `下确界相加：$(${a}) + (${c}) = ${answer}$。` : `上确界相加：$(${top1}) + (${top2}) = ${answer}$。`,
+        inf
+          ? why(top1 + top2, "That adds the two upper ends, which gives the supremum.", "这把两个上端相加，得到的是上确界。")
+          : why(a + c, "That adds the two lower ends, which gives the infimum.", "这把两个下端相加，得到的是下确界。"),
+        why(top1 + c, "That adds the upper end of $A$ to the lower end of $B$.", "这把 $A$ 的上端与 $B$ 的下端相加。"),
+        why(a + top2, "That adds the lower end of $A$ to the upper end of $B$.", "这把 $A$ 的下端与 $B$ 的上端相加。"),
+        why(
+          answer + 1,
+          `That steps one past ${answer} because it is not in $A + B$, but the ${en} need not belong to the set.`,
+          `这因为 ${answer} 不在 $A + B$ 中而多走了 1，但${zh}不必属于这个集合。`,
+        ),
       ],
+      solution(
+        [
+          [
+            ["Take the ends", "取端点"],
+            inf
+              ? [
+                  `$\\inf A = ${a}$ and $\\inf B = ${c}$, though neither open interval contains its lower end.`,
+                  `$\\inf A = ${a}$，$\\inf B = ${c}$，尽管两个开区间都不包含各自的下端。`,
+                ]
+              : [
+                  `$\\sup A = ${top1}$ and $\\sup B = ${top2}$, though neither open interval contains its upper end.`,
+                  `$\\sup A = ${top1}$，$\\sup B = ${top2}$，尽管两个开区间都不包含各自的上端。`,
+                ],
+          ],
+          [
+            ["Add them", "相加"],
+            inf
+              ? [`Infima add: $${a} ${signed(c)} = ${answer}$.`, `下确界相加：$${a} ${signed(c)} = ${answer}$。`]
+              : [`Suprema add: $${top1} ${signed(top2)} = ${answer}$.`, `上确界相加：$${top1} ${signed(top2)} = ${answer}$。`],
+          ],
+        ],
+        [
+          `Every sum lies strictly between $${a + c}$ and $${top1 + top2}$, and sums come as close to either end as we like, so $A + B = (${a + c}, ${top1 + top2})$.`,
+          `每个和都严格在 $${a + c}$ 与 $${top1 + top2}$ 之间，且和可以任意接近两端，所以 $A + B = (${a + c}, ${top1 + top2})$。`,
+        ],
+      ),
     );
   },
 );
@@ -51,25 +85,57 @@ const fractionsBetween = point(
   "counting-fractions-in-an-interval",
   ["Counting fractions in an interval", "数区间中的分数"],
   [
-    "The Archimedean property shows that for large $n$ the multiples of $\\frac{1}{n}$ have spacing small enough to land in any interval. Counting them makes this concrete: between two whole numbers $a < b$, the multiples of $\\frac{1}{n}$ strictly inside number $n (b - a) - 1$, which grows without limit.",
-    "阿基米德性质说明：当 $n$ 很大时，$\\frac{1}{n}$ 的倍数间隔足够小，能落在任何区间内。数一数就更具体：在两个整数 $a < b$ 之间，严格在内部的 $\\frac{1}{n}$ 的倍数有 $n (b - a) - 1$ 个，它无限增长。",
+    "The Archimedean property shows that for large $n$ the multiples of $\\frac{1}{n}$ have spacing small enough to land in any interval. Counting them makes this concrete: between two whole numbers $a < b$, the multiples of $\\frac{1}{n}$ strictly inside number $n (b - a) - 1$, which grows without limit.\n\nBetween 0 and 2 the multiples of $\\frac{1}{3}$ strictly inside are $\\frac{1}{3}, \\frac{2}{3}, 1, \\frac{4}{3}, \\frac{5}{3}$, which is $3 \\cdot 2 - 1 = 5$ of them.\n\nCheck: they are $\\frac{k}{3}$ for $k = 1, 2, 3, 4, 5$, the whole numbers strictly between $0$ and $6$.\n\n> **Watch out.** The ends $a$ and $b$ are multiples of $\\frac{1}{n}$ themselves. Strictly between leaves both of them out.",
+    "阿基米德性质说明：当 $n$ 很大时，$\\frac{1}{n}$ 的倍数间隔足够小，能落在任何区间内。数一数就更具体：在两个整数 $a < b$ 之间，严格在内部的 $\\frac{1}{n}$ 的倍数有 $n (b - a) - 1$ 个，它无限增长。\n\n在 0 和 2 之间，严格在内部的 $\\frac{1}{3}$ 的倍数是 $\\frac{1}{3}, \\frac{2}{3}, 1, \\frac{4}{3}, \\frac{5}{3}$，共 $3 \\cdot 2 - 1 = 5$ 个。\n\n检验：它们是 $\\frac{k}{3}$，$k = 1, 2, 3, 4, 5$，也就是严格在 $0$ 和 $6$ 之间的整数。\n\n> **注意。** 端点 $a$ 和 $b$ 本身就是 $\\frac{1}{n}$ 的倍数。严格在之间要把两个端点都去掉。",
   ],
   (rng) => {
     const a = rng.int(-5, 5);
     const b = a + rng.int(1, 4);
     const n = rng.int(2, 12);
     const answer = n * (b - a) - 1;
-    return ask(
+    const [low, high] = [n * a, n * b];
+    return solved(
       [
         `How many multiples of $\\frac{1}{${n}}$ lie strictly between ${a} and ${b}?`,
         `严格在 ${a} 和 ${b} 之间的 $\\frac{1}{${n}}$ 的倍数有多少个？`,
       ],
       answer,
-      [answer + 1, answer + 2, n, n * b - 1].filter((v) => v !== answer),
       [
-        `Including both ends there are $${n} \\cdot ${b - a} + 1$ multiples, and removing the 2 ends leaves ${answer}.`,
-        `算上两端共有 $${n} \\cdot ${b - a} + 1$ 个倍数，去掉两端后剩 ${answer} 个。`,
+        why(
+          answer + 1,
+          "That keeps one of the ends; strictly between leaves out both.",
+          "这保留了一个端点；严格在之间要把两个端点都去掉。",
+        ),
+        why(
+          answer + 2,
+          `That keeps both ends, ${a} and ${b}, which are multiples too but not strictly between.`,
+          `这保留了两个端点 ${a} 和 ${b}；它们也是倍数，但不严格在之间。`,
+        ),
+        why(n, `That counts the steps in one unit; the interval has length ${b - a}.`, `这是一个单位中的步数；区间长度是 ${b - a}。`),
+        why(n * b - 1, `That counts from 0 up to ${b} instead of from ${a}.`, `这是从 0 数到 ${b}，而不是从 ${a} 开始。`),
       ],
+      solution(
+        [
+          [
+            ["Write the multiples as fractions", "把倍数写成分数"],
+            [
+              `The multiples are $\\frac{k}{${n}}$, and the ends are $${a} = \\frac{${low}}{${n}}$ and $${b} = \\frac{${high}}{${n}}$, so $k$ runs over the whole numbers strictly between ${low} and ${high}.`,
+              `倍数是 $\\frac{k}{${n}}$，端点是 $${a} = \\frac{${low}}{${n}}$ 和 $${b} = \\frac{${high}}{${n}}$，所以 $k$ 取遍严格在 ${low} 和 ${high} 之间的整数。`,
+            ],
+          ],
+          [
+            ["Count them", "数一数"],
+            [
+              `There are $${high} - ${low < 0 ? `(${low})` : low} - 1 = ${answer}$ such whole numbers.`,
+              `这样的整数有 $${high} - ${low < 0 ? `(${low})` : low} - 1 = ${answer}$ 个。`,
+            ],
+          ],
+        ],
+        [
+          `$k$ runs from ${low + 1} to ${high - 1}, which is $${high - 1} - ${low + 1 < 0 ? `(${low + 1})` : low + 1} + 1 = ${answer}$ values.`,
+          `$k$ 从 ${low + 1} 到 ${high - 1}，共 $${high - 1} - ${low + 1 < 0 ? `(${low + 1})` : low + 1} + 1 = ${answer}$ 个值。`,
+        ],
+      ),
     );
   },
 );
@@ -78,24 +144,60 @@ const leadingCoefficients = point(
   "the-limit-of-a-rational-sequence",
   ["The limit of a rational sequence", "有理式数列的极限"],
   [
-    "For a quotient of polynomials in $n$ of the same degree, divide the top and bottom by the highest power of $n$. Every other term then tends to 0 by the algebra of limits. So the limit is the ratio of the leading coefficients, and the lower terms have no effect.",
-    "对于 $n$ 的同次多项式之商，分子分母同除以 $n$ 的最高次幂。由极限的代数性质，其余各项都趋于 0。所以极限是首项系数之比，低次项没有影响。",
+    "For a quotient of polynomials in $n$ of the same degree, divide the top and bottom by the highest power of $n$. Every other term then tends to 0 by the algebra of limits. So the limit is the ratio of the leading coefficients, and the lower terms have no effect.\n\nFor $\\frac{2n^2 + 3n}{5n^2 - 1}$, dividing by $n^2$ gives $\\frac{2 + \\frac{3}{n}}{5 - \\frac{1}{n^2}}$, which tends to $\\frac{2}{5}$.\n\nCheck: at $n = 100$ the quotient is $\\frac{20300}{49999} \\approx 0.40601$, close to $0.4$.\n\n> **Watch out.** Divide by the highest power of $n$ in the denominator. The constant terms do not decide the limit; the leading terms do.",
+    "对于 $n$ 的同次多项式之商，分子分母同除以 $n$ 的最高次幂。由极限的代数性质，其余各项都趋于 0。所以极限是首项系数之比，低次项没有影响。\n\n对 $\\frac{2n^2 + 3n}{5n^2 - 1}$，除以 $n^2$ 得 $\\frac{2 + \\frac{3}{n}}{5 - \\frac{1}{n^2}}$，它趋于 $\\frac{2}{5}$。\n\n检验：$n = 100$ 时商是 $\\frac{20300}{49999} \\approx 0.40601$，接近 $0.4$。\n\n> **注意。** 要除以分母中 $n$ 的最高次幂。决定极限的是首项，而不是常数项。",
   ],
   (rng) => {
     const [a, c] = [rng.int(1, 9), rng.int(2, 9)];
     const [b, d] = [rng.pick([-7, -4, -2, -1, 1, 3, 5, 8]), rng.pick([-6, -3, -1, 1, 2, 4, 9])];
     const answer = frac(a, c);
-    return ask(
+    const over = (k: number, power: string) => `${k < 0 ? "-" : "+"} \\frac{${Math.abs(k)}}{${power}}`;
+    const reduced = `\\frac{${a} ${over(b, "n")}}{${c} ${over(d, "n^2")}}`;
+    const big = 1000;
+    const value = (a * big * big + b * big) / (c * big * big + d);
+    return solved(
       [
         `What is the limit of $\\frac{${coef(a, "n^2")} ${signed(b, "n")}}{${coef(c, "n^2")} ${signed(d)}}$ as $n \\to \\infty$?`,
         `当 $n \\to \\infty$ 时，$\\frac{${coef(a, "n^2")} ${signed(b, "n")}}{${coef(c, "n^2")} ${signed(d)}}$ 的极限是多少？`,
       ],
       answer,
-      [frac(c, a), frac(b, d), frac(a + b, c + d === 0 ? 1 : c + d), Q.of(0, 1)],
       [
-        `Dividing by $n^2$ gives $\\frac{${a} + \\cdots}{${c} + \\cdots}$, where the other terms tend to 0. So the limit is $${answer.toLatex()}$.`,
-        `除以 $n^2$ 得 $\\frac{${a} + \\cdots}{${c} + \\cdots}$，其余各项趋于 0。所以极限是 $${answer.toLatex()}$。`,
+        why(frac(c, a), "That is upside down; the numerator's leading coefficient goes on top.", "这颠倒了；分子的首项系数应在上面。"),
+        why(
+          frac(b, d),
+          "That is the ratio of the lower terms, which vanish after dividing by $n^2$.",
+          "这是低次项之比，而它们除以 $n^2$ 后都趋于 0。",
+        ),
+        why(
+          frac(a + b, c + d === 0 ? 1 : c + d),
+          "That adds the coefficients together; after dividing by $n^2$ only the leading ones survive.",
+          "这把系数加在了一起；除以 $n^2$ 后只有首项系数留下。",
+        ),
+        why(
+          Q.of(0, 1),
+          "Top and bottom have the same degree, so the limit is the ratio of the leading coefficients, not 0.",
+          "分子分母次数相同，所以极限是首项系数之比，而不是 0。",
+        ),
       ],
+      solution(
+        [
+          [
+            ["Divide by the highest power", "除以最高次幂"],
+            [`Dividing the top and bottom by $n^2$ gives $${reduced}$.`, `分子分母同除以 $n^2$，得 $${reduced}$。`],
+          ],
+          [
+            ["Take the limits of the terms", "求各项的极限"],
+            [
+              `Each fraction with $n$ in its denominator tends to 0, so the limit is $\\frac{${a}}{${c}} = ${answer.toLatex()}$.`,
+              `分母含 $n$ 的每个分式都趋于 0，所以极限是 $\\frac{${a}}{${c}} = ${answer.toLatex()}$。`,
+            ],
+          ],
+        ],
+        [
+          `At $n = ${big}$ the quotient is about $${value.toFixed(5)}$, close to $${answer.toLatex()} \\approx ${answer.toNumber().toFixed(5)}$.`,
+          `$n = ${big}$ 时商约为 $${value.toFixed(5)}$，接近 $${answer.toLatex()} \\approx ${answer.toNumber().toFixed(5)}$。`,
+        ],
+      ),
     );
   },
 );
@@ -499,8 +601,8 @@ const taylorCoefficient = point(
   "a-taylor-coefficient-from-a-derivative",
   ["A Taylor coefficient from a derivative", "由导数求泰勒系数"],
   [
-    "The Taylor polynomial of $f$ at 0 has the coefficient $\\frac{f^{(n)}(0)}{n!}$ on $x^n$. The reason is that the $n$th derivative of $x^n$ is $n!$ and it is the only term that survives at 0. So derivatives at a point determine the polynomial, and conversely.",
-    "$f$ 在 0 处的泰勒多项式中 $x^n$ 的系数是 $\\frac{f^{(n)}(0)}{n!}$。原因是 $x^n$ 的 $n$ 阶导数是 $n!$，而且在 0 处只有这一项留下来。所以某点的导数决定多项式，反之亦然。",
+    "The Taylor polynomial of $f$ at 0 has the coefficient $\\frac{f^{(n)}(0)}{n!}$ on $x^n$. The reason is that the $n$th derivative of $x^n$ is $n!$ and it is the only term that survives at 0. So derivatives at a point determine the polynomial, and conversely.\n\nIf $f'''(0) = 12$, the coefficient of $x^3$ is $\\frac{12}{3!} = \\frac{12}{6} = 2$.\n\nCheck: differentiating $2x^3$ three times gives $2 \\cdot 6 = 12$, the given derivative.\n\n> **Watch out.** Divide by $n!$, not by $n$. The factorial comes from differentiating $x^n$ all $n$ times.",
+    "$f$ 在 0 处的泰勒多项式中 $x^n$ 的系数是 $\\frac{f^{(n)}(0)}{n!}$。原因是 $x^n$ 的 $n$ 阶导数是 $n!$，而且在 0 处只有这一项留下来。所以某点的导数决定多项式，反之亦然。\n\n若 $f'''(0) = 12$，则 $x^3$ 的系数是 $\\frac{12}{3!} = \\frac{12}{6} = 2$。\n\n检验：$2x^3$ 求三次导数得 $2 \\cdot 6 = 12$，正是给定的导数。\n\n> **注意。** 要除以 $n!$，而不是 $n$。阶乘来自对 $x^n$ 求 $n$ 次导数。",
   ],
   (rng) => {
     const n = rng.int(2, 6);
@@ -508,14 +610,41 @@ const taylorCoefficient = point(
     let factorial = 1;
     for (let i = 2; i <= n; i++) factorial *= i;
     const answer = frac(m, factorial);
-    return ask(
+    return solved(
       [
         `If the derivative of order ${n} of $f$ at 0 is ${m}, what is the coefficient of $x^{${n}}$ in its Taylor polynomial at 0?`,
         `若 $f$ 在 0 处的 ${n} 阶导数是 ${m}，它在 0 处的泰勒多项式中 $x^{${n}}$ 的系数是多少？`,
       ],
       answer,
-      [frac(m, n), Q.of(m, 1), frac(factorial, m), frac(m, factorial * n)].filter((v) => !v.eq(answer)),
-      [`Divide by the factorial: $\\frac{${m}}{${n}!} = ${answer.toLatex()}$.`, `除以阶乘：$\\frac{${m}}{${n}!} = ${answer.toLatex()}$。`],
+      [
+        why(frac(m, n), `That divides by ${n} instead of $${n}! = ${factorial}$.`, `这除以了 ${n}，而不是 $${n}! = ${factorial}$。`),
+        why(Q.of(m, 1), `That is the derivative itself; the coefficient divides it by $${n}!$.`, `这是导数本身；系数要把它除以 $${n}!$。`),
+        why(
+          frac(factorial, m),
+          "That is upside down; the derivative goes on top and the factorial below.",
+          "这颠倒了；导数在上，阶乘在下。",
+        ),
+        why(frac(m, factorial * n), `That divides by ${n} once more after dividing by $${n}!$.`, `这除以 $${n}!$ 之后又多除了一次 ${n}。`),
+      ],
+      solution(
+        [
+          [
+            ["Find the factorial", "求阶乘"],
+            [`$${n}! = ${factorial}$.`, `$${n}! = ${factorial}$。`],
+          ],
+          [
+            ["Divide", "相除"],
+            [
+              `The coefficient is $\\frac{${m}}{${n}!} = \\frac{${m}}{${factorial}} = ${answer.toLatex()}$.`,
+              `系数是 $\\frac{${m}}{${n}!} = \\frac{${m}}{${factorial}} = ${answer.toLatex()}$。`,
+            ],
+          ],
+        ],
+        [
+          `Differentiating $x^{${n}}$ ${n} times gives $${factorial}$, and $${factorial} \\times ${answer.toLatex()} = ${m}$, the given derivative.`,
+          `$x^{${n}}$ 求 ${n} 次导数得 $${factorial}$，而 $${factorial} \\times ${answer.toLatex()} = ${m}$，正是给定的导数。`,
+        ],
+      ),
     );
   },
 );
@@ -524,24 +653,58 @@ const lowerSum = point(
   "upper-and-lower-sums-of-the-identity",
   ["Upper and lower sums of the identity", "恒等函数的上和与下和"],
   [
-    "For $f(x) = x$ on $[0, 1]$ with $n$ equal parts, each lower sum uses left endpoints and each upper sum right endpoints. They come to $\\frac{n - 1}{2 n}$ and $\\frac{n + 1}{2 n}$. Their difference $\\frac{1}{n}$ tends to 0, so the integral exists and equals $\\frac{1}{2}$.",
-    "对 $[0, 1]$ 上的 $f(x) = x$ 作 $n$ 等分，下和用左端点，上和用右端点。它们分别是 $\\frac{n - 1}{2 n}$ 和 $\\frac{n + 1}{2 n}$。它们的差 $\\frac{1}{n}$ 趋于 0，所以积分存在且等于 $\\frac{1}{2}$。",
+    "For $f(x) = x$ on $[0, 1]$ with $n$ equal parts, each lower sum uses left endpoints and each upper sum right endpoints. They come to $\\frac{n - 1}{2 n}$ and $\\frac{n + 1}{2 n}$. Their difference $\\frac{1}{n}$ tends to 0, so the integral exists and equals $\\frac{1}{2}$.\n\nWith 4 parts the left endpoints are $0, \\frac{1}{4}, \\frac{2}{4}, \\frac{3}{4}$, so the lower sum is $\\frac{1}{4} \\cdot \\frac{0 + 1 + 2 + 3}{4} = \\frac{6}{16} = \\frac{3}{8}$. The right endpoints give $\\frac{1}{4} \\cdot \\frac{10}{4} = \\frac{5}{8}$.\n\nCheck: $\\frac{3}{8}$ and $\\frac{5}{8}$ differ by $\\frac{1}{4}$ and average to $\\frac{1}{2}$, the integral.\n\n> **Watch out.** For an increasing function the lower sum uses the left endpoints. The right endpoints give the upper sum.",
+    "对 $[0, 1]$ 上的 $f(x) = x$ 作 $n$ 等分，下和用左端点，上和用右端点。它们分别是 $\\frac{n - 1}{2 n}$ 和 $\\frac{n + 1}{2 n}$。它们的差 $\\frac{1}{n}$ 趋于 0，所以积分存在且等于 $\\frac{1}{2}$。\n\n分成 4 份时，左端点是 $0, \\frac{1}{4}, \\frac{2}{4}, \\frac{3}{4}$，所以下和是 $\\frac{1}{4} \\cdot \\frac{0 + 1 + 2 + 3}{4} = \\frac{6}{16} = \\frac{3}{8}$。右端点给出 $\\frac{1}{4} \\cdot \\frac{10}{4} = \\frac{5}{8}$。\n\n检验：$\\frac{3}{8}$ 和 $\\frac{5}{8}$ 相差 $\\frac{1}{4}$，平均值是 $\\frac{1}{2}$，正是积分。\n\n> **注意。** 对递增函数，下和用左端点，右端点给出的是上和。",
   ],
   (rng) => {
     const n = rng.int(2, 30);
     const lower = rng.bool();
     const answer = lower ? frac(n - 1, 2 * n) : frac(n + 1, 2 * n);
-    return ask(
+    const [lo, hi] = lower ? [0, n - 1] : [1, n];
+    const count = (lo + hi) * n;
+    const integers = n <= 4 ? Array.from({ length: n }, (_, i) => lo + i).join(" + ") : `${lo} + ${lo + 1} + \\cdots + ${hi}`;
+    return solved(
       [
         `What is the ${lower ? "lower" : "upper"} sum of $f(x) = x$ on $[0, 1]$ with ${n} equal parts?`,
         `$[0, 1]$ 上的 $f(x) = x$ 作 ${n} 等分，${lower ? "下" : "上"}和是多少？`,
       ],
       answer,
-      [lower ? frac(n + 1, 2 * n) : frac(n - 1, 2 * n), Q.of(1, 2), Q.of(1, n), frac(n - 1, n)],
       [
-        `The ${lower ? "left" : "right"} endpoints give $\\frac{1}{${n}} \\cdot \\frac{${lower ? n - 1 : n + 1} \\cdot ${n}}{2 \\cdot ${n}} = ${answer.toLatex()}$.`,
-        `${lower ? "左" : "右"}端点给出 $\\frac{1}{${n}} \\cdot \\frac{${lower ? n - 1 : n + 1} \\cdot ${n}}{2 \\cdot ${n}} = ${answer.toLatex()}$。`,
+        why(
+          lower ? frac(n + 1, 2 * n) : frac(n - 1, 2 * n),
+          `That is the ${lower ? "upper" : "lower"} sum, from the ${lower ? "right" : "left"} endpoints.`,
+          `这是${lower ? "上" : "下"}和，用的是${lower ? "右" : "左"}端点。`,
+        ),
+        why(Q.of(1, 2), "That is the integral, which lies strictly between the two sums.", "这是积分，它严格在两个和之间。"),
+        why(Q.of(1, n), "That is the difference between the upper and lower sums.", "这是上和与下和之差。"),
+        why(
+          frac(n - 1, n),
+          "That drops the 2 from the sum of the whole numbers, $\\frac{k (k + 1)}{2}$.",
+          "这漏掉了整数求和公式 $\\frac{k (k + 1)}{2}$ 中的 2。",
+        ),
       ],
+      solution(
+        [
+          [
+            [`List the ${lower ? "left" : "right"} endpoints`, `列出${lower ? "左" : "右"}端点`],
+            [
+              `Each part has width $\\frac{1}{${n}}$, and the ${lower ? "left" : "right"} endpoints are $\\frac{k}{${n}}$ for $k = ${lo}$ to ${hi}.`,
+              `每份宽 $\\frac{1}{${n}}$，${lower ? "左" : "右"}端点是 $\\frac{k}{${n}}$，$k$ 从 ${lo} 到 ${hi}。`,
+            ],
+          ],
+          [
+            ["Add the rectangles", "把矩形加起来"],
+            [
+              `$${integers} = ${count / 2}$, so the sum is $\\frac{1}{${n}} \\cdot \\frac{${count / 2}}{${n}} = ${answer.toLatex()}$.`,
+              `$${integers} = ${count / 2}$，所以和是 $\\frac{1}{${n}} \\cdot \\frac{${count / 2}}{${n}} = ${answer.toLatex()}$。`,
+            ],
+          ],
+        ],
+        [
+          `The two sums $\\frac{${n - 1}}{${2 * n}}$ and $\\frac{${n + 1}}{${2 * n}}$ differ by $\\frac{1}{${n}}$ and average to $\\frac{1}{2}$, the integral.`,
+          `两个和 $\\frac{${n - 1}}{${2 * n}}$ 与 $\\frac{${n + 1}}{${2 * n}}$ 相差 $\\frac{1}{${n}}$，平均值是 $\\frac{1}{2}$，正是积分。`,
+        ],
+      ),
     );
   },
 );
@@ -550,23 +713,66 @@ const variableLimit = point(
   "an-accumulation-function-with-a-moving-limit",
   ["An accumulation function with a moving limit", "变上限的积分函数"],
   [
-    "When the upper limit of an integral is itself a function, combine the fundamental theorem with the chain rule. The derivative of $\\int_0^{x^2} g(t) \\, dt$ is $g(x^2) \\cdot 2 x$. This holds wherever $g$ is continuous, because then the inner accumulation function is differentiable.",
-    "当积分上限本身是函数时，把微积分基本定理和链式法则结合起来。$\\int_0^{x^2} g(t) \\, dt$ 的导数是 $g(x^2) \\cdot 2 x$。只要 $g$ 连续这就成立，因为这时内层的积分函数可导。",
+    "When the upper limit of an integral is itself a function, combine the fundamental theorem with the chain rule. The derivative of $\\int_0^{x^2} g(t) \\, dt$ is $g(x^2) \\cdot 2 x$. This holds wherever $g$ is continuous, because then the inner accumulation function is differentiable.\n\nFor $F(x) = \\int_0^{x^2} t \\, dt$, the rule gives $F'(x) = x^2 \\cdot 2x = 2x^3$.\n\nCheck: integrating first, $F(x) = \\frac{(x^2)^2}{2} = \\frac{x^4}{2}$, whose derivative is $2x^3$.\n\n> **Watch out.** Multiply by the derivative of the upper limit. Writing only $g(x^2)$ forgets the chain rule.",
+    "当积分上限本身是函数时，把微积分基本定理和链式法则结合起来。$\\int_0^{x^2} g(t) \\, dt$ 的导数是 $g(x^2) \\cdot 2 x$。只要 $g$ 连续这就成立，因为这时内层的积分函数可导。\n\n对 $F(x) = \\int_0^{x^2} t \\, dt$，法则给出 $F'(x) = x^2 \\cdot 2x = 2x^3$。\n\n检验：先积分，$F(x) = \\frac{(x^2)^2}{2} = \\frac{x^4}{2}$，它的导数是 $2x^3$。\n\n> **注意。** 要乘以上限的导数。只写 $g(x^2)$ 就忘了链式法则。",
   ],
   (rng) => {
     const [c, a, m] = [rng.int(1, 9), rng.int(1, 5), rng.int(1, 4)];
     const answer = (m * a * a + c) * 2 * a;
-    return ask(
+    const inner = m * a * a + c;
+    const square = m === 1 ? `${a * a}` : `${m} \\times ${a * a}`;
+    const half = frac(m, 2);
+    const quartic = half.eq(Q.of(1, 1)) ? "x^4" : `${half.toLatex()} x^4`;
+    return solved(
       [
         `If $F(x) = \\int_0^{x^2} (${coef(m, "t")} + ${c}) \\, dt$, what is $F'(${a})$?`,
         `若 $F(x) = \\int_0^{x^2} (${coef(m, "t")} + ${c}) \\, dt$，$F'(${a})$ 是多少？`,
       ],
       answer,
-      [m * a * a + c, m * a + c, (m * a + c) * 2 * a, answer + 2 * a].filter((v) => v !== answer),
       [
-        `$F'(x) = (${coef(m, "x^2")} + ${c}) \\cdot 2 x$, which at $x = ${a}$ is $${m * a * a + c} \\cdot ${2 * a} = ${answer}$.`,
-        `$F'(x) = (${coef(m, "x^2")} + ${c}) \\cdot 2 x$，在 $x = ${a}$ 处等于 $${m * a * a + c} \\cdot ${2 * a} = ${answer}$。`,
+        why(
+          inner,
+          `That is $g(${a * a})$ without the chain-rule factor $2x = ${2 * a}$.`,
+          `这是 $g(${a * a})$，漏掉了链式法则的因子 $2x = ${2 * a}$。`,
+        ),
+        why(
+          m * a + c,
+          `That evaluates the integrand at ${a} instead of at $${a}^2$, and drops the factor ${2 * a}.`,
+          `这在 ${a} 而不是 $${a}^2$ 处求被积函数的值，还漏掉了因子 ${2 * a}。`,
+        ),
+        why(
+          (m * a + c) * 2 * a,
+          `That evaluates the integrand at ${a}; the upper limit is $x^2 = ${a * a}$.`,
+          `这在 ${a} 处求被积函数的值；上限是 $x^2 = ${a * a}$。`,
+        ),
+        why(
+          answer + 2 * a,
+          `That is ${2 * a} too much; the product is $${inner} \\cdot ${2 * a} = ${answer}$.`,
+          `这多了 ${2 * a}；乘积是 $${inner} \\cdot ${2 * a} = ${answer}$。`,
+        ),
       ],
+      solution(
+        [
+          [
+            ["Apply the chain rule", "用链式法则"],
+            [
+              `With $g(t) = ${coef(m, "t")} + ${c}$, the fundamental theorem and the chain rule give $F'(x) = g(x^2) \\cdot 2x = (${coef(m, "x^2")} + ${c}) \\cdot 2x$.`,
+              `取 $g(t) = ${coef(m, "t")} + ${c}$，微积分基本定理和链式法则给出 $F'(x) = g(x^2) \\cdot 2x = (${coef(m, "x^2")} + ${c}) \\cdot 2x$。`,
+            ],
+          ],
+          [
+            ["Evaluate", "求值"],
+            [
+              `At $x = ${a}$, $g(${a * a}) = ${square} + ${c} = ${inner}$ and $2x = ${2 * a}$, so $F'(${a}) = ${inner} \\cdot ${2 * a} = ${answer}$.`,
+              `在 $x = ${a}$ 处，$g(${a * a}) = ${square} + ${c} = ${inner}$，$2x = ${2 * a}$，所以 $F'(${a}) = ${inner} \\cdot ${2 * a} = ${answer}$。`,
+            ],
+          ],
+        ],
+        [
+          `Integrating first gives $F(x) = ${quartic} + ${coef(c, "x^2")}$, whose derivative $${2 * m}x^3 + ${2 * c}x$ at $x = ${a}$ is $${2 * m * a ** 3} + ${2 * c * a} = ${answer}$.`,
+          `先积分得 $F(x) = ${quartic} + ${coef(c, "x^2")}$，它的导数 $${2 * m}x^3 + ${2 * c}x$ 在 $x = ${a}$ 处是 $${2 * m * a ** 3} + ${2 * c * a} = ${answer}$。`,
+        ],
+      ),
     );
   },
 );
@@ -575,8 +781,8 @@ const coverLength = point(
   "the-total-length-of-a-shrinking-cover",
   ["The total length of a shrinking cover", "收缩覆盖的总长度"],
   [
-    "To cover a countable list of points by intervals of small total length, give the $k$th point an interval of length $\\frac{\\varepsilon}{2^k}$. The lengths form a geometric series with sum $\\varepsilon$. This is the standard proof that every countable set has measure zero, however dense it may be.",
-    "要用总长度很小的区间覆盖可数个点，就给第 $k$ 个点一个长度为 $\\frac{\\varepsilon}{2^k}$ 的区间。这些长度构成和为 $\\varepsilon$ 的几何级数。这是每个可数集（不管多稠密）测度为零的标准证明。",
+    "To cover a countable list of points by intervals of small total length, give the $k$th point an interval of length $\\frac{\\varepsilon}{2^k}$. The lengths form a geometric series with sum $\\varepsilon$. This is the standard proof that every countable set has measure zero, however dense it may be.\n\nWith $\\varepsilon = \\frac{1}{10}$ and 3 points, the lengths are $\\frac{1}{20}$, $\\frac{1}{40}$ and $\\frac{1}{80}$, which add up to $\\frac{7}{80}$.\n\nCheck: $\\frac{1}{10} \\left( 1 - \\frac{1}{8} \\right) = \\frac{1}{10} \\cdot \\frac{7}{8} = \\frac{7}{80}$.\n\n> **Watch out.** The first point has $k = 1$, so its interval has length $\\frac{\\varepsilon}{2}$. A finite number of intervals falls short of $\\varepsilon$.",
+    "要用总长度很小的区间覆盖可数个点，就给第 $k$ 个点一个长度为 $\\frac{\\varepsilon}{2^k}$ 的区间。这些长度构成和为 $\\varepsilon$ 的几何级数。这是每个可数集（不管多稠密）测度为零的标准证明。\n\n取 $\\varepsilon = \\frac{1}{10}$，3 个点，长度是 $\\frac{1}{20}$、$\\frac{1}{40}$ 和 $\\frac{1}{80}$，加起来是 $\\frac{7}{80}$。\n\n检验：$\\frac{1}{10} \\left( 1 - \\frac{1}{8} \\right) = \\frac{1}{10} \\cdot \\frac{7}{8} = \\frac{7}{80}$。\n\n> **注意。** 第一个点对应 $k = 1$，所以它的区间长 $\\frac{\\varepsilon}{2}$。有限个区间的总长度达不到 $\\varepsilon$。",
   ],
   (rng) => {
     const e = rng.pick([1, 2, 3, 5, 7]);
@@ -584,17 +790,51 @@ const coverLength = point(
     const n = rng.int(2, 6);
     const answer = frac(e * (2 ** n - 1), d * 2 ** n);
     const eps = frac(e, d);
-    return ask(
+    const share = frac(2 ** n - 1, 2 ** n).toLatex();
+    const lengths = Array.from({ length: n }, (_, i) => frac(e, d * 2 ** (i + 1)).toLatex()).join(" + ");
+    return solved(
       [
         `The $k$th of ${n} points gets an interval of length $\\frac{\\varepsilon}{2^k}$, with $\\varepsilon = ${eps.toLatex()}$. What is the total length of the ${n} intervals?`,
         `${n} 个点中第 $k$ 个点得到长度为 $\\frac{\\varepsilon}{2^k}$ 的区间，$\\varepsilon = ${eps.toLatex()}$。这 ${n} 个区间的总长度是多少？`,
       ],
       answer,
-      [eps, frac(e, d * 2 ** n), frac(e * n, d * 2 ** n), frac(e * (2 ** n - 1), d)],
       [
-        `The sum of $\\frac{1}{2^k}$ for $k$ up to ${n} is $1 - \\frac{1}{2^{${n}}}$. Multiplying by $\\varepsilon$ gives $${answer.toLatex()}$.`,
-        `$k$ 到 ${n} 的 $\\frac{1}{2^k}$ 之和是 $1 - \\frac{1}{2^{${n}}}$。乘 $\\varepsilon$ 得 $${answer.toLatex()}$。`,
+        why(
+          eps,
+          `That is the sum of all infinitely many lengths; ${n} intervals fall short of it by $\\frac{\\varepsilon}{2^{${n}}}$.`,
+          `这是无穷多个长度的总和；${n} 个区间比它少 $\\frac{\\varepsilon}{2^{${n}}}$。`,
+        ),
+        why(frac(e, d * 2 ** n), `That is the length of the ${n}th interval alone.`, `这只是第 ${n} 个区间的长度。`),
+        why(
+          frac(e * n, d * 2 ** n),
+          `That gives every interval the length of the ${n}th; the earlier ones are longer.`,
+          `这让每个区间都和第 ${n} 个一样长；前面的区间更长。`,
+        ),
+        why(
+          frac(e * (2 ** n - 1), d),
+          `That leaves out the division by $2^{${n}}$; the sum is $\\varepsilon$ times $1 - \\frac{1}{2^{${n}}}$.`,
+          `这漏掉了除以 $2^{${n}}$；总和是 $\\varepsilon$ 乘 $1 - \\frac{1}{2^{${n}}}$。`,
+        ),
       ],
+      solution(
+        [
+          [
+            ["Sum the geometric series", "求几何级数的和"],
+            [
+              `$\\frac{1}{2} + \\cdots + \\frac{1}{2^{${n}}} = 1 - \\frac{1}{2^{${n}}} = ${share}$.`,
+              `$\\frac{1}{2} + \\cdots + \\frac{1}{2^{${n}}} = 1 - \\frac{1}{2^{${n}}} = ${share}$。`,
+            ],
+          ],
+          [
+            ["Multiply by the tolerance", "乘以容许值"],
+            [
+              `The total length is $${eps.toLatex()} \\cdot ${share} = ${answer.toLatex()}$.`,
+              `总长度是 $${eps.toLatex()} \\cdot ${share} = ${answer.toLatex()}$。`,
+            ],
+          ],
+        ],
+        [`Adding the lengths directly, $${lengths} = ${answer.toLatex()}$.`, `直接把长度相加，$${lengths} = ${answer.toLatex()}$。`],
+      ),
     );
   },
 );

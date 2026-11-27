@@ -347,8 +347,8 @@ const discontinuityKind = {
     "the-kind-of-a-drawn-discontinuity",
     ["The kind of a drawn discontinuity", "图中间断的类型"],
     [
-      "Discontinuities are classified by one-sided limits. If both exist and agree, the discontinuity is removable. If both exist and differ, it is a jump. If a side grows without bound, it is an infinite discontinuity. A graph shows at a glance which case holds, by what happens as it approaches the point from each side.",
-      "间断按单侧极限分类。两侧极限都存在且相等，是可去间断。都存在但不相等，是跳跃间断。若有一侧无界增大，是无穷间断。看图趋近该点时两侧发生什么，就能立刻判断属于哪种情况。",
+      "Discontinuities are classified by one-sided limits. If both exist and agree, the discontinuity is removable. If both exist and differ, it is a jump. If a side grows without bound, it is an infinite discontinuity. A graph shows at a glance which case holds, by what happens as it approaches the point from each side.\n\nFor example, if a graph approaches height $2$ from the left of $x = 1$ and height $5$ from the right, the one-sided limits are $2$ and $5$, so it has a jump discontinuity at $1$.\n\nCheck: both limits are finite, so the discontinuity is not infinite, and they differ, so no single value at $1$ could make it removable.\n\n> **Watch out.** A filled dot away from the curve does not make a jump. If both sides run into the same open circle, the discontinuity is removable, wherever the dot sits.",
+      "间断按单侧极限分类。两侧极限都存在且相等，是可去间断。都存在但不相等，是跳跃间断。若有一侧无界增大，是无穷间断。看图趋近该点时两侧发生什么，就能立刻判断属于哪种情况。\n\n例如，若图像从 $x = 1$ 左侧趋于高度 $2$，从右侧趋于高度 $5$，两个单侧极限是 $2$ 和 $5$，所以在 $1$ 处是跳跃间断。\n\n检验：两个极限都有限，所以不是无穷间断；它们不相等，所以 $1$ 处取任何一个值都不能使它成为可去间断。\n\n> **注意。** 曲线外的一个实心点并不构成跳跃。如果两侧都趋向同一个空心圆，那就是可去间断，不管那个点在哪里。",
     ],
     (rng) => {
       const a = rng.int(-3, 3);
@@ -396,21 +396,86 @@ const discontinuityKind = {
                 "The graph rises or falls without bound next to the dashed line, so the one-sided limits are not finite",
                 "图在虚线旁无界地上升或下降，所以单侧极限不是有限值",
               ];
-      return choose(
-        rng,
-        [`What kind of discontinuity does the function drawn have at $x = ${a}$?`, `图中函数在 $x = ${a}$ 处是哪种间断？`],
-        names[kind] as Pair,
+      const sign = gap > 0 ? 1 : -1;
+      const rule: Pair =
+        kind === "removable"
+          ? ["Equal one-sided limits mean a removable discontinuity.", "两个单侧极限相等，就是可去间断。"]
+          : kind === "jump"
+            ? ["Different finite one-sided limits mean a jump discontinuity.", "两个单侧极限有限但不相等，就是跳跃间断。"]
+            : ["A side that grows without bound means an infinite discontinuity.", "有一侧无界增大，就是无穷间断。"];
+      const check: Pair =
+        kind === "removable"
+          ? [
+              `Near $x = ${a}$ the heights of the curve tend to $${h}$ from both sides, while $f(${a}) = ${h + gap}$. Setting $f(${a}) = ${h}$ would make $f$ continuous.`,
+              `在 $x = ${a}$ 附近，曲线的高度从两侧都趋于 $${h}$，而 $f(${a}) = ${h + gap}$。令 $f(${a}) = ${h}$ 就能使 $f$ 连续。`,
+            ]
+          : kind === "jump"
+            ? [
+                `From the left the heights tend to $${h}$ and from the right to $${h + gap}$, which differ by $${Math.abs(gap)}$.`,
+                `从左侧高度趋于 $${h}$，从右侧趋于 $${h + gap}$，两者相差 $${Math.abs(gap)}$。`,
+              ]
+            : [
+                `At $x = ${a} - 0.01$ the height is $${h - sign * 100}$ and at $x = ${a} + 0.01$ it is $${h + sign * 100}$, and closer points go further still.`,
+                `在 $x = ${a} - 0.01$ 处高度是 $${h - sign * 100}$，在 $x = ${a} + 0.01$ 处是 $${h + sign * 100}$，更近的点离得更远。`,
+              ];
+      const against: Record<string, Pair> = {
+        removable:
+          kind === "jump"
+            ? [
+                "The two sides approach different heights, so no single value fills the gap.",
+                "两侧趋向不同的高度，所以没有一个值能补上缺口。",
+              ]
+            : [
+                "The graph is unbounded near the point, so there is no finite limit to fill in.",
+                "图在该点附近无界，所以没有有限的极限可以补上。",
+              ],
+        jump:
+          kind === "removable"
+            ? [
+                "Both sides approach the same open circle; the separate dot is the value, not a second limit.",
+                "两侧趋向同一个空心圆；单独的点是函数值，不是第二个极限。",
+              ]
+            : [
+                "A jump needs finite one-sided limits, but here the graph grows without bound.",
+                "跳跃间断要求单侧极限有限，但这里图像无界增大。",
+              ],
+        infinite:
+          kind === "removable"
+            ? ["The graph stays bounded; both sides approach the open circle.", "图像保持有界；两侧都趋向空心圆。"]
+            : ["Both sides approach finite heights; nothing grows without bound.", "两侧都趋向有限的高度；没有什么无界增大。"],
+        none:
+          kind === "removable"
+            ? [
+                "The filled dot is off the curve, so the value is not the limit and $f$ is not continuous.",
+                "实心点不在曲线上，所以函数值不等于极限，$f$ 不连续。",
+              ]
+            : kind === "jump"
+              ? ["The two sides of the graph do not meet, so $f$ is not continuous.", "图像的两侧接不上，所以 $f$ 不连续。"]
+              : ["The graph has no finite height to approach, so $f$ is not continuous.", "图像没有可以趋近的有限高度，所以 $f$ 不连续。"],
+      };
+      return reasoned(
+        choose(
+          rng,
+          [`What kind of discontinuity does the function drawn have at $x = ${a}$?`, `图中函数在 $x = ${a}$ 处是哪种间断？`],
+          names[kind] as Pair,
+          Object.keys(names)
+            .filter((n) => n !== kind)
+            .map((n) => names[n] as Pair),
+          walk(
+            [
+              ["Read both sides", "看两侧", `${seen[0]}.`, `${seen[1]}。`],
+              ["Classify", "分类", rule[0], rule[1]],
+            ],
+            check,
+          ),
+          fig({ xMin: -7, xMax: 7, yMin: -7, yMax: 7 }, marks, [
+            `A graph near x = ${a}. ${observed(seen)[0]}.`,
+            `x = ${a} 附近的图。${observed(seen)[1]}。`,
+          ]),
+        ),
         Object.keys(names)
           .filter((n) => n !== kind)
-          .map((n) => names[n] as Pair),
-        [
-          `${seen[0]}. That is the meaning of ${(names[kind] as Pair)[0].toLowerCase()}.`,
-          `${seen[1]}。这就是${(names[kind] as Pair)[1]}的含义。`,
-        ],
-        fig({ xMin: -7, xMax: 7, yMin: -7, yMax: 7 }, marks, [
-          `A graph near x = ${a}. ${observed(seen)[0]}.`,
-          `x = ${a} 附近的图。${observed(seen)[1]}。`,
-        ]),
+          .map((n): [string, string, string] => [(names[n] as Pair)[0], (against[n] as Pair)[0], (against[n] as Pair)[1]]),
       );
     },
   ),
@@ -422,8 +487,8 @@ const jumpsOfStep = {
     "the-jumps-of-a-monotone-step-graph",
     ["The jumps of a monotone step graph", "单调阶梯图的跃变"],
     [
-      "A monotone function has one-sided limits at every point, so its only discontinuities are jumps. The size of a jump is the right limit minus the left limit. For an increasing function, the jumps add up to at most the total rise, and for a step function they add up to exactly that rise.",
-      "单调函数在每一点都有单侧极限，所以它的间断只能是跳跃。跃变的大小等于右极限减左极限。对于增函数，跃变之和不超过总上升量，而对于阶梯函数，跃变之和恰好等于总上升量。",
+      "A monotone function has one-sided limits at every point, so its only discontinuities are jumps. The size of a jump is the right limit minus the left limit. For an increasing function, the jumps add up to at most the total rise, and for a step function they add up to exactly that rise.\n\nA step function with heights $-1, 2, 3, 6$ has jumps of $3$, $1$ and $3$, which add up to $7$, the rise from $-1$ to $6$.\n\nCheck: $-1 + 7 = 6$, so the jumps carry the function from its first height to its last.\n\n> **Watch out.** Add the sizes of the jumps, not the number of jumps, and measure the rise from the first height, not from $0$.",
+      "单调函数在每一点都有单侧极限，所以它的间断只能是跳跃。跃变的大小等于右极限减左极限。对于增函数，跃变之和不超过总上升量，而对于阶梯函数，跃变之和恰好等于总上升量。\n\n高度依次为 $-1, 2, 3, 6$ 的阶梯函数，跃变是 $3$、$1$ 和 $3$，和为 $7$，正是从 $-1$ 到 $6$ 的上升量。\n\n检验：$-1 + 7 = 6$，所以这些跃变把函数从第一个高度带到最后一个高度。\n\n> **注意。** 要加的是跃变的大小，不是跃变的个数；上升量要从第一个高度量起，而不是从 $0$ 量起。",
     ],
     (rng) => {
       const count = rng.int(3, 5);
@@ -436,7 +501,12 @@ const jumpsOfStep = {
       const jump = (values[index] as number) - (values[index - 1] as number);
       const total = (values[count - 1] as number) - (values[0] as number);
       const whole = rng.bool();
-      return ask(
+      const first = values[0] as number;
+      const last = values[count - 1] as number;
+      const before = values[index - 1] as number;
+      const after = values[index] as number;
+      const jumps = values.slice(1).map((v, i) => v - (values[i] as number));
+      return solved(
         whole
           ? [
               "The graph shows an increasing step function. What is the sum of the sizes of all of its jumps?",
@@ -447,16 +517,65 @@ const jumpsOfStep = {
               `图中是一个递增的阶梯函数。它在 $x = ${at}$ 处的跃变大小是多少？`,
             ],
         whole ? total : jump,
-        whole ? [count - 1, values[count - 1] as number, total + 1] : [values[index] as number, values[index - 1] as number, jump + 1],
         whole
           ? [
-              `The function rises from $${values[0]}$ on the left to $${values[count - 1]}$ on the right only by jumping, so its jumps add up to the total rise, $${total}$.`,
-              `函数从左边的 $${values[0]}$ 升到右边的 $${values[count - 1]}$，全靠跃变，所以跃变之和等于总上升量 $${total}$。`,
+              why(count - 1, "That counts the jumps instead of adding their sizes.", "这数的是跃变的个数，而不是把它们的大小相加。"),
+              why(
+                last,
+                `That is the last height, but the function starts at $${first}$, not at $0$.`,
+                `这是最后的高度，但函数从 $${first}$ 开始，而不是从 $0$ 开始。`,
+              ),
+              why(
+                total + 1,
+                `That counts the whole numbers from $${first}$ to $${last}$, one more than the rise.`,
+                `这数的是从 $${first}$ 到 $${last}$ 的整数个数，比上升量多一。`,
+              ),
             ]
           : [
-              `Just left of $x = ${at}$ the height is $${values[index - 1]}$, and from $x = ${at}$ on it is $${values[index]}$. The jump is the difference, $${jump}$.`,
-              `$x = ${at}$ 左侧的高度是 $${values[index - 1]}$，从 $x = ${at}$ 起是 $${values[index]}$。跃变是二者之差 $${jump}$。`,
+              why(after, `That is the height from $x = ${at}$ on, not the jump.`, `这是从 $x = ${at}$ 起的高度，不是跃变。`),
+              why(before, `That is the height just left of $x = ${at}$, not the jump.`, `这是 $x = ${at}$ 左侧的高度，不是跃变。`),
+              why(
+                jump + 1,
+                `That counts the whole numbers from $${before}$ to $${after}$, one more than the jump.`,
+                `这数的是从 $${before}$ 到 $${after}$ 的整数个数，比跃变多一。`,
+              ),
             ],
+        t(
+          ...walk(
+            whole
+              ? [
+                  [
+                    "Read the end heights",
+                    "读出两端的高度",
+                    `The function starts at height $${first}$ and ends at height $${last}$.`,
+                    `函数从高度 $${first}$ 开始，到高度 $${last}$ 结束。`,
+                  ],
+                  [
+                    "Add the jumps",
+                    "把跃变相加",
+                    `Between the jumps it is constant, so the jumps make up the whole rise from $${first}$ to $${last}$, which is $${total}$.`,
+                    `在跃变之间函数是常数，所以跃变构成从 $${first}$ 到 $${last}$ 的全部上升量，即 $${total}$。`,
+                  ],
+                ]
+              : [
+                  [
+                    "Read the two heights",
+                    "读出两侧的高度",
+                    `Just left of $x = ${at}$ the height is $${before}$, and from $x = ${at}$ on it is $${after}$.`,
+                    `$x = ${at}$ 左侧的高度是 $${before}$，从 $x = ${at}$ 起是 $${after}$。`,
+                  ],
+                  [
+                    "Take the difference",
+                    "求差",
+                    `The jump is the right limit minus the left limit, a rise from $${before}$ to $${after}$ of $${jump}$.`,
+                    `跃变等于右极限减左极限，即从 $${before}$ 升到 $${after}$，大小为 $${jump}$。`,
+                  ],
+                ],
+            whole
+              ? [`The jumps one by one are $${jumps.join(" + ")} = ${total}$.`, `逐个列出的跃变是 $${jumps.join(" + ")} = ${total}$。`]
+              : [`$${before} + ${jump} = ${after}$, the height after the jump.`, `$${before} + ${jump} = ${after}$，正是跃变之后的高度。`],
+          ),
+        ),
         fig({ xMin: -1, xMax: 11, yMin: -4, yMax: 10 }, steps(cuts, values), [
           `Steps at heights ${values.join(", ")}, changing at x = ${cuts.slice(1, -1).join(", ")}.`,
           `高度依次为 ${values.join("，")} 的阶梯，在 x = ${cuts.slice(1, -1).join("，")} 处变化。`,
@@ -472,8 +591,8 @@ const totalVariation = {
     "the-total-variation-of-a-drawn-path",
     ["The total variation of a drawn path", "图中折线的全变差"],
     [
-      "The total variation of a function adds up every rise and every fall, as positive amounts. For a graph of straight pieces, it is the sum of the absolute changes in height on the pieces. It differs from the net change, where falls cancel rises, and from the range, which ignores repeated travel over the same heights.",
-      "函数的全变差把每次上升和下降都按正数加起来。对于由直线段组成的图，它是各段高度变化绝对值之和。它不同于净变化，后者中下降抵消上升；也不同于值域长度，后者忽略在相同高度上的重复往返。",
+      "The total variation of a function adds up every rise and every fall, as positive amounts. For a graph of straight pieces, it is the sum of the absolute changes in height on the pieces. It differs from the net change, where falls cancel rises, and from the range, which ignores repeated travel over the same heights.\n\nA path through the heights $0, 3, 1, 4$ changes by $3$, $2$ and $3$ in size, so its total variation is $8$, while its net change is $4$ and its range is $4$.\n\nCheck: the rises add to $6$ and the fall to $2$; together they make $8$, and the rises minus the fall make the net change $4$.\n\n> **Watch out.** A fall counts as a positive amount; it does not cancel a rise.",
+      "函数的全变差把每次上升和下降都按正数加起来。对于由直线段组成的图，它是各段高度变化绝对值之和。它不同于净变化，后者中下降抵消上升；也不同于值域长度，后者忽略在相同高度上的重复往返。\n\n经过高度 $0, 3, 1, 4$ 的折线，各段变化的绝对值是 $3$、$2$ 和 $3$，所以全变差是 $8$，而净变化是 $4$，值域长度也是 $4$。\n\n检验：上升合计 $6$，下降合计 $2$；两者合起来是 $8$，上升减去下降是净变化 $4$。\n\n> **注意。** 下降按正数计入，它不会抵消上升。",
     ],
     (rng) => {
       const n = rng.int(4, 7);
@@ -487,17 +606,57 @@ const totalVariation = {
       for (let i = 0; i < n; i++) tv += Math.abs((h[i + 1] as number) - (h[i] as number));
       const net = (h[n] as number) - (h[0] as number);
       const range = Math.max(...h) - Math.min(...h);
-      return ask(
+      const sizes = h.slice(1).map((v, i) => Math.abs(v - (h[i] as number)));
+      const rises = h.slice(1).reduce((s, v, i) => s + Math.max(0, v - (h[i] as number)), 0);
+      const falls = tv - rises;
+      return solved(
         [
           "What is the total variation of the function drawn, over the whole interval on which it is drawn?",
           "图中函数在所画的整个区间上的全变差是多少？",
         ],
         tv,
-        [Math.abs(net) === tv ? tv + 1 : Math.abs(net), range === tv ? tv + 2 : range, tv + 1],
         [
-          `The heights in turn are $${h.join(", ")}$. Adding the absolute change on each piece gives $${tv}$, and every fall counts as a positive amount.`,
-          `高度依次为 $${h.join(", ")}$。把每段高度变化的绝对值相加得 $${tv}$，每次下降都算作正数。`,
+          Math.abs(net) === tv
+            ? why(
+                tv + 1,
+                `That overcounts: the changes on the pieces add to exactly $${tv}$.`,
+                `这算多了：各段变化的绝对值之和恰好是 $${tv}$。`,
+              )
+            : why(Math.abs(net), "That is the size of the net change, where falls cancel rises.", "这是净变化的大小，其中下降抵消了上升。"),
+          range === tv
+            ? why(
+                tv + 2,
+                `That overcounts: the changes on the pieces add to exactly $${tv}$.`,
+                `这算多了：各段变化的绝对值之和恰好是 $${tv}$。`,
+              )
+            : why(
+                range,
+                "That is the range of heights, which ignores travelling over the same heights again.",
+                "这是高度的值域长度，它忽略了在相同高度上的重复往返。",
+              ),
+          why(
+            tv + 1,
+            `That overcounts: the changes on the pieces add to exactly $${tv}$.`,
+            `这算多了：各段变化的绝对值之和恰好是 $${tv}$。`,
+          ),
         ],
+        t(
+          ...walk(
+            [
+              ["Read the heights", "读出高度", `The heights in turn are $${h.join(", ")}$.`, `高度依次为 $${h.join(", ")}$。`],
+              [
+                "Add the sizes of the changes",
+                "把变化的绝对值相加",
+                `The changes on the pieces have sizes $${sizes.join(" + ")} = ${tv}$, with every fall counted as a positive amount.`,
+                `各段变化的绝对值是 $${sizes.join(" + ")} = ${tv}$，每次下降都算作正数。`,
+              ],
+            ],
+            [
+              `The rises add to $${rises}$ and the falls to $${falls}$: together they make $${tv}$, and the rises minus the falls make the net change $${net}$.`,
+              `上升合计 $${rises}$，下降合计 $${falls}$：两者合起来是 $${tv}$，上升减去下降是净变化 $${net}$。`,
+            ],
+          ),
+        ),
         fig(
           { xMin: -1, xMax: 8, yMin: -5, yMax: 6 },
           [{ kind: "path", points: h.map((v, i): Point => [i, v]), accent: true }],
@@ -933,8 +1092,8 @@ const simpleIntegral = {
     "the-integral-of-a-drawn-simple-function",
     ["The integral of a drawn simple function", "图中简单函数的积分"],
     [
-      "A simple function takes finitely many values, each on a set of some measure. Its Lebesgue integral is the sum of each value times the measure of the set where it is taken. A part of the graph below the axis has a negative value, so it subtracts from the total rather than adding to it.",
-      "简单函数只取有限多个值，每个值在一个有测度的集合上取到。它的勒贝格积分是每个值乘以取到该值的集合的测度之和。图在轴下方的部分取负值，所以从总数中减去，而不是加上。",
+      "A simple function takes finitely many values, each on a set of some measure. Its Lebesgue integral is the sum of each value times the measure of the set where it is taken. A part of the graph below the axis has a negative value, so it subtracts from the total rather than adding to it.\n\nA function equal to $3$ on $[0, 2)$ and to $-2$ on $[2, 5)$ has integral $3 \\times 2 + (-2) \\times 3 = 0$.\n\nCheck: the area above the axis is $6$ and the area below it is $6$, so they cancel.\n\n> **Watch out.** Multiply each value by the length of its own piece, and keep the sign of the values below the axis.",
+      "简单函数只取有限多个值，每个值在一个有测度的集合上取到。它的勒贝格积分是每个值乘以取到该值的集合的测度之和。图在轴下方的部分取负值，所以从总数中减去，而不是加上。\n\n一个函数在 $[0, 2)$ 上等于 $3$，在 $[2, 5)$ 上等于 $-2$，它的积分是 $3 \\times 2 + (-2) \\times 3 = 0$。\n\n检验：轴上方的面积是 $6$，轴下方的面积也是 $6$，所以二者抵消。\n\n> **注意。** 每个值要乘它自己那一段的长度，轴下方的值要保留负号。",
     ],
     (rng) => {
       const count = rng.int(3, 5);
@@ -950,17 +1109,61 @@ const simpleIntegral = {
       }
       const heights = values.reduce((a, b) => a + b, 0);
       const end = cuts[count] as number;
-      return ask(
+      const par = (v: number) => (v < 0 ? `(${v})` : `${v}`);
+      const lengths = values.map((_, i) => (cuts[i + 1] as number) - (cuts[i] as number));
+      const products = values.map((v, i) => `${par(v)} \\times ${lengths[i]}`).join(" + ");
+      const above = (absolute + total) / 2;
+      const below = (absolute - total) / 2;
+      const overcount = (by: number): Pair => [
+        `That is ${by === 1 ? "one" : "two"} more than the sum of value times length, which is $${total}$.`,
+        `这比值乘长度之和 $${total}$ 多了${by === 1 ? "一" : "二"}。`,
+      ];
+      return solved(
         [
           "The graph shows a simple function that is zero outside the part drawn. What is its Lebesgue integral?",
           "图中是一个简单函数，它在所画部分之外为零。它的勒贝格积分是多少？",
         ],
         total,
-        [absolute === total ? total + 1 : absolute, heights === total ? total + 2 : heights, -total === total ? total - 1 : -total],
         [
-          `Each piece contributes its value times its length, with the parts below the axis counting as negative. The total of these contributions is $${total}$.`,
-          `每段贡献其值乘以长度，轴下方的部分算作负值。这些贡献的总和是 $${total}$。`,
+          absolute === total
+            ? why(total + 1, ...overcount(1))
+            : why(absolute, "That counts the parts below the axis as positive.", "这把轴下方的部分算成了正数。"),
+          heights === total
+            ? why(total + 2, ...overcount(2))
+            : why(
+                heights,
+                "That adds the values without multiplying them by the lengths of their pieces.",
+                "这把值相加，却没有乘以各段的长度。",
+              ),
+          -total === total
+            ? why(
+                total - 1,
+                `That is one less than the sum of value times length, which is $${total}$.`,
+                `这比值乘长度之和 $${total}$ 少了一。`,
+              )
+            : why(
+                -total,
+                "That has the wrong sign: the parts above the axis add and the parts below subtract.",
+                "这符号反了：轴上方的部分加上，轴下方的部分减去。",
+              ),
         ],
+        t(
+          ...walk(
+            [
+              [
+                "Read the pieces",
+                "读出各段",
+                `The values are $${values.join(", ")}$ on pieces of lengths $${lengths.join(", ")}$.`,
+                `各段的值是 $${values.join(", ")}$，长度是 $${lengths.join(", ")}$。`,
+              ],
+              ["Add value times length", "把值乘长度相加", `$${products} = ${total}$.`, `$${products} = ${total}$。`],
+            ],
+            [
+              `The pieces above the axis add $${above}$ and those below take away $${below}$, which leaves $${total}$.`,
+              `轴上方的各段加上 $${above}$，轴下方的各段减去 $${below}$，剩下 $${total}$。`,
+            ],
+          ),
+        ),
         fig({ xMin: -1, xMax: Math.max(end + 1, 9), yMin: -4, yMax: 5 }, steps(cuts, values), [
           `Values ${values.join(", ")} on pieces with end points ${cuts.join(", ")}.`,
           `各段的值依次为 ${values.join("，")}，端点为 ${cuts.join("，")}。`,

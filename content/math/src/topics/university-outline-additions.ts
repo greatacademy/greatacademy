@@ -663,24 +663,54 @@ const measurableFunctions = topic(
       "adding-countably-many-measures",
       ["Adding countably many measures", "可数个测度相加"],
       [
-        "Lebesgue measure is countably additive: the measure of a countable union of disjoint measurable sets is the sum of their measures. Countable sets have measure $0$, so adding one changes nothing.",
-        "勒贝格测度具有可数可加性：互不相交的可数个可测集的并的测度等于它们测度的和。可数集的测度为 $0$，所以加入它不改变结果。",
+        "Lebesgue measure is countably additive: the measure of a countable union of disjoint measurable sets is the sum of their measures. Countable sets have measure $0$, so adding one changes nothing.\n\nDisjoint intervals of lengths $1, \\frac{1}{2}, \\frac{1}{4}, \\dots$ have a union of measure $\\frac{1}{1 - 1/2} = 2$, and adding the rationals outside them keeps the measure $2$.\n\nCheck: the first three intervals already give $1 + \\frac{1}{2} + \\frac{1}{4} = \\frac{7}{4}$, and the rest add the remaining $\\frac{1}{4}$.\n\n> **Watch out.** Countable additivity needs the sets to be disjoint, and a countable set adds $0$, however densely it is spread.",
+        "勒贝格测度具有可数可加性：互不相交的可数个可测集的并的测度等于它们测度的和。可数集的测度为 $0$，所以加入它不改变结果。\n\n长度为 $1, \\frac{1}{2}, \\frac{1}{4}, \\dots$ 的互不相交区间，它们的并的测度是 $\\frac{1}{1 - 1/2} = 2$；再加入区间外的有理数，测度仍是 $2$。\n\n检验：前三个区间已给出 $1 + \\frac{1}{2} + \\frac{1}{4} = \\frac{7}{4}$，其余区间补上剩下的 $\\frac{1}{4}$。\n\n> **注意。** 可数可加性要求集合互不相交；可数集无论分布多稠密，增加的测度都是 $0$。",
       ],
       (rng) => {
         const r = rng.pick([2, 3, 5]);
         const a = (r - 1) * rng.int(1, 12);
         const total = (a * r) / (r - 1);
-        return ask(
-          [
-            `Disjoint intervals have lengths $${a}, \\frac{${a}}{${r}}, \\frac{${a}}{${r * r}}, \\dots$ Their union is joined with the set of all rationals outside them. What is the measure of the result?`,
-            `互不相交的区间长度为 $${a}, \\frac{${a}}{${r}}, \\frac{${a}}{${r * r}}, \\dots$ 把它们的并与区间外的全体有理数合并。结果的测度是多少？`,
-          ],
-          total,
-          [a, total + 1, a * r],
-          [
-            `The lengths form a geometric series with sum ${total}, and the rationals add measure 0.`,
-            `这些长度构成和为 ${total} 的几何级数，有理数增加的测度为 0。`,
-          ],
+        return until(() =>
+          worked(
+            [
+              `Disjoint intervals have lengths $${a}, \\frac{${a}}{${r}}, \\frac{${a}}{${r * r}}, \\dots$ Their union is joined with the set of all rationals outside them. What is the measure of the result?`,
+              `互不相交的区间长度为 $${a}, \\frac{${a}}{${r}}, \\frac{${a}}{${r * r}}, \\dots$ 把它们的并与区间外的全体有理数合并。结果的测度是多少？`,
+            ],
+            total,
+            [
+              [a, "That is only the first interval; the others add to it.", "这只是第一个区间；其余区间还要加上。"],
+              [
+                total + 1,
+                "That gives the rationals measure 1, but a countable set has measure 0.",
+                "这给有理数算了测度 1，但可数集的测度是 0。",
+              ],
+              [
+                a * r,
+                `That multiplies by ${r}; the sum $\\frac{${a}}{1 - 1/${r}}$ also divides by ${r - 1}.`,
+                `这乘了 ${r}；和 $\\frac{${a}}{1 - 1/${r}}$ 还要除以 ${r - 1}。`,
+              ],
+            ],
+            [
+              [
+                ["Sum the lengths", "求长度之和"],
+                [
+                  `The lengths form a geometric series with ratio $\\frac{1}{${r}}$, so they add to $\\frac{${a}}{1 - 1/${r}} = \\frac{${a * r}}{${r - 1}} = ${total}$.`,
+                  `这些长度构成公比为 $\\frac{1}{${r}}$ 的几何级数，和为 $\\frac{${a}}{1 - 1/${r}} = \\frac{${a * r}}{${r - 1}} = ${total}$。`,
+                ],
+              ],
+              [
+                ["Add the rationals", "加入有理数"],
+                [
+                  `The rationals outside are countable, so they have measure 0, and the measure stays ${total}.`,
+                  `区间外的有理数可数，测度为 0，所以测度仍是 ${total}。`,
+                ],
+              ],
+            ],
+            [
+              `Without the first interval the lengths add to $${total} - ${a} = ${total - a}$, which is $\\frac{1}{${r}}$ of ${total}, as it must be, since the rest is the same series scaled by $\\frac{1}{${r}}$.`,
+              `去掉第一个区间后长度之和是 $${total} - ${a} = ${total - a}$，正是 ${total} 的 $\\frac{1}{${r}}$，因为其余部分就是同一个级数乘以 $\\frac{1}{${r}}$。`,
+            ],
+          ),
         );
       },
     ),
@@ -688,20 +718,50 @@ const measurableFunctions = topic(
       "the-measure-of-a-level-set",
       ["The measure of a level set", "水平集的测度"],
       [
-        "A function $f$ is measurable when every set $\\{x : f(x) > t\\}$ is measurable. The measures of these sets, taken for all $t$, are what the Lebesgue integral adds up.",
-        "如果每个集合 $\\{x : f(x) > t\\}$ 都可测，函数 $f$ 就是可测的。对所有 $t$ 取这些集合的测度，勒贝格积分加起来的正是它们。",
+        "A function $f$ is measurable when every set $\\{x : f(x) > t\\}$ is measurable. The measures of these sets, taken for all $t$, are what the Lebesgue integral adds up.\n\nFor $f(x) = x^{2}$ on $[0, 5]$, the set $\\{x : f(x) > 9\\}$ is $(3, 5]$, because $x^{2} > 9$ means $x > 3$ when $x \\ge 0$. Its measure is $2$.\n\nCheck: the rest of the interval, $[0, 3]$, has measure $3$, and $2 + 3 = 5$, the length of $[0, 5]$.\n\n> **Watch out.** The level set is a set of inputs $x$, so measure its length on the $x$-axis, not the range of values $f$ takes there.",
+        "如果每个集合 $\\{x : f(x) > t\\}$ 都可测，函数 $f$ 就是可测的。对所有 $t$ 取这些集合的测度，勒贝格积分加起来的正是它们。\n\n对 $[0, 5]$ 上的 $f(x) = x^{2}$，集合 $\\{x : f(x) > 9\\}$ 是 $(3, 5]$，因为当 $x \\ge 0$ 时 $x^{2} > 9$ 即 $x > 3$。它的测度是 $2$。\n\n检验：区间的其余部分 $[0, 3]$ 的测度是 $3$，而 $2 + 3 = 5$，正是 $[0, 5]$ 的长度。\n\n> **注意。** 水平集是自变量 $x$ 的集合，所以要量它在 $x$ 轴上的长度，而不是 $f$ 在那里取值的范围。",
       ],
       (rng) => {
         const s = rng.int(1, 8);
         const b = s + rng.int(1, 9);
-        return ask(
-          [
-            `For $f(x) = x^{2}$ on $[0, ${b}]$, what is the measure of $\\{x : f(x) > ${s * s}\\}$?`,
-            `对 $[0, ${b}]$ 上的 $f(x) = x^{2}$，$\\{x : f(x) > ${s * s}\\}$ 的测度是多少？`,
-          ],
-          b - s,
-          [s, b, b * b - s * s],
-          [`The set is $(${s}, ${b}]$, which has length ${b - s}.`, `这个集合是 $(${s}, ${b}]$，长度为 ${b - s}。`],
+        return until(() =>
+          worked(
+            [
+              `For $f(x) = x^{2}$ on $[0, ${b}]$, what is the measure of $\\{x : f(x) > ${s * s}\\}$?`,
+              `对 $[0, ${b}]$ 上的 $f(x) = x^{2}$，$\\{x : f(x) > ${s * s}\\}$ 的测度是多少？`,
+            ],
+            b - s,
+            [
+              [
+                s,
+                `That is the measure of the rest, $[0, ${s}]$, where $f$ is not above ${s * s}.`,
+                `这是其余部分 $[0, ${s}]$ 的测度，那里 $f$ 不大于 ${s * s}。`,
+              ],
+              [b, `That is the whole interval $[0, ${b}]$.`, `这是整个区间 $[0, ${b}]$。`],
+              [
+                b * b - s * s,
+                `That measures the values of $f$ from ${s * s} to ${b * b}, not the set of inputs.`,
+                `这量的是 $f$ 从 ${s * s} 到 ${b * b} 的取值范围，而不是自变量的集合。`,
+              ],
+            ],
+            [
+              [
+                ["Solve the inequality", "解不等式"],
+                [
+                  `For $x \\ge 0$, $x^{2} > ${s * s}$ means $x > ${s}$, so the set is $(${s}, ${b}]$.`,
+                  `当 $x \\ge 0$ 时，$x^{2} > ${s * s}$ 即 $x > ${s}$，所以这个集合是 $(${s}, ${b}]$。`,
+                ],
+              ],
+              [
+                ["Take the length", "取长度"],
+                [`$(${s}, ${b}]$ has length $${b} - ${s} = ${b - s}$.`, `$(${s}, ${b}]$ 的长度是 $${b} - ${s} = ${b - s}$。`],
+              ],
+            ],
+            [
+              `The rest of the interval, $[0, ${s}]$, has measure ${s}, and $${b - s} + ${s} = ${b}$, the length of $[0, ${b}]$.`,
+              `区间的其余部分 $[0, ${s}]$ 的测度是 ${s}，而 $${b - s} + ${s} = ${b}$，正是 $[0, ${b}]$ 的长度。`,
+            ],
+          ),
         );
       },
     ),
@@ -709,8 +769,8 @@ const measurableFunctions = topic(
       "a-step-function-above-a-level",
       ["A step function above a level", "阶梯函数高于某水平的部分"],
       [
-        "For a step function, $\\{x : f(x) > t\\}$ is the union of the pieces whose value exceeds $t$. Its measure is the total length of those pieces, whichever order they come in.",
-        "对阶梯函数，$\\{x : f(x) > t\\}$ 是取值超过 $t$ 的那些段的并。它的测度是这些段的总长度，与顺序无关。",
+        "For a step function, $\\{x : f(x) > t\\}$ is the union of the pieces whose value exceeds $t$. Its measure is the total length of those pieces, whichever order they come in.\n\nIf $f = 5$ on a set of measure $2$, $f = 1$ on a set of measure $4$ and $f = 7$ on a set of measure $3$, then $\\{x : f(x) > 3\\}$ is made of the first and third sets, of measure $2 + 3 = 5$.\n\nCheck: the set where $f \\le 3$ is the second set, of measure $4$, and $5 + 4 = 9$ is the total measure.\n\n> **Watch out.** The inequality is strict, so a piece whose value equals $t$ is left out.",
+        "对阶梯函数，$\\{x : f(x) > t\\}$ 是取值超过 $t$ 的那些段的并。它的测度是这些段的总长度，与顺序无关。\n\n若 $f$ 在测度为 $2$ 的集合上等于 $5$，在测度为 $4$ 的集合上等于 $1$，在测度为 $3$ 的集合上等于 $7$，那么 $\\{x : f(x) > 3\\}$ 由第一个和第三个集合组成，测度为 $2 + 3 = 5$。\n\n检验：$f \\le 3$ 的集合是第二个集合，测度为 $4$，而 $5 + 4 = 9$ 是总测度。\n\n> **注意。** 不等号是严格的，所以取值恰好等于 $t$ 的段不计入。",
       ],
       (rng) => {
         const t = rng.int(1, 9);
@@ -718,17 +778,44 @@ const measurableFunctions = topic(
         const high = t + rng.int(1, 5);
         const higher = high + rng.int(1, 5);
         const [l1, l2, l3] = [rng.int(1, 7), rng.int(1, 7), rng.int(1, 7)];
-        return ask(
-          [
-            `A step function equals ${high} on a set of measure ${l1}, ${low} on a disjoint set of measure ${l2}, and ${higher} on a third disjoint set of measure ${l3}. What is the measure of the set where $f > ${t}$?`,
-            `阶梯函数在测度为 ${l1} 的集合上等于 ${high}，在与之不交、测度为 ${l2} 的集合上等于 ${low}，在第三个不交、测度为 ${l3} 的集合上等于 ${higher}。$f > ${t}$ 的集合的测度是多少？`,
-          ],
-          l1 + l3,
-          [l1 + l2 + l3, l2, l1 + l2],
-          [
-            `Only the values ${high} and ${higher} exceed ${t}, so the measure is $${l1} + ${l3}$.`,
-            `只有值 ${high} 和 ${higher} 超过 ${t}，所以测度是 $${l1} + ${l3}$。`,
-          ],
+        return until(() =>
+          worked(
+            [
+              `A step function equals ${high} on a set of measure ${l1}, ${low} on a disjoint set of measure ${l2}, and ${higher} on a third disjoint set of measure ${l3}. What is the measure of the set where $f > ${t}$?`,
+              `阶梯函数在测度为 ${l1} 的集合上等于 ${high}，在与之不交、测度为 ${l2} 的集合上等于 ${low}，在第三个不交、测度为 ${l3} 的集合上等于 ${higher}。$f > ${t}$ 的集合的测度是多少？`,
+            ],
+            l1 + l3,
+            [
+              [
+                l1 + l2 + l3,
+                `That counts all three sets, but the value ${low} is not above ${t}.`,
+                `这把三个集合都算上了，但值 ${low} 并不大于 ${t}。`,
+              ],
+              [l2, `That is the measure of the set where $f \\le ${t}$.`, `这是 $f \\le ${t}$ 的集合的测度。`],
+              [
+                l1 + l2,
+                `That takes the first two sets, but the value ${low} is not above ${t} and the value ${higher} is.`,
+                `这取了前两个集合，但值 ${low} 不大于 ${t}，而值 ${higher} 大于 ${t}。`,
+              ],
+            ],
+            [
+              [
+                ["Compare each value with the level", "把每个值与水平比较"],
+                [`${high} and ${higher} are above ${t}, while ${low} is not.`, `${high} 和 ${higher} 大于 ${t}，而 ${low} 不大于 ${t}。`],
+              ],
+              [
+                ["Add the measures", "把测度相加"],
+                [
+                  `The set where $f > ${t}$ is the first and third sets together, of measure $${l1} + ${l3} = ${l1 + l3}$.`,
+                  `$f > ${t}$ 的集合由第一个和第三个集合组成，测度为 $${l1} + ${l3} = ${l1 + l3}$。`,
+                ],
+              ],
+            ],
+            [
+              `The set where $f \\le ${t}$ has measure ${l2}, and $${l1 + l3} + ${l2} = ${l1 + l2 + l3}$ is the total measure.`,
+              `$f \\le ${t}$ 的集合测度为 ${l2}，而 $${l1 + l3} + ${l2} = ${l1 + l2 + l3}$ 是总测度。`,
+            ],
+          ),
         );
       },
     ),
@@ -746,25 +833,62 @@ const convergenceTheorems = topic(
       "monotone-convergence",
       ["Monotone convergence", "单调收敛"],
       [
-        "If $0 \\le f_{1} \\le f_{2} \\le \\dots$ are measurable and tend to $f$, then $\\int f_{n} \\to \\int f$, even when $f$ is unbounded. Truncating an unbounded function at height $n$ gives such a sequence.",
-        "如果可测函数满足 $0 \\le f_{1} \\le f_{2} \\le \\dots$ 且趋于 $f$，那么 $\\int f_{n} \\to \\int f$，即使 $f$ 无界也成立。把无界函数在高度 $n$ 处截断就得到这样的序列。",
+        "If $0 \\le f_{1} \\le f_{2} \\le \\dots$ are measurable and tend to $f$, then $\\int f_{n} \\to \\int f$, even when $f$ is unbounded. Truncating an unbounded function at height $n$ gives such a sequence.\n\nFor $f_{n}(x) = \\min(n, x^{-1/2})$ on $(0, 1]$, the $f_{n}$ increase to $x^{-1/2}$, so $\\int_{0}^{1} f_{n} \\to \\int_{0}^{1} x^{-1/2}\\, dx = 2$.\n\nCheck: $f_{n}$ equals $n$ on $\\left(0, \\frac{1}{n^{2}}\\right]$ and $x^{-1/2}$ after that, so $\\int_{0}^{1} f_{n} = \\frac{1}{n} + 2 - \\frac{2}{n} = 2 - \\frac{1}{n}$, which tends to $2$.\n\n> **Watch out.** The integral of $x^{-r}$ over $(0, 1]$ is $\\frac{1}{1 - r}$: divide by $1 - r$, not by $r$.",
+        "如果可测函数满足 $0 \\le f_{1} \\le f_{2} \\le \\dots$ 且趋于 $f$，那么 $\\int f_{n} \\to \\int f$，即使 $f$ 无界也成立。把无界函数在高度 $n$ 处截断就得到这样的序列。\n\n对 $(0, 1]$ 上的 $f_{n}(x) = \\min(n, x^{-1/2})$，$f_{n}$ 递增趋于 $x^{-1/2}$，所以 $\\int_{0}^{1} f_{n} \\to \\int_{0}^{1} x^{-1/2}\\, dx = 2$。\n\n检验：$f_{n}$ 在 $\\left(0, \\frac{1}{n^{2}}\\right]$ 上等于 $n$，之后等于 $x^{-1/2}$，所以 $\\int_{0}^{1} f_{n} = \\frac{1}{n} + 2 - \\frac{2}{n} = 2 - \\frac{1}{n}$，它趋于 $2$。\n\n> **注意。** $x^{-r}$ 在 $(0, 1]$ 上的积分是 $\\frac{1}{1 - r}$：要除以 $1 - r$，而不是除以 $r$。",
       ],
       (rng) => {
         const q = rng.pick([2, 3, 4, 5]);
         const p = rng.int(1, q - 1);
         const c = rng.int(1, 9);
         const f = `${c === 1 ? "" : c}x^{-${Q.of(p, q).toLatex()}}`;
-        return ask(
-          [
-            `Let $f_{n}(x) = \\min(n, ${f})$ on $(0, 1]$. What is the limit of $\\int_{0}^{1} f_{n}$?`,
-            `设 $(0, 1]$ 上 $f_{n}(x) = \\min(n, ${f})$。$\\int_{0}^{1} f_{n}$ 的极限是多少？`,
-          ],
-          Q.of(c * q, q - p),
-          [Q.of(c * p, q), Q.of(c, 1), Q.of(c * q, p)],
-          [
-            `The $f_{n}$ increase to $${f}$, so the limit is its integral, $${c} \\cdot \\frac{1}{1 - ${Q.of(p, q).toLatex()}}$.`,
-            `$f_{n}$ 递增趋于 $${f}$，所以极限就是它的积分 $${c} \\cdot \\frac{1}{1 - ${Q.of(p, q).toLatex()}}$。`,
-          ],
+        const r = Q.of(p, q).toLatex();
+        const answer = Q.of(c * q, q - p);
+        const front = c === 1 ? "" : `${c} \\times `;
+        return until(() =>
+          worked(
+            [
+              `Let $f_{n}(x) = \\min(n, ${f})$ on $(0, 1]$. What is the limit of $\\int_{0}^{1} f_{n}$?`,
+              `设 $(0, 1]$ 上 $f_{n}(x) = \\min(n, ${f})$。$\\int_{0}^{1} f_{n}$ 的极限是多少？`,
+            ],
+            answer,
+            [
+              [
+                Q.of(c * p, q),
+                `That multiplies by the exponent $${r}$ instead of dividing by $1 - ${r}$.`,
+                `这是乘以指数 $${r}$，而不是除以 $1 - ${r}$。`,
+              ],
+              [
+                Q.of(c, 1),
+                "That is the value at $x = 1$, not the integral over $(0, 1]$.",
+                "这是 $x = 1$ 处的值，不是在 $(0, 1]$ 上的积分。",
+              ],
+              [
+                Q.of(c * q, p),
+                `That divides by the exponent $${r}$ instead of by $1 - ${r}$.`,
+                `这是除以指数 $${r}$，而不是除以 $1 - ${r}$。`,
+              ],
+            ],
+            [
+              [
+                ["Check the hypotheses", "检验条件"],
+                [
+                  `The $f_{n}$ are at least $0$, increase with $n$ and tend to $${f}$ at every $x$ in $(0, 1]$, so monotone convergence applies.`,
+                  `$f_{n}$ 都不小于 $0$，随 $n$ 递增，并在 $(0, 1]$ 的每个 $x$ 处趋于 $${f}$，所以单调收敛定理适用。`,
+                ],
+              ],
+              [
+                ["Integrate the limit", "对极限积分"],
+                [
+                  `$\\int_{0}^{1} ${f}\\, dx = ${front}\\frac{1}{1 - ${r}} = ${answer.toLatex()}$.`,
+                  `$\\int_{0}^{1} ${f}\\, dx = ${front}\\frac{1}{1 - ${r}} = ${answer.toLatex()}$。`,
+                ],
+              ],
+            ],
+            [
+              `An antiderivative of $${f}$ is $${answer.toLatex()} x^{${Q.of(q - p, q).toLatex()}}$, which is $0$ at $x = 0$ and $${answer.toLatex()}$ at $x = 1$.`,
+              `$${f}$ 的一个原函数是 $${answer.toLatex()} x^{${Q.of(q - p, q).toLatex()}}$，它在 $x = 0$ 处为 $0$，在 $x = 1$ 处为 $${answer.toLatex()}$。`,
+            ],
+          ),
         );
       },
     ),
@@ -772,37 +896,93 @@ const convergenceTheorems = topic(
       "dominated-convergence",
       ["Dominated convergence", "控制收敛"],
       [
-        "If $f_{n} \\to f$ almost everywhere and $|f_{n}| \\le g$ for one integrable $g$, then $\\int f_{n} \\to \\int f$. The convergence need not be uniform, and points where it fails may form a set of measure zero.",
-        "如果 $f_{n} \\to f$ 几乎处处成立，且对一个可积函数 $g$ 有 $|f_{n}| \\le g$，那么 $\\int f_{n} \\to \\int f$。收敛不必一致，不收敛的点可以构成零测集。",
+        "If $f_{n} \\to f$ almost everywhere and $|f_{n}| \\le g$ for one integrable $g$, then $\\int f_{n} \\to \\int f$. The convergence need not be uniform, and points where it fails may form a set of measure zero.\n\nFor $\\int_{0}^{1} (4x^{n} + 3)\\, dx$, the integrand tends to $3$ at every $x < 1$ and stays below $7$, so the limit of the integrals is $\\int_{0}^{1} 3\\, dx = 3$.\n\nCheck: directly, $\\int_{0}^{1} (4x^{n} + 3)\\, dx = \\frac{4}{n + 1} + 3$, which tends to $3$.\n\n> **Watch out.** The single point $x = 1$, where $x^{n}$ stays $1$, has measure zero and does not affect the integral.",
+        "如果 $f_{n} \\to f$ 几乎处处成立，且对一个可积函数 $g$ 有 $|f_{n}| \\le g$，那么 $\\int f_{n} \\to \\int f$。收敛不必一致，不收敛的点可以构成零测集。\n\n对 $\\int_{0}^{1} (4x^{n} + 3)\\, dx$，被积函数在每个 $x < 1$ 处趋于 $3$，且始终小于 $7$，所以积分的极限是 $\\int_{0}^{1} 3\\, dx = 3$。\n\n检验：直接计算，$\\int_{0}^{1} (4x^{n} + 3)\\, dx = \\frac{4}{n + 1} + 3$，它趋于 $3$。\n\n> **注意。** 单独一点 $x = 1$ 处 $x^{n}$ 始终为 $1$，但它的测度为零，不影响积分。",
       ],
       (rng) => {
         const c = rng.int(2, 12);
         const d = rng.int(1, 9);
         const b = rng.int(2, 9);
         return rng.bool()
-          ? ask(
-              [
-                `What is $\\lim_{n \\to \\infty} \\int_{0}^{1} (${c}x^{n} + ${d}) \\, dx$?`,
-                `$\\lim_{n \\to \\infty} \\int_{0}^{1} (${c}x^{n} + ${d}) \\, dx$ 是多少？`,
-              ],
-              d,
-              [c + d, c, 0],
-              [
-                `The integrand tends to ${d} except at $x = 1$ and is bounded by ${c + d}, so the limit is ${d}.`,
-                `被积函数除 $x = 1$ 外都趋于 ${d}，并且以 ${c + d} 为界，所以极限是 ${d}。`,
-              ],
+          ? until(() =>
+              worked(
+                [
+                  `What is $\\lim_{n \\to \\infty} \\int_{0}^{1} (${c}x^{n} + ${d}) \\, dx$?`,
+                  `$\\lim_{n \\to \\infty} \\int_{0}^{1} (${c}x^{n} + ${d}) \\, dx$ 是多少？`,
+                ],
+                d,
+                [
+                  [
+                    c + d,
+                    "That uses the value at $x = 1$, a single point of measure zero.",
+                    "这用了 $x = 1$ 处的值，而那只是一个零测度的点。",
+                  ],
+                  [
+                    c,
+                    `That keeps the term $${c}x^{n}$, which tends to $0$, and drops the constant ${d}.`,
+                    `这保留了趋于 $0$ 的项 $${c}x^{n}$，却丢掉了常数 ${d}。`,
+                  ],
+                  [0, `That sends the constant ${d} to $0$ as well.`, `这把常数 ${d} 也变成了 $0$。`],
+                ],
+                [
+                  [
+                    ["Find the limit at each point", "求每一点的极限"],
+                    [
+                      `For $0 \\le x < 1$, $${c}x^{n} \\to 0$, so the integrand tends to ${d} everywhere except at the single point $x = 1$.`,
+                      `当 $0 \\le x < 1$ 时 $${c}x^{n} \\to 0$，所以被积函数除单点 $x = 1$ 外都趋于 ${d}。`,
+                    ],
+                  ],
+                  [
+                    ["Apply dominated convergence", "应用控制收敛定理"],
+                    [
+                      `The integrand stays below the constant ${c + d}, which is integrable on $[0, 1]$, so the limit is $\\int_{0}^{1} ${d}\\, dx = ${d}$.`,
+                      `被积函数始终小于常数 ${c + d}，而它在 $[0, 1]$ 上可积，所以极限是 $\\int_{0}^{1} ${d}\\, dx = ${d}$。`,
+                    ],
+                  ],
+                ],
+                [
+                  `Directly, the integral is $\\frac{${c}}{n + 1} + ${d}$, which tends to ${d}.`,
+                  `直接计算，积分是 $\\frac{${c}}{n + 1} + ${d}$，它趋于 ${d}。`,
+                ],
+              ),
             )
-          : ask(
-              [
-                `What is $\\lim_{n \\to \\infty} \\int_{0}^{${b}} ${c}e^{-x/n} \\, dx$?`,
-                `$\\lim_{n \\to \\infty} \\int_{0}^{${b}} ${c}e^{-x/n} \\, dx$ 是多少？`,
-              ],
-              b * c,
-              [0, c, b],
-              [
-                `The integrand tends to ${c} and is bounded by ${c}, so the limit is $${c} \\cdot ${b}$.`,
-                `被积函数趋于 ${c} 且以 ${c} 为界，所以极限是 $${c} \\cdot ${b}$。`,
-              ],
+          : until(() =>
+              worked(
+                [
+                  `What is $\\lim_{n \\to \\infty} \\int_{0}^{${b}} ${c}e^{-x/n} \\, dx$?`,
+                  `$\\lim_{n \\to \\infty} \\int_{0}^{${b}} ${c}e^{-x/n} \\, dx$ 是多少？`,
+                ],
+                b * c,
+                [
+                  [
+                    0,
+                    "That lets $e^{-x/n}$ tend to $0$, but $-x/n$ tends to $0$, so $e^{-x/n}$ tends to $1$.",
+                    "这让 $e^{-x/n}$ 趋于 $0$，但 $-x/n$ 趋于 $0$，所以 $e^{-x/n}$ 趋于 $1$。",
+                  ],
+                  [c, `That forgets the length ${b} of the interval.`, `这忘了区间的长度 ${b}。`],
+                  [b, `That drops the constant ${c}.`, `这丢掉了常数 ${c}。`],
+                ],
+                [
+                  [
+                    ["Find the limit at each point", "求每一点的极限"],
+                    [
+                      `For each $x$, $-\\frac{x}{n} \\to 0$, so $${c}e^{-x/n} \\to ${c}$.`,
+                      `对每个 $x$，$-\\frac{x}{n} \\to 0$，所以 $${c}e^{-x/n} \\to ${c}$。`,
+                    ],
+                  ],
+                  [
+                    ["Apply dominated convergence", "应用控制收敛定理"],
+                    [
+                      `For $x \\ge 0$ the integrand is at most ${c}, which is integrable on $[0, ${b}]$, so the limit is $${c} \\times ${b} = ${b * c}$.`,
+                      `当 $x \\ge 0$ 时被积函数至多是 ${c}，它在 $[0, ${b}]$ 上可积，所以极限是 $${c} \\times ${b} = ${b * c}$。`,
+                    ],
+                  ],
+                ],
+                [
+                  `Directly, the integral is $${c}n\\left(1 - e^{-${b}/n}\\right)$, and $n\\left(1 - e^{-${b}/n}\\right) \\to ${b}$, so it tends to $${b * c}$.`,
+                  `直接计算，积分是 $${c}n\\left(1 - e^{-${b}/n}\\right)$，而 $n\\left(1 - e^{-${b}/n}\\right) \\to ${b}$，所以它趋于 $${b * c}$。`,
+                ],
+              ),
             );
       },
     ),
@@ -810,23 +990,53 @@ const convergenceTheorems = topic(
       "when-domination-fails",
       ["When domination fails", "控制条件不成立时"],
       [
-        "A taller and thinner spike keeps its area while it tends to $0$ at every point. No integrable function lies above all these spikes, so the theorem does not apply and the integral of the limit differs from the limit of the integrals.",
-        "越来越高、越来越窄的尖峰保持面积不变，同时在每一点趋于 $0$。没有可积函数能位于所有这些尖峰之上，所以定理不适用，极限的积分不等于积分的极限。",
+        "A taller and thinner spike keeps its area while it tends to $0$ at every point. No integrable function lies above all these spikes, so the theorem does not apply and the integral of the limit differs from the limit of the integrals.\n\nFor $f_{n} = n$ on $\\left(0, \\frac{1}{n}\\right)$ and $0$ elsewhere, each $\\int f_{n} = n \\times \\frac{1}{n} = 1$, while $f_{n}(x) \\to 0$ at every $x$. So $\\lim \\int f_{n} = 1$ but $\\int \\lim f_{n} = 0$.\n\nCheck: any $g$ above every $f_{n}$ satisfies $g(x) \\ge \\frac{1}{x} - 1$ on $(0, 1)$, and $\\int_{0}^{1} \\left(\\frac{1}{x} - 1\\right) dx$ diverges, so no integrable $g$ exists.\n\n> **Watch out.** The difference is the area each spike keeps; the length of the whole interval plays no part.",
+        "越来越高、越来越窄的尖峰保持面积不变，同时在每一点趋于 $0$。没有可积函数能位于所有这些尖峰之上，所以定理不适用，极限的积分不等于积分的极限。\n\n对在 $\\left(0, \\frac{1}{n}\\right)$ 上等于 $n$、其余处为 $0$ 的 $f_{n}$，每个 $\\int f_{n} = n \\times \\frac{1}{n} = 1$，而 $f_{n}(x)$ 在每个 $x$ 处都趋于 $0$。所以 $\\lim \\int f_{n} = 1$，但 $\\int \\lim f_{n} = 0$。\n\n检验：位于每个 $f_{n}$ 之上的 $g$ 在 $(0, 1)$ 上满足 $g(x) \\ge \\frac{1}{x} - 1$，而 $\\int_{0}^{1} \\left(\\frac{1}{x} - 1\\right) dx$ 发散，所以不存在可积的 $g$。\n\n> **注意。** 这个差是每个尖峰保持的面积；整个区间的长度不起作用。",
       ],
       (rng) => {
         const c = rng.int(2, 15);
         const b = rng.int(2, 9);
-        return ask(
-          [
-            `Let $f_{n} = ${c}n$ on $(0, \\frac{1}{n})$ and $0$ elsewhere on $[0, ${b}]$. What is $\\lim \\int f_{n} - \\int \\lim f_{n}$?`,
-            `在 $[0, ${b}]$ 上，设 $f_{n}$ 在 $(0, \\frac{1}{n})$ 上等于 $${c}n$，其余处为 $0$。$\\lim \\int f_{n} - \\int \\lim f_{n}$ 是多少？`,
-          ],
-          c,
-          [0, b * c, 1],
-          [
-            `Each $\\int f_{n}$ equals ${c}, while $f_{n} \\to 0$ at every point, so the difference is ${c}.`,
-            `每个 $\\int f_{n}$ 都等于 ${c}，而 $f_{n}$ 在每一点都趋于 0，所以差是 ${c}。`,
-          ],
+        return until(() =>
+          worked(
+            [
+              `Let $f_{n} = ${c}n$ on $(0, \\frac{1}{n})$ and $0$ elsewhere on $[0, ${b}]$. What is $\\lim \\int f_{n} - \\int \\lim f_{n}$?`,
+              `在 $[0, ${b}]$ 上，设 $f_{n}$ 在 $(0, \\frac{1}{n})$ 上等于 $${c}n$，其余处为 $0$。$\\lim \\int f_{n} - \\int \\lim f_{n}$ 是多少？`,
+            ],
+            c,
+            [
+              [
+                0,
+                "That assumes the limit and the integral can be exchanged, but no integrable function dominates the spikes.",
+                "这假定极限与积分可以交换，但没有可积函数控制这些尖峰。",
+              ],
+              [
+                b * c,
+                `That spreads the height over the whole interval $[0, ${b}]$, but each spike has width $\\frac{1}{n}$.`,
+                `这把高度铺满了整个区间 $[0, ${b}]$，但每个尖峰的宽度只有 $\\frac{1}{n}$。`,
+              ],
+              [1, `That drops the constant ${c} in the height $${c}n$.`, `这丢掉了高度 $${c}n$ 中的常数 ${c}。`],
+            ],
+            [
+              [
+                ["Integrate each spike", "对每个尖峰积分"],
+                [
+                  `$\\int f_{n} = ${c}n \\times \\frac{1}{n} = ${c}$ for every $n$, so $\\lim \\int f_{n} = ${c}$.`,
+                  `对每个 $n$，$\\int f_{n} = ${c}n \\times \\frac{1}{n} = ${c}$，所以 $\\lim \\int f_{n} = ${c}$。`,
+                ],
+              ],
+              [
+                ["Integrate the limit", "对极限积分"],
+                [
+                  "Each $x > 0$ lies outside $(0, \\frac{1}{n})$ once $n > \\frac{1}{x}$, and $f_{n}(0) = 0$, so $f_{n} \\to 0$ everywhere and $\\int \\lim f_{n} = 0$.",
+                  "每个 $x > 0$ 在 $n > \\frac{1}{x}$ 后都落在 $(0, \\frac{1}{n})$ 之外，且 $f_{n}(0) = 0$，所以 $f_{n}$ 处处趋于 $0$，$\\int \\lim f_{n} = 0$。",
+                ],
+              ],
+            ],
+            [
+              `The difference is $${c} - 0 = ${c}$, the area each spike keeps; the spikes have no integrable bound, since any bound is at least $${c}\\left(\\frac{1}{x} - 1\\right)$ on $(0, 1)$.`,
+              `差是 $${c} - 0 = ${c}$，即每个尖峰保持的面积；这些尖峰没有可积的上界，因为任何上界在 $(0, 1)$ 上都至少是 $${c}\\left(\\frac{1}{x} - 1\\right)$。`,
+            ],
+          ),
         );
       },
     ),
@@ -844,25 +1054,53 @@ const stoneWeierstrass = topic(
       "checking-the-hypotheses",
       ["Checking the hypotheses", "检验条件"],
       [
-        "An algebra of real continuous functions on a compact set is dense in all continuous functions if it separates points and vanishes at no point. Being an algebra means closure under addition, multiplication and scalars.",
-        "紧集上的实连续函数代数，如果能分离点且不在任何一点同时为零，就在全体连续函数中稠密。代数是指对加法、乘法和数乘封闭。",
+        "An algebra of real continuous functions on a compact set is dense in all continuous functions if it separates points and vanishes at no point. Being an algebra means closure under addition, multiplication and scalars.\n\nOn $[1, 2]$ the polynomials in $x^{2}$ form an algebra that contains the constants, so it vanishes at no point, and $x^{2}$ takes different values at different points of $[1, 2]$. So these polynomials are dense in the continuous functions on $[1, 2]$.\n\nCheck: the substitution $u = x^{2}$ turns them into all polynomials in $u$ on $[1, 4]$, which are dense by the Weierstrass theorem.\n\n> **Watch out.** On an interval symmetric about $0$, $x^{2}$ takes the same value at $x$ and $-x$, so the same family no longer separates points.",
+        "紧集上的实连续函数代数，如果能分离点且不在任何一点同时为零，就在全体连续函数中稠密。代数是指对加法、乘法和数乘封闭。\n\n在 $[1, 2]$ 上，关于 $x^{2}$ 的多项式构成一个包含常数的代数，所以它不在任何一点全为零；而 $x^{2}$ 在 $[1, 2]$ 的不同点取不同的值。所以这些多项式在 $[1, 2]$ 上的连续函数中稠密。\n\n检验：代换 $u = x^{2}$ 把它们变成 $[1, 4]$ 上关于 $u$ 的全体多项式，由魏尔斯特拉斯定理，它们是稠密的。\n\n> **注意。** 在关于 $0$ 对称的区间上，$x^{2}$ 在 $x$ 和 $-x$ 处取相同的值，所以同一族函数就不再能分离点。",
       ],
       (rng) => {
         const a = rng.int(1, 6);
         const b = a + rng.int(1, 8);
         const d = rng.int(2, 7);
-        return choose(
+        return chosen(
           rng,
           [`Which family is dense in the continuous functions on the stated interval?`, `哪一族函数在所给区间上的连续函数中稠密？`],
           [`Polynomials in $x^{2}$ on $[${a}, ${b}]$`, `$[${a}, ${b}]$ 上关于 $x^{2}$ 的多项式`],
           [
-            [`Polynomials in $x^{2}$ on $[${-b}, ${b}]$`, `$[${-b}, ${b}]$ 上关于 $x^{2}$ 的多项式`],
-            [`Polynomials $p$ with $p(${a}) = 0$ on $[${a}, ${b}]$`, `$[${a}, ${b}]$ 上满足 $p(${a}) = 0$ 的多项式`],
-            [`Polynomials of degree at most ${d} on $[${a}, ${b}]$`, `$[${a}, ${b}]$ 上次数不超过 ${d} 的多项式`],
+            [
+              [`Polynomials in $x^{2}$ on $[${-b}, ${b}]$`, `$[${-b}, ${b}]$ 上关于 $x^{2}$ 的多项式`],
+              `$x^{2}$ takes the same value at $${b}$ and $${-b}$, so these polynomials cannot separate those points.`,
+              `$x^{2}$ 在 $${b}$ 和 $${-b}$ 处取相同的值，所以这些多项式不能分离这两点。`,
+            ],
+            [
+              [`Polynomials $p$ with $p(${a}) = 0$ on $[${a}, ${b}]$`, `$[${a}, ${b}]$ 上满足 $p(${a}) = 0$ 的多项式`],
+              `Every member vanishes at ${a}, so their uniform limits do too, and they cannot approach a function that is not $0$ there.`,
+              `每个成员都在 ${a} 处为零，它们的一致极限也是如此，所以无法逼近在那里不为 $0$ 的函数。`,
+            ],
+            [
+              [`Polynomials of degree at most ${d} on $[${a}, ${b}]$`, `$[${a}, ${b}]$ 上次数不超过 ${d} 的多项式`],
+              `A product of two members can have degree $${2 * d}$, so the family is not an algebra; it is a closed space of finite dimension and cannot be dense.`,
+              `两个成员的乘积次数可以是 $${2 * d}$，所以这一族不是代数；它是有限维的闭空间，不可能稠密。`,
+            ],
           ],
           [
-            `On a positive interval $x^{2}$ separates points and the constants are included. The others fail to separate $\\pm x$, vanish at ${a}, or are not closed under multiplication.`,
-            `在正区间上，$x^{2}$ 能分离点，而且包含常数。其余几族分别不能分离 $\\pm x$、在 ${a} 处全为零或对乘法不封闭。`,
+            [
+              ["Check that it is an algebra", "检验它是代数"],
+              [
+                "Sums, products and multiples of polynomials in $x^{2}$ are again polynomials in $x^{2}$, and the constants belong, so the family vanishes at no point.",
+                "关于 $x^{2}$ 的多项式的和、积与数乘仍是关于 $x^{2}$ 的多项式，而且包含常数，所以这一族不在任何一点全为零。",
+              ],
+            ],
+            [
+              ["Check that it separates points", "检验它能分离点"],
+              [
+                `On $[${a}, ${b}]$ every $x$ is positive, so $x^{2}$ is strictly increasing and takes different values at different points; the Stone-Weierstrass theorem applies.`,
+                `在 $[${a}, ${b}]$ 上每个 $x$ 都是正数，所以 $x^{2}$ 严格递增，在不同的点取不同的值；斯通-魏尔斯特拉斯定理适用。`,
+              ],
+            ],
+          ],
+          [
+            `The substitution $u = x^{2}$ turns the family into all polynomials in $u$ on $[${a * a}, ${b * b}]$, which are dense by the Weierstrass approximation theorem.`,
+            `代换 $u = x^{2}$ 把这一族变成 $[${a * a}, ${b * b}]$ 上关于 $u$ 的全体多项式，由魏尔斯特拉斯逼近定理，它们是稠密的。`,
           ],
         );
       },
@@ -871,23 +1109,53 @@ const stoneWeierstrass = topic(
       "a-family-that-cannot-separate",
       ["A family that cannot separate", "不能分离点的函数族"],
       [
-        "An even function takes the same value at $x$ and $-x$, so even functions cannot separate them. If $f$ differs at those two points, the distance from $f$ to any even function is at least half the difference.",
-        "偶函数在 $x$ 和 $-x$ 取相同的值，所以偶函数分离不了它们。如果 $f$ 在这两点的值不同，$f$ 到任何偶函数的距离至少是差的一半。",
+        "An even function takes the same value at $x$ and $-x$, so even functions cannot separate them. If $f$ differs at those two points, the distance from $f$ to any even function is at least half the difference.\n\nOn $[-1, 1]$, $f(x) = x$ has $f(1) - f(-1) = 2$, so every even $g$ is at distance at least $1$ from it, and $g = 0$ is at distance exactly $1$.\n\nCheck: an even $g$ with $g(1) = g(-1) = v$ is at distance at least $|1 - v|$ at $1$ and $|1 + v|$ at $-1$, and these add to at least $2$.\n\n> **Watch out.** The lower bound is half the difference of the two values, not the whole difference.",
+        "偶函数在 $x$ 和 $-x$ 取相同的值，所以偶函数分离不了它们。如果 $f$ 在这两点的值不同，$f$ 到任何偶函数的距离至少是差的一半。\n\n在 $[-1, 1]$ 上，$f(x) = x$ 满足 $f(1) - f(-1) = 2$，所以每个偶函数 $g$ 到它的距离至少是 $1$，而 $g = 0$ 的距离恰好是 $1$。\n\n检验：满足 $g(1) = g(-1) = v$ 的偶函数在 $1$ 处的距离至少是 $|1 - v|$，在 $-1$ 处至少是 $|1 + v|$，两者之和至少是 $2$。\n\n> **注意。** 下界是两个值之差的一半，而不是整个差。",
       ],
       (rng) => {
         const a = rng.int(1, 9);
         const c = rng.int(2, 9);
-        return ask(
-          [
-            `On $[${-a}, ${a}]$, what is the smallest possible value of $\\sup |${c}x - g(x)|$ over all even continuous functions $g$?`,
-            `在 $[${-a}, ${a}]$ 上，对所有连续偶函数 $g$，$\\sup |${c}x - g(x)|$ 的最小可能值是多少？`,
-          ],
-          a * c,
-          [0, 2 * a * c, c],
-          [
-            `The values at $\\pm ${a}$ differ by $${2 * a * c}$, so half of that is a lower bound, and $g = 0$ reaches it.`,
-            `在 $\\pm ${a}$ 处的值相差 $${2 * a * c}$，所以它的一半是下界，而 $g = 0$ 能达到。`,
-          ],
+        return until(() =>
+          worked(
+            [
+              `On $[${-a}, ${a}]$, what is the smallest possible value of $\\sup |${c}x - g(x)|$ over all even continuous functions $g$?`,
+              `在 $[${-a}, ${a}]$ 上，对所有连续偶函数 $g$，$\\sup |${c}x - g(x)|$ 的最小可能值是多少？`,
+            ],
+            a * c,
+            [
+              [
+                0,
+                `That would need an even $g$ equal to $${c}x$, but $${c}x$ is odd.`,
+                `这需要一个等于 $${c}x$ 的偶函数 $g$，但 $${c}x$ 是奇函数。`,
+              ],
+              [
+                2 * a * c,
+                `That is the whole difference of the values at $\\pm ${a}$; the bound is half of it.`,
+                `这是 $\\pm ${a}$ 处两值之差的全部；下界是它的一半。`,
+              ],
+              [c, `That is the slope ${c}, not the value at the end point ${a}.`, `这是斜率 ${c}，不是端点 ${a} 处的值。`],
+            ],
+            [
+              [
+                ["Find a lower bound", "求下界"],
+                [
+                  `An even $g$ has $g(${a}) = g(${-a})$, while $${c}x$ takes the values $${a * c}$ and $${-a * c}$ there, which differ by $${2 * a * c}$. So at one of the two ends the gap is at least $${a * c}$.`,
+                  `偶函数 $g$ 满足 $g(${a}) = g(${-a})$，而 $${c}x$ 在那两点取 $${a * c}$ 和 $${-a * c}$，相差 $${2 * a * c}$。所以在两个端点之一处差距至少是 $${a * c}$。`,
+                ],
+              ],
+              [
+                ["Reach the bound", "取到下界"],
+                [
+                  `With $g = 0$, the gap is $|${c}x|$, whose largest value on $[${-a}, ${a}]$ is $${a * c}$.`,
+                  `取 $g = 0$，差距是 $|${c}x|$，它在 $[${-a}, ${a}]$ 上的最大值是 $${a * c}$。`,
+                ],
+              ],
+            ],
+            [
+              `If $g(${a}) = v$, the gaps at $${a}$ and $${-a}$ are $|${a * c} - v|$ and $|${a * c} + v|$, which add to at least $${2 * a * c}$, so the larger is at least $${a * c}$.`,
+              `若 $g(${a}) = v$，则在 $${a}$ 和 $${-a}$ 处的差距是 $|${a * c} - v|$ 和 $|${a * c} + v|$，两者之和至少是 $${2 * a * c}$，所以较大者至少是 $${a * c}$。`,
+            ],
+          ),
         );
       },
     ),
@@ -895,24 +1163,55 @@ const stoneWeierstrass = topic(
       "a-family-that-vanishes-at-a-point",
       ["A family that vanishes at a point", "在一点全为零的函数族"],
       [
-        "If every function in the family vanishes at $x_{0}$, then any uniform limit also vanishes there. So the distance from $f$ to the family is at least $|f(x_{0})|$, and in fact it equals that.",
-        "如果函数族中每个函数都在 $x_{0}$ 处为零，那么任何一致极限在那里也为零。所以 $f$ 到这一族的距离至少是 $|f(x_{0})|$，实际上正好等于它。",
+        "If every function in the family vanishes at $x_{0}$, then any uniform limit also vanishes there. So the distance from $f$ to the family is at least $|f(x_{0})|$, and in fact it equals that.\n\nFor $f(x) = x^{2} + 1$ on $[0, 3]$ and the polynomials that vanish at $2$, the distance is at least $f(2) = 5$, and $p(x) = x^{2} - 4$ reaches it, since $f - p = 5$ everywhere.\n\nCheck: $p(2) = 4 - 4 = 0$, so $p$ belongs to the family.\n\n> **Watch out.** The distance is the value of $f$ at the point where the family vanishes, not $f(0)$ and not the point itself.",
+        "如果函数族中每个函数都在 $x_{0}$ 处为零，那么任何一致极限在那里也为零。所以 $f$ 到这一族的距离至少是 $|f(x_{0})|$，实际上正好等于它。\n\n对 $[0, 3]$ 上的 $f(x) = x^{2} + 1$ 和在 $2$ 处为零的多项式，距离至少是 $f(2) = 5$，而 $p(x) = x^{2} - 4$ 能取到它，因为 $f - p$ 处处等于 $5$。\n\n检验：$p(2) = 4 - 4 = 0$，所以 $p$ 属于这一族。\n\n> **注意。** 距离是 $f$ 在这一族全为零的那一点的值，不是 $f(0)$，也不是那个点本身。",
       ],
       (rng) => {
         const x0 = rng.int(1, 6);
         const c = rng.int(1, 12);
         const b = x0 + rng.int(1, 5);
-        return ask(
-          [
-            `On $[0, ${b}]$, what is the distance in the supremum norm from $f(x) = x^{2} + ${c}$ to the polynomials that vanish at ${x0}?`,
-            `在 $[0, ${b}]$ 上，$f(x) = x^{2} + ${c}$ 到在 ${x0} 处为零的多项式的上确界范数距离是多少？`,
-          ],
-          x0 * x0 + c,
-          [0, c, x0],
-          [
-            `The distance is $|f(${x0})| = ${x0}^{2} + ${c}$, which is ${x0 * x0 + c}.`,
-            `距离是 $|f(${x0})| = ${x0}^{2} + ${c}$，即 ${x0 * x0 + c}。`,
-          ],
+        const value = x0 * x0 + c;
+        return until(() =>
+          worked(
+            [
+              `On $[0, ${b}]$, what is the distance in the supremum norm from $f(x) = x^{2} + ${c}$ to the polynomials that vanish at ${x0}?`,
+              `在 $[0, ${b}]$ 上，$f(x) = x^{2} + ${c}$ 到在 ${x0} 处为零的多项式的上确界范数距离是多少？`,
+            ],
+            value,
+            [
+              [
+                0,
+                `$f$ does not vanish at ${x0}, so no uniform limit of the family can equal it.`,
+                `$f$ 在 ${x0} 处不为零，所以这一族的一致极限都不可能等于它。`,
+              ],
+              [
+                c,
+                `That is $f(0)$, but the family vanishes at ${x0}, not at $0$.`,
+                `这是 $f(0)$，但这一族在 ${x0} 处为零，而不是在 $0$ 处。`,
+              ],
+              [x0, `That is the point ${x0} itself, not the value of $f$ there.`, `这是点 ${x0} 本身，而不是 $f$ 在那里的值。`],
+            ],
+            [
+              [
+                ["Find a lower bound", "求下界"],
+                [
+                  `Every polynomial $p$ in the family has $p(${x0}) = 0$, so $|f(${x0}) - p(${x0})| = ${x0}^{2} + ${c} = ${value}$, and the distance is at least ${value}.`,
+                  `这一族中每个多项式 $p$ 都满足 $p(${x0}) = 0$，所以 $|f(${x0}) - p(${x0})| = ${x0}^{2} + ${c} = ${value}$，距离至少是 ${value}。`,
+                ],
+              ],
+              [
+                ["Reach the bound", "取到下界"],
+                [
+                  `$p(x) = x^{2} - ${x0 * x0}$ vanishes at ${x0}, and $f - p = ${value}$ everywhere, so the distance is exactly ${value}.`,
+                  `$p(x) = x^{2} - ${x0 * x0}$ 在 ${x0} 处为零，而 $f - p$ 处处等于 ${value}，所以距离恰好是 ${value}。`,
+                ],
+              ],
+            ],
+            [
+              `$p(${x0}) = ${x0 * x0} - ${x0 * x0} = 0$, so this $p$ is in the family, and no member can do better because of the lower bound at ${x0}.`,
+              `$p(${x0}) = ${x0 * x0} - ${x0 * x0} = 0$，所以这个 $p$ 属于这一族；由于 ${x0} 处的下界，没有成员能做得更好。`,
+            ],
+          ),
         );
       },
     ),
@@ -1771,7 +2070,53 @@ export const numberTheoryOutlineTopics: readonly TopicDef[] = [
 ];
 
 /** realAnalysisOutlineTopics holds the Real Analysis topics added from the course outline. */
-export const realAnalysisOutlineTopics: readonly TopicDef[] = [measurableFunctions, convergenceTheorems, stoneWeierstrass];
+export const realAnalysisOutlineTopics: readonly TopicDef[] = [
+  lesson(
+    measurableFunctions,
+    [
+      "For $f(x) = x^{2}$ on $[0, 5]$, the set where $f(x) > 4$ is $(2, 5]$, of measure $3$. Measurable functions are exactly those whose sets of this kind all have a measure.",
+      "对 $[0, 5]$ 上的 $f(x) = x^{2}$，$f(x) > 4$ 的集合是 $(2, 5]$，测度为 $3$。可测函数正是这类集合都有测度的函数。",
+    ],
+    [
+      "the rest of the interval, $[0, 2]$, has measure $2$, and $3 + 2 = 5$, the length of $[0, 5]$.",
+      "区间的其余部分 $[0, 2]$ 的测度是 $2$，而 $3 + 2 = 5$，正是 $[0, 5]$ 的长度。",
+    ],
+    [
+      "add countably many measures, measure the set where a function is above a level, and do the same for step functions.",
+      "把可数个测度相加，量出函数高于某水平的集合的测度，并对阶梯函数做同样的事。",
+    ],
+  ),
+  lesson(
+    convergenceTheorems,
+    [
+      "On $[0, 1]$ the functions $x^{n}$ tend to $0$ at every $x < 1$ and stay below $1$, so $\\int_{0}^{1} x^{n}\\, dx$ tends to $\\int_{0}^{1} 0\\, dx = 0$.",
+      "在 $[0, 1]$ 上，函数 $x^{n}$ 在每个 $x < 1$ 处趋于 $0$，且始终不超过 $1$，所以 $\\int_{0}^{1} x^{n}\\, dx$ 趋于 $\\int_{0}^{1} 0\\, dx = 0$。",
+    ],
+    [
+      "directly, $\\int_{0}^{1} x^{n}\\, dx = \\frac{1}{n + 1}$, which tends to $0$.",
+      "直接计算，$\\int_{0}^{1} x^{n}\\, dx = \\frac{1}{n + 1}$，它趋于 $0$。",
+    ],
+    [
+      "use monotone convergence for an unbounded function, use dominated convergence with a bound, and see what goes wrong when no bound exists.",
+      "对无界函数使用单调收敛定理，借助一个上界使用控制收敛定理，并看到没有上界时会出什么问题。",
+    ],
+  ),
+  lesson(
+    stoneWeierstrass,
+    [
+      "On $[-1, 1]$ the even polynomials cannot approach $f(x) = x$: every even $g$ has $g(1) = g(-1)$, while $f$ takes the values $1$ and $-1$ there, so the distance is at least $1$.",
+      "在 $[-1, 1]$ 上，偶多项式无法逼近 $f(x) = x$：每个偶函数 $g$ 都满足 $g(1) = g(-1)$，而 $f$ 在那两点取 $1$ 和 $-1$，所以距离至少是 $1$。",
+    ],
+    [
+      "$g = 0$ is at distance exactly $1$, the largest value of $|x|$ on $[-1, 1]$.",
+      "$g = 0$ 的距离恰好是 $1$，即 $|x|$ 在 $[-1, 1]$ 上的最大值。",
+    ],
+    [
+      "check the hypotheses of the Stone-Weierstrass theorem, and measure how far a family falls short when it cannot separate points or vanishes at a point.",
+      "检验斯通-魏尔斯特拉斯定理的条件，并在函数族不能分离点或在一点全为零时，量出它差多远。",
+    ],
+  ),
+];
 
 /** complexAnalysisOutlineTopics holds the Complex Analysis topics added from the course outline. */
 export const complexAnalysisOutlineTopics: readonly TopicDef[] = [normalFamilies, mittagLeffler, schwarzChristoffel];

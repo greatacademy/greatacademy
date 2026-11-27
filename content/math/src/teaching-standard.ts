@@ -29,31 +29,11 @@ export const taughtCourses: readonly string[] = [
   "probability-and-statistics",
   "abstract-algebra",
   "number-theory",
+  "real-analysis",
 ];
 
 /**
  * taughtTopics lists further topics written to the standard while their course is still being rewritten; once the
  * course is listed in taughtCourses, its topics leave this list.
  */
-export const taughtTopics: readonly string[] = [
-  "the-epsilon-definition-for-sequences",
-  "suprema-of-sets-of-reals",
-  "the-monotone-convergence-theorem",
-  "subsequences-and-the-bolzano-weierstrass-theorem",
-  "cauchy-sequences",
-  "limit-superior-and-limit-inferior",
-  "absolute-and-conditional-convergence-of-series",
-  "epsilon-delta-proofs-of-limits",
-  "the-sequential-criterion-for-continuity",
-  "distances-in-metric-spaces",
-  "open-and-closed-sets-of-reals",
-  "compactness-on-the-real-line",
-  "uniform-continuity",
-  "differentiability-in-analysis",
-  "bounds-from-the-mean-value-theorem",
-  "upper-and-lower-darboux-sums",
-  "riemann-integrability",
-  "pointwise-and-uniform-convergence",
-  "the-weierstrass-m-test",
-  "the-contraction-mapping-principle",
-];
+export const taughtTopics: readonly string[] = [];

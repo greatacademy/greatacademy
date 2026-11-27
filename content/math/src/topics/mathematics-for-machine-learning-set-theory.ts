@@ -2,7 +2,8 @@ import type { Problem, Rng, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { plane, poly, Q } from "@ga/subject-math";
 import { machineLearningDrawings1 } from "../explanation-drawings-mathematics-for-machine-learning-1.ts";
-import { numberProblem } from "../problems.ts";
+import { numberProblem, why } from "../problems.ts";
+import { walked } from "./calculus-i-differentiation.ts";
 
 export const mathematicsForMachineLearningSetTheoryTopics: TopicDef[] = [
   // 1.1.8 Indicator Functions for Predicates
@@ -121,13 +122,17 @@ export const mathematicsForMachineLearningSetTheoryTopics: TopicDef[] = [
     prerequisites: ["the-maximum-and-minimum-of-a-set"],
     encompasses: [],
     xp: 10,
+    intro: t(
+      "Take $S = \\left\\{1 - \\frac{1}{n} : n \\in \\mathbb{N}^{+}\\right\\} = \\left\\{0, \\frac{1}{2}, \\frac{2}{3}, \\dots\\right\\}$. Every element is below $1$ and the elements come as close to $1$ as we like, so $\\sup S = 1$, though $1$ is not in $S$ and $S$ has no maximum. The smallest element is $0$, so $\\inf S = \\min S = 0$.\n\nCheck: a number below $1$, such as $0.99$, is passed by the element $1 - \\frac{1}{200} = 0.995$, so it is not an upper bound.\n\nIn this lesson we find the supremum and infimum of intervals, of sets given by a formula in $n$, of sets whose terms alternate around a limit, and of sums of sets.",
+      "取 $S = \\left\\{1 - \\frac{1}{n} : n \\in \\mathbb{N}^{+}\\right\\} = \\left\\{0, \\frac{1}{2}, \\frac{2}{3}, \\dots\\right\\}$。每个元素都小于 $1$，且元素可以任意接近 $1$，所以 $\\sup S = 1$，尽管 $1$ 不在 $S$ 中，$S$ 也没有最大值。最小的元素是 $0$，所以 $\\inf S = \\min S = 0$。\n\n检验：小于 $1$ 的数，比如 $0.99$，会被元素 $1 - \\frac{1}{200} = 0.995$ 超过，所以它不是上界。\n\n本课我们求区间、由 $n$ 的式子给出的集合、各项围绕极限交错的集合以及集合之和的上确界与下确界。",
+    ),
     knowledgePoints: [
       {
         id: "evaluating-supremum-and-infimum",
         title: t("Evaluating supremum and infimum of bounded sets", "求有界集合的上确界与下确界"),
         explanation: t(
-          "For an open interval $(a, b)$, $\\sup (a, b) = b$ and $\\inf (a, b) = a$, neither of which is a maximum or minimum. For $S = \\{c - \\frac{d}{n} : n \\in \\mathbb{N}^{+}\\}$ with $d > 0$, $\\sup S = c$ and $\\inf S = c - d$.",
-          "对于开区间 $(a, b)$，$\\sup (a, b) = b$ 且 $\\inf (a, b) = a$，两者都不是最大值或最小值。对于 $S = \\{c - \\frac{d}{n} : n \\in \\mathbb{N}^{+}\\}$（$d > 0$），$\\sup S = c$ 且 $\\inf S = c - d$。",
+          "For an open interval $(a, b)$, $\\sup (a, b) = b$ and $\\inf (a, b) = a$, neither of which is a maximum or minimum. For $S = \\{c - \\frac{d}{n} : n \\in \\mathbb{N}^{+}\\}$ with $d > 0$, $\\sup S = c$ and $\\inf S = c - d$.\n\nFor $S = \\{5 - \\frac{2}{n} : n \\in \\mathbb{N}^{+}\\} = \\{3, 4, \\frac{13}{3}, \\dots\\}$, the terms rise toward $5$, so $\\sup S = 5$, and the first term is the smallest, so $\\inf S = 3$.\n\nCheck: $3$ is in $S$, at $n = 1$, so it is also the minimum, while $5$ is not in $S$, since $\\frac{2}{n} > 0$ for every $n$.\n\n> **Watch out.** A supremum or infimum need not belong to the set. Do not step to a nearby element because the end itself is left out.",
+          "对于开区间 $(a, b)$，$\\sup (a, b) = b$ 且 $\\inf (a, b) = a$，两者都不是最大值或最小值。对于 $S = \\{c - \\frac{d}{n} : n \\in \\mathbb{N}^{+}\\}$（$d > 0$），$\\sup S = c$ 且 $\\inf S = c - d$。\n\n对 $S = \\{5 - \\frac{2}{n} : n \\in \\mathbb{N}^{+}\\} = \\{3, 4, \\frac{13}{3}, \\dots\\}$，各项增大趋向 $5$，所以 $\\sup S = 5$；第一项最小，所以 $\\inf S = 3$。\n\n检验：$3$ 在 $S$ 中（$n = 1$），所以它也是最小值；而 $5$ 不在 $S$ 中，因为对每个 $n$ 都有 $\\frac{2}{n} > 0$。\n\n> **注意。** 上确界或下确界不必属于集合。不要因为端点本身不在集合里就改取附近的元素。",
         ),
         generate: (rng: Rng): Problem => {
           const kind = rng.int(0, 1);
@@ -144,14 +149,69 @@ export const mathematicsForMachineLearningSetTheoryTopics: TopicDef[] = [
                 `考虑实数集合 $S = \\left\\{ ${c} - \\frac{${k}}{n} : n \\in \\mathbb{N}^+ \\right\\} = \\left\\{ ${c - k}, ${c} - \\frac{${k}}{2}, ${c} - \\frac{${k}}{3}, \\dots \\right\\}$。求 $${askSup ? "\\sup(S)" : "\\inf(S)"}$ 的精确值。`,
               ),
               answer: ans,
-              wrong: [askSup ? c - k : c, Q.of(2 * c - k, 2), askSup ? c + k : c],
-              solution: t(
+              mistakes: [
                 askSup
-                  ? `As $n \\to \\infty$, the terms strictly increase toward $${c}$. Every element in $S$ is strictly less than $${c}$, and for any $\\varepsilon > 0$, choosing $n > \\frac{${k}}{\\varepsilon}$ gives an element in $S$ greater than $${c} - \\varepsilon$. Thus $\\sup(S) = ${c}$.`
-                  : `The sequence is strictly increasing with $n$, so the smallest element occurs at $n = 1$, giving $\\inf(S) = \\min(S) = ${c} - \\frac{${k}}{1} = ${ans}$.`,
+                  ? why(c - k, "That is the smallest element, at $n = 1$, which is the infimum.", "这是最小的元素（$n = 1$），它是下确界。")
+                  : why(
+                      c,
+                      "That is the limit of the terms, which is the supremum; the infimum is the smallest element.",
+                      "这是各项的极限，它是上确界；下确界是最小的元素。",
+                    ),
                 askSup
-                  ? `当 $n \\to \\infty$ 时，各项严格递增并趋于 $${c}$。$S$ 中的每个元素都严格小于 $${c}$，且对任意 $\\varepsilon > 0$，取 $n > \\frac{${k}}{\\varepsilon}$ 即可找到大于 $${c} - \\varepsilon$ 的元素。因此 $\\sup(S) = ${c}$。`
-                  : `该数列随 $n$ 严格单调递增，故最小值在 $n = 1$ 处取得，因此 $\\inf(S) = \\min(S) = ${c} - \\frac{${k}}{1} = ${ans}$。`,
+                  ? why(
+                      Q.of(2 * c - k, 2),
+                      "That is the term at $n = 2$, but the later terms keep rising past it.",
+                      "这是 $n = 2$ 时的项，但后面的项还在继续增大，超过了它。",
+                    )
+                  : why(
+                      Q.of(2 * c - k, 2),
+                      "That is the term at $n = 2$, but the term at $n = 1$ is smaller.",
+                      "这是 $n = 2$ 时的项，但 $n = 1$ 时的项更小。",
+                    ),
+                ...(askSup
+                  ? [
+                      why(
+                        c + k,
+                        `That adds $\\frac{${k}}{n}$ instead of subtracting it; every element is below ${c}.`,
+                        `这是加上而不是减去 $\\frac{${k}}{n}$；每个元素都小于 ${c}。`,
+                      ),
+                    ]
+                  : []),
+              ],
+              solution: walked(
+                [
+                  [
+                    ["Follow the terms", "观察各项"],
+                    t(
+                      `The terms $${c} - \\frac{${k}}{n}$ increase with $n$ and tend to $${c}$, and each of them is less than $${c}$.`,
+                      `各项 $${c} - \\frac{${k}}{n}$ 随 $n$ 增大，趋于 $${c}$，且每一项都小于 $${c}$。`,
+                    ),
+                  ],
+                  askSup
+                    ? [
+                        ["Find the least upper bound", "求最小上界"],
+                        t(
+                          `So $${c}$ is an upper bound, and for any $\\varepsilon > 0$, choosing $n > \\frac{${k}}{\\varepsilon}$ gives an element above $${c} - \\varepsilon$, so no smaller number is an upper bound. Thus $\\sup(S) = ${c}$.`,
+                          `所以 $${c}$ 是上界；对任意 $\\varepsilon > 0$，取 $n > \\frac{${k}}{\\varepsilon}$ 即可得到大于 $${c} - \\varepsilon$ 的元素，所以更小的数都不是上界。因此 $\\sup(S) = ${c}$。`,
+                        ),
+                      ]
+                    : [
+                        ["Take the first term", "取第一项"],
+                        t(
+                          `Since the terms increase, the smallest is at $n = 1$: $\\inf(S) = \\min(S) = ${c} - ${k} = ${ans}$.`,
+                          `各项递增，所以最小的一项在 $n = 1$ 处：$\\inf(S) = \\min(S) = ${c} - ${k} = ${ans}$。`,
+                        ),
+                      ],
+                ],
+                askSup
+                  ? t(
+                      `$${c}$ itself is not in $S$, since $\\frac{${k}}{n} > 0$ for every $n$, so $S$ has no maximum and its supremum is not an element.`,
+                      `$${c}$ 本身不在 $S$ 中，因为对每个 $n$ 都有 $\\frac{${k}}{n} > 0$，所以 $S$ 没有最大值，它的上确界不是元素。`,
+                    )
+                  : t(
+                      `The term at $n = 2$ is $${Q.of(2 * c - k, 2).toLatex()}$, which is larger than $${ans}$, as every later term is.`,
+                      `$n = 2$ 时的项是 $${Q.of(2 * c - k, 2).toLatex()}$，比 $${ans}$ 大，后面的每一项也都比它大。`,
+                    ),
               ),
             });
           }
@@ -169,14 +229,66 @@ export const mathematicsForMachineLearningSetTheoryTopics: TopicDef[] = [
               `考虑半开区间 $S = (${a}, ${b}]$。求 $${askSup ? "\\sup(S)" : "\\inf(S)"}$ 的精确值。`,
             ),
             answer: ans,
-            wrong: [askSup ? a : b, askSup ? b - 1 : a + 1, len],
-            solution: t(
+            mistakes: [
               askSup
-                ? `The maximum element of $(${a}, ${b}]$ is $${b}$, so $\\sup(S) = \\max(S) = ${b}$.`
-                : `The elements of $(${a}, ${b}]$ are all strictly greater than $${a}$, and values approach $${a}$ arbitrarily closely. Therefore $\\inf(S) = ${a}$.`,
+                ? why(a, "That is the lower end, which is the infimum.", "这是下端，它是下确界。")
+                : why(b, "That is the upper end, which is the supremum.", "这是上端，它是上确界。"),
               askSup
-                ? `半开区间 $(${a}, ${b}]$ 的最大元素为 $${b}$，故 $\\sup(S) = \\max(S) = ${b}$。`
-                : `$(${a}, ${b}]$ 中的所有元素均严格大于 $${a}$，且可任意接近 $${a}$。因此 $\\inf(S) = ${a}$。`,
+                ? why(
+                    b - 1,
+                    `That steps below ${b}, but ${b} is in the set and is its largest element.`,
+                    `这退到了 ${b} 以下，但 ${b} 在集合中，是最大的元素。`,
+                  )
+                : why(
+                    a + 1,
+                    `That steps inside because ${a} is not in the set, but the infimum need not belong to it.`,
+                    `这因为 ${a} 不在集合中而往里走了一步，但下确界不必属于集合。`,
+                  ),
+              why(len, "That is the length of the interval, not one of its ends.", "这是区间的长度，而不是它的端点。"),
+            ].filter((m, i, all) => all.findIndex((o) => o.value === m.value) === i),
+            solution: walked(
+              askSup
+                ? [
+                    [
+                      ["Find the upper bounds", "找上界"],
+                      t(
+                        `Every element of $(${a}, ${b}]$ is at most $${b}$, so $${b}$ is an upper bound.`,
+                        `$(${a}, ${b}]$ 中的每个元素都不超过 $${b}$，所以 $${b}$ 是上界。`,
+                      ),
+                    ],
+                    [
+                      ["Use the largest element", "用最大元素"],
+                      t(
+                        `$${b}$ itself is in the set, so no smaller number is an upper bound: $\\sup(S) = \\max(S) = ${b}$.`,
+                        `$${b}$ 本身在集合中，所以更小的数都不是上界：$\\sup(S) = \\max(S) = ${b}$。`,
+                      ),
+                    ],
+                  ]
+                : [
+                    [
+                      ["Find the lower bounds", "找下界"],
+                      t(
+                        `Every element of $(${a}, ${b}]$ is greater than $${a}$, so $${a}$ is a lower bound.`,
+                        `$(${a}, ${b}]$ 中的每个元素都大于 $${a}$，所以 $${a}$ 是下界。`,
+                      ),
+                    ],
+                    [
+                      ["Rule out larger bounds", "排除更大的下界"],
+                      t(
+                        `Elements of the set come as close to $${a}$ as we like, so no larger number is a lower bound: $\\inf(S) = ${a}$.`,
+                        `集合中的元素可以任意接近 $${a}$，所以更大的数都不是下界：$\\inf(S) = ${a}$。`,
+                      ),
+                    ],
+                  ],
+              askSup
+                ? t(
+                    `A number below $${b}$ is passed by the element $${b}$, so it cannot be an upper bound.`,
+                    `小于 $${b}$ 的数会被元素 $${b}$ 超过，所以它不可能是上界。`,
+                  )
+                : t(
+                    `$${a}$ is not in the set, so $S$ has no minimum, yet below any number above $${a}$ there are elements of the set.`,
+                    `$${a}$ 不在集合中，所以 $S$ 没有最小值，但在任何大于 $${a}$ 的数之下都有集合中的元素。`,
+                  ),
             ),
           });
         },
@@ -185,8 +297,8 @@ export const mathematicsForMachineLearningSetTheoryTopics: TopicDef[] = [
         id: "bounds-of-alternating-sets",
         title: t("Supremum and infimum of alternating sets", "交错集合的上确界与下确界"),
         explanation: t(
-          "When the terms of a set alternate around a value, look at the two sides separately. For $S = \\left\\{ c + \\frac{(-1)^n k}{n} : n \\in \\mathbb{N}^+ \\right\\}$ with $k > 0$, the odd terms $c - k, c - \\frac{k}{3}, \\dots$ rise toward $c$ from below and the even terms $c + \\frac{k}{2}, c + \\frac{k}{4}, \\dots$ fall toward $c$ from above.\n\nSo the largest element is the first even term and the smallest is the first odd term: $\\sup S = \\max S = c + \\frac{k}{2}$ and $\\inf S = \\min S = c - k$. The limit $c$ is neither.",
-          "当集合中的项围绕某个值交错时，分别观察两侧。对 $S = \\left\\{ c + \\frac{(-1)^n k}{n} : n \\in \\mathbb{N}^+ \\right\\}$（$k > 0$），奇数项 $c - k, c - \\frac{k}{3}, \\dots$ 从下方增大趋向 $c$，偶数项 $c + \\frac{k}{2}, c + \\frac{k}{4}, \\dots$ 从上方减小趋向 $c$。\n\n所以最大元素是第一个偶数项，最小元素是第一个奇数项：$\\sup S = \\max S = c + \\frac{k}{2}$，$\\inf S = \\min S = c - k$。极限 $c$ 两者都不是。",
+          "When the terms of a set alternate around a value, look at the two sides separately. For $S = \\left\\{ c + \\frac{(-1)^n k}{n} : n \\in \\mathbb{N}^+ \\right\\}$ with $k > 0$, the odd terms $c - k, c - \\frac{k}{3}, \\dots$ rise toward $c$ from below and the even terms $c + \\frac{k}{2}, c + \\frac{k}{4}, \\dots$ fall toward $c$ from above.\n\nSo the largest element is the first even term and the smallest is the first odd term: $\\sup S = \\max S = c + \\frac{k}{2}$ and $\\inf S = \\min S = c - k$. The limit $c$ is neither.\n\nCheck: for $c = 1$ and $k = 4$ the terms are $-3, 3, -\\frac{1}{3}, 2, \\dots$, whose largest is $3 = 1 + \\frac{4}{2}$ and whose smallest is $-3 = 1 - 4$.\n\n> **Watch out.** The first term has $n = 1$, which is odd, so it lies below $c$. The largest element is the second term, not the first.",
+          "当集合中的项围绕某个值交错时，分别观察两侧。对 $S = \\left\\{ c + \\frac{(-1)^n k}{n} : n \\in \\mathbb{N}^+ \\right\\}$（$k > 0$），奇数项 $c - k, c - \\frac{k}{3}, \\dots$ 从下方增大趋向 $c$，偶数项 $c + \\frac{k}{2}, c + \\frac{k}{4}, \\dots$ 从上方减小趋向 $c$。\n\n所以最大元素是第一个偶数项，最小元素是第一个奇数项：$\\sup S = \\max S = c + \\frac{k}{2}$，$\\inf S = \\min S = c - k$。极限 $c$ 两者都不是。\n\n检验：当 $c = 1$、$k = 4$ 时，各项为 $-3, 3, -\\frac{1}{3}, 2, \\dots$，最大的是 $3 = 1 + \\frac{4}{2}$，最小的是 $-3 = 1 - 4$。\n\n> **注意。** 第一项的 $n = 1$ 是奇数，所以它在 $c$ 之下。最大元素是第二项，而不是第一项。",
         ),
         generate: (rng: Rng): Problem => {
           const c = rng.int(-5, 8);
@@ -203,10 +315,61 @@ export const mathematicsForMachineLearningSetTheoryTopics: TopicDef[] = [
             ),
             answer: ans,
             form: "fraction",
-            wrong: [Q.of(c), askSup ? Q.of(c + k) : Q.of(c).sub(Q.of(k, 2)), askSup ? inf : sup],
-            solution: t(
-              `The odd terms are $${inf.toLatex()}, \\dots$, increasing toward $${c}$; the even terms are $${sup.toLatex()}, \\dots$, decreasing toward $${c}$. So $\\sup S = ${sup.toLatex()}$ (at $n = 2$) and $\\inf S = ${inf.toLatex()}$ (at $n = 1$).`,
-              `奇数项为 $${inf.toLatex()}, \\dots$，增大趋向 $${c}$；偶数项为 $${sup.toLatex()}, \\dots$，减小趋向 $${c}$。所以 $\\sup S = ${sup.toLatex()}$（在 $n = 2$ 处），$\\inf S = ${inf.toLatex()}$（在 $n = 1$ 处）。`,
+            mistakes: [
+              why(
+                c,
+                `That is the limit ${c} of the terms, which is neither the largest nor the smallest element.`,
+                `这是各项的极限 ${c}，它既不是最大元素，也不是最小元素。`,
+              ),
+              askSup
+                ? why(
+                    c + k,
+                    `That gives the first term a plus sign, but $n = 1$ is odd, so the first term is $${inf.toLatex()}$.`,
+                    `这给第一项取了正号，但 $n = 1$ 是奇数，所以第一项是 $${inf.toLatex()}$。`,
+                  )
+                : why(
+                    Q.of(c).sub(Q.of(k, 2)),
+                    "That gives the term at $n = 2$ a minus sign, but $n = 2$ is even, so that term lies above the limit.",
+                    "这给 $n = 2$ 的项取了负号，但 $n = 2$ 是偶数，所以这一项在极限之上。",
+                  ),
+              askSup
+                ? why(inf, "That is the smallest element, at $n = 1$, which is the infimum.", "这是最小的元素（$n = 1$），它是下确界。")
+                : why(sup, "That is the largest element, at $n = 2$, which is the supremum.", "这是最大的元素（$n = 2$），它是上确界。"),
+            ],
+            solution: walked(
+              [
+                [
+                  ["Split by parity", "按奇偶分开"],
+                  t(
+                    `The odd terms are $${inf.toLatex()}, \\dots$, increasing toward $${c}$; the even terms are $${sup.toLatex()}, \\dots$, decreasing toward $${c}$.`,
+                    `奇数项为 $${inf.toLatex()}, \\dots$，增大趋向 $${c}$；偶数项为 $${sup.toLatex()}, \\dots$，减小趋向 $${c}$。`,
+                  ),
+                ],
+                askSup
+                  ? [
+                      ["Take the first even term", "取第一个偶数项"],
+                      t(
+                        `The largest element is the first even term, so $\\sup S = \\max S = ${sup.toLatex()}$, at $n = 2$.`,
+                        `最大元素是第一个偶数项，所以 $\\sup S = \\max S = ${sup.toLatex()}$，在 $n = 2$ 处取到。`,
+                      ),
+                    ]
+                  : [
+                      ["Take the first odd term", "取第一个奇数项"],
+                      t(
+                        `The smallest element is the first odd term, so $\\inf S = \\min S = ${inf.toLatex()}$, at $n = 1$.`,
+                        `最小元素是第一个奇数项，所以 $\\inf S = \\min S = ${inf.toLatex()}$，在 $n = 1$ 处取到。`,
+                      ),
+                    ],
+              ],
+              askSup
+                ? t(
+                    `Every odd term is below ${c}, and every later even term, $${cTex}\\frac{${k}}{n}$ with $n \\ge 4$, is below $${sup.toLatex()}$.`,
+                    `每个奇数项都小于 ${c}，而之后的每个偶数项，即 $n \\ge 4$ 时的 $${cTex}\\frac{${k}}{n}$，都小于 $${sup.toLatex()}$。`,
+                  )
+                : t(
+                    `Every even term is above ${c}, and every later odd term, $${c === 0 ? "-" : `${c} - `}\\frac{${k}}{n}$ with $n \\ge 3$, is above $${inf.toLatex()}$.`,
+                    `每个偶数项都大于 ${c}，而之后的每个奇数项，即 $n \\ge 3$ 时的 $${c === 0 ? "-" : `${c} - `}\\frac{${k}}{n}$，都大于 $${inf.toLatex()}$。`,
+                  ),
             ),
           });
         },

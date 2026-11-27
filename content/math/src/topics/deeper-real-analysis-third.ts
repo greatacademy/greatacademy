@@ -6,7 +6,7 @@ import { poly, Q } from "@ga/subject-math";
 import { analysisDrawings1 } from "../explanation-drawings-real-analysis-1.ts";
 
 import { why } from "../problems.ts";
-import { ask, choose, type Pair, point } from "../university-kit.ts";
+import { choose, type Pair, point } from "../university-kit.ts";
 import { reasoned } from "../wrong-reasons.ts";
 import { asPair, solution, solved } from "./real-analysis.ts";
 
@@ -356,25 +356,55 @@ const absoluteRearrangement = point(
   "rearranging-an-absolutely-convergent-series",
   ["Rearranging an absolutely convergent series", "重排绝对收敛的级数"],
   [
-    "An absolutely convergent series keeps its sum under every rearrangement, however the terms are shuffled. So a rearranged geometric series with ratio between $-1$ and $1$ still has the sum of the original, and the original sum can be used without following the new order.",
-    "绝对收敛的级数无论如何重排，和都不变。所以公比在 $-1$ 和 $1$ 之间的几何级数重排后仍有原来的和，可以直接用原来的和，而不必追踪新的次序。",
+    "An absolutely convergent series keeps its sum under every rearrangement, however the terms are shuffled. So a rearranged geometric series with ratio between $-1$ and $1$ still has the sum of the original, and the original sum can be used without following the new order.\n\nFor $\\sum_{n \\ge 0} \\left(-\\frac{1}{2}\\right)^{n}$, the absolute values form $\\sum \\frac{1}{2^{n}} = 2$, which is finite. So any rearrangement has the original sum $\\frac{1}{1 + \\frac{1}{2}} = \\frac{2}{3}$.\n\nCheck: the partial sums of the original order are $1, \\frac{1}{2}, \\frac{3}{4}, \\frac{5}{8}$, closing in on $\\frac{2}{3}$ from both sides.\n\n> **Watch out.** The ratio is negative, so the denominator is $1 + \\frac{1}{r}$, not $1 - \\frac{1}{r}$. And only absolute convergence protects the sum: a conditionally convergent series can be rearranged to any sum.",
+    "绝对收敛的级数无论如何重排，和都不变。所以公比在 $-1$ 和 $1$ 之间的几何级数重排后仍有原来的和，可以直接用原来的和，而不必追踪新的次序。\n\n对 $\\sum_{n \\ge 0} \\left(-\\frac{1}{2}\\right)^{n}$，绝对值构成 $\\sum \\frac{1}{2^{n}} = 2$，是有限的。所以任何重排都有原来的和 $\\frac{1}{1 + \\frac{1}{2}} = \\frac{2}{3}$。\n\n检验：原来次序的部分和是 $1, \\frac{1}{2}, \\frac{3}{4}, \\frac{5}{8}$，从两侧逼近 $\\frac{2}{3}$。\n\n> **注意。** 公比是负的，所以分母是 $1 + \\frac{1}{r}$，不是 $1 - \\frac{1}{r}$。而且只有绝对收敛才能保住和：条件收敛的级数可以重排成任意的和。",
   ],
   (rng) => {
     const c = rng.int(1, 9);
     const r = rng.int(2, 9);
     const answer = Q.of(c * r, r + 1);
     const start = c === 1 ? "" : `${c}`;
-    return ask(
+    return solved(
       [
         `Rearrange $\\sum_{n \\ge 0} ${start}\\left(-\\frac{1}{${r}}\\right)^{n}$ so that two positive terms come before each negative term. What is the sum of the new series?`,
         `重排 $\\sum_{n \\ge 0} ${start}\\left(-\\frac{1}{${r}}\\right)^{n}$，使每个负项之前有两个正项。新级数的和是多少？`,
       ],
       answer,
-      [Q.of(c * r * r, r * r - 1), Q.of(c * r, r - 1), Q.of(c)],
       [
-        `The series converges absolutely, so the sum is unchanged. It is the geometric sum $\\frac{${c}}{1 + \\frac{1}{${r}}} = ${answer.toLatex()}$.`,
-        `这个级数绝对收敛，所以和不变。它是几何级数的和 $\\frac{${c}}{1 + \\frac{1}{${r}}} = ${answer.toLatex()}$。`,
+        why(
+          Q.of(c * r * r, r * r - 1),
+          "That is the sum of the positive terms alone; the negative terms still come, only later.",
+          "这只是正项的和；负项仍然都会出现，只是出现得晚一些。",
+        ),
+        why(
+          Q.of(c * r, r - 1),
+          "That is the sum of the absolute values, which drops the minus signs of the odd terms.",
+          "这是绝对值的和，丢掉了奇数项的负号。",
+        ),
+        why(Q.of(c), "That is only the first term, not the sum of the series.", "这只是第一项，不是级数的和。"),
       ],
+      solution(
+        [
+          [
+            ["Check absolute convergence", "检验绝对收敛"],
+            [
+              `The absolute values form a geometric series with ratio $\\frac{1}{${r}} < 1$, so the series converges absolutely and every rearrangement has the same sum.`,
+              `绝对值构成公比为 $\\frac{1}{${r}} < 1$ 的几何级数，所以级数绝对收敛，每种重排的和都相同。`,
+            ],
+          ],
+          [
+            ["Sum the original order", "按原来的次序求和"],
+            [
+              `The geometric sum is $\\frac{${c}}{1 + \\frac{1}{${r}}} = ${answer.toLatex()}$.`,
+              `几何级数的和是 $\\frac{${c}}{1 + \\frac{1}{${r}}} = ${answer.toLatex()}$。`,
+            ],
+          ],
+        ],
+        [
+          `Multiplying $${answer.toLatex()}$ by $1 + \\frac{1}{${r}} = \\frac{${r + 1}}{${r}}$ gives back the first term $${c}$.`,
+          `把 $${answer.toLatex()}$ 乘以 $1 + \\frac{1}{${r}} = \\frac{${r + 1}}{${r}}$，又得到第一项 $${c}$。`,
+        ],
+      ),
     );
   },
 );
@@ -383,8 +413,8 @@ const cauchyProductReverse = point(
   "recovering-a-factor-of-a-cauchy-product",
   ["Recovering a factor of a Cauchy product", "还原柯西积的因子"],
   [
-    "The Cauchy product is built from $c_n = \\sum_{k=0}^{n} a_k b_{n-k}$. If the $a_k$ and the $c_n$ are known and $a_0 \\ne 0$, these equations can be solved one at a time for the $b_n$, in the same way as long division of power series.",
-    "柯西积由 $c_n = \\sum_{k=0}^{n} a_k b_{n-k}$ 构成。如果已知 $a_k$ 和 $c_n$，且 $a_0 \\ne 0$，那么可以逐个解这些方程求出 $b_n$，这与幂级数的长除法相同。",
+    "The Cauchy product is built from $c_n = \\sum_{k=0}^{n} a_k b_{n-k}$. If the $a_k$ and the $c_n$ are known and $a_0 \\ne 0$, these equations can be solved one at a time for the $b_n$, in the same way as long division of power series.\n\nLet $a_0, a_1, a_2 = 1, 2, 1$ and $c_0, c_1, c_2 = 2, 5, 7$. Then $c_0 = a_0 b_0$ gives $b_0 = 2$, $c_1 = a_0 b_1 + a_1 b_0$ gives $5 = b_1 + 4$, so $b_1 = 1$, and $c_2 = a_0 b_2 + a_1 b_1 + a_2 b_0$ gives $7 = b_2 + 2 + 2$, so $b_2 = 3$.\n\nCheck: the products $a_0 b_2, a_1 b_1, a_2 b_0$ are $3, 2, 2$, and they add to $7 = c_2$.\n\n> **Watch out.** Each $c_n$ contains every product whose indices add to $n$. Leaving one of them out is the usual slip, and so is forgetting to divide by $a_0$.",
+    "柯西积由 $c_n = \\sum_{k=0}^{n} a_k b_{n-k}$ 构成。如果已知 $a_k$ 和 $c_n$，且 $a_0 \\ne 0$，那么可以逐个解这些方程求出 $b_n$，这与幂级数的长除法相同。\n\n设 $a_0, a_1, a_2 = 1, 2, 1$，$c_0, c_1, c_2 = 2, 5, 7$。由 $c_0 = a_0 b_0$ 得 $b_0 = 2$；由 $c_1 = a_0 b_1 + a_1 b_0$ 得 $5 = b_1 + 4$，所以 $b_1 = 1$；由 $c_2 = a_0 b_2 + a_1 b_1 + a_2 b_0$ 得 $7 = b_2 + 2 + 2$，所以 $b_2 = 3$。\n\n检验：乘积 $a_0 b_2, a_1 b_1, a_2 b_0$ 是 $3, 2, 2$，相加得 $7 = c_2$。\n\n> **注意。** 每个 $c_n$ 包含下标之和为 $n$ 的所有乘积。漏掉其中一个是常见的错误，忘了除以 $a_0$ 也是。",
   ],
   (rng) => {
     const a0 = rng.pick([1, -1]);
@@ -396,17 +426,43 @@ const cauchyProductReverse = point(
     const c0 = a0 * b0;
     const c1 = a0 * b1 + a1 * b0;
     const c2 = a0 * b2 + a1 * b1 + a2 * b0;
-    return ask(
+    return solved(
       [
         `The series $\\sum a_n$ begins with $a_0, a_1, a_2 = ${a0}, ${a1}, ${a2}$, and its Cauchy product with $\\sum b_n$ begins with $c_0, c_1, c_2 = ${c0}, ${c1}, ${c2}$. Find $b_2$.`,
         `级数 $\\sum a_n$ 以 $a_0, a_1, a_2 = ${a0}, ${a1}, ${a2}$ 开始，它与 $\\sum b_n$ 的柯西积以 $c_0, c_1, c_2 = ${c0}, ${c1}, ${c2}$ 开始。求 $b_2$。`,
       ],
       b2,
-      [c2, a0 * (c2 - a2 * b0), a0 * (c2 - a1 * b1)],
       [
-        `Solving in order gives $b_0 = ${b0}$ and $b_1 = ${b1}$. Then $c_2 = a_0 b_2 + a_1 b_1 + a_2 b_0$ becomes $${c2} = ${poly([a0, "b_2"], [a1 * b1 + a2 * b0, ""])}$, so $b_2 = ${b2}$.`,
-        `依次求解得 $b_0 = ${b0}$，$b_1 = ${b1}$。于是 $c_2 = a_0 b_2 + a_1 b_1 + a_2 b_0$ 变为 $${c2} = ${poly([a0, "b_2"], [a1 * b1 + a2 * b0, ""])}$，所以 $b_2 = ${b2}$。`,
+        why(
+          c2,
+          "That takes $c_2$ itself, as if $c_2 = a_0 b_2$; the products $a_1 b_1$ and $a_2 b_0$ are left in.",
+          "这是直接取 $c_2$，好像 $c_2 = a_0 b_2$；乘积 $a_1 b_1$ 和 $a_2 b_0$ 没有减去。",
+        ),
+        why(a0 * (c2 - a2 * b0), `That forgets the product $a_1 b_1 = ${a1 * b1}$.`, `这忘了乘积 $a_1 b_1 = ${a1 * b1}$。`),
+        why(a0 * (c2 - a1 * b1), `That forgets the product $a_2 b_0 = ${a2 * b0}$.`, `这忘了乘积 $a_2 b_0 = ${a2 * b0}$。`),
       ],
+      solution(
+        [
+          [
+            ["Solve for the first two terms", "先解出前两项"],
+            [
+              `$c_0 = a_0 b_0$ gives $b_0 = ${b0}$, and $c_1 = a_0 b_1 + a_1 b_0$ gives $b_1 = ${b1}$.`,
+              `由 $c_0 = a_0 b_0$ 得 $b_0 = ${b0}$，由 $c_1 = a_0 b_1 + a_1 b_0$ 得 $b_1 = ${b1}$。`,
+            ],
+          ],
+          [
+            ["Solve the third equation", "解第三个方程"],
+            [
+              `$c_2 = a_0 b_2 + a_1 b_1 + a_2 b_0$ becomes $${c2} = ${poly([a0, "b_2"], [a1 * b1 + a2 * b0, ""])}$, so $b_2 = ${b2}$.`,
+              `$c_2 = a_0 b_2 + a_1 b_1 + a_2 b_0$ 变为 $${c2} = ${poly([a0, "b_2"], [a1 * b1 + a2 * b0, ""])}$，所以 $b_2 = ${b2}$。`,
+            ],
+          ],
+        ],
+        [
+          `The products $a_0 b_2, a_1 b_1, a_2 b_0$ are $${a0 * b2}, ${a1 * b1}, ${a2 * b0}$, and they add to $${c2} = c_2$.`,
+          `乘积 $a_0 b_2, a_1 b_1, a_2 b_0$ 是 $${a0 * b2}, ${a1 * b1}, ${a2 * b0}$，相加得 $${c2} = c_2$。`,
+        ],
+      ),
     );
   },
 );
@@ -415,8 +471,8 @@ const removingDiscontinuity = point(
   "the-value-that-removes-a-discontinuity",
   ["The value that removes a discontinuity", "消除间断的值"],
   [
-    "A removable discontinuity has a limit but the wrong value or no value at the point. To remove it, set the value equal to the limit. For a rational function, cancel the common factor first, because the limit is not found by substituting into the original fraction.",
-    "可去间断点处有极限，但函数值错误或没有定义。要消除它，就令函数值等于极限。对有理函数要先约去公因式，因为极限不能通过代入原来的分式求得。",
+    "A removable discontinuity has a limit but the wrong value or no value at the point. To remove it, set the value equal to the limit. For a rational function, cancel the common factor first, because the limit is not found by substituting into the original fraction.\n\nFor $f(x) = \\frac{x^{2} - 5x + 6}{x - 2}$, the numerator is $(x - 2)(x - 3)$, so $f(x) = x - 3$ for $x \\ne 2$. The limit at $2$ is $-1$, and setting $f(2) = -1$ makes $f$ continuous.\n\nCheck: the cancelled form agrees with $f$ away from $2$; at $x = 4$, $\\frac{16 - 20 + 6}{2} = 1 = 4 - 3$.\n\n> **Watch out.** Substituting $x = 2$ into the original fraction gives $\\frac{0}{0}$, which is no value at all. Evaluate the cancelled form, and keep the sign of the remaining factor.",
+    "可去间断点处有极限，但函数值错误或没有定义。要消除它，就令函数值等于极限。对有理函数要先约去公因式，因为极限不能通过代入原来的分式求得。\n\n对 $f(x) = \\frac{x^{2} - 5x + 6}{x - 2}$，分子是 $(x - 2)(x - 3)$，所以 $x \\ne 2$ 时 $f(x) = x - 3$。在 $2$ 处的极限是 $-1$，令 $f(2) = -1$ 就使 $f$ 连续。\n\n检验：约分后的形式在 $2$ 以外与 $f$ 一致；在 $x = 4$ 处，$\\frac{16 - 20 + 6}{2} = 1 = 4 - 3$。\n\n> **注意。** 把 $x = 2$ 代入原来的分式得到 $\\frac{0}{0}$，这根本不是一个值。要用约分后的形式求值，并保留剩下因式的符号。",
   ],
   (rng) => {
     const a = rng.int(1, 9);
@@ -424,17 +480,40 @@ const removingDiscontinuity = point(
     if (b === a) b = a + 1;
     const top = poly([1, "x^{2}"], [-(a + b), "x"], [a * b, ""]);
     const answer = a - b;
-    return ask(
+    const rest = poly([1, "x"], [-b, ""]);
+    return solved(
       [
         `The function $f(x) = \\frac{${top}}{x - ${a}}$ is not defined at $x = ${a}$. What value of $f(${a})$ makes $f$ continuous there?`,
         `函数 $f(x) = \\frac{${top}}{x - ${a}}$ 在 $x = ${a}$ 处没有定义。$f(${a})$ 取什么值时 $f$ 在该点连续？`,
       ],
       answer,
-      [a + b, a, b],
       [
-        `The factor $x - ${a}$ cancels, which leaves $${poly([1, "x"], [-b, ""])}$. Its limit at $x = ${a}$ is $${answer}$, so this is the required value.`,
-        `约去因式 $x - ${a}$，剩下 $${poly([1, "x"], [-b, ""])}$。它在 $x = ${a}$ 处的极限是 $${answer}$，所以这就是所求的值。`,
+        why(a + b, `That takes the remaining factor with the wrong sign; it is $${rest}$.`, `这把剩下因式的符号弄错了；它是 $${rest}$。`),
+        why(a, "That is the point itself, not the value of the function there.", "这是那个点本身，不是函数在该点的值。"),
+        why(b, "That is the other zero of the numerator, not the limit at the point.", "这是分子的另一个零点，不是在该点的极限。"),
       ],
+      solution(
+        [
+          [
+            ["Factor and cancel", "分解并约分"],
+            [
+              `The numerator is $(x - ${a})(${rest})$, so $f(x) = ${rest}$ for $x \\ne ${a}$.`,
+              `分子是 $(x - ${a})(${rest})$，所以 $x \\ne ${a}$ 时 $f(x) = ${rest}$。`,
+            ],
+          ],
+          [
+            ["Take the limit", "求极限"],
+            [
+              `As $x \\to ${a}$, $${rest} \\to ${answer}$, so the value $f(${a}) = ${answer}$ makes $f$ continuous.`,
+              `当 $x \\to ${a}$ 时，$${rest} \\to ${answer}$，所以令 $f(${a}) = ${answer}$ 就使 $f$ 连续。`,
+            ],
+          ],
+        ],
+        [
+          `Expanding $(x - ${a})(${rest})$ gives back $${top}$, so the cancellation is right.`,
+          `展开 $(x - ${a})(${rest})$ 又得到 $${top}$，所以约分是对的。`,
+        ],
+      ),
     );
   },
 );
@@ -509,8 +588,8 @@ const threeBisections = point(
   "the-interval-after-three-bisections",
   ["The interval after three bisections", "三次二分后的区间"],
   [
-    "Each step of bisection evaluates at the midpoint and keeps the half on which the sign changes, so the root stays trapped. After $n$ steps, the interval has length $\\frac{1}{2^{n}}$ of the original, and its endpoints come from following the choices one at a time.",
-    "二分法的每一步都在中点求值，并保留符号变化的那一半，所以根始终被夹住。经过 $n$ 步后，区间的长度是原来的 $\\frac{1}{2^{n}}$，它的端点要逐次根据选择得出。",
+    "Each step of bisection evaluates at the midpoint and keeps the half on which the sign changes, so the root stays trapped. After $n$ steps, the interval has length $\\frac{1}{2^{n}}$ of the original, and its endpoints come from following the choices one at a time.\n\nTo solve $x^{2} = 2$ from $[1, 3]$: the midpoint $2$ has $2^{2} = 4 > 2$, so keep $[1, 2]$; the midpoint $\\frac{3}{2}$ has square $\\frac{9}{4} > 2$, so keep $\\left[1, \\frac{3}{2}\\right]$; the midpoint $\\frac{5}{4}$ has square $\\frac{25}{16} < 2$, so keep $\\left[\\frac{5}{4}, \\frac{3}{2}\\right]$.\n\nCheck: $\\frac{25}{16} < 2 < \\frac{9}{4}$, so the root is still trapped, and the length is $\\frac{1}{4}$, which is $\\frac{1}{8}$ of the original length $2$.\n\n> **Watch out.** Compare the square of each midpoint with the target, not the midpoint itself. And the third midpoint need not be the left endpoint: it is the left end only when its square is too small.",
+    "二分法的每一步都在中点求值，并保留符号变化的那一半，所以根始终被夹住。经过 $n$ 步后，区间的长度是原来的 $\\frac{1}{2^{n}}$，它的端点要逐次根据选择得出。\n\n从 $[1, 3]$ 开始解 $x^{2} = 2$：中点 $2$ 满足 $2^{2} = 4 > 2$，保留 $[1, 2]$；中点 $\\frac{3}{2}$ 的平方 $\\frac{9}{4} > 2$，保留 $\\left[1, \\frac{3}{2}\\right]$；中点 $\\frac{5}{4}$ 的平方 $\\frac{25}{16} < 2$，保留 $\\left[\\frac{5}{4}, \\frac{3}{2}\\right]$。\n\n检验：$\\frac{25}{16} < 2 < \\frac{9}{4}$，所以根仍被夹住，长度是 $\\frac{1}{4}$，是原长 $2$ 的 $\\frac{1}{8}$。\n\n> **注意。** 要把每个中点的平方与目标比较，而不是中点本身。而且第三个中点不一定是左端点：只有当它的平方太小时，它才是左端。",
   ],
   (rng) => {
     const m = rng.int(1, 9);
@@ -518,25 +597,61 @@ const threeBisections = point(
     if (Number.isInteger(Math.sqrt(N))) N += 1;
     let lo = 4 * m;
     let hi = 4 * m + 8;
-    const mids: string[] = [];
+    const tests: Pair[] = [];
     for (let i = 0; i < 3; i++) {
       const mid = (lo + hi) / 2;
-      mids.push(Q.of(mid, 4).toLatex());
-      if (mid * mid < 16 * N) lo = mid;
-      else hi = mid;
+      const at = Q.of(mid, 4).toLatex();
+      const square = Q.of(mid * mid, 16).toLatex();
+      if (mid * mid < 16 * N) {
+        lo = mid;
+        tests.push([
+          `$\\left(${at}\\right)^{2} = ${square} < ${N}$, keep the right half`,
+          `$\\left(${at}\\right)^{2} = ${square} < ${N}$，保留右半`,
+        ]);
+      } else {
+        hi = mid;
+        tests.push([
+          `$\\left(${at}\\right)^{2} = ${square} > ${N}$, keep the left half`,
+          `$\\left(${at}\\right)^{2} = ${square} > ${N}$，保留左半`,
+        ]);
+      }
     }
     const answer = Q.of(lo, 4);
-    return ask(
+    const right = Q.of(hi, 4);
+    return solved(
       [
         `To solve $x^{2} = ${N}$, bisection starts on $[${m}, ${m + 2}]$. What is the left endpoint of the interval kept after three steps?`,
         `为解 $x^{2} = ${N}$，二分法从 $[${m}, ${m + 2}]$ 开始。三步后保留的区间的左端点是多少？`,
       ],
       answer,
-      [Q.of(hi, 4), Q.of(m + 1), Q.of(Math.floor(Math.sqrt(N)))],
       [
-        `The midpoints tested are $${mids.join(", ")}$. Comparing each square with $${N}$ leaves the interval from $${answer.toLatex()}$ to $${Q.of(hi, 4).toLatex()}$.`,
-        `依次检验的中点是 $${mids.join(", ")}$。把每个平方与 $${N}$ 比较，留下从 $${answer.toLatex()}$ 到 $${Q.of(hi, 4).toLatex()}$ 的区间。`,
+        why(right, "That is the right endpoint of the kept interval.", "这是保留区间的右端点。"),
+        why(Q.of(m + 1), "That is the first midpoint; two more steps still move the endpoints.", "这是第一个中点；后面两步还会移动端点。"),
+        why(
+          Q.of(Math.floor(Math.sqrt(N))),
+          "That is the whole part of the root, not an endpoint that bisection produces.",
+          "这是根的整数部分，不是二分法得到的端点。",
+        ),
       ],
+      solution(
+        [
+          [
+            ["Test the midpoints", "检验中点"],
+            [`${tests.map((test) => test[0]).join("; ")}.`, `${tests.map((test) => test[1]).join("；")}。`],
+          ],
+          [
+            ["Read off the interval", "读出区间"],
+            [
+              `The interval kept is $\\left[${answer.toLatex()}, ${right.toLatex()}\\right]$, so its left endpoint is $${answer.toLatex()}$.`,
+              `保留的区间是 $\\left[${answer.toLatex()}, ${right.toLatex()}\\right]$，所以左端点是 $${answer.toLatex()}$。`,
+            ],
+          ],
+        ],
+        [
+          `The square of $${answer.toLatex()}$ is below $${N}$ and the square of $${right.toLatex()}$ is above it, and the length is $\\frac{1}{4}$, an eighth of the original $2$.`,
+          `$${answer.toLatex()}$ 的平方小于 $${N}$，$${right.toLatex()}$ 的平方大于它，长度是 $\\frac{1}{4}$，是原长 $2$ 的八分之一。`,
+        ],
+      ),
     );
   },
 );
@@ -545,25 +660,59 @@ const contractionBound = point(
   "the-error-bound-of-a-contraction",
   ["The error bound of a contraction", "压缩映射的误差界"],
   [
-    "On a complete metric space, a contraction with constant $q < 1$ has a unique fixed point $x^{*}$, and completeness is what makes the iterates converge to it. The estimate $d(x_n, x^{*}) \\le \\frac{q^{n}}{1 - q} d(x_0, x_1)$ bounds the error before the limit is known.",
-    "在完备度量空间上，常数 $q < 1$ 的压缩映射有唯一不动点 $x^{*}$，完备性正是迭代收敛到它的原因。估计式 $d(x_n, x^{*}) \\le \\frac{q^{n}}{1 - q} d(x_0, x_1)$ 在极限未知时就给出误差的界。",
+    "On a complete metric space, a contraction with constant $q < 1$ has a unique fixed point $x^{*}$, and completeness is what makes the iterates converge to it. The estimate $d(x_n, x^{*}) \\le \\frac{q^{n}}{1 - q} d(x_0, x_1)$ bounds the error before the limit is known.\n\nWith $q = \\frac{1}{2}$, $d(x_0, x_1) = 3$ and $n = 2$: $q^{2} = \\frac{1}{4}$ and $1 - q = \\frac{1}{2}$, so the bound is $\\frac{1/4}{1/2} \\times 3 = \\frac{3}{2}$.\n\nCheck: the steps from $x_2$ onward are at most $\\frac{3}{4}, \\frac{3}{8}, \\frac{3}{16}, \\dots$, and these add to $\\frac{3}{2}$.\n\n> **Watch out.** Dividing by $1 - q = \\frac{k - 1}{k}$ multiplies by $\\frac{k}{k - 1}$; do not divide by $k - 1$ alone.",
+    "在完备度量空间上，常数 $q < 1$ 的压缩映射有唯一不动点 $x^{*}$，完备性正是迭代收敛到它的原因。估计式 $d(x_n, x^{*}) \\le \\frac{q^{n}}{1 - q} d(x_0, x_1)$ 在极限未知时就给出误差的界。\n\n取 $q = \\frac{1}{2}$，$d(x_0, x_1) = 3$，$n = 2$：$q^{2} = \\frac{1}{4}$，$1 - q = \\frac{1}{2}$，所以界是 $\\frac{1/4}{1/2} \\times 3 = \\frac{3}{2}$。\n\n检验：从 $x_2$ 起的各步至多是 $\\frac{3}{4}, \\frac{3}{8}, \\frac{3}{16}, \\dots$，它们相加得 $\\frac{3}{2}$。\n\n> **注意。** 除以 $1 - q = \\frac{k - 1}{k}$ 就是乘以 $\\frac{k}{k - 1}$；不要只除以 $k - 1$。",
   ],
   (rng) => {
     const k = rng.int(2, 5);
     const n = rng.int(2, 5);
     const D = rng.int(1, 12);
     const answer = Q.of(D * k, k ** n * (k - 1));
-    return ask(
+    return solved(
       [
         `A contraction on a complete metric space has constant $q = \\frac{1}{${k}}$, and its iterates have $d(x_0, x_1) = ${D}$. What upper bound does the standard estimate give for $d(x_{${n}}, x^{*})$?`,
         `完备度量空间上的压缩映射的常数为 $q = \\frac{1}{${k}}$，其迭代满足 $d(x_0, x_1) = ${D}$。标准估计式给出 $d(x_{${n}}, x^{*})$ 的什么上界？`,
       ],
       answer,
-      [Q.of(D, k ** n), Q.of(D * k, k - 1), Q.of(D, k ** n * (k - 1))],
       [
-        `The estimate gives $\\frac{q^{${n}}}{1 - q} \\cdot ${D}$, with $q^{${n}} = \\frac{1}{${k ** n}}$ and $1 - q = \\frac{${k - 1}}{${k}}$. The result is $${answer.toLatex()}$.`,
-        `估计式给出 $\\frac{q^{${n}}}{1 - q} \\cdot ${D}$，其中 $q^{${n}} = \\frac{1}{${k ** n}}$，$1 - q = \\frac{${k - 1}}{${k}}$。结果是 $${answer.toLatex()}$。`,
+        why(
+          Q.of(D, k ** n),
+          "That is only the size of the next step; the factor $\\frac{1}{1 - q}$ adds the steps after it.",
+          "这只是下一步的大小；因子 $\\frac{1}{1 - q}$ 把之后的各步也加上。",
+        ),
+        why(
+          Q.of(D * k, k - 1),
+          `That leaves out $q^{${n}}$; it is the bound for $x_0$, before any iteration.`,
+          `这漏掉了 $q^{${n}}$；它是迭代之前 $x_0$ 的界。`,
+        ),
+        why(
+          Q.of(D, k ** n * (k - 1)),
+          `That divides by $${k - 1}$ instead of by $1 - q = \\frac{${k - 1}}{${k}}$.`,
+          `这是除以 $${k - 1}$，而不是除以 $1 - q = \\frac{${k - 1}}{${k}}$。`,
+        ),
       ],
+      solution(
+        [
+          [
+            ["Compute the factors", "计算各因子"],
+            [
+              `$q^{${n}} = \\frac{1}{${k ** n}}$ and $1 - q = \\frac{${k - 1}}{${k}}$, so $\\frac{q^{${n}}}{1 - q} = ${Q.of(k, k ** n * (k - 1)).toLatex()}$.`,
+              `$q^{${n}} = \\frac{1}{${k ** n}}$，$1 - q = \\frac{${k - 1}}{${k}}$，所以 $\\frac{q^{${n}}}{1 - q} = ${Q.of(k, k ** n * (k - 1)).toLatex()}$。`,
+            ],
+          ],
+          [
+            ["Scale by the first step", "乘以第一步的距离"],
+            [
+              `Multiplying by $d(x_0, x_1) = ${D}$ gives the bound $${answer.toLatex()}$.`,
+              `乘以 $d(x_0, x_1) = ${D}$，得到上界 $${answer.toLatex()}$。`,
+            ],
+          ],
+        ],
+        [
+          `The steps from $x_{${n}}$ onward are at most $${Q.of(D, k ** n).toLatex()}$, then $${Q.of(D, k ** (n + 1)).toLatex()}$, and so on, a geometric series whose sum is $${answer.toLatex()}$.`,
+          `从 $x_{${n}}$ 起的各步至多是 $${Q.of(D, k ** n).toLatex()}$，然后是 $${Q.of(D, k ** (n + 1)).toLatex()}$，依此类推，这个几何级数的和是 $${answer.toLatex()}$。`,
+        ],
+      ),
     );
   },
 );
@@ -627,25 +776,69 @@ const lebesgueNumber = point(
   "the-overlap-of-a-cover",
   ["The overlap of a cover", "覆盖的重叠"],
   [
-    "When an open cover is made of overlapping intervals, a short interval fits inside a single member only if it is shorter than a limit set by the overlap. A Lebesgue number of an open cover is a $\\delta > 0$ such that every set of diameter less than $\\delta$ lies inside a single member of the cover. An open cover of a compact set always has one, and it is the number behind many proofs by compactness. For overlapping open intervals, the danger is an interval that reaches past the overlap of two neighbours: it sticks out of both.",
-    "当开覆盖由互相重叠的区间组成时，只有比重叠所确定的界限更短的小区间，才能放进单个成员之内。开覆盖的勒贝格数是这样一个 $\\delta > 0$：每个直径小于 $\\delta$ 的集合都落在覆盖的某一个成员之内。紧集的开覆盖总有勒贝格数，许多紧性证明都依赖它。对于互相重叠的开区间，危险在于小区间越过两个相邻区间的重叠部分：这时它同时伸出这两个区间。",
+    "When an open cover is made of overlapping intervals, a short interval fits inside a single member only if it is shorter than a limit set by the overlap. A Lebesgue number of an open cover is a $\\delta > 0$ such that every set of diameter less than $\\delta$ lies inside a single member of the cover. An open cover of a compact set always has one, and it is the number behind many proofs by compactness. For overlapping open intervals, the danger is an interval that reaches past the overlap of two neighbours: it sticks out of both.\n\nThe intervals $(2k - 3, 2k + 3)$ have half-width $3$ and centers $2$ apart. Neighbours such as $(-3, 3)$ and $(-1, 5)$ overlap in $(-1, 3)$, of length $6 - 2 = 4$, so the largest such $\\delta$ is $4$.\n\nCheck: the closed interval $[-1, 3]$ has length $4$, and it lies in no member, because each open member misses at least one of its ends.\n\n> **Watch out.** The answer is the length of the overlap, the width $2w$ minus the spacing, not the width of one interval or the spacing itself.",
+    "当开覆盖由互相重叠的区间组成时，只有比重叠所确定的界限更短的小区间，才能放进单个成员之内。开覆盖的勒贝格数是这样一个 $\\delta > 0$：每个直径小于 $\\delta$ 的集合都落在覆盖的某一个成员之内。紧集的开覆盖总有勒贝格数，许多紧性证明都依赖它。对于互相重叠的开区间，危险在于小区间越过两个相邻区间的重叠部分：这时它同时伸出这两个区间。\n\n区间 $(2k - 3, 2k + 3)$ 的半宽是 $3$，中心间距是 $2$。相邻的 $(-3, 3)$ 和 $(-1, 5)$ 重叠于 $(-1, 3)$，长度为 $6 - 2 = 4$，所以这样的最大 $\\delta$ 是 $4$。\n\n检验：闭区间 $[-1, 3]$ 的长度是 $4$，它不落在任何成员内，因为每个开成员都至少缺它的一个端点。\n\n> **注意。** 答案是重叠部分的长度，即宽度 $2w$ 减去间距，不是一个区间的宽度，也不是间距本身。",
   ],
   (rng) => {
     const w = rng.int(2, 9);
     const s = rng.int(1, 2 * w - 1);
     const answer = 2 * w - s;
     const center = s === 1 ? "k" : `${s}k`;
-    return ask(
+    const longer = (value: number) =>
+      why(
+        value,
+        `That is longer than the overlap $${answer}$ of two neighbours, so an interval that long can stick out of both.`,
+        `这比两个相邻区间的重叠 $${answer}$ 更长，所以这么长的区间可能同时伸出两者。`,
+      );
+    return solved(
       [
         `The open intervals $(${center} - ${w}, ${center} + ${w})$, for all integers $k$, cover the real line. What is the largest $\\delta$ such that every closed interval of length less than $\\delta$ lies inside one of them?`,
         `对所有整数 $k$，开区间 $(${center} - ${w}, ${center} + ${w})$ 覆盖实数轴。使每个长度小于 $\\delta$ 的闭区间都落在其中一个开区间内的最大 $\\delta$ 是多少？`,
       ],
       answer,
-      [w === answer ? answer + 1 : w, s === answer ? answer + 2 : s, 2 * w],
       [
-        `A closed interval of length $\\ell$ fits in a member exactly when some center lies in an open range of length $${2 * w} - \\ell$. Centers are spaced $${s}$ apart, so this is guaranteed when $\\ell < ${answer}$.`,
-        `长度为 $\\ell$ 的闭区间能放进某个成员，当且仅当某个中心落在长度为 $${2 * w} - \\ell$ 的开范围内。中心的间距是 $${s}$，所以当 $\\ell < ${answer}$ 时这一定成立。`,
+        w === answer
+          ? longer(answer + 1)
+          : why(
+              w,
+              "That is the half-width of one interval; what matters is how far neighbours overlap.",
+              "这是一个区间的半宽；关键是相邻区间重叠多少。",
+            ),
+        s === answer
+          ? longer(answer + 2)
+          : why(
+              s,
+              `That is the spacing of the centers, not the overlap $${2 * w} - ${s}$.`,
+              `这是中心的间距，不是重叠 $${2 * w} - ${s}$。`,
+            ),
+        why(
+          2 * w,
+          "That is the length of one member; only intervals shorter than the overlap are sure to fit.",
+          "这是一个成员的长度；只有比重叠更短的区间才一定放得进。",
+        ),
       ],
+      solution(
+        [
+          [
+            ["Fit one interval", "放进一个区间"],
+            [
+              `A closed interval of length $\\ell$ fits in a member exactly when that member's center lies in an open range of length $${2 * w} - \\ell$.`,
+              `长度为 $\\ell$ 的闭区间能放进某个成员，当且仅当这个成员的中心落在长度为 $${2 * w} - \\ell$ 的开范围内。`,
+            ],
+          ],
+          [
+            ["Use the spacing", "利用间距"],
+            [
+              `Centers are spaced $${s}$ apart, so such a range always contains one when $${2 * w} - \\ell > ${s}$, that is when $\\ell < ${answer}$.`,
+              `中心的间距是 $${s}$，所以当 $${2 * w} - \\ell > ${s}$，即 $\\ell < ${answer}$ 时，这样的范围总含有一个中心。`,
+            ],
+          ],
+        ],
+        [
+          `The closed interval $[${s - w}, ${w}]$, the overlap of the members centered at $0$ and $${s}$, has length $${answer}$ and lies in no member, so no larger $\\delta$ works.`,
+          `闭区间 $[${s - w}, ${w}]$ 是中心在 $0$ 和 $${s}$ 的两个成员的重叠，长度为 $${answer}$，它不落在任何成员内，所以更大的 $\\delta$ 不行。`,
+        ],
+      ),
     );
   },
 );
@@ -715,8 +908,8 @@ const exactCubicZeros = {
     "counting-the-exact-zeros-of-a-cubic",
     ["Counting the exact zeros of a cubic", "精确计算三次函数的零点"],
     [
-      "Rolle's theorem gives an upper bound on the number of zeros, since zeros of $f$ are separated by zeros of $f'$. To find the exact count, evaluate $f$ at the critical points as well: the signs of these values show how many times the graph actually crosses the axis.",
-      "罗尔定理给出零点个数的上界，因为 $f$ 的零点被 $f'$ 的零点分隔。要求出准确的个数，还要计算 $f$ 在临界点的值：这些值的符号说明图像实际穿过坐标轴多少次。",
+      "Rolle's theorem gives an upper bound on the number of zeros, since zeros of $f$ are separated by zeros of $f'$. To find the exact count, evaluate $f$ at the critical points as well: the signs of these values show how many times the graph actually crosses the axis.\n\nFor $f(x) = x^{3} - 3x + 1$, $f'(x) = 3x^{2} - 3$ vanishes at $x = \\pm 1$, and $f(1) = -1$, $f(-1) = 3$. The critical values have opposite signs, so $f$ has three real zeros.\n\nCheck: $f(-2) = -1$, $f(0) = 1$, $f(1) = -1$ and $f(2) = 3$ change sign three times.\n\n> **Watch out.** Rolle's bound of three is only a maximum. When a critical value is $0$, that zero is a double zero and counts once.",
+      "罗尔定理给出零点个数的上界，因为 $f$ 的零点被 $f'$ 的零点分隔。要求出准确的个数，还要计算 $f$ 在临界点的值：这些值的符号说明图像实际穿过坐标轴多少次。\n\n对 $f(x) = x^{3} - 3x + 1$，$f'(x) = 3x^{2} - 3$ 在 $x = \\pm 1$ 处为零，且 $f(1) = -1$，$f(-1) = 3$。两个临界值符号相反，所以 $f$ 有三个实零点。\n\n检验：$f(-2) = -1$，$f(0) = 1$，$f(1) = -1$，$f(2) = 3$，符号变化三次。\n\n> **注意。** 罗尔定理给出的三只是最大值。当某个临界值为 $0$ 时，那个零点是二重零点，只算一次。",
     ],
     (rng) => {
       const a = rng.int(1, 4);
@@ -728,7 +921,7 @@ const exactCubicZeros = {
       const high = c + edge;
       const answer = low < 0 && high > 0 ? 3 : low === 0 || high === 0 ? 2 : 1;
       const f = poly([1, "x^{3}"], [-3 * a * a, "x"], [c, ""]);
-      const why: Pair =
+      const verdict: Pair =
         answer === 3
           ? ["They have opposite signs, so the graph crosses the axis three times.", "它们符号相反，所以图像穿过坐标轴三次。"]
           : answer === 2
@@ -737,14 +930,47 @@ const exactCubicZeros = {
                 "其中一个为零，所以图像在该处与坐标轴相切，并在别处穿过一次。",
               ]
             : ["They have the same sign, so the graph crosses the axis only once.", "它们符号相同，所以图像只穿过坐标轴一次。"];
-      return ask(
+      const reasons: Record<number, Pair> = {
+        0: [
+          "A cubic runs from $-\\infty$ to $+\\infty$, so it has at least one real zero.",
+          "三次函数从 $-\\infty$ 变到 $+\\infty$，所以至少有一个实零点。",
+        ],
+        1: [
+          `The critical values $${low}$ and $${high}$ show that the graph meets the axis more than once.`,
+          `临界值 $${low}$ 和 $${high}$ 说明图像与坐标轴不止相交一次。`,
+        ],
+        2: [
+          `Two zeros need a critical value of $0$, and neither $${low}$ nor $${high}$ is $0$.`,
+          `两个零点要求某个临界值为 $0$，而 $${low}$ 和 $${high}$ 都不是 $0$。`,
+        ],
+        3: [
+          `Three is only Rolle's upper bound; the critical values $${low}$ and $${high}$ do not have opposite signs.`,
+          `三只是罗尔定理的上界；临界值 $${low}$ 和 $${high}$ 并不异号。`,
+        ],
+      };
+      return solved(
         [`How many distinct real zeros does $${f}$ have?`, `$${f}$ 有多少个不同的实零点？`],
         answer,
-        [0, 1, 2, 3].filter((v) => v !== answer),
-        [
-          `The critical points are $x = ${a}$ and $x = ${-a}$, where the values are $${low}$ and $${high}$. ${why[0]}`,
-          `临界点是 $x = ${a}$ 和 $x = ${-a}$，函数值分别是 $${low}$ 和 $${high}$。${why[1]}`,
-        ],
+        [0, 1, 2, 3].filter((v) => v !== answer).map((v) => why(v, (reasons[v] as Pair)[0], (reasons[v] as Pair)[1])),
+        solution(
+          [
+            [
+              ["Find the critical points", "求临界点"],
+              [
+                `$f'(x) = 3x^{2} - ${3 * a * a}$ vanishes at $x = ${a}$ and $x = ${-a}$.`,
+                `$f'(x) = 3x^{2} - ${3 * a * a}$ 在 $x = ${a}$ 和 $x = ${-a}$ 处为零。`,
+              ],
+            ],
+            [
+              ["Read the critical values", "看临界值"],
+              [`$f(${a}) = ${low}$ and $f(${-a}) = ${high}$. ${verdict[0]}`, `$f(${a}) = ${low}$，$f(${-a}) = ${high}$。${verdict[1]}`],
+            ],
+          ],
+          [
+            `$f$ is monotone on $(-\\infty, ${-a}]$, $[${-a}, ${a}]$ and $[${a}, \\infty)$, and it runs from $-\\infty$ to $+\\infty$, so each piece holds at most one zero, and counting the pieces that reach the axis gives $${answer}$.`,
+            `$f$ 在 $(-\\infty, ${-a}]$、$[${-a}, ${a}]$ 和 $[${a}, \\infty)$ 上单调，并从 $-\\infty$ 变到 $+\\infty$，所以每一段至多有一个零点，数出到达坐标轴的段，得到 $${answer}$。`,
+          ],
+        ),
       );
     },
   ),
@@ -755,8 +981,8 @@ const darbouxCount = point(
   "the-zeros-forced-by-sign-changes",
   ["The zeros forced by sign changes", "符号变化迫使的零点"],
   [
-    "A derivative need not be continuous, yet Darboux's theorem gives it the intermediate value property. So each change of sign among known values of $f'$ forces a zero between them, and nothing else is forced, which means that the sign changes give the guaranteed number of zeros.",
-    "导数不一定连续，但达布定理使它具有介值性质。所以 $f'$ 的已知值中，每次符号变化都迫使其间有一个零点，除此之外没有别的强制，这意味着符号变化数就是可保证的零点个数。",
+    "A derivative need not be continuous, yet Darboux's theorem gives it the intermediate value property. So each change of sign among known values of $f'$ forces a zero between them, and nothing else is forced, which means that the sign changes give the guaranteed number of zeros.\n\nSuppose $f'(0) = 2$, $f'(1) = -1$, $f'(2) = -3$ and $f'(3) = 4$. The signs run $+, -, -, +$, with changes between $0$ and $1$ and between $2$ and $3$, so $f'$ must have at least $2$ zeros.\n\nCheck: between $1$ and $2$ both values are negative, so nothing forces a zero there, and the piecewise linear $f'$ through these values has exactly $2$ zeros.\n\n> **Watch out.** Count only changes of sign between neighbouring values. Neither the number of gaps nor the number of negative values is the answer.",
+    "导数不一定连续，但达布定理使它具有介值性质。所以 $f'$ 的已知值中，每次符号变化都迫使其间有一个零点，除此之外没有别的强制，这意味着符号变化数就是可保证的零点个数。\n\n设 $f'(0) = 2$，$f'(1) = -1$，$f'(2) = -3$，$f'(3) = 4$。符号依次是 $+, -, -, +$，在 $0$ 与 $1$ 之间、$2$ 与 $3$ 之间变号，所以 $f'$ 至少有 $2$ 个零点。\n\n检验：在 $1$ 与 $2$ 之间两个值都是负的，没有什么迫使那里有零点；经过这些值的分段线性 $f'$ 恰好有 $2$ 个零点。\n\n> **注意。** 只数相邻值之间的符号变化。区间段数和负值个数都不是答案。",
   ],
   (rng) => {
     const n = rng.int(4, 7);
@@ -764,17 +990,56 @@ const darbouxCount = point(
     let changes = 0;
     for (let i = 1; i < n; i++) if ((values[i - 1] as number) * (values[i] as number) < 0) changes++;
     const shown = values.map((v, i) => `f'(${i}) = ${v}`).join(", ");
-    return ask(
+    const signs = values.map((v) => (v > 0 ? "+" : "-")).join(", ");
+    const negatives = values.filter((v) => v < 0).length;
+    const more = why(
+      changes + 1,
+      "That adds a zero that nothing forces; $f'$ can avoid zero wherever the sign does not change.",
+      "这多加了一个没有被迫出现的零点；在不变号的地方 $f'$ 可以不为零。",
+    );
+    return solved(
       [
         `A function is differentiable on $[0, ${n - 1}]$, with $${shown}$. What is the smallest number of zeros that $f'$ must have on this interval?`,
         `函数在 $[0, ${n - 1}]$ 上可导，且 $${shown}$。$f'$ 在这个区间上至少必须有多少个零点？`,
       ],
       changes,
-      [n - 1 === changes ? changes + 1 : n - 1, changes + 1, values.filter((v) => v < 0).length],
       [
-        `The listed values change sign $${changes}$ ${changes === 1 ? "time" : "times"}, and Darboux's theorem puts a zero of $f'$ in each such gap. A function could have no other zeros of $f'$, so the minimum is $${changes}$.`,
-        `所列的值变号 $${changes}$ 次，达布定理在每个这样的区间内给出 $f'$ 的一个零点。函数可以使 $f'$ 没有其他零点，所以最小值是 $${changes}$。`,
+        n - 1 === changes
+          ? more
+          : why(
+              n - 1,
+              "That counts every gap between listed values, but a gap without a change of sign forces no zero.",
+              "这数的是所有相邻值之间的区间，但不变号的区间不迫使零点出现。",
+            ),
+        more,
+        why(
+          negatives,
+          "That counts the negative values, not the changes of sign between neighbours.",
+          "这数的是负值的个数，而不是相邻值之间的符号变化。",
+        ),
       ],
+      solution(
+        [
+          [
+            ["List the signs", "列出符号"],
+            [
+              `The signs of $f'(0), \\dots, f'(${n - 1})$ are $${signs}$, which change $${changes}$ ${changes === 1 ? "time" : "times"}.`,
+              `$f'(0), \\dots, f'(${n - 1})$ 的符号是 $${signs}$，共变号 $${changes}$ 次。`,
+            ],
+          ],
+          [
+            ["Apply Darboux's theorem", "应用达布定理"],
+            [
+              `Each change of sign forces a zero of $f'$ in that gap, so $f'$ has at least $${changes}$ zeros.`,
+              `每次变号都迫使 $f'$ 在该区间内有一个零点，所以 $f'$ 至少有 $${changes}$ 个零点。`,
+            ],
+          ],
+        ],
+        [
+          `The piecewise linear $f'$ through the listed values has exactly one zero in each gap with a change of sign and none elsewhere, so no more than $${changes}$ are forced.`,
+          `经过所列值的分段线性 $f'$ 在每个变号的区间内恰有一个零点，别处没有，所以被迫出现的零点不超过 $${changes}$ 个。`,
+        ],
+      ),
     );
   },
 );
@@ -783,8 +1048,8 @@ const escapingMass = point(
   "an-integral-limit-that-beats-the-pointwise-limit",
   ["An integral limit that beats the pointwise limit", "积分极限不等于逐点极限的积分"],
   [
-    "A sequence of functions can tend to zero at every point while its integrals tend to something else, because a tall narrow peak keeps carrying area near one point. So a limit and an integral can be exchanged only with a condition such as uniform convergence, and here it fails.",
-    "函数列可以在每一点都趋于零，而积分却趋于别的值，因为又高又窄的尖峰在一点附近持续携带面积。所以只有在一致收敛这样的条件下才能交换极限与积分，而这里这个条件不成立。",
+    "A sequence of functions can tend to zero at every point while its integrals tend to something else, because a tall narrow peak keeps carrying area near one point. So a limit and an integral can be exchanged only with a condition such as uniform convergence, and here it fails.\n\nFor $f_n(x) = n x (1 - x^{2})^{n}$, the substitution $u = 1 - x^{2}$, $du = -2x \\, dx$ gives $\\int_0^1 f_n \\, dx = \\frac{n}{2} \\int_0^1 u^{n} \\, du = \\frac{n}{2(n + 1)}$, which tends to $\\frac{1}{2}$.\n\nCheck: for $n = 1$, $\\int_0^1 (x - x^{3}) \\, dx = \\frac{1}{2} - \\frac{1}{4} = \\frac{1}{4}$, and the formula gives $\\frac{1}{2 \\times 2} = \\frac{1}{4}$ too.\n\n> **Watch out.** The pointwise limit is $0$, so its integral is $0$, but that is not the limit of the integrals. Also keep the factor $\\frac{1}{p}$ that the substitution brings in.",
+    "函数列可以在每一点都趋于零，而积分却趋于别的值，因为又高又窄的尖峰在一点附近持续携带面积。所以只有在一致收敛这样的条件下才能交换极限与积分，而这里这个条件不成立。\n\n对 $f_n(x) = n x (1 - x^{2})^{n}$，代换 $u = 1 - x^{2}$，$du = -2x \\, dx$，得 $\\int_0^1 f_n \\, dx = \\frac{n}{2} \\int_0^1 u^{n} \\, du = \\frac{n}{2(n + 1)}$，它趋于 $\\frac{1}{2}$。\n\n检验：$n = 1$ 时，$\\int_0^1 (x - x^{3}) \\, dx = \\frac{1}{2} - \\frac{1}{4} = \\frac{1}{4}$，公式也给出 $\\frac{1}{2 \\times 2} = \\frac{1}{4}$。\n\n> **注意。** 逐点极限是 $0$，它的积分是 $0$，但这不是积分的极限。还要保留代换带来的因子 $\\frac{1}{p}$。",
   ],
   (rng) => {
     const k = rng.int(1, 12);
@@ -792,17 +1057,52 @@ const escapingMass = point(
     const answer = Q.of(k, p);
     const start = k === 1 ? "" : `${k} `;
     const inner = p === 2 ? "x" : `x^{${p - 1}}`;
-    return ask(
+    const first = poly([k, inner], [-k, `x^{${2 * p - 1}}`]);
+    return solved(
       [
         `Let $f_n(x) = ${start}n ${inner} (1 - x^{${p}})^{n}$ on $[0, 1]$. It tends to $0$ at every point. What is $\\lim_{n \\to \\infty} \\int_0^1 f_n(x) \\, dx$?`,
         `设 $[0, 1]$ 上的 $f_n(x) = ${start}n ${inner} (1 - x^{${p}})^{n}$。它在每一点都趋于 $0$。$\\lim_{n \\to \\infty} \\int_0^1 f_n(x) \\, dx$ 是多少？`,
       ],
       answer,
-      [0, Q.of(k), Q.of(k, p + 1)],
       [
-        `Substituting $u = 1 - x^{${p}}$ gives $\\int_0^1 f_n \\, dx = \\frac{${start}n}{${p}(n + 1)}$, which tends to $${answer.toLatex()}$. This is not $0$, the integral of the pointwise limit.`,
-        `代换 $u = 1 - x^{${p}}$，得 $\\int_0^1 f_n \\, dx = \\frac{${start}n}{${p}(n + 1)}$，它趋于 $${answer.toLatex()}$。这不是逐点极限的积分 $0$。`,
+        why(
+          0,
+          "That is the integral of the pointwise limit; the limit and the integral cannot be exchanged here.",
+          "这是逐点极限的积分；这里极限与积分不能交换。",
+        ),
+        why(
+          Q.of(k),
+          `That drops the factor $\\frac{1}{${p}}$ from $du = -${p} ${inner} \\, dx$.`,
+          `这丢掉了 $du = -${p} ${inner} \\, dx$ 带来的因子 $\\frac{1}{${p}}$。`,
+        ),
+        why(
+          Q.of(k, p + 1),
+          `That divides by $${p + 1}$ instead of by $${p}$, the factor that the substitution brings in.`,
+          `这是除以 $${p + 1}$，而不是除以代换带来的因子 $${p}$。`,
+        ),
       ],
+      solution(
+        [
+          [
+            ["Substitute", "换元"],
+            [
+              `With $u = 1 - x^{${p}}$ and $du = -${p} ${inner} \\, dx$, $\\int_0^1 f_n \\, dx = \\frac{${start}n}{${p}} \\int_0^1 u^{n} \\, du = \\frac{${start}n}{${p}(n + 1)}$.`,
+              `令 $u = 1 - x^{${p}}$，$du = -${p} ${inner} \\, dx$，则 $\\int_0^1 f_n \\, dx = \\frac{${start}n}{${p}} \\int_0^1 u^{n} \\, du = \\frac{${start}n}{${p}(n + 1)}$。`,
+            ],
+          ],
+          [
+            ["Let n grow", "令项数增大"],
+            [
+              `Since $\\frac{n}{n + 1} \\to 1$, the integrals tend to $${answer.toLatex()}$, which is not $0$.`,
+              `由于 $\\frac{n}{n + 1} \\to 1$，积分趋于 $${answer.toLatex()}$，不是 $0$。`,
+            ],
+          ],
+        ],
+        [
+          `For $n = 1$, $\\int_0^1 (${first}) \\, dx = ${Q.of(k, 2 * p).toLatex()}$, which matches $\\frac{${start}n}{${p}(n + 1)}$ at $n = 1$.`,
+          `$n = 1$ 时，$\\int_0^1 (${first}) \\, dx = ${Q.of(k, 2 * p).toLatex()}$，与 $\\frac{${start}n}{${p}(n + 1)}$ 在 $n = 1$ 时的值一致。`,
+        ],
+      ),
     );
   },
 );
