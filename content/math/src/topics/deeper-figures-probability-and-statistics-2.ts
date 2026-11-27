@@ -1706,36 +1706,66 @@ const intervalDecision = point(
   "a-test-decision-from-a-drawn-interval",
   ["A test decision from a drawn interval", "由图中的区间作检验判断"],
   [
-    "A $95\\%$ confidence interval and a two-sided test at the $5\\%$ level agree: the test rejects $H_0: \\mu = \\mu_0$ exactly when $\\mu_0$ lies outside the interval.",
-    "$95\\%$ 置信区间与 $5\\%$ 水平的双侧检验结论一致：当且仅当 $\\mu_0$ 落在区间之外时，检验拒绝 $H_0: \\mu = \\mu_0$。",
+    "A $95\\%$ confidence interval and a two-sided test at the $5\\%$ level agree: the test rejects $H_0: \\mu = \\mu_0$ exactly when $\\mu_0$ lies outside the interval.\n\nA $95\\%$ interval from $48$ to $56$ keeps $H_0: \\mu = 50$, since $50$ lies inside it, and rejects $H_0: \\mu = 58$, since $58$ lies outside.\n\nCheck: the interval's midpoint is $52$ and its half-width is $4$; $50$ is $2$ from the midpoint, less than $4$, and $58$ is $6$ from it, more than $4$.\n\n> **Watch out.** The sample size is already built into the width of the interval, so nothing more is needed. A value inside the interval is a plausible value of $\\mu$ and is kept, not rejected.",
+    "$95\\%$ 置信区间与 $5\\%$ 水平的双侧检验结论一致：当且仅当 $\\mu_0$ 落在区间之外时，检验拒绝 $H_0: \\mu = \\mu_0$。\n\n从 $48$ 到 $56$ 的 $95\\%$ 区间保留 $H_0: \\mu = 50$，因为 $50$ 在区间内；拒绝 $H_0: \\mu = 58$，因为 $58$ 在区间外。\n\n检验：区间中点是 $52$，半宽是 $4$；$50$ 离中点 $2$，小于 $4$；$58$ 离中点 $6$，大于 $4$。\n\n> **注意。** 样本量已经体现在区间的宽度中，不需要更多信息。区间内的值是 $\\mu$ 的合理取值，应保留而不是拒绝。",
   ],
   (rng) => {
     const center = rng.int(16, 24);
     const margin = rng.int(2, 4);
     const inside = rng.bool();
     const mu0 = inside ? center + rng.int(-margin + 1, margin - 1) : center + rng.pick([-1, 1]) * (margin + rng.int(1, 3));
-    const reject: [string, string] = ["Reject $H_0$", "拒绝 $H_0$"];
-    const keep: [string, string] = ["Do not reject $H_0$", "不拒绝 $H_0$"];
-    return choose(
-      rng,
-      [
+    const reject = t("Reject $H_0$", "拒绝 $H_0$");
+    const keep = t("Do not reject $H_0$", "不拒绝 $H_0$");
+    const [low, high] = [center - margin, center + margin];
+    const distance = Math.abs(mu0 - center);
+    return explainedChoice(rng, {
+      prompt: t(
         `The figure shows a $95\\%$ confidence interval for $\\mu$. What does a two-sided test of $H_0: \\mu = ${mu0}$ at the $5\\%$ level conclude?`,
         `图中是 $\\mu$ 的 $95\\%$ 置信区间。在 $5\\%$ 水平下对 $H_0: \\mu = ${mu0}$ 作双侧检验，结论是什么？`,
+      ),
+      correct: inside ? keep : reject,
+      wrong: [
+        {
+          option: inside ? reject : keep,
+          why: inside
+            ? t(
+                `$${mu0}$ lies inside the interval, so it is a plausible value of $\\mu$ and the test keeps $H_0$.`,
+                `$${mu0}$ 在区间内，是 $\\mu$ 的合理取值，检验保留 $H_0$。`,
+              )
+            : t(
+                `$${mu0}$ lies outside the interval, so the test at the $5\\%$ level rejects it.`,
+                `$${mu0}$ 在区间外，所以 $5\\%$ 水平的检验拒绝它。`,
+              ),
+        },
+        {
+          option: t("There is not enough information without the sample size.", "没有样本量就无法判断。"),
+          why: t(
+            "The sample size is already built into the width of the interval; where $\\mu_0$ lies is enough.",
+            "样本量已经体现在区间宽度中；看 $\\mu_0$ 落在哪里就够了。",
+          ),
+        },
       ],
-      inside ? keep : reject,
-      [inside ? reject : keep, ["There is not enough information without the sample size.", "没有样本量就无法判断。"]],
-      [
-        `The interval runs from $${center - margin}$ to $${center + margin}$, and $${mu0}$ lies ${inside ? "inside" : "outside"} it.`,
-        `区间从 $${center - margin}$ 到 $${center + margin}$，$${mu0}$ 落在区间${inside ? "之内" : "之外"}。`,
-      ],
-      {
-        svg: intervalLine(10, 30, center - margin, center + margin),
-        alt: t(
-          `An interval on a number line from ${center - margin} to ${center + margin}.`,
-          `数轴上从 ${center - margin} 到 ${center + margin} 的区间。`,
+      solution: walked(
+        [
+          [["Read the interval", "读区间"], t(`The interval runs from $${low}$ to $${high}$.`, `区间从 $${low}$ 到 $${high}$。`)],
+          [
+            ["Locate the null value", "确定原假设值的位置"],
+            t(
+              `$${mu0}$ lies ${inside ? "inside" : "outside"} it, so the test ${inside ? "does not reject" : "rejects"} $H_0$.`,
+              `$${mu0}$ 落在区间${inside ? "之内" : "之外"}，所以检验${inside ? "不拒绝" : "拒绝"} $H_0$。`,
+            ),
+          ],
+        ],
+        t(
+          `The midpoint is $${center}$ and the half-width is $${margin}$; $${mu0}$ is $${distance}$ from the midpoint, ${inside ? "less" : "more"} than $${margin}$.`,
+          `中点是 $${center}$，半宽是 $${margin}$；$${mu0}$ 离中点 $${distance}$，${inside ? "小于" : "大于"} $${margin}$。`,
         ),
+      ),
+      figure: {
+        svg: intervalLine(10, 30, low, high),
+        alt: t(`An interval on a number line from ${low} to ${high}.`, `数轴上从 ${low} 到 ${high} 的区间。`),
       },
-    );
+    });
   },
 );
 
@@ -1753,8 +1783,8 @@ const regionDecision = point(
   "a-decision-from-a-shaded-rejection-region",
   ["A decision from a shaded rejection region", "由阴影拒绝域作判断"],
   [
-    "The critical region of a test is where the statistic must fall for $H_0$ to be rejected. On a picture of the null distribution it is the shaded tail: on the right for a right-tailed test, on the left for a left-tailed test, and on both sides for a two-tailed test.",
-    "检验的拒绝域是统计量必须落入才能拒绝 $H_0$ 的区域。在零假设分布的图上，它是阴影尾部：右尾检验在右侧，左尾检验在左侧，双尾检验在两侧。",
+    "The critical region of a test is where the statistic must fall for $H_0$ to be rejected. On a picture of the null distribution it is the shaded tail: on the right for a right-tailed test, on the left for a left-tailed test, and on both sides for a two-tailed test.\n\nWith the right tail shaded beyond $z = 1.645$, the value $z = 2.1$ lies in the shaded tail and rejects $H_0$, while $z = -2.1$ does not, however far it is from $0$.\n\nCheck: $2.1 \\ge 1.645$, but $-2.1 < 1.645$.\n\n> **Watch out.** Only the shaded side counts: in a left-tailed test the region is $z \\le -c$, so a large positive $z$ does not reject. And a value in the critical region means rejecting $H_0$, not keeping it.",
+    "检验的拒绝域是统计量必须落入才能拒绝 $H_0$ 的区域。在零假设分布的图上，它是阴影尾部：右尾检验在右侧，左尾检验在左侧，双尾检验在两侧。\n\n若右尾在 $z = 1.645$ 之外为阴影，则 $z = 2.1$ 落在阴影尾部内，拒绝 $H_0$；而 $z = -2.1$ 不在其中，不论它离 $0$ 多远。\n\n检验：$2.1 \\ge 1.645$，但 $-2.1 < 1.645$。\n\n> **注意。** 只有阴影一侧才算：左尾检验的拒绝域是 $z \\le -c$，所以很大的正 $z$ 不会导致拒绝。并且落在拒绝域内意味着拒绝 $H_0$，而不是保留。",
   ],
   (rng) => {
     const c = rng.pick([1.5, 1.75, 2, 2.25, 2.5]);
@@ -1764,33 +1794,62 @@ const regionDecision = point(
     const z = kind === "right" ? (rng.bool(0.8) ? size : -size) : rng.bool(0.8) ? -size : size;
     const inRegion = kind === "right" ? z >= c : z <= -c;
     const cut = kind === "right" ? c : -c;
-    const rejectIn: [string, string] = ["Reject $H_0$, since $z$ is in the critical region", "拒绝 $H_0$，因为 $z$ 在拒绝域内"];
-    const rejectOut: [string, string] = ["Reject $H_0$, since $z$ is outside the critical region", "拒绝 $H_0$，因为 $z$ 在拒绝域外"];
-    const keepIn: [string, string] = ["Do not reject $H_0$, since $z$ is in the critical region", "不拒绝 $H_0$，因为 $z$ 在拒绝域内"];
-    const keepOut: [string, string] = [
-      "Do not reject $H_0$, since $z$ is outside the critical region",
-      "不拒绝 $H_0$，因为 $z$ 在拒绝域外",
-    ];
-    return choose(
-      rng,
-      [
+    const region = kind === "right" ? `$z \\ge ${c}$` : `$z \\le ${-c}$`;
+    const option = (reject: boolean, claimIn: boolean) => {
+      const en = `${reject ? "Reject $H_0$" : "Do not reject $H_0$"}, since $z$ is ${claimIn ? "in" : "outside"} the critical region`;
+      const zh = `${reject ? "拒绝 $H_0$" : "不拒绝 $H_0$"}，因为 $z$ 在拒绝域${claimIn ? "内" : "外"}`;
+      return { option: t(en, zh), reject, claimIn };
+    };
+    const reason = (claimIn: boolean) =>
+      claimIn !== inRegion
+        ? t(
+            `$z = ${z}$ is ${inRegion ? "in" : "not in"} the critical region ${region}.`,
+            `$z = ${z}$ ${inRegion ? "在" : "不在"}拒绝域 ${region} 内。`,
+          )
+        : inRegion
+          ? t("A value in the critical region rejects $H_0$.", "落在拒绝域内的值应拒绝 $H_0$。")
+          : t("A value outside the critical region does not reject $H_0$.", "落在拒绝域外的值不拒绝 $H_0$。");
+    const [rejectIn, rejectOut, keepIn, keepOut] = [option(true, true), option(true, false), option(false, true), option(false, false)];
+    const right = inRegion ? rejectIn : keepOut;
+    const wrongOrder = inRegion ? [keepIn, rejectOut, keepOut] : [rejectOut, keepIn, rejectIn];
+    const relation = kind === "right" ? (inRegion ? "\\ge" : "<") : inRegion ? "\\le" : ">";
+    return explainedChoice(rng, {
+      prompt: t(
         `The shaded part, beyond $z = ${cut}$, is the critical region of a test with statistic $Z$. The observed value is $z = ${z}$. What is the decision?`,
         `阴影部分（$z = ${cut}$ 之外）是统计量 $Z$ 的检验的拒绝域。观测值为 $z = ${z}$。结论是什么？`,
-      ],
-      inRegion ? rejectIn : keepOut,
-      inRegion ? [keepIn, rejectOut, keepOut] : [rejectOut, keepIn, rejectIn],
-      [
-        `The critical region is ${kind === "right" ? `$z \\ge ${c}$` : `$z \\le ${-c}$`}, and $z = ${z}$ is ${inRegion ? "in" : "not in"} it.`,
-        `拒绝域为 ${kind === "right" ? `$z \\ge ${c}$` : `$z \\le ${-c}$`}，$z = ${z}$ ${inRegion ? "在" : "不在"}其中。`,
-      ],
-      {
+      ),
+      correct: right.option,
+      wrong: wrongOrder.map((o) => ({ option: o.option, why: reason(o.claimIn) })),
+      solution: walked(
+        [
+          [
+            ["Read the critical region", "读出拒绝域"],
+            t(
+              `The shaded ${kind} tail beyond $z = ${cut}$ is the critical region ${region}.`,
+              `$z = ${cut}$ 之外的${kind === "right" ? "右" : "左"}尾阴影就是拒绝域 ${region}。`,
+            ),
+          ],
+          [
+            ["Place the observed value", "确定观测值的位置"],
+            t(
+              `$z = ${z}$ is ${inRegion ? "in" : "not in"} it, so ${inRegion ? "reject" : "do not reject"} $H_0$.`,
+              `$z = ${z}$ ${inRegion ? "在" : "不在"}其中，所以${inRegion ? "拒绝" : "不拒绝"} $H_0$。`,
+            ),
+          ],
+        ],
+        t(
+          `$${z} ${relation} ${cut}$, so $z$ ${inRegion ? "lies" : "does not lie"} on the shaded side of $${cut}$.`,
+          `$${z} ${relation} ${cut}$，所以 $z$ ${inRegion ? "落在" : "不落在"} $${cut}$ 的阴影一侧。`,
+        ),
+      ),
+      figure: {
         svg: kind === "right" ? tailChart(null, c) : tailChart(-c, null),
         alt: t(
           `A standard normal curve with the ${kind} tail shaded beyond z = ${cut}.`,
           `标准正态曲线，${kind === "right" ? "右" : "左"}尾在 z = ${cut} 之外为阴影。`,
         ),
       },
-    );
+    });
   },
 );
 
@@ -1798,8 +1857,8 @@ const twoTailDecision = point(
   "the-level-of-a-shaded-two-tailed-region",
   ["The level of a shaded two-tailed region", "阴影双尾区域的显著性水平"],
   [
-    "The level of a test is the total shaded area under the null distribution. A two-tailed test shares it between the tails, so each tail holds $\\frac{\\alpha}{2}$. If one tail of a drawn region has area $0.025$, the level is $0.05$.",
-    "检验的显著性水平是零假设分布下阴影的总面积。双尾检验把它分给两侧，每个尾部占 $\\frac{\\alpha}{2}$。如果图中一个尾部的面积是 $0.025$，水平就是 $0.05$。",
+    "The level of a test is the total shaded area under the null distribution. A two-tailed test shares it between the tails, so each tail holds $\\frac{\\alpha}{2}$. If one tail of a drawn region has area $0.025$, the level is $0.05$.\n\nWith tails beyond $z = \\pm 2.17$ of area $0.015$ each, the level is $\\alpha = 2(0.015) = 0.03$, and the unshaded middle has area $1 - 0.03 = 0.97$.\n\nCheck: $0.015 + 0.97 + 0.015 = 1$, the whole area under the curve.\n\n> **Watch out.** $\\alpha$ is both tails together: each tail is $\\frac{\\alpha}{2}$, and the unshaded middle is $1 - \\alpha$, not $1 - \\frac{\\alpha}{2}$.",
+    "检验的显著性水平是零假设分布下阴影的总面积。双尾检验把它分给两侧，每个尾部占 $\\frac{\\alpha}{2}$。如果图中一个尾部的面积是 $0.025$，水平就是 $0.05$。\n\n若 $z = \\pm 2.17$ 之外的两个尾部面积各为 $0.015$，则水平为 $\\alpha = 2(0.015) = 0.03$，中间未加阴影部分的面积为 $1 - 0.03 = 0.97$。\n\n检验：$0.015 + 0.97 + 0.015 = 1$，正是曲线下的总面积。\n\n> **注意。** $\\alpha$ 是两个尾部合起来的面积：每个尾部是 $\\frac{\\alpha}{2}$，中间未加阴影部分是 $1 - \\alpha$，而不是 $1 - \\frac{\\alpha}{2}$。",
   ],
   (rng) => {
     const [cut, thousandths] = rng.pick<[number, number]>([
@@ -1822,34 +1881,126 @@ const twoTailDecision = point(
       svg,
       alt: t(`A standard normal curve with both tails shaded beyond z = ±${cut}.`, `标准正态曲线，两侧在 z = ±${cut} 之外为阴影。`),
     };
-    if (kind === "tail")
-      return ask(
-        [
-          `The shaded tails beyond $z = \\pm ${cut}$ form the critical region of a two-tailed test at level $\\alpha = ${alpha}$. What is the area of the left tail?`,
-          `$z = \\pm ${cut}$ 之外的阴影尾部构成水平 $\\alpha = ${alpha}$ 的双尾检验的拒绝域。左尾面积是多少？`,
-        ],
-        Q.of(thousandths, 1000),
-        [Q.of(2 * thousandths, 1000), Q.of(4 * thousandths, 1000), Q.of(1000 - thousandths, 1000)],
-        [
-          `The two tails are equal and together have area $\\alpha$, so each has area $\\frac{${alpha}}{2} = ${tail}$.`,
-          `两个尾部相等，合起来面积为 $\\alpha$，所以每个面积为 $\\frac{${alpha}}{2} = ${tail}$。`,
-        ],
+    if (kind === "tail") {
+      const answer = Q.of(thousandths, 1000);
+      return {
+        ...numberProblem({
+          prompt: t(
+            `The shaded tails beyond $z = \\pm ${cut}$ form the critical region of a two-tailed test at level $\\alpha = ${alpha}$. What is the area of the left tail?`,
+            `$z = \\pm ${cut}$ 之外的阴影尾部构成水平 $\\alpha = ${alpha}$ 的双尾检验的拒绝域。左尾面积是多少？`,
+          ),
+          answer,
+          mistakes: apart(answer, [
+            why(
+              Q.of(2 * thousandths, 1000),
+              "That is $\\alpha$, the area of both tails together; one tail holds half of it.",
+              "那是 $\\alpha$，两个尾部合起来的面积；一个尾部只占一半。",
+            ),
+            why(Q.of(4 * thousandths, 1000), "That doubles $\\alpha$ instead of halving it.", "那是把 $\\alpha$ 乘以二，而不是除以二。"),
+            why(
+              Q.of(1000 - thousandths, 1000),
+              "That is the area to the right of the left tail, not the tail itself.",
+              "那是左尾右边的面积，不是左尾本身。",
+            ),
+          ]),
+          solution: walked(
+            [
+              [
+                ["Share the level between the tails", "把水平分给两尾"],
+                t(
+                  `The two tails are equal and together have area $\\alpha = ${alpha}$.`,
+                  `两个尾部相等，合起来面积为 $\\alpha = ${alpha}$。`,
+                ),
+              ],
+              [
+                ["Halve it", "取一半"],
+                t(`Each tail has area $\\frac{${alpha}}{2} = ${tail}$.`, `每个尾部面积为 $\\frac{${alpha}}{2} = ${tail}$。`),
+              ],
+            ],
+            t(`$2(${tail}) = ${alpha}$, the level of the test.`, `$2(${tail}) = ${alpha}$，正是检验的水平。`),
+          ),
+        }),
         figure,
-      );
+      };
+    }
     const middle = kind === "middle";
-    return ask(
+    const rest = (1000 - 2 * thousandths) / 1000;
+    const answer = Q.of(middle ? 1000 - 2 * thousandths : 2 * thousandths, 1000);
+    const steps: Step[] = [
       [
-        `The shaded tails beyond $z = \\pm ${cut}$ form the critical region of a two-tailed test, and the area of the right tail is $${tail}$. What is ${middle ? "the unshaded area between the tails" : "the level $\\alpha$ of the test"}?`,
-        `$z = \\pm ${cut}$ 之外的阴影尾部构成双尾检验的拒绝域，右尾面积为 $${tail}$。${middle ? "两尾之间未加阴影部分的面积" : "检验的水平 $\\alpha$"}是多少？`,
+        ["Read the right tail", "读右尾"],
+        t(
+          `The right tail has area $${tail}$, and the left tail beyond $z = -${cut}$ is its mirror image, so it also has area $${tail}$.`,
+          `右尾面积为 $${tail}$，$z = -${cut}$ 之外的左尾与它对称，面积也是 $${tail}$。`,
+        ),
       ],
-      Q.of(middle ? 1000 - 2 * thousandths : 2 * thousandths, 1000),
-      [Q.of(thousandths, 1000), Q.of(1000 - thousandths, 1000), Q.of(middle ? 2 * thousandths : 1000 - 2 * thousandths, 1000)],
-      [
-        `The two tails are equal, so the shaded area is $\\alpha = 2(${tail}) = ${alpha}$.${middle ? ` The whole area under the curve is one, which leaves $1 - ${alpha}$ between the tails.` : ""}`,
-        `两个尾部相等，所以阴影面积为 $\\alpha = 2(${tail}) = ${alpha}$。${middle ? `曲线下总面积为一，两尾之间剩下 $1 - ${alpha}$。` : ""}`,
-      ],
+      [["Add the tails", "两尾相加"], t(`$\\alpha = ${tail} + ${tail} = ${alpha}$.`, `$\\alpha = ${tail} + ${tail} = ${alpha}$。`)],
+    ];
+    if (middle)
+      steps.push([
+        ["Take away the tails", "减去两尾"],
+        t(
+          `The whole area under the curve is $1$, so the middle has area $1 - ${alpha} = ${rest}$.`,
+          `曲线下总面积为 $1$，所以中间的面积为 $1 - ${alpha} = ${rest}$。`,
+        ),
+      ]);
+    return {
+      ...numberProblem({
+        prompt: t(
+          `The shaded tails beyond $z = \\pm ${cut}$ form the critical region of a two-tailed test, and the area of the right tail is $${tail}$. What is ${middle ? "the unshaded area between the tails" : "the level $\\alpha$ of the test"}?`,
+          `$z = \\pm ${cut}$ 之外的阴影尾部构成双尾检验的拒绝域，右尾面积为 $${tail}$。${middle ? "两尾之间未加阴影部分的面积" : "检验的水平 $\\alpha$"}是多少？`,
+        ),
+        answer,
+        mistakes: apart(answer, [
+          middle
+            ? why(
+                Q.of(thousandths, 1000),
+                "That is the right tail, which is shaded; the middle is the unshaded part.",
+                "那是右尾，它是阴影部分；中间是未加阴影的部分。",
+              )
+            : why(
+                Q.of(thousandths, 1000),
+                "That is one tail only; the level counts both tails.",
+                "那只是一个尾部；水平要把两个尾部都算上。",
+              ),
+          middle
+            ? why(
+                Q.of(1000 - thousandths, 1000),
+                "That takes away only the right tail; the left tail is shaded too.",
+                "那只减去了右尾；左尾也是阴影。",
+              )
+            : why(
+                Q.of(1000 - thousandths, 1000),
+                "That is the area to the left of the right tail, not a shaded area.",
+                "那是右尾左边的面积，不是阴影面积。",
+              ),
+          middle
+            ? why(
+                Q.of(2 * thousandths, 1000),
+                "That is $\\alpha$, the shaded area; the middle is what is left.",
+                "那是 $\\alpha$，即阴影面积；中间是剩下的部分。",
+              )
+            : why(
+                Q.of(1000 - 2 * thousandths, 1000),
+                "That is the unshaded middle, $1 - \\alpha$, not the shaded area.",
+                "那是中间未加阴影的部分 $1 - \\alpha$，不是阴影面积。",
+              ),
+        ]),
+        solution: walked(
+          steps,
+          middle
+            ? t(
+                `$${tail} + ${rest} + ${tail} = 1$, the whole area under the curve.`,
+                `$${tail} + ${rest} + ${tail} = 1$，正是曲线下的总面积。`,
+              )
+            : t(
+                `Each tail is $\\frac{\\alpha}{2} = \\frac{${alpha}}{2} = ${tail}$, the area given.`,
+                `每个尾部是 $\\frac{\\alpha}{2} = \\frac{${alpha}}{2} = ${tail}$，正是给出的面积。`,
+              ),
+        ),
+      }),
       figure,
-    );
+    };
   },
 );
 

@@ -8,7 +8,7 @@ import { Q } from "@ga/subject-math";
 import { multivariableDrawings8 } from "../explanation-drawings-multivariable-8.ts";
 import { precalculusDrawings4 } from "../explanation-drawings-precalculus-4.ts";
 import { probabilityDrawings1 } from "../explanation-drawings-probability-and-statistics-1.ts";
-import { numberProblem, why, withMistakes } from "../problems.ts";
+import { explainedChoice, numberProblem, why, withMistakes } from "../problems.ts";
 
 import { ask, choose, type Pair, point, same } from "../university-kit.ts";
 import { type Reason, reasoned } from "../wrong-reasons.ts";
@@ -1448,8 +1448,8 @@ const errorArea = point(
   "naming-a-shaded-area-in-a-hypothesis-test",
   ["Naming a shaded area in a hypothesis test", "说出假设检验中阴影面积的名称"],
   [
-    "A hypothesis test draws a critical line between two curves for the null and alternative hypotheses. Rejecting is on one side of the line. The probability of a type I error is the part of the null curve in the rejection region. The probability of a type II error is the part of the alternative curve outside that region, and the power is its complement.",
-    "假设检验在原假设和备择假设的两条曲线之间画一条临界线。拒绝在线的一侧。第一类错误的概率是原假设曲线落在拒绝域的部分。第二类错误的概率是备择假设曲线落在拒绝域之外的部分，功效是它的补。",
+    "A hypothesis test draws a critical line between two curves for the null and alternative hypotheses. Rejecting is on one side of the line. The probability of a type I error is the part of the null curve in the rejection region. The probability of a type II error is the part of the alternative curve outside that region, and the power is its complement.\n\nWith a null curve centered at $10$, an alternative centered at $14$, and rejection when $X > 12.5$: the type I error is the null curve's area to the right of $12.5$, the type II error is the alternative curve's area to the left of $12.5$, and the power is the alternative curve's area to the right.\n\nCheck: the two parts of the alternative curve, type II error and power, add to $1$, and so do the two parts of the null curve.\n\n> **Watch out.** The type II error lies under the alternative curve, not the null curve. The null curve's part outside the rejection region is the probability of correctly keeping $H_0$.",
+    "假设检验在原假设和备择假设的两条曲线之间画一条临界线。拒绝在线的一侧。第一类错误的概率是原假设曲线落在拒绝域的部分。第二类错误的概率是备择假设曲线落在拒绝域之外的部分，功效是它的补。\n\n若原假设曲线中心在 $10$，备择曲线中心在 $14$，当 $X > 12.5$ 时拒绝：第一类错误是原假设曲线在 $12.5$ 右边的面积，第二类错误是备择曲线在 $12.5$ 左边的面积，功效是备择曲线在右边的面积。\n\n检验：备择曲线的两部分，第二类错误与功效，加起来是 $1$；原假设曲线的两部分也是如此。\n\n> **注意。** 第二类错误在备择假设曲线下，而不是原假设曲线下。原假设曲线落在拒绝域之外的部分是正确保留 $H_0$ 的概率。",
   ],
   (rng) => {
     const m0 = rng.int(0, 2);
@@ -1479,51 +1479,64 @@ const errorArea = point(
         return `${shade}${curvePath(f0, lo, hi, x, y, 'stroke="currentColor"')}${curvePath(f1, lo, hi, x, y)}<line stroke-dasharray="4 3" x1="${x(c)}" y1="${y(0)}" x2="${x(c)}" y2="${y(0.48)}"/>`;
       },
     );
-    const names: Record<string, Pair> = {
-      one: ["The probability of a type I error", "第一类错误的概率"],
-      two: ["The probability of a type II error", "第二类错误的概率"],
-      power: ["The power of the test", "检验的功效"],
-      keep: ["The probability of correctly keeping the null hypothesis", "正确保留原假设的概率"],
+    type Kind = "one" | "two" | "power" | "keep";
+    const names: Record<Kind, Text> = {
+      one: t("The probability of a type I error", "第一类错误的概率"),
+      two: t("The probability of a type II error", "第二类错误的概率"),
+      power: t("The power of the test", "检验的功效"),
+      keep: t("The probability of correctly keeping the null hypothesis", "正确保留原假设的概率"),
     };
-    const why: Pair =
-      kind === "one"
-        ? [
-            "It lies under the null curve in the rejection region to the right of $c$, so the null is true and is rejected",
-            "它在原假设曲线下、$c$ 右边的拒绝域内，所以原假设为真却被拒绝",
-          ]
-        : kind === "two"
-          ? [
-              "It lies under the alternative curve to the left of $c$, so the alternative is true and the null is kept",
-              "它在备择假设曲线下、$c$ 左边，所以备择假设为真却保留了原假设",
-            ]
-          : kind === "power"
-            ? [
-                "It lies under the alternative curve in the rejection region, so the alternative is true and the null is rejected",
-                "它在备择假设曲线下的拒绝域内，所以备择假设为真并拒绝了原假设",
-              ]
-            : [
-                "It lies under the null curve to the left of $c$, so the null is true and is kept",
-                "它在原假设曲线下、$c$ 左边，所以原假设为真并被保留",
-              ];
-    return choose(
-      rng,
-      [
+    const kinds: readonly Kind[] = ["one", "two", "power", "keep"];
+    const onNull = (k: Kind) => k === "one" || k === "keep";
+    const onRight = (k: Kind) => k === "one" || k === "power";
+    const curve = (k: Kind): readonly [string, string] => (onNull(k) ? ["null", "原假设"] : ["alternative", "备择假设"]);
+    const side = (k: Kind): readonly [string, string] => (onRight(k) ? ["right", "右"] : ["left", "左"]);
+    const complement: Record<Kind, Kind> = { one: "keep", keep: "one", two: "power", power: "two" };
+    return explainedChoice(rng, {
+      prompt: t(
         "The left curve is the null distribution with mean $\\mu_0$, and the right curve is the alternative with mean $\\mu_1$. The test rejects to the right of $c$. What is the shaded area?",
         "左边的曲线是均值为 $\\mu_0$ 的原假设分布，右边的曲线是均值为 $\\mu_1$ 的备择分布。检验在 $c$ 右边拒绝。阴影面积是什么？",
-      ],
-      names[kind] as Pair,
-      Object.keys(names)
+      ),
+      correct: names[kind],
+      wrong: kinds
         .filter((n) => n !== kind)
-        .map((n) => names[n] as Pair),
-      [`${why[0]}.`, `${why[1]}。`],
-      {
+        .map((n) => ({
+          option: names[n],
+          why: t(
+            `That is the area under the ${curve(n)[0]} curve to the ${side(n)[0]} of $c$; the shaded area is under the ${curve(kind)[0]} curve to the ${side(kind)[0]}.`,
+            `那是${curve(n)[1]}曲线下、$c$ ${side(n)[1]}边的面积；阴影在${curve(kind)[1]}曲线下、$c$ ${side(kind)[1]}边。`,
+          ),
+        })),
+      solution: walked(
+        [
+          [
+            ["Find the curve", "找出曲线"],
+            t(
+              `The shaded area lies under the ${curve(kind)[0]} curve, so it is a probability computed when the ${curve(kind)[0]} hypothesis is true.`,
+              `阴影在${curve(kind)[1]}曲线下，所以它是${curve(kind)[1]}为真时的概率。`,
+            ),
+          ],
+          [
+            ["Find the side", "找出所在一侧"],
+            t(
+              `It lies to the ${side(kind)[0]} of $c$, where the test ${onRight(kind) ? "rejects" : "keeps"} the null hypothesis, so it is ${names[kind].en.charAt(0).toLowerCase()}${names[kind].en.slice(1)}.`,
+              `它在 $c$ ${side(kind)[1]}边，检验在那里${onRight(kind) ? "拒绝" : "保留"}原假设，所以它是${names[kind]["zh-CN"]}。`,
+            ),
+          ],
+        ],
+        t(
+          `The rest of the same curve is ${names[complement[kind]].en.charAt(0).toLowerCase()}${names[complement[kind]].en.slice(1)}, and the two add to $1$.`,
+          `同一曲线的其余部分是${names[complement[kind]]["zh-CN"]}，两者之和为 $1$。`,
+        ),
+      ),
+      figure: {
         svg,
         alt: t(
           `Two normal curves, centered at μ₀ and at μ₁ to its right, with a critical line at c. The area under the ${kind === "one" || kind === "keep" ? "μ₀" : "μ₁"} curve to the ${kind === "one" || kind === "power" ? "right" : "left"} of c is shaded.`,
           `两条正态曲线，中心分别在 μ₀ 和其右边的 μ₁，c 处有临界线。${kind === "one" || kind === "keep" ? "μ₀" : "μ₁"} 曲线下、c ${kind === "one" || kind === "power" ? "右" : "左"}边的面积涂色。`,
         ),
       },
-    );
+    });
   },
 );
 

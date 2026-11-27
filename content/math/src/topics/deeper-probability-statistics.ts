@@ -1182,8 +1182,8 @@ const anovaDegreesOfFreedom: KnowledgePointDef = {
   id: "the-degrees-of-freedom-of-an-anova-f-statistic",
   title: t("The degrees of freedom of an ANOVA $F$ statistic", "方差分析 $F$ 统计量的自由度"),
   explanation: t(
-    "With $k$ groups and $N$ observations in all, the numerator of $F$ has $k - 1$ degrees of freedom because the group means are compared to one overall mean. The denominator has $N - k$, because each group loses one degree of freedom to its own mean.",
-    "有 $k$ 组、共 $N$ 个观测时，$F$ 的分子有 $k - 1$ 个自由度，因为各组均值要与一个总均值比较；分母有 $N - k$ 个自由度，因为每组都因自身的均值失去一个自由度。",
+    "With $k$ groups and $N$ observations in all, the numerator of $F$ has $k - 1$ degrees of freedom because the group means are compared to one overall mean. The denominator has $N - k$, because each group loses one degree of freedom to its own mean. Two groups of $25$ and $30$ give $N = 55$, so the numerator has $1$ degree of freedom and the denominator $55 - 2 = 53$.\n\n> **Watch out.** The denominator subtracts the number of groups, $N - k$, not one: $N - 1$ is the total degrees of freedom.",
+    "有 $k$ 组、共 $N$ 个观测时，$F$ 的分子有 $k - 1$ 个自由度，因为各组均值要与一个总均值比较；分母有 $N - k$ 个自由度，因为每组都因自身的均值失去一个自由度。$25$ 与 $30$ 的两组给出 $N = 55$，所以分子有 $1$ 个自由度，分母有 $55 - 2 = 53$ 个。\n\n> **注意。** 分母减去的是组数，即 $N - k$，而不是一：$N - 1$ 是总自由度。",
   ),
   generate(rng) {
     const k = rng.int(3, 5);
@@ -1197,10 +1197,34 @@ const anovaDegreesOfFreedom: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong: [total - 1, k - 1, total],
-      solution: t(
-        `There are $${total}$ observations in all, and each of the ${k} groups loses one degree of freedom to its own mean: $${total} - ${k} = ${answer}$.`,
-        `一共有 $${total}$ 个观测，${k} 组各因自身的均值失去一个自由度：$${total} - ${k} = ${answer}$。`,
+      mistakes: apart(answer, [
+        why(
+          total - 1,
+          "That is $N - 1$, the total degrees of freedom; subtract the number of groups.",
+          "那是总自由度 $N - 1$；应减去组数。",
+        ),
+        why(k - 1, "That is $k - 1$, the numerator's degrees of freedom.", "那是分子的自由度 $k - 1$。"),
+        why(
+          total,
+          "That is $N$ itself; each group loses one degree of freedom to its mean.",
+          "那是 $N$ 本身；每组都因自身的均值失去一个自由度。",
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Count the observations", "数观测个数"],
+            t(`$N = ${sizes.join(" + ")} = ${total}$.`, `$N = ${sizes.join(" + ")} = ${total}$。`),
+          ],
+          [
+            ["Subtract one for each group", "每组减去一"],
+            t(`$N - k = ${total} - ${k} = ${answer}$.`, `$N - k = ${total} - ${k} = ${answer}$。`),
+          ],
+        ],
+        t(
+          `With the numerator's $${k - 1}$, the total is $${k - 1} + ${answer} = ${total - 1} = N - 1$.`,
+          `加上分子的 $${k - 1}$，合计 $${k - 1} + ${answer} = ${total - 1} = N - 1$。`,
+        ),
       ),
     });
   },
@@ -1298,13 +1322,14 @@ const chiSquareDegrees: KnowledgePointDef = {
   id: "the-degrees-of-freedom-of-a-test-of-independence",
   title: t("The degrees of freedom of a test of independence", "独立性检验的自由度"),
   explanation: t(
-    "In a table with $r$ rows and $c$ columns, the totals of the rows and columns are fixed. Once $(r - 1)(c - 1)$ cells are filled in, those totals determine all the others, so a chi-square test of independence has this many degrees of freedom.",
-    "在 $r$ 行 $c$ 列的表中，各行各列的合计是固定的。填好 $(r - 1)(c - 1)$ 个格子后，其余格子都由合计决定，所以独立性的卡方检验有这么多自由度。",
+    "In a table with $r$ rows and $c$ columns, the totals of the rows and columns are fixed. Once $(r - 1)(c - 1)$ cells are filled in, those totals determine all the others, so a chi-square test of independence has this many degrees of freedom.\n\nA table with $3$ rows and $4$ columns has $12$ cells. Fill in the first $2$ rows of the first $3$ columns, $6$ cells; the row totals then give the last column and the column totals give the last row, so $\\nu = (3 - 1)(4 - 1) = 6$.\n\nCheck: the cells fixed by the totals are the last row and the last column, $4 + 3 - 1 = 6$ of them, and $6 + 6 = 12$ accounts for every cell.\n\n> **Watch out.** A table is not a list of $rc$ categories: $12 - 1 = 11$ is the count for a goodness of fit test with $12$ classes, and it ignores that every row total and every column total is fixed.",
+    "在 $r$ 行 $c$ 列的表中，各行各列的合计是固定的。填好 $(r - 1)(c - 1)$ 个格子后，其余格子都由合计决定，所以独立性的卡方检验有这么多自由度。\n\n$3$ 行 $4$ 列的表有 $12$ 个格子。填好前 $3$ 列的前 $2$ 行，共 $6$ 个格子；行合计确定最后一列，列合计确定最后一行，所以 $\\nu = (3 - 1)(4 - 1) = 6$。\n\n检验：由合计确定的格子是最后一行和最后一列，共 $4 + 3 - 1 = 6$ 个，而 $6 + 6 = 12$ 正好是全部格子。\n\n> **注意。** 列联表不是 $rc$ 个类别的列表：$12 - 1 = 11$ 是 $12$ 个类别的拟合优度检验的自由度，它忽略了每个行合计和列合计都是固定的。",
   ),
   generate(rng) {
     const rows = rng.int(2, 8);
     const columns = rng.int(2, 8);
     const answer = (rows - 1) * (columns - 1);
+    const fixed = rows + columns - 1;
     return numberProblem({
       prompt: t(
         `A chi-square test of independence uses a table with ${rows} rows and ${columns} columns. How many degrees of freedom does the statistic have?`,
@@ -1312,10 +1337,37 @@ const chiSquareDegrees: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong: [rows * columns - 1, rows + columns - 2, rows * columns],
-      solution: t(
-        `The row and column totals fix all but $(${rows} - 1)(${columns} - 1) = ${answer}$ of the cells.`,
-        `行和列的合计决定了其余的格子，只有 $(${rows} - 1)(${columns} - 1) = ${answer}$ 个格子可以自由填写。`,
+      mistakes: apart(answer, [
+        why(
+          rows * columns - 1,
+          `This treats the $${rows * columns}$ cells as the classes of a goodness of fit test; here every row and column total is fixed.`,
+          `这把 $${rows * columns}$ 个格子当成拟合优度检验的类别；这里每个行合计和列合计都是固定的。`,
+        ),
+        why(
+          rows + columns - 2,
+          "This adds $r - 1$ and $c - 1$; the free cells form an $(r - 1)$ by $(c - 1)$ block, so the two multiply.",
+          "这把 $r - 1$ 与 $c - 1$ 相加了；自由格子组成 $(r - 1)$ 行 $(c - 1)$ 列的一块，所以两者相乘。",
+        ),
+        why(rows * columns, "This is the number of cells, with no restriction subtracted.", "这是格子总数，没有减去任何限制。"),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Find the free block", "找出自由的格子"],
+            t(
+              `Leave out the last row and the last column: $${rows - 1}$ rows and $${columns - 1}$ columns remain.`,
+              `去掉最后一行和最后一列：剩下 $${rows - 1}$ 行 $${columns - 1}$ 列。`,
+            ),
+          ],
+          [
+            ["Multiply", "相乘"],
+            t(`$\\nu = (${rows} - 1)(${columns} - 1) = ${answer}$.`, `$\\nu = (${rows} - 1)(${columns} - 1) = ${answer}$。`),
+          ],
+        ],
+        t(
+          `The totals fix the last row and column, $${columns} + ${rows} - 1 = ${fixed}$ cells, and $${answer} + ${fixed} = ${rows * columns}$ is every cell.`,
+          `合计确定了最后一行和最后一列，共 $${columns} + ${rows} - 1 = ${fixed}$ 个格子，而 $${answer} + ${fixed} = ${rows * columns}$ 正是全部格子。`,
+        ),
       ),
     });
   },
@@ -4660,8 +4712,8 @@ const testOnUniform: KnowledgePointDef = {
   id: "the-size-and-power-of-a-test-on-a-uniform-variable",
   title: t("The size and power of a test on a uniform variable", "均匀变量检验的水平和功效"),
   explanation: t(
-    "The size of a test is the probability of rejecting when the null hypothesis is true, and its power is the probability of rejecting when the alternative is true. Both are the probability of the same event, the critical region, computed under different distributions. For one observation of a uniform variable on $[0, \\theta]$, rejecting for values above $c$ has probability $\\frac{\\theta - c}{\\theta}$, so a larger $\\theta$ gives greater power.",
-    "检验的水平是原假设为真时拒绝的概率，功效是备择假设为真时拒绝的概率。两者是同一事件（拒绝域）在不同分布下的概率。对 $[0, \\theta]$ 上均匀变量的一个观测，当值超过 $c$ 时拒绝的概率是 $\\frac{\\theta - c}{\\theta}$，所以 $\\theta$ 越大，功效越大。",
+    "The size of a test is the probability of rejecting when the null hypothesis is true, and its power is the probability of rejecting when the alternative is true. Both are the probability of the same event, the critical region, computed under different distributions. For one observation of a uniform variable on $[0, \\theta]$, rejecting for values above $c$ has probability $\\frac{\\theta - c}{\\theta}$, so a larger $\\theta$ gives greater power. Testing $\\theta = 20$ against $\\theta = 40$ and rejecting when $X > 15$, the size is $\\frac{20 - 15}{20} = \\frac{1}{4}$ and the power is $\\frac{40 - 15}{40} = \\frac{5}{8}$.\n\n> **Watch out.** Use $H_0$'s $\\theta$ for the size and $H_1$'s for the power, and take the probability above $c$, $1 - \\frac{c}{\\theta}$, not $\\frac{c}{\\theta}$.",
+    "检验的水平是原假设为真时拒绝的概率，功效是备择假设为真时拒绝的概率。两者是同一事件（拒绝域）在不同分布下的概率。对 $[0, \\theta]$ 上均匀变量的一个观测，当值超过 $c$ 时拒绝的概率是 $\\frac{\\theta - c}{\\theta}$，所以 $\\theta$ 越大，功效越大。检验 $\\theta = 20$ 对 $\\theta = 40$，当 $X > 15$ 时拒绝，则水平为 $\\frac{20 - 15}{20} = \\frac{1}{4}$，功效为 $\\frac{40 - 15}{40} = \\frac{5}{8}$。\n\n> **注意。** 水平用 $H_0$ 的 $\\theta$，功效用 $H_1$ 的 $\\theta$，并且取 $c$ 上方的概率 $1 - \\frac{c}{\\theta}$，而不是 $\\frac{c}{\\theta}$。",
   ),
   generate(rng) {
     const a = rng.int(2, 12);
@@ -4677,10 +4729,49 @@ const testOnUniform: KnowledgePointDef = {
         `用 $[0, \\theta]$ 上均匀变量的一个观测 $X$ 检验 $H_0: \\theta = ${a}$ 对 $H_1: \\theta = ${b}$，当 $X > ${c}$ 时拒绝 $H_0$。求检验的${asksPower ? "功效" : "水平"}。`,
       ),
       answer,
-      wrong: [asksPower ? size : strength, Q.of(c, asksPower ? b : a), Q.of(c, asksPower ? a : b), Q.of(b - a, b)],
-      solution: t(
-        `Under $\\theta = ${asksPower ? b : a}$, the probability of $X > ${c}$ is $1 - \\frac{${c}}{${asksPower ? b : a}} = ${answer.toLatex()}$.`,
-        `当 $\\theta = ${asksPower ? b : a}$ 时，$X > ${c}$ 的概率是 $1 - \\frac{${c}}{${asksPower ? b : a}} = ${answer.toLatex()}$。`,
+      mistakes: apart(answer, [
+        why(
+          asksPower ? size : strength,
+          `That is the ${asksPower ? "size" : "power"}, computed with $\\theta = ${asksPower ? a : b}$; the ${asksPower ? "power" : "size"} uses $\\theta = ${asksPower ? b : a}$.`,
+          `那是${asksPower ? "水平" : "功效"}，用的是 $\\theta = ${asksPower ? a : b}$；${asksPower ? "功效" : "水平"}要用 $\\theta = ${asksPower ? b : a}$。`,
+        ),
+        why(
+          Q.of(c, asksPower ? b : a),
+          `That is $P(X \\le ${c})$, the probability of keeping $H_0$; the test rejects above $${c}$.`,
+          `那是 $P(X \\le ${c})$，即保留 $H_0$ 的概率；检验在 $${c}$ 上方拒绝。`,
+        ),
+        why(
+          Q.of(c, asksPower ? a : b),
+          `That is the probability of keeping $H_0$, and under the wrong $\\theta$ as well.`,
+          `那是保留 $H_0$ 的概率，而且用错了 $\\theta$。`,
+        ),
+        why(
+          Q.of(b - a, b),
+          "That measures the gap between the two values of $\\theta$, not the probability of the critical region.",
+          "那衡量的是两个 $\\theta$ 值之间的差距，而不是拒绝域的概率。",
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Choose the distribution", "选定分布"],
+            t(
+              `The ${asksPower ? "power" : "size"} is computed under $${asksPower ? "H_1" : "H_0"}$, so $\\theta = ${asksPower ? b : a}$.`,
+              `${asksPower ? "功效" : "水平"}在 $${asksPower ? "H_1" : "H_0"}$ 下计算，所以 $\\theta = ${asksPower ? b : a}$。`,
+            ),
+          ],
+          [
+            ["Find the probability of rejecting", "求拒绝的概率"],
+            t(
+              `$P(X > ${c}) = 1 - \\frac{${c}}{${asksPower ? b : a}} = ${answer.toLatex()}$.`,
+              `$P(X > ${c}) = 1 - \\frac{${c}}{${asksPower ? b : a}} = ${answer.toLatex()}$。`,
+            ),
+          ],
+        ],
+        t(
+          `The power $${strength.toLatex()}$ is greater than the size $${size.toLatex()}$, as it should be, since a larger $\\theta$ puts more probability above $${c}$.`,
+          `功效 $${strength.toLatex()}$ 大于水平 $${size.toLatex()}$，理应如此，因为 $\\theta$ 越大，$${c}$ 上方的概率越大。`,
+        ),
       ),
     });
   },
@@ -4690,8 +4781,8 @@ const anovaFFromTotals: KnowledgePointDef = {
   id: "the-f-statistic-from-the-total-and-within-sums-of-squares",
   title: t("The F statistic from the total and within sums of squares", "由总平方和与组内平方和求 F 统计量"),
   explanation: t(
-    "The identity $SST = SSB + SSW$ means that the between-groups sum of squares can be found by subtraction. Each sum of squares must then be divided by its degrees of freedom before they are compared, $k - 1$ between $k$ groups and $N - k$ within them. The statistic $F$ is the ratio of these two mean squares. Comparing raw sums of squares would be misleading, because there are usually far more degrees of freedom within groups.",
-    "恒等式 $SST = SSB + SSW$ 说明组间平方和可以用减法求得。比较之前，每个平方和必须除以它的自由度：$k$ 组之间是 $k - 1$，组内是 $N - k$。统计量 $F$ 是这两个均方之比。直接比较平方和会产生误导，因为组内的自由度通常多得多。",
+    "The identity $SST = SSB + SSW$ means that the between-groups sum of squares can be found by subtraction. Each sum of squares must then be divided by its degrees of freedom before they are compared, $k - 1$ between $k$ groups and $N - k$ within them. The statistic $F$ is the ratio of these two mean squares. Comparing raw sums of squares would be misleading, because there are usually far more degrees of freedom within groups. With $2$ groups, $12$ observations, $SST = 100$ and $SSW = 60$: $SSB = 40$ on $1$ degree of freedom, the within mean square is $\\frac{60}{10} = 6$, and $F = \\frac{40}{6} = \\frac{20}{3}$.\n\n> **Watch out.** Subtract $SSW$ from $SST$ before dividing; $SST$ itself is not the between-groups sum of squares.",
+    "恒等式 $SST = SSB + SSW$ 说明组间平方和可以用减法求得。比较之前，每个平方和必须除以它的自由度：$k$ 组之间是 $k - 1$，组内是 $N - k$。统计量 $F$ 是这两个均方之比。直接比较平方和会产生误导，因为组内的自由度通常多得多。若有 $2$ 组、$12$ 个观测，$SST = 100$，$SSW = 60$：则 $SSB = 40$，自由度为 $1$，组内均方为 $\\frac{60}{10} = 6$，$F = \\frac{40}{6} = \\frac{20}{3}$。\n\n> **注意。** 要先用 $SST$ 减去 $SSW$ 再相除；$SST$ 本身不是组间平方和。",
   ),
   generate(rng) {
     const k = rng.int(3, 7);
@@ -4708,10 +4799,49 @@ const anovaFFromTotals: KnowledgePointDef = {
         `对 ${k} 组、共 ${n} 个观测做单因素方差分析，$SST = ${sst}$，$SSW = ${ssw}$。求 $F$ 统计量。`,
       ),
       answer,
-      wrong: [Q.of(ssb, ssw), Q.of(sst, ssw), Q.of(within, between), Q.of(between * (n - 1), sst)],
-      solution: t(
-        `Here $SSB = ${sst} - ${ssw} = ${ssb}$. The mean squares are $\\frac{${ssb}}{${k - 1}} = ${between}$ and $\\frac{${ssw}}{${n - k}} = ${within}$, so $F = ${answer.toLatex()}$.`,
-        `这里 $SSB = ${sst} - ${ssw} = ${ssb}$。均方是 $\\frac{${ssb}}{${k - 1}} = ${between}$ 和 $\\frac{${ssw}}{${n - k}} = ${within}$，所以 $F = ${answer.toLatex()}$。`,
+      mistakes: apart(answer, [
+        why(
+          Q.of(ssb, ssw),
+          "That compares the raw sums of squares; divide each by its degrees of freedom first.",
+          "那是直接比较平方和；要先分别除以各自的自由度。",
+        ),
+        why(
+          Q.of(sst, ssw),
+          "That divides $SST$ by $SSW$; subtract $SSW$ to get $SSB$, then divide each by its degrees of freedom.",
+          "那是用 $SST$ 除以 $SSW$；要先减去 $SSW$ 得到 $SSB$，再分别除以各自的自由度。",
+        ),
+        why(Q.of(within, between), "That is upside down; the between-groups mean square goes on top.", "那是颠倒了；组间均方应在分子。"),
+        why(
+          Q.of(between * (n - 1), sst),
+          `That divides by the total mean square $\\frac{SST}{N - 1}$; the denominator is the within-groups mean square.`,
+          "那是除以总均方 $\\frac{SST}{N - 1}$；分母应是组内均方。",
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Find the between-groups sum of squares", "求组间平方和"],
+            t(`$SSB = ${sst} - ${ssw} = ${ssb}$.`, `$SSB = ${sst} - ${ssw} = ${ssb}$。`),
+          ],
+          [
+            ["Find the mean squares", "求均方"],
+            t(
+              `$\\frac{${ssb}}{${k - 1}} = ${between}$ and $\\frac{${ssw}}{${n - k}} = ${within}$.`,
+              `$\\frac{${ssb}}{${k - 1}} = ${between}$，$\\frac{${ssw}}{${n - k}} = ${within}$。`,
+            ),
+          ],
+          [
+            ["Divide", "相除"],
+            t(
+              `$F = \\frac{${between}}{${within}}${answer.toLatex() === `\\frac{${between}}{${within}}` ? "" : ` = ${answer.toLatex()}`}$.`,
+              `$F = \\frac{${between}}{${within}}${answer.toLatex() === `\\frac{${between}}{${within}}` ? "" : ` = ${answer.toLatex()}`}$。`,
+            ),
+          ],
+        ],
+        t(
+          `The degrees of freedom $${k - 1}$ and $${n - k}$ add to $N - 1 = ${n - 1}$.`,
+          `自由度 $${k - 1}$ 与 $${n - k}$ 之和为 $N - 1 = ${n - 1}$。`,
+        ),
       ),
     });
   },
@@ -4721,8 +4851,8 @@ const reversedRanks: KnowledgePointDef = {
   id: "the-squared-rank-differences-of-reversed-rankings",
   title: t("The squared rank differences of reversed rankings", "完全相反排名的秩差平方和"),
   explanation: t(
-    "When one ranking is exactly the reverse of another, the rank differences are as large as they can be, and Spearman's coefficient reaches its lowest value of $-1$. Setting $r_s = 1 - \\frac{6\\sum d^2}{n(n^2 - 1)} = -1$ and solving shows that $\\sum d^2 = \\frac{n(n^2 - 1)}{3}$. So this formula gives the largest possible sum of squared differences for $n$ items, which is a useful check on hand calculations.",
-    "当一个排名恰好是另一个的逆序时，秩差达到最大，斯皮尔曼系数达到最小值 $-1$。令 $r_s = 1 - \\frac{6\\sum d^2}{n(n^2 - 1)} = -1$ 并求解，得 $\\sum d^2 = \\frac{n(n^2 - 1)}{3}$。所以这个公式给出 $n$ 个项目的秩差平方和的最大可能值，这是手算时有用的检查。",
+    "When one ranking is exactly the reverse of another, the rank differences are as large as they can be, and Spearman's coefficient reaches its lowest value of $-1$. Setting $r_s = 1 - \\frac{6\\sum d^2}{n(n^2 - 1)} = -1$ and solving shows that $\\sum d^2 = \\frac{n(n^2 - 1)}{3}$. So this formula gives the largest possible sum of squared differences for $n$ items, which is a useful check on hand calculations. For $40$ items it is $\\frac{40 \\cdot 1599}{3} = 21320$.\n\n> **Watch out.** $r_s = -1$ makes the fraction $\\frac{6\\sum d^2}{n(n^2 - 1)}$ equal to $2$, not $1$; setting it to $1$ gives the halved value, which belongs to $r_s = 0$.",
+    "当一个排名恰好是另一个的逆序时，秩差达到最大，斯皮尔曼系数达到最小值 $-1$。令 $r_s = 1 - \\frac{6\\sum d^2}{n(n^2 - 1)} = -1$ 并求解，得 $\\sum d^2 = \\frac{n(n^2 - 1)}{3}$。所以这个公式给出 $n$ 个项目的秩差平方和的最大可能值，这是手算时有用的检查。对 $40$ 个项目，它是 $\\frac{40 \\cdot 1599}{3} = 21320$。\n\n> **注意。** $r_s = -1$ 使分数 $\\frac{6\\sum d^2}{n(n^2 - 1)}$ 等于 $2$，而不是 $1$；令它等于 $1$ 得到的是一半，那对应 $r_s = 0$。",
   ),
   generate(rng) {
     const n = rng.int(3, 30);
@@ -4734,10 +4864,44 @@ const reversedRanks: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong: [(n * (n * n - 1)) / 6, n * n, n * (n - 1), answer + 1],
-      solution: t(
-        `Reversed rankings have $r_s = -1$, so $\\frac{6\\sum d^2}{${n * (n * n - 1)}} = 2$. This gives $\\sum d^2 = ${answer}$.`,
-        `相反的排名有 $r_s = -1$，所以 $\\frac{6\\sum d^2}{${n * (n * n - 1)}} = 2$。于是 $\\sum d^2 = ${answer}$。`,
+      mistakes: apart(Q.of(answer), [
+        why(
+          Q.of(n * (n * n - 1), 6),
+          "That sets the fraction to $1$, which gives $r_s = 0$; reversed rankings need $r_s = -1$, so the fraction is $2$.",
+          "那是令分数等于 $1$，得到 $r_s = 0$；相反的排名要求 $r_s = -1$，所以分数是 $2$。",
+        ),
+        why(
+          Q.of(n * (n * n - 1)),
+          "That forgets to divide by $3$: $6\\sum d^2 = 2n(n^2 - 1)$.",
+          "那忘了除以 $3$：$6\\sum d^2 = 2n(n^2 - 1)$。",
+        ),
+        why(
+          Q.of(2 * n * (n * n - 1)),
+          "That leaves out the $6$ in front of $\\sum d^2$; divide by it as well.",
+          "那漏掉了 $\\sum d^2$ 前面的 $6$；还要除以它。",
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Use the value of the coefficient", "用系数的值"],
+            t(
+              `Reversed rankings have $r_s = -1$, so $1 - \\frac{6\\sum d^2}{${n * (n * n - 1)}} = -1$ and $\\frac{6\\sum d^2}{${n * (n * n - 1)}} = 2$.`,
+              `相反的排名有 $r_s = -1$，所以 $1 - \\frac{6\\sum d^2}{${n * (n * n - 1)}} = -1$，$\\frac{6\\sum d^2}{${n * (n * n - 1)}} = 2$。`,
+            ),
+          ],
+          [
+            ["Solve", "求解"],
+            t(
+              `$\\sum d^2 = \\frac{2 \\cdot ${n * (n * n - 1)}}{6} = ${answer}$.`,
+              `$\\sum d^2 = \\frac{2 \\cdot ${n * (n * n - 1)}}{6} = ${answer}$。`,
+            ),
+          ],
+        ],
+        t(
+          `$1 - \\frac{6 \\cdot ${answer}}{${n * (n * n - 1)}} = 1 - 2 = -1$.`,
+          `$1 - \\frac{6 \\cdot ${answer}}{${n * (n * n - 1)}} = 1 - 2 = -1$。`,
+        ),
       ),
     });
   },
@@ -4747,23 +4911,67 @@ const expectedRange: KnowledgePointDef = {
   id: "the-expected-range-of-a-uniform-sample",
   title: t("The expected range of a uniform sample", "均匀样本的期望极差"),
   explanation: t(
-    "On average, $n$ uniform points divide $[0, \\theta]$ into $n + 1$ gaps of equal expected length $\\frac{\\theta}{n + 1}$. The largest point then has mean $\\frac{n\\theta}{n + 1}$, and the smallest has mean $\\frac{\\theta}{n + 1}$. The range is their difference, and expectation is linear, even though the two order statistics are dependent. So the expected range covers $n - 1$ of the gaps, and it never quite reaches the full length $\\theta$.",
-    "平均而言，$n$ 个均匀点把 $[0, \\theta]$ 分成 $n + 1$ 段，每段的期望长度都是 $\\frac{\\theta}{n + 1}$。于是最大点的均值是 $\\frac{n\\theta}{n + 1}$，最小点的均值是 $\\frac{\\theta}{n + 1}$。极差是它们的差，而且期望是线性的，尽管这两个顺序统计量并不独立。所以期望极差覆盖 $n - 1$ 段，永远达不到全长 $\\theta$。",
+    "On average, $n$ uniform points divide $[0, \\theta]$ into $n + 1$ gaps of equal expected length $\\frac{\\theta}{n + 1}$. The largest point then has mean $\\frac{n\\theta}{n + 1}$, and the smallest has mean $\\frac{\\theta}{n + 1}$. The range is their difference, and expectation is linear, even though the two order statistics are dependent. So the expected range covers $n - 1$ of the gaps, and it never quite reaches the full length $\\theta$.\n\nFor $4$ values on $[0, 10]$ there are $5$ gaps of expected length $2$. The largest has mean $8$ and the smallest has mean $2$, so the expected range is $8 - 2 = 6 = \\frac{10 \\cdot 3}{5}$.\n\nCheck: the range leaves out the gap below the smallest and the gap above the largest, $2 + 2 = 4$, and $6 + 4 = 10$ is the full length.\n\n> **Watch out.** The denominator is $n + 1$, the number of gaps, not $n$: $\\frac{10 \\cdot 3}{4} = 7.5$ uses gaps that are too long.",
+    "平均而言，$n$ 个均匀点把 $[0, \\theta]$ 分成 $n + 1$ 段，每段的期望长度都是 $\\frac{\\theta}{n + 1}$。于是最大点的均值是 $\\frac{n\\theta}{n + 1}$，最小点的均值是 $\\frac{\\theta}{n + 1}$。极差是它们的差，而且期望是线性的，尽管这两个顺序统计量并不独立。所以期望极差覆盖 $n - 1$ 段，永远达不到全长 $\\theta$。\n\n对 $[0, 10]$ 上的 $4$ 个值，共有 $5$ 段，每段期望长度为 $2$。最大值的均值是 $8$，最小值的均值是 $2$，所以期望极差是 $8 - 2 = 6 = \\frac{10 \\cdot 3}{5}$。\n\n检验：极差不包括最小值下方的一段和最大值上方的一段，$2 + 2 = 4$，而 $6 + 4 = 10$ 正是全长。\n\n> **注意。** 分母是段数 $n + 1$，而不是 $n$：$\\frac{10 \\cdot 3}{4} = 7.5$ 用的段太长了。",
   ),
   generate(rng) {
     const n = rng.int(2, 12);
     const theta = rng.int(1, 20);
     const answer = Q.of(theta * (n - 1), n + 1);
+    const gap = Q.of(theta, n + 1);
+    const top = Q.of(theta * n, n + 1);
     return numberProblem({
       prompt: t(
         `A sample of ${n} independent values is taken from the uniform distribution on $[0, ${theta}]$. Find the expected value of the largest minus the smallest.`,
         `从 $[0, ${theta}]$ 上的均匀分布中独立抽取 ${n} 个值。求最大值减最小值的期望。`,
       ),
       answer,
-      wrong: [Q.of(theta * n, n + 1), Q.of(theta, n + 1), Q.of(theta * (n - 1), n), Q.of(theta)],
-      solution: t(
-        `The largest has mean $${Q.of(theta * n, n + 1).toLatex()}$, and the smallest has mean $${Q.of(theta, n + 1).toLatex()}$. Their difference is $${answer.toLatex()}$.`,
-        `最大值的均值是 $${Q.of(theta * n, n + 1).toLatex()}$，最小值的均值是 $${Q.of(theta, n + 1).toLatex()}$。它们的差是 $${answer.toLatex()}$。`,
+      mistakes: apart(answer, [
+        why(
+          top,
+          "This is the mean of the largest value alone; the mean of the smallest must be subtracted.",
+          "这只是最大值的均值；还要减去最小值的均值。",
+        ),
+        why(gap, "This is the mean of the smallest value, the length of a single gap.", "这是最小值的均值，即一段的长度。"),
+        why(
+          Q.of(theta * (n - 1), n),
+          `This divides by $n = ${n}$; the ${n} points make $n + 1 = ${n + 1}$ gaps.`,
+          `这除以了 $n = ${n}$；${n} 个点形成 $n + 1 = ${n + 1}$ 段。`,
+        ),
+        why(
+          Q.of(theta),
+          "This is the full length of the interval; the sample almost never reaches both ends.",
+          "这是整个区间的长度；样本几乎不可能同时到达两端。",
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Find the gap length", "求每段长度"],
+            t(
+              `${n} points make ${n + 1} gaps of expected length $\\frac{${theta}}{${n + 1}}$.`,
+              `${n} 个点形成 ${n + 1} 段，每段期望长度为 $\\frac{${theta}}{${n + 1}}$。`,
+            ),
+          ],
+          [
+            ["Find the two means", "求两个均值"],
+            t(
+              `The largest has mean $${top.toLatex()}$, and the smallest has mean $${gap.toLatex()}$.`,
+              `最大值的均值是 $${top.toLatex()}$，最小值的均值是 $${gap.toLatex()}$。`,
+            ),
+          ],
+          [
+            ["Subtract", "相减"],
+            t(
+              `By linearity of expectation, $${top.toLatex()} - ${gap.toLatex()} = ${answer.toLatex()}$.`,
+              `由期望的线性性，$${top.toLatex()} - ${gap.toLatex()} = ${answer.toLatex()}$。`,
+            ),
+          ],
+        ],
+        t(
+          `The two end gaps add $2 \\cdot ${gap.toLatex()} = ${gap.mul(Q.of(2)).toLatex()}$, and $${answer.toLatex()} + ${gap.mul(Q.of(2)).toLatex()} = ${theta}$ is the full length.`,
+          `两端的两段共 $2 \\cdot ${gap.toLatex()} = ${gap.mul(Q.of(2)).toLatex()}$，而 $${answer.toLatex()} + ${gap.mul(Q.of(2)).toLatex()} = ${theta}$ 正是全长。`,
+        ),
       ),
     });
   },
