@@ -15,7 +15,7 @@ import { reasoned } from "../wrong-reasons.ts";
 import { table } from "./calculus-common.ts";
 import { walked } from "./calculus-i-differentiation.ts";
 import { arrowLine, drawn, label, node, numeric, pickChoice, ring } from "./figure-reading-more.ts";
-import { chosen, type Miss, type Slip, until, worked } from "./number-theory-course.ts";
+import { chosen, type Miss, type Slip, until, type Walk, worked } from "./number-theory-course.ts";
 
 /** math writes the same formula as an option in both languages. */
 const math = (latex: string): Text => t(`$${latex}$`, `$${latex}$`);
@@ -1594,35 +1594,72 @@ const speedFromSnapshots: KnowledgePointDef = {
   id: "the-speed-from-two-snapshots",
   title: t("The speed from two snapshots", "由两张快照读速度"),
   explanation: t(
-    "The solution of $u_t + c u_x = 0$ is the initial shape sliding without change at speed $c$. Compare the same feature, such as the peak, in two snapshots: the speed is the distance moved divided by the time elapsed. A move to the right means $c > 0$ and a move to the left means $c < 0$.",
-    "$u_t + c u_x = 0$ 的解是初始形状以速度 $c$ 平移，形状不变。在两张快照中比较同一个特征，比如峰顶：速度等于移动的距离除以经过的时间。向右移动说明 $c > 0$，向左移动说明 $c < 0$。",
+    "The solution of $u_t + c u_x = 0$ is the initial shape sliding without change at speed $c$. Compare the same feature, such as the peak, in two snapshots: the speed is the distance moved divided by the time elapsed. A move to the right means $c > 0$ and a move to the left means $c < 0$. For example, if the peak sits at $x = 2$ at $t = 0$ and at $x = 8$ at $t = 3$, then $c = 6 \\div 3 = 2$.\n\nCheck: the solution is $f(x - 2t)$, and at the later peak $x - 2t = 8 - 2 \\cdot 3 = 2$, the same as at the start.\n\n> **Watch out.** Divide the distance by the time, not the time by the distance, and give $c$ a minus sign when the shape moves to the left.",
+    "$u_t + c u_x = 0$ 的解是初始形状以速度 $c$ 平移，形状不变。在两张快照中比较同一个特征，比如峰顶：速度等于移动的距离除以经过的时间。向右移动说明 $c > 0$，向左移动说明 $c < 0$。例如，峰顶在 $t = 0$ 时位于 $x = 2$，在 $t = 3$ 时位于 $x = 8$，那么 $c = 6 \\div 3 = 2$。\n\n检验：解是 $f(x - 2t)$，在后来的峰顶处 $x - 2t = 8 - 2 \\cdot 3 = 2$，与开始时相同。\n\n> **注意。** 要用距离除以时间，而不是时间除以距离；形状向左移动时，$c$ 要带负号。",
   ),
   generate(rng) {
-    const shift = rng.pick([-6, -4, -3, -2, 2, 3, 4, 6]);
-    const time = rng.pick([1, 2, 3, 4]);
-    const start = shift > 0 ? rng.int(2, 3) : rng.int(9, 10);
-    const height = rng.int(2, 4);
-    const speed = Q.of(shift, time);
-    return numeric(
-      t(
-        `The dashed curve is a solution of $u_t + c u_x = 0$ at $t = 0$, and the solid curve is the same solution at $t = ${time}$. What is $c$?`,
-        `虚线是 $u_t + c u_x = 0$ 的解在 $t = 0$ 时的图像，实线是同一个解在 $t = ${time}$ 时的图像。$c$ 是多少？`,
-      ),
-      speed,
-      [speed.neg(), Q.of(shift, 1), Q.of(time, shift), Q.of(-shift, 1)],
-      t(
-        `The peak moves from $x = ${start}$ to $x = ${start + shift}$ in time ${time}. So $c = ${shift} \\div ${time} = ${speed.toLatex()}$, and the sign records the direction.`,
-        `峰顶在时间 ${time} 内从 $x = ${start}$ 移到 $x = ${start + shift}$。所以 $c = ${shift} \\div ${time} = ${speed.toLatex()}$，符号表示方向。`,
-      ),
-      drawn(
-        { xMin: 0, xMax: 12, yMin: -1, yMax: 6, yName: "u" },
+    return until(() => {
+      const shift = rng.pick([-6, -4, -3, -2, 2, 3, 4, 6]);
+      const time = rng.pick([1, 2, 3, 4]);
+      const start = shift > 0 ? rng.int(2, 3) : rng.int(9, 10);
+      const height = rng.int(2, 4);
+      const speed = Q.of(shift, time);
+      const right = shift > 0;
+      const back = speed.sign() < 0 ? `\\left(${speed.toLatex()}\\right)` : speed.toLatex();
+      const misses: Miss[] = [
         [
-          { kind: "path", points: tent(start, 2, height, 0, 12), dashed: true },
-          { kind: "path", points: tent(start + shift, 2, height, 0, 12), accent: true },
+          speed.neg(),
+          `That has the wrong sign: the shape moved to the ${right ? "right" : "left"}, so $c$ is ${right ? "positive" : "negative"}.`,
+          `符号错了：形状向${right ? "右" : "左"}移动，所以 $c$ 是${right ? "正" : "负"}的。`,
         ],
-        t("A dashed tent-shaped profile and a solid copy of it moved along the axis.", "虚线的帐篷形曲线，以及沿轴平移后的实线曲线。"),
-      ),
-    );
+        [
+          Q.of(shift, 1),
+          `$${shift}$ is the displacement; it still has to be divided by the time ${time}.`,
+          `$${shift}$ 是位移，还要除以时间 ${time}。`,
+        ],
+        [
+          Q.of(time, shift),
+          "That divides the time by the distance; speed is distance over time.",
+          "那是用时间除以距离；速度是距离除以时间。",
+        ],
+      ];
+      return worked(
+        [
+          `The dashed curve is a solution of $u_t + c u_x = 0$ at $t = 0$, and the solid curve is the same solution at $t = ${time}$. What is $c$?`,
+          `虚线是 $u_t + c u_x = 0$ 的解在 $t = 0$ 时的图像，实线是同一个解在 $t = ${time}$ 时的图像。$c$ 是多少？`,
+        ],
+        speed,
+        misses,
+        [
+          [
+            ["Read the peaks", "读出峰顶"],
+            [
+              `The dashed peak is at $x = ${start}$ and the solid peak at $x = ${start + shift}$, so the shape moved ${Math.abs(shift)} to the ${right ? "right" : "left"}.`,
+              `虚线的峰顶在 $x = ${start}$，实线的峰顶在 $x = ${start + shift}$，所以形状向${right ? "右" : "左"}移动了 ${Math.abs(shift)}。`,
+            ],
+          ],
+          [
+            ["Divide by the time", "除以时间"],
+            [
+              `$c = ${shift} \\div ${time} = ${speed.toLatex()}$, and the sign records the direction.`,
+              `$c = ${shift} \\div ${time} = ${speed.toLatex()}$，符号表示方向。`,
+            ],
+          ],
+        ],
+        [
+          `The solution is $f(x - ct)$, and at the solid peak $x - ct = ${start + shift} - ${back} \\cdot ${time} = ${start}$, where the dashed peak was.`,
+          `解是 $f(x - ct)$，在实线的峰顶处 $x - ct = ${start + shift} - ${back} \\cdot ${time} = ${start}$，正是虚线峰顶的位置。`,
+        ],
+        drawn(
+          { xMin: 0, xMax: 12, yMin: -1, yMax: 6, yName: "u" },
+          [
+            { kind: "path", points: tent(start, 2, height, 0, 12), dashed: true },
+            { kind: "path", points: tent(start + shift, 2, height, 0, 12), accent: true },
+          ],
+          t("A dashed tent-shaped profile and a solid copy of it moved along the axis.", "虚线的帐篷形曲线，以及沿轴平移后的实线曲线。"),
+        ),
+      );
+    });
   },
 };
 
@@ -1630,52 +1667,88 @@ const traceCharacteristic: KnowledgePointDef = {
   id: "tracing-a-characteristic-back",
   title: t("Tracing a characteristic back", "沿特征线回溯"),
   explanation: t(
-    "A solution of $u_t + c u_x = 0$ is constant along each characteristic line. To find $u$ at a point, follow the line through it down to $t = 0$ and read the initial data at the foot. Do not put the $x$ of the point itself into the initial data: that would ignore the distance the data has travelled.",
-    "$u_t + c u_x = 0$ 的解沿每条特征线不变。要求某点的 $u$，就沿经过它的直线走到 $t = 0$，在落点处读初始数据。不要把这一点自己的 $x$ 代入初始数据，那样就忽略了数据走过的距离。",
+    "A solution of $u_t + c u_x = 0$ is constant along each characteristic line. To find $u$ at a point, follow the line through it down to $t = 0$ and read the initial data at the foot. Do not put the $x$ of the point itself into the initial data: that would ignore the distance the data has travelled. For example, with $c = 2$ and $u(x, 0) = x^2$, the characteristic through $(8, 2)$ is $x - 2t = 4$, so its foot is $x = 4$ and $u(8, 2) = 4^2 = 16$.\n\nCheck: the solution is $u = (x - 2t)^2$, and $(8 - 2 \\cdot 2)^2 = 16$.\n\n> **Watch out.** The foot lies at $x - ct$, behind the point: for $c > 0$ it is to the left. Going the other way, to $x + ct$, reads the data at the wrong place.",
+    "$u_t + c u_x = 0$ 的解沿每条特征线不变。要求某点的 $u$，就沿经过它的直线走到 $t = 0$，在落点处读初始数据。不要把这一点自己的 $x$ 代入初始数据，那样就忽略了数据走过的距离。例如，$c = 2$、$u(x, 0) = x^2$ 时，经过 $(8, 2)$ 的特征线是 $x - 2t = 4$，所以落点是 $x = 4$，$u(8, 2) = 4^2 = 16$。\n\n检验：解是 $u = (x - 2t)^2$，而 $(8 - 2 \\cdot 2)^2 = 16$。\n\n> **注意。** 落点在 $x - ct$，在这一点的后方：$c > 0$ 时它在左边。反方向走到 $x + ct$，读到的就是错误位置的数据。",
   ),
   generate(rng) {
-    const [cn, cd] = rng.pick([
-      [1, 1],
-      [2, 1],
-      [-1, 1],
-      [-2, 1],
-      [1, 2],
-      [-1, 2],
-    ] as const);
-    const c = cn / cd;
-    const time = cd === 2 ? rng.pick([2, 4]) : rng.int(1, 3);
-    const foot = cn > 0 ? rng.int(1, 3) : rng.int(7, 9);
-    const px = foot + c * time;
-    const data = rng.pick([
-      { en: "x^2", f: (x: number) => x * x },
-      { en: "2x + 1", f: (x: number) => 2 * x + 1 },
-      { en: "10 - x", f: (x: number) => 10 - x },
-      { en: "x^2 - x", f: (x: number) => x * x - x },
-    ]);
-    const lines: PlaneMark[] = [-4, -2, 2, 4].map(
-      (d): PlaneMark => ({ kind: "line", a: [foot + d, 0], b: [foot + d + c, 1], dashed: true }),
-    );
-    return numeric(
-      t(
-        `The lines are the characteristics of $u_t + c u_x = 0$ in the plane with $x$ across and $t$ up, and $u(x, 0) = ${data.en}$. Find $u$ at the marked point.`,
-        `图中直线是 $u_t + c u_x = 0$ 的特征线，横轴是 $x$，纵轴是 $t$，且 $u(x, 0) = ${data.en}$。求标出的点处的 $u$。`,
-      ),
-      data.f(foot),
-      [data.f(px), data.f(px + c * time), data.f(time), px],
-      t(
-        `The solid characteristic through $(${px}, ${time})$ meets $t = 0$ at $x = ${foot}$, and $u$ does not change along it. So $u = u(${foot}, 0) = ${data.f(foot)}$.`,
-        `经过 $(${px}, ${time})$ 的实线特征线与 $t = 0$ 交于 $x = ${foot}$，$u$ 沿它不变。所以 $u = u(${foot}, 0) = ${data.f(foot)}$。`,
-      ),
-      drawn(
-        { xMin: 0, xMax: 10, yMin: 0, yMax: 6, yName: "t" },
-        [...lines, { kind: "line", a: [foot, 0], b: [foot + c, 1], accent: true }, { kind: "point", at: [px, time], accent: true }],
-        t(
-          `Parallel straight characteristics in the $x$, $t$ plane, with a point on the solid one at $(${px}, ${time})$.`,
-          `$x$、$t$ 平面上互相平行的特征线，实线上标出点 $(${px}, ${time})$。`,
+    return until(() => {
+      const [cn, cd] = rng.pick([
+        [1, 1],
+        [2, 1],
+        [-1, 1],
+        [-2, 1],
+        [1, 2],
+        [-1, 2],
+      ] as const);
+      const c = cn / cd;
+      const cl = cd === 2 ? `${cn < 0 ? "-" : ""}\\frac{1}{2}` : `${cn}`;
+      const time = cd === 2 ? rng.pick([2, 4]) : rng.int(1, 3);
+      const foot = cn > 0 ? rng.int(1, 3) : rng.int(7, 9);
+      const px = foot + c * time;
+      const data = rng.pick([
+        { en: "x^2", f: (x: number) => x * x, at: (x: number) => `${x}^2` },
+        { en: "2x + 1", f: (x: number) => 2 * x + 1, at: (x: number) => `2 \\cdot ${x} + 1` },
+        { en: "10 - x", f: (x: number) => 10 - x, at: (x: number) => `10 - ${x}` },
+        { en: "x^2 - x", f: (x: number) => x * x - x, at: (x: number) => `${x}^2 - ${x}` },
+      ]);
+      const lines: PlaneMark[] = [-4, -2, 2, 4].map(
+        (d): PlaneMark => ({ kind: "line", a: [foot + d, 0], b: [foot + d + c, 1], dashed: true }),
+      );
+      const misses: Miss[] = [
+        [
+          data.f(px),
+          `That reads the initial data at the point's own $x = ${px}$ and ignores how far the data has travelled.`,
+          `那是在这一点自己的 $x = ${px}$ 处读初始数据，忽略了数据走过的距离。`,
+        ],
+        [
+          data.f(px + c * time),
+          `That follows the line the wrong way, to $x = ${px + c * time}$; the foot is at $x - ct$.`,
+          `那是沿直线走反了方向，走到 $x = ${px + c * time}$；落点在 $x - ct$。`,
+        ],
+        [
+          data.f(time),
+          `That puts $t = ${time}$ into the initial data instead of the foot of the line.`,
+          `那是把 $t = ${time}$ 代入了初始数据，而不是直线的落点。`,
+        ],
+        [px, `$${px}$ is the $x$ of the marked point, not the value of $u$ there.`, `$${px}$ 是标出点的 $x$，不是那里 $u$ 的值。`],
+      ];
+      return worked(
+        [
+          `The lines are the characteristics of $u_t + c u_x = 0$ in the plane with $x$ across and $t$ up, and $u(x, 0) = ${data.en}$. Find $u$ at the marked point.`,
+          `图中直线是 $u_t + c u_x = 0$ 的特征线，横轴是 $x$，纵轴是 $t$，且 $u(x, 0) = ${data.en}$。求标出的点处的 $u$。`,
+        ],
+        data.f(foot),
+        misses,
+        [
+          [
+            ["Find the foot", "找出落点"],
+            [
+              `Here $c = ${cl}$, and the solid characteristic through $(${px}, ${time})$ is $x - ct = ${foot}$, so it meets $t = 0$ at $x = ${foot}$.`,
+              `这里 $c = ${cl}$，经过 $(${px}, ${time})$ 的实线特征线是 $x - ct = ${foot}$，所以它与 $t = 0$ 交于 $x = ${foot}$。`,
+            ],
+          ],
+          [
+            ["Read the data there", "在落点读数据"],
+            [
+              `$u$ does not change along the line, so $u = u(${foot}, 0) = ${data.at(foot)} = ${data.f(foot)}$.`,
+              `$u$ 沿直线不变，所以 $u = u(${foot}, 0) = ${data.at(foot)} = ${data.f(foot)}$。`,
+            ],
+          ],
+        ],
+        [
+          `Starting at $x = ${foot}$ and moving at speed $${cl}$ for time ${time} gives $x = ${foot} ${c * time < 0 ? "-" : "+"} ${Math.abs(c * time)} = ${px}$, which is the marked point.`,
+          `从 $x = ${foot}$ 出发，以速度 $${cl}$ 走时间 ${time}，得到 $x = ${foot} ${c * time < 0 ? "-" : "+"} ${Math.abs(c * time)} = ${px}$，正是标出的点。`,
+        ],
+        drawn(
+          { xMin: 0, xMax: 10, yMin: 0, yMax: 6, yName: "t" },
+          [...lines, { kind: "line", a: [foot, 0], b: [foot + c, 1], accent: true }, { kind: "point", at: [px, time], accent: true }],
+          t(
+            `Parallel straight characteristics in the $x$, $t$ plane, with a point on the solid one at $(${px}, ${time})$.`,
+            `$x$、$t$ 平面上互相平行的特征线，实线上标出点 $(${px}, ${time})$。`,
+          ),
         ),
-      ),
-      "integer",
-    );
+      );
+    });
   },
 };
 
@@ -1683,32 +1756,70 @@ const heatOrder: KnowledgePointDef = {
   id: "ordering-heat-profiles-in-time",
   title: t("Ordering heat profiles in time", "按时间排列温度曲线"),
   explanation: t(
-    "With both ends of a rod held at zero, heat drains out and a single sine mode keeps its shape while its height falls steadily. It never changes sign and never grows back, because the solution is $e^{-\\lambda t}$ times the mode. So among profiles of one rod, the taller curve is always the earlier one.",
-    "杆的两端保持为零时，热量不断流失，单个正弦模态形状不变，高度持续下降。它不会变号，也不会再升高，因为解是 $e^{-\\lambda t}$ 乘这个模态。所以同一根杆的几条曲线中，较高的总是较早的。",
+    "With both ends of a rod held at zero, heat drains out and a single sine mode keeps its shape while its height falls steadily. It never changes sign and never grows back, because the solution is $e^{-\\lambda t}$ times the mode. So among profiles of one rod, the taller curve is always the earlier one. For example, the profiles $5 \\sin(\\pi x / 8)$ and $2 \\sin(\\pi x / 8)$ of one rod come in that order: the first is taller, so it is earlier.\n\nCheck: the height is $h_0 e^{-\\lambda t}$ with $\\lambda > 0$, which only falls as $t$ grows, so the height $5$ comes before the height $2$.\n\n> **Watch out.** Compare the curves at their peaks, not at the ends: every profile is $0$ at both ends, because the ends are held at zero.",
+    "杆的两端保持为零时，热量不断流失，单个正弦模态形状不变，高度持续下降。它不会变号，也不会再升高，因为解是 $e^{-\\lambda t}$ 乘这个模态。所以同一根杆的几条曲线中，较高的总是较早的。例如，同一根杆的曲线 $5 \\sin(\\pi x / 8)$ 和 $2 \\sin(\\pi x / 8)$ 按这个顺序出现：前者较高，所以较早。\n\n检验：高度是 $h_0 e^{-\\lambda t}$，其中 $\\lambda > 0$，它随 $t$ 增大只会下降，所以高度 $5$ 在高度 $2$ 之前。\n\n> **注意。** 要在峰顶比较曲线，而不是在两端：两端保持为零，每条曲线在两端都是 $0$。",
   ),
   generate(rng) {
     const mode = rng.pick([1, 1, 2]);
     const heights = [rng.int(5, 6), rng.int(3, 4), rng.pick([1, 2])] as const;
     const names = rng.shuffle(["A", "B", "C"]);
+    const [first, middle, last] = names as [string, string, string];
     const latest = rng.bool();
-    const answer = names[latest ? 2 : 0] as string;
-    const name = (s: string) => t(`Curve ${s}`, `曲线 ${s}`);
+    const answer = latest ? last : first;
+    const name = (s: string): readonly [string, string] => [`Curve ${s}`, `曲线 ${s}`];
     const curves: PlaneMark[] = heights.flatMap((h, i): PlaneMark[] => [
       { kind: "curve", f: (x) => h * Math.sin((mode * Math.PI * x) / 8), from: 0, to: 8, accent: i === 0 },
       { kind: "label", at: [4 / mode, h], text: names[i] as string, dir: "n" },
     ]);
-    return pickChoice(
+    const slips: Slip[] = latest
+      ? [
+          [
+            name(first),
+            `${first} is the tallest curve, so it is the earliest, not the latest.`,
+            `${first} 是最高的曲线，所以时刻最早，而不是最晚。`,
+          ],
+          [name(middle), `${middle} is taller than ${last}, so it comes before ${last}.`, `${middle} 比 ${last} 高，所以在 ${last} 之前。`],
+        ]
+      : [
+          [
+            name(last),
+            `${last} is the lowest curve, so it is the latest, not the earliest.`,
+            `${last} 是最低的曲线，所以时刻最晚，而不是最早。`,
+          ],
+          [
+            name(middle),
+            `${middle} is lower than ${first}, so it comes after ${first}.`,
+            `${middle} 比 ${first} 低，所以在 ${first} 之后。`,
+          ],
+        ];
+    return chosen(
       rng,
-      t(
+      [
         `The curves show the temperature of one rod at three times, with both ends held at 0. Which curve is the ${latest ? "latest" : "earliest"}?`,
         `这些曲线是同一根杆在三个时刻的温度，两端保持为 0。哪条曲线的时刻${latest ? "最晚" : "最早"}？`,
-      ),
+      ],
       name(answer),
-      names.filter((s) => s !== answer).map(name),
-      t(
-        `The mode keeps its shape and its height only falls, so the ${latest ? "lowest" : "tallest"} curve, ${answer}, is the ${latest ? "latest" : "earliest"}.`,
-        `模态形状不变，高度只会下降，所以${latest ? "最低" : "最高"}的曲线 ${answer} 时刻${latest ? "最晚" : "最早"}。`,
-      ),
+      slips,
+      [
+        [
+          ["Read the heights", "读出高度"],
+          [
+            `The peaks of ${first}, ${middle} and ${last} reach ${heights[0]}, ${heights[1]} and ${heights[2]}.`,
+            `${first}、${middle}、${last} 的峰顶分别达到 ${heights[0]}、${heights[1]}、${heights[2]}。`,
+          ],
+        ],
+        [
+          ["Order them in time", "按时间排列"],
+          [
+            `The height is $h_0 e^{-\\lambda t}$ and only falls, so the order in time is ${first}, ${middle}, ${last}, and the ${latest ? "latest" : "earliest"} is ${answer}.`,
+            `高度是 $h_0 e^{-\\lambda t}$，只会下降，所以时间顺序是 ${first}、${middle}、${last}，时刻${latest ? "最晚" : "最早"}的是 ${answer}。`,
+          ],
+        ],
+      ],
+      [
+        `The ratios $\\frac{${heights[1]}}{${heights[0]}}$ and $\\frac{${heights[2]}}{${heights[1]}}$ are both below 1, as a factor $e^{-\\lambda \\Delta t}$ with $\\Delta t > 0$ must be; the reverse order would need factors above 1.`,
+        `比值 $\\frac{${heights[1]}}{${heights[0]}}$ 和 $\\frac{${heights[2]}}{${heights[1]}}$ 都小于 1，$\\Delta t > 0$ 时的因子 $e^{-\\lambda \\Delta t}$ 正应如此；相反的顺序需要大于 1 的因子。`,
+      ],
       drawn(
         { xMin: 0, xMax: 8, yMin: mode === 2 ? -7 : -1, yMax: 7, yName: "u" },
         curves,
@@ -1725,45 +1836,82 @@ const insulatedMean: KnowledgePointDef = {
   id: "the-final-temperature-of-an-insulated-rod",
   title: t("The final temperature of an insulated rod", "绝热杆的最终温度"),
   explanation: t(
-    "With insulated ends no heat escapes, so the total heat in the rod never changes while the temperature evens out. The final uniform temperature must carry the same total, so it is the average of the initial temperature over the length. A longer stretch counts for more, which is why the average of the heights alone is wrong.",
-    "两端绝热时热量不会散失，温度趋于均匀的过程中，杆里的总热量不变。最终的均匀温度必须对应同样的总热量，所以它是初始温度沿长度的平均值。长的一段权重更大，所以只平均高度是错的。",
+    "With insulated ends no heat escapes, so the total heat in the rod never changes while the temperature evens out. The final uniform temperature must carry the same total, so it is the average of the initial temperature over the length. A longer stretch counts for more, which is why the average of the heights alone is wrong. For example, a rod of length $6$ at temperature $2$ on its first $4$ units and $8$ on the last $2$ settles at $\\frac{4 \\cdot 2 + 2 \\cdot 8}{6} = 4$.\n\nCheck: the total heat starts as $4 \\cdot 2 + 2 \\cdot 8 = 24$ and ends as $6 \\cdot 4 = 24$.\n\n> **Watch out.** Averaging the two heights gives $\\frac{2 + 8}{2} = 5$, which ignores that the cooler piece is twice as long as the hotter one.",
+    "两端绝热时热量不会散失，温度趋于均匀的过程中，杆里的总热量不变。最终的均匀温度必须对应同样的总热量，所以它是初始温度沿长度的平均值。长的一段权重更大，所以只平均高度是错的。例如，长度为 $6$ 的杆，前 $4$ 个单位温度是 $2$，后 $2$ 个单位是 $8$，最终温度是 $\\frac{4 \\cdot 2 + 2 \\cdot 8}{6} = 4$。\n\n检验：总热量开始是 $4 \\cdot 2 + 2 \\cdot 8 = 24$，最后是 $6 \\cdot 4 = 24$。\n\n> **注意。** 只平均两个高度得到 $\\frac{2 + 8}{2} = 5$，忽略了较冷的一段是较热一段的两倍长。",
   ),
   generate(rng) {
-    const length = rng.pick([6, 8, 10]);
-    const cut = rng.int(1, length - 1);
-    const pieces = rng.bool()
-      ? [
-          { from: 0, to: cut, u: rng.int(1, 9) },
-          { from: cut, to: length, u: rng.int(1, 9) },
-        ]
-      : [
-          { from: 0, to: 2, u: rng.int(1, 9) },
-          { from: 2, to: 4, u: rng.int(1, 9) },
-          { from: 4, to: length, u: rng.int(1, 9) },
-        ];
-    if (new Set(pieces.map((p) => p.u)).size === 1)
-      (pieces[0] as { u: number }).u = (pieces[1] as { u: number }).u === 9 ? 1 : (pieces[1] as { u: number }).u + 1;
-    const total = pieces.reduce((sum, p) => sum + (p.to - p.from) * p.u, 0);
-    const answer = Q.of(total, length);
-    const plain = pieces.reduce((sum, p) => sum + p.u, 0);
-    const parts = pieces.map((p) => `${p.to - p.from} \\cdot ${p.u}`).join(" + ");
-    return numeric(
-      t(
-        `The graph shows the initial temperature of a rod of length ${length} whose ends are insulated. What uniform temperature does the rod approach as $t \\to \\infty$?`,
-        `图中是长度为 ${length}、两端绝热的杆的初始温度。当 $t \\to \\infty$ 时，杆趋近于什么均匀温度？`,
-      ),
-      answer,
-      [Q.of(plain, pieces.length), Q.of(total, 1), Q.of(0, 1), Q.of(Math.max(...pieces.map((p) => p.u)), 1)],
-      t(
-        `No heat leaves, so the final temperature is the average over the length: $\\frac{${parts}}{${length}} = ${answer.toLatex()}$.`,
-        `热量不会散失，所以最终温度是沿长度的平均值：$\\frac{${parts}}{${length}} = ${answer.toLatex()}$。`,
-      ),
-      drawn(
-        { xMin: 0, xMax: length, yMin: 0, yMax: 10, yName: "u" },
-        pieces.map((p): PlaneMark => ({ kind: "segment", a: [p.from, p.u], b: [p.to, p.u], accent: true })),
-        t(`A piecewise constant temperature over a rod of length ${length}.`, `长度为 ${length} 的杆上分段为常数的温度。`),
-      ),
-    );
+    return until(() => {
+      const length = rng.pick([6, 8, 10]);
+      const cut = rng.int(1, length - 1);
+      const pieces = rng.bool()
+        ? [
+            { from: 0, to: cut, u: rng.int(1, 9) },
+            { from: cut, to: length, u: rng.int(1, 9) },
+          ]
+        : [
+            { from: 0, to: 2, u: rng.int(1, 9) },
+            { from: 2, to: 4, u: rng.int(1, 9) },
+            { from: 4, to: length, u: rng.int(1, 9) },
+          ];
+      if (new Set(pieces.map((p) => p.u)).size === 1)
+        (pieces[0] as { u: number }).u = (pieces[1] as { u: number }).u === 9 ? 1 : (pieces[1] as { u: number }).u + 1;
+      const total = pieces.reduce((sum, p) => sum + (p.to - p.from) * p.u, 0);
+      const answer = Q.of(total, length);
+      const plain = pieces.reduce((sum, p) => sum + p.u, 0);
+      const parts = pieces.map((p) => `${p.to - p.from} \\cdot ${p.u}`).join(" + ");
+      const hottest = Math.max(...pieces.map((p) => p.u));
+      return worked(
+        [
+          `The graph shows the initial temperature of a rod of length ${length} whose ends are insulated. What uniform temperature does the rod approach as $t \\to \\infty$?`,
+          `图中是长度为 ${length}、两端绝热的杆的初始温度。当 $t \\to \\infty$ 时，杆趋近于什么均匀温度？`,
+        ],
+        answer,
+        [
+          [
+            Q.of(plain, pieces.length),
+            "That averages the heights alone; each piece has to be weighted by its length.",
+            "那只平均了高度；每一段都要按长度加权。",
+          ],
+          [
+            Q.of(total, 1),
+            `$${total}$ is the total heat; it still has to be spread over the length ${length}.`,
+            `$${total}$ 是总热量，还要分摊到长度 ${length} 上。`,
+          ],
+          [
+            0,
+            "That is the limit when the ends are held at 0; insulated ends keep the heat in.",
+            "那是两端保持为 0 时的极限；两端绝热时热量留在杆里。",
+          ],
+          [
+            hottest,
+            `$${hottest}$ is the temperature of the hottest piece; its heat spreads into the cooler pieces, so it cools down.`,
+            `$${hottest}$ 是最热一段的温度；它的热量会流向较冷的部分，所以它会降温。`,
+          ],
+        ],
+        [
+          [
+            ["Find the total heat", "求总热量"],
+            [`Length times temperature on each piece: $${parts} = ${total}$.`, `每一段的长度乘温度：$${parts} = ${total}$。`],
+          ],
+          [
+            ["Spread it over the rod", "分摊到整根杆"],
+            [
+              `No heat leaves, so the final temperature is $${total} \\div ${length} = ${answer.toLatex()}$.`,
+              `热量不会散失，所以最终温度是 $${total} \\div ${length} = ${answer.toLatex()}$。`,
+            ],
+          ],
+        ],
+        [
+          `A uniform temperature $${answer.toLatex()}$ over length ${length} holds $${length} \\cdot ${answer.toLatex()} = ${total}$, the same total as at the start.`,
+          `长度 ${length} 上均匀的温度 $${answer.toLatex()}$ 对应 $${length} \\cdot ${answer.toLatex()} = ${total}$，与开始时的总量相同。`,
+        ],
+        drawn(
+          { xMin: 0, xMax: length, yMin: 0, yMax: 10, yName: "u" },
+          pieces.map((p): PlaneMark => ({ kind: "segment", a: [p.from, p.u], b: [p.to, p.u], accent: true })),
+          t(`A piecewise constant temperature over a rod of length ${length}.`, `长度为 ${length} 的杆上分段为常数的温度。`),
+        ),
+      );
+    });
   },
 };
 
@@ -1771,37 +1919,78 @@ const standingWave: KnowledgePointDef = {
   id: "the-period-of-a-standing-wave",
   title: t("The period of a standing wave", "驻波的周期"),
   explanation: t(
-    "A string fixed at both ends vibrates in modes $\\sin(n \\pi x / L)$, and $n$ is the number of loops you can count between the ends. Each mode oscillates in time with angular frequency $n \\pi c / L$, so its period is $2L / (nc)$. More loops mean a faster vibration, which is why a harmonic sounds higher than the fundamental.",
-    "两端固定的弦按 $\\sin(n \\pi x / L)$ 的模态振动，$n$ 就是两端之间能数出的波腹个数。每个模态随时间振动的角频率是 $n \\pi c / L$，所以周期是 $2L / (nc)$。波腹越多，振动越快，所以泛音比基音高。",
+    "A string fixed at both ends vibrates in modes $\\sin(n \\pi x / L)$, and $n$ is the number of loops you can count between the ends. Each mode oscillates in time with angular frequency $n \\pi c / L$, so its period is $2L / (nc)$. More loops mean a faster vibration, which is why a harmonic sounds higher than the fundamental. For example, a string of length $6$ with wave speed $2$ showing $3$ loops is in mode $n = 3$, so its period is $\\frac{2 \\cdot 6}{3 \\cdot 2} = 2$.\n\nCheck: the angular frequency is $\\frac{3 \\pi \\cdot 2}{6} = \\pi$, and $\\frac{2 \\pi}{\\pi} = 2$.\n\n> **Watch out.** The period $\\frac{2L}{c}$ belongs to the fundamental, with one loop; with $n$ loops divide it by $n$. And $\\frac{L}{nc}$ is only half a period, the time from one extreme to the other.",
+    "两端固定的弦按 $\\sin(n \\pi x / L)$ 的模态振动，$n$ 就是两端之间能数出的波腹个数。每个模态随时间振动的角频率是 $n \\pi c / L$，所以周期是 $2L / (nc)$。波腹越多，振动越快，所以泛音比基音高。例如，长度为 $6$、波速为 $2$ 的弦显示 $3$ 个波腹，就是 $n = 3$ 的模态，周期是 $\\frac{2 \\cdot 6}{3 \\cdot 2} = 2$。\n\n检验：角频率是 $\\frac{3 \\pi \\cdot 2}{6} = \\pi$，而 $\\frac{2 \\pi}{\\pi} = 2$。\n\n> **注意。** 周期 $\\frac{2L}{c}$ 属于只有一个波腹的基音；有 $n$ 个波腹时要再除以 $n$。而 $\\frac{L}{nc}$ 只是半个周期，即从一个极端位置到另一个的时间。",
   ),
   generate(rng) {
-    const n = rng.int(1, 5);
-    const length = rng.pick([4, 6, 8, 10]);
-    const c = rng.int(1, 3);
-    const answer = Q.of(2 * length, n * c);
-    return numeric(
-      t(
-        `A string of length ${length}, fixed at both ends with wave speed ${c}, vibrates in the standing wave shown at its two extremes. What is the period of the vibration?`,
-        `长度为 ${length}、两端固定、波速为 ${c} 的弦按图中的驻波振动，图中画出了两个极端位置。振动周期是多少？`,
-      ),
-      answer,
-      [Q.of(2 * length, c), Q.of(length, n * c), Q.of(n * c, 2 * length), Q.of(2 * length, (n + 1) * c)],
-      t(
-        `The drawing has ${n} ${n === 1 ? "loop" : "loops"}, so this is mode $n = ${n}$. Its period is $\\frac{2L}{nc} = ${2 * length} \\div ${n * c} = ${answer.toLatex()}$.`,
-        `图中有 ${n} 个波腹，所以这是 $n = ${n}$ 的模态。周期是 $\\frac{2L}{nc} = ${2 * length} \\div ${n * c} = ${answer.toLatex()}$。`,
-      ),
-      drawn(
-        { xMin: 0, xMax: length, yMin: -2, yMax: 2, labelEvery: length > 6 ? 2 : 1, yName: "u" },
+    return until(() => {
+      const n = rng.int(1, 5);
+      const length = rng.pick([4, 6, 8, 10]);
+      const c = rng.int(1, 3);
+      const answer = Q.of(2 * length, n * c);
+      const omega = Q.of(n * c, length);
+      const omegaL = omega.eq(Q.of(1, 1)) ? "\\pi" : `${omega.toLatex()} \\pi`;
+      return worked(
         [
-          { kind: "curve", f: (x) => 1.6 * Math.sin((n * Math.PI * x) / length), from: 0, to: length, accent: true },
-          { kind: "curve", f: (x) => -1.6 * Math.sin((n * Math.PI * x) / length), from: 0, to: length, dashed: true },
+          `A string of length ${length}, fixed at both ends with wave speed ${c}, vibrates in the standing wave shown at its two extremes. What is the period of the vibration?`,
+          `长度为 ${length}、两端固定、波速为 ${c} 的弦按图中的驻波振动，图中画出了两个极端位置。振动周期是多少？`,
         ],
-        t(
-          `A standing wave on a string of length ${length}, drawn at its two extremes.`,
-          `长度为 ${length} 的弦上的驻波，画出了两个极端位置。`,
+        answer,
+        [
+          [
+            Q.of(2 * length, c),
+            `That is the period of the fundamental, with one loop; this string shows ${n} loops, so divide by ${n}.`,
+            `那是只有一个波腹的基音的周期；这根弦有 ${n} 个波腹，要再除以 ${n}。`,
+          ],
+          [
+            Q.of(length, n * c),
+            "That is half a period: the time to swing from one extreme to the other.",
+            "那是半个周期：从一个极端位置摆到另一个的时间。",
+          ],
+          [
+            Q.of(n * c, 2 * length),
+            "That is the number of vibrations per unit time, the frequency, not the period.",
+            "那是单位时间内的振动次数，即频率，而不是周期。",
+          ],
+          [
+            Q.of(2 * length, (n + 1) * c),
+            `That uses $n = ${n + 1}$, the number of points that stay still, ends included; $n$ counts the loops.`,
+            `那用了 $n = ${n + 1}$，即包括两端在内不动的点数；$n$ 数的是波腹。`,
+          ],
+        ],
+        [
+          [
+            ["Count the loops", "数波腹"],
+            [
+              `The drawing has ${n} ${n === 1 ? "loop" : "loops"} between the fixed ends, so this is mode $n = ${n}$.`,
+              `图中两个固定端之间有 ${n} 个波腹，所以这是 $n = ${n}$ 的模态。`,
+            ],
+          ],
+          [
+            ["Use the period of the mode", "用模态的周期"],
+            [
+              `$T = \\frac{2L}{nc} = ${2 * length} \\div ${n * c} = ${answer.toLatex()}$.`,
+              `$T = \\frac{2L}{nc} = ${2 * length} \\div ${n * c} = ${answer.toLatex()}$。`,
+            ],
+          ],
+        ],
+        [
+          `The angular frequency is $\\omega = \\frac{n \\pi c}{L} = ${omegaL}$, and $\\frac{2 \\pi}{\\omega} = ${answer.toLatex()}$, the time for $\\cos(\\omega t)$ to make one full cycle.`,
+          `角频率是 $\\omega = \\frac{n \\pi c}{L} = ${omegaL}$，而 $\\frac{2 \\pi}{\\omega} = ${answer.toLatex()}$，正是 $\\cos(\\omega t)$ 完成一个周期的时间。`,
+        ],
+        drawn(
+          { xMin: 0, xMax: length, yMin: -2, yMax: 2, labelEvery: length > 6 ? 2 : 1, yName: "u" },
+          [
+            { kind: "curve", f: (x) => 1.6 * Math.sin((n * Math.PI * x) / length), from: 0, to: length, accent: true },
+            { kind: "curve", f: (x) => -1.6 * Math.sin((n * Math.PI * x) / length), from: 0, to: length, dashed: true },
+          ],
+          t(
+            `A standing wave on a string of length ${length}, drawn at its two extremes.`,
+            `长度为 ${length} 的弦上的驻波，画出了两个极端位置。`,
+          ),
         ),
-      ),
-    );
+      );
+    });
   },
 };
 
@@ -1809,43 +1998,94 @@ const splitPulse: KnowledgePointDef = {
   id: "the-value-of-a-splitting-pulse",
   title: t("The value of a splitting pulse", "分裂脉冲的值"),
   explanation: t(
-    "When a string starts at rest, d'Alembert's formula reads $u(x, t) = \\frac{1}{2} \\left[ f(x - ct) + f(x + ct) \\right]$. The initial shape splits into two half-height copies moving in opposite directions at speed $c$. To find a value, look back a distance $ct$ on each side, read the initial shape at both places, and average the two readings.",
-    "弦从静止开始时，达朗贝尔公式是 $u(x, t) = \\frac{1}{2} \\left[ f(x - ct) + f(x + ct) \\right]$。初始形状分裂成两个一半高的副本，以速度 $c$ 向相反方向移动。求某点的值，就在两侧各退后距离 $ct$，读出那两处的初始形状，再取平均。",
+    "When a string starts at rest, d'Alembert's formula reads $u(x, t) = \\frac{1}{2} \\left[ f(x - ct) + f(x + ct) \\right]$. The initial shape splits into two half-height copies moving in opposite directions at speed $c$. To find a value, look back a distance $ct$ on each side, read the initial shape at both places, and average the two readings. For example, if $f$ is a tent of height $4$ and half-width $2$ centered at $0$, and $c = 1$, then $u(2, 1) = \\frac{1}{2} \\left[ f(1) + f(3) \\right] = \\frac{1}{2} (2 + 0) = 1$.\n\nCheck: at $t = 1$ the right-moving copy, of height $2$, has its peak at $x = 1$ and falls to $1$ at $x = 2$, while the left-moving copy is centered at $x = -1$ and is $0$ there.\n\n> **Watch out.** Do not forget the factor $\\frac{1}{2}$, and do not read $f$ at $x$ itself: the two readings come from $x - ct$ and $x + ct$.",
+    "弦从静止开始时，达朗贝尔公式是 $u(x, t) = \\frac{1}{2} \\left[ f(x - ct) + f(x + ct) \\right]$。初始形状分裂成两个一半高的副本，以速度 $c$ 向相反方向移动。求某点的值，就在两侧各退后距离 $ct$，读出那两处的初始形状，再取平均。例如，$f$ 是以 $0$ 为中心、高 $4$、半宽 $2$ 的帐篷形，$c = 1$，那么 $u(2, 1) = \\frac{1}{2} \\left[ f(1) + f(3) \\right] = \\frac{1}{2} (2 + 0) = 1$。\n\n检验：$t = 1$ 时向右移动的副本高 $2$，峰顶在 $x = 1$，到 $x = 2$ 处降到 $1$；向左移动的副本以 $x = -1$ 为中心，在那里是 $0$。\n\n> **注意。** 不要忘记因子 $\\frac{1}{2}$，也不要在 $x$ 本身读 $f$：两个读数来自 $x - ct$ 和 $x + ct$。",
   ),
   generate(rng) {
-    const [half, height] = rng.pick([
-      [2, 4],
-      [4, 4],
-      [3, 6],
-    ] as const);
-    const f = (x: number) => Math.max(0, height * (1 - Math.abs(x) / half));
-    const c = rng.int(1, 2);
-    const time = rng.int(1, 3);
-    const reach = c * time;
-    const offset = rng.int(1 - half, half - 1);
-    const x = rng.pick([1, -1]) * reach + offset;
-    const [behind, ahead] = [f(x - reach), f(x + reach)];
-    const answer = Q.of(behind + ahead, 2);
-    return numeric(
-      t(
-        `A string starts at rest with the shape $u(x, 0)$ shown, and it obeys $u_{tt} = ${c * c === 1 ? "" : c * c} u_{xx}$ on the whole line. Find $u(${x}, ${time})$.`,
-        `弦从静止开始，初始形状 $u(x, 0)$ 如图，满足整条直线上的 $u_{tt} = ${c * c === 1 ? "" : c * c} u_{xx}$。求 $u(${x}, ${time})$。`,
-      ),
-      answer,
-      [Q.of(behind + ahead, 1), Q.of(f(x), 1), Q.of(f(x), 2), Q.of(behind, 1), Q.of(ahead, 1), Q.of(height, 2)],
-      t(
-        `Here $c = ${c}$, so $ct = ${reach}$. The shape at $x = ${x - reach}$ is ${behind} and at $x = ${x + reach}$ is ${ahead}, and d'Alembert's formula averages them to $${answer.toLatex()}$.`,
-        `这里 $c = ${c}$，所以 $ct = ${reach}$。形状在 $x = ${x - reach}$ 处是 ${behind}，在 $x = ${x + reach}$ 处是 ${ahead}，达朗贝尔公式取平均得 $${answer.toLatex()}$。`,
-      ),
-      drawn(
-        { xMin: -8, xMax: 8, yMin: -1, yMax: 7, labelEvery: 2, yName: "u" },
-        [{ kind: "path", points: tent(0, half, height, -8, 8), accent: true }],
-        t(
-          `A tent-shaped initial position centered at 0, of height ${height} and half-width ${half}.`,
-          `以 0 为中心的帐篷形初始位置，高 ${height}，半宽 ${half}。`,
+    return until(() => {
+      const [half, height] = rng.pick([
+        [2, 4],
+        [4, 4],
+        [3, 6],
+      ] as const);
+      const f = (x: number) => Math.max(0, height * (1 - Math.abs(x) / half));
+      const c = rng.int(1, 2);
+      const time = rng.int(1, 3);
+      const reach = c * time;
+      const offset = rng.int(1 - half, half - 1);
+      const x = rng.pick([1, -1]) * reach + offset;
+      const [behind, ahead] = [f(x - reach), f(x + reach)];
+      const answer = Q.of(behind + ahead, 2);
+      const wave = c * c === 1 ? "u_{xx}" : `${c * c} u_{xx}`;
+      const [rightPart, leftPart] = [Q.of(behind, 2).toLatex(), Q.of(ahead, 2).toLatex()];
+      return worked(
+        [
+          `A string starts at rest with the shape $u(x, 0)$ shown, and it obeys $u_{tt} = ${wave}$ on the whole line. Find $u(${x}, ${time})$.`,
+          `弦从静止开始，初始形状 $u(x, 0)$ 如图，满足整条直线上的 $u_{tt} = ${wave}$。求 $u(${x}, ${time})$。`,
+        ],
+        answer,
+        [
+          [
+            Q.of(behind + ahead, 1),
+            "That adds the two readings but leaves out the factor $\\frac{1}{2}$.",
+            "那把两个读数相加了，却漏掉了因子 $\\frac{1}{2}$。",
+          ],
+          [
+            Q.of(f(x), 1),
+            `That reads the initial shape at $x = ${x}$ itself, as if the string had not moved.`,
+            `那是在 $x = ${x}$ 本身读初始形状，好像弦没有动过。`,
+          ],
+          [
+            Q.of(f(x), 2),
+            `That halves the initial shape at $x = ${x}$ but does not move the two copies apart.`,
+            `那把 $x = ${x}$ 处的初始形状减半了，却没有让两个副本分开移动。`,
+          ],
+          [
+            Q.of(behind, 1),
+            `That is $f(x - ct)$ alone, without the other reading and without the factor $\\frac{1}{2}$.`,
+            `那只是 $f(x - ct)$，漏掉了另一个读数和因子 $\\frac{1}{2}$。`,
+          ],
+          [
+            Q.of(ahead, 1),
+            `That is $f(x + ct)$ alone, without the other reading and without the factor $\\frac{1}{2}$.`,
+            `那只是 $f(x + ct)$，漏掉了另一个读数和因子 $\\frac{1}{2}$。`,
+          ],
+          [
+            Q.of(height, 2),
+            "That is the height of each copy at its peak, not its value at this point.",
+            "那是每个副本峰顶的高度，而不是它在这一点的值。",
+          ],
+        ],
+        [
+          [
+            ["Look back on both sides", "向两侧回看"],
+            [
+              `Here $c = ${c}$ and $t = ${time}$, so $ct = ${reach}$. The shape at $x = ${x} - ${reach} = ${x - reach}$ is ${behind}, and at $x = ${x} + ${reach} = ${x + reach}$ it is ${ahead}.`,
+              `这里 $c = ${c}$，$t = ${time}$，所以 $ct = ${reach}$。形状在 $x = ${x} - ${reach} = ${x - reach}$ 处是 ${behind}，在 $x = ${x} + ${reach} = ${x + reach}$ 处是 ${ahead}。`,
+            ],
+          ],
+          [
+            ["Average the readings", "取平均"],
+            [
+              `$u(${x}, ${time}) = \\frac{1}{2} (${behind} + ${ahead}) = ${answer.toLatex()}$.`,
+              `$u(${x}, ${time}) = \\frac{1}{2} (${behind} + ${ahead}) = ${answer.toLatex()}$。`,
+            ],
+          ],
+        ],
+        [
+          `The copy moving right is centered at $x = ${reach}$ and gives $${rightPart}$ here; the copy moving left is centered at $x = -${reach}$ and gives $${leftPart}$; together they make $${answer.toLatex()}$.`,
+          `向右移动的副本以 $x = ${reach}$ 为中心，在这里给出 $${rightPart}$；向左移动的副本以 $x = -${reach}$ 为中心，给出 $${leftPart}$；合起来是 $${answer.toLatex()}$。`,
+        ],
+        drawn(
+          { xMin: -8, xMax: 8, yMin: -1, yMax: 7, labelEvery: 2, yName: "u" },
+          [{ kind: "path", points: tent(0, half, height, -8, 8), accent: true }],
+          t(
+            `A tent-shaped initial position centered at 0, of height ${height} and half-width ${half}.`,
+            `以 0 为中心的帐篷形初始位置，高 ${height}，半宽 ${half}。`,
+          ),
         ),
-      ),
-    );
+      );
+    });
   },
 };
 
@@ -1853,37 +2093,84 @@ const stencilStep: KnowledgePointDef = {
   id: "one-step-on-a-difference-grid",
   title: t("One step on a difference grid", "差分网格上走一步"),
   explanation: t(
-    "The explicit scheme for the heat equation is $u_j^{n+1} = u_j^n + r \\left( u_{j-1}^n - 2 u_j^n + u_{j+1}^n \\right)$, where $r = \\alpha \\Delta t / (\\Delta x)^2$. It uses three neighbouring values in the row below to compute one value in the next row. A point lower than the average of its neighbours warms up, and a higher one cools down.",
-    "热方程的显式格式是 $u_j^{n+1} = u_j^n + r \\left( u_{j-1}^n - 2 u_j^n + u_{j+1}^n \\right)$，其中 $r = \\alpha \\Delta t / (\\Delta x)^2$。它用下面一行相邻的三个值算出上一行的一个值。比两邻平均值低的点会升温，高的点会降温。",
+    "The explicit scheme for the heat equation is $u_j^{n+1} = u_j^n + r \\left( u_{j-1}^n - 2 u_j^n + u_{j+1}^n \\right)$, where $r = \\alpha \\Delta t / (\\Delta x)^2$. It uses three neighbouring values in the row below to compute one value in the next row. A point lower than the average of its neighbours warms up, and a higher one cools down. For example, with $r = \\frac{1}{4}$ and the values $4, 2, 8$ in a row, the new middle value is $2 + \\frac{1}{4} (4 - 2 \\cdot 2 + 8) = 4$.\n\nCheck: the middle $2$ was below its neighbours' average $6$, and it rose to $4$, toward that average.\n\n> **Watch out.** The middle value enters twice: as $-2 u_j^n$ inside the bracket, and as the $u_j^n$ the update is added to. Leaving out either one gives a wrong value.",
+    "热方程的显式格式是 $u_j^{n+1} = u_j^n + r \\left( u_{j-1}^n - 2 u_j^n + u_{j+1}^n \\right)$，其中 $r = \\alpha \\Delta t / (\\Delta x)^2$。它用下面一行相邻的三个值算出上一行的一个值。比两邻平均值低的点会升温，高的点会降温。例如，$r = \\frac{1}{4}$，一行中相邻的值是 $4, 2, 8$，新的中间值是 $2 + \\frac{1}{4} (4 - 2 \\cdot 2 + 8) = 4$。\n\n检验：中间的 $2$ 低于两邻的平均值 $6$，它升到了 $4$，向那个平均值靠近。\n\n> **注意。** 中间值出现两次：括号里的 $-2 u_j^n$，以及更新量要加上的 $u_j^n$。漏掉任何一个都会算错。",
   ),
   generate(rng) {
-    const values = Array.from({ length: 5 }, () => rng.int(1, 9) * rng.pick([2, 4]));
-    const r = rng.pick([Q.of(1, 4), Q.of(1, 2), Q.of(1, 8)]);
-    const [left, here, right] = [values[1] as number, values[2] as number, values[3] as number];
-    const change = Q.of(left - 2 * here + right, 1);
-    const answer = Q.of(here, 1).add(r.mul(change));
-    const name = "j";
-    return numeric(
-      t(
-        `The bottom row holds the values $u_j^n$ of the explicit heat scheme with $r = ${r.toLatex()}$. Find the value in the ringed cell of the row above, at time level $n + 1$.`,
-        `下面一行是显式热方程格式的值 $u_j^n$，$r = ${r.toLatex()}$。求上面一行（时间层 $n + 1$）带圈格子里的值。`,
-      ),
-      answer,
-      [r.mul(change), Q.of(here, 1).add(r.mul(Q.of(left + 2 * here + right, 1))), Q.of(left + right, 2), Q.of(here, 1).sub(r.mul(change))],
-      t(
-        `Using the three cells below it: $${here} + ${r.toLatex()} \\left( ${left} - 2 \\cdot ${here} + ${right} \\right) = ${answer.toLatex()}$.`,
-        `用它下方的三个格子：$${here} + ${r.toLatex()} \\left( ${left} - 2 \\cdot ${here} + ${right} \\right) = ${answer.toLatex()}$。`,
-      ),
-      grid(
-        ["n+1", "n"],
-        [`${name}-2`, `${name}-1`, name, `${name}+1`, `${name}+2`],
-        [["", "", "?", "", ""], values.map(String)],
-        t(
-          "A grid with five values in the bottom row and one ringed empty cell in the middle of the row above.",
-          "网格的下面一行有五个值，上面一行中间有一个带圈的空格。",
+    return until(() => {
+      const values = Array.from({ length: 5 }, () => rng.int(1, 9) * rng.pick([2, 4]));
+      const r = rng.pick([Q.of(1, 4), Q.of(1, 2), Q.of(1, 8)]);
+      const [left, here, right] = [values[1] as number, values[2] as number, values[3] as number];
+      const change = Q.of(left - 2 * here + right, 1);
+      const step = r.mul(change);
+      const answer = Q.of(here, 1).add(step);
+      const stepL = step.sign() < 0 ? `\\left(${step.toLatex()}\\right)` : step.toLatex();
+      const middle = Q.of(1, 1).sub(r.mul(Q.of(2, 1)));
+      const name = "j";
+      return worked(
+        [
+          `The bottom row holds the values $u_j^n$ of the explicit heat scheme with $r = ${r.toLatex()}$. Find the value in the ringed cell of the row above, at time level $n + 1$.`,
+          `下面一行是显式热方程格式的值 $u_j^n$，$r = ${r.toLatex()}$。求上面一行（时间层 $n + 1$）带圈格子里的值。`,
+        ],
+        answer,
+        [
+          [
+            step,
+            `That is only the update $r(\\dots)$; it still has to be added to $u_j^n = ${here}$.`,
+            `那只是更新量 $r(\\dots)$，还要加到 $u_j^n = ${here}$ 上。`,
+          ],
+          [
+            Q.of(here, 1).add(r.mul(Q.of(left + 2 * here + right, 1))),
+            "That adds the middle value inside the bracket; it enters as $-2 u_j^n$.",
+            "那在括号里加上了中间值；它应以 $-2 u_j^n$ 出现。",
+          ],
+          [
+            Q.of(left + right, 2),
+            "That is the average of the two neighbours, not one step of the scheme.",
+            "那是两邻的平均值，而不是格式走的一步。",
+          ],
+          [
+            Q.of(here, 1).sub(step),
+            "That subtracts the update; the scheme adds $r(\\dots)$ to $u_j^n$.",
+            "那减去了更新量；格式是把 $r(\\dots)$ 加到 $u_j^n$ 上。",
+          ],
+        ],
+        [
+          [
+            ["Pick the stencil", "取出模板"],
+            [
+              `The ringed cell sits above $u_j^n = ${here}$, whose neighbours are ${left} and ${right}.`,
+              `带圈的格子在 $u_j^n = ${here}$ 的上方，它的两邻是 ${left} 和 ${right}。`,
+            ],
+          ],
+          [
+            ["Apply the scheme", "代入格式"],
+            [
+              `$${here} + ${r.toLatex()} \\left( ${left} - 2 \\cdot ${here} + ${right} \\right) = ${here} + ${stepL} = ${answer.toLatex()}$.`,
+              `$${here} + ${r.toLatex()} \\left( ${left} - 2 \\cdot ${here} + ${right} \\right) = ${here} + ${stepL} = ${answer.toLatex()}$。`,
+            ],
+          ],
+        ],
+        middle.isZero()
+          ? [
+              `With $r = \\frac{1}{2}$ the middle value drops out and the scheme is the neighbours' average: $\\frac{${left} + ${right}}{2} = ${answer.toLatex()}$.`,
+              `$r = \\frac{1}{2}$ 时中间值消去，格式就是两邻的平均值：$\\frac{${left} + ${right}}{2} = ${answer.toLatex()}$。`,
+            ]
+          : [
+              `Written as a weighted average, the step is $${middle.toLatex()} \\cdot ${here} + ${r.toLatex()} \\cdot (${left} + ${right}) = ${answer.toLatex()}$, with weight $${middle.toLatex()}$ on the middle and $${r.toLatex()}$ on each neighbour.`,
+              `写成加权平均，这一步是 $${middle.toLatex()} \\cdot ${here} + ${r.toLatex()} \\cdot (${left} + ${right}) = ${answer.toLatex()}$，中间的权重是 $${middle.toLatex()}$，每个邻点的权重是 $${r.toLatex()}$。`,
+            ],
+        grid(
+          ["n+1", "n"],
+          [`${name}-2`, `${name}-1`, name, `${name}+1`, `${name}+2`],
+          [["", "", "?", "", ""], values.map(String)],
+          t(
+            "A grid with five values in the bottom row and one ringed empty cell in the middle of the row above.",
+            "网格的下面一行有五个值，上面一行中间有一个带圈的空格。",
+          ),
         ),
-      ),
-    );
+      );
+    });
   },
 };
 
@@ -1891,70 +2178,137 @@ const fivePoint: KnowledgePointDef = {
   id: "the-five-point-average",
   title: t("The five-point average", "五点平均"),
   explanation: t(
-    "On a square grid, the discrete form of Laplace's equation says that each interior value is the average of its four neighbours. This is the grid version of the mean value property, and it is why a harmonic function has no interior peaks: a point cannot be higher than all of its neighbours if it equals their average.",
-    "在正方形网格上，拉普拉斯方程的离散形式是：每个内部点的值等于四个相邻点的平均值。这是平均值性质的网格版本，也说明调和函数内部没有峰值：一个点如果等于相邻点的平均值，就不可能比它们都高。",
+    "On a square grid, the discrete form of Laplace's equation says that each interior value is the average of its four neighbours. This is the grid version of the mean value property, and it is why a harmonic function has no interior peaks: a point cannot be higher than all of its neighbours if it equals their average. For example, if the neighbours are $10, 12, 13$ and $13$, the center is $\\frac{48}{4} = 12$.\n\nCheck: $12$ lies between the smallest neighbour $10$ and the largest $13$, as an average must.\n\n> **Watch out.** Average only the four neighbours: the center is not one of them, so divide by $4$, not $5$. A missing neighbour is $4$ times the center minus the other three.",
+    "在正方形网格上，拉普拉斯方程的离散形式是：每个内部点的值等于四个相邻点的平均值。这是平均值性质的网格版本，也说明调和函数内部没有峰值：一个点如果等于相邻点的平均值，就不可能比它们都高。例如，相邻点是 $10, 12, 13$ 和 $13$ 时，中心是 $\\frac{48}{4} = 12$。\n\n检验：$12$ 在最小的相邻点 $10$ 和最大的 $13$ 之间，平均值理应如此。\n\n> **注意。** 只平均四个相邻点：中心不是其中之一，所以除以 $4$，而不是 $5$。缺少的相邻点等于中心的 $4$ 倍减去另外三个。",
   ),
   generate(rng) {
-    const center = rng.int(10, 16);
-    const others = [rng.int(-3, 3), rng.int(-3, 3), rng.int(-3, 3)].map((d) => center + d);
-    const fourth = 4 * center - (others[0] as number) - (others[1] as number) - (others[2] as number);
-    const askCenter = rng.bool();
-    const positions: Point[] = [
-      [160, 26],
-      [240, 96],
-      [160, 166],
-      [80, 96],
-    ];
-    const missing = rng.int(0, 3);
-    const around = rng.shuffle([...others, fourth]);
-    const hidden = around[missing] as number;
-    const answer = askCenter ? center : hidden;
-    const known = around.filter((_, i) => i !== missing);
-    const sum3 = known.reduce((a, b) => a + b, 0);
-    const spokes: readonly (readonly [number, number, number, number])[] = [
-      [160, 80, 160, 38],
-      [176, 96, 228, 96],
-      [160, 112, 160, 154],
-      [144, 96, 92, 96],
-    ];
-    const lines = spokes.map(([x1, y1, x2, y2]) => `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}"/>`).join("");
-    const nodes = positions.map((p, i) => (!askCenter && i === missing ? ringed(p) + node(p, "?") : node(p, String(around[i])))).join("");
-    const middle = askCenter ? ringed([160, 96]) + node([160, 96], "?") : node([160, 96], String(center));
-    const solution = askCenter
-      ? t(
-          `The center is the average of its four neighbours: $\\frac{${around.join(" + ")}}{4} = ${center}$.`,
-          `中心等于四个相邻点的平均值：$\\frac{${around.join(" + ")}}{4} = ${center}$。`,
-        )
-      : t(
-          `The four neighbours must add up to $4 \\cdot ${center} = ${4 * center}$. The three known ones add up to ${sum3}, so the last is ${hidden}.`,
-          `四个相邻点的和必须是 $4 \\cdot ${center} = ${4 * center}$。已知的三个之和是 ${sum3}，所以最后一个是 ${hidden}。`,
-        );
-    return numeric(
-      t(
-        "These five grid values satisfy the discrete Laplace equation at the center. Which number belongs in the ringed node?",
-        "这五个网格值在中心处满足离散拉普拉斯方程。带圈的结点应填哪个数？",
-      ),
-      answer,
-      askCenter
+    return until(() => {
+      const center = rng.int(10, 16);
+      const others = [rng.int(-3, 3), rng.int(-3, 3), rng.int(-3, 3)].map((d) => center + d);
+      const fourth = 4 * center - (others[0] as number) - (others[1] as number) - (others[2] as number);
+      const askCenter = rng.bool();
+      const positions: Point[] = [
+        [160, 26],
+        [240, 96],
+        [160, 166],
+        [80, 96],
+      ];
+      const missing = rng.int(0, 3);
+      const around = rng.shuffle([...others, fourth]);
+      const hidden = around[missing] as number;
+      const answer = askCenter ? center : hidden;
+      const known = around.filter((_, i) => i !== missing);
+      const sum3 = known.reduce((a, b) => a + b, 0);
+      const spokes: readonly (readonly [number, number, number, number])[] = [
+        [160, 80, 160, 38],
+        [176, 96, 228, 96],
+        [160, 112, 160, 154],
+        [144, 96, 92, 96],
+      ];
+      const lines = spokes.map(([x1, y1, x2, y2]) => `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}"/>`).join("");
+      const nodes = positions.map((p, i) => (!askCenter && i === missing ? ringed(p) + node(p, "?") : node(p, String(around[i])))).join("");
+      const middle = askCenter ? ringed([160, 96]) + node([160, 96], "?") : node([160, 96], String(center));
+      const sum4 = sum3 + hidden;
+      const [low, high] = [Math.min(...around), Math.max(...around)];
+      const misses: Miss[] = askCenter
         ? [
-            around.reduce((a, b) => a + b, 0),
-            center + 1,
-            Q.of(
-              known.reduce((a, b) => a + b, 0),
-              3,
-            ),
-            Math.max(...around),
+            [
+              sum4,
+              "That is the sum of the four neighbours; the center is their average, so divide by 4.",
+              "那是四个相邻点的和；中心是它们的平均值，要除以 4。",
+            ],
+            [
+              Q.of(sum4, 5),
+              "That divides by 5, as if the center were one of its own neighbours.",
+              "那是除以 5，好像中心也是它自己的相邻点。",
+            ],
+            [
+              high,
+              `$${high}$ is the largest neighbour; an average lies between the smallest and the largest.`,
+              `$${high}$ 是最大的相邻点；平均值在最小值和最大值之间。`,
+            ],
+            [
+              low,
+              `$${low}$ is the smallest neighbour; an average lies between the smallest and the largest.`,
+              `$${low}$ 是最小的相邻点；平均值在最小值和最大值之间。`,
+            ],
           ]
-        : [Q.of(sum3, 3), center, 4 * center + sum3, hidden + 1, sum3 - center],
-      solution,
-      {
-        svg: svgDocument(192, lines + nodes + middle),
-        alt: t(
-          "A center node joined to four neighbours, with one node ringed and unknown.",
-          "中心结点与四个相邻结点相连，其中一个结点带圈且未知。",
-        ),
-      },
-    );
+        : [
+            [
+              Q.of(sum3, 3),
+              "That averages the three known neighbours; it is the center that must equal the average of all four.",
+              "那是三个已知相邻点的平均值；要等于四个相邻点平均值的是中心。",
+            ],
+            [
+              center,
+              "That copies the center; a neighbour need not equal it, only the four together must average to it.",
+              "那是照抄中心；相邻点不必等于它，只要四个合起来的平均值等于它。",
+            ],
+            [
+              5 * center - sum3,
+              "That counts the center as a fifth value, making all five add up to 5 times the center.",
+              "那把中心也算作第五个值，让五个数之和等于中心的 5 倍。",
+            ],
+            [
+              sum3 - center,
+              "That subtracts the center from the known three; the four neighbours add up to 4 times the center.",
+              "那是用已知三个之和减去中心；四个相邻点之和等于中心的 4 倍。",
+            ],
+          ];
+      const steps: Walk[] = askCenter
+        ? [
+            [
+              ["Add the neighbours", "把相邻点相加"],
+              [`$${around.join(" + ")} = ${sum4}$.`, `$${around.join(" + ")} = ${sum4}$。`],
+            ],
+            [
+              ["Divide by 4", "除以 4"],
+              [`The center is their average: $${sum4} \\div 4 = ${center}$.`, `中心是它们的平均值：$${sum4} \\div 4 = ${center}$。`],
+            ],
+          ]
+        : [
+            [
+              ["Use the average", "用平均值"],
+              [
+                `The center is the average, so the four neighbours add up to $4 \\cdot ${center} = ${4 * center}$.`,
+                `中心是平均值，所以四个相邻点之和是 $4 \\cdot ${center} = ${4 * center}$。`,
+              ],
+            ],
+            [
+              ["Subtract the known three", "减去已知的三个"],
+              [
+                `The known ones add up to $${known.join(" + ")} = ${sum3}$, so the last is $${4 * center} - ${sum3} = ${hidden}$.`,
+                `已知的三个之和是 $${known.join(" + ")} = ${sum3}$，所以最后一个是 $${4 * center} - ${sum3} = ${hidden}$。`,
+              ],
+            ],
+          ];
+      const check: readonly [string, string] = askCenter
+        ? [
+            `$${center}$ lies between the smallest neighbour ${low} and the largest ${high}, and $4 \\cdot ${center} = ${sum4}$.`,
+            `$${center}$ 在最小的相邻点 ${low} 和最大的 ${high} 之间，而且 $4 \\cdot ${center} = ${sum4}$。`,
+          ]
+        : [
+            `With ${hidden} filled in, $\\frac{${around.join(" + ")}}{4} = ${center}$, the value at the center.`,
+            `填入 ${hidden} 后，$\\frac{${around.join(" + ")}}{4} = ${center}$，正是中心的值。`,
+          ];
+      return worked(
+        [
+          "These five grid values satisfy the discrete Laplace equation at the center. Which number belongs in the ringed node?",
+          "这五个网格值在中心处满足离散拉普拉斯方程。带圈的结点应填哪个数？",
+        ],
+        answer,
+        misses,
+        steps,
+        check,
+        {
+          svg: svgDocument(192, lines + nodes + middle),
+          alt: t(
+            "A center node joined to four neighbours, with one node ringed and unknown.",
+            "中心结点与四个相邻结点相连，其中一个结点带圈且未知。",
+          ),
+        },
+      );
+    });
   },
 };
 

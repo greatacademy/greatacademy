@@ -33,6 +33,7 @@ export const taughtCourses: readonly string[] = [
   "complex-analysis",
   "linear-programming",
   "mathematics-for-machine-learning",
+  "partial-differential-equations",
 ];
 
 /**

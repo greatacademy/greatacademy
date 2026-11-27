@@ -10,7 +10,7 @@ import { complexDrawings2 } from "../explanation-drawings-complex-analysis-2.ts"
 import { numberTheoryDrawings1 } from "../explanation-drawings-number-theory-1.ts";
 import { pdeDrawings1 } from "../explanation-drawings-partial-differential-equations-1.ts";
 
-import { ask, choose, type Pair, point, powMod, primesUpTo, same, topic } from "../university-kit.ts";
+import { type Pair, point, powMod, primesUpTo, same, topic } from "../university-kit.ts";
 import { solved } from "./linear-programming.ts";
 import { chosen, lesson, type Miss, pw, type Slip, until, worked } from "./number-theory-course.ts";
 
@@ -2127,85 +2127,182 @@ const transformsOnUnbounded = topic(
       "each-frequency-oscillates",
       ["Each frequency oscillates", "每个频率都在振荡"],
       [
-        "Transforming $u_{tt} = c^{2}u_{xx}$ in $x$ gives $\\hat{u}_{tt} = -c^{2}k^{2}\\hat{u}$. So the part of the wave with wavenumber $k$ oscillates in time with angular frequency $c|k|$ and period $\\frac{2\\pi}{c|k|}$.",
-        "对 $u_{tt} = c^{2}u_{xx}$ 关于 $x$ 作变换，得 $\\hat{u}_{tt} = -c^{2}k^{2}\\hat{u}$。所以波数为 $k$ 的部分随时间振荡，角频率是 $c|k|$，周期是 $\\frac{2\\pi}{c|k|}$。",
+        "Transforming $u_{tt} = c^{2}u_{xx}$ in $x$ gives $\\hat{u}_{tt} = -c^{2}k^{2}\\hat{u}$. So the part of the wave with wavenumber $k$ oscillates in time with angular frequency $c|k|$ and period $\\frac{2\\pi}{c|k|}$.\n\nFor $u_{tt} = 4u_{xx}$ the speed is $c = 2$, so the part with $k = 3$ has angular frequency $2 \\cdot 3 = 6$ and period $\\frac{2\\pi}{6} = \\frac{\\pi}{3}$.\n\nCheck: $\\cos 6t$ first returns to $1$ when $6t = 2\\pi$, that is at $t = \\frac{\\pi}{3}$.\n\n> **Watch out.** The coefficient of $u_{xx}$ is $c^{2}$, not $c$: take its square root before multiplying by $|k|$.",
+        "对 $u_{tt} = c^{2}u_{xx}$ 关于 $x$ 作变换，得 $\\hat{u}_{tt} = -c^{2}k^{2}\\hat{u}$。所以波数为 $k$ 的部分随时间振荡，角频率是 $c|k|$，周期是 $\\frac{2\\pi}{c|k|}$。\n\n对 $u_{tt} = 4u_{xx}$，波速是 $c = 2$，所以 $k = 3$ 的部分角频率是 $2 \\cdot 3 = 6$，周期是 $\\frac{2\\pi}{6} = \\frac{\\pi}{3}$。\n\n检验：$\\cos 6t$ 在 $6t = 2\\pi$，即 $t = \\frac{\\pi}{3}$ 时第一次回到 $1$。\n\n> **注意。** $u_{xx}$ 的系数是 $c^{2}$，不是 $c$：要先开平方，再乘 $|k|$。",
       ],
-      (rng) => {
-        const c = rng.int(1, 9);
-        const k = rng.pick([-1, 1]) * rng.int(1, 9);
-        return ask(
-          [
-            `For $u_{tt} = ${c * c}u_{xx}$, the part with wavenumber $k = ${k}$ has period $r\\pi$. What is $r$?`,
-            `对 $u_{tt} = ${c * c}u_{xx}$，波数 $k = ${k}$ 的部分周期是 $r\\pi$。$r$ 是多少？`,
-          ],
-          Q.of(2, c * Math.abs(k)),
-          [Q.of(2, c * c * Math.abs(k)), Q.of(1, c * Math.abs(k)), Q.of(2, c * k * k)],
-          [
-            `The speed is ${c}, so the angular frequency is ${c * Math.abs(k)} and the period is $\\frac{2\\pi}{${c * Math.abs(k)}}$.`,
-            `波速是 ${c}，所以角频率是 ${c * Math.abs(k)}，周期是 $\\frac{2\\pi}{${c * Math.abs(k)}}$。`,
-          ],
-        );
-      },
+      (rng) =>
+        until(() => {
+          const c = rng.int(1, 9);
+          const k = rng.pick([-1, 1]) * rng.int(1, 9);
+          const w = c * Math.abs(k);
+          const r = Q.of(2, w);
+          const period = r.eq(Q.of(1, 1)) ? "\\pi" : `${r.toLatex()}\\pi`;
+          const wave = c * c === 1 ? "u_{xx}" : `${c * c}u_{xx}`;
+          const wt = w === 1 ? "t" : `${w}t`;
+          return worked(
+            [
+              `For $u_{tt} = ${wave}$, the part with wavenumber $k = ${k}$ has period $r\\pi$. What is $r$?`,
+              `对 $u_{tt} = ${wave}$，波数 $k = ${k}$ 的部分周期是 $r\\pi$。$r$ 是多少？`,
+            ],
+            r,
+            [
+              [
+                Q.of(2, c * c * Math.abs(k)),
+                `That uses $c^{2} = ${c * c}$ as the speed; the speed is its square root, ${c}.`,
+                `那把 $c^{2} = ${c * c}$ 当成了波速；波速是它的平方根 ${c}。`,
+              ],
+              [
+                Q.of(1, w),
+                "That is half the period: one full cycle takes $2\\pi$ divided by the angular frequency.",
+                "那是半个周期：一个完整周期是 $2\\pi$ 除以角频率。",
+              ],
+              [Q.of(2, c * k * k), "That multiplies by $k^{2}$; the angular frequency uses $|k|$.", "那乘了 $k^{2}$；角频率用的是 $|k|$。"],
+              [
+                Q.of(w, 2),
+                "That turns the fraction upside down: the period is $2\\pi$ over the angular frequency.",
+                "那把分数颠倒了：周期是 $2\\pi$ 除以角频率。",
+              ],
+            ],
+            [
+              [
+                ["Find the speed", "求波速"],
+                [`The coefficient is $c^{2} = ${c * c}$, so $c = ${c}$.`, `系数是 $c^{2} = ${c * c}$，所以 $c = ${c}$。`],
+              ],
+              [
+                ["Find the period", "求周期"],
+                [
+                  `The angular frequency is $c|k| = ${c} \\cdot ${Math.abs(k)} = ${w}$, so the period is ${w === 1 ? "$2\\pi$" : `$\\frac{2\\pi}{${w}} = ${period}$`}, and $r = ${r.toLatex()}$.`,
+                  `角频率是 $c|k| = ${c} \\cdot ${Math.abs(k)} = ${w}$，所以周期是 ${w === 1 ? "$2\\pi$" : `$\\frac{2\\pi}{${w}} = ${period}$`}，$r = ${r.toLatex()}$。`,
+                ],
+              ],
+            ],
+            [
+              `$\\cos ${wt}$ first returns to $1$ when $${wt} = 2\\pi$, that is at $t = ${period}$.`,
+              `$\\cos ${wt}$ 在 $${wt} = 2\\pi$，即 $t = ${period}$ 时第一次回到 $1$。`,
+            ],
+          );
+        }),
     ),
     point(
       "decay-away-from-the-boundary",
       ["Decay away from the boundary", "离开边界后的衰减"],
       [
-        "Transforming Laplace's equation on $y > 0$ gives $\\hat{u}_{yy} = k^{2}\\hat{u}$. The bounded solution is $\\hat{u}(k, y) = \\hat{u}(k, 0)e^{-|k|y}$. Rapid variations on the boundary fade fastest with height.",
-        "对 $y > 0$ 上的拉普拉斯方程作变换，得 $\\hat{u}_{yy} = k^{2}\\hat{u}$。有界解是 $\\hat{u}(k, y) = \\hat{u}(k, 0)e^{-|k|y}$。边界上变化快的部分随高度衰减得最快。",
+        "Transforming Laplace's equation on $y > 0$ gives $\\hat{u}_{yy} = k^{2}\\hat{u}$. The bounded solution is $\\hat{u}(k, y) = \\hat{u}(k, 0)e^{-|k|y}$. Rapid variations on the boundary fade fastest with height.\n\nFor $k = -3$, $|k| = 3$, so at height $y = 2$ that part is multiplied by $e^{-3 \\cdot 2} = e^{-6}$.\n\nCheck: the second derivative of $e^{-3y}$ is $9e^{-3y}$, so it solves $\\hat{u}_{yy} = 9\\hat{u}$, and it stays bounded as $y$ grows.\n\n> **Watch out.** The rate is $|k|$, not $k^{2}$: the equation has $k^{2}$, but the exponential that solves it has its square root.",
+        "对 $y > 0$ 上的拉普拉斯方程作变换，得 $\\hat{u}_{yy} = k^{2}\\hat{u}$。有界解是 $\\hat{u}(k, y) = \\hat{u}(k, 0)e^{-|k|y}$。边界上变化快的部分随高度衰减得最快。\n\n对 $k = -3$，$|k| = 3$，所以在高度 $y = 2$ 处这一部分乘以 $e^{-3 \\cdot 2} = e^{-6}$。\n\n检验：$e^{-3y}$ 的二阶导数是 $9e^{-3y}$，所以它满足 $\\hat{u}_{yy} = 9\\hat{u}$，而且 $y$ 增大时保持有界。\n\n> **注意。** 衰减率是 $|k|$，不是 $k^{2}$：方程里是 $k^{2}$，而满足它的指数函数用的是它的平方根。",
       ],
-      (rng) => {
-        const k = rng.pick([-1, 1]) * rng.int(1, 12);
-        const y = rng.int(1, 9);
-        const v = Math.abs(k) * y;
-        return ask(
-          [
-            `Laplace's equation holds on $y > 0$. The part with wavenumber $k = ${k}$ at height $y = ${y}$ is $e^{-r}$ times its boundary value. What is $r$?`,
-            `拉普拉斯方程在 $y > 0$ 上成立。波数 $k = ${k}$ 的部分在高度 $y = ${y}$ 处是其边界值的 $e^{-r}$ 倍。$r$ 是多少？`,
-          ],
-          v,
-          [k * k * y, y, k * y === v ? v + y : k * y],
-          [`The factor is $e^{-|k|y}$, and $|${k}| \\cdot ${y} = ${v}$.`, `因子是 $e^{-|k|y}$，而 $|${k}| \\cdot ${y} = ${v}$。`],
-        );
-      },
+      (rng) =>
+        until(() => {
+          const k = rng.pick([-1, 1]) * rng.int(1, 12);
+          const y = rng.int(1, 9);
+          const size = Math.abs(k);
+          const v = size * y;
+          const rate = size === 1 ? "y" : `${size}y`;
+          return worked(
+            [
+              `Laplace's equation holds on $y > 0$. The part with wavenumber $k = ${k}$ at height $y = ${y}$ is $e^{-r}$ times its boundary value. What is $r$?`,
+              `拉普拉斯方程在 $y > 0$ 上成立。波数 $k = ${k}$ 的部分在高度 $y = ${y}$ 处是其边界值的 $e^{-r}$ 倍。$r$ 是多少？`,
+            ],
+            v,
+            [
+              [
+                k * k * y,
+                "That uses $k^{2}$ as the rate; the rate is $|k|$, the square root of $k^{2}$.",
+                "那把 $k^{2}$ 当成了衰减率；衰减率是 $|k|$，即 $k^{2}$ 的平方根。",
+              ],
+              [y, "That leaves out the wavenumber; the rate of decay is $|k|$.", "那漏掉了波数；衰减率是 $|k|$。"],
+              [
+                k * y,
+                "That drops the absolute value; with $k < 0$ it would give a factor that grows with height.",
+                "那去掉了绝对值；$k < 0$ 时会得到随高度增长的因子。",
+              ],
+              [size + y, "That adds $|k|$ and $y$; the exponent is their product.", "那把 $|k|$ 和 $y$ 相加了；指数是它们的积。"],
+            ],
+            [
+              [
+                ["Keep the bounded solution", "取有界解"],
+                [
+                  `$\\hat{u}_{yy} = ${k * k === 1 ? "" : k * k}\\hat{u}$ has the solutions $e^{${rate}}$ and $e^{-${rate}}$, and only $e^{-${rate}}$ stays bounded.`,
+                  `$\\hat{u}_{yy} = ${k * k === 1 ? "" : k * k}\\hat{u}$ 的解是 $e^{${rate}}$ 和 $e^{-${rate}}$，只有 $e^{-${rate}}$ 保持有界。`,
+                ],
+              ],
+              [
+                ["Put in the height", "代入高度"],
+                [
+                  `At $y = ${y}$ the exponent is ${size === 1 ? `$-${y}$` : `$-${size} \\cdot ${y} = -${v}$`}, so $r = ${v}$.`,
+                  `在 $y = ${y}$ 处指数是 ${size === 1 ? `$-${y}$` : `$-${size} \\cdot ${y} = -${v}$`}，所以 $r = ${v}$。`,
+                ],
+              ],
+            ],
+            [
+              `The second derivative of $e^{-${rate}}$ is $${k * k === 1 ? "" : k * k}e^{-${rate}}$, as the equation needs, and at $y = ${y}$ it equals $e^{-${v}}$, below 1.`,
+              `$e^{-${rate}}$ 的二阶导数是 $${k * k === 1 ? "" : k * k}e^{-${rate}}$，符合方程，而在 $y = ${y}$ 处它等于 $e^{-${v}}$，小于 1。`,
+            ],
+          );
+        }),
     ),
     point(
       "the-poisson-kernel-of-a-half-plane",
       ["The Poisson kernel of a half-plane", "半平面的泊松核"],
       [
-        "Inverting the factor $e^{-|k|y}$ gives $u(x, y) = \\frac{1}{\\pi}\\int \\frac{y \\, f(s)}{(x - s)^{2} + y^{2}} \\, ds$. This formula averages the boundary values, and nearby boundary points count the most. For $f = C$ on $[-a, a]$ and $0$ elsewhere, on the axis this is $u(0, y) = \\frac{2C}{\\pi}\\arctan\\frac{a}{y}$.",
-        "对因子 $e^{-|k|y}$ 作逆变换，得 $u(x, y) = \\frac{1}{\\pi}\\int \\frac{y \\, f(s)}{(x - s)^{2} + y^{2}} \\, ds$。这个公式对边界值取平均，靠近的边界点权重最大。当 $f$ 在 $[-a, a]$ 上等于 $C$、其余处为 $0$ 时，在轴上有 $u(0, y) = \\frac{2C}{\\pi}\\arctan\\frac{a}{y}$。",
+        "Inverting the factor $e^{-|k|y}$ gives $u(x, y) = \\frac{1}{\\pi}\\int \\frac{y \\, f(s)}{(x - s)^{2} + y^{2}} \\, ds$. This formula averages the boundary values, and nearby boundary points count the most. For $f = C$ on $[-a, a]$ and $0$ elsewhere, on the axis this is $u(0, y) = \\frac{2C}{\\pi}\\arctan\\frac{a}{y}$.\n\nFor $C = 12$ on $[-2, 2]$, at the point $(0, 2)$ we get $\\arctan\\frac{2}{2} = \\frac{\\pi}{4}$, so $u = \\frac{2 \\cdot 12}{\\pi} \\cdot \\frac{\\pi}{4} = 6$.\n\nCheck: seen from $(0, 2)$, the segment $[-2, 2]$ spans an angle of $\\frac{\\pi}{2}$, half of the straight angle $\\pi$, and half of $12$ is $6$.\n\n> **Watch out.** The $\\arctan$ is of $\\frac{a}{y}$, half-width over height, not $\\frac{y}{a}$: swapping them gives the share of the rest of the boundary instead.",
+        "对因子 $e^{-|k|y}$ 作逆变换，得 $u(x, y) = \\frac{1}{\\pi}\\int \\frac{y \\, f(s)}{(x - s)^{2} + y^{2}} \\, ds$。这个公式对边界值取平均，靠近的边界点权重最大。当 $f$ 在 $[-a, a]$ 上等于 $C$、其余处为 $0$ 时，在轴上有 $u(0, y) = \\frac{2C}{\\pi}\\arctan\\frac{a}{y}$。\n\n对 $[-2, 2]$ 上的 $C = 12$，在点 $(0, 2)$ 处 $\\arctan\\frac{2}{2} = \\frac{\\pi}{4}$，所以 $u = \\frac{2 \\cdot 12}{\\pi} \\cdot \\frac{\\pi}{4} = 6$。\n\n检验：从 $(0, 2)$ 看，线段 $[-2, 2]$ 张成的角是 $\\frac{\\pi}{2}$，是平角 $\\pi$ 的一半，而 $12$ 的一半是 $6$。\n\n> **注意。** $\\arctan$ 里是 $\\frac{a}{y}$，即半宽除以高度，不是 $\\frac{y}{a}$：两者对调，得到的是其余边界所占的份额。",
       ],
-      (rng) => {
-        const a = rng.int(1, 9);
-        const c = 6 * rng.int(1, 8);
-        const [height, share] = rng.pick([
-          [`${a}`, Q.of(1, 2)],
-          [`${a}\\sqrt{3}`, Q.of(1, 3)],
-          [`\\frac{${a}}{\\sqrt{3}}`, Q.of(2, 3)],
-        ] as const);
-        return ask(
-          [
-            `The boundary value on $y = 0$ is ${c} on $[${-a}, ${a}]$ and 0 elsewhere. What is the bounded harmonic function's value at $(0, ${height})$?`,
-            `$y = 0$ 上的边界值在 $[${-a}, ${a}]$ 上是 ${c}，其余处是 0。有界调和函数在 $(0, ${height})$ 处的值是多少？`,
-          ],
-          share.mul(Q.of(c, 1)),
-          [
-            Q.of(c, 1),
-            Q.of(0, 1),
-            Q.of(1, 1)
-              .sub(share)
-              .mul(Q.of(c, 1))
-              .eq(share.mul(Q.of(c, 1)))
-              ? Q.of(c, 4)
-              : Q.of(1, 1).sub(share).mul(Q.of(c, 1)),
-          ],
-          [
-            `Here $\\frac{2}{\\pi}\\arctan\\frac{a}{y} = ${share.toLatex()}$, so the value is $${share.toLatex()} \\cdot ${c}$.`,
-            `这里 $\\frac{2}{\\pi}\\arctan\\frac{a}{y} = ${share.toLatex()}$，所以值是 $${share.toLatex()} \\cdot ${c}$。`,
-          ],
-        );
-      },
+      (rng) =>
+        until(() => {
+          const a = rng.int(1, 9);
+          const c = 6 * rng.int(1, 8);
+          const [height, share, ratio, angle, span] = rng.pick([
+            [`${a}`, Q.of(1, 2), "1", "\\frac{\\pi}{4}", "\\frac{\\pi}{2}"],
+            [`${a === 1 ? "" : a}\\sqrt{3}`, Q.of(1, 3), "\\frac{1}{\\sqrt{3}}", "\\frac{\\pi}{6}", "\\frac{\\pi}{3}"],
+            [`\\frac{${a}}{\\sqrt{3}}`, Q.of(2, 3), "\\sqrt{3}", "\\frac{\\pi}{3}", "\\frac{2\\pi}{3}"],
+          ] as const);
+          const value = share.mul(Q.of(c, 1));
+          return worked(
+            [
+              `The boundary value on $y = 0$ is ${c} on $[${-a}, ${a}]$ and 0 elsewhere. What is the bounded harmonic function's value at $(0, ${height})$?`,
+              `$y = 0$ 上的边界值在 $[${-a}, ${a}]$ 上是 ${c}，其余处是 0。有界调和函数在 $(0, ${height})$ 处的值是多少？`,
+            ],
+            value,
+            [
+              [
+                Q.of(c, 1),
+                `$${c}$ is the boundary value on the segment; the rest of the boundary is 0 and pulls the average down.`,
+                `$${c}$ 是线段上的边界值；其余边界是 0，会把平均值拉低。`,
+              ],
+              [
+                Q.of(1, 1).sub(share).mul(Q.of(c, 1)),
+                "That uses $\\arctan\\frac{y}{a}$; the formula has $\\arctan\\frac{a}{y}$, half-width over height.",
+                "那用了 $\\arctan\\frac{y}{a}$；公式里是 $\\arctan\\frac{a}{y}$，即半宽除以高度。",
+              ],
+              [value.mul(Q.of(1, 2)), "That leaves out the factor 2 in $\\frac{2C}{\\pi}$.", "那漏掉了 $\\frac{2C}{\\pi}$ 中的因子 2。"],
+              [
+                Q.of(0, 1),
+                "The boundary is 0 only outside the segment; the point sees the segment and gets a share of its value.",
+                "边界只在线段外是 0；这一点看得见线段，会分到它的一部分值。",
+              ],
+            ],
+            [
+              [
+                ["Find the angle", "求角"],
+                [
+                  `Here $\\frac{a}{y} = ${ratio}$, so $\\arctan\\frac{a}{y} = ${angle}$.`,
+                  `这里 $\\frac{a}{y} = ${ratio}$，所以 $\\arctan\\frac{a}{y} = ${angle}$。`,
+                ],
+              ],
+              [
+                ["Scale the boundary value", "乘边界值"],
+                [
+                  `$u = \\frac{2 \\cdot ${c}}{\\pi} \\cdot ${angle} = ${share.toLatex()} \\cdot ${c} = ${value.toLatex()}$.`,
+                  `$u = \\frac{2 \\cdot ${c}}{\\pi} \\cdot ${angle} = ${share.toLatex()} \\cdot ${c} = ${value.toLatex()}$。`,
+                ],
+              ],
+            ],
+            [
+              `Seen from $(0, ${height})$, the segment spans an angle $2 \\cdot ${angle} = ${span}$, which is $${share.toLatex()}$ of the straight angle $\\pi$; and $${share.toLatex()} \\cdot ${c} = ${value.toLatex()}$.`,
+              `从 $(0, ${height})$ 看，线段张成的角是 $2 \\cdot ${angle} = ${span}$，占平角 $\\pi$ 的 $${share.toLatex()}$；而 $${share.toLatex()} \\cdot ${c} = ${value.toLatex()}$。`,
+            ],
+          );
+        }),
     ),
   ],
 );
@@ -2222,29 +2319,91 @@ const fundamentalSolutions = topic(
         "the-formula-in-each-dimension",
         ["The formula in each dimension", "各维度的公式"],
         [
-          "The solution of $-\\Delta u = \\delta$ that depends only on the distance $r$ is $-\\frac{1}{2\\pi}\\ln r$ in the plane and $\\frac{1}{4\\pi r}$ in space. The constant makes the flux through a small circle or sphere equal to $1$.",
-          "$-\\Delta u = \\delta$ 只依赖距离 $r$ 的解，在平面上是 $-\\frac{1}{2\\pi}\\ln r$，在空间中是 $\\frac{1}{4\\pi r}$。常数使穿过小圆或小球面的通量等于 $1$。",
+          "The solution of $-\\Delta u = \\delta$ that depends only on the distance $r$ is $-\\frac{1}{2\\pi}\\ln r$ in the plane and $\\frac{1}{4\\pi r}$ in space. The constant makes the flux through a small circle or sphere equal to $1$.\n\nAs the figure shows, at $r = 1$ the plane solution is $-\\frac{1}{2\\pi}\\ln 1 = 0$ and it is negative beyond, while the space solution is $\\frac{1}{4\\pi}$ there and stays positive.\n\nCheck: in space $|u'| = \\frac{1}{4\\pi r^{2}}$, and times the area $4\\pi r^{2}$ of the sphere that is $1$; in the plane $|u'| = \\frac{1}{2\\pi r}$, and times the length $2\\pi r$ of the circle that is $1$ too.\n\n> **Watch out.** In the plane the solution is a logarithm, not a power of $r$, and it carries a minus sign: $-\\frac{1}{2\\pi}\\ln r$ falls as $r$ grows, as the potential of a positive source must.",
+          "$-\\Delta u = \\delta$ 只依赖距离 $r$ 的解，在平面上是 $-\\frac{1}{2\\pi}\\ln r$，在空间中是 $\\frac{1}{4\\pi r}$。常数使穿过小圆或小球面的通量等于 $1$。\n\n如图所示，在 $r = 1$ 处平面解是 $-\\frac{1}{2\\pi}\\ln 1 = 0$，再往外就是负的；而空间解在那里是 $\\frac{1}{4\\pi}$，并且一直为正。\n\n检验：在空间中 $|u'| = \\frac{1}{4\\pi r^{2}}$，乘以球面面积 $4\\pi r^{2}$ 得 $1$；在平面上 $|u'| = \\frac{1}{2\\pi r}$，乘以圆周长 $2\\pi r$ 也得 $1$。\n\n> **注意。** 平面上的解是对数，不是 $r$ 的幂，而且带负号：$-\\frac{1}{2\\pi}\\ln r$ 随 $r$ 增大而减小，正源的势理应如此。",
         ],
         (rng) => {
           const plane = rng.bool();
           const q = rng.int(2, 60);
           const a = `-\\frac{${q}}{2\\pi}\\ln r`;
           const b = `\\frac{${q}}{4\\pi r}`;
-          return choose(
+          const slips: Slip[] = plane
+            ? [
+                [
+                  same(b),
+                  "That is the fundamental solution in space; in the plane it is a logarithm.",
+                  "那是空间中的基本解；平面上的基本解是对数。",
+                ],
+                [
+                  same(`\\frac{${q}}{2\\pi}\\ln r`),
+                  "That has the wrong sign: it grows with $r$, so its flux points inward.",
+                  "符号错了：它随 $r$ 增大，通量指向内侧。",
+                ],
+                [
+                  same(`\\frac{${q}}{2\\pi r}`),
+                  "That is the size of the field $|u'|$, not the potential itself.",
+                  "那是场的大小 $|u'|$，不是势本身。",
+                ],
+              ]
+            : [
+                [
+                  same(a),
+                  "That is the fundamental solution in the plane; in space it is a multiple of $\\frac{1}{r}$.",
+                  "那是平面上的基本解；空间中的基本解是 $\\frac{1}{r}$ 的倍数。",
+                ],
+                [
+                  same(`-\\frac{${q}}{4\\pi r}`),
+                  "That has the wrong sign: it rises toward 0 as $r$ grows, so its flux points inward.",
+                  "符号错了：它随 $r$ 增大而升向 0，通量指向内侧。",
+                ],
+                [
+                  same(`\\frac{${q}}{4\\pi r^{2}}`),
+                  "That is the size of the field $|u'|$, which falls like $\\frac{1}{r^{2}}$, not the potential.",
+                  "那是按 $\\frac{1}{r^{2}}$ 衰减的场的大小 $|u'|$，不是势。",
+                ],
+              ];
+          return chosen(
             rng,
             plane
               ? [`Which function solves $-\\Delta u = ${q}\\delta$ in the plane?`, `哪个函数在平面上满足 $-\\Delta u = ${q}\\delta$？`]
               : [`Which function solves $-\\Delta u = ${q}\\delta$ in space?`, `哪个函数在空间中满足 $-\\Delta u = ${q}\\delta$？`],
             same(plane ? a : b),
+            slips,
             [
-              same(plane ? b : a),
-              same(plane ? `\\frac{${q}}{2\\pi}\\ln r` : `-\\frac{${q}}{4\\pi r}`),
-              same(plane ? `\\frac{${q}}{2\\pi r}` : `\\frac{${q}}{4\\pi r^{2}}`),
+              [
+                ["Pick the shape", "选形状"],
+                plane
+                  ? [
+                      "In the plane the radial solutions away from the source are multiples of $\\ln r$.",
+                      "在平面上，源外的径向解是 $\\ln r$ 的倍数。",
+                    ]
+                  : [
+                      "In space the radial solutions that vanish far away are multiples of $\\frac{1}{r}$.",
+                      "在空间中，远处趋于零的径向解是 $\\frac{1}{r}$ 的倍数。",
+                    ],
+              ],
+              [
+                ["Fix the constant", "定常数"],
+                plane
+                  ? [
+                      `The outward flux through a circle of radius $r$ is $2\\pi r \\cdot (-u')$, which must be ${q}, so $u' = -\\frac{${q}}{2\\pi r}$ and $u = ${a}$.`,
+                      `向外穿过半径为 $r$ 的圆的通量是 $2\\pi r \\cdot (-u')$，它必须等于 ${q}，所以 $u' = -\\frac{${q}}{2\\pi r}$，$u = ${a}$。`,
+                    ]
+                  : [
+                      `The outward flux through a sphere of radius $r$ is $4\\pi r^{2} \\cdot (-u')$, which must be ${q}, so $u' = -\\frac{${q}}{4\\pi r^{2}}$ and $u = ${b}$.`,
+                      `向外穿过半径为 $r$ 的球面的通量是 $4\\pi r^{2} \\cdot (-u')$，它必须等于 ${q}，所以 $u' = -\\frac{${q}}{4\\pi r^{2}}$，$u = ${b}$。`,
+                    ],
+              ],
             ],
-            [
-              `The flux outward through a circle or sphere of radius $r$ must equal ${q}, which fixes the sign and the constant.`,
-              `向外穿过半径为 $r$ 的圆或球面的通量必须等于 ${q}，这决定了符号和常数。`,
-            ],
+            plane
+              ? [
+                  `Differentiating, $u' = -\\frac{${q}}{2\\pi r}$, and $2\\pi r \\cdot \\frac{${q}}{2\\pi r} = ${q}$, the strength of the source.`,
+                  `求导得 $u' = -\\frac{${q}}{2\\pi r}$，而 $2\\pi r \\cdot \\frac{${q}}{2\\pi r} = ${q}$，正是源的强度。`,
+                ]
+              : [
+                  `Differentiating, $u' = -\\frac{${q}}{4\\pi r^{2}}$, and $4\\pi r^{2} \\cdot \\frac{${q}}{4\\pi r^{2}} = ${q}$, the strength of the source.`,
+                  `求导得 $u' = -\\frac{${q}}{4\\pi r^{2}}$，而 $4\\pi r^{2} \\cdot \\frac{${q}}{4\\pi r^{2}} = ${q}$，正是源的强度。`,
+                ],
           );
         },
       ),
@@ -2254,51 +2413,115 @@ const fundamentalSolutions = topic(
       "comparing-potentials-in-space",
       ["Comparing potentials in space", "比较空间中的势"],
       [
-        "In space, the potential of a point source decays like $\\frac{1}{r}$. Going from distance $r_{1}$ to distance $r_{2}$ multiplies it by $\\frac{r_{1}}{r_{2}}$.",
-        "在空间中，点源的势按 $\\frac{1}{r}$ 衰减。从距离 $r_{1}$ 到距离 $r_{2}$，势乘以 $\\frac{r_{1}}{r_{2}}$。",
+        "In space, the potential of a point source decays like $\\frac{1}{r}$. Going from distance $r_{1}$ to distance $r_{2}$ multiplies it by $\\frac{r_{1}}{r_{2}}$.\n\nA source with potential $12$ at distance $2$ has potential $12 \\cdot \\frac{2}{6} = 4$ at distance $6$.\n\nCheck: with $\\frac{1}{r}$ decay the product $ur$ stays the same, and $12 \\cdot 2 = 4 \\cdot 6 = 24$.\n\n> **Watch out.** The factor is $\\frac{r_{1}}{r_{2}}$, not $\\frac{r_{2}}{r_{1}}$: farther away the potential is smaller. It is not $\\frac{r_{1}^{2}}{r_{2}^{2}}$ either, which is how the field falls.",
+        "在空间中，点源的势按 $\\frac{1}{r}$ 衰减。从距离 $r_{1}$ 到距离 $r_{2}$，势乘以 $\\frac{r_{1}}{r_{2}}$。\n\n在距离 $2$ 处势为 $12$ 的源，在距离 $6$ 处的势是 $12 \\cdot \\frac{2}{6} = 4$。\n\n检验：按 $\\frac{1}{r}$ 衰减时，乘积 $ur$ 不变，而 $12 \\cdot 2 = 4 \\cdot 6 = 24$。\n\n> **注意。** 因子是 $\\frac{r_{1}}{r_{2}}$，不是 $\\frac{r_{2}}{r_{1}}$：越远势越小。它也不是 $\\frac{r_{1}^{2}}{r_{2}^{2}}$，那是场衰减的方式。",
       ],
-      (rng) => {
-        const r1 = rng.int(1, 9);
-        const r2 = r1 + rng.int(1, 9);
-        const u = 12 * r2 * rng.int(1, 3);
-        return ask(
-          [
-            `A point source in space has potential ${u} at distance ${r1}. What is its potential at distance ${r2}?`,
-            `空间中的点源在距离 ${r1} 处的势是 ${u}。它在距离 ${r2} 处的势是多少？`,
-          ],
-          Q.of(u * r1, r2),
-          [Q.of(u * r1 * r1, r2 * r2), Q.of(u * r2, r1), Q.of(u, r2)],
-          [
-            `In space the potential of a point source is proportional to $\\frac{1}{r}$, so $u(${r2}) = ${u} \\cdot \\frac{${r1}}{${r2}} = ${Q.of(u * r1, r2).toLatex()}$.`,
-            `空间中点源的势与 $\\frac{1}{r}$ 成正比，所以 $u(${r2}) = ${u} \\cdot \\frac{${r1}}{${r2}} = ${Q.of(u * r1, r2).toLatex()}$。`,
-          ],
-        );
-      },
+      (rng) =>
+        until(() => {
+          const r1 = rng.int(1, 9);
+          const r2 = r1 + rng.int(1, 9);
+          const u = 12 * r2 * rng.int(1, 3);
+          const far = Q.of(u * r1, r2);
+          return worked(
+            [
+              `A point source in space has potential ${u} at distance ${r1}. What is its potential at distance ${r2}?`,
+              `空间中的点源在距离 ${r1} 处的势是 ${u}。它在距离 ${r2} 处的势是多少？`,
+            ],
+            far,
+            [
+              [
+                Q.of(u * r1 * r1, r2 * r2),
+                "That uses the square of the ratio, which is how the field falls; the potential falls like $\\frac{1}{r}$.",
+                "那用了比值的平方，那是场衰减的方式；势按 $\\frac{1}{r}$ 衰减。",
+              ],
+              [
+                Q.of(u * r2, r1),
+                "That turns the ratio upside down, so the potential grows with distance.",
+                "那把比值颠倒了，势反而随距离增大。",
+              ],
+              [
+                Q.of(u, r2),
+                `That divides by ${r2} alone; the factor is $\\frac{${r1}}{${r2}}$.`,
+                `那只除以了 ${r2}；因子是 $\\frac{${r1}}{${r2}}$。`,
+              ],
+            ],
+            [
+              [
+                ["Find the factor", "求因子"],
+                [
+                  `Going from distance ${r1} to ${r2} multiplies the potential by $\\frac{${r1}}{${r2}}$.`,
+                  `从距离 ${r1} 到 ${r2}，势乘以 $\\frac{${r1}}{${r2}}$。`,
+                ],
+              ],
+              [
+                ["Multiply", "相乘"],
+                [`$${u} \\cdot \\frac{${r1}}{${r2}} = ${far.toLatex()}$.`, `$${u} \\cdot \\frac{${r1}}{${r2}} = ${far.toLatex()}$。`],
+              ],
+            ],
+            [
+              `The product $ur$ stays the same: $${u} \\cdot ${r1} = ${u * r1}$ and $${far.toLatex()} \\cdot ${r2} = ${u * r1}$.`,
+              `乘积 $ur$ 不变：$${u} \\cdot ${r1} = ${u * r1}$，而 $${far.toLatex()} \\cdot ${r2} = ${u * r1}$。`,
+            ],
+          );
+        }),
     ),
     point(
       "differences-of-potentials-in-the-plane",
       ["Differences of potentials in the plane", "平面上势的差"],
       [
-        "In the plane, the potential of a source of strength $q$ is $-\\frac{q}{2\\pi}\\ln r$, which is unbounded at infinity. Only differences have a fixed meaning: $u(r_{1}) - u(r_{2}) = \\frac{q}{2\\pi}\\ln\\frac{r_{2}}{r_{1}}$.",
-        "在平面上，强度为 $q$ 的源的势是 $-\\frac{q}{2\\pi}\\ln r$，它在无穷远处无界。只有差才有确定的意义：$u(r_{1}) - u(r_{2}) = \\frac{q}{2\\pi}\\ln\\frac{r_{2}}{r_{1}}$。",
+        "In the plane, the potential of a source of strength $q$ is $-\\frac{q}{2\\pi}\\ln r$, which is unbounded at infinity. Only differences have a fixed meaning: $u(r_{1}) - u(r_{2}) = \\frac{q}{2\\pi}\\ln\\frac{r_{2}}{r_{1}}$.\n\nFor $q = 4$, going from $r = 2$ out to $r = 2e^{3}$ the potential falls by $\\frac{4}{2\\pi} \\cdot 3 = \\frac{6}{\\pi}$.\n\nCheck: $u(2) - u(2e^{3}) = -\\frac{4}{2\\pi}\\left(\\ln 2 - \\ln 2 - 3\\right) = \\frac{12}{2\\pi} = \\frac{6}{\\pi}$.\n\n> **Watch out.** Only the ratio $\\frac{r_{2}}{r_{1}}$ matters, and $\\ln e^{m} = m$; keep the $2$ in $\\frac{q}{2\\pi}$, which belongs to the plane.",
+        "在平面上，强度为 $q$ 的源的势是 $-\\frac{q}{2\\pi}\\ln r$，它在无穷远处无界。只有差才有确定的意义：$u(r_{1}) - u(r_{2}) = \\frac{q}{2\\pi}\\ln\\frac{r_{2}}{r_{1}}$。\n\n对 $q = 4$，从 $r = 2$ 到 $r = 2e^{3}$，势下降 $\\frac{4}{2\\pi} \\cdot 3 = \\frac{6}{\\pi}$。\n\n检验：$u(2) - u(2e^{3}) = -\\frac{4}{2\\pi}\\left(\\ln 2 - \\ln 2 - 3\\right) = \\frac{12}{2\\pi} = \\frac{6}{\\pi}$。\n\n> **注意。** 只有比值 $\\frac{r_{2}}{r_{1}}$ 起作用，而 $\\ln e^{m} = m$；不要丢掉 $\\frac{q}{2\\pi}$ 中属于平面的 $2$。",
       ],
-      (rng) => {
-        const q = rng.int(2, 12);
-        const m = rng.int(1, 6);
-        const r = rng.int(1, 5);
-        return ask(
-          [
-            `A plane source of strength ${q} has potential $u$. If $u(${r}) - u(${r}e^{${m}})$ equals $\\frac{s}{\\pi}$, what is $s$?`,
-            `强度为 ${q} 的平面源的势为 $u$。如果 $u(${r}) - u(${r}e^{${m}})$ 等于 $\\frac{s}{\\pi}$，那么 $s$ 是多少？`,
-          ],
-          Q.of(q * m, 2),
-          [Q.of(q * m, 1), Q.of(q, 2), Q.of(q * m, 4)],
-          [
-            `The ratio of the distances is $e^{${m}}$, so the difference is $\\frac{${q}}{2\\pi} \\cdot ${m}$.`,
-            `距离之比是 $e^{${m}}$，所以差是 $\\frac{${q}}{2\\pi} \\cdot ${m}$。`,
-          ],
-        );
-      },
+      (rng) =>
+        until(() => {
+          const q = rng.int(2, 12);
+          const m = rng.int(1, 6);
+          const r = rng.int(1, 5);
+          const power = m === 1 ? "e" : `e^{${m}}`;
+          const outer = `${r === 1 ? "" : r}${power}`;
+          const s = Q.of(q * m, 2);
+          return worked(
+            [
+              `A plane source of strength ${q} has potential $u$. If $u(${r}) - u(${outer})$ equals $\\frac{s}{\\pi}$, what is $s$?`,
+              `强度为 ${q} 的平面源的势为 $u$。如果 $u(${r}) - u(${outer})$ 等于 $\\frac{s}{\\pi}$，那么 $s$ 是多少？`,
+            ],
+            s,
+            [
+              [Q.of(q * m, 1), "That leaves out the 2 in $\\frac{q}{2\\pi}$.", "那漏掉了 $\\frac{q}{2\\pi}$ 中的 2。"],
+              [Q.of(q, 2), `That forgets the logarithm of the ratio, $\\ln ${power} = ${m}$.`, `那忘了比值的对数 $\\ln ${power} = ${m}$。`],
+              [
+                Q.of(q * m, 4),
+                "That uses $4\\pi$, the constant of space; in the plane it is $2\\pi$.",
+                "那用了空间中的常数 $4\\pi$；平面上是 $2\\pi$。",
+              ],
+              [
+                Q.of(-q * m, 2),
+                "That has the wrong sign: the potential falls going outward, so the nearer value is larger.",
+                "符号错了：势向外下降，所以近处的值更大。",
+              ],
+            ],
+            [
+              [
+                ["Find the ratio", "求比值"],
+                [
+                  `The distances are $${r}$ and $${outer}$, so $\\ln\\frac{r_{2}}{r_{1}} = \\ln ${power} = ${m}$.`,
+                  `两个距离是 $${r}$ 和 $${outer}$，所以 $\\ln\\frac{r_{2}}{r_{1}} = \\ln ${power} = ${m}$。`,
+                ],
+              ],
+              [
+                ["Apply the formula", "代入公式"],
+                [
+                  `The difference is $\\frac{${q}}{2\\pi} \\cdot ${m} = \\frac{${q * m}}{2\\pi}$, which is $\\frac{s}{\\pi}$ with $s = ${s.toLatex()}$.`,
+                  `差是 $\\frac{${q}}{2\\pi} \\cdot ${m} = \\frac{${q * m}}{2\\pi}$，即 $\\frac{s}{\\pi}$，其中 $s = ${s.toLatex()}$。`,
+                ],
+              ],
+            ],
+            [
+              `Directly, $-\\frac{${q}}{2\\pi}\\left(\\ln ${r} - \\ln ${outer}\\right) = \\frac{${q}}{2\\pi}\\ln ${power} = \\frac{${q * m}}{2\\pi}$.`,
+              `直接计算，$-\\frac{${q}}{2\\pi}\\left(\\ln ${r} - \\ln ${outer}\\right) = \\frac{${q}}{2\\pi}\\ln ${power} = \\frac{${q * m}}{2\\pi}$。`,
+            ],
+          );
+        }),
     ),
   ],
 );
@@ -2314,72 +2537,186 @@ const weakSolutions = topic(
       "the-delta-function",
       ["The delta function", "δ 函数"],
       [
-        "The delta function $\\delta_{a}$ is defined by what it does to a smooth test function: $\\int \\delta_{a}\\varphi = \\varphi(a)$. It is not a function, but a rule that assigns a number to each test function.",
-        "δ 函数 $\\delta_{a}$ 由它对光滑检验函数的作用定义：$\\int \\delta_{a}\\varphi = \\varphi(a)$。它不是函数，而是给每个检验函数指定一个数的规则。",
+        "The delta function $\\delta_{a}$ is defined by what it does to a smooth test function: $\\int \\delta_{a}\\varphi = \\varphi(a)$. It is not a function, but a rule that assigns a number to each test function.\n\nSo $\\int \\delta(x - 2)(x^{2} + 1) \\, dx = 2^{2} + 1 = 5$: the integral reads off the other factor at $x = 2$.\n\nCheck: $\\delta(x - 2)$ is $\\delta_{2}$, and $\\varphi(x) = x^{2} + 1$ has $\\varphi(2) = 4 + 1 = 5$.\n\n> **Watch out.** $\\delta(x + 3)$ sits at $x = -3$, where its argument is zero, not at $x = 3$.",
+        "δ 函数 $\\delta_{a}$ 由它对光滑检验函数的作用定义：$\\int \\delta_{a}\\varphi = \\varphi(a)$。它不是函数，而是给每个检验函数指定一个数的规则。\n\n所以 $\\int \\delta(x - 2)(x^{2} + 1) \\, dx = 2^{2} + 1 = 5$：积分读出另一个因子在 $x = 2$ 处的值。\n\n检验：$\\delta(x - 2)$ 就是 $\\delta_{2}$，而 $\\varphi(x) = x^{2} + 1$ 满足 $\\varphi(2) = 4 + 1 = 5$。\n\n> **注意。** $\\delta(x + 3)$ 位于使其自变量为零的 $x = -3$，而不是 $x = 3$。",
       ],
-      (rng) => {
-        const a = rng.int(-6, 6);
-        const b = rng.int(1, 6);
-        const c = rng.int(1, 9);
-        const v = b * a * a + c;
-        return ask(
-          [
-            `What is $\\int_{-\\infty}^{\\infty} \\delta(x - ${a < 0 ? `(${a})` : a})(${b}x^{2} + ${c}) \\, dx$?`,
-            `$\\int_{-\\infty}^{\\infty} \\delta(x - ${a < 0 ? `(${a})` : a})(${b}x^{2} + ${c}) \\, dx$ 是多少？`,
-          ],
-          v,
-          [c, b * a + c, v + b],
-          [`Evaluate the other factor at $x = ${a}$, which gives ${v}.`, `把另一个因子在 $x = ${a}$ 处取值，得 ${v}。`],
-        );
-      },
+      (rng) =>
+        until(() => {
+          const a = rng.int(-6, 6);
+          const b = rng.int(1, 6);
+          const c = rng.int(1, 9);
+          const v = b * a * a + c;
+          const shift = (name: string, by: number) => (by === 0 ? name : by > 0 ? `${name} - ${by}` : `${name} + ${-by}`);
+          const square = b === 1 ? "x^{2}" : `${b}x^{2}`;
+          const at = `${b === 1 ? "" : `${b} \\cdot `}${a < 0 ? `(${a})` : a}^{2} + ${c}`;
+          return worked(
+            [
+              `What is $\\int_{-\\infty}^{\\infty} \\delta(${shift("x", a)})(${square} + ${c}) \\, dx$?`,
+              `$\\int_{-\\infty}^{\\infty} \\delta(${shift("x", a)})(${square} + ${c}) \\, dx$ 是多少？`,
+            ],
+            v,
+            [
+              [
+                c,
+                "That evaluates the other factor at $x = 0$; this delta sits where its own argument is zero.",
+                "那是在 $x = 0$ 处取值；这个 δ 位于它自己的自变量为零的地方。",
+              ],
+              [b * a + c, "That multiplies by the point instead of squaring it.", "那是乘以这个点，而不是把它平方。"],
+              [b * a * a, "That leaves out the constant term of the other factor.", "那漏掉了另一个因子的常数项。"],
+              [
+                2 * b * a,
+                "That is the derivative of the other factor at the point; the delta picks the value itself.",
+                "那是另一个因子在该点的导数；δ 取的是值本身。",
+              ],
+            ],
+            [
+              [
+                ["Find where the delta sits", "找出 δ 的位置"],
+                [
+                  `$\\delta(${shift("x", a)})$ is $\\delta_{${a}}$: its argument is zero at $x = ${a}$.`,
+                  `$\\delta(${shift("x", a)})$ 就是 $\\delta_{${a}}$：它的自变量在 $x = ${a}$ 处为零。`,
+                ],
+              ],
+              [
+                ["Evaluate there", "在那里取值"],
+                [`The integral is $${at} = ${v}$.`, `积分等于 $${at} = ${v}$。`],
+              ],
+            ],
+            [
+              `With $s = ${shift("x", a)}$ the integral becomes $\\int \\delta(s) \\, \\varphi(${shift("s", -a)}) \\, ds = \\varphi(${a}) = ${v}$.`,
+              `令 $s = ${shift("x", a)}$，积分变为 $\\int \\delta(s) \\, \\varphi(${shift("s", -a)}) \\, ds = \\varphi(${a}) = ${v}$。`,
+            ],
+          );
+        }),
     ),
     point(
       "derivatives-by-integrating-by-parts",
       ["Derivatives by integrating by parts", "分部积分定义导数"],
       [
-        "A distribution's derivative moves the derivative onto the test function, with a sign: $\\langle T', \\varphi \\rangle = -\\langle T, \\varphi' \\rangle$. This is integration by parts, where the test function vanishes far away and leaves no boundary term. So $\\langle \\delta_{a}', \\varphi \\rangle = -\\varphi'(a)$.",
-        "分布的导数把求导转移到检验函数上，并带一个负号：$\\langle T', \\varphi \\rangle = -\\langle T, \\varphi' \\rangle$。这就是分部积分，检验函数在远处为零，所以没有边界项。因此 $\\langle \\delta_{a}', \\varphi \\rangle = -\\varphi'(a)$。",
+        "A distribution's derivative moves the derivative onto the test function, with a sign: $\\langle T', \\varphi \\rangle = -\\langle T, \\varphi' \\rangle$. This is integration by parts, where the test function vanishes far away and leaves no boundary term. So $\\langle \\delta_{a}', \\varphi \\rangle = -\\varphi'(a)$.\n\nFor $\\varphi(x) = x^{2}$ near $3$, $\\varphi'(3) = 6$, so $\\langle \\delta_{3}', \\varphi \\rangle = -6$.\n\nCheck: the slope at $3$ is $\\frac{\\varphi(3 + h) - \\varphi(3)}{h} = \\frac{6h + h^{2}}{h} = 6 + h$, which tends to $6$ as $h \\to 0$, and the sign makes it $-6$.\n\n> **Watch out.** Keep the minus sign that moving the derivative brings, and evaluate $\\varphi'$, not $\\varphi$.",
+        "分布的导数把求导转移到检验函数上，并带一个负号：$\\langle T', \\varphi \\rangle = -\\langle T, \\varphi' \\rangle$。这就是分部积分，检验函数在远处为零，所以没有边界项。因此 $\\langle \\delta_{a}', \\varphi \\rangle = -\\varphi'(a)$。\n\n对在 $3$ 附近等于 $x^{2}$ 的 $\\varphi$，$\\varphi'(3) = 6$，所以 $\\langle \\delta_{3}', \\varphi \\rangle = -6$。\n\n检验：$3$ 处的斜率是 $\\frac{\\varphi(3 + h) - \\varphi(3)}{h} = \\frac{6h + h^{2}}{h} = 6 + h$，当 $h \\to 0$ 时为 $6$，负号使它变成 $-6$。\n\n> **注意。** 转移导数带来的负号要保留，而且取的是 $\\varphi'$ 的值，不是 $\\varphi$ 的值。",
       ],
-      (rng) => {
-        const a = rng.int(1, 6) * rng.pick([-1, 1]);
-        const b = rng.int(1, 6);
-        const d = rng.int(1, 9);
-        const v = -(2 * b * a + d);
-        return ask(
-          [
-            `What is $\\langle \\delta_{${a}}', \\varphi \\rangle$ for $\\varphi(x) = ${b}x^{2} + ${d}x$ near ${a}?`,
-            `当 $\\varphi(x)$ 在 ${a} 附近等于 $${b}x^{2} + ${d}x$ 时，$\\langle \\delta_{${a}}', \\varphi \\rangle$ 是多少？`,
-          ],
-          v,
-          [-v, b * a * a + d * a, -(b * a * a + d * a)],
-          [`Since $\\varphi'(${a}) = ${-v}$, the value is ${v}.`, `因为 $\\varphi'(${a}) = ${-v}$，所以值是 ${v}。`],
-        );
-      },
+      (rng) =>
+        until(() => {
+          const a = rng.int(1, 6) * rng.pick([-1, 1]);
+          const b = rng.int(1, 6);
+          const d = rng.int(1, 9);
+          const slope = 2 * b * a + d;
+          const v = -slope;
+          const phi = `${b === 1 ? "" : b}x^{2} + ${d === 1 ? "" : d}x`;
+          const value = b * a * a + d * a;
+          const neg = (n: number) => (n < 0 ? `(${n})` : `${n}`);
+          return worked(
+            [
+              `What is $\\langle \\delta_{${a}}', \\varphi \\rangle$ for $\\varphi(x) = ${phi}$ near ${a}?`,
+              `当 $\\varphi(x)$ 在 ${a} 附近等于 $${phi}$ 时，$\\langle \\delta_{${a}}', \\varphi \\rangle$ 是多少？`,
+            ],
+            v,
+            [
+              [
+                slope,
+                "That leaves out the minus sign that comes from moving the derivative onto $\\varphi$.",
+                "那漏掉了把导数转移到 $\\varphi$ 上带来的负号。",
+              ],
+              [
+                value,
+                `That is $\\varphi(${a})$ itself; the derivative of the delta reads the slope.`,
+                `那是 $\\varphi(${a})$ 本身；δ 的导数读取的是斜率。`,
+              ],
+              [
+                -value,
+                `That is $-\\varphi(${a})$; it is $\\varphi'$ that has to be evaluated.`,
+                `那是 $-\\varphi(${a})$；要取值的是 $\\varphi'$。`,
+              ],
+              [
+                -(b * a + d),
+                `That differentiates $${b === 1 ? "" : b}x^{2}$ as $${b === 1 ? "" : b}x$; its derivative is $${2 * b}x$.`,
+                `那把 $${b === 1 ? "" : b}x^{2}$ 的导数算成了 $${b === 1 ? "" : b}x$；它的导数是 $${2 * b}x$。`,
+              ],
+            ],
+            [
+              [
+                ["Differentiate the test function", "对检验函数求导"],
+                [
+                  `$\\varphi'(x) = ${2 * b}x + ${d}$, so $\\varphi'(${a}) = ${2 * b} \\cdot ${neg(a)} + ${d} = ${slope}$.`,
+                  `$\\varphi'(x) = ${2 * b}x + ${d}$，所以 $\\varphi'(${a}) = ${2 * b} \\cdot ${neg(a)} + ${d} = ${slope}$。`,
+                ],
+              ],
+              [
+                ["Move the derivative", "转移导数"],
+                [
+                  `$\\langle \\delta_{${a}}', \\varphi \\rangle = -\\varphi'(${a}) = ${v}$.`,
+                  `$\\langle \\delta_{${a}}', \\varphi \\rangle = -\\varphi'(${a}) = ${v}$。`,
+                ],
+              ],
+            ],
+            [
+              `$\\varphi(${a} + h) - \\varphi(${a}) = ${slope}h + ${b === 1 ? "" : b}h^{2}$, so the slope at ${a} is ${slope}, and the pairing is its negative, ${v}.`,
+              `$\\varphi(${a} + h) - \\varphi(${a}) = ${slope}h + ${b === 1 ? "" : b}h^{2}$，所以 ${a} 处的斜率是 ${slope}，配对的值是它的相反数 ${v}。`,
+            ],
+          );
+        }),
     ),
     point(
       "the-second-derivative-of-a-corner",
       ["The second derivative of a corner", "角点的二阶导数"],
       [
-        "A function with a corner has a weak first derivative with a jump, and the derivative of a jump is a delta function. So at a corner $u''$ contains $(s_{+} - s_{-})\\delta$, where $s_{-}$ and $s_{+}$ are the slopes on the left and right.",
-        "带角点的函数的弱一阶导数有跳跃，而跳跃的导数是 δ 函数。所以在角点处 $u''$ 含有 $(s_{+} - s_{-})\\delta$，其中 $s_{-}$ 和 $s_{+}$ 是左右两侧的斜率。",
+        "A function with a corner has a weak first derivative with a jump, and the derivative of a jump is a delta function. So at a corner $u''$ contains $(s_{+} - s_{-})\\delta$, where $s_{-}$ and $s_{+}$ are the slopes on the left and right.\n\nFor $u(x) = |x|$ the slopes are $-1$ on the left and $1$ on the right, so $u'' = (1 - (-1))\\delta = 2\\delta$.\n\nCheck: $u'$ is the step that jumps from $-1$ to $1$ at $0$, and the derivative of a jump of size $2$ is $2\\delta$.\n\n> **Watch out.** A linear term adds the same slope on both sides, so it does not change the jump and adds no delta.",
+        "带角点的函数的弱一阶导数有跳跃，而跳跃的导数是 δ 函数。所以在角点处 $u''$ 含有 $(s_{+} - s_{-})\\delta$，其中 $s_{-}$ 和 $s_{+}$ 是左右两侧的斜率。\n\n对 $u(x) = |x|$，左侧斜率是 $-1$，右侧是 $1$，所以 $u'' = (1 - (-1))\\delta = 2\\delta$。\n\n检验：$u'$ 是在 $0$ 处从 $-1$ 跳到 $1$ 的阶跃，大小为 $2$ 的跳跃的导数是 $2\\delta$。\n\n> **注意。** 线性项给两侧加上相同的斜率，所以它不改变跳跃，也不产生 δ。",
       ],
-      (rng) => {
-        const p = rng.int(1, 9);
-        const q = rng.int(1, 9);
-        const a = rng.int(1, 6);
-        return ask(
-          [
-            `For $u(x) = ${p}|x - ${a}| + ${q}x$, the weak second derivative is $r\\delta_{${a}}$. What is $r$?`,
-            `对 $u(x) = ${p}|x - ${a}| + ${q}x$，弱二阶导数是 $r\\delta_{${a}}$。$r$ 是多少？`,
-          ],
-          2 * p,
-          [p, p + q, 2 * q === 2 * p ? 0 : 2 * q],
-          [
-            `The slopes are $${q - p}$ on the left and $${q + p}$ on the right, and their difference is ${2 * p}.`,
-            `左侧斜率是 $${q - p}$，右侧斜率是 $${q + p}$，它们的差是 ${2 * p}。`,
-          ],
-        );
-      },
+      (rng) =>
+        until(() => {
+          const p = rng.int(1, 9);
+          const q = rng.int(1, 9);
+          const a = rng.int(1, 6);
+          const left = q - p;
+          const right = q + p;
+          return worked(
+            [
+              `For $u(x) = ${p === 1 ? "" : p}|x - ${a}| + ${q === 1 ? "" : q}x$, the weak second derivative is $r\\delta_{${a}}$. What is $r$?`,
+              `对 $u(x) = ${p === 1 ? "" : p}|x - ${a}| + ${q === 1 ? "" : q}x$，弱二阶导数是 $r\\delta_{${a}}$。$r$ 是多少？`,
+            ],
+            2 * p,
+            [
+              [
+                p,
+                `That is the slope that $${p === 1 ? "" : p}|x - ${a}|$ has on one side; the delta measures the jump between the two sides.`,
+                `那是 $${p === 1 ? "" : p}|x - ${a}|$ 在一侧的斜率；δ 衡量的是两侧之间的跳跃。`,
+              ],
+              [right, "That is the slope on the right, not the jump in slope.", "那是右侧的斜率，而不是斜率的跳跃。"],
+              [
+                2 * q,
+                "That doubles the coefficient of the linear term, which has no corner; the jump comes from the absolute value.",
+                "那把没有角点的线性项的系数加倍了；跳跃来自绝对值。",
+              ],
+              [
+                0,
+                "A corner does leave a delta: only the straight pieces have zero second derivative.",
+                "角点确实会留下 δ：只有直线段的二阶导数为零。",
+              ],
+            ],
+            [
+              [
+                ["Read the slopes", "读出斜率"],
+                [
+                  `Left of ${a}, $u' = ${q} - ${p} = ${left}$; right of ${a}, $u' = ${q} + ${p} = ${right}$.`,
+                  `在 ${a} 左侧，$u' = ${q} - ${p} = ${left}$；在 ${a} 右侧，$u' = ${q} + ${p} = ${right}$。`,
+                ],
+              ],
+              [
+                ["Take the jump", "求跳跃"],
+                [
+                  `The jump is $${right} - ${left < 0 ? `(${left})` : left} = ${2 * p}$, so $u'' = ${2 * p}\\delta_{${a}}$ and $r = ${2 * p}$.`,
+                  `跳跃是 $${right} - ${left < 0 ? `(${left})` : left} = ${2 * p}$，所以 $u'' = ${2 * p}\\delta_{${a}}$，$r = ${2 * p}$。`,
+                ],
+              ],
+            ],
+            [
+              `Only $|x - ${a}|$ has a corner, and its slope jumps from $-1$ to $1$, by 2; times ${p} that is ${2 * p}, while $${q === 1 ? "" : q}x$ adds nothing.`,
+              `只有 $|x - ${a}|$ 有角点，它的斜率从 $-1$ 跳到 $1$，跳了 2；乘以 ${p} 得 ${2 * p}，而 $${q === 1 ? "" : q}x$ 不贡献任何东西。`,
+            ],
+          );
+        }),
     ),
   ],
 );
@@ -2395,74 +2732,178 @@ const finiteElements = topic(
       "the-stiffness-matrix",
       ["The stiffness matrix", "刚度矩阵"],
       [
-        "For $-u'' = f$ with $u = 0$ at both ends, the weak form is $\\int u'v' = \\int fv$. Using hat functions on a mesh of spacing $h$, the matrix entries $\\int \\varphi_{i}'\\varphi_{j}'$ are $\\frac{2}{h}$ on the diagonal and $-\\frac{1}{h}$ next to it.",
-        "对两端 $u = 0$ 的 $-u'' = f$，弱形式是 $\\int u'v' = \\int fv$。在间距为 $h$ 的网格上用帽函数，矩阵元素 $\\int \\varphi_{i}'\\varphi_{j}'$ 在对角线上是 $\\frac{2}{h}$，在相邻位置是 $-\\frac{1}{h}$。",
+        "For $-u'' = f$ with $u = 0$ at both ends, the weak form is $\\int u'v' = \\int fv$. Using hat functions on a mesh of spacing $h$, the matrix entries $\\int \\varphi_{i}'\\varphi_{j}'$ are $\\frac{2}{h}$ on the diagonal and $-\\frac{1}{h}$ next to it.\n\nWith $[0, 1]$ cut into $4$ elements, $h = \\frac{1}{4}$, so the diagonal entries are $\\frac{2}{h} = 8$ and their neighbours are $-\\frac{1}{h} = -4$.\n\nCheck: a hat has slope $4$ on one of its elements and $-4$ on the other, so $\\int (\\varphi_{i}')^{2} = 2 \\cdot 16 \\cdot \\frac{1}{4} = 8$.\n\n> **Watch out.** Divide by $h$, do not multiply: $\\frac{1}{h}$ is the number of elements, so the entries grow as the mesh gets finer.",
+        "对两端 $u = 0$ 的 $-u'' = f$，弱形式是 $\\int u'v' = \\int fv$。在间距为 $h$ 的网格上用帽函数，矩阵元素 $\\int \\varphi_{i}'\\varphi_{j}'$ 在对角线上是 $\\frac{2}{h}$，在相邻位置是 $-\\frac{1}{h}$。\n\n把 $[0, 1]$ 分成 $4$ 个单元时 $h = \\frac{1}{4}$，所以对角元素是 $\\frac{2}{h} = 8$，相邻元素是 $-\\frac{1}{h} = -4$。\n\n检验：帽函数在一个单元上斜率是 $4$，在另一个上是 $-4$，所以 $\\int (\\varphi_{i}')^{2} = 2 \\cdot 16 \\cdot \\frac{1}{4} = 8$。\n\n> **注意。** 要除以 $h$，不是乘以 $h$：$\\frac{1}{h}$ 是单元的个数，所以网格越细，元素越大。",
       ],
-      (rng) => {
-        const n = rng.int(3, 40);
-        const diagonal = rng.bool();
-        return ask(
-          [
+      (rng) =>
+        until(() => {
+          const n = rng.int(3, 40);
+          const diagonal = rng.bool();
+          return worked(
+            [
+              diagonal
+                ? `With hat functions on $[0, 1]$ cut into ${n} equal elements, what is a diagonal entry of the stiffness matrix?`
+                : `With hat functions on $[0, 1]$ cut into ${n} equal elements, what is the entry of the stiffness matrix next to the diagonal?`,
+              diagonal
+                ? `把 $[0, 1]$ 分成 ${n} 个相等单元并使用帽函数，刚度矩阵的对角元素是多少？`
+                : `把 $[0, 1]$ 分成 ${n} 个相等单元并使用帽函数，刚度矩阵中与对角线相邻的元素是多少？`,
+            ],
+            diagonal ? 2 * n : -n,
             diagonal
-              ? `With hat functions on $[0, 1]$ cut into ${n} equal elements, what is a diagonal entry of the stiffness matrix?`
-              : `With hat functions on $[0, 1]$ cut into ${n} equal elements, what is the entry of the stiffness matrix next to the diagonal?`,
-            diagonal
-              ? `把 $[0, 1]$ 分成 ${n} 个相等单元并使用帽函数，刚度矩阵的对角元素是多少？`
-              : `把 $[0, 1]$ 分成 ${n} 个相等单元并使用帽函数，刚度矩阵中与对角线相邻的元素是多少？`,
-          ],
-          diagonal ? 2 * n : -n,
-          diagonal ? [n, -n, Q.of(2, n)] : [n, 2 * n, Q.of(-1, n)],
-          [`Here $h = \\frac{1}{${n}}$, so $\\frac{1}{h} = ${n}$.`, `这里 $h = \\frac{1}{${n}}$，所以 $\\frac{1}{h} = ${n}$。`],
-        );
-      },
+              ? [
+                  [n, "That counts only one of the two elements under the hat.", "那只算了帽函数下两个单元中的一个。"],
+                  [
+                    -n,
+                    "That is the entry next to the diagonal, where two neighbouring hats overlap.",
+                    "那是对角线旁的元素，即两个相邻帽函数重叠处的值。",
+                  ],
+                  [Q.of(2, n), "That multiplies by $h$ instead of dividing by it.", "那是乘以 $h$，而不是除以 $h$。"],
+                ]
+              : [
+                  [
+                    n,
+                    "That drops the sign: on the shared element one hat rises while the other falls.",
+                    "那丢了负号：在共同的单元上，一个帽函数上升，另一个下降。",
+                  ],
+                  [2 * n, "That is the diagonal entry, a hat paired with itself.", "那是对角元素，即帽函数与自身配对。"],
+                  [Q.of(-1, n), "That multiplies by $h$ instead of dividing by it.", "那是乘以 $h$，而不是除以 $h$。"],
+                ],
+            [
+              [
+                ["Find the spacing", "求间距"],
+                [`$h = \\frac{1}{${n}}$, so a hat has slopes $\\pm ${n}$.`, `$h = \\frac{1}{${n}}$，所以帽函数的斜率是 $\\pm ${n}$。`],
+              ],
+              diagonal
+                ? [
+                    ["Integrate over the two elements", "在两个单元上积分"],
+                    [
+                      `$\\int (\\varphi_{i}')^{2} = 2 \\cdot ${n}^{2} \\cdot \\frac{1}{${n}} = ${2 * n}$.`,
+                      `$\\int (\\varphi_{i}')^{2} = 2 \\cdot ${n}^{2} \\cdot \\frac{1}{${n}} = ${2 * n}$。`,
+                    ],
+                  ]
+                : [
+                    ["Integrate over the shared element", "在共同单元上积分"],
+                    [
+                      `Neighbouring hats overlap on one element, with slopes $-${n}$ and $${n}$, so $\\int \\varphi_{i}'\\varphi_{i+1}' = -${n}^{2} \\cdot \\frac{1}{${n}} = -${n}$.`,
+                      `相邻帽函数在一个单元上重叠，斜率是 $-${n}$ 和 $${n}$，所以 $\\int \\varphi_{i}'\\varphi_{i+1}' = -${n}^{2} \\cdot \\frac{1}{${n}} = -${n}$。`,
+                    ],
+                  ],
+            ],
+            [
+              `An interior row reads $-${n}, ${2 * n}, -${n}$, which adds up to 0, as it must: the hats add up to the constant 1, whose derivative is 0.`,
+              `内部的一行是 $-${n}, ${2 * n}, -${n}$，加起来是 0，理应如此：帽函数加起来是常数 1，其导数为 0。`,
+            ],
+          );
+        }),
     ),
     point(
       "the-load-vector",
       ["The load vector", "载荷向量"],
       [
-        "The right side of the system has entries $\\int f\\varphi_{i}$. A hat function has area $h$, so a constant $f$ gives the entry $fh$.",
-        "方程组右边的元素是 $\\int f\\varphi_{i}$。帽函数的面积是 $h$，所以常数 $f$ 给出的元素是 $fh$。",
+        "The right side of the system has entries $\\int f\\varphi_{i}$. A hat function has area $h$, so a constant $f$ gives the entry $fh$.\n\nFor $f = 6$ on $[0, 1]$ cut into $3$ elements, $h = \\frac{1}{3}$ and each entry is $6 \\cdot \\frac{1}{3} = 2$.\n\nCheck: a hat of height $1$ on a base of width $2h = \\frac{2}{3}$ is a triangle of area $\\frac{1}{2} \\cdot \\frac{2}{3} = \\frac{1}{3}$, and $6 \\cdot \\frac{1}{3} = 2$.\n\n> **Watch out.** The base of a hat is $2h$, not $h$, but a triangle's area is half its base times its height, so the area is $h$.",
+        "方程组右边的元素是 $\\int f\\varphi_{i}$。帽函数的面积是 $h$，所以常数 $f$ 给出的元素是 $fh$。\n\n对 $[0, 1]$ 上分成 $3$ 个单元的 $f = 6$，$h = \\frac{1}{3}$，每个元素是 $6 \\cdot \\frac{1}{3} = 2$。\n\n检验：高为 $1$、底宽为 $2h = \\frac{2}{3}$ 的帽函数是面积为 $\\frac{1}{2} \\cdot \\frac{2}{3} = \\frac{1}{3}$ 的三角形，而 $6 \\cdot \\frac{1}{3} = 2$。\n\n> **注意。** 帽函数的底是 $2h$，不是 $h$；但三角形面积是底乘高的一半，所以面积是 $h$。",
       ],
-      (rng) => {
-        const f = rng.int(2, 30);
-        const n = rng.int(3, 40);
-        return ask(
-          [
-            `For $f = ${f}$ on $[0, 1]$ cut into ${n} equal elements, what is an entry of the load vector?`,
-            `对 $f = ${f}$，把 $[0, 1]$ 分成 ${n} 个相等单元，载荷向量的元素是多少？`,
-          ],
-          Q.of(f, n),
-          [Q.of(f, 2 * n), Q.of(2 * f, n), Q.of(f * n, 1)],
-          [
-            `A hat of width $\\frac{2}{${n}}$ and height 1 has area $\\frac{1}{${n}}$.`,
-            `宽为 $\\frac{2}{${n}}$、高为 1 的帽函数面积是 $\\frac{1}{${n}}$。`,
-          ],
-        );
-      },
+      (rng) =>
+        until(() => {
+          const f = rng.int(2, 30);
+          const n = rng.int(3, 40);
+          const entry = Q.of(f, n);
+          return worked(
+            [
+              `For $f = ${f}$ on $[0, 1]$ cut into ${n} equal elements, what is an entry of the load vector?`,
+              `对 $f = ${f}$，把 $[0, 1]$ 分成 ${n} 个相等单元，载荷向量的元素是多少？`,
+            ],
+            entry,
+            [
+              [
+                Q.of(f, 2 * n),
+                "That takes the base of the hat to be $h$; it spans two elements, $2h$.",
+                "那把帽函数的底当成了 $h$；它跨两个单元，是 $2h$。",
+              ],
+              [Q.of(2 * f, n), "That forgets the half in the area of a triangle.", "那忘了三角形面积中的二分之一。"],
+              [Q.of(f * n, 1), "That multiplies by the number of elements instead of by $h$.", "那乘以了单元个数，而不是乘以 $h$。"],
+            ],
+            [
+              [
+                ["Find the area of a hat", "求帽函数的面积"],
+                [
+                  `$h = \\frac{1}{${n}}$, and a hat of base $\\frac{2}{${n}}$ and height 1 has area $\\frac{1}{2} \\cdot \\frac{2}{${n}} = \\frac{1}{${n}}$.`,
+                  `$h = \\frac{1}{${n}}$，底为 $\\frac{2}{${n}}$、高为 1 的帽函数面积是 $\\frac{1}{2} \\cdot \\frac{2}{${n}} = \\frac{1}{${n}}$。`,
+                ],
+              ],
+              [
+                ["Multiply by f", "乘以 f"],
+                [
+                  `$\\int ${f}\\varphi_{i} = ${f} \\cdot \\frac{1}{${n}} = ${entry.toLatex()}$.`,
+                  `$\\int ${f}\\varphi_{i} = ${f} \\cdot \\frac{1}{${n}} = ${entry.toLatex()}$。`,
+                ],
+              ],
+            ],
+            [
+              `The ${n - 1} interior hats and the two half hats at the ends add up to the constant 1, so their loads add up to $\\int ${f} = ${f}$; each half hat carries half an entry, and $(${n - 1} + 1) \\cdot ${entry.toLatex()} = ${f}$.`,
+              `${n - 1} 个内部帽函数和两端的两个半帽函数加起来是常数 1，所以它们的载荷加起来是 $\\int ${f} = ${f}$；每个半帽函数承担半个元素，而 $(${n - 1} + 1) \\cdot ${entry.toLatex()} = ${f}$。`,
+            ],
+          );
+        }),
     ),
     point(
       "solving-with-one-unknown",
       ["Solving with one unknown", "只有一个未知数时求解"],
       [
-        "With two elements on $[0, L]$ there is one interior node, and $h = \\frac{L}{2}$. The system is $\\frac{2}{h}U = fh$, so $U = \\frac{fh^{2}}{2}$. For constant $f$ this equals the exact solution at the midpoint.",
-        "在 $[0, L]$ 上用两个单元时只有一个内部节点，$h = \\frac{L}{2}$。方程组是 $\\frac{2}{h}U = fh$，所以 $U = \\frac{fh^{2}}{2}$。对常数 $f$，它等于中点处的精确解。",
+        "With two elements on $[0, L]$ there is one interior node, and $h = \\frac{L}{2}$. The system is $\\frac{2}{h}U = fh$, so $U = \\frac{fh^{2}}{2}$. For constant $f$ this equals the exact solution at the midpoint.\n\nFor $-u'' = 8$ on $[0, 2]$, $h = 1$ and the system is $2U = 8$, so $U = 4$.\n\nCheck: the exact solution $u = 4x(2 - x)$ has $-u'' = 8$, vanishes at both ends, and equals $4$ at $x = 1$.\n\n> **Watch out.** Use $h = \\frac{L}{2}$, not $L$: with $h = L$ the answer comes out four times too big.",
+        "在 $[0, L]$ 上用两个单元时只有一个内部节点，$h = \\frac{L}{2}$。方程组是 $\\frac{2}{h}U = fh$，所以 $U = \\frac{fh^{2}}{2}$。对常数 $f$，它等于中点处的精确解。\n\n对 $[0, 2]$ 上的 $-u'' = 8$，$h = 1$，方程组是 $2U = 8$，所以 $U = 4$。\n\n检验：精确解 $u = 4x(2 - x)$ 满足 $-u'' = 8$，在两端为零，在 $x = 1$ 处等于 $4$。\n\n> **注意。** 要用 $h = \\frac{L}{2}$，不是 $L$：用 $h = L$ 得到的答案会大四倍。",
       ],
-      (rng) => {
-        const f = rng.int(1, 16);
-        const L = rng.int(1, 6);
-        return ask(
-          [
-            `Solve $-u'' = ${f}$ on $[0, ${L}]$ with $u = 0$ at both ends, using two equal elements. What is the value at the midpoint?`,
-            `用两个相等单元求解 $[0, ${L}]$ 上两端 $u = 0$ 的 $-u'' = ${f}$。中点处的值是多少？`,
-          ],
-          Q.of(f * L * L, 8),
-          [Q.of(f * L * L, 4), Q.of(f * L, 4), Q.of(f * L * L, 2)],
-          [
-            `With $h = \\frac{${L}}{2}$, we get $U = \\frac{${f}h^{2}}{2} = \\frac{${f} \\cdot ${L * L}}{8}$.`,
-            `当 $h = \\frac{${L}}{2}$ 时，$U = \\frac{${f}h^{2}}{2} = \\frac{${f} \\cdot ${L * L}}{8}$。`,
-          ],
-        );
-      },
+      (rng) =>
+        until(() => {
+          const f = rng.int(1, 16);
+          const L = rng.int(1, 6);
+          const h = Q.of(L, 2);
+          const U = Q.of(f * L * L, 8);
+          return worked(
+            [
+              `Solve $-u'' = ${f}$ on $[0, ${L}]$ with $u = 0$ at both ends, using two equal elements. What is the value at the midpoint?`,
+              `用两个相等单元求解 $[0, ${L}]$ 上两端 $u = 0$ 的 $-u'' = ${f}$。中点处的值是多少？`,
+            ],
+            U,
+            [
+              [
+                Q.of(f * L * L, 2),
+                "That takes $h = L$; with two elements $h = \\frac{L}{2}$.",
+                "那取了 $h = L$；两个单元时 $h = \\frac{L}{2}$。",
+              ],
+              [
+                Q.of(f * L * L, 4),
+                "That is $fh^{2}$; dividing $fh$ by $\\frac{2}{h}$ also halves it.",
+                "那是 $fh^{2}$；用 $fh$ 除以 $\\frac{2}{h}$ 还要再减半。",
+              ],
+              [
+                Q.of(f * L, 4),
+                "That is $\\frac{fh}{2}$; dividing by $\\frac{2}{h}$ multiplies by $h$ as well.",
+                "那是 $\\frac{fh}{2}$；除以 $\\frac{2}{h}$ 还要再乘以 $h$。",
+              ],
+            ],
+            [
+              [
+                ["Set up the equation", "列方程"],
+                [
+                  `$h = ${h.toLatex()}$, and the one equation is $\\frac{2}{h}U = ${f === 1 ? "" : f}h$.`,
+                  `$h = ${h.toLatex()}$，唯一的方程是 $\\frac{2}{h}U = ${f === 1 ? "" : f}h$。`,
+                ],
+              ],
+              [
+                ["Solve it", "求解"],
+                [
+                  `$U = \\frac{fh^{2}}{2} = \\frac{${f} \\cdot ${h.mul(h).toLatex()}}{2} = ${U.toLatex()}$.`,
+                  `$U = \\frac{fh^{2}}{2} = \\frac{${f} \\cdot ${h.mul(h).toLatex()}}{2} = ${U.toLatex()}$。`,
+                ],
+              ],
+            ],
+            [
+              `The exact solution $u = \\frac{${f}}{2}x(${L} - x)$ vanishes at both ends, and at $x = ${h.toLatex()}$ it is $\\frac{${f}}{2} \\cdot ${h.toLatex()} \\cdot ${h.toLatex()} = ${U.toLatex()}$.`,
+              `精确解 $u = \\frac{${f}}{2}x(${L} - x)$ 在两端为零，在 $x = ${h.toLatex()}$ 处等于 $\\frac{${f}}{2} \\cdot ${h.toLatex()} \\cdot ${h.toLatex()} = ${U.toLatex()}$。`,
+            ],
+          );
+        }),
     ),
   ],
 );
@@ -2647,8 +3088,61 @@ export const linearProgrammingOutlineTopics: readonly TopicDef[] = [
 
 /** partialDifferentialEquationsOutlineTopics holds the PDE topics added from the course outline. */
 export const partialDifferentialEquationsOutlineTopics: readonly TopicDef[] = [
-  transformsOnUnbounded,
-  fundamentalSolutions,
-  weakSolutions,
-  finiteElements,
+  lesson(
+    transformsOnUnbounded,
+    [
+      "On a bounded interval, separation of variables gives a list of modes; on the whole line, the Fourier transform in $x$ gives a mode $e^{ikx}$ for every real $k$. For the wave equation $u_{tt} = 4u_{xx}$ the mode with $k = 3$ oscillates with angular frequency $6$, and for Laplace's equation above the line it fades like $e^{-3y}$.",
+      "在有界区间上，分离变量给出一列模态；在整条直线上，对 $x$ 作傅里叶变换，每个实数 $k$ 都给出一个模态 $e^{ikx}$。对波动方程 $u_{tt} = 4u_{xx}$，$k = 3$ 的模态以角频率 $6$ 振荡；对直线上方的拉普拉斯方程，它按 $e^{-3y}$ 衰减。",
+    ],
+    [
+      "$e^{i(3x - 6t)}$ has $u_{tt} = -36u$ and $u_{xx} = -9u$, and $-36 = 4 \\cdot (-9)$.",
+      "$e^{i(3x - 6t)}$ 满足 $u_{tt} = -36u$ 和 $u_{xx} = -9u$，而 $-36 = 4 \\cdot (-9)$。",
+    ],
+    [
+      "find the period of each frequency in a wave, the decay of each frequency above a boundary, and values of the Poisson integral of a half-plane.",
+      "求波中每个频率的周期、边界上方每个频率的衰减，以及半平面泊松积分的值。",
+    ],
+  ),
+  lesson(
+    fundamentalSolutions,
+    [
+      "A point charge $q$ in space has potential $\\frac{q}{4\\pi r}$: at distance $2$ from a charge $8\\pi$ it is $\\frac{8\\pi}{8\\pi} = 1$. In the plane the potential of a point source is a logarithm instead, and only its differences have a fixed value.",
+      "空间中的点电荷 $q$ 的势是 $\\frac{q}{4\\pi r}$：在距电荷 $8\\pi$ 为 $2$ 的地方，势是 $\\frac{8\\pi}{8\\pi} = 1$。在平面上，点源的势则是对数，只有它的差才有确定的值。",
+    ],
+    [
+      "The field there has size $\\frac{8\\pi}{4\\pi \\cdot 2^{2}} = \\frac{1}{2}$, and times the area $4\\pi \\cdot 2^{2} = 16\\pi$ of the sphere it gives the flux $8\\pi$, the charge.",
+      "那里场的大小是 $\\frac{8\\pi}{4\\pi \\cdot 2^{2}} = \\frac{1}{2}$，乘以球面面积 $4\\pi \\cdot 2^{2} = 16\\pi$ 得通量 $8\\pi$，正是电荷。",
+    ],
+    [
+      "choose the fundamental solution in each dimension, compare potentials at two distances in space, and find differences of potentials in the plane.",
+      "选出各维度的基本解，比较空间中两个距离处的势，并求平面上势的差。",
+    ],
+  ),
+  lesson(
+    weakSolutions,
+    [
+      "The tent $u(x) = 1 - |x|$ has no derivative at its peak, yet $-u'' = 2\\delta$ describes it exactly: its slope drops from $1$ to $-1$ there. Weak derivatives make this precise by moving every derivative onto a smooth test function.",
+      "帐篷函数 $u(x) = 1 - |x|$ 在峰顶处没有导数，但 $-u'' = 2\\delta$ 恰好描述了它：它的斜率在那里从 $1$ 降到 $-1$。弱导数把每个导数都转移到光滑的检验函数上，使这一点变得严格。",
+    ],
+    [
+      "Left of $0$ the slope is $1$ and right of it $-1$, a jump of $-2$, which is the $-2\\delta$ in $u''$.",
+      "在 $0$ 左侧斜率是 $1$，右侧是 $-1$，跳跃为 $-2$，这正是 $u''$ 中的 $-2\\delta$。",
+    ],
+    [
+      "evaluate the delta function on a test function, differentiate distributions by moving the derivative, and find the delta in the second derivative of a corner.",
+      "计算 δ 函数作用在检验函数上的值，通过转移导数求分布的导数，并求出角点二阶导数中的 δ。",
+    ],
+  ),
+  lesson(
+    finiteElements,
+    [
+      "To solve $-u'' = 8$ on $[0, 2]$ with $u = 0$ at the ends, try $u = U\\varphi$, where $\\varphi$ is the hat that rises from $0$ to $1$ at $x = 1$ and falls back to $0$. Asking the weak form to hold for this one test function gives $2U = 8$, so $U = 4$.",
+      "要求解 $[0, 2]$ 上两端 $u = 0$ 的 $-u'' = 8$，试取 $u = U\\varphi$，其中 $\\varphi$ 是在 $x = 1$ 处从 $0$ 升到 $1$ 再降回 $0$ 的帽函数。要求弱形式对这一个检验函数成立，得 $2U = 8$，所以 $U = 4$。",
+    ],
+    ["The exact solution $4x(2 - x)$ is also $4$ at $x = 1$.", "精确解 $4x(2 - x)$ 在 $x = 1$ 处也等于 $4$。"],
+    [
+      "find entries of the stiffness matrix and of the load vector, and the value at the node when there is one unknown.",
+      "求刚度矩阵和载荷向量的元素，以及只有一个未知数时节点处的值。",
+    ],
+  ),
 ];
