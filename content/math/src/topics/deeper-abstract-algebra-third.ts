@@ -9,7 +9,7 @@ import { algebraDrawings1 } from "../explanation-drawings-abstract-algebra-1.ts"
 import { algebraDrawings2 } from "../explanation-drawings-abstract-algebra-2.ts";
 
 import { numberProblem, why } from "../problems.ts";
-import { ask, choose, factorize, type Pair, point, totient } from "../university-kit.ts";
+import { choose, factorize, type Pair, point, totient } from "../university-kit.ts";
 import { type Reason, reasoned } from "../wrong-reasons.ts";
 import { walked } from "./calculus-i-differentiation.ts";
 import { gcd, lcm } from "./deeper-methods-of-proof-third.ts";
@@ -1481,8 +1481,8 @@ const reflectionFixedVertices = {
     "the-vertices-a-reflection-fixes",
     ["The vertices a reflection fixes", "反射固定的顶点"],
     [
-      "The reflection $r^{a}s$ sends the vertex $v$ to $a - v$ modulo $n$, so a fixed vertex must satisfy $2v \\equiv a \\pmod{n}$. For odd $n$ there is one solution. For even $n$ there are two when $a$ is even and none when $a$ is odd.",
-      "反射 $r^{a}s$ 把顶点 $v$ 映到模 $n$ 的 $a - v$，所以不动顶点必须满足 $2v \\equiv a \\pmod{n}$。当 $n$ 为奇数时有一个解。当 $n$ 为偶数时，$a$ 为偶数有两个解，$a$ 为奇数没有解。",
+      "The reflection $r^{a}s$ sends the vertex $v$ to $a - v$ modulo $n$, so a fixed vertex must satisfy $2v \\equiv a \\pmod{n}$. For odd $n$ there is one solution. For even $n$ there are two when $a$ is even and none when $a$ is odd.\n\nIn $D_{6}$, the reflection $r^{4}s$ fixes the vertices with $2v \\equiv 4 \\pmod{6}$, namely $2$ and $5$.\n\nCheck: $r^{4}s \\cdot 2 = 4 - 2 = 2$ and $r^{4}s \\cdot 5 = 4 - 5 = -1 \\equiv 5 \\pmod{6}$.\n\n> **Watch out.** For even $n$, solving $2v \\equiv a$ gives two vertices, $v$ and $v + \\frac{n}{2}$, opposite each other; do not stop at the first one.",
+      "反射 $r^{a}s$ 把顶点 $v$ 映到模 $n$ 的 $a - v$，所以不动顶点必须满足 $2v \\equiv a \\pmod{n}$。当 $n$ 为奇数时有一个解。当 $n$ 为偶数时，$a$ 为偶数有两个解，$a$ 为奇数没有解。\n\n在 $D_{6}$ 中，反射 $r^{4}s$ 固定满足 $2v \\equiv 4 \\pmod{6}$ 的顶点，即 $2$ 与 $5$。\n\n检验：$r^{4}s \\cdot 2 = 4 - 2 = 2$，$r^{4}s \\cdot 5 = 4 - 5 = -1 \\equiv 5 \\pmod{6}$。\n\n> **注意。** 当 $n$ 为偶数时，解 $2v \\equiv a$ 得到两个相对的顶点 $v$ 与 $v + \\frac{n}{2}$；不要只找到第一个就停下。",
     ],
     (rng) => {
       const n = rng.int(5, 24);
@@ -1490,23 +1490,80 @@ const reflectionFixedVertices = {
       const fixed: number[] = [];
       for (let v = 0; v < n; v++) if ((2 * v - a) % n === 0) fixed.push(v);
       const answer = fixed.length;
-      return ask(
-        [
-          `$D_{${n}}$ acts on the vertices $0, 1, \\dots, ${n - 1}$ of a regular ${n}-gon, with $r \\cdot v = v + 1$ and $s \\cdot v = -v \\pmod{${n}}$. How many vertices does $r^{${a}}s$ fix?`,
-          `$D_{${n}}$ 作用在正 ${n} 边形的顶点 $0, 1, \\dots, ${n - 1}$ 上，其中 $r \\cdot v = v + 1$，$s \\cdot v = -v \\pmod{${n}}$。$r^{${a}}s$ 固定多少个顶点？`,
-        ],
+      const element = a === 1 ? "rs" : `r^{${a}}s`;
+      return numberProblem({
+        prompt: t(
+          `$D_{${n}}$ acts on the vertices $0, 1, \\dots, ${n - 1}$ of a regular ${n}-gon, with $r \\cdot v = v + 1$ and $s \\cdot v = -v \\pmod{${n}}$. How many vertices does $${element}$ fix?`,
+          `$D_{${n}}$ 作用在正 ${n} 边形的顶点 $0, 1, \\dots, ${n - 1}$ 上，其中 $r \\cdot v = v + 1$，$s \\cdot v = -v \\pmod{${n}}$。$${element}$ 固定多少个顶点？`,
+        ),
         answer,
-        [0, 1, 2, n].filter((v) => v !== answer),
-        answer === 0
-          ? [
-              `The element sends $v$ to $${a} - v$, so a fixed vertex needs $2v \\equiv ${a} \\pmod{${n}}$. The left side is even and $${n}$ is even, but $${a}$ is odd, so there are none.`,
-              `这个元素把 $v$ 映到 $${a} - v$，所以不动顶点需要 $2v \\equiv ${a} \\pmod{${n}}$。左边是偶数，$${n}$ 是偶数，而 $${a}$ 是奇数，所以没有。`,
-            ]
-          : [
-              `The element sends $v$ to $${a} - v$, so a fixed vertex needs $2v \\equiv ${a} \\pmod{${n}}$. ${answer === 1 ? `The only solution is $${fixed[0]}$` : `The solutions are $${fixed.join(", ")}$`}, so the count is $${answer}$.`,
-              `这个元素把 $v$ 映到 $${a} - v$，所以不动顶点需要 $2v \\equiv ${a} \\pmod{${n}}$。${answer === 1 ? `唯一的解是 $${fixed[0]}$` : `解是 $${fixed.join(", ")}$`}，所以个数是 $${answer}$。`,
+        mistakes: distinctMistakes(answer, [
+          why(
+            0,
+            n % 2 === 1
+              ? `For odd $${n}$, $2$ has an inverse modulo $${n}$, so $2v \\equiv ${a}$ always has a solution.`
+              : `$${a}$ is even, so $2v \\equiv ${a} \\pmod{${n}}$ has solutions.`,
+            n % 2 === 1
+              ? `$${n}$ 为奇数时，$2$ 模 $${n}$ 可逆，所以 $2v \\equiv ${a}$ 总有解。`
+              : `$${a}$ 是偶数，所以 $2v \\equiv ${a} \\pmod{${n}}$ 有解。`,
+          ),
+          why(
+            1,
+            n % 2 === 1
+              ? "One solution is right for odd $n$."
+              : `For even $${n}$ the solutions come in opposite pairs $v$ and $v + ${n / 2}$, so there are $0$ or $2$, never $1$.`,
+            n % 2 === 1
+              ? "当 $n$ 为奇数时，一个解是对的。"
+              : `$${n}$ 为偶数时，解成对出现，即相对的 $v$ 与 $v + ${n / 2}$，所以有 $0$ 个或 $2$ 个，不会只有 $1$ 个。`,
+          ),
+          why(
+            2,
+            n % 2 === 1
+              ? `For odd $${n}$ the congruence $2v \\equiv ${a}$ has exactly one solution, since $2$ has an inverse.`
+              : `$${a}$ is odd, while $2v$ and $${n}$ are even, so no vertex is fixed.`,
+            n % 2 === 1
+              ? `$${n}$ 为奇数时，因为 $2$ 可逆，同余式 $2v \\equiv ${a}$ 恰有一个解。`
+              : `$${a}$ 是奇数，而 $2v$ 与 $${n}$ 都是偶数，所以没有不动顶点。`,
+          ),
+          why(
+            n,
+            "Only the identity fixes every vertex; a reflection moves most of them.",
+            "只有恒等元才固定每个顶点；反射移动其中大多数顶点。",
+          ),
+        ]),
+        solution: walked(
+          [
+            [
+              ["Set up the congruence", "列出同余式"],
+              t(
+                `The element sends $v$ to $${a} - v$, so a fixed vertex needs $${a} - v \\equiv v$, that is $2v \\equiv ${a} \\pmod{${n}}$.`,
+                `这个元素把 $v$ 映到 $${a} - v$，所以不动顶点需要 $${a} - v \\equiv v$，即 $2v \\equiv ${a} \\pmod{${n}}$。`,
+              ),
             ],
-      );
+            [
+              ["Solve it", "解同余式"],
+              answer === 0
+                ? t(
+                    `The left side is even and $${n}$ is even, but $${a}$ is odd, so there are none.`,
+                    `左边是偶数，$${n}$ 是偶数，而 $${a}$ 是奇数，所以没有。`,
+                  )
+                : t(
+                    `${answer === 1 ? `The only solution is $${fixed[0]}$` : `The solutions are $${fixed.join(", ")}$`}, so the count is $${answer}$.`,
+                    `${answer === 1 ? `唯一的解是 $${fixed[0]}$` : `解是 $${fixed.join(", ")}$`}，所以个数是 $${answer}$。`,
+                  ),
+            ],
+          ],
+          answer === 0
+            ? t(
+                `For $v = 0$ the element gives $${a}$, and every vertex moves by an odd amount, $${a} - 2v$, so none stays.`,
+                `$v = 0$ 时这个元素给出 $${a}$；每个顶点移动的量 $${a} - 2v$ 都是奇数，所以没有顶点不动。`,
+              )
+            : t(
+                `${fixed.map((v) => `$${element} \\cdot ${v} = ${a} - ${v} \\equiv ${v} \\pmod{${n}}$`).join(" and ")}.`,
+                `${fixed.map((v) => `$${element} \\cdot ${v} = ${a} - ${v} \\equiv ${v} \\pmod{${n}}$`).join("，")}。`,
+              ),
+        ),
+      });
     },
   ),
   figure: algebraDrawings2["natural-actions-of-symmetric-and-dihedral-groups#the-vertices-a-reflection-fixes"],

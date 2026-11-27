@@ -9,7 +9,7 @@ import { algebraDrawings1 } from "../explanation-drawings-abstract-algebra-1.ts"
 import { algebraDrawings2 } from "../explanation-drawings-abstract-algebra-2.ts";
 
 import { numberProblem } from "../problems.ts";
-import { ask, choose, divisors, observed, type Pair, point, same } from "../university-kit.ts";
+import { choose, divisors, observed, type Pair, point, same } from "../university-kit.ts";
 import { type Reason, reasoned } from "../wrong-reasons.ts";
 import { type Step, walked } from "./calculus-i-differentiation.ts";
 import { arrowLine, node, ring } from "./figure-reading-more.ts";
@@ -1006,8 +1006,8 @@ const orbitStabilizer = {
     "the-stabilizer-of-a-marked-point-of-a-polygon",
     ["The stabilizer of a marked point of a polygon", "多边形上所标点的稳定子"],
     [
-      "The orbit-stabilizer theorem says that the size of a group equals the size of an orbit times the size of a stabilizer. The symmetry group of a regular polygon with $n$ sides has $2n$ elements. A point on no mirror line has a stabilizer of size one, a point on one mirror line has size two, and the center is fixed by all.",
-      "轨道-稳定子定理说，群的大小等于轨道大小乘以稳定子大小。正 $n$ 边形的对称群有 $2n$ 个元素。不在任何镜像线上的点，稳定子大小为一；在一条镜像线上的点，大小为二；中心被所有元素固定。",
+      "The orbit-stabilizer theorem says that the size of a group equals the size of an orbit times the size of a stabilizer. The symmetry group of a regular polygon with $n$ sides has $2n$ elements. A point on no mirror line has a stabilizer of size one, a point on one mirror line has size two, and the center is fixed by all.\n\nIn a regular hexagon, with $12$ symmetries, the midpoint of a side lies on one mirror line, so its stabilizer is the identity and that reflection: $2$ symmetries.\n\nCheck: the orbit is the $6$ midpoints of the sides, and $6 \\cdot 2 = 12$.\n\n> **Watch out.** The identity fixes every point, so a stabilizer always has at least $1$ element, even for a point on no mirror line.",
+      "轨道-稳定子定理说，群的大小等于轨道大小乘以稳定子大小。正 $n$ 边形的对称群有 $2n$ 个元素。不在任何镜像线上的点，稳定子大小为一；在一条镜像线上的点，大小为二；中心被所有元素固定。\n\n正六边形有 $12$ 个对称，一条边的中点在一条镜像线上，所以它的稳定子是恒等变换和这个反射：共 $2$ 个对称。\n\n检验：轨道是 $6$ 条边的中点，且 $6 \\cdot 2 = 12$。\n\n> **注意。** 恒等变换固定每个点，所以稳定子至少有 $1$ 个元素，即使点不在任何镜像线上。",
     ],
     (rng) => {
       const n = rng.int(3, 8);
@@ -1035,22 +1035,62 @@ const orbitStabilizer = {
                 "这个点恰好在一条镜像线上，所以恒等变换和这个反射固定它",
               ];
       const body = `<polygon points="${at.map((p) => p.join(",")).join(" ")}" fill="none"/><circle class="accent" cx="${spot[0]}" cy="${spot[1]}" r="6" fill="currentColor" stroke="none"/>`;
-      return ask(
-        [
-          "The symmetry group of the regular polygon acts on its points. How many symmetries fix the marked point?",
-          "正多边形的对称群作用在它的点上。有多少个对称固定所标的点？",
-        ],
-        stabilizer,
-        [orbit, 2 * n === stabilizer ? 1 : 2 * n, n === stabilizer ? n + 1 : n],
-        [
-          `${seen[0]}, so the stabilizer has size $${stabilizer}$. The orbit then has size $${orbit}$, and the product is the group size $${2 * n}$, as the theorem requires.`,
-          `${seen[1]}，所以稳定子大小为 $${stabilizer}$。于是轨道大小为 $${orbit}$，二者之积是群的大小 $${2 * n}$，符合定理。`,
-        ],
-        {
+      const mistakes = [
+        said(
+          orbit,
+          "That is the size of the orbit, the number of places the point can be moved to, not of the stabilizer.",
+          "这是轨道的大小，即这个点能被移到的位置个数，而不是稳定子的大小。",
+        ),
+        said(2 * n, "That is the whole group; only the center is fixed by every symmetry.", "这是整个群；只有中心才被每个对称固定。"),
+        said(
+          n,
+          "That counts the rotations, but a rotation other than the identity moves every point except the center.",
+          "这数的是旋转，但除恒等变换外，旋转移动除中心以外的每个点。",
+        ),
+        kind === "generic"
+          ? said(2, "No mirror line passes through the point, so no reflection fixes it.", "没有镜像线经过这个点，所以没有反射固定它。")
+          : kind === "center"
+            ? said(
+                2,
+                "Every symmetry fixes the center, not only the identity and one reflection.",
+                "每个对称都固定中心，而不只是恒等变换和一个反射。",
+              )
+            : said(1, "The reflection in the mirror line through the point fixes it too.", "经过这个点的镜像线所对应的反射也固定它。"),
+      ].filter((w, i, all) => w.value !== stabilizer && all.findIndex((o) => o.value === w.value) === i);
+      return {
+        ...numberProblem({
+          prompt: t(
+            "The symmetry group of the regular polygon acts on its points. How many symmetries fix the marked point?",
+            "正多边形的对称群作用在它的点上。有多少个对称固定所标的点？",
+          ),
+          answer: stabilizer,
+          mistakes,
+          solution: walked(
+            [
+              [["Look at the mirror lines", "看镜像线"], t(`${seen[0]}.`, `${seen[1]}。`)],
+              [["Count the symmetries", "数对称"], t(`So the stabilizer has size $${stabilizer}$.`, `所以稳定子大小为 $${stabilizer}$。`)],
+            ],
+            kind === "center"
+              ? t(
+                  `The orbit is the center alone, and all $${2 * n}$ symmetries fix it, as the theorem requires.`,
+                  `轨道只有中心一个点，全部 $${2 * n}$ 个对称都固定它，符合定理。`,
+                )
+              : kind === "generic"
+                ? t(
+                    `The orbit has $${2 * n}$ points, one for each symmetry, as the theorem requires for a stabilizer of size $1$.`,
+                    `轨道有 $${2 * n}$ 个点，每个对称对应一个，符合定理对大小为 $1$ 的稳定子的要求。`,
+                  )
+                : t(
+                    `The orbit has $${orbit}$ points, and $${orbit} \\cdot 2 = ${2 * n}$, the size of the group.`,
+                    `轨道有 $${orbit}$ 个点，且 $${orbit} \\cdot 2 = ${2 * n}$，正是群的大小。`,
+                  ),
+          ),
+        }),
+        figure: {
           svg: svgDocument(220, body),
           alt: t(`A regular polygon with ${n} sides. ${observed(seen)[0]}.`, `正 ${n} 边形。${observed(seen)[1]}。`),
         },
-      );
+      };
     },
   ),
   figure: algebraDrawings2["the-orbit-stabilizer-theorem#the-stabilizer-of-a-marked-point-of-a-polygon"],
@@ -1239,8 +1279,8 @@ const necklace = {
     "rotations-that-fix-a-drawn-necklace",
     ["Rotations that fix a drawn necklace", "固定图中项链的旋转"],
     [
-      "The stabilizer of a colored necklace in the rotation group is the set of rotations that leave the colors in place. If the color pattern repeats every $p$ beads, then only rotations by multiples of $p$ steps fix it. So the stabilizer has size $n / p$, and the orbit of the necklace has size $p$.",
-      "在旋转群中，彩色项链的稳定子是使颜色不变的旋转组成的集合。如果颜色模式每 $p$ 颗珠子重复一次，那么只有转动 $p$ 的倍数步才能固定它。所以稳定子大小为 $n / p$，项链的轨道大小为 $p$。",
+      "The stabilizer of a colored necklace in the rotation group is the set of rotations that leave the colors in place. If the color pattern repeats every $p$ beads, then only rotations by multiples of $p$ steps fix it. So the stabilizer has size $n / p$, and the orbit of the necklace has size $p$.\n\nWith $8$ beads whose pattern first repeats after $4$ beads, only the rotations by $0$ and $4$ steps fix the necklace, so the stabilizer has size $\\frac{8}{4} = 2$.\n\nCheck: the orbit has the $4$ different rotations of the pattern, and $4 \\cdot 2 = 8$.\n\n> **Watch out.** Use the shortest period: a pattern that repeats every $2$ beads also repeats every $4$, and then the rotations by $2$ and $6$ steps fix it as well.",
+      "在旋转群中，彩色项链的稳定子是使颜色不变的旋转组成的集合。如果颜色模式每 $p$ 颗珠子重复一次，那么只有转动 $p$ 的倍数步才能固定它。所以稳定子大小为 $n / p$，项链的轨道大小为 $p$。\n\n$8$ 颗珠子的颜色模式在 $4$ 颗之后才第一次重复时，只有转动 $0$ 步和 $4$ 步固定项链，所以稳定子大小为 $\\frac{8}{4} = 2$。\n\n检验：轨道由这个模式的 $4$ 种不同旋转组成，且 $4 \\cdot 2 = 8$。\n\n> **注意。** 要用最短的周期：每 $2$ 颗重复的模式也每 $4$ 颗重复，这时转动 $2$ 步和 $6$ 步也固定它。",
     ],
     (rng) => {
       const n = rng.pick([6, 8, 9, 10, 12]);
@@ -1254,29 +1294,63 @@ const necklace = {
       const stabilizer = n / period;
       const at = ring(n, 85);
       const body = `${at.map((q, i) => `<circle class="accent" cx="${q[0]}" cy="${q[1]}" r="11" stroke="currentColor" fill="${beads[i] ? "currentColor" : "none"}"/>`).join("")}`;
-      return ask(
-        [
-          "The necklace has beads of two colors, and the group of rotations of the ring acts on it. How many rotations, counting the identity, leave the colors in place?",
-          "项链上有两种颜色的珠子，圆环的旋转群作用在它上面。有多少个旋转使颜色不变？恒等变换也要算。",
-        ],
-        stabilizer,
-        [
-          period === stabilizer ? stabilizer + 1 : period,
-          n,
-          beads.filter((b) => b).length === stabilizer ? stabilizer + 2 : beads.filter((b) => b).length,
-        ],
-        [
-          `The color pattern repeats every $${period}$ beads and no sooner, so only rotations by multiples of $${period}$ steps preserve it. Among the $${n}$ rotations, that makes $${stabilizer}$.`,
-          `颜色模式每 $${period}$ 颗珠子重复一次，且没有更短的周期，所以只有转动 $${period}$ 的倍数步才能保持它。在 $${n}$ 个旋转中，这样的有 $${stabilizer}$ 个。`,
-        ],
-        {
+      const mistakes = [
+        said(
+          period,
+          "That is the period of the pattern, which is the size of the orbit, not of the stabilizer.",
+          "这是颜色模式的周期，也就是轨道的大小，而不是稳定子的大小。",
+        ),
+        said(n, "That counts every rotation, but most of them move the colors.", "这数的是全部旋转，但其中大多数会移动颜色。"),
+        said(
+          beads.filter((b) => b).length,
+          "That counts the filled beads, not the rotations that fix the pattern.",
+          "这数的是实心珠子，而不是固定颜色模式的旋转。",
+        ),
+      ].filter((w, i, all) => w.value !== stabilizer && all.findIndex((o) => o.value === w.value) === i);
+      return {
+        ...numberProblem({
+          prompt: t(
+            "The necklace has beads of two colors, and the group of rotations of the ring acts on it. How many rotations, counting the identity, leave the colors in place?",
+            "项链上有两种颜色的珠子，圆环的旋转群作用在它上面。有多少个旋转使颜色不变？恒等变换也要算。",
+          ),
+          answer: stabilizer,
+          mistakes,
+          solution: walked(
+            [
+              [
+                ["Find the period", "求周期"],
+                t(
+                  `Going around, the color pattern repeats every $${period}$ beads and no sooner.`,
+                  `沿环看去，颜色模式每 $${period}$ 颗珠子重复一次，且没有更短的周期。`,
+                ),
+              ],
+              [
+                ["Count the rotations", "数旋转"],
+                t(
+                  `Only rotations by multiples of $${period}$ steps preserve it. Among the $${n}$ rotations, that makes $\\frac{${n}}{${period}} = ${stabilizer}$.`,
+                  `只有转动 $${period}$ 的倍数步才能保持它。在 $${n}$ 个旋转中，这样的有 $\\frac{${n}}{${period}} = ${stabilizer}$ 个。`,
+                ),
+              ],
+            ],
+            stabilizer === 1
+              ? t(
+                  `Only the identity fixes the necklace, so its orbit has all $${n}$ of its rotations, as the orbit-stabilizer theorem requires.`,
+                  `只有恒等变换固定这条项链，所以它的轨道包含它的全部 $${n}$ 个旋转，符合轨道-稳定子定理。`,
+                )
+              : t(
+                  `The orbit has the $${period}$ different rotations of the pattern, and $${period} \\cdot ${stabilizer} = ${n}$.`,
+                  `轨道由这个模式的 $${period}$ 种不同旋转组成，且 $${period} \\cdot ${stabilizer} = ${n}$。`,
+                ),
+          ),
+        }),
+        figure: {
           svg: svgDocument(220, body),
           alt: t(
             `A ring of ${n} beads, going around: ${beads.map((b) => (b ? "filled" : "hollow")).join(", ")}.`,
             `${n} 颗珠子组成的环，依次为：${beads.map((b) => (b ? "实心" : "空心")).join("、")}。`,
           ),
         },
-      );
+      };
     },
   ),
   figure: algebraDrawings2["stabilizers#rotations-that-fix-a-drawn-necklace"],

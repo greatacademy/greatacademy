@@ -958,14 +958,15 @@ const setStabilizer: KnowledgePointDef = {
   id: "the-stabilizer-of-a-subset",
   title: t("The stabilizer of a subset", "子集的稳定子"),
   explanation: t(
-    "A permutation can fix a subset as a whole without fixing each of its elements. It must then rearrange the subset among itself, and rearrange the rest among itself, independently. So the stabilizer of a set of $k$ symbols in $S_n$ has order $k!(n - k)!$. This agrees with the orbit-stabilizer theorem, as the orbit has $\\binom{n}{k}$ elements.",
-    "置换可以整体保持一个子集不变，而不固定其中每个元素。这时它必须在子集内部重排，也在其余部分内部重排，两者相互独立。所以 $S_n$ 中 $k$ 个符号的集合的稳定子阶为 $k!(n - k)!$。这与轨道-稳定子定理一致，因为轨道有 $\\binom{n}{k}$ 个元素。",
+    "A permutation can fix a subset as a whole without fixing each of its elements. It must then rearrange the subset among itself, and rearrange the rest among itself, independently. So the stabilizer of a set of $k$ symbols in $S_n$ has order $k!(n - k)!$. This agrees with the orbit-stabilizer theorem, as the orbit has $\\binom{n}{k}$ elements.\n\nIn $S_7$, the stabilizer of $\\{1, 2, 3\\}$ rearranges $1, 2, 3$ in $3!$ ways and $4, 5, 6, 7$ in $4!$ ways, so it has order $3! \\cdot 4! = 6 \\cdot 24 = 144$.\n\nCheck: $\\binom{7}{3} = 35$ subsets make up the orbit, and $35 \\cdot 144 = 5040 = 7!$.\n\n> **Watch out.** Fixing the set is weaker than fixing each of its elements: the permutations fixing $1$, $2$ and $3$ one by one number only $4! = 24$.",
+    "置换可以整体保持一个子集不变，而不固定其中每个元素。这时它必须在子集内部重排，也在其余部分内部重排，两者相互独立。所以 $S_n$ 中 $k$ 个符号的集合的稳定子阶为 $k!(n - k)!$。这与轨道-稳定子定理一致，因为轨道有 $\\binom{n}{k}$ 个元素。\n\n在 $S_7$ 中，$\\{1, 2, 3\\}$ 的稳定子以 $3!$ 种方式重排 $1, 2, 3$，以 $4!$ 种方式重排 $4, 5, 6, 7$，所以阶为 $3! \\cdot 4! = 6 \\cdot 24 = 144$。\n\n检验：轨道由 $\\binom{7}{3} = 35$ 个子集组成，且 $35 \\cdot 144 = 5040 = 7!$。\n\n> **注意。** 保持集合不变比逐个固定其中的元素要弱：逐个固定 $1$、$2$、$3$ 的置换只有 $4! = 24$ 个。",
   ),
   generate(rng) {
     const n = rng.int(5, 12);
     const k = rng.int(2, n - 2);
     const factorial = (m: number): number => (m < 2 ? 1 : m * factorial(m - 1));
     const answer = factorial(k) * factorial(n - k);
+    const orbit = factorial(n) / answer;
     return numberProblem({
       prompt: t(
         `In the action of $S_{${n}}$ on subsets of $\\{1, \\dots, ${n}\\}$, what is the order of the stabilizer of $\\{${range(1, k).join(", ")}\\}$?`,
@@ -973,10 +974,44 @@ const setStabilizer: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong: [factorial(n - k), factorial(n) / answer, factorial(n) / factorial(k)],
-      solution: t(
-        `The stabilizer rearranges the ${k} symbols of the set and the other ${n - k} symbols separately, in $${k}! \\cdot ${n - k}! = ${answer}$ ways.`,
-        `稳定子分别重排集合中的 ${k} 个符号和其余 ${n - k} 个符号，共 $${k}! \\cdot ${n - k}! = ${answer}$ 种方式。`,
+      mistakes: apart(answer, [
+        why(
+          factorial(n - k),
+          `That fixes each of the ${k} symbols; the set may also be rearranged within itself, a further factor of $${k}!$.`,
+          `这是逐个固定这 ${k} 个符号；集合还可以在内部重排，还要乘以 $${k}!$。`,
+        ),
+        why(
+          orbit,
+          "That is the size of the orbit, the number of subsets of this size, not of the stabilizer.",
+          "这是轨道的大小，即这种大小的子集个数，而不是稳定子的阶。",
+        ),
+        why(
+          factorial(n) / factorial(k),
+          `That divides $${n}!$ by $${k}!$; the stabilizer is the product $${k}! \\cdot ${n - k}!$.`,
+          `这是用 $${n}!$ 除以 $${k}!$；稳定子的阶是乘积 $${k}! \\cdot ${n - k}!$。`,
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Rearrange the set", "重排集合内部"],
+            t(
+              `The ${k} symbols of the set may be permuted among themselves in $${k}!$ ways.`,
+              `集合中的 ${k} 个符号可以在它们之间置换，有 $${k}!$ 种方式。`,
+            ),
+          ],
+          [
+            ["Rearrange the rest", "重排其余部分"],
+            t(
+              `The other ${n - k} symbols are permuted separately: $${k}! \\cdot ${n - k}! = ${answer}$.`,
+              `其余 ${n - k} 个符号另外置换：$${k}! \\cdot ${n - k}! = ${answer}$。`,
+            ),
+          ],
+        ],
+        t(
+          `The orbit has $\\binom{${n}}{${k}} = ${orbit}$ subsets, and $${orbit} \\cdot ${answer} = ${factorial(n)} = ${n}!$.`,
+          `轨道有 $\\binom{${n}}{${k}} = ${orbit}$ 个子集，且 $${orbit} \\cdot ${answer} = ${factorial(n)} = ${n}!$。`,
+        ),
       ),
     });
   },
@@ -1465,8 +1500,8 @@ const countingPolynomials: KnowledgePointDef = {
   id: "counting-polynomials-of-a-given-degree-over-zp",
   title: t("Counting polynomials of a given degree over $\\mathbb{Z}_p$", "数 $\\mathbb{Z}_p$ 上给定次数的多项式"),
   explanation: t(
-    "A polynomial over $\\mathbb{Z}_p$ is a list of coefficients, each with $p$ possible values. Degree exactly $d$ means the leading coefficient is one of the $p - 1$ nonzero values, and the other $d$ coefficients are free. Monic means the leading coefficient is 1. Degree at most $d$ leaves all $d + 1$ coefficients free.",
-    "$\\mathbb{Z}_p$ 上的多项式就是一列系数，每个系数有 $p$ 种取值。次数恰好为 $d$，表示首项系数是 $p - 1$ 个非零值之一，其余 $d$ 个系数任取。首一表示首项系数是 1。次数至多为 $d$ 时，全部 $d + 1$ 个系数都可以任取。",
+    "A polynomial over $\\mathbb{Z}_p$ is a list of coefficients, each with $p$ possible values. Degree exactly $d$ means the leading coefficient is one of the $p - 1$ nonzero values, and the other $d$ coefficients are free. Monic means the leading coefficient is 1. Degree at most $d$ leaves all $d + 1$ coefficients free.\n\nOver $\\mathbb{Z}_3$, a polynomial of degree exactly $2$ has $2$ choices of leading coefficient and $3$ choices for each of the other two: $(2)(3)(3) = 18$.\n\nCheck: the $3^3 = 27$ polynomials of degree at most $2$ are these $18$ and the $9$ of degree at most $1$.\n\n> **Watch out.** Degree exactly $d$ forbids a zero leading coefficient: over $\\mathbb{Z}_2$ there are $2^4 = 16$ polynomials of degree at most $3$, but only $8$ of degree exactly $3$.",
+    "$\\mathbb{Z}_p$ 上的多项式就是一列系数，每个系数有 $p$ 种取值。次数恰好为 $d$，表示首项系数是 $p - 1$ 个非零值之一，其余 $d$ 个系数任取。首一表示首项系数是 1。次数至多为 $d$ 时，全部 $d + 1$ 个系数都可以任取。\n\n在 $\\mathbb{Z}_3$ 上，次数恰好为 $2$ 的多项式，首项系数有 $2$ 种选法，其余两个系数各有 $3$ 种：$(2)(3)(3) = 18$。\n\n检验：次数至多为 $2$ 的 $3^3 = 27$ 个多项式，就是这 $18$ 个加上次数至多为 $1$ 的 $9$ 个。\n\n> **注意。** 次数恰好为 $d$ 不允许首项系数为零：$\\mathbb{Z}_2$ 上次数至多为 $3$ 的多项式有 $2^4 = 16$ 个，但次数恰好为 $3$ 的只有 $8$ 个。",
   ),
   generate(rng) {
     const p = rng.pick([2, 3, 5, 7, 11]);
@@ -1484,22 +1519,67 @@ const countingPolynomials: KnowledgePointDef = {
       prompt: t(`How many polynomials in $${Zn(p)}[x]$ ${en}?`, `$${Zn(p)}[x]$ 中有多少个多项式${zh}？`),
       answer,
       form: "integer",
-      wrong: [(p - 1) * p ** d, p ** d, p ** (d + 1), d ** p],
-      solution:
+      mistakes: apart(answer, [
+        why(
+          (p - 1) * p ** d,
+          "That counts degree exactly the given degree, with any nonzero leading coefficient.",
+          "这数的是次数恰好为给定次数、首项系数为任意非零值的多项式。",
+        ),
+        why(p ** d, "That counts the monic ones, with the leading coefficient fixed at $1$.", "这数的是首一多项式，首项系数固定为 $1$。"),
+        why(
+          p ** (d + 1),
+          "That counts degree at most the given degree, with every coefficient free.",
+          "这数的是次数至多为给定次数的多项式，每个系数都任取。",
+        ),
+        why(
+          d ** p,
+          `The base and the exponent are swapped: each coefficient has $${p}$ values.`,
+          `底数与指数颠倒了：每个系数有 $${p}$ 种取值。`,
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Count the leading coefficient", "数首项系数"],
+            kind === 0
+              ? t(`It is nonzero, so it has $${p - 1}$ values.`, `它不为零，所以有 $${p - 1}$ 种取值。`)
+              : kind === 1
+                ? t("It is fixed at $1$.", "它固定为 $1$。")
+                : t(`It may be $0$ too, so it has $${p}$ values like the others.`, `它也可以为 $0$，所以和其他系数一样有 $${p}$ 种取值。`),
+          ],
+          [
+            ["Multiply the choices", "把选择数相乘"],
+            kind === 0
+              ? t(
+                  `Each of the other ${d} coefficients has ${p} values: $(${p - 1})(${p}^{${d}}) = ${answer}$.`,
+                  `其余 ${d} 个系数各有 ${p} 种取值：$(${p - 1})(${p}^{${d}}) = ${answer}$。`,
+                )
+              : kind === 1
+                ? t(
+                    `Each of the other ${d} coefficients has ${p} values: $${p}^{${d}} = ${answer}$.`,
+                    `其余 ${d} 个系数各有 ${p} 种取值：$${p}^{${d}} = ${answer}$。`,
+                  )
+                : t(
+                    `All ${d + 1} coefficients have ${p} values each: $${p}^{${d + 1}} = ${answer}$.`,
+                    `全部 ${d + 1} 个系数各有 ${p} 种取值：$${p}^{${d + 1}} = ${answer}$。`,
+                  ),
+          ],
+        ],
         kind === 0
           ? t(
-              `The leading coefficient has $${p - 1}$ values and each of the other ${d} coefficients has ${p}, which gives ${answer}.`,
-              `首项系数有 $${p - 1}$ 种取值，其余 ${d} 个系数各有 ${p} 种，得 ${answer}。`,
+              `$${p}^{${d + 1}} - ${p}^{${d}} = ${p ** (d + 1)} - ${p ** d} = ${answer}$: degree at most ${d}, minus degree at most ${d - 1}.`,
+              `$${p}^{${d + 1}} - ${p}^{${d}} = ${p ** (d + 1)} - ${p ** d} = ${answer}$：次数至多为 ${d} 的减去次数至多为 ${d - 1} 的。`,
             )
           : kind === 1
             ? t(
-                `The leading coefficient is fixed, and each of the other ${d} coefficients has ${p} values, which gives $${p}^{${d}} = ${answer}$.`,
-                `首项系数已固定，其余 ${d} 个系数各有 ${p} 种取值，得 $${p}^{${d}} = ${answer}$。`,
+                `Scaling by the $${p - 1}$ nonzero leading coefficients gives $(${p - 1})(${answer}) = ${(p - 1) * answer}$ polynomials of degree exactly ${d}.`,
+                `乘以 $${p - 1}$ 个非零首项系数，得 $(${p - 1})(${answer}) = ${(p - 1) * answer}$ 个次数恰好为 ${d} 的多项式。`,
               )
             : t(
-                `All ${d + 1} coefficients are free, with ${p} values each, which gives $${p}^{${d + 1}} = ${answer}$.`,
-                `全部 ${d + 1} 个系数都任取，各有 ${p} 种取值，得 $${p}^{${d + 1}} = ${answer}$。`,
+                `$${(p - 1) * p ** d} + ${p ** d} = ${answer}$: those of degree exactly ${d} and those of degree at most ${d - 1}.`,
+                `$${(p - 1) * p ** d} + ${p ** d} = ${answer}$：次数恰好为 ${d} 的与次数至多为 ${d - 1} 的。`,
               ),
+      ),
     });
   },
 };
@@ -1508,8 +1588,8 @@ const linearUnits: KnowledgePointDef = {
   id: "counting-linear-units-over-zn",
   title: t("Counting linear units over $\\mathbb{Z}_n$", "数 $\\mathbb{Z}_n$ 上的一次单位"),
   explanation: t(
-    "Over a ring with nilpotents, a polynomial of positive degree can be a unit. The polynomial $a + bx$ is a unit in $\\mathbb{Z}_n[x]$ exactly when $a$ is a unit and $b$ is nilpotent, because then the geometric series for the inverse stops. So the two coefficients can be counted separately, and the counts multiply.",
-    "在有幂零元的环上，正次数的多项式也可以是单位。$a + bx$ 是 $\\mathbb{Z}_n[x]$ 中的单位，当且仅当 $a$ 是单位且 $b$ 是幂零元，因为这时逆的几何级数会终止。所以两个系数可以分别计数，再把个数相乘。",
+    "Over a ring with nilpotents, a polynomial of positive degree can be a unit. The polynomial $a + bx$ is a unit in $\\mathbb{Z}_n[x]$ exactly when $a$ is a unit and $b$ is nilpotent, because then the geometric series for the inverse stops. So the two coefficients can be counted separately, and the counts multiply.\n\nIn $\\mathbb{Z}_8[x]$, $a$ is one of the $4$ units $1, 3, 5, 7$ and $b$ is one of the $4$ nilpotents $0, 2, 4, 6$, so there are $(4)(4) = 16$ linear units.\n\nCheck: $(3 + 4x)^2 = 9 + 24x + 16x^2 \\equiv 1 \\pmod{8}$, so $3 + 4x$ is one of them.\n\n> **Watch out.** $b = 0$ is allowed and $0$ is nilpotent, so the constant units are among the count.",
+    "在有幂零元的环上，正次数的多项式也可以是单位。$a + bx$ 是 $\\mathbb{Z}_n[x]$ 中的单位，当且仅当 $a$ 是单位且 $b$ 是幂零元，因为这时逆的几何级数会终止。所以两个系数可以分别计数，再把个数相乘。\n\n在 $\\mathbb{Z}_8[x]$ 中，$a$ 是 $4$ 个单位 $1, 3, 5, 7$ 之一，$b$ 是 $4$ 个幂零元 $0, 2, 4, 6$ 之一，所以一次单位有 $(4)(4) = 16$ 个。\n\n检验：$(3 + 4x)^2 = 9 + 24x + 16x^2 \\equiv 1 \\pmod{8}$，所以 $3 + 4x$ 是其中之一。\n\n> **注意。** $b = 0$ 是允许的，而 $0$ 是幂零元，所以常数单位也计算在内。",
   ),
   generate(rng) {
     const n = rng.pick(nonsquarefree(120));
@@ -1524,10 +1604,41 @@ const linearUnits: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong: [units, units * n, units + nil],
-      solution: t(
-        `There are $\\varphi(${n}) = ${units}$ units for $a$. The nilpotents, for $b$, are the multiples of ${r}, and there are ${nil} of them. That makes $${units} \\cdot ${nil} = ${answer}$.`,
-        `$a$ 有 $\\varphi(${n}) = ${units}$ 种取值。$b$ 必须是幂零元，即 ${r} 的倍数，有 ${nil} 个。共 $${units} \\cdot ${nil} = ${answer}$ 个。`,
+      mistakes: apart(answer, [
+        why(
+          units,
+          `That counts only the constants, with $b = 0$; $b$ can be any of the ${nil} nilpotents.`,
+          `这只数了 $b = 0$ 的常数；$b$ 可以是 ${nil} 个幂零元中的任意一个。`,
+        ),
+        why(
+          units * n,
+          `That lets $b$ be anything; $b$ must be nilpotent, a multiple of ${r}.`,
+          `这让 $b$ 任取；$b$ 必须是幂零元，即 ${r} 的倍数。`,
+        ),
+        why(
+          units + nil,
+          "The choices of $a$ and $b$ are independent, so the counts multiply, not add.",
+          "$a$ 与 $b$ 的选择相互独立，所以个数相乘，而不是相加。",
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Count the constant terms", "数常数项"],
+            t(`$a$ must be a unit: $\\varphi(${n}) = ${units}$ choices.`, `$a$ 必须是单位：有 $\\varphi(${n}) = ${units}$ 种选法。`),
+          ],
+          [
+            ["Count the coefficients of the variable", "数一次项系数"],
+            t(
+              `$b$ must be nilpotent, a multiple of ${r}, the product of the primes dividing ${n}: ${nil} choices. That makes $(${units})(${nil}) = ${answer}$.`,
+              `$b$ 必须是幂零元，即 ${r}（整除 ${n} 的各素数之积）的倍数：有 ${nil} 种选法。共 $(${units})(${nil}) = ${answer}$ 个。`,
+            ),
+          ],
+        ],
+        t(
+          `The multiples of ${r} in $\\{0, \\dots, ${n - 1}\\}$ number $\\frac{${n}}{${r}} = ${nil}$, and $(${units})(${nil}) = ${answer}$.`,
+          `$\\{0, \\dots, ${n - 1}\\}$ 中 ${r} 的倍数有 $\\frac{${n}}{${r}} = ${nil}$ 个，且 $(${units})(${nil}) = ${answer}$。`,
+        ),
       ),
     });
   },
@@ -1537,8 +1648,8 @@ const cyclotomicFactors: KnowledgePointDef = {
   id: "counting-the-irreducible-factors-of-x-to-the-n-minus-one",
   title: t("Counting the irreducible factors of $x^n - 1$", "数 $x^n - 1$ 的不可约因子"),
   explanation: t(
-    "Each root of $x^n - 1$ is a primitive root of unity of exactly one order $d$ dividing $n$. Collecting the roots by order gives the factorization $x^n - 1 = \\prod_{d \\mid n} \\Phi_d(x)$ into cyclotomic polynomials. Each of these has integer coefficients and is irreducible over $\\mathbb{Q}$, so there is one irreducible factor for each divisor of $n$.",
-    "$x^n - 1$ 的每个根都恰是某个整除 $n$ 的 $d$ 次本原单位根。按次数归类这些根，就得到分圆多项式的分解 $x^n - 1 = \\prod_{d \\mid n} \\Phi_d(x)$。每个分圆多项式都有整数系数，而且在 $\\mathbb{Q}$ 上不可约，所以 $n$ 的每个因数对应一个不可约因子。",
+    "Each root of $x^n - 1$ is a primitive root of unity of exactly one order $d$ dividing $n$. Collecting the roots by order gives the factorization $x^n - 1 = \\prod_{d \\mid n} \\Phi_d(x)$ into cyclotomic polynomials. Each of these has integer coefficients and is irreducible over $\\mathbb{Q}$, so there is one irreducible factor for each divisor of $n$.\n\n$x^6 - 1 = (x - 1)(x + 1)(x^2 + x + 1)(x^2 - x + 1)$ has $4$ irreducible factors over $\\mathbb{Q}$, one for each of the divisors $1, 2, 3, 6$.\n\nCheck: the degrees add up, $1 + 1 + 2 + 2 = 6$.\n\n> **Watch out.** Count factors, not roots: $x^4 - 1$ has $4$ roots but only $3$ irreducible factors over $\\mathbb{Q}$, $(x - 1)(x + 1)(x^2 + 1)$.",
+    "$x^n - 1$ 的每个根都恰是某个整除 $n$ 的 $d$ 次本原单位根。按次数归类这些根，就得到分圆多项式的分解 $x^n - 1 = \\prod_{d \\mid n} \\Phi_d(x)$。每个分圆多项式都有整数系数，而且在 $\\mathbb{Q}$ 上不可约，所以 $n$ 的每个因数对应一个不可约因子。\n\n$x^6 - 1 = (x - 1)(x + 1)(x^2 + x + 1)(x^2 - x + 1)$ 在 $\\mathbb{Q}$ 上有 $4$ 个不可约因子，分别对应因数 $1, 2, 3, 6$。\n\n检验：次数相加 $1 + 1 + 2 + 2 = 6$。\n\n> **注意。** 要数因子，不是数根：$x^4 - 1$ 有 $4$ 个根，但在 $\\mathbb{Q}$ 上只有 $3$ 个不可约因子 $(x - 1)(x + 1)(x^2 + 1)$。",
   ),
   generate(rng) {
     const n = rng.int(2, 72);
@@ -1550,10 +1661,38 @@ const cyclotomicFactors: KnowledgePointDef = {
       ),
       answer: list.length,
       form: "integer",
-      wrong: [n, 2, primes(n).length + 1],
-      solution: t(
-        `There is one cyclotomic factor for each divisor of ${n}. The divisors are ${list.join(", ")}, so there are ${list.length}.`,
-        `${n} 的每个因数对应一个分圆因子。因数是 ${list.join("、")}，所以有 ${list.length} 个。`,
+      mistakes: apart(list.length, [
+        why(
+          n,
+          `That counts the roots; the ${n} roots group into one factor for each divisor of ${n}.`,
+          `这数的是根；${n} 个根按 ${n} 的每个因数归为一个因子。`,
+        ),
+        why(
+          2,
+          "$x - 1$ splits off, but the other factor is reducible unless the exponent is prime.",
+          "$x - 1$ 可以分出，但除非指数是素数，另一个因子仍可约。",
+        ),
+        why(
+          primes(n).length + 1,
+          `That counts $1$ and the prime divisors; every divisor of ${n} gives a factor, composite ones included.`,
+          `这只数了 $1$ 和素因数；${n} 的每个因数都给出一个因子，合数因数也算。`,
+        ),
+      ]),
+      solution: walked(
+        [
+          [["List the divisors", "列出因数"], t(`The divisors of ${n} are ${list.join(", ")}.`, `${n} 的因数是 ${list.join("、")}。`)],
+          [
+            ["Match them to factors", "对应到因子"],
+            t(
+              `Each divisor $d$ gives the irreducible factor $\\Phi_d(x)$, so there are ${list.length}.`,
+              `每个因数 $d$ 给出不可约因子 $\\Phi_d(x)$，所以有 ${list.length} 个。`,
+            ),
+          ],
+        ],
+        t(
+          `The degrees $\\varphi(d)$ of the factors are ${list.map(totient).join(", ")}, which add up to ${n}.`,
+          `各因子的次数 $\\varphi(d)$ 为 ${list.map(totient).join("、")}，加起来是 ${n}。`,
+        ),
       ),
     });
   },
@@ -1563,8 +1702,8 @@ const squareOfAPureQuaternion: KnowledgePointDef = {
   id: "the-square-of-a-pure-quaternion",
   title: t("The square of a pure quaternion", "纯四元数的平方"),
   explanation: t(
-    "A pure quaternion has no real part. When $bi + cj + dk$ is squared, the mixed terms cancel in pairs, since $ij = -ji$ and likewise for the others. Only the squares remain, and each of $i^2$, $j^2$, $k^2$ is $-1$. So the square is the negative of a sum of squares, which is why every pure unit quaternion is a square root of $-1$.",
-    "纯四元数没有实部。把 $bi + cj + dk$ 平方时，混合项成对抵消，因为 $ij = -ji$，其余类似。只剩下平方项，而 $i^2$、$j^2$、$k^2$ 都是 $-1$。所以平方是平方和的相反数，这也是每个纯单位四元数都是 $-1$ 的平方根的原因。",
+    "A pure quaternion has no real part. When $bi + cj + dk$ is squared, the mixed terms cancel in pairs, since $ij = -ji$ and likewise for the others. Only the squares remain, and each of $i^2$, $j^2$, $k^2$ is $-1$. So the square is the negative of a sum of squares, which is why every pure unit quaternion is a square root of $-1$.\n\n$(2i - j + 2k)^2 = -(4 + 1 + 4) = -9$.\n\nCheck: its norm is $9$, so $\\frac{2i - j + 2k}{3}$ squares to $-1$.\n\n> **Watch out.** The mixed terms cancel instead of doubling as for real numbers: $(i + j)^2 = i^2 + ij + ji + j^2 = -2$, since $ij + ji = 0$.",
+    "纯四元数没有实部。把 $bi + cj + dk$ 平方时，混合项成对抵消，因为 $ij = -ji$，其余类似。只剩下平方项，而 $i^2$、$j^2$、$k^2$ 都是 $-1$。所以平方是平方和的相反数，这也是每个纯单位四元数都是 $-1$ 的平方根的原因。\n\n$(2i - j + 2k)^2 = -(4 + 1 + 4) = -9$。\n\n检验：它的范数是 $9$，所以 $\\frac{2i - j + 2k}{3}$ 的平方是 $-1$。\n\n> **注意。** 混合项是抵消，而不像实数那样加倍：$(i + j)^2 = i^2 + ij + ji + j^2 = -2$，因为 $ij + ji = 0$。",
   ),
   generate(rng) {
     const b = pickNonzero(rng, 9);
@@ -1576,10 +1715,37 @@ const squareOfAPureQuaternion: KnowledgePointDef = {
       prompt: t(`The square of the quaternion $q = ${q}$ is a real number. Find it.`, `四元数 $q = ${q}$ 的平方是实数。求这个数。`),
       answer: -total,
       form: "integer",
-      wrong: [total, -((b + c + d) ** 2), -(Math.abs(b) + Math.abs(c) + Math.abs(d))],
-      solution: t(
-        `The mixed terms cancel, so $q^2 = -(${b * b} + ${c * c} + ${d * d}) = ${-total}$.`,
-        `混合项抵消，所以 $q^2 = -(${b * b} + ${c * c} + ${d * d}) = ${-total}$。`,
+      mistakes: apart(-total, [
+        why(total, "Each of $i^2$, $j^2$, $k^2$ is $-1$, so the square is negative.", "$i^2$、$j^2$、$k^2$ 都是 $-1$，所以平方是负数。"),
+        why(
+          -((b + c + d) ** 2),
+          "That squares the sum of the coefficients; the mixed terms cancel, so only the squares of the coefficients remain.",
+          "这是把系数之和平方；混合项抵消，只剩下各系数的平方。",
+        ),
+        why(
+          -(Math.abs(b) + Math.abs(c) + Math.abs(d)),
+          "The coefficients must be squared, not just added.",
+          "系数要平方，而不是直接相加。",
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Cancel the mixed terms", "抵消混合项"],
+            t(
+              `Since $ij + ji = jk + kj = ki + ik = 0$, the products such as $(${b})(${c})(ij + ji)$ vanish.`,
+              `由于 $ij + ji = jk + kj = ki + ik = 0$，像 $(${b})(${c})(ij + ji)$ 这样的乘积都为零。`,
+            ),
+          ],
+          [
+            ["Add the squares", "把平方相加"],
+            t(
+              `$q^2 = (${b})^2 i^2 + (${c})^2 j^2 + (${d})^2 k^2 = -(${b * b} + ${c * c} + ${d * d}) = ${-total}$.`,
+              `$q^2 = (${b})^2 i^2 + (${c})^2 j^2 + (${d})^2 k^2 = -(${b * b} + ${c * c} + ${d * d}) = ${-total}$。`,
+            ),
+          ],
+        ],
+        t(`$\\bar q = -q$, so $q^2 = -q\\bar q = -N(q) = ${-total}$.`, `$\\bar q = -q$，所以 $q^2 = -q\\bar q = -N(q) = ${-total}$。`),
       ),
     });
   },
@@ -1589,8 +1755,8 @@ const normOfAProduct: KnowledgePointDef = {
   id: "the-norm-of-a-product-of-quaternions",
   title: t("The norm of a product of quaternions", "四元数之积的范数"),
   explanation: t(
-    "The norm $N(a + bi + cj + dk) = a^2 + b^2 + c^2 + d^2$ is multiplicative: $N(pq) = N(p)N(q)$. This holds even though multiplication is not commutative, and it means the norm of a product can be found without multiplying the quaternions. It also explains why a product of nonzero quaternions is never zero.",
-    "范数 $N(a + bi + cj + dk) = a^2 + b^2 + c^2 + d^2$ 是可乘的：$N(pq) = N(p)N(q)$。即使乘法不交换这也成立，这意味着不必把四元数相乘就能求出积的范数。这也解释了为什么在这个除环中，非零元素之积永远不为零。",
+    "The norm $N(a + bi + cj + dk) = a^2 + b^2 + c^2 + d^2$ is multiplicative: $N(pq) = N(p)N(q)$. This holds even though multiplication is not commutative, and it means the norm of a product can be found without multiplying the quaternions. It also explains why a product of nonzero quaternions is never zero.\n\n$N(1 + i) = 2$ and $N(1 + j + k) = 3$, so $N((1 + i)(1 + j + k)) = 6$.\n\nCheck: $(1 + i)(1 + j + k) = 1 + j + k + i + ij + ik = 1 + i + 2k$, and $1 + 1 + 4 = 6$.\n\n> **Watch out.** Square every component, negative ones included: $N(1 - i) = 1 + 1 = 2$, not $1 - 1 = 0$.",
+    "范数 $N(a + bi + cj + dk) = a^2 + b^2 + c^2 + d^2$ 是可乘的：$N(pq) = N(p)N(q)$。即使乘法不交换这也成立，这意味着不必把四元数相乘就能求出积的范数。这也解释了为什么在这个除环中，非零元素之积永远不为零。\n\n$N(1 + i) = 2$，$N(1 + j + k) = 3$，所以 $N((1 + i)(1 + j + k)) = 6$。\n\n检验：$(1 + i)(1 + j + k) = 1 + j + k + i + ij + ik = 1 + i + 2k$，而 $1 + 1 + 4 = 6$。\n\n> **注意。** 每个分量都要平方，负的也一样：$N(1 - i) = 1 + 1 = 2$，而不是 $1 - 1 = 0$。",
   ),
   generate(rng) {
     const coefficients = () => [pickNonzero(rng, 4), pickNonzero(rng, 4), pickNonzero(rng, 4), pickNonzero(rng, 4)] as const;
@@ -1600,6 +1766,12 @@ const normOfAProduct: KnowledgePointDef = {
     const R = e * e + f * f + g * g + h * h;
     const p = poly([a, ""], [b, "i"], [c, "j"], [d, "k"]);
     const q = poly([e, ""], [f, "i"], [g, "j"], [h, "k"]);
+    const pq = poly(
+      [a * e - b * f - c * g - d * h, ""],
+      [a * f + b * e + c * h - d * g, "i"],
+      [a * g - b * h + c * e + d * f, "j"],
+      [a * h + b * g - c * f + d * e, "k"],
+    );
     return numberProblem({
       prompt: t(
         `Let $p = ${p}$ and $q = ${q}$. Find the norm $N(pq)$, where $N(a + bi + cj + dk) = a^2 + b^2 + c^2 + d^2$.`,
@@ -1607,10 +1779,29 @@ const normOfAProduct: KnowledgePointDef = {
       ),
       answer: P * R,
       form: "integer",
-      wrong: [P + R, P, R],
-      solution: t(
-        `$N(p) = ${P}$ and $N(q) = ${R}$. The norm is multiplicative, so $N(pq) = ${P} \\cdot ${R} = ${P * R}$.`,
-        `$N(p) = ${P}$，$N(q) = ${R}$。范数是可乘的，所以 $N(pq) = ${P} \\cdot ${R} = ${P * R}$。`,
+      mistakes: apart(P * R, [
+        why(P + R, "Norms multiply under multiplication; they do not add.", "相乘时范数相乘，而不是相加。"),
+        why(P, "That is $N(p)$ alone; multiply it by $N(q)$.", "这只是 $N(p)$；还要乘以 $N(q)$。"),
+        why(R, "That is $N(q)$ alone; multiply it by $N(p)$.", "这只是 $N(q)$；还要乘以 $N(p)$。"),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Find each norm", "求各自的范数"],
+            t(
+              `$N(p) = ${a * a} + ${b * b} + ${c * c} + ${d * d} = ${P}$ and $N(q) = ${e * e} + ${f * f} + ${g * g} + ${h * h} = ${R}$.`,
+              `$N(p) = ${a * a} + ${b * b} + ${c * c} + ${d * d} = ${P}$，$N(q) = ${e * e} + ${f * f} + ${g * g} + ${h * h} = ${R}$。`,
+            ),
+          ],
+          [
+            ["Multiply", "相乘"],
+            t(
+              `The norm is multiplicative, so $N(pq) = (${P})(${R}) = ${P * R}$.`,
+              `范数是可乘的，所以 $N(pq) = (${P})(${R}) = ${P * R}$。`,
+            ),
+          ],
+        ],
+        t(`$pq = ${pq}$, and the squares of its components add up to ${P * R}.`, `$pq = ${pq}$，其各分量的平方和为 ${P * R}。`),
       ),
     });
   },
@@ -2897,8 +3088,8 @@ const centralizerFromClass: KnowledgePointDef = {
   id: "a-centralizer-from-the-size-of-a-conjugacy-class",
   title: t("A centralizer from the size of a conjugacy class", "由共轭类大小求中心化子"),
   explanation: t(
-    "A group acts on itself by conjugation. The orbit of $g$ is its conjugacy class, and the stabilizer of $g$ is its centralizer, so the orbit-stabilizer theorem gives $|\\text{cl}(g)| \\cdot |C(g)| = |G|$. A large class therefore means few elements commute with $g$. This also explains why the size of any conjugacy class divides the order of the group.",
-    "群通过共轭作用于自身。$g$ 的轨道是它的共轭类，$g$ 的稳定子是它的中心化子，所以轨道-稳定子定理给出 $|\\text{cl}(g)| \\cdot |C(g)| = |G|$。因此，共轭类越大，与 $g$ 可交换的元素就越少。这也解释了为什么任何共轭类的大小都整除群的阶。",
+    "A group acts on itself by conjugation. The orbit of $g$ is its conjugacy class, and the stabilizer of $g$ is its centralizer, so the orbit-stabilizer theorem gives $|\\text{cl}(g)| \\cdot |C(g)| = |G|$. A large class therefore means few elements commute with $g$. This also explains why the size of any conjugacy class divides the order of the group.\n\nIn $S_4$, of order $24$, the class of $(1\\;2)$ consists of the $6$ transpositions, so the centralizer of $(1\\;2)$ has $\\frac{24}{6} = 4$ elements.\n\nCheck: they are $e$, $(1\\;2)$, $(3\\;4)$ and $(1\\;2)(3\\;4)$, each of which commutes with $(1\\;2)$.\n\n> **Watch out.** Divide the order of the group by the size of the class; subtracting the class size from the order does not give the centralizer.",
+    "群通过共轭作用于自身。$g$ 的轨道是它的共轭类，$g$ 的稳定子是它的中心化子，所以轨道-稳定子定理给出 $|\\text{cl}(g)| \\cdot |C(g)| = |G|$。因此，共轭类越大，与 $g$ 可交换的元素就越少。这也解释了为什么任何共轭类的大小都整除群的阶。\n\n在 $24$ 阶的 $S_4$ 中，$(1\\;2)$ 的共轭类由 $6$ 个对换组成，所以 $(1\\;2)$ 的中心化子有 $\\frac{24}{6} = 4$ 个元素。\n\n检验：它们是 $e$、$(1\\;2)$、$(3\\;4)$ 与 $(1\\;2)(3\\;4)$，每个都与 $(1\\;2)$ 可交换。\n\n> **注意。** 要用群的阶除以共轭类的大小；用阶减去共轭类的大小得不到中心化子。",
   ),
   generate(rng) {
     const size = rng.int(2, 30);
@@ -2911,10 +3102,38 @@ const centralizerFromClass: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong: [size, order - size, order - answer],
-      solution: t(
-        `The class size times the centralizer size is the group order, so the centralizer has $\\frac{${order}}{${size}} = ${answer}$ elements.`,
-        `共轭类大小乘以中心化子大小等于群的阶，所以中心化子有 $\\frac{${order}}{${size}} = ${answer}$ 个元素。`,
+      mistakes: apart(answer, [
+        why(
+          size,
+          "That is the size of the class, the orbit of $g$, not of its centralizer.",
+          "这是共轭类的大小，即 $g$ 的轨道，而不是它的中心化子的大小。",
+        ),
+        why(
+          order - size,
+          "Subtracting does not give the centralizer; divide the order of the group by the size of the class.",
+          "相减得不到中心化子；要用群的阶除以共轭类的大小。",
+        ),
+        why(
+          order - answer,
+          `That counts the elements outside a subgroup of order $${answer}$, not the elements commuting with $g$.`,
+          `这数的是一个 $${answer}$ 阶子群以外的元素，而不是与 $g$ 可交换的元素。`,
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Use the orbit-stabilizer theorem", "用轨道-稳定子定理"],
+            t(
+              `Under conjugation the orbit of $g$ is its class and the stabilizer is $C(g)$, so $${size} \\cdot |C(g)| = ${order}$.`,
+              `在共轭作用下，$g$ 的轨道是它的共轭类，稳定子是 $C(g)$，所以 $${size} \\cdot |C(g)| = ${order}$。`,
+            ),
+          ],
+          [
+            ["Divide", "相除"],
+            t(`$|C(g)| = \\frac{${order}}{${size}} = ${answer}$.`, `$|C(g)| = \\frac{${order}}{${size}} = ${answer}$。`),
+          ],
+        ],
+        t(`$${size} \\cdot ${answer} = ${order}$, the order of the group.`, `$${size} \\cdot ${answer} = ${order}$，正是群的阶。`),
       ),
     });
   },
@@ -3067,8 +3286,8 @@ const orderFromCycleType: KnowledgePointDef = {
   id: "the-order-of-a-permutation-from-its-cycle-type",
   title: t("The order of a permutation from its cycle type", "由循环类型求置换的阶"),
   explanation: t(
-    "Disjoint cycles commute, so a power of a permutation is computed one cycle at a time. A power is the identity exactly when it is the identity on each cycle, which requires the exponent to be a multiple of each cycle length. So the order is the least common multiple of the lengths, and conjugate permutations have the same order.",
-    "不相交的循环可交换，所以置换的幂可以逐个循环计算。一个幂是恒等置换，当且仅当它在每个循环上都是恒等的，这要求指数是每个循环长度的倍数。所以阶是各长度的最小公倍数，共轭的置换有相同的阶。",
+    "Disjoint cycles commute, so a power of a permutation is computed one cycle at a time. A power is the identity exactly when it is the identity on each cycle, which requires the exponent to be a multiple of each cycle length. So the order is the least common multiple of the lengths, and conjugate permutations have the same order.\n\nA product of disjoint cycles of lengths $4$, $6$ and $3$ has order $\\text{lcm}(4, 6, 3) = 12$.\n\nCheck: $12$ is a multiple of $4$, $6$ and $3$, while no smaller positive number is a multiple of both $4$ and $6$.\n\n> **Watch out.** Take the least common multiple, not the product: $4 \\cdot 6 \\cdot 3 = 72$ is a power that gives the identity, but $12$ already does.",
+    "不相交的循环可交换，所以置换的幂可以逐个循环计算。一个幂是恒等置换，当且仅当它在每个循环上都是恒等的，这要求指数是每个循环长度的倍数。所以阶是各长度的最小公倍数，共轭的置换有相同的阶。\n\n长度为 $4$、$6$、$3$ 的不相交循环之积的阶为 $\\text{lcm}(4, 6, 3) = 12$。\n\n检验：$12$ 是 $4$、$6$、$3$ 的倍数，而没有更小的正数同时是 $4$ 与 $6$ 的倍数。\n\n> **注意。** 要取最小公倍数，而不是乘积：$4 \\cdot 6 \\cdot 3 = 72$ 次幂确实是恒等置换，但 $12$ 次幂就已经是了。",
   ),
   generate(rng) {
     const a = rng.int(2, 9);
@@ -3082,8 +3301,42 @@ const orderFromCycleType: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong: [a + b + c, a * b * c, Math.max(a, b, c)],
-      solution: t(`The order is $\\text{lcm}(${a}, ${b}, ${c}) = ${answer}$.`, `阶是 $\\text{lcm}(${a}, ${b}, ${c}) = ${answer}$。`),
+      mistakes: apart(answer, [
+        why(
+          a + b + c,
+          "That adds the lengths, which counts the symbols moved, not the order.",
+          "这是把长度相加，数的是被移动的符号个数，而不是阶。",
+        ),
+        why(
+          a * b * c,
+          "That multiplies the lengths; that power is the identity, but a smaller one already is.",
+          "这是把长度相乘；这个次幂确实是恒等置换，但更小的次幂就已经是了。",
+        ),
+        why(
+          Math.max(a, b, c),
+          "That is the longest cycle; the power must be the identity on every cycle at once.",
+          "这是最长的循环的长度；幂必须同时在每个循环上都是恒等的。",
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Power each cycle", "对每个循环求幂"],
+            t(
+              `A power is the identity exactly when its exponent is a multiple of ${a}, ${b} and ${c}.`,
+              `一个幂是恒等置换，当且仅当指数是 ${a}、${b}、${c} 的倍数。`,
+            ),
+          ],
+          [
+            ["Take the least common multiple", "取最小公倍数"],
+            t(`The order is $\\text{lcm}(${a}, ${b}, ${c}) = ${answer}$.`, `阶是 $\\text{lcm}(${a}, ${b}, ${c}) = ${answer}$。`),
+          ],
+        ],
+        t(
+          `$${answer}$ divided by ${a}, ${b} and ${c} gives $${answer / a}$, $${answer / b}$ and $${answer / c}$, all whole numbers.`,
+          `$${answer}$ 分别除以 ${a}、${b}、${c} 得 $${answer / a}$、$${answer / b}$、$${answer / c}$，都是整数。`,
+        ),
+      ),
     });
   },
 };
@@ -3154,8 +3407,8 @@ const solutionSpaceSize: KnowledgePointDef = {
   id: "the-size-of-a-solution-space-over-a-finite-field",
   title: t("The size of a solution space over a finite field", "有限域上解空间的大小"),
   explanation: t(
-    "The rank-nullity theorem holds over any field. A homogeneous system in $n$ unknowns whose matrix has rank $r$ has a solution space of dimension $n - r$. Over $\\mathbb{Z}_p$, a space of dimension $k$ has exactly $p^k$ vectors, since each of $k$ coordinates is a free choice. So dimension counts become exact element counts.",
-    "秩-零化度定理在任何域上都成立。$n$ 个未知数、矩阵秩为 $r$ 的齐次方程组，解空间的维数是 $n - r$。在 $\\mathbb{Z}_p$ 上，$k$ 维空间恰有 $p^k$ 个向量，因为 $k$ 个坐标都可以自由选择。所以维数的计算就成为元素个数的精确计算。",
+    "The rank-nullity theorem holds over any field. A homogeneous system in $n$ unknowns whose matrix has rank $r$ has a solution space of dimension $n - r$. Over $\\mathbb{Z}_p$, a space of dimension $k$ has exactly $p^k$ vectors, since each of $k$ coordinates is a free choice. So dimension counts become exact element counts.\n\nOver $\\mathbb{Z}_2$, the single equation $x + y + z = 0$ has rank $1$ in $3$ unknowns, so it has $2^2 = 4$ solutions: $(0, 0, 0)$, $(1, 1, 0)$, $(1, 0, 1)$ and $(0, 1, 1)$.\n\nCheck: each of these has an even number of entries equal to $1$, so its sum is $0$ in $\\mathbb{Z}_2$.\n\n> **Watch out.** Only the rank matters, not the number of equations: writing the same equation twice still gives rank $1$.",
+    "秩-零化度定理在任何域上都成立。$n$ 个未知数、矩阵秩为 $r$ 的齐次方程组，解空间的维数是 $n - r$。在 $\\mathbb{Z}_p$ 上，$k$ 维空间恰有 $p^k$ 个向量，因为 $k$ 个坐标都可以自由选择。所以维数的计算就成为元素个数的精确计算。\n\n在 $\\mathbb{Z}_2$ 上，单个方程 $x + y + z = 0$ 有 $3$ 个未知数、秩为 $1$，所以有 $2^2 = 4$ 个解：$(0, 0, 0)$、$(1, 1, 0)$、$(1, 0, 1)$ 与 $(0, 1, 1)$。\n\n检验：每个解中等于 $1$ 的分量都有偶数个，所以在 $\\mathbb{Z}_2$ 中和为 $0$。\n\n> **注意。** 只有秩起作用，方程的个数无关：同一个方程写两遍，秩仍是 $1$。",
   ),
   generate(rng) {
     const p = rng.pick(primeList(13));
@@ -3171,10 +3424,46 @@ const solutionSpaceSize: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong: [p ** r, p ** n, (n - r) * p, p ** (n - r + 1)],
-      solution: t(
-        `The solution space has dimension $${n} - ${r} = ${n - r}$, so it has $${count}$ vectors.`,
-        `解空间的维数是 $${n} - ${r} = ${n - r}$，所以它有 $${count}$ 个向量。`,
+      mistakes: apart(answer, [
+        why(
+          p ** r,
+          `That uses the rank; the solution space has dimension $${n} - ${r}$, not ${r}.`,
+          `这用了秩；解空间的维数是 $${n} - ${r}$，不是 ${r}。`,
+        ),
+        why(
+          p ** n,
+          "That counts every vector; only those in the null space solve the system.",
+          "这数的是所有向量；只有零空间中的向量才是解。",
+        ),
+        why(
+          (n - r) * p,
+          `Choices multiply: ${p} values for each of the ${n - r} free coordinates.`,
+          `选择数要相乘：${n - r} 个自由坐标各有 ${p} 种取值。`,
+        ),
+        why(
+          p ** (n - r + 1),
+          `The dimension is $${n} - ${r} = ${n - r}$, one less than that exponent.`,
+          `维数是 $${n} - ${r} = ${n - r}$，比这个指数少 $1$。`,
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Use rank and nullity", "用秩与零化度"],
+            t(`The solution space has dimension $${n} - ${r} = ${n - r}$.`, `解空间的维数是 $${n} - ${r} = ${n - r}$。`),
+          ],
+          [
+            ["Count the vectors", "数向量"],
+            t(
+              `Each of the ${n - r} coordinates in a basis has ${p} values, so there are $${count}$ solutions.`,
+              `在一组基下 ${n - r} 个坐标各有 ${p} 种取值，所以有 $${count}$ 个解。`,
+            ),
+          ],
+        ],
+        t(
+          `The image has $${r === 1 ? p : `${p}^{${r}}`}$ vectors, and $(${p ** r})(${answer}) = ${p ** n} = ${p}^{${n}}$, the size of the whole space.`,
+          `像有 $${r === 1 ? p : `${p}^{${r}}`}$ 个向量，而 $(${p ** r})(${answer}) = ${p ** n} = ${p}^{${n}}$，正是整个空间的大小。`,
+        ),
       ),
     });
   },
@@ -4385,8 +4674,8 @@ const orbitsOfNegation: KnowledgePointDef = {
   id: "counting-the-orbits-of-negation-on-zn",
   title: t("Counting the orbits of negation on Zn", "计算 Zn 上取负作用的轨道数"),
   explanation: t(
-    "The two-element group $\\{1, -1\\}$ acts on the residues modulo $n$ by multiplication. Each orbit is the pair $\\{x, -x\\}$, and this pair has only one element when $x \\equiv -x$. Those fixed residues are 0 and, for even $n$, also $\\frac{n}{2}$. All other residues pair up, so the number of orbits is the number of fixed residues plus half of the rest. Burnside's lemma gives the same count, as the average number of points fixed.",
-    "二元群 $\\{1, -1\\}$ 通过乘法作用在模 $n$ 的剩余上。每个轨道是一对 $\\{x, -x\\}$，当 $x \\equiv -x$ 时这一对只有一个元素。这些不动的剩余是 0，当 $n$ 为偶数时还有 $\\frac{n}{2}$。其余剩余两两配对，所以轨道数是不动剩余的个数加上其余个数的一半。伯恩赛德引理作为不动点个数的平均值，给出同样的结果。",
+    "The two-element group $\\{1, -1\\}$ acts on the residues modulo $n$ by multiplication. Each orbit is the pair $\\{x, -x\\}$, and this pair has only one element when $x \\equiv -x$. Those fixed residues are 0 and, for even $n$, also $\\frac{n}{2}$. All other residues pair up, so the number of orbits is the number of fixed residues plus half of the rest. Burnside's lemma gives the same count, as the average number of points fixed.\n\nOn $\\mathbb{Z}_{10}$ the fixed residues are $0$ and $5$, and the other $8$ form the pairs $\\{1, 9\\}$, $\\{2, 8\\}$, $\\{3, 7\\}$ and $\\{4, 6\\}$, so there are $2 + 4 = 6$ orbits.\n\nCheck: by Burnside's lemma, $1$ fixes all $10$ residues and $-1$ fixes $2$, and $\\frac{10 + 2}{2} = 6$.\n\n> **Watch out.** Halving $n$ forgets the residues that are their own negatives: $0$ always, and $\\frac{n}{2}$ when $n$ is even, each form an orbit of one element.",
+    "二元群 $\\{1, -1\\}$ 通过乘法作用在模 $n$ 的剩余上。每个轨道是一对 $\\{x, -x\\}$，当 $x \\equiv -x$ 时这一对只有一个元素。这些不动的剩余是 0，当 $n$ 为偶数时还有 $\\frac{n}{2}$。其余剩余两两配对，所以轨道数是不动剩余的个数加上其余个数的一半。伯恩赛德引理作为不动点个数的平均值，给出同样的结果。\n\n在 $\\mathbb{Z}_{10}$ 上，不动的剩余是 $0$ 和 $5$，其余 $8$ 个组成 $\\{1, 9\\}$、$\\{2, 8\\}$、$\\{3, 7\\}$、$\\{4, 6\\}$ 四对，所以共有 $2 + 4 = 6$ 个轨道。\n\n检验：由伯恩赛德引理，$1$ 固定全部 $10$ 个剩余，$-1$ 固定 $2$ 个，$\\frac{10 + 2}{2} = 6$。\n\n> **注意。** 直接把 $n$ 减半会漏掉等于自身相反数的剩余：$0$ 总是如此，$n$ 为偶数时 $\\frac{n}{2}$ 也是，它们各自构成只有一个元素的轨道。",
   ),
   generate(rng) {
     const n = rng.int(5, 100);
@@ -4399,10 +4688,38 @@ const orbitsOfNegation: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong: [Math.floor(n / 2), answer + 1, n, 2],
-      solution: t(
-        `Each orbit is $\\{x, -x\\}$. There ${fixed === 1 ? "is $1$ fixed residue, namely 0" : `are $2$ fixed residues, namely 0 and ${n / 2}`}, and the other $${n - fixed}$ residues form $${(n - fixed) / 2}$ pairs. So there are $${answer}$ orbits.`,
-        `每个轨道是 $\\{x, -x\\}$。不动的剩余有 ${fixed === 1 ? "$1$ 个，即 0" : `$2$ 个，即 0 和 ${n / 2}`}，其余 $${n - fixed}$ 个剩余组成 $${(n - fixed) / 2}$ 对。所以共有 $${answer}$ 个轨道。`,
+      mistakes: apart(answer, [
+        why(
+          Math.floor(n / 2),
+          "That pairs up every residue, but the residues equal to their own negatives form orbits of one element.",
+          "这把每个剩余都配了对，但等于自身相反数的剩余各自单独构成一个轨道。",
+        ),
+        why(
+          answer + 1,
+          `Only ${fixed === 1 ? "$0$ is" : `$0$ and $${n / 2}$ are`} fixed by $-1$; no other residue is its own negative.`,
+          `只有 ${fixed === 1 ? "$0$" : `$0$ 与 $${n / 2}$`} 被 $-1$ 固定；其他剩余都不等于自身的相反数。`,
+        ),
+        why(n, "That is the number of residues; most orbits contain two of them.", "这是剩余的个数；大多数轨道含有两个剩余。"),
+        why(2, "That is the order of the group, not the number of orbits.", "这是群的阶，而不是轨道的个数。"),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Find the fixed residues", "求不动的剩余"],
+            t(
+              `$x \\equiv -x$ means $2x \\equiv 0 \\pmod{${n}}$: ${fixed === 1 ? "only $0$" : `$0$ and $${n / 2}$`}.`,
+              `$x \\equiv -x$ 即 $2x \\equiv 0 \\pmod{${n}}$：${fixed === 1 ? "只有 $0$" : `$0$ 与 $${n / 2}$`}。`,
+            ),
+          ],
+          [
+            ["Pair up the rest", "其余两两配对"],
+            t(
+              `The other $${n - fixed}$ residues form $${(n - fixed) / 2}$ pairs $\\{x, -x\\}$, so there are $${fixed} + ${(n - fixed) / 2} = ${answer}$ orbits.`,
+              `其余 $${n - fixed}$ 个剩余组成 $${(n - fixed) / 2}$ 对 $\\{x, -x\\}$，所以共有 $${fixed} + ${(n - fixed) / 2} = ${answer}$ 个轨道。`,
+            ),
+          ],
+        ],
+        t(`By Burnside's lemma, $\\frac{${n} + ${fixed}}{2} = ${answer}$.`, `由伯恩赛德引理，$\\frac{${n} + ${fixed}}{2} = ${answer}$。`),
       ),
     });
   },
@@ -4413,8 +4730,8 @@ const gridColorings: KnowledgePointDef = {
   figure: algebraDrawings2["burnsides-lemma#colorings-of-a-square-grid-up-to-rotation"],
   title: t("Colorings of a square grid up to rotation", "旋转意义下方格的染色"),
   explanation: t(
-    "Burnside's lemma counts colorings up to rotation by averaging the numbers of colorings fixed by each of the four rotations. A coloring is fixed by a rotation exactly when it is constant on each cycle of cells, so a rotation with $m$ cycles fixes $c^m$ colorings. The identity has one cycle per cell. The quarter turns have the fewest cycles, since most cells move through a four-cell loop. A central cell, if there is one, always forms a cycle by itself.",
-    "伯恩赛德引理把四个旋转各自固定的染色数取平均，来计算旋转意义下的染色数。一个染色被旋转固定，当且仅当它在方格的每个循环上取常数，所以有 $m$ 个循环的旋转固定 $c^m$ 种染色。恒等变换每格一个循环。四分之一转的循环最少，因为大多数方格在四格环中移动。如果有中心格，它总是单独成一个循环。",
+    "Burnside's lemma counts colorings up to rotation by averaging the numbers of colorings fixed by each of the four rotations. A coloring is fixed by a rotation exactly when it is constant on each cycle of cells, so a rotation with $m$ cycles fixes $c^m$ colorings. The identity has one cycle per cell. The quarter turns have the fewest cycles, since most cells move through a four-cell loop. A central cell, if there is one, always forms a cycle by itself.\n\nColor a $3 \\times 3$ grid with $2$ colors. The identity has $9$ cycles, the half turn $5$ (four pairs and the center), and each quarter turn $3$ (two loops of four and the center), so there are $\\frac{2^9 + 2^5 + 2 \\cdot 2^3}{4} = \\frac{512 + 32 + 16}{4} = 140$ colorings.\n\nCheck: $9 = 4 + 4 + 1$ cells for a quarter turn and $9 = 2 \\cdot 4 + 1$ for the half turn, every cell counted once.\n\n> **Watch out.** Average over all four rotations, the identity included, and count the two quarter turns separately: the denominator is $4$.",
+    "伯恩赛德引理把四个旋转各自固定的染色数取平均，来计算旋转意义下的染色数。一个染色被旋转固定，当且仅当它在方格的每个循环上取常数，所以有 $m$ 个循环的旋转固定 $c^m$ 种染色。恒等变换每格一个循环。四分之一转的循环最少，因为大多数方格在四格环中移动。如果有中心格，它总是单独成一个循环。\n\n用 $2$ 种颜色给 $3 \\times 3$ 方格染色。恒等变换有 $9$ 个循环，半周旋转有 $5$ 个（四对加上中心），每个四分之一转有 $3$ 个（两个四格环加上中心），所以共有 $\\frac{2^9 + 2^5 + 2 \\cdot 2^3}{4} = \\frac{512 + 32 + 16}{4} = 140$ 种染色。\n\n检验：四分之一转时 $9 = 4 + 4 + 1$ 格，半周旋转时 $9 = 2 \\cdot 4 + 1$ 格，每格恰好数一次。\n\n> **注意。** 要对全部四个旋转（包括恒等变换）取平均，两个四分之一转要分别计入：分母是 $4$。",
   ),
   generate(rng) {
     const size = rng.pick([2, 3, 3, 4, 4]);
@@ -4429,10 +4746,49 @@ const gridColorings: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong: [c ** identity, Math.floor(c ** identity / 4), (c ** identity + c ** half) / 2, answer + 1],
-      solution: t(
-        `The identity has ${identity} cycles of cells, the half turn has ${half}, and each of the two quarter turns has ${quarter}. So Burnside's lemma gives $\\frac{${power(identity)} + ${power(half)} + 2 \\cdot ${power(quarter)}}{4} = ${answer}$.`,
-        `恒等变换有 ${identity} 个方格循环，半周旋转有 ${half} 个，两个四分之一转各有 ${quarter} 个。所以伯恩赛德引理给出 $\\frac{${power(identity)} + ${power(half)} + 2 \\cdot ${power(quarter)}}{4} = ${answer}$。`,
+      mistakes: apart(answer, [
+        why(
+          c ** identity,
+          "That counts all colorings, without treating rotated ones as the same.",
+          "这数的是全部染色，没有把旋转后相同的染色视为同一种。",
+        ),
+        why(
+          Math.floor(c ** identity / 4),
+          "Dividing all colorings by $4$ assumes no coloring is fixed by a turn; Burnside's lemma corrects for the ones that are.",
+          "把全部染色数除以 $4$，相当于假设没有染色被旋转固定；伯恩赛德引理修正了被固定的那些。",
+        ),
+        why(
+          (c ** identity + c ** half) / 2,
+          "That counts colorings up to the half turn only; the quarter turns identify more of them.",
+          "这只考虑了半周旋转；四分之一转会使更多染色视为相同。",
+        ),
+        why(
+          answer + 1,
+          `Burnside's average is exactly $${answer}$; nothing more is added.`,
+          `伯恩赛德引理的平均值恰为 $${answer}$；不需要再加什么。`,
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Count the cycles", "数循环"],
+            t(
+              `The identity has ${identity} cycles of cells, the half turn has ${half}, and each of the two quarter turns has ${quarter}.`,
+              `恒等变换有 ${identity} 个方格循环，半周旋转有 ${half} 个，两个四分之一转各有 ${quarter} 个。`,
+            ),
+          ],
+          [
+            ["Average the fixed colorings", "对固定的染色数取平均"],
+            t(
+              `Burnside's lemma gives $\\frac{${power(identity)} + ${power(half)} + 2 \\cdot ${power(quarter)}}{4} = ${answer}$.`,
+              `伯恩赛德引理给出 $\\frac{${power(identity)} + ${power(half)} + 2 \\cdot ${power(quarter)}}{4} = ${answer}$。`,
+            ),
+          ],
+        ],
+        t(
+          `$4 \\cdot ${answer} = ${4 * answer} = ${c ** identity} + ${c ** half} + ${2 * c ** quarter}$, the total of the fixed colorings.`,
+          `$4 \\cdot ${answer} = ${4 * answer} = ${c ** identity} + ${c ** half} + ${2 * c ** quarter}$，正是被固定的染色总数。`,
+        ),
       ),
     });
   },

@@ -2,16 +2,20 @@
 // polynomials: the reverse question, a harder case or a common trap.
 // See `deeperAbstractAlgebraThird2Points`.
 
-import type { KnowledgePointDef } from "@ga/content";
+import type { KnowledgePointDef, Text } from "@ga/content";
 import { t } from "@ga/content";
 import { poly } from "@ga/subject-math";
 import { algebraDrawings2 } from "../explanation-drawings-abstract-algebra-2.ts";
 
 import { numberProblem, why } from "../problems.ts";
-import { ask, choose, divisors, factorize, type Pair, point, powMod, totient } from "../university-kit.ts";
+import { choose, divisors, factorize, type Pair, point, powMod, totient } from "../university-kit.ts";
+import { type Reason, reasoned } from "../wrong-reasons.ts";
 import { walked } from "./calculus-i-differentiation.ts";
 import { factorial } from "./deeper-abstract-algebra-third.ts";
 import { gcd, lcm } from "./deeper-methods-of-proof-third.ts";
+
+/** asPair turns a text into a pair, so that a walked solution can go where a pair is expected. */
+const asPair = (x: Text): Pair => [x.en, x["zh-CN"]];
 
 /** binomial gives the number of ways to choose k things from n. */
 const binomial = (n: number, k: number) => {
@@ -35,8 +39,8 @@ const burnside = point(
   "counting-orbits-from-fixed-points",
   ["Counting orbits from fixed points", "由不动点计算轨道数"],
   [
-    "Burnside's lemma counts orbits by averaging: the number of orbits is the sum over the group of the number of points each element fixes, divided by the order of the group. The identity fixes every point, so it must be included in the sum.",
-    "伯恩赛德引理用求平均的方法计算轨道数：轨道数等于群中每个元素固定的点数之和，再除以群的阶。单位元固定每个点，所以必须计入总和。",
+    "Burnside's lemma counts orbits by averaging: the number of orbits is the sum over the group of the number of points each element fixes, divided by the order of the group. The identity fixes every point, so it must be included in the sum.\n\nA group of order $4$ acts on $7$ points, and besides the identity its elements fix $1$, $3$ and $1$ points. The sum is $7 + 1 + 3 + 1 = 12$, so there are $\\frac{12}{4} = 3$ orbits.\n\nCheck: the cyclic group of order $4$ acting with orbits of sizes $1$, $2$ and $4$ gives exactly these fixed points, and it has $3$ orbits.\n\n> **Watch out.** Leaving out the identity gives $\\frac{1 + 3 + 1}{4} = \\frac{5}{4}$, not even a whole number; its fixed points, the whole set, belong in the sum.",
+    "伯恩赛德引理用求平均的方法计算轨道数：轨道数等于群中每个元素固定的点数之和，再除以群的阶。单位元固定每个点，所以必须计入总和。\n\n阶为 $4$ 的群作用在 $7$ 个点上，除单位元外各元素分别固定 $1$、$3$、$1$ 个点。总和是 $7 + 1 + 3 + 1 = 12$，所以有 $\\frac{12}{4} = 3$ 个轨道。\n\n检验：$4$ 阶循环群以大小为 $1$、$2$、$4$ 的轨道作用时，恰好给出这些不动点个数，它有 $3$ 个轨道。\n\n> **注意。** 漏掉单位元会得到 $\\frac{1 + 3 + 1}{4} = \\frac{5}{4}$，连整数都不是；单位元的不动点，也就是整个集合，必须计入总和。",
   ],
   (rng) => {
     const g = rng.pick([4, 6, 8, 10, 12]);
@@ -47,18 +51,45 @@ const burnside = point(
     const fixes = [...Array(g - 1).keys()].map((i) => orbits.filter((d) => (i + 1) % d === 0).reduce((a, b) => a + b, 0));
     const total = size + fixes.reduce((a, b) => a + b, 0);
     const list = rng.shuffle(fixes);
-    return ask(
-      [
+    return numberProblem({
+      prompt: t(
         `A group of order $${g}$ acts on a set of $${size}$ points. Besides the identity, its elements fix $${list.join(", ")}$ points. How many orbits are there?`,
         `阶为 $${g}$ 的群作用在 $${size}$ 个点的集合上。除单位元外，各元素分别固定 $${list.join(", ")}$ 个点。有多少个轨道？`,
-      ],
+      ),
       answer,
-      [Math.floor((total - size) / g), Math.floor(total / (g - 1)), total],
-      [
-        `The identity fixes all $${size}$ points, so the total is $${total}$. Dividing by the group order gives $\\frac{${total}}{${g}} = ${answer}$.`,
-        `单位元固定全部 $${size}$ 个点，所以总和是 $${total}$。除以群的阶，得 $\\frac{${total}}{${g}} = ${answer}$。`,
-      ],
-    );
+      mistakes: distinctRingMistakes(answer, [
+        why(
+          Math.floor((total - size) / g),
+          `That leaves out the identity, which fixes all $${size}$ points.`,
+          `这漏掉了单位元，它固定全部 $${size}$ 个点。`,
+        ),
+        why(
+          Math.floor(total / (g - 1)),
+          `That divides by $${g - 1}$, the elements other than the identity; the average is over all $${g}$ elements.`,
+          `这是除以单位元以外的 $${g - 1}$ 个元素；平均要对全部 $${g}$ 个元素取。`,
+        ),
+        why(total, `That is the sum of the fixed points; divide it by the order $${g}$.`, `这是不动点之和；还要除以群的阶 $${g}$。`),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Add the fixed points", "求不动点之和"],
+            t(
+              `The identity fixes all $${size}$ points, so the total is $${size} + ${list.join(" + ")} = ${total}$.`,
+              `单位元固定全部 $${size}$ 个点，所以总和是 $${size} + ${list.join(" + ")} = ${total}$。`,
+            ),
+          ],
+          [
+            ["Divide by the order", "除以群的阶"],
+            t(
+              `By Burnside's lemma there are $\\frac{${total}}{${g}} = ${answer}$ orbits.`,
+              `由伯恩赛德引理，共有 $\\frac{${total}}{${g}} = ${answer}$ 个轨道。`,
+            ),
+          ],
+        ],
+        t(`$${answer} \\cdot ${g} = ${total}$, the sum of the fixed points.`, `$${answer} \\cdot ${g} = ${total}$，正是不动点之和。`),
+      ),
+    });
   },
 );
 
@@ -66,8 +97,8 @@ const orbitsFromStabilizers = point(
   "the-number-of-orbits-when-stabilizers-agree",
   ["The number of orbits when stabilizers agree", "稳定子大小相同时的轨道数"],
   [
-    "If every stabilizer has the same order, then the orbit-stabilizer theorem makes all the orbits the same size, namely the group order divided by the stabilizer order. Since the orbits partition the set, the number of orbits is the set size divided by this common orbit size.",
-    "如果每个稳定子的阶都相同，轨道-稳定子定理使所有轨道大小相同，都等于群的阶除以稳定子的阶。由于轨道划分集合，轨道数就是集合大小除以这个公共的轨道大小。",
+    "If every stabilizer has the same order, then the orbit-stabilizer theorem makes all the orbits the same size, namely the group order divided by the stabilizer order. Since the orbits partition the set, the number of orbits is the set size divided by this common orbit size.\n\nA group of order $24$ acts on $30$ elements, and every stabilizer has order $4$. Each orbit has $\\frac{24}{4} = 6$ elements, so there are $\\frac{30}{6} = 5$ orbits.\n\nCheck: $5$ orbits of $6$ elements make $5 \\cdot 6 = 30$ elements.\n\n> **Watch out.** Divide the size of the set by the size of an orbit, not by the order of the stabilizer: $\\frac{30}{4}$ is not even a whole number.",
+    "如果每个稳定子的阶都相同，轨道-稳定子定理使所有轨道大小相同，都等于群的阶除以稳定子的阶。由于轨道划分集合，轨道数就是集合大小除以这个公共的轨道大小。\n\n阶为 $24$ 的群作用在 $30$ 个元素上，每个稳定子的阶都是 $4$。每个轨道有 $\\frac{24}{4} = 6$ 个元素，所以有 $\\frac{30}{6} = 5$ 个轨道。\n\n检验：$5$ 个各含 $6$ 个元素的轨道共有 $5 \\cdot 6 = 30$ 个元素。\n\n> **注意。** 要用集合的大小除以轨道的大小，而不是除以稳定子的阶：$\\frac{30}{4}$ 连整数都不是。",
   ],
   (rng) => {
     const g = rng.pick([12, 24, 36, 48, 60, 72, 120]);
@@ -75,18 +106,41 @@ const orbitsFromStabilizers = point(
     const size = g / s;
     const answer = rng.int(2, 12);
     const X = answer * size;
-    return ask(
-      [
+    return numberProblem({
+      prompt: t(
         `A group of order $${g}$ acts on a set of $${X}$ elements, and every stabilizer has order $${s}$. How many orbits are there?`,
         `阶为 $${g}$ 的群作用在 $${X}$ 个元素的集合上，每个稳定子的阶都是 $${s}$。有多少个轨道？`,
-      ],
+      ),
       answer,
-      [size, X === g ? X + 1 : Math.max(X, g), s === answer ? answer + 1 : s],
-      [
-        `Each orbit has $\\frac{${g}}{${s}} = ${size}$ elements, and the orbits partition the set. So there are $\\frac{${X}}{${size}} = ${answer}$ orbits.`,
-        `每个轨道有 $\\frac{${g}}{${s}} = ${size}$ 个元素，轨道划分集合。所以有 $\\frac{${X}}{${size}} = ${answer}$ 个轨道。`,
-      ],
-    );
+      mistakes: distinctRingMistakes(answer, [
+        why(size, "That is the size of each orbit, not the number of orbits.", "这是每个轨道的大小，而不是轨道的个数。"),
+        why(X, "That is the number of elements; each orbit holds several of them.", "这是元素的个数；每个轨道含有多个元素。"),
+        why(g, "That is the order of the group, not the number of orbits.", "这是群的阶，而不是轨道的个数。"),
+        why(s, "That is the order of each stabilizer, not the number of orbits.", "这是每个稳定子的阶，而不是轨道的个数。"),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Find the orbit size", "求轨道的大小"],
+            t(
+              `By the orbit-stabilizer theorem each orbit has $\\frac{${g}}{${s}} = ${size}$ elements.`,
+              `由轨道-稳定子定理，每个轨道有 $\\frac{${g}}{${s}} = ${size}$ 个元素。`,
+            ),
+          ],
+          [
+            ["Divide the set", "划分集合"],
+            t(
+              `The orbits partition the set, so there are $\\frac{${X}}{${size}} = ${answer}$ orbits.`,
+              `轨道划分集合，所以有 $\\frac{${X}}{${size}} = ${answer}$ 个轨道。`,
+            ),
+          ],
+        ],
+        t(
+          `$${answer}$ orbits of $${size}$ elements make $${answer} \\cdot ${size} = ${X}$ elements.`,
+          `$${answer}$ 个各含 $${size}$ 个元素的轨道共有 $${answer} \\cdot ${size} = ${X}$ 个元素。`,
+        ),
+      ),
+    });
   },
 );
 
@@ -95,8 +149,8 @@ const dihedralClasses = {
     "the-conjugacy-classes-of-a-dihedral-group",
     ["The conjugacy classes of a dihedral group", "二面体群的共轭类"],
     [
-      "The class equation sorts a group by conjugacy. In $D_{n}$, each rotation is conjugate to its inverse, and the reflections form one class for odd $n$ and two for even $n$. So the number of classes depends on the parity of $n$.",
-      "类方程按共轭关系对群进行分类。在 $D_{n}$ 中，每个旋转都与它的逆共轭，反射当 $n$ 为奇数时构成一个类，当 $n$ 为偶数时构成两个类。所以类的个数取决于 $n$ 的奇偶性。",
+      "The class equation sorts a group by conjugacy. In $D_{n}$, each rotation is conjugate to its inverse, and the reflections form one class for odd $n$ and two for even $n$. So the number of classes depends on the parity of $n$.\n\nIn $D_{7}$ the rotation classes are $\\{e\\}$, $\\{r, r^{6}\\}$, $\\{r^{2}, r^{5}\\}$ and $\\{r^{3}, r^{4}\\}$, and the $7$ reflections form one class, so there are $4 + 1 = 5$ classes.\n\nCheck: the class sizes $1 + 2 + 2 + 2 + 7 = 14$ add up to the order of $D_{7}$.\n\n> **Watch out.** For even $n$ the half turn $r^{n/2}$ is its own inverse and forms a class of its own, and the reflections split into two classes.",
+      "类方程按共轭关系对群进行分类。在 $D_{n}$ 中，每个旋转都与它的逆共轭，反射当 $n$ 为奇数时构成一个类，当 $n$ 为偶数时构成两个类。所以类的个数取决于 $n$ 的奇偶性。\n\n在 $D_{7}$ 中，旋转的共轭类为 $\\{e\\}$、$\\{r, r^{6}\\}$、$\\{r^{2}, r^{5}\\}$、$\\{r^{3}, r^{4}\\}$，$7$ 个反射构成一个类，所以共有 $4 + 1 = 5$ 个类。\n\n检验：各类大小之和 $1 + 2 + 2 + 2 + 7 = 14$，正是 $D_{7}$ 的阶。\n\n> **注意。** $n$ 为偶数时，半周旋转 $r^{n/2}$ 是它自身的逆，单独构成一个类，而反射分成两个类。",
     ],
     (rng) => {
       const n = rng.int(3, 40);
@@ -104,18 +158,64 @@ const dihedralClasses = {
       const rotationClasses = even ? n / 2 + 1 : (n + 1) / 2;
       const reflectionClasses = even ? 2 : 1;
       const answer = rotationClasses + reflectionClasses;
-      return ask(
-        [
+      const pairs = even ? n / 2 - 1 : (n - 1) / 2;
+      const pairSizes = pairs === 1 ? "2" : `${pairs} \\cdot 2`;
+      return numberProblem({
+        prompt: t(
           `How many conjugacy classes does the dihedral group $D_{${n}}$ of order $${2 * n}$ have?`,
           `阶为 $${2 * n}$ 的二面体群 $D_{${n}}$ 有多少个共轭类？`,
-        ],
+        ),
         answer,
-        [n, 2 * n, rotationClasses + (even ? 1 : 2)],
-        [
-          `The rotations form $${rotationClasses}$ classes, by pairing each with its inverse. The reflections form $${reflectionClasses}$ ${reflectionClasses === 1 ? "class" : "classes"}, since $${n}$ is ${even ? "even" : "odd"}. The total is $${answer}$.`,
-          `把每个旋转与它的逆配对，旋转构成 $${rotationClasses}$ 个类。由于 $${n}$ 是${even ? "偶数" : "奇数"}，反射构成 $${reflectionClasses}$ 个类。总数是 $${answer}$。`,
-        ],
-      );
+        mistakes: distinctRingMistakes(answer, [
+          why(
+            n,
+            "That counts the rotations, one class each, and leaves out the reflections.",
+            "这是把每个旋转算作一个类，并且漏掉了反射。",
+          ),
+          why(2 * n, "That is the order of the group; conjugate elements share a class.", "这是群的阶；互相共轭的元素属于同一个类。"),
+          why(
+            rotationClasses + (even ? 1 : 2),
+            even
+              ? `For even $${n}$ the reflections form two classes, by the parity of the exponent, not one.`
+              : `For odd $${n}$ all the reflections are conjugate and form one class, not two.`,
+            even
+              ? `$${n}$ 为偶数时，反射按指数的奇偶构成两个类，而不是一个。`
+              : `$${n}$ 为奇数时，全部反射互相共轭，构成一个类，而不是两个。`,
+          ),
+        ]),
+        solution: walked(
+          [
+            [
+              ["Count the rotation classes", "数旋转的共轭类"],
+              even
+                ? t(
+                    `$\\{e\\}$, $\\{r^{${n / 2}}\\}$ and the $${pairs}$ ${pairs === 1 ? "pair" : "pairs"} $\\{r^{k}, r^{-k}\\}$: $${rotationClasses}$ classes.`,
+                    `$\\{e\\}$、$\\{r^{${n / 2}}\\}$ 与 $${pairs}$ 对 $\\{r^{k}, r^{-k}\\}$：共 $${rotationClasses}$ 个类。`,
+                  )
+                : t(
+                    `$\\{e\\}$ and the $${pairs}$ ${pairs === 1 ? "pair" : "pairs"} $\\{r^{k}, r^{-k}\\}$: $${rotationClasses}$ classes.`,
+                    `$\\{e\\}$ 与 $${pairs}$ 对 $\\{r^{k}, r^{-k}\\}$：共 $${rotationClasses}$ 个类。`,
+                  ),
+            ],
+            [
+              ["Count the reflection classes", "数反射的共轭类"],
+              t(
+                `$${n}$ is ${even ? "even" : "odd"}, so the reflections form $${reflectionClasses}$ ${reflectionClasses === 1 ? "class" : "classes"}: $${rotationClasses} + ${reflectionClasses} = ${answer}$.`,
+                `$${n}$ 是${even ? "偶数" : "奇数"}，所以反射构成 $${reflectionClasses}$ 个类：$${rotationClasses} + ${reflectionClasses} = ${answer}$。`,
+              ),
+            ],
+          ],
+          even
+            ? t(
+                `The class sizes $1 + 1 + ${pairSizes} + 2 \\cdot ${n / 2}$ add up to $${2 * n}$, the order of the group.`,
+                `各类大小之和 $1 + 1 + ${pairSizes} + 2 \\cdot ${n / 2}$ 等于 $${2 * n}$，正是群的阶。`,
+              )
+            : t(
+                `The class sizes $1 + ${pairSizes} + ${n}$ add up to $${2 * n}$, the order of the group.`,
+                `各类大小之和 $1 + ${pairSizes} + ${n}$ 等于 $${2 * n}$，正是群的阶。`,
+              ),
+        ),
+      });
     },
   ),
   figure: algebraDrawings2["the-class-equation-of-a-group-action#the-conjugacy-classes-of-a-dihedral-group"],
@@ -125,23 +225,68 @@ const cycleConjugates = point(
   "the-number-of-conjugates-of-a-cycle",
   ["The number of conjugates of a cycle", "循环的共轭元个数"],
   [
-    "Two permutations are conjugate exactly when they have the same cycle type, so the conjugates of a cycle are all the cycles of that length. Choosing and ordering the letters overcounts each cycle once for each of its cyclic rotations, so the count is $\\frac{n!}{k \\cdot (n - k)!}$.",
-    "两个置换共轭当且仅当它们的循环类型相同，所以一个循环的共轭元就是所有同长度的循环。选择并排列字母时，每个循环按其旋转方式被重复计数，所以个数是 $\\frac{n!}{k \\cdot (n - k)!}$。",
+    "Two permutations are conjugate exactly when they have the same cycle type, so the conjugates of a cycle are all the cycles of that length. Choosing and ordering the letters overcounts each cycle once for each of its cyclic rotations, so the count is $\\frac{n!}{k \\cdot (n - k)!}$.\n\nIn $S_{5}$ the conjugates of $(1\\;2\\;3)$ are the $3$-cycles: $\\frac{5!}{3 \\cdot 2!} = \\frac{120}{6} = 20$ of them.\n\nCheck: the $3$ letters can be chosen in $\\binom{5}{3} = 10$ ways, and each choice gives $2$ different $3$-cycles, so $10 \\cdot 2 = 20$.\n\n> **Watch out.** Divide by $k$: $(1\\;2\\;3)$, $(2\\;3\\;1)$ and $(3\\;1\\;2)$ are the same cycle, written from different starting letters.",
+    "两个置换共轭当且仅当它们的循环类型相同，所以一个循环的共轭元就是所有同长度的循环。选择并排列字母时，每个循环按其旋转方式被重复计数，所以个数是 $\\frac{n!}{k \\cdot (n - k)!}$。\n\n在 $S_{5}$ 中，$(1\\;2\\;3)$ 的共轭元就是各个 $3$-循环：共 $\\frac{5!}{3 \\cdot 2!} = \\frac{120}{6} = 20$ 个。\n\n检验：$3$ 个字母有 $\\binom{5}{3} = 10$ 种选法，每种选法给出 $2$ 个不同的 $3$-循环，所以 $10 \\cdot 2 = 20$。\n\n> **注意。** 要除以 $k$：$(1\\;2\\;3)$、$(2\\;3\\;1)$、$(3\\;1\\;2)$ 是同一个循环，只是从不同的字母开始写。",
   ],
   (rng) => {
     const n = rng.int(4, 10);
     const k = rng.int(2, n);
     const answer = factorial(n) / (k * factorial(n - k));
     const cycle = [...Array(k).keys()].map((i) => i + 1).join("\\;");
-    return ask(
-      [`How many conjugates does $(${cycle})$ have in $S_{${n}}$?`, `$(${cycle})$ 在 $S_{${n}}$ 中有多少个共轭元？`],
+    const ordered = factorial(n) / factorial(n - k);
+    return numberProblem({
+      prompt: t(`How many conjugates does $(${cycle})$ have in $S_{${n}}$?`, `$(${cycle})$ 在 $S_{${n}}$ 中有多少个共轭元？`),
       answer,
-      [binomial(n, k), factorial(n) / factorial(n - k), factorial(n) / k],
-      [
-        `The conjugates are the cycles of length $${k}$. There are $\\frac{${n}!}{${n - k}!}$ ordered choices of letters, and each cycle arises $${k}$ times, which gives $${answer}$.`,
-        `共轭元就是长度为 $${k}$ 的循环。字母的有序选择有 $\\frac{${n}!}{${n - k}!}$ 种，每个循环出现 $${k}$ 次，所以得 $${answer}$。`,
-      ],
-    );
+      mistakes: distinctRingMistakes(answer, [
+        why(
+          binomial(n, k),
+          `That chooses the ${k} letters but not the order around the cycle.`,
+          `这选出了 ${k} 个字母，但没有考虑它们在循环中的顺序。`,
+        ),
+        why(
+          ordered,
+          `That orders the letters, but each cycle can be written from any of its $${k}$ letters.`,
+          `这对字母排了序，但每个循环可以从它的 $${k}$ 个字母中任何一个开始写。`,
+        ),
+        why(
+          factorial(n) / k,
+          `That divides $${n}!$ by $${k}$, but the letters outside the cycle are not arranged at all.`,
+          `这是用 $${n}!$ 除以 $${k}$，但循环以外的字母根本不需要排列。`,
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Order the letters", "排列字母"],
+            t(
+              `The conjugates are the cycles of length $${k}$. Writing one down takes an ordered choice of $${k}$ letters: $\\frac{${n}!}{${n - k}!} = ${ordered}$ ways.`,
+              `共轭元就是长度为 $${k}$ 的循环。写出一个这样的循环需要有序地选出 $${k}$ 个字母：共 $\\frac{${n}!}{${n - k}!} = ${ordered}$ 种。`,
+            ),
+          ],
+          [
+            ["Divide by the starting letters", "除以起始字母的选法"],
+            t(
+              `Each cycle arises $${k}$ times, once for each starting letter: $\\frac{${ordered}}{${k}} = ${answer}$.`,
+              `每个循环出现 $${k}$ 次，每个起始字母一次：$\\frac{${ordered}}{${k}} = ${answer}$。`,
+            ),
+          ],
+        ],
+        k === 2
+          ? t(
+              `Each pair of letters gives one transposition, and $\\binom{${n}}{2} = ${answer}$.`,
+              `每对字母给出一个对换，且 $\\binom{${n}}{2} = ${answer}$。`,
+            )
+          : k === n
+            ? t(
+                `The cycle uses all $${n}$ letters; starting it at $1$, the other letters can follow in $${n - 1}! = ${answer}$ orders.`,
+                `这个循环用到全部 $${n}$ 个字母；从 $1$ 开始写，其余字母有 $${n - 1}! = ${answer}$ 种排列顺序。`,
+              )
+            : t(
+                `Choose the letters in $\\binom{${n}}{${k}} = ${binomial(n, k)}$ ways; each choice gives $${k - 1}! = ${factorial(k - 1)}$ cycles, and $${binomial(n, k)} \\cdot ${factorial(k - 1)} = ${answer}$.`,
+                `字母有 $\\binom{${n}}{${k}} = ${binomial(n, k)}$ 种选法；每种选法给出 $${k - 1}! = ${factorial(k - 1)}$ 个循环，且 $${binomial(n, k)} \\cdot ${factorial(k - 1)} = ${answer}$。`,
+              ),
+      ),
+    });
   },
 );
 
@@ -150,8 +295,8 @@ const rotationsWithCycles = {
     "how-many-rotations-have-a-given-cycle-type",
     ["How many rotations have a given cycle type", "具有给定循环类型的旋转个数"],
     [
-      "The rotation $r^{j}$ of a regular $n$-gon splits the vertices into $\\gcd(j, n)$ cycles. So the number of rotations with exactly $d$ cycles is the number of $j$ with $\\gcd(j, n) = d$, and this count equals $\\varphi\\left(\\frac{n}{d}\\right)$.",
-      "正 $n$ 边形的旋转 $r^{j}$ 把顶点分成 $\\gcd(j, n)$ 个循环。所以恰好有 $d$ 个循环的旋转个数，就是满足 $\\gcd(j, n) = d$ 的 $j$ 的个数，它等于 $\\varphi\\left(\\frac{n}{d}\\right)$。",
+      "The rotation $r^{j}$ of a regular $n$-gon splits the vertices into $\\gcd(j, n)$ cycles. So the number of rotations with exactly $d$ cycles is the number of $j$ with $\\gcd(j, n) = d$, and this count equals $\\varphi\\left(\\frac{n}{d}\\right)$.\n\nIn a regular hexagon, the rotations with exactly $2$ cycles are those with $\\gcd(j, 6) = 2$, namely $r^{2}$ and $r^{4}$: $\\varphi(3) = 2$ rotations.\n\nCheck: $r^{2}$ has the cycles $(0\\;2\\;4)$ and $(1\\;3\\;5)$, and $r^{4}$ the same two sets of vertices.\n\n> **Watch out.** Apply $\\varphi$ to $\\frac{n}{d}$, the length of each cycle, not to $d$: above, $\\varphi(2) = 1$ would miss one of the two rotations.",
+      "正 $n$ 边形的旋转 $r^{j}$ 把顶点分成 $\\gcd(j, n)$ 个循环。所以恰好有 $d$ 个循环的旋转个数，就是满足 $\\gcd(j, n) = d$ 的 $j$ 的个数，它等于 $\\varphi\\left(\\frac{n}{d}\\right)$。\n\n在正六边形中，恰有 $2$ 个循环的旋转是满足 $\\gcd(j, 6) = 2$ 的那些，即 $r^{2}$ 与 $r^{4}$：共 $\\varphi(3) = 2$ 个旋转。\n\n检验：$r^{2}$ 的循环是 $(0\\;2\\;4)$ 与 $(1\\;3\\;5)$，$r^{4}$ 的循环也是这两组顶点。\n\n> **注意。** $\\varphi$ 要作用于每个循环的长度 $\\frac{n}{d}$，而不是 $d$：上例中 $\\varphi(2) = 1$ 会漏掉两个旋转中的一个。",
     ],
     (rng) => {
       let n = rng.int(6, 60);
@@ -159,18 +304,53 @@ const rotationsWithCycles = {
       const d = rng.pick(divisors(n).filter((x) => x < n));
       const quotient = n / d;
       const answer = totient(quotient);
-      return ask(
-        [
+      const jt = d === 1 ? "t" : `${d}t`;
+      return numberProblem({
+        prompt: t(
           `How many of the $${n}$ rotations of a regular ${n}-gon split the vertices into exactly $${d}$ ${d === 1 ? "cycle" : "cycles"}?`,
           `正 ${n} 边形的 $${n}$ 个旋转中，有多少个恰好把顶点分成 $${d}$ 个循环？`,
-        ],
+        ),
         answer,
-        [d, quotient, totient(n)],
-        [
-          `We count $j$ with $\\gcd(j, ${n}) = ${d}$. Writing $j = ${d}t$, we need $\\gcd(t, ${quotient}) = 1$, which gives $\\varphi(${quotient}) = ${answer}$ rotations.`,
-          `要计算满足 $\\gcd(j, ${n}) = ${d}$ 的 $j$。写成 $j = ${d}t$，需要 $\\gcd(t, ${quotient}) = 1$，所以有 $\\varphi(${quotient}) = ${answer}$ 个旋转。`,
-        ],
-      );
+        mistakes: distinctRingMistakes(answer, [
+          why(
+            d,
+            "That is the number of cycles, not the number of rotations that have them.",
+            "这是循环的个数，而不是具有这些循环的旋转个数。",
+          ),
+          why(
+            quotient,
+            `That is the length of each cycle; only the $j = ${jt}$ with $\\gcd(t, ${quotient}) = 1$ count.`,
+            `这是每个循环的长度；只有满足 $\\gcd(t, ${quotient}) = 1$ 的 $j = ${jt}$ 才算数。`,
+          ),
+          why(
+            totient(n),
+            `That counts the rotations with $\\gcd(j, ${n}) = 1$, which have a single cycle.`,
+            `这数的是满足 $\\gcd(j, ${n}) = 1$ 的旋转，它们只有一个循环。`,
+          ),
+        ]),
+        solution: walked(
+          [
+            [
+              ["Set up the condition", "写出条件"],
+              t(
+                `$r^{j}$ has $\\gcd(j, ${n})$ cycles, so we count $j$ from $1$ to $${n}$ with $\\gcd(j, ${n}) = ${d}$.`,
+                `$r^{j}$ 有 $\\gcd(j, ${n})$ 个循环，所以要数 $1$ 到 $${n}$ 中满足 $\\gcd(j, ${n}) = ${d}$ 的 $j$。`,
+              ),
+            ],
+            [
+              ["Count the exponents", "数指数"],
+              t(
+                `Writing $j = ${jt}$ with $1 \\le t \\le ${quotient}$, we need $\\gcd(t, ${quotient}) = 1$, which gives $\\varphi(${quotient}) = ${answer}$ rotations.`,
+                `写成 $j = ${jt}$，$1 \\le t \\le ${quotient}$，需要 $\\gcd(t, ${quotient}) = 1$，所以有 $\\varphi(${quotient}) = ${answer}$ 个旋转。`,
+              ),
+            ],
+          ],
+          t(
+            `Each of these rotations has order $${quotient}$, so its cycles have length $${quotient}$, and $\\frac{${n}}{${quotient}} = ${d}$ cycles.`,
+            `每个这样的旋转阶为 $${quotient}$，所以它的循环长度为 $${quotient}$，共 $\\frac{${n}}{${quotient}} = ${d}$ 个循环。`,
+          ),
+        ),
+      });
     },
   ),
   figure: algebraDrawings2["cycle-types-of-permutations-of-some-groups#how-many-rotations-have-a-given-cycle-type"],
@@ -180,25 +360,60 @@ const wordOrbits = point(
   "the-number-of-orbits-on-words",
   ["The number of orbits on words", "单词上的轨道数"],
   [
-    "When $S_{n}$ permutes the positions of a word, the orbit of a word is determined by how many times each letter appears. So the number of orbits equals the number of ways to write $n$ as an ordered sum of $k$ nonnegative counts, which is $\\binom{n + k - 1}{k - 1}$.",
-    "当 $S_{n}$ 置换单词的位置时，单词的轨道由每个字母出现的次数决定。所以轨道数等于把 $n$ 写成 $k$ 个非负计数的有序和的方法数，即 $\\binom{n + k - 1}{k - 1}$。",
+    "When $S_{n}$ permutes the positions of a word, the orbit of a word is determined by how many times each letter appears. So the number of orbits equals the number of ways to write $n$ as an ordered sum of $k$ nonnegative counts, which is $\\binom{n + k - 1}{k - 1}$.\n\nFor words of length $3$ on the two letters $\\text{A}$ and $\\text{B}$, an orbit is fixed by how many $\\text{A}$'s the word has, $0$, $1$, $2$ or $3$, so there are $\\binom{4}{1} = 4$ orbits.\n\nCheck: the orbits are those of $\\text{BBB}$, $\\text{ABB}$, $\\text{AAB}$ and $\\text{AAA}$.\n\n> **Watch out.** The lower index is $k - 1$, the number of bars between the $k$ letters, not $k$: above, $\\binom{4}{2} = 6$ would be too many.",
+    "当 $S_{n}$ 置换单词的位置时，单词的轨道由每个字母出现的次数决定。所以轨道数等于把 $n$ 写成 $k$ 个非负计数的有序和的方法数，即 $\\binom{n + k - 1}{k - 1}$。\n\n对由两个字母 $\\text{A}$、$\\text{B}$ 组成的长度为 $3$ 的单词，轨道由单词中 $\\text{A}$ 的个数 $0$、$1$、$2$ 或 $3$ 确定，所以有 $\\binom{4}{1} = 4$ 个轨道。\n\n检验：这些轨道就是 $\\text{BBB}$、$\\text{ABB}$、$\\text{AAB}$、$\\text{AAA}$ 的轨道。\n\n> **注意。** 下标是 $k - 1$，即隔开 $k$ 个字母所需的隔板数，而不是 $k$：上例中 $\\binom{4}{2} = 6$ 就太多了。",
   ],
   (rng) => {
     const n = rng.int(3, 10);
     const k = rng.int(2, 5);
     const answer = binomial(n + k - 1, k - 1);
-    return ask(
-      [
+    const bars = k === 2 ? "$1$ bar" : `$${k - 1}$ bars`;
+    return numberProblem({
+      prompt: t(
         `$S_{${n}}$ acts by permuting the positions of words of length $${n}$ on an alphabet of $${k}$ letters. How many orbits are there?`,
         `$S_{${n}}$ 通过置换位置，作用在由 $${k}$ 个字母组成的长度为 $${n}$ 的单词上。有多少个轨道？`,
-      ],
+      ),
       answer,
-      [k ** n, binomial(n + k - 1, k), n + k],
-      [
-        `An orbit is fixed by the counts of the $${k}$ letters, which add up to $${n}$. The number of such counts is $\\binom{${n + k - 1}}{${k - 1}} = ${answer}$.`,
-        `轨道由 $${k}$ 个字母的计数确定，这些计数之和为 $${n}$。这样的计数有 $\\binom{${n + k - 1}}{${k - 1}} = ${answer}$ 种。`,
-      ],
-    );
+      mistakes: distinctRingMistakes(answer, [
+        why(
+          k ** n,
+          "That counts the words, but rearranging the letters of a word stays in its orbit.",
+          "这数的是单词，但重排一个单词的字母仍在同一轨道中。",
+        ),
+        why(
+          binomial(n + k - 1, k),
+          `That takes $${k}$ as the lower index; ${k} letters need only ${bars} between them.`,
+          `这把 $${k}$ 当作下标；${k} 个字母之间只需要 $${k - 1}$ 块隔板。`,
+        ),
+        why(
+          n + k,
+          "That adds the length and the number of letters, which counts nothing here.",
+          "这是把长度与字母个数相加，在这里没有意义。",
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Reduce to counts", "化为计数"],
+            t(
+              `Permuting positions can rearrange a word in any way, so an orbit is fixed by the counts of the $${k}$ letters, which add up to $${n}$.`,
+              `置换位置可以任意重排单词，所以轨道由 $${k}$ 个字母的计数确定，这些计数之和为 $${n}$。`,
+            ),
+          ],
+          [
+            ["Place stars and bars", "放置星号与隔板"],
+            t(
+              `Such counts correspond to $${n}$ stars and ${bars} in a row of $${n + k - 1}$ places: $\\binom{${n + k - 1}}{${k - 1}} = ${answer}$.`,
+              `这样的计数对应于在 $${n + k - 1}$ 个位置上排 $${n}$ 个星号与 $${k - 1}$ 块隔板：$\\binom{${n + k - 1}}{${k - 1}} = ${answer}$。`,
+            ),
+          ],
+        ],
+        t(
+          `Choosing the places of the stars instead gives $\\binom{${n + k - 1}}{${n}} = ${answer}$ as well.`,
+          `改为选择星号的位置，同样得到 $\\binom{${n + k - 1}}{${n}} = ${answer}$。`,
+        ),
+      ),
+    });
   },
 );
 
@@ -207,8 +422,8 @@ const rotationFixedColorings = {
     "the-colorings-a-rotation-fixes",
     ["The colorings a rotation fixes", "旋转固定的着色"],
     [
-      "A necklace coloring is fixed by a rotation exactly when each cycle of the rotation has a single color. A rotation by $j$ places has $\\gcd(j, n)$ cycles, so it fixes $k^{\\gcd(j, n)}$ colorings, and these are the numbers that enter Burnside's lemma.",
-      "一种项链着色被旋转固定，当且仅当旋转的每个循环都只有一种颜色。旋转 $j$ 个位置有 $\\gcd(j, n)$ 个循环，所以固定 $k^{\\gcd(j, n)}$ 种着色，这些数就是代入伯恩赛德引理的数。",
+      "A necklace coloring is fixed by a rotation exactly when each cycle of the rotation has a single color. A rotation by $j$ places has $\\gcd(j, n)$ cycles, so it fixes $k^{\\gcd(j, n)}$ colorings, and these are the numbers that enter Burnside's lemma.\n\nWith $6$ beads and $2$ colors, the rotation through $2$ places has the $\\gcd(2, 6) = 2$ cycles of beads $\\{1, 3, 5\\}$ and $\\{2, 4, 6\\}$, so it fixes $2^{2} = 4$ colorings.\n\nCheck: they are the two one-color necklaces and the two that alternate the colors.\n\n> **Watch out.** The exponent is the number of cycles, $\\gcd(j, n)$, not their length $\\frac{n}{\\gcd(j, n)}$: above, $2^{3} = 8$ would be too many.",
+      "一种项链着色被旋转固定，当且仅当旋转的每个循环都只有一种颜色。旋转 $j$ 个位置有 $\\gcd(j, n)$ 个循环，所以固定 $k^{\\gcd(j, n)}$ 种着色，这些数就是代入伯恩赛德引理的数。\n\n$6$ 颗珠子、$2$ 种颜色时，旋转 $2$ 个位置有 $\\gcd(2, 6) = 2$ 个珠子循环 $\\{1, 3, 5\\}$ 与 $\\{2, 4, 6\\}$，所以固定 $2^{2} = 4$ 种着色。\n\n检验：它们是两种单色项链和两种颜色交替的项链。\n\n> **注意。** 指数是循环的个数 $\\gcd(j, n)$，而不是循环的长度 $\\frac{n}{\\gcd(j, n)}$：上例中 $2^{3} = 8$ 就太多了。",
     ],
     (rng) => {
       const n = rng.int(4, 12);
@@ -216,18 +431,54 @@ const rotationFixedColorings = {
       const k = rng.int(2, 4);
       const g = gcd(j, n);
       const answer = k ** g;
-      return ask(
-        [
+      const power = g === 1 ? `${k}` : `${k}^{${g}}`;
+      return numberProblem({
+        prompt: t(
           `A necklace has $${n}$ beads, each with one of $${k}$ colors. How many colorings are unchanged by the rotation through $${j}$ ${j === 1 ? "place" : "places"}?`,
           `项链有 $${n}$ 颗珠子，每颗取 $${k}$ 种颜色之一。旋转 $${j}$ 个位置后，有多少种着色保持不变？`,
-        ],
+        ),
         answer,
-        [k ** (n / g) === answer ? answer * k : k ** (n / g), k ** n === answer ? answer + 1 : k ** n, k * g],
-        [
-          `The rotation has $\\gcd(${j}, ${n}) = ${g}$ ${g === 1 ? "cycle" : "cycles"} of beads, and each cycle has one color. So the count is $${k}^{${g}} = ${answer}$.`,
-          `这个旋转把珠子分成 $\\gcd(${j}, ${n}) = ${g}$ 个循环，每个循环一种颜色。所以个数是 $${k}^{${g}} = ${answer}$。`,
-        ],
-      );
+        mistakes: distinctRingMistakes(answer, [
+          why(
+            k ** (n / g),
+            `That raises $${k}$ to the length of each cycle, $${n / g}$, instead of the number of cycles, $${g}$.`,
+            `这是以每个循环的长度 $${n / g}$ 为指数，而应以循环的个数 $${g}$ 为指数。`,
+          ),
+          why(k ** n, "That counts all colorings; most of them change under the rotation.", "这数的是全部着色；其中大多数在旋转下会改变。"),
+          why(
+            k * g,
+            `That multiplies $${k}$ by the number of cycles instead of raising it to that power.`,
+            `这是用 $${k}$ 乘以循环的个数，而不是求它的这个次幂。`,
+          ),
+        ]),
+        solution: walked(
+          [
+            [
+              ["Find the cycles", "求循环"],
+              t(
+                `The rotation has $\\gcd(${j}, ${n}) = ${g}$ ${g === 1 ? "cycle" : "cycles"} of beads, each of length $${n / g}$.`,
+                `这个旋转把珠子分成 $\\gcd(${j}, ${n}) = ${g}$ 个循环，每个长度为 $${n / g}$。`,
+              ),
+            ],
+            [
+              ["Color each cycle", "给每个循环着色"],
+              t(
+                `A fixed coloring gives each cycle a single color, so the count is $${power} = ${answer}$.`,
+                `被固定的着色在每个循环上只用一种颜色，所以个数是 $${power} = ${answer}$。`,
+              ),
+            ],
+          ],
+          g === 1
+            ? t(
+                `Every bead lies in the single cycle, so only the $${k}$ one-color colorings are fixed.`,
+                `每颗珠子都在唯一的循环中，所以只有 $${k}$ 种单色着色被固定。`,
+              )
+            : t(
+                `Beads $1$ to $${g}$ lie in different cycles, and choosing their colors fixes all the others: $${power} = ${answer}$ choices.`,
+                `第 $1$ 到第 $${g}$ 颗珠子位于不同的循环中，选定它们的颜色就确定了其余所有珠子：共 $${power} = ${answer}$ 种选法。`,
+              ),
+        ),
+      });
     },
   ),
   figure: algebraDrawings2["colorings-of-necklaces#the-colorings-a-rotation-fixes"],
@@ -703,8 +954,8 @@ const quotientByLinear = point(
   "the-quotient-on-division-by-a-linear-polynomial",
   ["The quotient on division by a linear polynomial", "除以一次多项式的商"],
   [
-    "Synthetic division works over any field. Over $\\mathbb{Z}_{p}$, each step multiplies by the root and adds the next coefficient, reducing modulo $p$. The last number is the remainder, and the numbers before it are the coefficients of the quotient.",
-    "综合除法对任何域都适用。在 $\\mathbb{Z}_{p}$ 上，每一步乘以根再加上下一个系数，并模 $p$ 化简。最后一个数是余数，它前面的数是商的系数。",
+    "Synthetic division works over any field. Over $\\mathbb{Z}_{p}$, each step multiplies by the root and adds the next coefficient, reducing modulo $p$. The last number is the remainder, and the numbers before it are the coefficients of the quotient.\n\nOver $\\mathbb{Z}_{5}$, divide $x^{3} + 2x + 1$ by $x - 3$: the coefficients $1, 0, 2, 1$ give $1$, then $(3)(1) + 0 = 3$, then $(3)(3) + 2 = 11 \\equiv 1$, then $(3)(1) + 1 = 4$. So the quotient is $x^{2} + 3x + 1$ and the remainder is $4$.\n\nCheck: $f(3) = 27 + 6 + 1 = 34 \\equiv 4 \\pmod{5}$, the remainder.\n\n> **Watch out.** The last number is the remainder, not part of the quotient: above, $4$ is the remainder and the constant term of the quotient is $1$.",
+    "综合除法对任何域都适用。在 $\\mathbb{Z}_{p}$ 上，每一步乘以根再加上下一个系数，并模 $p$ 化简。最后一个数是余数，它前面的数是商的系数。\n\n在 $\\mathbb{Z}_{5}$ 上，用 $x - 3$ 除 $x^{3} + 2x + 1$：系数 $1, 0, 2, 1$ 依次给出 $1$，$(3)(1) + 0 = 3$，$(3)(3) + 2 = 11 \\equiv 1$，$(3)(1) + 1 = 4$。所以商是 $x^{2} + 3x + 1$，余数是 $4$。\n\n检验：$f(3) = 27 + 6 + 1 = 34 \\equiv 4 \\pmod{5}$，正是余数。\n\n> **注意。** 最后一个数是余数，不属于商：上例中 $4$ 是余数，商的常数项是 $1$。",
   ],
   (rng) => {
     const p = rng.pick([5, 7, 11, 13]);
@@ -717,18 +968,48 @@ const quotientByLinear = point(
     const r = (a * q1 + d) % p;
     const f = poly([1, "x^{3}"], [b, "x^{2}"], [c, "x"], [d, ""]);
     const q0text = poly([1, "x^{2}"], [q2, "x"], [q1, ""]);
-    return ask(
-      [
+    return numberProblem({
+      prompt: t(
         `In $\\mathbb{Z}_{${p}}[x]$, divide $${f}$ by $x - ${a}$. What is the constant term of the quotient, as a value from $0$ to $${p - 1}$?`,
         `在 $\\mathbb{Z}_{${p}}[x]$ 中，用 $x - ${a}$ 除 $${f}$。商的常数项是多少，取值范围为 $0$ 到 $${p - 1}$？`,
-      ],
-      q1,
-      [r === q1 ? (q1 + 1) % p : r, q2 === q1 ? (q1 + 2) % p : q2, (a * q2) % p === q1 ? (q1 + 3) % p : (a * q2) % p],
-      [
-        `Synthetic division with the root $${a}$ gives the numbers $1, ${q2}, ${q1}$ and the remainder $${r}$. So the quotient is $${q0text}$, whose constant term is $${q1}$.`,
-        `用根 $${a}$ 做综合除法，得数 $1, ${q2}, ${q1}$，余数是 $${r}$。所以商是 $${q0text}$，常数项是 $${q1}$。`,
-      ],
-    );
+      ),
+      answer: q1,
+      mistakes: distinctRingMistakes(q1, [
+        why(
+          r,
+          "That is the remainder, the last number of the synthetic division; the constant term of the quotient comes just before it.",
+          "这是余数，即综合除法的最后一个数；商的常数项在它前面。",
+        ),
+        why(q2, "That is the coefficient of $x$ in the quotient.", "这是商中 $x$ 的系数。"),
+        why(
+          (a * q2) % p,
+          `That multiplies by the root but forgets to add the next coefficient $${c}$.`,
+          `这乘了根，却忘了加上下一个系数 $${c}$。`,
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Run the synthetic division", "做综合除法"],
+            t(
+              `With the root $${a}$: bring down $1$, then $(${a})(1) + ${b} = ${a + b} \\equiv ${q2}$, then $(${a})(${q2}) + ${c} = ${a * q2 + c} \\equiv ${q1}$, then $(${a})(${q1}) + ${d} = ${a * q1 + d} \\equiv ${r}$.`,
+              `用根 $${a}$：先写下 $1$，再算 $(${a})(1) + ${b} = ${a + b} \\equiv ${q2}$，$(${a})(${q2}) + ${c} = ${a * q2 + c} \\equiv ${q1}$，$(${a})(${q1}) + ${d} = ${a * q1 + d} \\equiv ${r}$。`,
+            ),
+          ],
+          [
+            ["Read off the quotient", "读出商"],
+            t(
+              `The last number $${r}$ is the remainder, so the quotient is $${q0text}$, whose constant term is $${q1}$.`,
+              `最后一个数 $${r}$ 是余数，所以商是 $${q0text}$，常数项是 $${q1}$。`,
+            ),
+          ],
+        ],
+        t(
+          `The constant term of $(x - ${a})(${q0text}) + ${r}$ is $-(${a})(${q1}) + ${r} = ${r - a * q1} \\equiv ${d} \\pmod{${p}}$, the constant term of $${f}$.`,
+          `$(x - ${a})(${q0text}) + ${r}$ 的常数项为 $-(${a})(${q1}) + ${r} = ${r - a * q1} \\equiv ${d} \\pmod{${p}}$，正是 $${f}$ 的常数项。`,
+        ),
+      ),
+    });
   },
 );
 
@@ -736,8 +1017,8 @@ const commonRoot = point(
   "a-common-root-from-the-gcd",
   ["A common root from the gcd", "由最大公因式求公共根"],
   [
-    "A common root of two polynomials is a root of their greatest common divisor, so the Euclidean algorithm finds common roots without factoring either polynomial. For two monic quadratics, one subtraction already gives a linear polynomial whose root can be read off.",
-    "两个多项式的公共根是它们的最大公因式的根，所以欧几里得算法不必分解任一多项式就能求出公共根。对两个首一二次多项式，一次相减就得到一个一次多项式，它的根可以直接读出。",
+    "A common root of two polynomials is a root of their greatest common divisor, so the Euclidean algorithm finds common roots without factoring either polynomial. For two monic quadratics, one subtraction already gives a linear polynomial whose root can be read off.\n\nOver $\\mathbb{Z}_{7}$, $(x^{2} + 4x + 3) - (x^{2} + 5x + 4) = -x - 1 \\equiv 6x + 6$, whose root is $-1 = 6$.\n\nCheck: $36 + 24 + 3 = 63$ and $36 + 30 + 4 = 70$ are both multiples of $7$.\n\n> **Watch out.** Every common root is a root of the difference, but not the other way round: substitute the candidate into both polynomials, because two polynomials with no common root still have a difference with a root.",
+    "两个多项式的公共根是它们的最大公因式的根，所以欧几里得算法不必分解任一多项式就能求出公共根。对两个首一二次多项式，一次相减就得到一个一次多项式，它的根可以直接读出。\n\n在 $\\mathbb{Z}_{7}$ 上，$(x^{2} + 4x + 3) - (x^{2} + 5x + 4) = -x - 1 \\equiv 6x + 6$，它的根是 $-1 = 6$。\n\n检验：$36 + 24 + 3 = 63$ 与 $36 + 30 + 4 = 70$ 都是 $7$ 的倍数。\n\n> **注意。** 每个公共根都是差的根，反过来却不一定：要把候选根代入两个多项式检验，因为没有公共根的两个多项式，它们的差照样有根。",
   ],
   (rng) => {
     const p = rng.pick([7, 11, 13, 17]);
@@ -754,18 +1035,38 @@ const commonRoot = point(
     const u = (((f1 - g1) % p) + p) % p;
     const w = (((f0 - g0) % p) + p) % p;
     const diff = poly([u, "x"], [w, ""]);
-    return ask(
-      [
+    const at = (s: number, t1: number, t0: number) => `${s}^{2} + (${t1})(${s}) + ${t0} = ${s * s + t1 * s + t0}`;
+    return numberProblem({
+      prompt: t(
         `The polynomials $${f}$ and $${g}$ in $\\mathbb{Z}_{${p}}[x]$ have exactly one common root. Find it, as a value from $0$ to $${p - 1}$.`,
         `$\\mathbb{Z}_{${p}}[x]$ 中的多项式 $${f}$ 和 $${g}$ 恰好有一个公共根。求它，取值范围为 $0$ 到 $${p - 1}$。`,
-      ],
-      a,
-      [b, c, (a + 1) % p],
-      [
-        `The difference of the two polynomials is $${diff}$, and any common root is a root of it. Its root is $${a}$, and substituting confirms that this is a root of both.`,
-        `两个多项式之差是 $${diff}$，任何公共根都是它的根。它的根是 $${a}$，代入可验证这是两者的根。`,
-      ],
-    );
+      ),
+      answer: a,
+      mistakes: distinctRingMistakes(a, [
+        why(b, `$${b}$ is a root of $${f}$ only, not of $${g}$.`, `$${b}$ 只是 $${f}$ 的根，不是 $${g}$ 的根。`),
+        why(c, `$${c}$ is a root of $${g}$ only, not of $${f}$.`, `$${c}$ 只是 $${g}$ 的根，不是 $${f}$ 的根。`),
+        why((a + 1) % p, `That is off by one: the root of $${diff}$ is $${a}$.`, `差了 $1$：$${diff}$ 的根是 $${a}$。`),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Subtract", "相减"],
+            t(
+              `The squares cancel, and the difference is $${diff}$; any common root is a root of it.`,
+              `平方项抵消，差是 $${diff}$；任何公共根都是它的根。`,
+            ),
+          ],
+          [
+            ["Solve the linear equation", "解一次方程"],
+            t(`$${diff} \\equiv 0$ gives $x = ${a}$ modulo $${p}$.`, `由 $${diff} \\equiv 0$ 得 $x = ${a}$（模 $${p}$）。`),
+          ],
+        ],
+        t(
+          `$${at(a, f1, f0)}$ and $${at(a, g1, g0)}$ are both multiples of $${p}$.`,
+          `$${at(a, f1, f0)}$ 与 $${at(a, g1, g0)}$ 都是 $${p}$ 的倍数。`,
+        ),
+      ),
+    });
   },
 );
 
@@ -773,8 +1074,8 @@ const inverseModLinear = point(
   "the-inverse-modulo-a-linear-polynomial",
   ["The inverse modulo a linear polynomial", "模一次多项式的逆"],
   [
-    "Modulo $x - a$, every polynomial is congruent to its value at $a$, so the quotient ring is just $\\mathbb{Z}_{p}$. The extended Euclidean algorithm stops after one step: the inverse of a polynomial is a constant, namely the inverse of its value at $a$.",
-    "模 $x - a$ 时，每个多项式都同余于它在 $a$ 处的值，所以商环就是 $\\mathbb{Z}_{p}$。扩展欧几里得算法一步就结束：多项式的逆是一个常数，即它在 $a$ 处的值的逆。",
+    "Modulo $x - a$, every polynomial is congruent to its value at $a$, so the quotient ring is just $\\mathbb{Z}_{p}$. The extended Euclidean algorithm stops after one step: the inverse of a polynomial is a constant, namely the inverse of its value at $a$.\n\nIn $\\mathbb{Z}_{7}[x]/\\langle x - 2 \\rangle$, $x^{2} + 1 \\equiv 2^{2} + 1 = 5$, and $5^{-1} = 3$, so the inverse of $x^{2} + 1$ is $3$.\n\nCheck: $(5)(3) = 15 = 2 \\cdot 7 + 1$.\n\n> **Watch out.** Invert the value, do not stop at it: $5$ is what $x^{2} + 1$ equals in the quotient ring, and its inverse $3$ is the answer.",
+    "模 $x - a$ 时，每个多项式都同余于它在 $a$ 处的值，所以商环就是 $\\mathbb{Z}_{p}$。扩展欧几里得算法一步就结束：多项式的逆是一个常数，即它在 $a$ 处的值的逆。\n\n在 $\\mathbb{Z}_{7}[x]/\\langle x - 2 \\rangle$ 中，$x^{2} + 1 \\equiv 2^{2} + 1 = 5$，而 $5^{-1} = 3$，所以 $x^{2} + 1$ 的逆是 $3$。\n\n检验：$(5)(3) = 15 = 2 \\cdot 7 + 1$。\n\n> **注意。** 要对这个值求逆，不能停在值本身：$5$ 是 $x^{2} + 1$ 在商环中等于的数，它的逆 $3$ 才是答案。",
   ],
   (rng) => {
     const p = rng.pick([5, 7, 11, 13]);
@@ -785,22 +1086,52 @@ const inverseModLinear = point(
     const value = (a * a + b * a + c) % p;
     const answer = inverseMod(value, p);
     const f = poly([1, "x^{2}"], [b, "x"], [c, ""]);
-    return ask(
-      [
+    return numberProblem({
+      prompt: t(
         `In $\\mathbb{Z}_{${p}}[x]/\\langle x - ${a} \\rangle$, the inverse of $${f}$ is a constant. Find it, as a value from $1$ to $${p - 1}$.`,
         `在 $\\mathbb{Z}_{${p}}[x]/\\langle x - ${a} \\rangle$ 中，$${f}$ 的逆是一个常数。求它，取值范围为 $1$ 到 $${p - 1}$。`,
-      ],
+      ),
       answer,
-      [
-        value === answer ? (answer % (p - 1)) + 1 : value,
-        a === answer ? (answer % (p - 1)) + 1 : a,
-        p - answer === answer ? 1 : p - answer,
-      ],
-      [
-        `Modulo $x - ${a}$ the polynomial equals its value at $${a}$, which is $${value}$. The inverse of $${value}$ modulo $${p}$ is $${answer}$.`,
-        `模 $x - ${a}$ 时，这个多项式等于它在 $${a}$ 处的值，即 $${value}$。$${value}$ 模 $${p}$ 的逆是 $${answer}$。`,
-      ],
-    );
+      mistakes: distinctRingMistakes(answer, [
+        why(
+          value,
+          `$${value}$ is the value at $${a}$, what the polynomial equals in the quotient ring; the answer is its inverse.`,
+          `$${value}$ 是在 $${a}$ 处的值，即该多项式在商环中等于的数；答案是它的逆。`,
+        ),
+        why(
+          a,
+          `That is the root $${a}$; the polynomial reduces to its value there, not to $${a}$.`,
+          `这是根 $${a}$；多项式约化为它在该处的值，而不是 $${a}$。`,
+        ),
+        why(
+          p - answer,
+          `That is the negative of the inverse: $(${value})(${p - answer}) \\equiv -1$, not $1$.`,
+          `这是逆的相反数：$(${value})(${p - answer}) \\equiv -1$，不是 $1$。`,
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Reduce modulo the linear polynomial", "模一次多项式约化"],
+            t(
+              `Modulo $x - ${a}$ the polynomial equals its value at $${a}$: $${a}^{2} + (${b})(${a}) + ${c} = ${a * a + b * a + c} \\equiv ${value}$.`,
+              `模 $x - ${a}$ 时，这个多项式等于它在 $${a}$ 处的值：$${a}^{2} + (${b})(${a}) + ${c} = ${a * a + b * a + c} \\equiv ${value}$。`,
+            ),
+          ],
+          [
+            ["Invert the value", "对这个值求逆"],
+            t(
+              `$(${value})(${answer}) = ${value * answer} \\equiv 1 \\pmod{${p}}$, so the inverse is $${answer}$.`,
+              `$(${value})(${answer}) = ${value * answer} \\equiv 1 \\pmod{${p}}$，所以逆是 $${answer}$。`,
+            ),
+          ],
+        ],
+        t(
+          `$(${f})(${answer}) - 1$ takes the value $${value * answer} - 1 = ${value * answer - 1}$ at $${a}$, a multiple of $${p}$, so $x - ${a}$ divides it.`,
+          `$(${f})(${answer}) - 1$ 在 $${a}$ 处的值为 $${value * answer} - 1 = ${value * answer - 1}$，是 $${p}$ 的倍数，所以 $x - ${a}$ 整除它。`,
+        ),
+      ),
+    });
   },
 );
 
@@ -808,8 +1139,8 @@ const realFactorCount = point(
   "the-real-factors-of-x-to-the-n-minus-one",
   ["The real factors of a power minus one", "幂减一的实因式"],
   [
-    "Over the reals, $x^{n} - 1$ has the linear factor $x - 1$, and also $x + 1$ when $n$ is even. The other complex roots occur in conjugate pairs, and each pair gives one irreducible quadratic, so the count depends on the parity of $n$.",
-    "在实数上，$x^{n} - 1$ 有一次因式 $x - 1$，当 $n$ 为偶数时还有 $x + 1$。其余的复根成共轭对出现，每对给出一个不可约的二次因式，所以个数取决于 $n$ 的奇偶性。",
+    "Over the reals, $x^{n} - 1$ has the linear factor $x - 1$, and also $x + 1$ when $n$ is even. The other complex roots occur in conjugate pairs, and each pair gives one irreducible quadratic, so the count depends on the parity of $n$.\n\n$x^{5} - 1$ has the real root $1$ and two conjugate pairs of nonreal roots, so over $\\mathbb{R}$ it is $x - 1$ times two irreducible quadratics: $3$ factors.\n\nCheck: the degrees add up, $1 + 2 + 2 = 5$.\n\n> **Watch out.** For odd $n$, $-1$ is not a root: $(-1)^{5} - 1 = -2$, so $x + 1$ is not a factor of $x^{5} - 1$.",
+    "在实数上，$x^{n} - 1$ 有一次因式 $x - 1$，当 $n$ 为偶数时还有 $x + 1$。其余的复根成共轭对出现，每对给出一个不可约的二次因式，所以个数取决于 $n$ 的奇偶性。\n\n$x^{5} - 1$ 有实根 $1$ 和两对共轭的非实根，所以在 $\\mathbb{R}$ 上它是 $x - 1$ 乘以两个不可约二次因式：共 $3$ 个因式。\n\n检验：次数相加 $1 + 2 + 2 = 5$。\n\n> **注意。** $n$ 为奇数时 $-1$ 不是根：$(-1)^{5} - 1 = -2$，所以 $x + 1$ 不是 $x^{5} - 1$ 的因式。",
   ],
   (rng) => {
     const n = rng.int(5, 40);
@@ -817,18 +1148,51 @@ const realFactorCount = point(
     const linear = even ? 2 : 1;
     const quadratic = (n - linear) / 2;
     const answer = linear + quadratic;
-    return ask(
-      [
+    return numberProblem({
+      prompt: t(
         `Into how many monic irreducible factors does $x^{${n}} - 1$ split over $\\mathbb{R}$?`,
         `$x^{${n}} - 1$ 在 $\\mathbb{R}$ 上分解为多少个首一不可约因式？`,
-      ],
+      ),
       answer,
-      [n, quadratic, answer + 1],
-      [
-        `The real roots give $${linear}$ linear ${linear === 1 ? "factor" : "factors"}. The other $${n - linear}$ roots form $${quadratic}$ conjugate pairs, each giving a quadratic, so the total is $${answer}$.`,
-        `实根给出 $${linear}$ 个一次因式。其余 $${n - linear}$ 个根构成 $${quadratic}$ 对共轭复根，每对给出一个二次因式，所以总数是 $${answer}$。`,
-      ],
-    );
+      mistakes: distinctRingMistakes(answer, [
+        why(
+          n,
+          "That counts the roots; over $\\mathbb{R}$ each conjugate pair of roots gives one quadratic factor.",
+          "这数的是根；在 $\\mathbb{R}$ 上每对共轭根只给出一个二次因式。",
+        ),
+        even
+          ? why(quadratic, "That leaves out the linear factors $x - 1$ and $x + 1$.", "这漏掉了一次因式 $x - 1$ 与 $x + 1$。")
+          : why(quadratic, "That leaves out the linear factor $x - 1$.", "这漏掉了一次因式 $x - 1$。"),
+        why(
+          answer + 1,
+          even
+            ? "That counts one factor too many; only $1$ and $-1$ are real roots."
+            : "That counts one factor too many; for odd $n$, $-1$ is not a root, so $x + 1$ is not a factor.",
+          even ? "这多数了一个因式；只有 $1$ 和 $-1$ 是实根。" : "这多数了一个因式；$n$ 为奇数时 $-1$ 不是根，所以 $x + 1$ 不是因式。",
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Find the real roots", "找实根"],
+            even
+              ? t(
+                  `Since ${n} is even, $1$ and $-1$ are the real roots, giving $x - 1$ and $x + 1$.`,
+                  `由于 ${n} 是偶数，实根是 $1$ 与 $-1$，给出 $x - 1$ 与 $x + 1$。`,
+                )
+              : t(`Since ${n} is odd, $1$ is the only real root, giving $x - 1$.`, `由于 ${n} 是奇数，唯一的实根是 $1$，给出 $x - 1$。`),
+          ],
+          [
+            ["Pair the other roots", "把其余的根配对"],
+            t(
+              `The other $${n - linear}$ roots form $${quadratic}$ conjugate pairs, each giving an irreducible quadratic, so the total is $${linear} + ${quadratic} = ${answer}$.`,
+              `其余 $${n - linear}$ 个根构成 $${quadratic}$ 对共轭复根，每对给出一个不可约二次因式，所以总数是 $${linear} + ${quadratic} = ${answer}$。`,
+            ),
+          ],
+        ],
+        t(`The degrees add up: $${linear} + 2(${quadratic}) = ${n}$.`, `次数相加：$${linear} + 2(${quadratic}) = ${n}$。`),
+      ),
+    });
   },
 );
 
@@ -836,8 +1200,8 @@ const cubicByRoots = point(
   "deciding-a-cubic-by-its-roots",
   ["Deciding a cubic by its roots", "由根判断三次多项式"],
   [
-    "A polynomial of degree two or three over a field is reducible exactly when it has a root in the field, because any factorization must contain a linear factor. So testing all the residues decides the question, but this shortcut does not work for higher degrees.",
-    "域上二次或三次多项式可约，当且仅当它在该域中有根，因为任何分解都必须包含一次因式。所以检验所有余数就能判断，但这个捷径对更高次数不适用。",
+    "A polynomial of degree two or three over a field is reducible exactly when it has a root in the field, because any factorization must contain a linear factor. So testing all the residues decides the question, but this shortcut does not work for higher degrees.\n\nOver $\\mathbb{Z}_{5}$, $x^{3} + x + 1$ takes the values $1, 3, 1, 1, 4$ at $0, 1, 2, 3, 4$, so it has no root and is irreducible.\n\nCheck: $4^{3} + 4 + 1 = 69 = 13 \\cdot 5 + 4$, the last value.\n\n> **Watch out.** The shortcut stops at degree $3$: over $\\mathbb{Z}_{2}$, $x^{4} + x^{2} + 1 = (x^{2} + x + 1)^{2}$ has no root but is reducible.",
+    "域上二次或三次多项式可约，当且仅当它在该域中有根，因为任何分解都必须包含一次因式。所以检验所有余数就能判断，但这个捷径对更高次数不适用。\n\n在 $\\mathbb{Z}_{5}$ 上，$x^{3} + x + 1$ 在 $0, 1, 2, 3, 4$ 处的值为 $1, 3, 1, 1, 4$，所以无根，因而不可约。\n\n检验：$4^{3} + 4 + 1 = 69 = 13 \\cdot 5 + 4$，正是最后一个值。\n\n> **注意。** 这个捷径只到三次为止：在 $\\mathbb{Z}_{2}$ 上，$x^{4} + x^{2} + 1 = (x^{2} + x + 1)^{2}$ 没有根，却是可约的。",
   ],
   (rng) => {
     const p = rng.pick([3, 5, 7, 11]);
@@ -855,15 +1219,65 @@ const cubicByRoots = point(
     const option = root === undefined ? noRoot : hasRoot;
     const others = root === undefined ? [hasRoot, degree, noLinear] : [noRoot, degree, noLinear];
     const values = [...Array(p).keys()].map(value).join(", ");
-    return choose(
-      rng,
-      [`Is $${f}$ irreducible over $\\mathbb{Z}_{${p}}$?`, `$${f}$ 在 $\\mathbb{Z}_{${p}}$ 上是否不可约？`],
-      option,
-      others,
+    const quotient = root === undefined ? "" : poly([1, "x^{2}"], [root, "x"], [(root * root + a) % p, ""]);
+    const reasons: Reason[] = [
       [
-        `Its values at $0, 1, \\dots, ${p - 1}$ are $${values}$. ${root === undefined ? "None is zero, so a cubic has no linear factor and is irreducible." : `The value at $${root}$ is zero, so $x - ${root}$ is a factor.`}`,
-        `它在 $0, 1, \\dots, ${p - 1}$ 处的值是 $${values}$。${root === undefined ? "没有一个为零，所以三次多项式没有一次因式，是不可约的。" : `在 $${root}$ 处的值为零，所以 $x - ${root}$ 是因式。`}`,
+        noRoot[0],
+        `$f(${root ?? fake}) = 0$, so $x - ${root ?? fake}$ is a factor.`,
+        `$f(${root ?? fake}) = 0$，所以 $x - ${root ?? fake}$ 是因式。`,
       ],
+      [
+        hasRoot[0],
+        `$f(${fake}) = ${value(fake)}$, not $0$, and no residue gives $0$.`,
+        `$f(${fake}) = ${value(fake)}$，不是 $0$，而且没有哪个余数给出 $0$。`,
+      ],
+      [
+        degree[0],
+        "An odd degree does not decide irreducibility over a finite field; only the roots do.",
+        "奇数次数并不能决定有限域上的不可约性；只有根才能。",
+      ],
+      [
+        noLinear[0],
+        "Not every cubic over a finite field factors: a cubic with no root is irreducible.",
+        "并非有限域上每个三次多项式都能分解：没有根的三次多项式是不可约的。",
+      ],
+    ];
+    return reasoned(
+      choose(
+        rng,
+        [`Is $${f}$ irreducible over $\\mathbb{Z}_{${p}}$?`, `$${f}$ 在 $\\mathbb{Z}_{${p}}$ 上是否不可约？`],
+        option,
+        others,
+        asPair(
+          walked(
+            [
+              [
+                ["Evaluate at every residue", "在每个余数处求值"],
+                t(`Its values at $0, 1, \\dots, ${p - 1}$ are $${values}$.`, `它在 $0, 1, \\dots, ${p - 1}$ 处的值是 $${values}$。`),
+              ],
+              [
+                ["Decide", "判断"],
+                root === undefined
+                  ? t(
+                      "None is zero, so the cubic has no linear factor, and a cubic that factors must have one; it is irreducible.",
+                      "没有一个为零，所以三次多项式没有一次因式，而可分解的三次多项式必有一次因式；它是不可约的。",
+                    )
+                  : t(
+                      `The value at $${root}$ is zero, so $x - ${root}$ is a factor.`,
+                      `在 $${root}$ 处的值为零，所以 $x - ${root}$ 是因式。`,
+                    ),
+              ],
+            ],
+            root === undefined
+              ? t(`None of $${values}$ is $0$.`, `$${values}$ 都不是 $0$。`)
+              : t(
+                  `$${f} = (x - ${root})(${quotient})$ in $\\mathbb{Z}_{${p}}[x]$.`,
+                  `在 $\\mathbb{Z}_{${p}}[x]$ 中，$${f} = (x - ${root})(${quotient})$。`,
+                ),
+          ),
+        ),
+      ),
+      reasons,
     );
   },
 );
@@ -872,8 +1286,8 @@ const rationalCandidates = point(
   "counting-the-candidates-of-the-rational-root-test",
   ["Counting the candidates of the rational root test", "计算有理根检验的候选数"],
   [
-    "The rational root test lists the fractions $\\pm \\frac{r}{s}$, with $r$ dividing the constant term and $s$ dividing the leading coefficient. Different pairs can give the same number, so the candidates must be counted in lowest terms, or the same value is counted twice.",
-    "有理根检验列出分数 $\\pm \\frac{r}{s}$，其中 $r$ 整除常数项，$s$ 整除首项系数。不同的数对可能给出同一个数，所以候选数必须按最简分数计算，否则同一个值会被计算两次。",
+    "The rational root test lists the fractions $\\pm \\frac{r}{s}$, with $r$ dividing the constant term and $s$ dividing the leading coefficient. Different pairs can give the same number, so the candidates must be counted in lowest terms, or the same value is counted twice.\n\nFor $2x^{3} + x + 4$, $r$ divides $4$ and $s$ divides $2$: the $6$ fractions $\\frac{1}{1}, \\frac{2}{1}, \\frac{4}{1}, \\frac{1}{2}, \\frac{2}{2}, \\frac{4}{2}$ give only the $4$ values $1, 2, 4, \\frac{1}{2}$, so there are $8$ candidates with the signs.\n\nCheck: $\\frac{2}{2} = 1$ and $\\frac{4}{2} = 2$ repeat earlier values.\n\n> **Watch out.** Reduce before counting, and remember the signs: each positive value $v$ gives the two candidates $v$ and $-v$.",
+    "有理根检验列出分数 $\\pm \\frac{r}{s}$，其中 $r$ 整除常数项，$s$ 整除首项系数。不同的数对可能给出同一个数，所以候选数必须按最简分数计算，否则同一个值会被计算两次。\n\n对 $2x^{3} + x + 4$，$r$ 整除 $4$，$s$ 整除 $2$：$6$ 个分数 $\\frac{1}{1}, \\frac{2}{1}, \\frac{4}{1}, \\frac{1}{2}, \\frac{2}{2}, \\frac{4}{2}$ 只给出 $4$ 个值 $1, 2, 4, \\frac{1}{2}$，加上符号共 $8$ 个候选。\n\n检验：$\\frac{2}{2} = 1$ 与 $\\frac{4}{2} = 2$ 重复了前面的值。\n\n> **注意。** 计数前要先约分，还要记得符号：每个正值 $v$ 给出 $v$ 与 $-v$ 两个候选。",
   ],
   (rng) => {
     const lead = rng.int(2, 12);
@@ -895,18 +1309,49 @@ const rationalCandidates = point(
     const answer = 2 * list.length;
     const pairsCount = divisors(last).length * divisors(lead).length;
     const f = poly([lead, "x^{3}"], [b, "x^{2}"], [c, "x"], [last, ""]);
-    return ask(
-      [
+    const whole = divisors(last).length;
+    return numberProblem({
+      prompt: t(
         `How many different rational numbers does the rational root test list as candidates for $${f}$?`,
         `对 $${f}$，有理根检验列出多少个不同的有理数作为候选？`,
-      ],
+      ),
       answer,
-      [2 * pairsCount === answer ? answer + 2 : 2 * pairsCount, list.length, divisors(last).length * 2],
-      [
-        `The constant term has $${divisors(last).length}$ positive divisors and the leading coefficient has $${divisors(lead).length}$. Reducing the fractions leaves $${list.length}$ positive values, and with the signs there are $${answer}$.`,
-        `常数项有 $${divisors(last).length}$ 个正因数，首项系数有 $${divisors(lead).length}$ 个。约分后剩下 $${list.length}$ 个正值，加上符号共 $${answer}$ 个。`,
-      ],
-    );
+      mistakes: distinctRingMistakes(answer, [
+        why(
+          2 * pairsCount === answer ? answer + 2 : 2 * pairsCount,
+          "That counts every pair without reducing the fractions, so equal values are counted more than once.",
+          "这没有约分就把每个数对都算上了，所以相等的值被计算了不止一次。",
+        ),
+        why(list.length, "That forgets the negative candidates.", "这漏掉了负的候选。"),
+        why(
+          whole * 2,
+          "That counts only the whole-number candidates; the divisors of the leading coefficient give fractions too.",
+          "这只数了整数候选；首项系数的因数也给出分数。",
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["List the divisors", "列出因数"],
+            t(
+              `The constant term ${last} has the positive divisors ${divisors(last).join(", ")}, and the leading coefficient ${lead} has ${divisors(lead).join(", ")}: $${pairsCount}$ fractions.`,
+              `常数项 ${last} 的正因数是 ${divisors(last).join("、")}，首项系数 ${lead} 的正因数是 ${divisors(lead).join("、")}：共 $${pairsCount}$ 个分数。`,
+            ),
+          ],
+          [
+            ["Reduce and add the signs", "约分并加上符号"],
+            t(
+              `Reducing the fractions leaves $${list.length}$ positive values, and with the signs there are $${answer}$.`,
+              `约分后剩下 $${list.length}$ 个正值，加上符号共 $${answer}$ 个。`,
+            ),
+          ],
+        ],
+        t(
+          `Of the $${list.length}$ positive values, $${whole}$ are whole numbers, the divisors of ${last}, and $${list.length - whole}$ are proper fractions; doubling for the signs gives $${answer}$.`,
+          `$${list.length}$ 个正值中，$${whole}$ 个是整数，即 ${last} 的因数，$${list.length - whole}$ 个是真分数；按符号加倍得 $${answer}$。`,
+        ),
+      ),
+    });
   },
 );
 
@@ -914,8 +1359,8 @@ const quaternionCommutator = point(
   "the-commutator-of-two-quaternions",
   ["The commutator of two quaternions", "两个四元数的交换子"],
   [
-    "Linear equations over the quaternions need separate left and right solutions because multiplication is not commutative. The difference $pq - qp$ measures this. It has no real part, and only the vector parts contribute, so the real coefficients of $p$ and $q$ do not affect it.",
-    "四元数上的线性方程需要分别求左解和右解，因为乘法不可交换。差 $pq - qp$ 衡量了这一点。它没有实部，只有向量部分起作用，所以 $p$ 和 $q$ 的实系数不影响它。",
+    "Linear equations over the quaternions need separate left and right solutions because multiplication is not commutative. The difference $pq - qp$ measures this. It has no real part, and only the vector parts contribute, so the real coefficients of $p$ and $q$ do not affect it.\n\nFor $p = i$ and $q = j$: $pq - qp = k - (-k) = 2k$, so the coefficient of $k$ is $2$.\n\nCheck: the coefficient of $k$ in $pq - qp$ is $2(b_{1}c_{2} - c_{1}b_{2})$, here $2((1)(1) - (0)(0)) = 2$.\n\n> **Watch out.** The terms do not cancel: $ij = k$ but $ji = -k$, so the commutator doubles them; and the real parts change nothing, as $(3 + i)j - j(3 + i) = 2k$ too.",
+    "四元数上的线性方程需要分别求左解和右解，因为乘法不可交换。差 $pq - qp$ 衡量了这一点。它没有实部，只有向量部分起作用，所以 $p$ 和 $q$ 的实系数不影响它。\n\n对 $p = i$，$q = j$：$pq - qp = k - (-k) = 2k$，所以 $k$ 的系数是 $2$。\n\n检验：$pq - qp$ 中 $k$ 的系数是 $2(b_{1}c_{2} - c_{1}b_{2})$，这里是 $2((1)(1) - (0)(0)) = 2$。\n\n> **注意。** 这些项不会抵消：$ij = k$ 而 $ji = -k$，所以交换子把它们加倍；实部不起作用，$(3 + i)j - j(3 + i) = 2k$ 也一样。",
   ],
   (rng) => {
     const entry = () => rng.int(-4, 4);
@@ -925,18 +1370,50 @@ const quaternionCommutator = point(
     const qp = quaternionProduct(q, p);
     const answer = (pq[3] as number) - (qp[3] as number);
     const show = (v: readonly number[]) => poly([v[0] as number, ""], [v[1] as number, "i"], [v[2] as number, "j"], [v[3] as number, "k"]);
-    return ask(
-      [
+    const pk = pq[3] as number;
+    const qk = qp[3] as number;
+    return numberProblem({
+      prompt: t(
         `Let $p = ${show(p)}$ and $q = ${show(q)}$. Find the coefficient of $k$ in $pq - qp$.`,
         `设 $p = ${show(p)}$，$q = ${show(q)}$。求 $pq - qp$ 中 $k$ 的系数。`,
-      ],
+      ),
       answer,
-      [pq[3] as number, -answer === answer ? 1 : -answer, answer === 0 ? 2 : answer / 2],
-      [
-        `We find $pq = ${show(pq)}$ and $qp = ${show(qp)}$. Subtracting the coefficients of $k$ gives $${answer}$.`,
-        `算得 $pq = ${show(pq)}$，$qp = ${show(qp)}$。把 $k$ 的系数相减，得 $${answer}$。`,
-      ],
-    );
+      mistakes: distinctRingMistakes(answer, [
+        why(
+          pk,
+          "That is the coefficient of $k$ in $pq$ alone; subtract the one in $qp$.",
+          "这只是 $pq$ 中 $k$ 的系数；还要减去 $qp$ 中的。",
+        ),
+        why(
+          -answer === answer ? 1 : -answer,
+          "That is the coefficient in $qp - pq$; the order of the subtraction matters.",
+          "这是 $qp - pq$ 中的系数；相减的顺序是有影响的。",
+        ),
+        why(
+          answer === 0 ? 2 : answer / 2,
+          answer === 0
+            ? "The cross terms cancel exactly here, so the coefficient is $0$."
+            : "That is half the answer: the cross terms of $pq$ and $qp$ have opposite signs, so the difference doubles them.",
+          answer === 0 ? "这里交叉项恰好抵消，所以系数是 $0$。" : "这是答案的一半：$pq$ 与 $qp$ 的交叉项符号相反，所以相减后加倍。",
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Multiply both ways", "两种顺序相乘"],
+            t(`$pq = ${show(pq)}$ and $qp = ${show(qp)}$.`, `$pq = ${show(pq)}$，$qp = ${show(qp)}$。`),
+          ],
+          [
+            ["Subtract", "相减"],
+            t(`The coefficients of $k$ give $${pk} - (${qk}) = ${answer}$.`, `把 $k$ 的系数相减，得 $${pk} - (${qk}) = ${answer}$。`),
+          ],
+        ],
+        t(
+          `The coefficient of $k$ in $pq - qp$ is $2(b_{1}c_{2} - c_{1}b_{2}) = 2((${p[1]})(${q[2]}) - (${p[2]})(${q[1]})) = ${answer}$.`,
+          `$pq - qp$ 中 $k$ 的系数为 $2(b_{1}c_{2} - c_{1}b_{2}) = 2((${p[1]})(${q[2]}) - (${p[2]})(${q[1]})) = ${answer}$。`,
+        ),
+      ),
+    });
   },
 );
 

@@ -16,6 +16,7 @@ import { type Reason, reasoned } from "../wrong-reasons.ts";
 import { type Step, walked } from "./calculus-i-differentiation.ts";
 import { chart, intTicks } from "./figure-charts.ts";
 import { arrowLine, drawn, label, node, ring } from "./figure-reading-more.ts";
+import { chosen, type Miss, pw, type Slip, until, worked } from "./number-theory-course.ts";
 
 /** figureOf pairs a drawing with its description in both languages. */
 const figureOf = (svg: string, [en, zh]: Pair) => ({ svg, alt: t(en, zh) });
@@ -1372,8 +1373,8 @@ const cycleTypeDrawn = point(
   "the-cycle-type-of-a-drawn-permutation",
   ["The cycle type of a drawn permutation", "所画置换的轮换型"],
   [
-    "Follow each number through the arrows until you return to it: that is one cycle. The cycle type lists the lengths of all the cycles, including fixed points as cycles of length one.",
-    "沿箭头跟踪每个数，直到回到它自身，就得到一个轮换。轮换型列出所有轮换的长度，不动点算作长度为一的轮换。",
+    "Follow each number through the arrows until you return to it: that is one cycle. The cycle type lists the lengths of all the cycles, including fixed points as cycles of length one.\n\nFor arrows $1 \\to 2$, $2 \\to 3$, $3 \\to 1$ and $4 \\to 4$: starting from $1$ gives $1 \\to 2 \\to 3 \\to 1$, a cycle of length $3$, and $4$ goes to itself, a cycle of length one. The cycle type is $(3, 1)$.\n\nCheck: $3 + 1 = 4$, so every number lies in exactly one cycle.\n\n> **Watch out.** Do not drop the fixed points. A number whose arrow goes straight down is a cycle of length one, so the type above is $(3, 1)$; the lengths always add up to the number of points.",
+    "沿箭头跟踪每个数，直到回到它自身，就得到一个轮换。轮换型列出所有轮换的长度，不动点算作长度为一的轮换。\n\n对箭头 $1 \\to 2$、$2 \\to 3$、$3 \\to 1$、$4 \\to 4$：从 $1$ 出发得 $1 \\to 2 \\to 3 \\to 1$，是长度为 $3$ 的轮换；$4$ 送到自身，是长度为一的轮换。轮换型是 $(3, 1)$。\n\n检验：$3 + 1 = 4$，所以每个数恰好在一个轮换中。\n\n> **注意。** 不要漏掉不动点。箭头竖直向下的数是长度为一的轮换，所以上面的轮换型是 $(3, 1)$；各长度之和总等于点的个数。",
   ],
   (rng) => {
     const n = rng.int(4, 6);
@@ -1391,19 +1392,65 @@ const cycleTypeDrawn = point(
       3,
     );
     const written = cycles.map((c) => `(${c.map((v) => v + 1).join("\\,")})`).join("");
-    return choose(
-      rng,
-      [
-        "The arrows show a permutation, sending each top number to a bottom number. What is its cycle type?",
-        "箭头表示一个置换，把上排的每个数送到下排的一个数。它的轮换型是什么？",
-      ],
-      form(lengths),
-      wrong.map(form),
-      [
-        `Following the arrows gives the cycles $${written}$, of lengths $${lengths.join(", ")}$.`,
-        `沿箭头得到轮换 $${written}$，长度为 $${lengths.join(", ")}$。`,
-      ],
-      figureOf(stringDiagram(p), stringAlt(p)),
+    const chains = cycles.map((c) => `$${[...c, c[0] as number].map((v) => v + 1).join(" \\to ")}$`);
+    const fixed = lengths.filter((l) => l === 1).length;
+    const count = (k: number) => (k === 1 ? "one cycle" : `${k} cycles`);
+    const reasons: Reason[] = wrong.map((l): Reason => {
+      const response = form(l)[0];
+      if (l.length < lengths.length)
+        return [
+          response,
+          `That has only ${count(l.length)}, but following the arrows gives ${lengths.length}: $${written}$.${fixed > 0 ? " Each number whose arrow goes straight down is a cycle of length one." : ""}`,
+          `那只有 ${l.length} 个轮换，而沿箭头得到 ${lengths.length} 个：$${written}$。${fixed > 0 ? "箭头竖直向下的数是长度为一的轮换。" : ""}`,
+        ];
+      if (l.length > lengths.length)
+        return [
+          response,
+          `That has ${l.length} cycles, but following the arrows gives only ${count(lengths.length)}: a cycle closes only when you return to the number you started from.`,
+          `那有 ${l.length} 个轮换，而沿箭头只得到 ${lengths.length} 个：只有回到出发的数，轮换才算结束。`,
+        ];
+      return [
+        response,
+        `That has the right number of cycles, ${lengths.length}, but not their lengths: the cycles are $${written}$.`,
+        `轮换的个数 ${lengths.length} 对了，但长度不对：轮换是 $${written}$。`,
+      ];
+    });
+    return reasoned(
+      choose(
+        rng,
+        [
+          "The arrows show a permutation, sending each top number to a bottom number. What is its cycle type?",
+          "箭头表示一个置换，把上排的每个数送到下排的一个数。它的轮换型是什么？",
+        ],
+        form(lengths),
+        wrong.map(form),
+        asPair(
+          walked(
+            [
+              [
+                ["Follow the arrows", "沿箭头走"],
+                t(
+                  `Starting from each number not yet used and following the arrows back to it gives ${chains.join(", ")}, that is, the cycles $${written}$.`,
+                  `从每个还没用过的数出发，沿箭头走回它自身，得到 ${chains.join("，")}，即轮换 $${written}$。`,
+                ),
+              ],
+              [
+                ["List the lengths", "列出长度"],
+                t(
+                  `Largest first, the lengths are $(${lengths.join(", ")})$${fixed > 0 ? ", with each fixed point counted as a cycle of length one" : ""}.`,
+                  `从大到小，长度为 $(${lengths.join(", ")})$${fixed > 0 ? "，每个不动点算作长度为一的轮换" : ""}。`,
+                ),
+              ],
+            ],
+            t(
+              `$${lengths.join(" + ")} = ${n}$, so each of the $${n}$ numbers lies in exactly one cycle.`,
+              `$${lengths.join(" + ")} = ${n}$，所以 $${n}$ 个数每个恰好在一个轮换中。`,
+            ),
+          ),
+        ),
+        figureOf(stringDiagram(p), stringAlt(p)),
+      ),
+      reasons,
     );
   },
 );
@@ -1522,24 +1569,70 @@ const necklaceOrbit = {
     "the-orbit-of-a-drawn-necklace",
     ["The orbit of a drawn necklace", "所画项链的轨道"],
     [
-      "Rotations of a necklace with $n$ beads form a group of size $n$. The orbit of a coloring is the set of colorings you can reach by rotating. If the pattern first repeats after $p$ beads, the orbit has size $p$.",
-      "$n$ 颗珠子的项链的旋转构成大小为 $n$ 的群。一种着色的轨道是旋转能得到的所有着色。如果图案在 $p$ 颗珠子后第一次重复，轨道的大小就是 $p$。",
+      "Rotations of a necklace with $n$ beads form a group of size $n$. The orbit of a coloring is the set of colorings you can reach by rotating. If the pattern first repeats after $p$ beads, the orbit has size $p$.\n\nFor $6$ beads colored black, white, black, white, black, white, the pattern first repeats after $2$ beads. Rotating by one step swaps the colors and rotating by two steps gives the start again, so the orbit has $2$ colorings.\n\nCheck: the rotations by $0$, $2$ and $4$ steps fix the coloring, and $2 \\times 3 = 6$, the size of the group, as the orbit–stabilizer theorem says.\n\n> **Watch out.** Count different colorings, not rotations. The orbit has $p$ colorings, which is less than $n$ whenever the pattern repeats before going all the way round.",
+      "$n$ 颗珠子的项链的旋转构成大小为 $n$ 的群。一种着色的轨道是旋转能得到的所有着色。如果图案在 $p$ 颗珠子后第一次重复，轨道的大小就是 $p$。\n\n对颜色为黑、白、黑、白、黑、白的 $6$ 颗珠子，图案在 $2$ 颗珠子后第一次重复。旋转一步交换两种颜色，旋转两步又回到开始的样子，所以轨道有 $2$ 种着色。\n\n检验：旋转 $0$、$2$、$4$ 步保持着色不变，而 $2 \\times 3 = 6$ 正是群的大小，与轨道–稳定子定理一致。\n\n> **注意。** 要数不同的着色，而不是旋转的个数。轨道有 $p$ 种着色；只要图案在转完一整圈之前就重复，它就小于 $n$。",
     ],
     (rng) => {
       const { n, p, pattern } = periodicPattern(rng);
-      return ask(
-        [
-          "The rotations of the necklace act on its colorings, with the beads in fixed positions. How many different colorings are in the orbit of the one shown?",
-          "项链的旋转作用在它的着色上，珠子的位置固定。所示着色的轨道中有多少种不同的着色？",
-        ],
-        p,
-        [n, n / p, pattern.reduce((a, b) => a + b, 0), 2 * n, n - p + 1],
-        [
-          `The pattern first repeats after $${p}$ beads, so exactly $${p}$ of the $${n}$ rotations give different colorings.`,
-          `图案在 $${p}$ 颗珠子后第一次重复，所以 $${n}$ 个旋转中恰有 $${p}$ 个给出不同的着色。`,
-        ],
-        figureOf(necklace(pattern), beadAlt(pattern)),
-      );
+      const fixing = n / p;
+      const black = pattern.reduce((a, b) => a + b, 0);
+      const seen = new Set<number>([p]);
+      const mistakes = [
+        why(
+          n,
+          `That counts every rotation, but rotations that differ by a multiple of $${p}$ steps give the same coloring.`,
+          `那数的是所有旋转，但相差 $${p}$ 步的倍数的旋转给出同一种着色。`,
+        ),
+        why(
+          fixing,
+          `That is the number of rotations that fix the coloring, the stabilizer; the orbit has $\\frac{${n}}{${fixing}}$ colorings.`,
+          `那是保持着色不变的旋转个数，即稳定子；轨道有 $\\frac{${n}}{${fixing}}$ 种着色。`,
+        ),
+        why(black, "That counts the black beads, not the colorings in the orbit.", "那数的是黑珠子，而不是轨道中的着色。"),
+        why(2 * n, "That also counts reflections, but only the rotations act here.", "那把翻转也算进去了，但这里只有旋转在作用。"),
+        why(
+          n - p + 1,
+          `That subtracts the period from $${n}$; the orbit size is $${n}$ divided by the number of rotations that fix the coloring.`,
+          `那是从 $${n}$ 里减去周期；轨道的大小是 $${n}$ 除以保持着色不变的旋转个数。`,
+        ),
+      ].filter((m) => !seen.has(m.value as number) && Boolean(seen.add(m.value as number)));
+      return {
+        ...numberProblem({
+          prompt: t(
+            "The rotations of the necklace act on its colorings, with the beads in fixed positions. How many different colorings are in the orbit of the one shown?",
+            "项链的旋转作用在它的着色上，珠子的位置固定。所示着色的轨道中有多少种不同的着色？",
+          ),
+          answer: p,
+          mistakes,
+          solution: walked(
+            [
+              [
+                ["Find where the pattern repeats", "找出图案重复的位置"],
+                t(
+                  `Going clockwise from the top, the beads first repeat after $${p}$ beads, so rotating by $${p}$ steps gives the same coloring.`,
+                  `从顶部顺时针看，珠子在 $${p}$ 颗之后第一次重复，所以旋转 $${p}$ 步得到同一种着色。`,
+                ),
+              ],
+              [
+                ["Count the different colorings", "数不同的着色"],
+                t(
+                  `The rotations by $0$ to $${p - 1}$ steps give different colorings, and every other rotation repeats one of them, so the orbit has $${p}$ colorings.`,
+                  `旋转 $0$ 到 $${p - 1}$ 步给出互不相同的着色，其他旋转都重复其中之一，所以轨道有 $${p}$ 种着色。`,
+                ),
+              ],
+            ],
+            t(
+              fixing === 1
+                ? `Only the identity fixes the coloring, and $${p} \\times 1 = ${n}$, the number of rotations.`
+                : `The $${fixing}$ rotations by multiples of $${p}$ steps fix the coloring, and $${p} \\times ${fixing} = ${n}$, the number of rotations.`,
+              fixing === 1
+                ? `只有恒等旋转保持着色不变，而 $${p} \\times 1 = ${n}$，正是旋转的个数。`
+                : `旋转 $${p}$ 步的倍数的 $${fixing}$ 个旋转保持着色不变，而 $${p} \\times ${fixing} = ${n}$，正是旋转的个数。`,
+            ),
+          ),
+        }),
+        figure: figureOf(necklace(pattern), beadAlt(pattern)),
+      };
     },
   ),
   figure: algebraDrawings2["orbits#the-orbit-of-a-drawn-necklace"],
@@ -1550,25 +1643,69 @@ const necklaceFixed = {
     "the-rotations-that-fix-a-drawn-necklace",
     ["The rotations that fix a drawn necklace", "保持所画项链不变的旋转"],
     [
-      "A rotation fixes a coloring when every bead lands on a bead of the same color. If the pattern first repeats after $p$ beads, the rotations that fix it are the multiples of $p$ steps, and there are $\\frac{n}{p}$ of them, counting the identity.",
-      "当每颗珠子都落到同色珠子上时，旋转保持着色不变。如果图案在 $p$ 颗珠子后第一次重复，保持它不变的旋转就是 $p$ 步的倍数，共 $\\frac{n}{p}$ 个（含恒等旋转）。",
+      "A rotation fixes a coloring when every bead lands on a bead of the same color. If the pattern first repeats after $p$ beads, the rotations that fix it are the multiples of $p$ steps, and there are $\\frac{n}{p}$ of them, counting the identity.\n\nFor $8$ beads colored black, black, white, white, black, black, white, white, the pattern first repeats after $4$ beads. The rotations by $0$ and $4$ steps fix it, so $\\frac{8}{4} = 2$ rotations fix it.\n\nCheck: rotating by $2$ steps puts a black bead where a white one was, so it does not fix the coloring, as expected for a step count that is not a multiple of $4$.\n\n> **Watch out.** The identity, the rotation by $0$ steps, counts and is already among the multiples of $p$. And the answer is $\\frac{n}{p}$, not $p$: $p$ is the number of different colorings in the orbit.",
+      "当每颗珠子都落到同色珠子上时，旋转保持着色不变。如果图案在 $p$ 颗珠子后第一次重复，保持它不变的旋转就是 $p$ 步的倍数，共 $\\frac{n}{p}$ 个（含恒等旋转）。\n\n对颜色为黑、黑、白、白、黑、黑、白、白的 $8$ 颗珠子，图案在 $4$ 颗珠子后第一次重复。旋转 $0$ 步和 $4$ 步保持它不变，所以有 $\\frac{8}{4} = 2$ 个旋转保持它不变。\n\n检验：旋转 $2$ 步会把黑珠子放到原来白珠子的位置，所以它不保持着色，这与 $2$ 不是 $4$ 的倍数相符。\n\n> **注意。** 恒等旋转（旋转 $0$ 步）要算上，而且它已经在 $p$ 步的倍数之中。答案是 $\\frac{n}{p}$ 而不是 $p$：$p$ 是轨道中不同着色的个数。",
     ],
     (rng) => {
       const { n, p, pattern } = periodicPattern(rng);
       const answer = n / p;
-      return ask(
-        [
-          "How many rotations of this necklace, counting the identity, leave the coloring unchanged?",
-          "这条项链有多少个旋转（含恒等旋转）保持着色不变？",
-        ],
-        answer,
-        [p, n, answer + 1, 2 * answer + 1],
-        [
-          `The pattern first repeats after $${p}$ beads, so the rotations by multiples of $${p}$ steps fix it. There are $\\frac{${n}}{${p}} = ${answer}$ of them.`,
-          `图案在 $${p}$ 颗珠子后第一次重复，所以旋转 $${p}$ 步的倍数保持它不变，共 $\\frac{${n}}{${p}} = ${answer}$ 个。`,
-        ],
-        figureOf(necklace(pattern), beadAlt(pattern)),
-      );
+      const multiples = Array.from({ length: answer }, (_, i) => i * p);
+      const seen = new Set<number>([answer]);
+      const mistakes = [
+        why(
+          p,
+          `That is the number of different colorings in the orbit; the rotations that fix the coloring number $\\frac{${n}}{${p}}$.`,
+          `那是轨道中不同着色的个数；保持着色不变的旋转有 $\\frac{${n}}{${p}}$ 个。`,
+        ),
+        why(
+          n,
+          `That counts every rotation, but a rotation by a number of steps that is not a multiple of $${p}$ puts some bead on one of the other color.`,
+          `那数的是所有旋转，但旋转的步数不是 $${p}$ 的倍数时，总有珠子落到另一种颜色的珠子上。`,
+        ),
+        why(
+          answer + 1,
+          "That counts the identity twice; the rotation by $0$ steps is already one of the multiples.",
+          "那把恒等旋转算了两次；旋转 $0$ 步已经是倍数之一。",
+        ),
+        why(
+          2 * answer + 1,
+          "That also counts reflections and adds the identity again; only rotations are counted, and the identity is already among them.",
+          "那把翻转也算进去，又多加了恒等旋转；这里只数旋转，而恒等旋转已经在其中。",
+        ),
+      ].filter((m) => !seen.has(m.value as number) && Boolean(seen.add(m.value as number)));
+      return {
+        ...numberProblem({
+          prompt: t(
+            "How many rotations of this necklace, counting the identity, leave the coloring unchanged?",
+            "这条项链有多少个旋转（含恒等旋转）保持着色不变？",
+          ),
+          answer,
+          mistakes,
+          solution: walked(
+            [
+              [
+                ["Find the period", "找出周期"],
+                t(
+                  `Going clockwise from the top, the beads first repeat after $${p}$ beads.`,
+                  `从顶部顺时针看，珠子在 $${p}$ 颗之后第一次重复。`,
+                ),
+              ],
+              [
+                ["List the rotations that fix it", "列出保持它不变的旋转"],
+                t(
+                  `The rotations by $${multiples.join(", ")}$ steps, the multiples of $${p}$ below $${n}$, fix the coloring. There are $\\frac{${n}}{${p}} = ${answer}$ of them.`,
+                  `旋转 $${multiples.join(", ")}$ 步（小于 $${n}$ 的 $${p}$ 的倍数）保持着色不变，共 $\\frac{${n}}{${p}} = ${answer}$ 个。`,
+                ),
+              ],
+            ],
+            t(
+              `The orbit has $${p}$ colorings, and $${p} \\times ${answer} = ${n}$, the number of rotations, as the orbit–stabilizer theorem says.`,
+              `轨道有 $${p}$ 种着色，而 $${p} \\times ${answer} = ${n}$ 正是旋转的个数，与轨道–稳定子定理一致。`,
+            ),
+          ),
+        }),
+        figure: figureOf(necklace(pattern), beadAlt(pattern)),
+      };
     },
   ),
   figure: algebraDrawings2["colorings-of-necklaces#the-rotations-that-fix-a-drawn-necklace"],
@@ -1635,60 +1772,143 @@ const powerOnCycle = point(
   "a-large-power-from-a-drawn-cycle-of-powers",
   ["A large power from a drawn cycle of powers", "由所画幂循环求高次幂"],
   [
-    "The powers of $g$ modulo $n$ run around a closed cycle starting at $1$. If the cycle has length $L$, then $g^K$ depends only on $K \\bmod L$, so walk that many arrows from $1$.",
-    "$g$ 模 $n$ 的幂沿一个从 $1$ 开始的闭合循环运行。如果循环长度为 $L$，$g^K$ 就只取决于 $K \\bmod L$，所以从 $1$ 出发走这么多个箭头即可。",
+    "The powers of $g$ modulo $n$ run around a closed cycle starting at $1$. If the cycle has length $L$, then $g^K$ depends only on $K \\bmod L$, so walk that many arrows from $1$. Modulo $7$, the powers of $3$ run $1, 3, 2, 6, 4, 5$ and back to $1$, a cycle of length $6$. For $3^{100}$, $100 = 16 \\times 6 + 4$, and $4$ arrows from $1$ land on $4$.\n\nCheck: $3^{100} = (3^{6})^{16} \\cdot 3^{4} \\equiv 3^{4} = 81 = 11 \\times 7 + 4$.\n\n> **Watch out.** The walk starts at $1 = g^0$, so $g^K$ lies $K$ arrows from $1$, not $K + 1$; and $K$ is reduced modulo the length of the cycle, not modulo $n$.",
+    "$g$ 模 $n$ 的幂沿一个从 $1$ 开始的闭合循环运行。如果循环长度为 $L$，$g^K$ 就只取决于 $K \\bmod L$，所以从 $1$ 出发走这么多个箭头即可。模 $7$ 时，$3$ 的幂依次是 $1, 3, 2, 6, 4, 5$，再回到 $1$，循环长度为 $6$。对 $3^{100}$，$100 = 16 \\times 6 + 4$，从 $1$ 走 $4$ 个箭头到达 $4$。\n\n检验：$3^{100} = (3^{6})^{16} \\cdot 3^{4} \\equiv 3^{4} = 81 = 11 \\times 7 + 4$。\n\n> **注意。** 从 $1 = g^0$ 出发，所以 $g^K$ 在离 $1$ 有 $K$ 个箭头的地方，不是 $K + 1$ 个；$K$ 要模循环长度约化，而不是模 $n$。",
   ],
-  (rng) => {
-    const [g, p] = rng.pick(powerCases);
-    const path = powerPath(g, p);
-    const L = path.length;
-    const K = rng.int(L + 1, 200);
-    const answer = path[K % L] as number;
-    return ask(
-      [
-        `The arrows start at $1$ and follow the powers of $${g}$ modulo $${p}$. Find $${g}^{${K}} \\bmod ${p}$.`,
-        `箭头从 $1$ 出发，依次经过 $${g}$ 模 $${p}$ 的幂。求 $${g}^{${K}} \\bmod ${p}$。`,
-      ],
-      answer,
-      [path[(K + 1) % L] as number, K % p, K % L, (path[(K % L) + 1 === L ? 0 : (K % L) + 1] as number) + 1],
-      [
-        `The cycle has length $${L}$, and $${K} \\equiv ${K % L} \\pmod{${L}}$. Walking $${K % L}$ arrows from $1$ lands on $${answer}$.`,
-        `循环长度为 $${L}$，$${K} \\equiv ${K % L} \\pmod{${L}}$。从 $1$ 走 $${K % L}$ 个箭头到达 $${answer}$。`,
-      ],
-      powerFigure(g, p, path),
-    );
-  },
+  (rng) =>
+    until(() => {
+      const [g, p] = rng.pick(powerCases);
+      const path = powerPath(g, p);
+      const L = path.length;
+      const K = rng.int(L + 1, 200);
+      const r = K % L;
+      const answer = path[r] as number;
+      const last = path[L - 1] as number;
+      const misses: Miss[] = [
+        [
+          path[(K + 1) % L] as number,
+          "That walks one arrow too many, as if $1$ were the first power rather than $g^0$.",
+          "那多走了一个箭头，好像 $1$ 是第一次幂而不是 $g^0$。",
+        ],
+        [path[(K + L - 1) % L] as number, "That walks one arrow too few.", "那少走了一个箭头。"],
+        [
+          path[(K % p) % L] as number,
+          `That reduces the exponent modulo $${p}$; the powers repeat after the $${L}$ arrows of the cycle.`,
+          `那把指数模 $${p}$ 约化了；幂是在循环的 $${L}$ 个箭头之后重复的。`,
+        ],
+        [r, `$${r}$ is how many arrows to walk, not the residue where they end.`, `$${r}$ 是要走的箭头数，不是到达的剩余。`],
+      ];
+      return worked(
+        [
+          `The arrows start at $1$ and follow the powers of $${g}$ modulo $${p}$. Find $${g}^{${K}} \\bmod ${p}$.`,
+          `箭头从 $1$ 出发，依次经过 $${g}$ 模 $${p}$ 的幂。求 $${g}^{${K}} \\bmod ${p}$。`,
+        ],
+        answer,
+        misses,
+        [
+          [
+            ["Count the cycle", "数循环长度"],
+            [`The cycle is $${path.join(", ")}$, of length $${L}$.`, `循环是 $${path.join(", ")}$，长度为 $${L}$。`],
+          ],
+          [
+            ["Reduce the exponent", "约化指数"],
+            [`$${K} = ${Math.floor(K / L)} \\times ${L} + ${r}$.`, `$${K} = ${Math.floor(K / L)} \\times ${L} + ${r}$。`],
+          ],
+          [
+            ["Walk the arrows", "沿箭头走"],
+            [`Walking $${r}$ arrows from $1$ lands on $${answer}$.`, `从 $1$ 走 $${r}$ 个箭头到达 $${answer}$。`],
+          ],
+        ],
+        [
+          `The cycle closes because $${pw(g, L)} \\equiv ${last} \\cdot ${g} = ${last * g} = ${Math.floor((last * g) / p)} \\times ${p} + 1$, so $${g}^{${K}} = ${pw(`(${pw(g, L)})`, Math.floor(K / L))} \\cdot ${pw(g, r)} \\equiv ${pw(g, r)} \\equiv ${answer}$.`,
+          `循环闭合，因为 $${pw(g, L)} \\equiv ${last} \\cdot ${g} = ${last * g} = ${Math.floor((last * g) / p)} \\times ${p} + 1$，所以 $${g}^{${K}} = ${pw(`(${pw(g, L)})`, Math.floor(K / L))} \\cdot ${pw(g, r)} \\equiv ${pw(g, r)} \\equiv ${answer}$。`,
+        ],
+        powerFigure(g, p, path),
+      );
+    }),
 );
 
 const rootOnCycle = point(
   "is-a-drawn-cycle-that-of-a-primitive-root",
   ["Is a drawn cycle that of a primitive root?", "所画循环属于原根吗？"],
   [
-    "An integer $g$ is a primitive root modulo a prime $p$ when its powers reach every nonzero residue, so its cycle has length $p - 1$. A shorter cycle has a length dividing $p - 1$, and that length is the order of $g$.",
-    "当整数 $g$ 的幂能到达模素数 $p$ 的每个非零剩余类时，它是原根，此时它的循环长度为 $p - 1$。较短的循环长度整除 $p - 1$，这个长度就是 $g$ 的阶。",
+    "An integer $g$ is a primitive root modulo a prime $p$ when its powers reach every nonzero residue, so its cycle has length $p - 1$. A shorter cycle has a length dividing $p - 1$, and that length is the order of $g$. Modulo $7$, the powers of $2$ run $1, 2, 4$ and back to $1$, a cycle of length $3$, so $2$ is not a primitive root, while those of $3$ run $1, 3, 2, 6, 4, 5$, all six nonzero residues, so $3$ is one.\n\nCheck: $2^{3} = 8 = 7 + 1$, so $2$ has order $3$, and $3$ divides $6$, as an order must.\n\n> **Watch out.** Count the residues on the cycle, $1$ included, and compare with $p - 1$, not with $p$: $0$ is never a power of $g$.",
+    "当整数 $g$ 的幂能到达模素数 $p$ 的每个非零剩余类时，它是原根，此时它的循环长度为 $p - 1$。较短的循环长度整除 $p - 1$，这个长度就是 $g$ 的阶。模 $7$ 时，$2$ 的幂依次是 $1, 2, 4$，再回到 $1$，循环长度为 $3$，所以 $2$ 不是原根；而 $3$ 的幂依次是 $1, 3, 2, 6, 4, 5$，经过全部六个非零剩余类，所以 $3$ 是原根。\n\n检验：$2^{3} = 8 = 7 + 1$，所以 $2$ 的阶为 $3$，而 $3$ 整除 $6$，阶理应如此。\n\n> **注意。** 数循环上的剩余个数时要算上 $1$，并与 $p - 1$ 比较，而不是与 $p$ 比较：$0$ 永远不是 $g$ 的幂。",
   ],
   (rng) => {
     const [g, p] = rng.pick(powerCases);
     const path = powerPath(g, p);
     const L = path.length;
     const isRoot = L === p - 1;
+    const last = path[L - 1] as number;
     const yes: Pair = [`$${g}$ is a primitive root modulo $${p}$`, `$${g}$ 是模 $${p}$ 的原根`];
     const no: Pair = [`$${g}$ is not a primitive root: its order is $${L}$`, `$${g}$ 不是原根：它的阶为 $${L}$`];
     const wrongOrder = (m: number): Pair => [`$${g}$ is not a primitive root: its order is $${m}$`, `$${g}$ 不是原根：它的阶为 $${m}$`];
-    return choose(
+    const wrong: Slip[] = isRoot
+      ? [
+          [
+            wrongOrder((p - 1) / 2),
+            `The cycle does not stop halfway: it passes through all $${p - 1}$ nonzero residues.`,
+            `循环并没有在一半处停下：它经过全部 $${p - 1}$ 个非零剩余类。`,
+          ],
+          [
+            wrongOrder(p),
+            `No order modulo $${p}$ can be $${p}$: there are only $${p - 1}$ nonzero residues, and $0$ is never a power.`,
+            `模 $${p}$ 的阶不可能是 $${p}$：非零剩余类只有 $${p - 1}$ 个，而 $0$ 永远不是幂。`,
+          ],
+          [
+            wrongOrder(p - 1),
+            `An order of $${p - 1}$ is exactly what makes $${g}$ a primitive root, so the first half of this statement is false.`,
+            `阶为 $${p - 1}$ 正说明 $${g}$ 是原根，所以这个说法的前半句是错的。`,
+          ],
+        ]
+      : [
+          [
+            yes,
+            `The cycle has only $${L}$ of the $${p - 1}$ nonzero residues, so the powers of $${g}$ miss some of them.`,
+            `循环只有 $${p - 1}$ 个非零剩余类中的 $${L}$ 个，所以 $${g}$ 的幂漏掉了一些。`,
+          ],
+          [
+            wrongOrder(p - 1),
+            `$${p - 1}$ is the length a primitive root's cycle would have; this cycle has $${L}$ residues.`,
+            `$${p - 1}$ 是原根的循环应有的长度；这个循环只有 $${L}$ 个剩余类。`,
+          ],
+          [
+            wrongOrder(L + 1),
+            `That counts one residue too many, perhaps $1$ twice, at the start and at the end.`,
+            `那多数了一个剩余类，可能是把开头和结尾的 $1$ 数了两次。`,
+          ],
+        ];
+    return chosen(
       rng,
       [
         `The arrows start at $1$ and follow the powers of $${g}$ modulo $${p}$. Which statement is true?`,
         `箭头从 $1$ 出发，依次经过 $${g}$ 模 $${p}$ 的幂。哪个说法正确？`,
       ],
       isRoot ? yes : no,
-      isRoot ? [wrongOrder(Math.floor((p - 1) / 2)), wrongOrder(p), wrongOrder(g)] : [yes, wrongOrder(p - 1), wrongOrder(L + 1)],
-      isRoot
-        ? [`The cycle passes through all $${p - 1}$ nonzero residues.`, `循环经过全部 $${p - 1}$ 个非零剩余类。`]
-        : [
-            `The cycle has only $${L}$ residues out of $${p - 1}$, so the order of $${g}$ is $${L}$.`,
-            `循环只有 $${p - 1}$ 个中的 $${L}$ 个剩余类，所以 $${g}$ 的阶为 $${L}$。`,
-          ],
+      wrong,
+      [
+        [
+          ["Count the cycle", "数循环长度"],
+          [`The cycle is $${path.join(", ")}$, which has $${L}$ residues.`, `循环是 $${path.join(", ")}$，共 $${L}$ 个剩余类。`],
+        ],
+        [
+          ["Compare with p − 1", "与 p − 1 比较"],
+          isRoot
+            ? [
+                `$${L} = ${p} - 1$, so the powers reach every nonzero residue and $${g}$ is a primitive root.`,
+                `$${L} = ${p} - 1$，所以幂到达每个非零剩余类，$${g}$ 是原根。`,
+              ]
+            : [
+                `$${L} < ${p - 1}$, so $${g}$ is not a primitive root, and its order is $${L}$.`,
+                `$${L} < ${p - 1}$，所以 $${g}$ 不是原根，它的阶为 $${L}$。`,
+              ],
+        ],
+      ],
+      [
+        `The cycle closes because $${last} \\cdot ${g} = ${last * g} = ${Math.floor((last * g) / p)} \\times ${p} + 1$, and $${L}$ divides $${p - 1}$, as an order must.`,
+        `循环闭合，因为 $${last} \\cdot ${g} = ${last * g} = ${Math.floor((last * g) / p)} \\times ${p} + 1$，并且 $${L}$ 整除 $${p - 1}$，阶理应如此。`,
+      ],
       powerFigure(g, p, path),
     );
   },
@@ -1791,51 +2011,100 @@ const tripleCircle = {
     "a-pythagorean-triple-from-a-line-through-the-circle",
     ["A Pythagorean triple from a line through the circle", "由过单位圆的直线得到勾股数"],
     [
-      "A line through $(-1, 0)$ with rational slope $t = \\frac{p}{q}$ meets the unit circle again at $\\left(\\frac{q^2 - p^2}{q^2 + p^2}, \\frac{2pq}{q^2 + p^2}\\right)$. Clearing denominators gives the Pythagorean triple $q^2 - p^2,\\ 2pq,\\ q^2 + p^2$.",
-      "过 $(-1, 0)$、有理斜率 $t = \\frac{p}{q}$ 的直线与单位圆的另一个交点是 $\\left(\\frac{q^2 - p^2}{q^2 + p^2}, \\frac{2pq}{q^2 + p^2}\\right)$。消去分母就得到勾股数 $q^2 - p^2,\\ 2pq,\\ q^2 + p^2$。",
+      "A line through $(-1, 0)$ with rational slope $t = \\frac{p}{q}$ meets the unit circle again at $\\left(\\frac{q^2 - p^2}{q^2 + p^2}, \\frac{2pq}{q^2 + p^2}\\right)$. Clearing denominators gives the Pythagorean triple $q^2 - p^2,\\ 2pq,\\ q^2 + p^2$. For $t = \\frac{1}{2}$, $p = 1$ and $q = 2$, so the line meets the circle again at $\\left(\\frac{4 - 1}{4 + 1}, \\frac{2 \\cdot 1 \\cdot 2}{4 + 1}\\right) = \\left(\\frac{3}{5}, \\frac{4}{5}\\right)$, which gives the triple $3, 4, 5$.\n\nCheck: $\\frac{9}{25} + \\frac{16}{25} = 1$, so the point is on the circle, and $\\frac{1}{2} \\left(\\frac{3}{5} + 1\\right) = \\frac{4}{5}$, so it is on the line.\n\n> **Watch out.** $q^2 - p^2$ belongs to $x$ and $2pq$ to $y$, both over $q^2 + p^2$; and the slope $t$ is where the line crosses the $y$-axis, not a coordinate of the new point.",
+      "过 $(-1, 0)$、有理斜率 $t = \\frac{p}{q}$ 的直线与单位圆的另一个交点是 $\\left(\\frac{q^2 - p^2}{q^2 + p^2}, \\frac{2pq}{q^2 + p^2}\\right)$。消去分母就得到勾股数 $q^2 - p^2,\\ 2pq,\\ q^2 + p^2$。对 $t = \\frac{1}{2}$，$p = 1$，$q = 2$，所以直线与圆再次相交于 $\\left(\\frac{4 - 1}{4 + 1}, \\frac{2 \\cdot 1 \\cdot 2}{4 + 1}\\right) = \\left(\\frac{3}{5}, \\frac{4}{5}\\right)$，得到勾股数 $3, 4, 5$。\n\n检验：$\\frac{9}{25} + \\frac{16}{25} = 1$，所以这个点在圆上；而 $\\frac{1}{2} \\left(\\frac{3}{5} + 1\\right) = \\frac{4}{5}$，所以它在直线上。\n\n> **注意。** $q^2 - p^2$ 属于 $x$，$2pq$ 属于 $y$，分母都是 $q^2 + p^2$；斜率 $t$ 是直线与 $y$ 轴的交点，不是新交点的坐标。",
     ],
-    (rng) => {
-      const [p, q] = rng.pick(SLOPES);
-      const X = Q.of(q * q - p * p, q * q + p * p);
-      const Y = Q.of(2 * p * q, q * q + p * p);
-      const askX = rng.bool();
-      const slope = Q.of(p, q);
-      const px = X.toNumber();
-      const py = Y.toNumber();
-      return ask(
-        askX
+    (rng) =>
+      until(() => {
+        const [p, q] = rng.pick(SLOPES);
+        const X = Q.of(q * q - p * p, q * q + p * p);
+        const Y = Q.of(2 * p * q, q * q + p * p);
+        const askX = rng.bool();
+        const slope = Q.of(p, q);
+        const px = X.toNumber();
+        const py = Y.toNumber();
+        const [a, b, c] = [q * q - p * p, 2 * p * q, q * q + p * p];
+        const misses: Miss[] = askX
           ? [
-              `The line passes through $(-1, 0)$ and $\\left(0, ${slope.toLatex()}\\right)$, and it meets the unit circle again at $A$. Find the $x$-coordinate of $A$.`,
-              `直线过 $(-1, 0)$ 和 $\\left(0, ${slope.toLatex()}\\right)$，并与单位圆再次相交于 $A$。求 $A$ 的 $x$ 坐标。`,
+              [
+                Y,
+                "That is the $y$-coordinate of $A$; the $x$-coordinate has $q^2 - p^2$ on top.",
+                "那是 $A$ 的 $y$ 坐标；$x$ 坐标的分子是 $q^2 - p^2$。",
+              ],
+              [
+                Q.of(c, a),
+                "That turns the fraction upside down; a point on the unit circle has coordinates at most $1$.",
+                "那把分数倒过来了；单位圆上的点坐标不超过 $1$。",
+              ],
+              [Q.of(a, q * q), "That divides by $q^2$ instead of $q^2 + p^2$.", "那除以了 $q^2$，而不是 $q^2 + p^2$。"],
+              [
+                slope,
+                "That is the slope $t$, the height where the line crosses the $y$-axis, not a coordinate of $A$.",
+                "那是斜率 $t$，即直线与 $y$ 轴交点的高度，不是 $A$ 的坐标。",
+              ],
             ]
           : [
-              `The line passes through $(-1, 0)$ and $\\left(0, ${slope.toLatex()}\\right)$, and it meets the unit circle again at $A$. Find the $y$-coordinate of $A$.`,
-              `直线过 $(-1, 0)$ 和 $\\left(0, ${slope.toLatex()}\\right)$，并与单位圆再次相交于 $A$。求 $A$ 的 $y$ 坐标。`,
-            ],
-        askX ? X : Y,
-        askX
-          ? [Y, Q.of(q * q + p * p, q * q - p * p), Q.of(q * q - p * p, q * q), slope]
-          : [X, slope, Q.of(p * q, q * q + p * p), Q.of(2 * p * q, q * q)],
-        [
-          `The slope is $t = ${slope.toLatex()}$, so $p = ${p}$ and $q = ${q}$. Then $A = \\left(\\frac{${q * q} - ${p * p}}{${q * q} + ${p * p}}, \\frac{2(${p})(${q})}{${q * q} + ${p * p}}\\right) = \\left(${X.toLatex()}, ${Y.toLatex()}\\right)$.`,
-          `斜率为 $t = ${slope.toLatex()}$，所以 $p = ${p}$，$q = ${q}$。于是 $A = \\left(\\frac{${q * q} - ${p * p}}{${q * q} + ${p * p}}, \\frac{2(${p})(${q})}{${q * q} + ${p * p}}\\right) = \\left(${X.toLatex()}, ${Y.toLatex()}\\right)$。`,
-        ],
-        drawn(
-          { xMin: -2, xMax: 2, yMin: -2, yMax: 2, step: 0.5, labelEvery: 2 },
+              [
+                X,
+                "That is the $x$-coordinate of $A$; the $y$-coordinate has $2pq$ on top.",
+                "那是 $A$ 的 $x$ 坐标；$y$ 坐标的分子是 $2pq$。",
+              ],
+              [
+                slope,
+                "That is the slope $t$, the height where the line crosses the $y$-axis, not a coordinate of $A$.",
+                "那是斜率 $t$，即直线与 $y$ 轴交点的高度，不是 $A$ 的坐标。",
+              ],
+              [Q.of(p * q, c), "That leaves out the factor $2$ in $2pq$.", "那漏掉了 $2pq$ 中的因子 $2$。"],
+              [Q.of(b, q * q), "That divides by $q^2$ instead of $q^2 + p^2$.", "那除以了 $q^2$，而不是 $q^2 + p^2$。"],
+            ];
+        return worked(
+          askX
+            ? [
+                `The line passes through $(-1, 0)$ and $\\left(0, ${slope.toLatex()}\\right)$, and it meets the unit circle again at $A$. Find the $x$-coordinate of $A$.`,
+                `直线过 $(-1, 0)$ 和 $\\left(0, ${slope.toLatex()}\\right)$，并与单位圆再次相交于 $A$。求 $A$ 的 $x$ 坐标。`,
+              ]
+            : [
+                `The line passes through $(-1, 0)$ and $\\left(0, ${slope.toLatex()}\\right)$, and it meets the unit circle again at $A$. Find the $y$-coordinate of $A$.`,
+                `直线过 $(-1, 0)$ 和 $\\left(0, ${slope.toLatex()}\\right)$，并与单位圆再次相交于 $A$。求 $A$ 的 $y$ 坐标。`,
+              ],
+          askX ? X : Y,
+          misses,
           [
-            { kind: "circle", center: [0, 0], r: 1 },
-            { kind: "line", a: [-1, 0], b: [0, p / q], accent: true },
-            { kind: "point", at: [-1, 0] },
-            { kind: "point", at: [0, p / q] },
-            { kind: "point", at: [px, py], label: "A", dir: "ne" },
+            [
+              ["Read the slope", "读出斜率"],
+              [
+                `The line rises from $(-1, 0)$ to $\\left(0, ${slope.toLatex()}\\right)$, so $t = ${slope.toLatex()}$, with $p = ${p}$ and $q = ${q}$.`,
+                `直线从 $(-1, 0)$ 升到 $\\left(0, ${slope.toLatex()}\\right)$，所以 $t = ${slope.toLatex()}$，$p = ${p}$，$q = ${q}$。`,
+              ],
+            ],
+            [
+              ["Use the formula", "代入公式"],
+              [
+                `$A = \\left(\\frac{${q * q} - ${p * p}}{${q * q} + ${p * p}}, \\frac{2 \\cdot ${p} \\cdot ${q}}{${q * q} + ${p * p}}\\right) = \\left(${X.toLatex()}, ${Y.toLatex()}\\right)$.`,
+                `$A = \\left(\\frac{${q * q} - ${p * p}}{${q * q} + ${p * p}}, \\frac{2 \\cdot ${p} \\cdot ${q}}{${q * q} + ${p * p}}\\right) = \\left(${X.toLatex()}, ${Y.toLatex()}\\right)$。`,
+              ],
+            ],
           ],
-          t(
-            `The unit circle and a line through (−1, 0) with slope ${p}/${q}, meeting the circle again at A.`,
-            `单位圆和过 (−1, 0)、斜率为 ${p}/${q} 的直线，直线与圆再次相交于 A。`,
+          [
+            `$${a}^2 + ${b}^2 = ${a * a + b * b} = ${c}^2$, so $A$ is on the circle, and $${slope.toLatex()} \\left(${X.toLatex()} + 1\\right) = ${slope.mul(X.add(Q.one)).toLatex()}$, so it is on the line.`,
+            `$${a}^2 + ${b}^2 = ${a * a + b * b} = ${c}^2$，所以 $A$ 在圆上；而 $${slope.toLatex()} \\left(${X.toLatex()} + 1\\right) = ${slope.mul(X.add(Q.one)).toLatex()}$，所以它在直线上。`,
+          ],
+          drawn(
+            { xMin: -2, xMax: 2, yMin: -2, yMax: 2, step: 0.5, labelEvery: 2 },
+            [
+              { kind: "circle", center: [0, 0], r: 1 },
+              { kind: "line", a: [-1, 0], b: [0, p / q], accent: true },
+              { kind: "point", at: [-1, 0] },
+              { kind: "point", at: [0, p / q] },
+              { kind: "point", at: [px, py], label: "A", dir: "ne" },
+            ],
+            t(
+              `The unit circle and a line through (−1, 0) with slope ${p}/${q}, meeting the circle again at A.`,
+              `单位圆和过 (−1, 0)、斜率为 ${p}/${q} 的直线，直线与圆再次相交于 A。`,
+            ),
           ),
-        ),
-      );
-    },
+        );
+      }),
   ),
   figure: numberTheoryDrawings1["pythagorean-triples#a-pythagorean-triple-from-a-line-through-the-circle"],
 };
@@ -1850,8 +2119,8 @@ const primeSteps = {
     "primes-in-a-range-from-the-graph-of-the-counting-function",
     ["Primes in a range, from the graph of the counting function", "由计数函数的图求区间内的素数"],
     [
-      "The function $\\pi(x)$ counts the primes up to $x$, so its graph climbs one step at each prime. The number of primes $p$ with $a < p \\le b$ is $\\pi(b) - \\pi(a)$, a difference of two heights.",
-      "函数 $\\pi(x)$ 统计不超过 $x$ 的素数个数，所以它的图像在每个素数处上升一级。满足 $a < p \\le b$ 的素数 $p$ 的个数是 $\\pi(b) - \\pi(a)$，即两个高度之差。",
+      "The function $\\pi(x)$ counts the primes up to $x$, so its graph climbs one step at each prime. The number of primes $p$ with $a < p \\le b$ is $\\pi(b) - \\pi(a)$, a difference of two heights. For $a = 10$ and $b = 30$ the heights are $\\pi(10) = 4$ and $\\pi(30) = 10$, so there are $10 - 4 = 6$ such primes.\n\nCheck: they are $11, 13, 17, 19, 23, 29$, the six steps between the two heights.\n\n> **Watch out.** The range leaves out $a$ and keeps $b$: a step exactly at $a$ is already in $\\pi(a)$, so it is not counted, while a step at $b$ is.",
+      "函数 $\\pi(x)$ 统计不超过 $x$ 的素数个数，所以它的图像在每个素数处上升一级。满足 $a < p \\le b$ 的素数 $p$ 的个数是 $\\pi(b) - \\pi(a)$，即两个高度之差。对 $a = 10$，$b = 30$，高度为 $\\pi(10) = 4$，$\\pi(30) = 10$，所以这样的素数有 $10 - 4 = 6$ 个。\n\n检验：它们是 $11, 13, 17, 19, 23, 29$，正是两个高度之间的六个台阶。\n\n> **注意。** 区间不含 $a$ 而含 $b$：恰好在 $a$ 处的台阶已经算在 $\\pi(a)$ 里，所以不计入，而在 $b$ 处的台阶要计入。",
     ],
     (rng) => {
       const a = rng.int(2, 40);
@@ -1867,18 +2136,66 @@ const primeSteps = {
         line += ` ${x(60)},${y(at)}`;
         return `<polyline class="accent" stroke="currentColor" fill="none" points="${line}"/>`;
       });
-      return ask(
+      const inside = PRIMES_TO_60.filter((p) => p > a && p <= b);
+      const misses: Miss[] = [
         [
-          `The graph shows the prime-counting function $\\pi(x)$. How many primes $p$ satisfy $${a} < p \\le ${b}$?`,
-          `图中是素数计数函数 $\\pi(x)$。有多少个素数 $p$ 满足 $${a} < p \\le ${b}$？`,
+          primeCount(b),
+          `That is the height at $${b}$ alone, which counts every prime from $2$; subtract the height at $${a}$.`,
+          `那只是 $${b}$ 处的高度，它数了从 $2$ 起的所有素数；还要减去 $${a}$ 处的高度。`,
         ],
-        answer,
-        [primeCount(b), answer + 1, answer === 0 ? 2 : answer - 1, primeCount(b) + primeCount(a)],
         [
-          `The heights are $\\pi(${b}) = ${primeCount(b)}$ and $\\pi(${a}) = ${primeCount(a)}$. Their difference is $${answer}$.`,
-          `高度为 $\\pi(${b}) = ${primeCount(b)}$，$\\pi(${a}) = ${primeCount(a)}$。它们的差为 $${answer}$。`,
+          primeCount(b) + primeCount(a),
+          "That adds the two heights; the primes in the range are their difference.",
+          "那是把两个高度相加；区间内的素数个数是它们的差。",
         ],
-        figureOf(svg, ["A staircase graph that climbs one step at each prime up to 60.", "阶梯状的图像，到 60 为止在每个素数处上升一级。"]),
+      ];
+      if (PRIMES_TO_60.includes(a))
+        misses.push([
+          answer + 1,
+          `That counts $${a}$ itself, but the range $${a} < p$ leaves it out.`,
+          `那把 $${a}$ 本身也算进去了，但区间 $${a} < p$ 不含它。`,
+        ]);
+      if (PRIMES_TO_60.includes(b))
+        misses.push([
+          answer - 1,
+          `That leaves out $${b}$, but the range $p \\le ${b}$ includes it.`,
+          `那漏掉了 $${b}$，但区间 $p \\le ${b}$ 包含它。`,
+        ]);
+      return until(() =>
+        worked(
+          [
+            `The graph shows the prime-counting function $\\pi(x)$. How many primes $p$ satisfy $${a} < p \\le ${b}$?`,
+            `图中是素数计数函数 $\\pi(x)$。有多少个素数 $p$ 满足 $${a} < p \\le ${b}$？`,
+          ],
+          answer,
+          misses,
+          [
+            [
+              ["Read the heights", "读出高度"],
+              [
+                `$\\pi(${b}) = ${primeCount(b)}$ and $\\pi(${a}) = ${primeCount(a)}$.`,
+                `$\\pi(${b}) = ${primeCount(b)}$，$\\pi(${a}) = ${primeCount(a)}$。`,
+              ],
+            ],
+            [
+              ["Subtract", "相减"],
+              [`$${primeCount(b)} - ${primeCount(a)} = ${answer}$.`, `$${primeCount(b)} - ${primeCount(a)} = ${answer}$。`],
+            ],
+          ],
+          inside.length === 0
+            ? [
+                `No prime lies between $${a}$ and $${b}$ in this way, so the graph is level there.`,
+                `没有素数满足这个条件，所以图像在那里是水平的。`,
+              ]
+            : [
+                `The primes with $${a} < p \\le ${b}$ are $${inside.join(", ")}$, which is $${inside.length}$ of them.`,
+                `满足 $${a} < p \\le ${b}$ 的素数是 $${inside.join(", ")}$，共 $${inside.length}$ 个。`,
+              ],
+          figureOf(svg, [
+            "A staircase graph that climbs one step at each prime up to 60.",
+            "阶梯状的图像，到 60 为止在每个素数处上升一级。",
+          ]),
+        ),
       );
     },
   ),
