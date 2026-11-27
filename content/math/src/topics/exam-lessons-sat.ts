@@ -705,6 +705,18 @@ export const satExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "sat-exam-evaluating-expressions": {
+    intro: t(
+      "A phone plan charges $3$ dollars a gigabyte plus a $10$-dollar fee, and the SAT asks what a $4$-gigabyte month costs: $3(4) + 10 = 22$ dollars. Exam questions also ask for an expression that is a multiple of one already known, where finding $x$ is not needed.\n\nCheck: $22 - 10 = 12$ dollars of data, and $12 \\div 3 = 4$ gigabytes.\n\nIn this lesson we evaluate expressions in the order of operations and scale a known expression to get a related one.",
+      "某手机套餐每 GB 收 $3$ 美元，另加 $10$ 美元月费，SAT 问用 $4$ GB 的一个月要多少钱：$3(4) + 10 = 22$ 美元。考题还会问某个已知式子的倍数式的值，这时不必求出 $x$。\n\n检验：$22 - 10 = 12$ 美元是流量费，$12 \\div 3 = 4$ GB。\n\n本课我们按运算顺序求代数式的值，并把已知式子按倍数放大，得到相关式子的值。",
+    ),
+    watch: t(
+      "A negative input needs its parentheses before squaring: at $x = -3$, $x^2 - 1 = (-3)^2 - 1 = 8$, not $-9 - 1 = -10$.",
+      "代入负数时要先加括号再平方：$x = -3$ 时，$x^2 - 1 = (-3)^2 - 1 = 8$，而不是 $-9 - 1 = -10$。",
+    ),
+    hardWatch: t(
+      "Scale every term of the known expression, not only the $x$ term: if $3x - 2 = 10$, then $6x - 4 = 20$, while $6x - 2$ is $22$.",
+      "要把已知式子的每一项都放大，而不只是 $x$ 项：若 $3x - 2 = 10$，则 $6x - 4 = 20$，而 $6x - 2$ 是 $22$。",
+    ),
     tip: t(
       "Substitute the value in parentheses and follow the order of operations: powers first, then multiplication, then addition or subtraction. For $2x^2 + 5$ at $x = 4$: $2(16) + 5 = 37$. The usual wrong answer multiplies the coefficient and input before squaring, which gives $(2 \\cdot 4)^2 + 5$.",
       "把数值放进括号代入，按运算顺序计算：先乘方，再乘法，最后加减。对 $2x^2 + 5$，在 $x = 4$ 时：$2(16) + 5 = 37$。常见的错误答案是先把系数和输入相乘再平方，也就是 $(2 \\cdot 4)^2 + 5$。",
@@ -715,6 +727,18 @@ export const satExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "sat-exam-solving-one-step-addition-equations": {
+    intro: t(
+      "A runner's watch says she has gone $x$ kilometers, and $x + 3 = 10$ after a $3$-kilometer cool-down. SAT questions then ask about a related amount, such as $x + 5$, or follow a story where amounts are added and taken away.\n\nCheck: $x = 7$, and $7 + 3 = 10$.\n\nIn this lesson we solve one-step addition equations and answer the comparison a question actually asks.",
+      "一位跑步者的手表显示她跑了 $x$ 千米，再放松跑 $3$ 千米后 $x + 3 = 10$。SAT 题会接着问相关的量，比如 $x + 5$，或者讲一个先加后减的故事。\n\n检验：$x = 7$，而 $7 + 3 = 10$。\n\n本课我们解一步加减方程，并回答题目真正要比较的量。",
+    ),
+    watch: t(
+      "A related expression can also be smaller: if $x + 12 = 40$, then $x + 5$ is $7$ less, so it is $33$, not $47$.",
+      "相关式子也可能更小：若 $x + 12 = 40$，则 $x + 5$ 小 $7$，等于 $33$，而不是 $47$。",
+    ),
+    hardWatch: t(
+      "When more is taken out than was put in, the comparison is a decrease: start $14$, add $3$, remove $5$ leaves $12$, which is $2$ less than the start.",
+      "如果放出的比加入的多，比较的结果就是减少：最初 $14$，加 $3$，放出 $5$，剩 $12$，比最初少 $2$。",
+    ),
     tip: t(
       "You can jump straight from one expression to a related one. Compare them: if the new one has a constant that is greater by some amount, its value is greater by that amount as well. If $x + 9 = 30$, then $x + 14$ is $5$ more, so it is $35$. Solving for $x$ first also works, but do not stop there.",
       "可以直接从一个表达式推到相关的另一个。比较两者：新表达式的常数大多少，它的值也就大多少。若 $x + 9 = 30$，则 $x + 14$ 比它大 $5$，等于 $35$。先解出 $x$ 也可以，但不要停在那一步。",
@@ -725,6 +749,18 @@ export const satExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "sat-exam-solving-one-step-multiplication-equations": {
+    intro: t(
+      "Four tickets cost $48$ dollars, so $4x = 48$. The SAT may ask what $12$ tickets cost, which is $12x$, or give a fractional coefficient, as in two-thirds of a tank holding $18$ liters.\n\nCheck: $12x = 3 \\times 48 = 144$, and $x = 12$ gives $12 \\times 12 = 144$.\n\nIn this lesson we scale a known product and undo fractional coefficients with reciprocals.",
+      "$4$张票共 $48$ 美元，所以 $4x = 48$。SAT 可能问 $12$ 张票的价钱，即 $12x$，或者给出分数系数，比如油箱的三分之二是 $18$ 升。\n\n检验：$12x = 3 \\times 48 = 144$，而 $x = 12$ 时 $12 \\times 12 = 144$。\n\n本课我们把已知乘积按倍数放大，并用倒数消去分数系数。",
+    ),
+    watch: t(
+      "The factor between the expressions must be found by dividing coefficients: from $6x = 30$ to $9x$ the factor is $\\frac{3}{2}$, so $9x = 45$.",
+      "两个式子之间的倍数要用系数相除得到：从 $6x = 30$ 到 $9x$，倍数是 $\\frac{3}{2}$，所以 $9x = 45$。",
+    ),
+    hardWatch: t(
+      "A negative fraction has a negative reciprocal: $-\\frac{3}{4}x = 6$ gives $x = 6 \\times (-\\frac{4}{3}) = -8$.",
+      "负分数的倒数也是负的：$-\\frac{3}{4}x = 6$ 得 $x = 6 \\times (-\\frac{4}{3}) = -8$。",
+    ),
     tip: t(
       "If the target is a multiple of the given expression, multiply the known value by the same factor, with no need to solve first. Given $3x = 12$, the expression $15x$ is $5$ times $3x$, so it is $60$. Solving gives $x = 4$, which is a stop on the way and not the requested value.",
       "如果目标是已知表达式的倍数，把已知值乘以同样的倍数即可，不必先求解。已知 $3x = 12$，$15x$ 是 $3x$ 的 $5$ 倍，所以等于 $60$。解出 $x = 4$ 只是中途的一步，不是所求的值。",
@@ -735,6 +771,18 @@ export const satExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "sat-exam-solving-multistep-linear-equations": {
+    intro: t(
+      "Two gyms charge $5x + 20$ and $3x + 36$ dollars for $x$ visits. The SAT asks when the costs are equal, which means solving $5x + 20 = 3x + 36$, and sometimes asks for an expression in the answer instead of $x$.\n\nCheck: $x = 8$ makes both costs $60$ dollars.\n\nIn this lesson we solve equations with the variable on both sides and evaluate the expression the question asks for.",
+      "两家健身房去 $x$ 次的费用分别是 $5x + 20$ 美元和 $3x + 36$ 美元。SAT 问何时费用相同，就要解 $5x + 20 = 3x + 36$，有时还会问含解的式子，而不是 $x$ 本身。\n\n检验：$x = 8$ 时两边都是 $60$ 美元。\n\n本课我们解两边都有未知数的方程，并求题目要的式子的值。",
+    ),
+    watch: t(
+      "If the larger coefficient is on the right, the collected coefficient can be negative: $2x + 9 = 5x$ gives $-3x = -9$, so $x = 3$.",
+      "如果右边系数较大，合并后系数可能是负的：$2x + 9 = 5x$ 得 $-3x = -9$，所以 $x = 3$。",
+    ),
+    hardWatch: t(
+      "Substitute into the expression asked, not the equation: if $x = 5$ and the question asks for $2x - 3$, the answer is $7$.",
+      "要代入题目问的式子，而不是原方程：若 $x = 5$，题目问 $2x - 3$，答案是 $7$。",
+    ),
     tip: t(
       "Collect the variable terms on one side and the numbers on the other, using inverse operations on both sides, then divide by the coefficient. For $7x + 2 = 4x + 14$: $3x = 12$, so $x = 4$. Each move must change sign; adding instead of subtracting is the frequent error.",
       "用逆运算把含变量的项移到一边，常数移到另一边，再除以系数。对 $7x + 2 = 4x + 14$：$3x = 12$，所以 $x = 4$。每次移项都要变号，该减却加是常见错误。",
@@ -745,6 +793,18 @@ export const satExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "sat-exam-solving-equations-with-fractional-coefficients": {
+    intro: t(
+      "A pizza has $x$ slices, and a quarter of them plus $2$ more fill a plate with $5$ slices: $\\frac{x}{4} + 2 = 5$. SAT questions write such facts with fractions and reward clearing them cleanly.\n\nCheck: $x = 12$, and $\\frac{12}{4} + 2 = 5$.\n\nIn this lesson we solve equations with fractional coefficients by undoing operations and by multiplying through by a common denominator.",
+      "一个比萨有 $x$ 片，取其中四分之一再加 $2$ 片，一盘共 $5$ 片：$\\frac{x}{4} + 2 = 5$。SAT 题常用分数写出这样的关系，要求把分母干净地消去。\n\n检验：$x = 12$，而 $\\frac{12}{4} + 2 = 5$。\n\n本课我们通过逆运算以及乘以公分母，解分数系数的方程。",
+    ),
+    watch: t(
+      "If you multiply first, multiply the constant too: $\\frac{x}{3} + 2 = 6$ times $3$ is $x + 6 = 18$, so $x = 12$, not $x + 2 = 18$.",
+      "如果先乘，常数也要乘：$\\frac{x}{3} + 2 = 6$ 乘以 $3$ 得 $x + 6 = 18$，所以 $x = 12$，而不是 $x + 2 = 18$。",
+    ),
+    hardWatch: t(
+      "Use the least common denominator, not just any product: for $\\frac{x}{4} = \\frac{x}{6} + 1$, multiply by $12$ to get $3x = 2x + 12$, so $x = 12$.",
+      "要用最小公分母：解 $\\frac{x}{4} = \\frac{x}{6} + 1$ 时乘以 $12$，得 $3x = 2x + 12$，所以 $x = 12$。",
+    ),
     tip: t(
       "Work in reverse: remove the added number first, then multiply by the denominator to undo the division. For $\\frac{x}{4} - 3 = 2$: $\\frac{x}{4} = 5$, so $x = 20$. Multiplying before removing the constant is allowed only if every term is multiplied, which is where errors arise.",
       "反向操作：先去掉加减的数，再乘分母以撤销除法。对 $\\frac{x}{4} - 3 = 2$：$\\frac{x}{4} = 5$，所以 $x = 20$。如果先乘，就必须每一项都乘，错误往往出在这里。",
@@ -755,6 +815,18 @@ export const satExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "sat-exam-solving-linear-equations-containing-binomials": {
+    intro: t(
+      "Three friends each pay for a ticket and a $2$-dollar snack, $3(x + 2) = 39$ dollars in all. The SAT may ask for the price of one ticket with its snack, $x + 2$, or give several parentheses to distribute.\n\nCheck: $x + 2 = 13$, and $3 \\times 13 = 39$.\n\nIn this lesson we keep a binomial whole when it is what is asked, and distribute signs carefully when it is not.",
+      "三个朋友每人买一张票和一份 $2$ 美元的零食，共付 $3(x + 2) = 39$ 美元。SAT 可能问一张票加零食的钱 $x + 2$，也可能给出好几个要展开的括号。\n\n检验：$x + 2 = 13$，而 $3 \\times 13 = 39$。\n\n本课我们在题目问二项式时把它看作整体，在需要展开时仔细处理符号。",
+    ),
+    watch: t(
+      "Divide the whole right side by the outside number: $4(x - 3) = 28$ gives $x - 3 = 7$; subtracting first, as in $4x = 31$, misses the $4 \\times 3$.",
+      "要用整个右边除以括号外的数：$4(x - 3) = 28$ 得 $x - 3 = 7$；若先移项写成 $4x = 31$，就漏了 $4 \\times 3$。",
+    ),
+    hardWatch: t(
+      "A subtracted product changes both signs inside: $10 - 2(x + 4) = 10 - 2x - 8$, not $10 - 2x + 8$.",
+      "减去一个乘积时，括号内两项都要变号：$10 - 2(x + 4) = 10 - 2x - 8$，而不是 $10 - 2x + 8$。",
+    ),
     tip: t(
       "If the question asks for the binomial itself, keep it as one block and divide both sides by the outside number. For $5(x - 2) = 40$: $x - 2 = 8$, and you can stop there. Going on to $x$, which is $10$ here, answers a different question and is a listed wrong choice.",
       "如果题目问的就是这个二项式，把它当作一个整体，两边除以括号外的数。对 $5(x - 2) = 40$：$x - 2 = 8$，到这里就可以停了。继续求出 $x$（这里是 $10$）回答的是另一个问题，也是预设的错误选项。",
@@ -765,6 +837,18 @@ export const satExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "sat-exam-solving-linear-equations-containing-binomials-by-factoring": {
+    intro: t(
+      "A baker sells boxes of $(2x + 1)$ muffins: $7$ boxes in the morning, $5$ returned in the afternoon, and $18$ muffins sold on net. The same block $(2x + 1)$ appears twice, so it can be combined like a single variable.\n\nCheck: $2(2x + 1) = 18$ gives $2x + 1 = 9$, and $7 \\times 9 - 5 \\times 9 = 18$.\n\nIn this lesson we combine like binomials and solve for the block or for $x$.",
+      "一位面包师按每盒 $(2x + 1)$ 个卖松饼：上午卖出 $7$ 盒，下午退回 $5$ 盒，净卖出 $18$ 个。同一个整体 $(2x + 1)$ 出现两次，可以像一个变量那样合并。\n\n检验：$2(2x + 1) = 18$ 得 $2x + 1 = 9$，而 $7 \\times 9 - 5 \\times 9 = 18$。\n\n本课我们合并相同的二项式，并求出这个整体或 $x$。",
+    ),
+    watch: t(
+      "Combine only identical blocks: $4(x + 3) - 2(x - 3)$ cannot become $2(x + 3)$; it has to be expanded to $2x + 18$.",
+      "只有完全相同的整体才能合并：$4(x + 3) - 2(x - 3)$ 不能写成 $2(x + 3)$，必须展开成 $2x + 18$。",
+    ),
+    hardWatch: t(
+      "After finding the block, undo its constant before its coefficient: $3x - 2 = 10$ gives $3x = 12$ and $x = 4$, not $x = \\frac{10}{3} + 2$.",
+      "求出整体后，先消去常数，再除以系数：$3x - 2 = 10$ 得 $3x = 12$，$x = 4$，而不是 $x = \\frac{10}{3} + 2$。",
+    ),
     tip: t(
       "When the same binomial appears in several terms, treat it like a single variable and combine its coefficients. For $7(2x + 1) - 5(2x + 1) = 18$: $2(2x + 1) = 18$, so $2x + 1 = 9$. There is no need to expand, and the requested value is that of the block.",
       "同一个二项式出现在几项中时，把它当作一个变量，合并它的系数。对 $7(2x + 1) - 5(2x + 1) = 18$：$2(2x + 1) = 18$，所以 $2x + 1 = 9$。不必展开，题目要的就是这个整体的值。",
@@ -775,6 +859,18 @@ export const satExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "sat-exam-solving-linear-equations-with-binomials-on-both-sides": {
+    intro: t(
+      "Six friends each pay $x + 1$ dollars, and five others each pay $x + 2$ dollars plus a $3$-dollar tip; the two groups spend the same, $6(x + 1) = 5(x + 2) + 3$. The SAT writes such balances with a binomial on each side.\n\nCheck: $x = 7$ gives $6 \\times 8 = 48$ and $5 \\times 9 + 3 = 48$.\n\nIn this lesson we distribute on both sides, collect the terms and solve.",
+      "六个朋友每人付 $x + 1$ 美元，另外五人每人付 $x + 2$ 美元，再加 $3$ 美元小费；两组花费相同，$6(x + 1) = 5(x + 2) + 3$。SAT 常把这种平衡写成两边各有一个二项式。\n\n检验：$x = 7$ 时 $6 \\times 8 = 48$，$5 \\times 9 + 3 = 48$。\n\n本课我们两边展开，移项合并后求解。",
+    ),
+    watch: t(
+      "The solution can be negative: $3(x + 4) = 2(x + 5)$ gives $3x + 12 = 2x + 10$, so $x = -2$.",
+      "解可能是负数：$3(x + 4) = 2(x + 5)$ 得 $3x + 12 = 2x + 10$，所以 $x = -2$。",
+    ),
+    hardWatch: t(
+      "When the $x$ terms on the two sides have the same coefficient, there is no single solution: $2(x + 3) = 2x + 5$ has none.",
+      "如果两边 $x$ 的系数相同，就没有唯一解：$2(x + 3) = 2x + 5$ 无解。",
+    ),
     tip: t(
       "Distribute on each side, combine the numbers on each side, then collect the $x$ terms and solve. For $6(x + 1) = 5(x + 2) + 3$: $6x + 6 = 5x + 13$, so $x = 7$. Multiply the outside number by both terms inside. A solution of $x = 0$ is perfectly possible, so trust the algebra.",
       "两边分别去括号，合并各边的数，再把 $x$ 项集中并求解。对 $6(x + 1) = 5(x + 2) + 3$：$6x + 6 = 5x + 13$，所以 $x = 7$。括号外的数要乘括号内的两项。解为 $x = 0$ 完全可能，要相信计算结果。",
@@ -785,6 +881,18 @@ export const satExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "sat-exam-constructing-models-with-one-variable-linear-equations": {
+    intro: t(
+      "A climbing gym charges a $20$-dollar sign-up fee and $4$ dollars a visit, and a member has paid $60$ dollars. The SAT asks which equation describes this, and the choices differ only in where the numbers sit.\n\nCheck: $20 + 4n = 60$ gives $n = 10$ visits, and $20 + 40 = 60$.\n\nIn this lesson we write a one-variable equation for a fee plus a rate.",
+      "攀岩馆收 $20$ 美元注册费，每次 $4$ 美元，一位会员已付 $60$ 美元。SAT 问哪个方程描述这一情况，各选项的区别只在数字放在哪里。\n\n检验：$20 + 4n = 60$ 得 $n = 10$ 次，而 $20 + 40 = 60$。\n\n本课我们为“固定费用加单价”写出一元方程。",
+    ),
+    watch: t(
+      "A rate that is taken away each time gives a minus sign: a $50$-dollar card losing $3$ dollars a ride has $50 - 3n$ left, not $50 + 3n$.",
+      "每次减少的量要写成减号：$50$ 美元的卡每次乘车扣 $3$ 美元，剩下 $50 - 3n$ 美元，而不是 $50 + 3n$。",
+    ),
+    hardWatch: t(
+      "A percent discount scales the rate, not subtracts from it: $10$ dollars per lesson at $20\\%$ off is $8$ dollars, so the term is $8n$.",
+      "百分比折扣是把单价按比例缩小，而不是直接减：每节课 $10$ 美元打八折是 $8$ 美元，所以这一项是 $8n$。",
+    ),
     tip: t(
       "A total with a one-time charge and a per-unit charge has the form $\\text{fixed} + \\text{rate} \\cdot n = \\text{total}$. A $20$ dollar sign-up plus $4$ dollars per lesson, totaling $60$, gives $20 + 4n = 60$. Only the rate multiplies $n$; options attaching the variable to the fee, or adding the total, misread the situation.",
       "总费用由一次性费用和按单位收费组成，形式是 $\\text{fixed} + \\text{rate} \\cdot n = \\text{total}$（固定费加上单价乘以数量，等于总额）。$20$ 美元报名费加每节课 $4$ 美元，总共 $60$，就是 $20 + 4n = 60$。只有单价乘 $n$；把变量放在一次性费用上的选项都误读了情境。",
@@ -795,6 +903,18 @@ export const satExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "sat-exam-modeling-and-solving-problems-using-linear-equations": {
+    intro: t(
+      "A moving company charges a $25$-dollar fee and $6$ dollars per box, and a bill comes to $85$ dollars. How many boxes were moved? SAT questions also compare two such plans and ask when they cost the same.\n\nCheck: $25 + 6 \\times 10 = 85$, so $10$ boxes.\n\nIn this lesson we model fee-plus-rate totals and solve for the count, alone or by comparing two plans.",
+      "一家搬家公司收 $25$ 美元基本费，每箱 $6$ 美元，账单共 $85$ 美元。搬了多少箱？SAT 题还会比较两种收费方案，问何时费用相同。\n\n检验：$25 + 6 \\times 10 = 85$，所以是 $10$ 箱。\n\n本课我们为“费用加单价”的总额建模，单独求数量或比较两种方案求数量。",
+    ),
+    watch: t(
+      "A count must be a whole number of items; if $6n = 63$, no number of boxes gives that total, so recheck the fee you removed.",
+      "数量必须是整数；如果 $6n = 63$，没有哪个箱数能得到这个总额，要检查减去的费用是否正确。",
+    ),
+    hardWatch: t(
+      "The plan with the lower fee is cheaper only below the break-even count: $20 + 8n$ beats $35 + 5n$ for $n < 5$ and loses for $n > 5$.",
+      "基本费低的方案只在平衡点以下更便宜：$n < 5$ 时 $20 + 8n$ 比 $35 + 5n$ 便宜，$n > 5$ 时更贵。",
+    ),
     tip: t(
       "Write the total as fixed fee plus rate times the count, then solve: subtract the fee and divide by the rate. A $25$ dollar fee plus $6$ dollars per ticket, charged $85$ dollars in all, gives $6n = 60$, so $n = 10$. Dividing the total by the rate without removing the fee is the trap.",
       "把总额写成固定费用加单价乘数量，然后求解：减去固定费用，再除以单价。$25$ 美元手续费加每张票 $6$ 美元，共收 $85$ 美元，得 $6n = 60$，所以 $n = 10$。不减固定费用就直接除以单价是个陷阱。",
@@ -805,6 +925,18 @@ export const satExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "sat-exam-solving-two-variable-linear-models": {
+    intro: t(
+      "A school fair sells pies at $5$ dollars and cookies at $3$ dollars and takes in $50$ dollars: $5x + 3y = 50$. Knowing one count tells the other, and the equation also says how one count must change when the other does.\n\nCheck: $x = 4$ and $y = 10$ give $20 + 30 = 50$.\n\nIn this lesson we solve a two-variable model for one count and trace how the counts trade off.",
+      "学校义卖会上馅饼每个 $5$ 美元，饼干每块 $3$ 美元，共收入 $50$ 美元：$5x + 3y = 50$。知道一个数量就能求出另一个，方程还说明一个数量变化时另一个要怎样变。\n\n检验：$x = 4$、$y = 10$ 时 $20 + 30 = 50$。\n\n本课我们由二元模型求出一个数量，并分析两个数量之间的此消彼长。",
+    ),
+    watch: t(
+      "Put the known count with its own price: in $5x + 3y = 50$ with $y = 5$, it is $5x + 15 = 50$, so $x = 7$, not $3x + 25 = 50$.",
+      "已知数量要配上它自己的单价：$5x + 3y = 50$ 中若 $y = 5$，则 $5x + 15 = 50$，$x = 7$，而不是 $3x + 25 = 50$。",
+    ),
+    hardWatch: t(
+      "The trade need not be whole: in $4x + 6y = 60$, raising $x$ by $3$ lowers $y$ by $2$, but raising $x$ by $1$ lowers it by $\\frac{2}{3}$.",
+      "此消彼长不一定是整数：$4x + 6y = 60$ 中，$x$ 增加 $3$ 时 $y$ 减少 $2$，但 $x$ 增加 $1$ 时 $y$ 减少 $\\frac{2}{3}$。",
+    ),
     tip: t(
       "An equation like $ax + by = T$ links two counts to a total. Substitute the known count, subtract the money it brought, then divide by the other price. For $5x + 3y = 50$ with $x = 4$: $20 + 3y = 50$, so $y = 10$. Be sure to put the known count with its own coefficient.",
       "像 $ax + by = T$ 这样的方程把两个数量和总额联系起来。代入已知的数量，减去它带来的金额，再除以另一个单价。对 $5x + 3y = 50$，$x = 4$ 时：$20 + 3y = 50$，所以 $y = 10$。要把已知数量与它自己的系数相乘。",
@@ -815,6 +947,18 @@ export const satExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "sat-exam-constructing-models-with-two-variable-linear-equations": {
+    intro: t(
+      "A café sells mugs at $6$ dollars and cups at $2$ dollars, and the day's sales are $100$ dollars. Which equation relates the numbers sold? The SAT also mixes units, such as minutes per item and a total in hours.\n\nCheck: $10$ mugs and $20$ cups fit $6x + 2y = 100$: $60 + 40 = 100$.\n\nIn this lesson we build two-variable equations from prices or times, with matching units.",
+      "一家咖啡馆马克杯每个 $6$ 美元，纸杯每个 $2$ 美元，当天销售额 $100$ 美元。哪个方程表示卖出数量之间的关系？SAT 还会混用单位，比如每件用时以分钟计而总时间以小时计。\n\n检验：$10$ 个马克杯和 $20$ 个纸杯符合 $6x + 2y = 100$：$60 + 40 = 100$。\n\n本课我们由单价或用时列出二元方程，并统一单位。",
+    ),
+    watch: t(
+      "A total in cents needs prices in cents: pens at $\\$1.50$ and pencils at $\\$0.25$, with $\\$20$ in all, give $150x + 25y = 2000$.",
+      "总额以分计时单价也要以分计：钢笔 $1.50$ 美元、铅笔 $0.25$ 美元，共 $20$ 美元，得 $150x + 25y = 2000$。",
+    ),
+    hardWatch: t(
+      "Convert in the right direction: hours to minutes multiplies by $60$; $3$ hours is $180$ minutes, not $\\frac{3}{60}$.",
+      "换算方向要对：小时化分钟要乘以 $60$；$3$ 小时是 $180$ 分钟，而不是 $\\frac{3}{60}$。",
+    ),
     tip: t(
       "Each kind of item contributes its price times its count, and the two parts add up to the total: $(\\text{price}_1)x + (\\text{price}_2)y = \\text{total}$. Mugs at $6$ dollars and cups at $2$ dollars with sales of $100$ dollars give $6x + 2y = 100$. Pair each price with its own variable, and do not multiply the prices together.",
       "每种物品的贡献是单价乘数量，两部分加起来等于总额：$(\\text{price}_1)x + (\\text{price}_2)y = \\text{total}$。杯子每个 $6$ 美元，水杯每个 $2$ 美元，销售额 $100$ 美元，就写成 $6x + 2y = 100$。每个单价要配它自己的变量，不要把两个单价相乘。",
@@ -825,6 +969,18 @@ export const satExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "sat-exam-interpreting-two-variable-linear-equations": {
+    intro: t(
+      "A shop's sales satisfy $6x + 2y = 100$, with $x$ mugs and $y$ cups sold. The SAT asks what a term or a special solution means in the story, and the units decide.\n\nCheck: $6x$ is dollars per mug times mugs, which is dollars.\n\nIn this lesson we interpret the terms and the intercepts of a two-variable equation.",
+      "某商店的销售满足 $6x + 2y = 100$，其中卖出 $x$ 个马克杯和 $y$ 个纸杯。SAT 问某一项或某个特殊解在情境中的意义，单位能帮我们判断。\n\n检验：$6x$ 是每个马克杯的美元数乘以个数，单位是美元。\n\n本课我们解释二元方程中各项和截距的意义。",
+    ),
+    watch: t(
+      "A coefficient alone is a rate, not an amount: in $6x + 2y = 100$, the $2$ is dollars per cup, while $2y$ is the money from cups.",
+      "单独的系数是单价，不是总量：在 $6x + 2y = 100$ 中，$2$ 是每个纸杯的美元数，而 $2y$ 才是纸杯的收入。",
+    ),
+    hardWatch: t(
+      "Read which variable is zero: $x = 0$ gives $y = 50$ cups with no mugs, while $y = 0$ gives the mug count.",
+      "看清是哪个变量为零：$x = 0$ 时 $y = 50$，表示不卖马克杯时要卖 $50$ 个纸杯；$y = 0$ 时得到的是马克杯的数量。",
+    ),
     tip: t(
       "A term such as $6x$ is a price times a count, so it stands for the money from that kind of item, in dollars. It is neither the price of one item nor the number sold. In $6x + 2y = 100$ with $x$ mugs, the term $6x$ means the sales from mugs. Use the units to confirm.",
       "像 $6x$ 这样的项是单价乘数量，所以它表示这种物品带来的金额，单位是美元。它既不是单件的价格，也不是售出的数量。在 $6x + 2y = 100$ 中，若 $x$ 表示杯子数量，$6x$ 就是杯子的销售额。可用单位来确认。",
@@ -835,6 +991,18 @@ export const satExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "sat-exam-interpreting-coefficients-of-two-variable-linear-equations": {
+    intro: t(
+      "A phone's battery charge is $y = 90 - 5x$ percent after $x$ hours of video. The SAT asks what the $5$ and the $90$ mean, or how much charge any stretch of hours uses.\n\nCheck: from $x = 2$ to $x = 3$, $y$ goes from $80$ to $75$, a drop of $5$.\n\nIn this lesson we interpret the rate and the starting value of a linear model.",
+      "手机看视频 $x$ 小时后电量是 $y = 90 - 5x$（百分比）。SAT 问 $5$ 和 $90$ 的意义，或任意一段时间耗电多少。\n\n检验：从 $x = 2$ 到 $x = 3$，$y$ 从 $80$ 降到 $75$，减少 $5$。\n\n本课我们解释一次模型中的变化率和初始值。",
+    ),
+    watch: t(
+      "A positive coefficient is a rate of increase: in $y = 40 + 3x$ for a savings account, $3$ is the dollars added each week.",
+      "正系数表示增加的速率：储蓄模型 $y = 40 + 3x$ 中，$3$ 是每周存入的美元数。",
+    ),
+    hardWatch: t(
+      "The use over a stretch does not depend on where it starts: hours $5$ to $9$ use as much as hours $0$ to $4$, which is $4 \\times 5 = 20$.",
+      "一段时间的消耗与起点无关：第 $5$ 到第 $9$ 小时与第 $0$ 到第 $4$ 小时消耗一样多，都是 $4 \\times 5 = 20$。",
+    ),
     tip: t(
       "In $y = b - mx$, the coefficient $m$ multiplies the input, so it says how much $y$ falls for each added unit of $x$. In a model of a phone's charge, $y = 90 - 5x$ with $x$ in hours, the $5$ is the charge used per hour. The number $b$, not $m$, is the starting amount.",
       "在 $y = b - mx$ 中，系数 $m$ 乘输入，所以它表示 $x$ 每增加一个单位，$y$ 减少多少。在手机电量模型 $y = 90 - 5x$ 中，$x$ 以小时计，$5$ 就是每小时消耗的电量。起始量是 $b$，不是 $m$。",
@@ -845,6 +1013,18 @@ export const satExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "sat-exam-modeling-totals-using-two-variable-linear-equations": {
+    intro: t(
+      "A club sells hats at $9$ dollars and socks at $4$ dollars and takes in $130$ dollars from $20$ items. One equation tracks money and another tracks items; together they pin down each count.\n\nCheck: $10$ hats and $10$ socks give $90 + 40 = 130$ dollars and $20$ items.\n\nIn this lesson we write a money total as a two-variable equation and solve it with a count of items.",
+      "一个社团卖帽子每顶 $9$ 美元，袜子每双 $4$ 美元，共卖 $20$ 件，收入 $130$ 美元。一个方程管钱，一个方程管件数，合起来就能确定各自的数量。\n\n检验：$10$ 顶帽子和 $10$ 双袜子，收入 $90 + 40 = 130$ 美元，共 $20$ 件。\n\n本课我们把收入总额写成二元方程，并结合件数求解。",
+    ),
+    watch: t(
+      "Each price goes with its own item even if the question lists the items in another order: socks at $4$ and hats at $9$ still give $9x + 4y$ when $x$ counts hats.",
+      "即使题目列出顺序不同，每个单价也要对应自己的商品：先说袜子 $4$ 美元再说帽子 $9$ 美元，若 $x$ 是帽子数，仍是 $9x + 4y$。",
+    ),
+    hardWatch: t(
+      "After solving for $x$, the other count is $n - x$: with $20$ items and $x = 12$ hats, there are $8$ socks, not $12$.",
+      "求出 $x$ 后，另一个数量是 $n - x$：共 $20$ 件，帽子 $x = 12$ 顶，袜子就是 $8$ 双，而不是 $12$ 双。",
+    ),
     tip: t(
       "The total of a sale is the sum of two pieces, each a price times a number sold. Hats at $9$ dollars and socks at $4$ dollars, for $130$ dollars in all, give $9x + 4y = 130$. Options that write $x + y$ on the left count items rather than dollars, so they cannot equal a money total.",
       "销售总额是两部分之和，每部分都是单价乘售出数量。帽子每顶 $9$ 美元，袜子每双 $4$ 美元，一共 $130$ 美元，就写成 $9x + 4y = 130$。左边写成 $x + y$ 的选项数的是件数而不是金额，不可能等于总金额。",
@@ -855,6 +1035,18 @@ export const satExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "sat-exam-modeling-geometry-problems-using-linear-equations": {
+    intro: t(
+      "A garden is $3$ meters longer than twice its width, and $36$ meters of fence go around it. The sentence gives the length in terms of the width, and the perimeter gives the equation.\n\nCheck: width $5$ and length $13$ give $2(5 + 13) = 36$.\n\nIn this lesson we model rectangles with linear equations and find their sides and area.",
+      "一块菜园的长比宽的两倍多 $3$ 米，围一圈用了 $36$ 米篱笆。句子用宽表示长，周长给出方程。\n\n检验：宽 $5$、长 $13$ 时 $2(5 + 13) = 36$。\n\n本课我们用一次方程为长方形建模，求出边长和面积。",
+    ),
+    watch: t(
+      '"Less than" reverses the order: a length $2$ less than three times the width is $3w - 2$, not $2 - 3w$.',
+      "“比……少”要注意顺序：长比宽的三倍少 $2$，是 $3w - 2$，而不是 $2 - 3w$。",
+    ),
+    hardWatch: t(
+      "Area and perimeter can match in number but not in meaning: a $4$ by $4$ square has perimeter $16$ and area $16$, measured in different units.",
+      "面积和周长可能数值相同但意义不同：边长 $4$ 的正方形周长是 $16$，面积也是 $16$，但单位不同。",
+    ),
     tip: t(
       "Write the length in terms of the width from the sentence, then use perimeter $= 2(\\text{length} + \\text{width})$. If the length is $3$ more than twice the width and the perimeter is $36$: $2(w + 2w + 3) = 36$, so $3w + 3 = 18$ and $w = 5$. Remember that a perimeter counts each side pair, so the $2$ must be there.",
       "根据题意用宽表示长，再用周长 $= 2(\\text{length} + \\text{width})$（长加宽的两倍）。若长比宽的两倍多 $3$、周长为 $36$：$2(w + 2w + 3) = 36$，所以 $3w + 3 = 18$，$w = 5$。周长包括两组对边，这个 $2$ 不能漏。",
@@ -865,6 +1057,18 @@ export const satExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "sat-exam-evaluating-linear-functions": {
+    intro: t(
+      "A taxi fare is $f(x) = 2x + 3$ dollars for $x$ miles. The SAT asks for $f$ at some input, or for the difference of two outputs, where the constant falls away.\n\nCheck: $f(5) = 13$ and $f(2) = 7$, and $13 - 7 = 6 = 2 \\times 3$.\n\nIn this lesson we evaluate linear functions and find differences of outputs from the slope.",
+      "出租车费 $f(x) = 2x + 3$ 美元，$x$ 是英里数。SAT 问某个输入处 $f$ 的值，或两个输出之差，此时常数会消掉。\n\n检验：$f(5) = 13$，$f(2) = 7$，而 $13 - 7 = 6 = 2 \\times 3$。\n\n本课我们求一次函数的值，并用斜率求输出之差。",
+    ),
+    watch: t(
+      "A negative input needs parentheses: for $f(x) = 5 - 2x$, $f(-3) = 5 - 2(-3) = 11$, not $5 - 6 = -1$.",
+      "负数输入要加括号：$f(x) = 5 - 2x$ 时，$f(-3) = 5 - 2(-3) = 11$，而不是 $5 - 6 = -1$。",
+    ),
+    hardWatch: t(
+      "Order matters in a difference: $f(2) - f(6)$ is the negative of $f(6) - f(2)$; for slope $3$ it is $-12$.",
+      "相减的顺序很重要：$f(2) - f(6)$ 与 $f(6) - f(2)$ 互为相反数；斜率为 $3$ 时它等于 $-12$。",
+    ),
     tip: t(
       "To evaluate a linear function, replace $x$ with the input, multiply by the slope, then apply the constant. For $g(x) = -4x + 3$: $g(5) = -20 + 3 = -17$. Keep the signs: a negative times a positive is negative, and subtracting a number makes the result more negative.",
       "求一次函数的值时，把 $x$ 换成输入，乘斜率，再加上常数。对 $g(x) = -4x + 3$：$g(5) = -20 + 3 = -17$。注意符号：负数乘正数得负数，减去一个数会使结果更小。",
@@ -875,6 +1079,18 @@ export const satExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "sat-exam-working-with-function-composition": {
+    intro: t(
+      "A store takes $4$ dollars off a price and then adds tax by a rule; applying one rule to the result of another is composition. The SAT asks for $f(g(a))$ at a number or for the whole rule $f(g(x))$.\n\nCheck: with $f(x) = 2x + 1$ and $g(x) = x - 4$, $f(g(7)) = f(3) = 7$, and the rule $2x - 7$ also gives $7$ at $x = 7$.\n\nIn this lesson we compose linear functions at a number and as expressions.",
+      "商店先把价格减 $4$ 美元，再按某个规则加税；把一个规则作用在另一个规则的结果上，就是复合。SAT 问某个数处的 $f(g(a))$，或整个规则 $f(g(x))$。\n\n检验：$f(x) = 2x + 1$，$g(x) = x - 4$ 时，$f(g(7)) = f(3) = 7$，而规则 $2x - 7$ 在 $x = 7$ 时也得 $7$。\n\n本课我们在具体数值和代数式两种情形下求一次函数的复合。",
+    ),
+    watch: t(
+      "A negative inner value goes into $f$ in parentheses: with $g(1) = -3$ and $f(x) = 2x + 1$, $f(-3) = 2(-3) + 1 = -5$.",
+      "内层结果为负时，代入 $f$ 要加括号：$g(1) = -3$，$f(x) = 2x + 1$，则 $f(-3) = 2(-3) + 1 = -5$。",
+    ),
+    hardWatch: t(
+      "Composition is usually not symmetric: with $f(x) = 2x + 1$ and $g(x) = x + 3$, $f(g(x)) = 2x + 7$ but $g(f(x)) = 2x + 4$.",
+      "复合一般不可交换：$f(x) = 2x + 1$，$g(x) = x + 3$ 时，$f(g(x)) = 2x + 7$，而 $g(f(x)) = 2x + 4$。",
+    ),
     tip: t(
       "In $f(g(a))$, work from the inside out: compute $g(a)$ first, then use that result as the input to $f$. With $f(x) = 2x + 1$ and $g(x) = x - 4$: $g(7) = 3$ and $f(3) = 7$. Doing the outer function first, $g(f(7))$, is a different calculation and gives a distractor.",
       "在 $f(g(a))$ 中，从里到外计算：先算 $g(a)$，再把结果作为 $f$ 的输入。设 $f(x) = 2x + 1$、$g(x) = x - 4$：$g(7) = 3$，$f(3) = 7$。先算外层，即 $g(f(7))$，是另一种运算，会得到干扰项。",
@@ -885,6 +1101,18 @@ export const satExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "sat-exam-identifying-tables-corresponding-to-linear-functions": {
+    intro: t(
+      "A gym tracks its members with $y = 2x - 5$, and four printed tables claim to show the rule. Only one has every row right, and checking a couple of rows exposes the others.\n\nCheck: at $x = 3$ the rule gives $2 \\times 3 - 5 = 1$, so a table with $(3, 1)$ passes that row.\n\nIn this lesson we match tables to linear equations by testing their rows.",
+      "健身房用 $y = 2x - 5$ 记录会员数，印出来的四张表都说自己符合这个规则。只有一张每行都对，检查几行就能排除其他的。\n\n检验：$x = 3$ 时规则给出 $2 \\times 3 - 5 = 1$，所以含 $(3, 1)$ 的表格这一行通过。\n\n本课我们通过逐行检验，把表格与一次方程对应起来。",
+    ),
+    watch: t(
+      "A table with the right step can still start wrong: $y = 2x - 5$ and $y = 2x + 1$ both rise by $2$, but at $x = 0$ they give $-5$ and $1$.",
+      "步长正确的表格也可能起点错：$y = 2x - 5$ 和 $y = 2x + 1$ 都每步增加 $2$，但 $x = 0$ 时分别是 $-5$ 和 $1$。",
+    ),
+    hardWatch: t(
+      "Test a late row too: tables can agree at $x = 1$ and $x = 2$ and still differ at $x = 7$ if one bends away from the line.",
+      "也要检验靠后的一行：两张表在 $x = 1$、$x = 2$ 处一致，若其中一张偏离直线，在 $x = 7$ 处仍可能不同。",
+    ),
     tip: t(
       "To match a table to an equation, substitute two or three inputs and compare the outputs, row by row. For $y = 2x - 5$: at $x = 1$, $y = -3$; at $x = 2$, $y = -1$. A wrong table may have the correct pattern of change but a shifted start, so one row alone may not be enough.",
       "把表格与方程对应时，代入两三个输入，逐行比较输出。对 $y = 2x - 5$：$x = 1$ 时 $y = -3$；$x = 2$ 时 $y = -1$。错误的表格可能变化规律正确但起点错位，所以只看一行可能不够。",
@@ -895,6 +1123,18 @@ export const satExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "sat-exam-identifying-linear-functions-corresponding-to-tables": {
+    intro: t(
+      "A plant's height is recorded each week, and the table rises by the same amount every week. The SAT asks which equation produced the table: the slope comes from the change, and the intercept from any row.\n\nCheck: rows $(2, 1)$ and $(3, 3)$ give slope $2$, and $f(x) = 2x - 3$ gives $f(2) = 1$.\n\nIn this lesson we read the slope and intercept of a linear function from a table.",
+      "每周记录一株植物的高度，表格每周增加相同的量。SAT 问哪个方程产生了这张表：斜率来自变化量，截距可由任意一行求出。\n\n检验：$(2, 1)$ 和 $(3, 3)$ 给出斜率 $2$，而 $f(x) = 2x - 3$ 时 $f(2) = 1$。\n\n本课我们从表格读出一次函数的斜率和截距。",
+    ),
+    watch: t(
+      "Decreasing outputs mean a negative slope: $(1, 9), (2, 6), (3, 3)$ give slope $-3$ and $f(x) = -3x + 12$.",
+      "输出递减说明斜率为负：$(1, 9), (2, 6), (3, 3)$ 给出斜率 $-3$，$f(x) = -3x + 12$。",
+    ),
+    hardWatch: t(
+      "Divide in the same order on top and bottom: from $(4, 14)$ to $(1, 5)$ the slope is $\\frac{5 - 14}{1 - 4} = 3$, the same as the other way.",
+      "分子分母要按同一顺序相减：从 $(4, 14)$ 到 $(1, 5)$，斜率是 $\\frac{5 - 14}{1 - 4} = 3$，与反过来算相同。",
+    ),
     tip: t(
       "Find the slope from the change in output per unit of input, then get the intercept from any row: $b = y - mx$. If the table runs $(2, 1), (3, 3), (4, 5)$, the slope is $2$ and $b = 1 - 4 = -3$, so $f(x) = 2x - 3$. Beware of subtracting a negative in the last step.",
       "用每单位输入的输出变化求斜率，再用任一行求截距：$b = y - mx$。若表中为 $(2, 1), (3, 3), (4, 5)$，斜率是 $2$，$b = 1 - 4 = -3$，所以 $f(x) = 2x - 3$。最后一步减去负数时要当心。",
@@ -905,6 +1145,18 @@ export const satExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "sat-exam-analyzing-functions-in-tabular-form": {
+    intro: t(
+      "A parking meter shows $4, 7, 10, 13$ dollars after $1, 2, 3, 4$ hours. The SAT asks what it shows after $6$ hours, or after how many hours it shows $31$ dollars.\n\nCheck: the step is $3$, so after $6$ hours it shows $13 + 2 \\times 3 = 19$.\n\nIn this lesson we extend linear tables and work backward from an output to its input.",
+      "停车计费表在 $1, 2, 3, 4$ 小时后分别显示 $4, 7, 10, 13$ 美元。SAT 问 $6$ 小时后显示多少，或几小时后显示 $31$ 美元。\n\n检验：每步增加 $3$，所以 $6$ 小时后显示 $13 + 2 \\times 3 = 19$。\n\n本课我们延伸一次函数的表格，并由输出倒推输入。",
+    ),
+    watch: t(
+      "Count the steps from the last row: going from $x = 4$ to $x = 9$ is $5$ steps, not $9$.",
+      "要从最后一行开始数步数：从 $x = 4$ 到 $x = 9$ 是 $5$ 步，而不是 $9$ 步。",
+    ),
+    hardWatch: t(
+      "The input can lie before the table: with $f(x) = 3x + 1$, the output $-5$ comes at $x = -2$.",
+      "所求输入可能在表格之前：$f(x) = 3x + 1$ 时，输出 $-5$ 对应 $x = -2$。",
+    ),
     tip: t(
       "To extend a linear table, note the output change per step of input and keep applying it from the last row. If $f$ goes $4, 7, 10, 13$ for inputs $1, 2, 3, 4$, then $f(6) = 13 + 2(3) = 19$. The trap is counting the wrong number of steps past the table's end.",
       "要延伸一次函数的表格，找出输入每走一步时输出的变化，再从最后一行继续。若输入 $1, 2, 3, 4$ 对应 $f$ 值 $4, 7, 10, 13$，则 $f(6) = 13 + 2(3) = 19$。陷阱是把表格之后的步数数错。",
@@ -915,6 +1167,18 @@ export const satExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "sat-exam-function-tables-containing-unknown-parameters": {
+    intro: t(
+      "A car's odometer is read at a few times, and one reading has smudged into a $k$. Because the car moves at a steady speed, the other readings fix the missing one.\n\nCheck: readings $6, 11, k, 21$ at equal intervals rise by $5$, so $k = 16$ and $16 + 5 = 21$.\n\nIn this lesson we find an unknown entry of a linear table from its slope.",
+      "某辆车的里程表在几个时刻被读数，其中一个读数模糊成了 $k$。由于车速恒定，其他读数就能确定缺失的那个。\n\n检验：等间隔的读数 $6, 11, k, 21$ 每次增加 $5$，所以 $k = 16$，而 $16 + 5 = 21$。\n\n本课我们由斜率求出一次函数表格中的未知项。",
+    ),
+    watch: t(
+      "The blank can be between two known values that are not neighbours of each other: with $6, k, k', 21$ at equal steps, the step is $\\frac{21 - 6}{3} = 5$.",
+      "空格两侧的已知值可能相隔几步：$6, k, k', 21$ 等间隔时，每步是 $\\frac{21 - 6}{3} = 5$。",
+    ),
+    hardWatch: t(
+      "The midpoint shortcut needs the blank halfway: with $(2, 7)$, $(9, k)$ and $(10, 31)$, $k$ is not the average of $7$ and $31$; it is $28$.",
+      "取中点的捷径只在空格正好居中时成立：$(2, 7)$、$(9, k)$、$(10, 31)$ 中，$k$ 不是 $7$ 和 $31$ 的平均数，而是 $28$。",
+    ),
     tip: t(
       "A linear function changes by equal amounts over equal steps. With evenly spaced inputs, find the constant step from two known neighbours and apply it to reach the blank. If the outputs are $6, 11, k, 21$ for consecutive inputs, the step is $5$, so $k = 16$. Check that the next known value also fits.",
       "一次函数在相等的步长上变化量相等。输入间隔均匀时，用相邻的两个已知值求出固定步长，再推到空白处。若连续输入对应的输出为 $6, 11, k, 21$，步长是 $5$，所以 $k = 16$。再检验下一个已知值是否也吻合。",
@@ -925,6 +1189,18 @@ export const satExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "sat-exam-interpreting-coefficients-of-lines-in-slope-intercept-form": {
+    intro: t(
+      "A librarian logs the books on a cart each day with $y = 5x + 40$, where $x$ counts days. The two numbers in the equation answer two different questions: how many books there were at the outset, and how many arrive each day.\n\nCheck: at $x = 0$ the model gives $5 \\times 0 + 40 = 40$ books, and one day later $45$, five more.\n\nIn this lesson we read the slope and the intercept of a line in context, with their units.",
+      "图书管理员用 $y = 5x + 40$ 记录推车上每天的书数，$x$ 表示天数。方程里的两个数回答两个不同的问题：一开始有多少本书，以及每天增加多少本。\n\n检验：$x = 0$ 时模型给出 $5 \\times 0 + 40 = 40$ 本，一天后是 $45$ 本，多了五本。\n\n本课我们结合情境和单位，读懂直线的斜率和截距。",
+    ),
+    watch: t(
+      "The constant is the start only when $x$ counts from the start. If $x$ is the year, as in $y = 5x - 9{,}960$, the constant is the value in year $0$, which has no meaning in the story.",
+      "只有当 $x$ 从开始时刻算起时，常数才是起始量。若 $x$ 表示年份，如 $y = 5x - 9{,}960$，常数是第 $0$ 年的值，在情境中没有意义。",
+    ),
+    hardWatch: t(
+      "A falling line gives a negative change: for $y = 120 - 8x$, over $5$ days $y$ changes by $-40$, so the amount drops by $40$, and the change is not $+40$.",
+      "下降的直线变化量为负：对 $y = 120 - 8x$，$5$ 天内 $y$ 变化 $-40$，即减少 $40$，变化量不是 $+40$。",
+    ),
     tip: t(
       "In $y = mx + b$, the constant $b$ is the output when $x = 0$, so in a story it is the amount at the start, in the output's units. In $y = 5x + 40$ for a stack of books over days, $40$ is the number of books at the outset. It is not a per-day change; that is $m$.",
       "在 $y = mx + b$ 中，常数 $b$ 是 $x = 0$ 时的输出，所以在情境中它是起始量，单位与输出相同。在书堆随天数变化的 $y = 5x + 40$ 中，$40$ 是一开始的书数。它不是每天的变化量，后者是 $m$。",
@@ -935,6 +1211,18 @@ export const satExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "sat-exam-finding-equations-of-lines-using-slopes-and-points": {
+    intro: t(
+      "A ramp rises $3$ centimeters for every centimeter across, and a surveyor marks one point on it, $(2, 1)$. The slope and that single point pin the whole line down.\n\nCheck: $y = 3x - 5$ has slope $3$, and at $x = 2$ it gives $3 \\times 2 - 5 = 1$.\n\nIn this lesson we write the equation of a line from its slope and a point, or from two points.",
+      "一条坡道横向每走 $1$ 厘米升高 $3$ 厘米，测量员在上面标出一点 $(2, 1)$。斜率和这一个点就确定了整条直线。\n\n检验：$y = 3x - 5$ 的斜率是 $3$，$x = 2$ 时得 $3 \\times 2 - 5 = 1$。\n\n本课我们由斜率和一点，或由两点，写出直线的方程。",
+    ),
+    watch: t(
+      "A point with a negative coordinate needs parentheses: slope $-2$ through $(-3, 4)$ gives $4 = -2(-3) + b$, so $b = -2$, not $10$.",
+      "坐标为负时要加括号：斜率 $-2$、过 $(-3, 4)$ 时，$4 = -2(-3) + b$，所以 $b = -2$，而不是 $10$。",
+    ),
+    hardWatch: t(
+      "If the two points share an $x$-coordinate, as $(4, 1)$ and $(4, 9)$ do, the run is $0$ and there is no slope: the line is $x = 4$, which has no $y = mx + b$ form.",
+      "如果两点横坐标相同，如 $(4, 1)$ 和 $(4, 9)$，横向变化为 $0$，没有斜率：直线是 $x = 4$，不能写成 $y = mx + b$。",
+    ),
     tip: t(
       "Start from $y = mx + b$ with the given slope, substitute the point's coordinates, and solve for $b$. For slope $3$ through $(2, 1)$: $1 = 3(2) + b$, so $b = -5$ and $y = 3x - 5$. Substituting the coordinates in swapped positions is a typical cause of error.",
       "从带已知斜率的 $y = mx + b$ 出发，代入点的坐标，解出 $b$。斜率为 $3$、过 $(2, 1)$ 时：$1 = 3(2) + b$，所以 $b = -5$，$y = 3x - 5$。把坐标代反是常见的错因。",
@@ -945,6 +1233,18 @@ export const satExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "sat-exam-graphs-of-linear-equations-in-slope-intercept-form": {
+    intro: t(
+      "A designer sketches the line $y = 3x - 2$ before plotting it. Without computing a single point beyond the axis, the equation already says which way the line tilts and where it meets the $y$-axis.\n\nCheck: at $x = 0$, $y = -2$, below the origin; at $x = 1$, $y = 1$, higher, so the line rises.\n\nIn this lesson we read the shape of a line's graph from its slope and intercept, and shift lines up and down.",
+      "设计师在画图之前先勾画直线 $y = 3x - 2$。不必多算一个点，方程就已经说明了直线向哪边倾斜、在哪里与 $y$ 轴相交。\n\n检验：$x = 0$ 时 $y = -2$，在原点下方；$x = 1$ 时 $y = 1$，更高，所以直线上升。\n\n本课我们由斜率和截距读出直线图象的样子，并把直线上下平移。",
+    ),
+    watch: t(
+      "A slope of $0$ neither rises nor falls: $y = 0x + 4$, that is $y = 4$, is a horizontal line through $(0, 4)$.",
+      "斜率为 $0$ 的直线既不上升也不下降：$y = 0x + 4$ 即 $y = 4$，是过 $(0, 4)$ 的水平直线。",
+    ),
+    hardWatch: t(
+      "A shift to the right is not a shift up: moving $y = 3x - 2$ right by $1$ gives $y = 3(x - 1) - 2 = 3x - 5$, which is the same as moving it down by $3$.",
+      "向右平移不是向上平移：把 $y = 3x - 2$ 向右移 $1$，得 $y = 3(x - 1) - 2 = 3x - 5$，相当于向下移 $3$。",
+    ),
     tip: t(
       "Read two facts from $y = mx + b$. A negative $m$ means the line falls from left to right, and a positive one means it rises. The value $b$ tells where it crosses the $y$-axis: above the origin when positive, below when negative. So $y = 3x - 2$ rises and crosses below the origin.",
       "从 $y = mx + b$ 读出两件事。$m$ 为负表示直线从左到右下降，为正表示上升。$b$ 说明它与 $y$ 轴的交点：为正在原点上方，为负在原点下方。所以 $y = 3x - 2$ 上升，并在原点下方与 $y$ 轴相交。",
@@ -955,6 +1255,18 @@ export const satExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "sat-exam-constructing-and-analyzing-slope-intercept-equations": {
+    intro: t(
+      "A budget says that $4$ notebooks and $5$ pens cost $20$ dollars, written $4x + 5y = 20$. To see how pens trade against notebooks, rewrite the equation so that $y$ stands alone.\n\nCheck: $y = -\\frac{4}{5}x + 4$; at $x = 5$ it gives $y = 0$, and $4 \\times 5 + 5 \\times 0 = 20$.\n\nIn this lesson we rewrite $ax + by = c$ in slope-intercept form and read its slope and intercept.",
+      "一份预算写着 $4$ 本笔记本和 $5$ 支笔共 $20$ 美元，即 $4x + 5y = 20$。要看出笔和笔记本如何此消彼长，就把方程改写成 $y$ 单独在一边。\n\n检验：$y = -\\frac{4}{5}x + 4$；$x = 5$ 时 $y = 0$，而 $4 \\times 5 + 5 \\times 0 = 20$。\n\n本课我们把 $ax + by = c$ 改写成斜截式，读出它的斜率和截距。",
+    ),
+    watch: t(
+      "Divide every term, not only the right side: $3x + 2y = 7$ becomes $y = -\\frac{3}{2}x + \\frac{7}{2}$, and writing $y = -3x + \\frac{7}{2}$ leaves the slope undivided.",
+      "每一项都要除，不只是右边：$3x + 2y = 7$ 变为 $y = -\\frac{3}{2}x + \\frac{7}{2}$，写成 $y = -3x + \\frac{7}{2}$ 就是斜率没有除。",
+    ),
+    hardWatch: t(
+      "With no $y$ term at all, as in $3x = 12$, there is no $y$-intercept: the line is the vertical line $x = 4$.",
+      "如果根本没有 $y$ 项，如 $3x = 12$，就没有 $y$ 截距：这条直线是竖直线 $x = 4$。",
+    ),
     tip: t(
       "To read a slope from $ax + by = c$, solve for $y$: move the $x$ term across, then divide every term by $y$'s coefficient. The number multiplying $x$ is the slope. For $4x + 5y = 20$: $y = -\\frac{4}{5}x + 4$. The sign flips on moving across; forgetting that is the common wrong answer.",
       "要从 $ax + by = c$ 读出斜率，就解出 $y$：把 $x$ 项移过去，再把每一项除以 $y$ 的系数，$x$ 前的数就是斜率。对 $4x + 5y = 20$：$y = -\\frac{4}{5}x + 4$。移项时符号改变，忘了这一点就会得到常见的错误答案。",
@@ -965,6 +1277,18 @@ export const satExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "sat-exam-properties-of-lines-given-in-standard-or-general-form": {
+    intro: t(
+      "A garden bed is fenced off by two walls meeting at a right angle and a straight path, the line $5x + 2y = 30$. Where the path meets each wall decides the size of the bed.\n\nCheck: the path meets the $x$-axis at $(6, 0)$, since $5 \\times 6 = 30$, and the $y$-axis at $(0, 15)$, since $2 \\times 15 = 30$.\n\nIn this lesson we find the intercepts of a line in standard form and use them, for example for the triangle it cuts off.",
+      "一块花圃由两面成直角的墙和一条笔直的小路围成，小路是直线 $5x + 2y = 30$。小路与两面墙的交点决定了花圃的大小。\n\n检验：小路与 $x$ 轴交于 $(6, 0)$，因为 $5 \\times 6 = 30$；与 $y$ 轴交于 $(0, 15)$，因为 $2 \\times 15 = 30$。\n\n本课我们求一般式直线的截距，并加以运用，例如求它截出的三角形。",
+    ),
+    watch: t(
+      "The intercept need not be a whole number: for $4x + 3y = 10$, setting $y = 0$ gives $x = \\frac{5}{2}$, so the point is $\\left(\\frac{5}{2}, 0\\right)$.",
+      "截距不一定是整数：对 $4x + 3y = 10$，令 $y = 0$ 得 $x = \\frac{5}{2}$，所以这个点是 $\\left(\\frac{5}{2}, 0\\right)$。",
+    ),
+    hardWatch: t(
+      "A negative intercept is still a leg of positive length: $3x - 2y = 12$ meets the axes at $(4, 0)$ and $(0, -6)$, and the triangle's area is $\\frac{1}{2} \\times 4 \\times 6 = 12$.",
+      "截距为负时，直角边的长度仍为正：$3x - 2y = 12$ 与坐标轴交于 $(4, 0)$ 和 $(0, -6)$，三角形面积为 $\\frac{1}{2} \\times 4 \\times 6 = 12$。",
+    ),
     tip: t(
       "The $x$-intercept is where a line meets the horizontal axis, so set $y = 0$ and solve; write the result as a point with zero second coordinate. For $5x + 2y = 30$: $5x = 30$, so the point is $(6, 0)$. Swapping the coordinates, or setting $x = 0$, gives the wrong point.",
       "$x$ 轴截距是直线与水平轴的交点，所以令 $y = 0$ 并求解，结果写成第二个坐标为零的点。对 $5x + 2y = 30$：$5x = 30$，所以这个点是 $(6, 0)$。把坐标写反，或者令 $x = 0$，都会得到错误的点。",
@@ -975,6 +1299,18 @@ export const satExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "sat-exam-analyzing-linear-equations-in-general-form": {
+    intro: t(
+      "Two rails are laid out as $2x + 5y = 7$ and $4x + 10y = 9$. An engineer wants to know, without drawing them, whether they run side by side and never meet.\n\nCheck: halving the second gives $2x + 5y = 4.5$, the same left side as the first with a different constant, so the rails are parallel.\n\nIn this lesson we compare lines in general form by their coefficients and use the slope to relate points on a line.",
+      "两条铁轨铺设为 $2x + 5y = 7$ 和 $4x + 10y = 9$。工程师想不画图就知道它们是否平行、永不相交。\n\n检验：把第二个方程除以 $2$，得 $2x + 5y = 4.5$，左边与第一个相同而常数不同，所以两条铁轨平行。\n\n本课我们用系数比较一般式直线，并用斜率联系直线上的点。",
+    ),
+    watch: t(
+      "Scaling by a negative number also keeps the slope: $-2x - 5y = 3$ is parallel to $2x + 5y = 7$, even though every sign changed.",
+      "乘以负数也不改变斜率：$-2x - 5y = 3$ 与 $2x + 5y = 7$ 平行，尽管每个符号都变了。",
+    ),
+    hardWatch: t(
+      "The run need not equal $b$: for $2x + 5y = 7$ through $(1, t)$ and $(3, s)$, the run is $2$, so $s = t - \\frac{4}{5}$ and $t - s = \\frac{4}{5}$.",
+      "横向变化不一定等于 $b$：对 $2x + 5y = 7$ 上的 $(1, t)$ 和 $(3, s)$，横向变化为 $2$，所以 $s = t - \\frac{4}{5}$，$t - s = \\frac{4}{5}$。",
+    ),
     tip: t(
       "The slope of $ax + by = c$ depends only on the ratio of $a$ to $b$. A parallel line has both coefficients scaled by the same number, while its constant must not scale by that number, or it would be the same line. For $2x + 5y = 7$, the line $4x + 10y = 9$ qualifies, but $4x + 10y = 14$ does not.",
       "$ax + by = c$ 的斜率只取决于 $a$ 与 $b$ 之比。平行线的两个系数按同一倍数放大，而常数不能按这个倍数放大，否则就是同一条直线。对 $2x + 5y = 7$，直线 $4x + 10y = 9$ 符合，$4x + 10y = 14$ 则不符合。",
@@ -985,6 +1321,18 @@ export const satExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "sat-exam-constructing-linear-functions-using-slope-intercept-form": {
+    intro: t(
+      "A taxi meter shows $4$ dollars before the ride starts and $13$ dollars after $3$ miles. Those two readings are enough to write the whole fare rule.\n\nCheck: $f(x) = 3x + 4$ gives $f(0) = 4$ and $f(3) = 9 + 4 = 13$.\n\nIn this lesson we build a linear function from two of its values, with or without the value at zero.",
+      "出租车计价器在起步前显示 $4$ 美元，行驶 $3$ 英里后显示 $13$ 美元。这两个读数足以写出整个计费规则。\n\n检验：$f(x) = 3x + 4$ 给出 $f(0) = 4$，$f(3) = 9 + 4 = 13$。\n\n本课我们由一次函数的两个值构造它，无论是否给出零处的值。",
+    ),
+    watch: t(
+      "The slope can be a fraction: $f(0) = 2$ and $f(4) = 5$ give $m = \\frac{3}{4}$, so $f(x) = \\frac{3}{4}x + 2$.",
+      "斜率可能是分数：$f(0) = 2$、$f(4) = 5$ 得 $m = \\frac{3}{4}$，所以 $f(x) = \\frac{3}{4}x + 2$。",
+    ),
+    hardWatch: t(
+      "The known inputs can lie on opposite sides of zero: $f(-2) = 1$ and $f(4) = 13$ give $m = 2$, and stepping forward $2$ from $x = -2$ gives $f(0) = 1 + 4 = 5$.",
+      "已知输入可能在零的两侧：$f(-2) = 1$、$f(4) = 13$ 得 $m = 2$，从 $x = -2$ 向前走 $2$，得 $f(0) = 1 + 4 = 5$。",
+    ),
     tip: t(
       "The value at zero is the intercept, because $f(0) = b$. Use the other pair to find the slope: output change over input change. If $f(0) = 4$ and $f(3) = 13$, then $b = 4$, $m = \\frac{9}{3} = 3$, and $f(x) = 3x + 4$. Dividing by the wrong gap is the usual slip.",
       "零处的值就是截距，因为 $f(0) = b$。再用另一组数求斜率：输出变化除以输入变化。若 $f(0) = 4$、$f(3) = 13$，则 $b = 4$，$m = \\frac{9}{3} = 3$，$f(x) = 3x + 4$。除错了间隔是常见的疏漏。",
@@ -995,6 +1343,18 @@ export const satExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "sat-exam-parallel-lines": {
+    intro: t(
+      "The lanes of a running track are drawn parallel to a first line, $x + 2y = 5$. Every new lane line must climb at exactly the same rate as the first, or the lanes would narrow.\n\nCheck: $y = -\\frac{1}{2}x + 3$ has the same slope $-\\frac{1}{2}$ as $x + 2y = 5$, and its intercept differs, so it is a separate parallel line.\n\nIn this lesson we find the slope of a parallel line and the parallel line through a given point.",
+      "跑道的各条分道线都与第一条直线 $x + 2y = 5$ 平行。每条新的分道线必须和第一条倾斜得完全一样，否则跑道会变窄。\n\n检验：$y = -\\frac{1}{2}x + 3$ 与 $x + 2y = 5$ 的斜率都是 $-\\frac{1}{2}$，截距不同，所以它是另一条平行线。\n\n本课我们求平行线的斜率，以及过已知点的平行线。",
+    ),
+    watch: t(
+      "A line in the form $ax - by = c$ has a positive slope: $3x - 4y = 8$ gives $y = \\frac{3}{4}x - 2$, so its parallels have slope $\\frac{3}{4}$.",
+      "形如 $ax - by = c$ 的直线斜率为正：$3x - 4y = 8$ 得 $y = \\frac{3}{4}x - 2$，所以它的平行线斜率为 $\\frac{3}{4}$。",
+    ),
+    hardWatch: t(
+      "A vertical line has no slope to copy: the line parallel to $x = 3$ through $(5, 1)$ is $x = 5$, and it has no $y$-intercept at all.",
+      "竖直线没有斜率可以照搬：与 $x = 3$ 平行且过 $(5, 1)$ 的直线是 $x = 5$，它根本没有 $y$ 截距。",
+    ),
     tip: t(
       "Parallel lines have equal slopes. If the given line is in the form $ax + by = c$, rewrite it as $y = -\\frac{a}{b}x + \\frac{c}{b}$ and read the slope. For $4x + 7y = 21$, the slope is $-\\frac{4}{7}$, which any parallel line shares. A perpendicular's reciprocal, or a dropped minus sign, gives the wrong options.",
       "平行线的斜率相等。若给定直线形如 $ax + by = c$，把它改写成 $y = -\\frac{a}{b}x + \\frac{c}{b}$ 并读出斜率。对 $4x + 7y = 21$，斜率是 $-\\frac{4}{7}$，所有平行线都是这个斜率。错误选项来自取了垂线的倒数，或者丢了负号。",
@@ -1005,6 +1365,18 @@ export const satExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "sat-exam-slopes-of-perpendicular-lines": {
+    intro: t(
+      "A carpenter checks that a shelf bracket meets the wall at a right angle. On a coordinate drawing, the wall edge has slope $\\frac{5}{4}$, and the bracket must have the one slope that makes a square corner with it.\n\nCheck: $\\frac{5}{4} \\times \\left(-\\frac{4}{5}\\right) = -1$, so the bracket's slope is $-\\frac{4}{5}$.\n\nIn this lesson we find the slope of a line perpendicular to a given slope or to a line in standard form.",
+      "木匠检查搁板支架是否与墙成直角。在坐标图上，墙边的斜率是 $\\frac{5}{4}$，支架必须取唯一能与它构成直角的斜率。\n\n检验：$\\frac{5}{4} \\times \\left(-\\frac{4}{5}\\right) = -1$，所以支架的斜率是 $-\\frac{4}{5}$。\n\n本课我们求与已知斜率或一般式直线垂直的直线的斜率。",
+    ),
+    watch: t(
+      "A slope of $0$ has no negative reciprocal: a line perpendicular to the horizontal line $y = 2$ is vertical, such as $x = 7$, and has no slope.",
+      "斜率 $0$ 没有负倒数：与水平线 $y = 2$ 垂直的直线是竖直线，如 $x = 7$，没有斜率。",
+    ),
+    hardWatch: t(
+      "With a decimal coefficient, write the slope as a fraction first: $0.5x + 2y = 3$ has slope $-\\frac{1}{4}$, so the perpendicular slope is $4$.",
+      "系数是小数时先把斜率写成分数：$0.5x + 2y = 3$ 的斜率是 $-\\frac{1}{4}$，所以垂线斜率是 $4$。",
+    ),
     tip: t(
       "Slopes of perpendicular lines multiply to $-1$, so flip the fraction and change the sign. The perpendicular slope to $\\frac{5}{4}$ is $-\\frac{4}{5}$, and to $-3$ it is $\\frac{1}{3}$. Doing only one of the two steps, the reciprocal or the sign, produces the tempting wrong choices.",
       "互相垂直的直线斜率之积为 $-1$，所以把分数倒过来并改变符号。与 $\\frac{5}{4}$ 垂直的斜率是 $-\\frac{4}{5}$，与 $-3$ 垂直的斜率是 $\\frac{1}{3}$。只做倒数或只改符号，就会得到诱人的错误选项。",
@@ -1015,6 +1387,18 @@ export const satExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "sat-exam-perpendicular-lines": {
+    intro: t(
+      "A new street must cross the avenue $y = 2x + 7$ at a right angle and pass a fountain at $(6, 1)$. The angle fixes the street's slope, and the fountain fixes where it runs.\n\nCheck: $y = -\\frac{1}{2}x + 4$ gives $-3 + 4 = 1$ at $x = 6$, and $2 \\times \\left(-\\frac{1}{2}\\right) = -1$.\n\nIn this lesson we write the equation of the line perpendicular to a given line through a given point.",
+      "一条新街必须与大道 $y = 2x + 7$ 成直角相交，并经过位于 $(6, 1)$ 的喷泉。直角确定了街道的斜率，喷泉确定了它的位置。\n\n检验：$y = -\\frac{1}{2}x + 4$ 在 $x = 6$ 时得 $-3 + 4 = 1$，且 $2 \\times \\left(-\\frac{1}{2}\\right) = -1$。\n\n本课我们写出过已知点、与已知直线垂直的直线方程。",
+    ),
+    watch: t(
+      "The point can lie on the given line itself: perpendicular to $y = 2x + 7$ through $(1, 9)$ gives $y = -\\frac{1}{2}x + \\frac{19}{2}$, crossing the avenue right at that point.",
+      "这个点也可能就在已知直线上：与 $y = 2x + 7$ 垂直且过 $(1, 9)$，得 $y = -\\frac{1}{2}x + \\frac{19}{2}$，正好在这一点与大道相交。",
+    ),
+    hardWatch: t(
+      "The run need not be a multiple of the slope's denominator: from $(3, 1)$ with slope $-\\frac{1}{2}$, a run of $-3$ adds $\\frac{3}{2}$, so $c = \\frac{5}{2}$.",
+      "横向变化不一定是斜率分母的倍数：从 $(3, 1)$ 出发，斜率 $-\\frac{1}{2}$，横向移动 $-3$ 时增加 $\\frac{3}{2}$，所以 $c = \\frac{5}{2}$。",
+    ),
     tip: t(
       "To write a perpendicular line, take the negative reciprocal of the given slope, substitute the point in $y = mx + b$ and solve for $b$. Perpendicular to $y = 2x + 7$ through $(6, 1)$: the slope is $-\\frac{1}{2}$ and $1 = -3 + b$, so $y = -\\frac{1}{2}x + 4$. The old intercept is irrelevant.",
       "写垂线方程时，取已知斜率的负倒数，把点代入 $y = mx + b$，解出 $b$。与 $y = 2x + 7$ 垂直且过 $(6, 1)$ 时：斜率为 $-\\frac{1}{2}$，$1 = -3 + b$，所以 $y = -\\frac{1}{2}x + 4$。原来的截距没有关系。",
@@ -1025,6 +1409,18 @@ export const satExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "sat-exam-modeling-with-linear-functions": {
+    intro: t(
+      "A savings account opens with $150$ dollars and gains $6$ dollars every week, modeled by $f(x) = 150 + 6x$. The model answers both kinds of question: how much after a given time, and when a given amount is reached.\n\nCheck: after $9$ weeks, $150 + 6 \\times 9 = 204$; and $204$ is reached when $6x = 54$, at $x = 9$.\n\nIn this lesson we evaluate a linear model at a time and solve it for the time of a value.",
+      "一个储蓄账户开户时有 $150$ 美元，每周增加 $6$ 美元，模型为 $f(x) = 150 + 6x$。这个模型能回答两类问题：一段时间后有多少，以及何时达到某个金额。\n\n检验：$9$ 周后为 $150 + 6 \\times 9 = 204$；而达到 $204$ 时 $6x = 54$，即 $x = 9$。\n\n本课我们在某个时刻计算一次模型的值，并由某个值解出时刻。",
+    ),
+    watch: t(
+      "The input must be in the model's units: if $x$ counts weeks, the value after $21$ days uses $x = 3$, giving $150 + 18 = 168$, not $150 + 126$.",
+      "输入必须用模型的单位：若 $x$ 以周计，$21$ 天后应代入 $x = 3$，得 $150 + 18 = 168$，而不是 $150 + 126$。",
+    ),
+    hardWatch: t(
+      "The solved time may not be a whole number: $150 + 6x = 200$ gives $x = \\frac{25}{3}$, so a whole-week question needs $9$ weeks, the first week at or above $200$.",
+      "解出的时间不一定是整数：$150 + 6x = 200$ 得 $x = \\frac{25}{3}$，若问整周数，需要 $9$ 周，即首次达到或超过 $200$ 的那一周。",
+    ),
     tip: t(
       "Substitute the number of time units into the function, multiply by the rate, and add the start. For a bank balance $f(x) = 150 + 6x$ after $x$ weeks, the balance after $9$ weeks is $150 + 54 = 204$. Using only the rate times time, without the start, gives the amount gained.",
       "把时间单位数代入函数，乘变化率，再加初始值。对 $x$ 周后的存款 $f(x) = 150 + 6x$，$9$ 周后的余额是 $150 + 54 = 204$。只算变化率乘时间而不加初始值，得到的只是增加量。",
@@ -1035,6 +1431,18 @@ export const satExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "sat-exam-constructing-models-using-linear-functions": {
+    intro: t(
+      "A sapling is $80$ centimeters tall when planted and grows $6$ centimeters a month. A forester wants one formula that gives its height at any month.\n\nCheck: $f(x) = 80 + 6x$ gives $f(0) = 80$ at planting and $f(1) = 86$ a month later.\n\nIn this lesson we build a linear model from a start and a rate, or from two measurements.",
+      "一棵树苗种下时高 $80$ 厘米，每月长 $6$ 厘米。林务员想要一个公式，给出任何一个月的高度。\n\n检验：$f(x) = 80 + 6x$ 在种下时给出 $f(0) = 80$，一个月后 $f(1) = 86$。\n\n本课我们由初始值和变化率，或由两次测量，构造一次模型。",
+    ),
+    watch: t(
+      "A rate given per several units must be scaled down: growing $18$ centimeters every $3$ months is $6$ per month, so $f(x) = 80 + 6x$, not $80 + 18x$.",
+      "按几个单位给出的变化率要先化成每单位：每 $3$ 个月长 $18$ 厘米，就是每月 $6$ 厘米，所以 $f(x) = 80 + 6x$，而不是 $80 + 18x$。",
+    ),
+    hardWatch: t(
+      "The two measurements may come in the other order: $116$ at $x = 6$ and $104$ at $x = 4$ still give the rate $\\frac{116 - 104}{6 - 4} = 6$, as long as both differences keep the same order.",
+      "两次测量也可能倒序给出：$x = 6$ 时 $116$，$x = 4$ 时 $104$，只要两个差的顺序一致，变化率仍是 $\\frac{116 - 104}{6 - 4} = 6$。",
+    ),
     tip: t(
       "A start plus a constant change per unit has the form $f(x) = \\text{start} + \\text{rate} \\cdot x$. A tree $80$ centimeters tall that grows $6$ per month gives $f(x) = 80 + 6x$. Options that multiply start and rate together, or attach $x$ to the start, misread the description.",
       "初始值加每单位固定变化量，形式就是 $f(x) = \\text{start} + \\text{rate} \\cdot x$（初始值加上变化率乘以 $x$）。一棵 $80$ 厘米高、每月长 $6$ 厘米的树，就是 $f(x) = 80 + 6x$。把初始值和变化率相乘，或把 $x$ 放在初始值上的选项，都误读了描述。",
@@ -1045,6 +1453,18 @@ export const satExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "sat-exam-further-constructing-models-using-linear-functions": {
+    intro: t(
+      "A pump has already moved $50$ liters and moves $3$ liters every minute, but the schedule is written in hours. Before writing the model, the rate has to be put in the same unit as the time.\n\nCheck: $3 \\times 60 = 180$ liters per hour, so $P(h) = 50 + 180h$, and $P(1) = 230$ is $50$ plus $60$ minutes at $3$ liters.\n\nIn this lesson we build and use linear models whose rate and time come in different units.",
+      "一台水泵已经抽了 $50$ 升水，每分钟抽 $3$ 升，但日程表是按小时写的。写模型之前，要先把变化率换成与时间相同的单位。\n\n检验：$3 \\times 60 = 180$ 升每小时，所以 $P(h) = 50 + 180h$，$P(1) = 230$ 正是 $50$ 加上 $60$ 分钟、每分钟 $3$ 升。\n\n本课我们构造并使用变化率与时间单位不同的一次模型。",
+    ),
+    watch: t(
+      "Conversions can go the other way: a rate of $90$ liters per hour with time $t$ in minutes is $\\frac{90}{60} = 1.5$ liters per minute, so the model is $50 + 1.5t$.",
+      "换算也可能反过来：每小时 $90$ 升、时间 $t$ 以分钟计时，每分钟是 $\\frac{90}{60} = 1.5$ 升，模型为 $50 + 1.5t$。",
+    ),
+    hardWatch: t(
+      "Mixed times can also be written as a fraction of an hour: $20$ minutes and $1$ hour is $\\frac{4}{3}$ hours, and $180 \\times \\frac{4}{3} = 240$ liters, the same as $3 \\times 80$.",
+      "混合的时间也可以写成小时的分数：$20$ 分钟加 $1$ 小时是 $\\frac{4}{3}$ 小时，$180 \\times \\frac{4}{3} = 240$ 升，与 $3 \\times 80$ 相同。",
+    ),
     tip: t(
       "When the rate's unit differs from the variable's, convert first. A pump moving $3$ liters per minute, with time $h$ in hours, moves $180$ liters per hour. With $50$ liters already moved, $P(h) = 50 + 180h$. Options keeping $3h$ mix units, so they are too small by a factor of $60$.",
       "变化率的单位与变量的单位不同时，要先换算。水泵每分钟抽 $3$ 升，时间 $h$ 以小时计，则每小时抽 $180$ 升。已抽 $50$ 升时，$P(h) = 50 + 180h$。保留 $3h$ 的选项混用了单位，小了 $60$ 倍。",
@@ -1055,6 +1475,18 @@ export const satExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "sat-exam-interpreting-coefficients-of-linear-functions-in-context": {
+    intro: t(
+      "A jar of coins is modeled by $f(x) = 8x + 25$ after $x$ days. Each number in the formula has a job in the story, and a question about the jar is often a question about one of them.\n\nCheck: $f(0) = 25$ coins at the start, and $f(1) - f(0) = 33 - 25 = 8$ coins added in a day.\n\nIn this lesson we interpret the coefficients of a linear function and differences of its values in context.",
+      "一罐硬币在 $x$ 天后的数量用 $f(x) = 8x + 25$ 表示。公式里的每个数在情境中都有自己的作用，关于罐子的问题往往就是关于其中某个数的问题。\n\n检验：开始时 $f(0) = 25$ 枚，一天内增加 $f(1) - f(0) = 33 - 25 = 8$ 枚。\n\n本课我们在情境中解释一次函数的系数及其函数值之差。",
+    ),
+    watch: t(
+      "If the input is measured in larger units, the coefficient is per that unit: in $f(w) = 56w + 25$ with $w$ in weeks, $56$ is the coins added per week, which is $8$ per day.",
+      "输入用较大的单位时，系数也是按那个单位：在 $f(w) = 56w + 25$ 中，$w$ 以周计，$56$ 是每周增加的硬币数，即每天 $8$ 枚。",
+    ),
+    hardWatch: t(
+      "A gap of more than one unit scales the difference: $f(9) - f(6)$ is the change during $3$ days, which is $3 \\times 8 = 24$, not the slope $8$.",
+      "输入相差不止一个单位时，差也随之放大：$f(9) - f(6)$ 是 $3$ 天内的变化量，即 $3 \\times 8 = 24$，而不是斜率 $8$。",
+    ),
     tip: t(
       "The coefficient of $x$ is the change in output for each extra unit of input, carrying the units of output per input. In $f(x) = 8x + 25$ for a pile of coins after $x$ days, the $8$ is how many coins are added each day. It is not the initial pile, which is the constant.",
       "$x$ 的系数是输入每增加一个单位时输出的变化，单位是“输出每输入”。在 $x$ 天后硬币堆的模型 $f(x) = 8x + 25$ 中，$8$ 是每天增加的硬币数。它不是最初的数量，那是常数项。",
@@ -1065,6 +1497,18 @@ export const satExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "sat-exam-interpreting-graphs-of-linear-functions": {
+    intro: t(
+      "A graph shows a tank's fuel against days, and the line crosses the vertical axis at $(0, 60)$. That single point already tells part of the tank's story before any change is measured.\n\nCheck: the point has $x = 0$, day zero, so the tank starts with $60$ units; a point such as $(2, 52)$ then shows a loss of $4$ a day.\n\nIn this lesson we interpret the intercept of a linear graph in context and find it from two points.",
+      "一张图表示油箱燃料随天数的变化，直线与竖轴交于 $(0, 60)$。还没测量任何变化，这一个点就已经讲出了油箱的一部分情况。\n\n检验：这个点的 $x = 0$，即第零天，所以油箱一开始有 $60$ 个单位；再看 $(2, 52)$ 这样的点，就知道每天减少 $4$。\n\n本课我们在情境中解释一次函数图象的截距，并由两点求出它。",
+    ),
+    watch: t(
+      "The horizontal intercept has a meaning too: a line through $(0, 60)$ and $(15, 0)$ says the tank runs empty after $15$ days.",
+      "横轴截距也有含义：过 $(0, 60)$ 和 $(15, 0)$ 的直线表示油箱在 $15$ 天后用完。",
+    ),
+    hardWatch: t(
+      "If the horizontal axis starts at a year such as $2010$ rather than at zero, the point where the line meets the drawn vertical axis is not the value at $x = 0$, so check the labels first.",
+      "如果坐标轴从某个年份而不是零开始，直线与画出的纵轴的交点就不是 $x = 0$ 时的值：取交点之前先看坐标轴的标注。",
+    ),
     tip: t(
       "The point where a line crosses the vertical axis has $x = 0$, so in context it is the value at the very start of the process. For a line of a tank's fuel against days, with crossing $(0, 60)$, there are $60$ units of fuel at day zero. It is not a rate of change.",
       "直线与竖轴的交点满足 $x = 0$，所以在情境中它表示过程刚开始时的值。对油箱燃料随天数变化的直线，若交点是 $(0, 60)$，则第零天有 $60$ 个单位的燃料。它不是变化率。",
@@ -1075,6 +1519,18 @@ export const satExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "sat-exam-modeling-using-slope-intercept-form": {
+    intro: t(
+      "A pencil is $190$ millimeters long and is sharpened down by $5$ millimeters each week. Its length shrinks steadily, so a line with a negative slope describes it.\n\nCheck: $y = 190 - 5x$ gives $190$ at $x = 0$ and $185$ a week later, $5$ shorter.\n\nIn this lesson we write a slope-intercept model for a quantity that shrinks, and solve it for the time to reach a length.",
+      "一支铅笔长 $190$ 毫米，每周削短 $5$ 毫米。它的长度稳定地减少，所以用斜率为负的直线来描述。\n\n检验：$y = 190 - 5x$ 在 $x = 0$ 时为 $190$，一周后为 $185$，短了 $5$。\n\n本课我们为减少的量写出斜截式模型，并解出达到某个长度所需的时间。",
+    ),
+    watch: t(
+      "A model holds only while it makes sense: $y = 190 - 5x$ gives $-10$ at $x = 40$, but a pencil cannot have negative length, so the model stops at $x = 38$.",
+      "模型只在有意义时成立：$y = 190 - 5x$ 在 $x = 40$ 时得 $-10$，但铅笔长度不可能为负，所以模型到 $x = 38$ 为止。",
+    ),
+    hardWatch: t(
+      "The time to reach a length need not be whole: $190 - 5x = 42$ gives $x = 29.6$ weeks, which is not one of the whole weeks.",
+      "达到某个长度的时间不一定是整数：$190 - 5x = 42$ 得 $x = 29.6$ 周，不是整周数。",
+    ),
     tip: t(
       "Identify the start and the change per unit, then decide the sign: a quantity that shrinks has a negative slope. A pencil $190$ millimeters long losing $5$ per week gives $y = 190 - 5x$. The start is the constant, and $x$ goes with the rate. A plus sign would have the pencil grow.",
       "找出起始量和每单位的变化，再确定符号：减少的量斜率为负。一支 $190$ 毫米长的铅笔每周减少 $5$ 毫米，就是 $y = 190 - 5x$。起始量是常数，$x$ 配变化率。若写成加号，铅笔反而变长了。",
@@ -1085,6 +1541,18 @@ export const satExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "sat-exam-solving-simple-systems-of-linear-equations": {
+    intro: t(
+      "A snack stand sells cups of juice and bags of popcorn, and each bag of popcorn costs $4$ dollars more than a cup of juice, $y = x + 4$. A second fact about one purchase, $2x + y = 10$, then fixes both prices.\n\nCheck: $x = 2$ and $y = 6$ satisfy $6 = 2 + 4$ and $2 \\times 2 + 6 = 10$.\n\nIn this lesson we solve a system by substitution when one equation already gives a variable.",
+      "小吃摊卖果汁和爆米花，每袋爆米花比一杯果汁贵 $4$ 元，即 $y = x + 4$。再加上一次购买的信息 $2x + y = 10$，两种价格就都确定了。\n\n检验：$x = 2$、$y = 6$ 满足 $6 = 2 + 4$ 和 $2 \\times 2 + 6 = 10$。\n\n本课我们在一个方程已给出某个变量时，用代入法解方程组。",
+    ),
+    watch: t(
+      "Keep the parentheses when the expression has a minus sign: putting $y = 3 - x$ into $5x - y = 9$ gives $5x - (3 - x) = 9$, so $6x = 12$; dropping them gives $4x = 12$.",
+      "代入含减号的式子时要保留括号：把 $y = 3 - x$ 代入 $5x - y = 9$ 得 $5x - (3 - x) = 9$，所以 $6x = 12$；去掉括号会得到 $4x = 12$。",
+    ),
+    hardWatch: t(
+      "The combination may need no solving: for $y = x + 4$ and $2x + y = 10$, the difference $y - x = 4$ comes straight from the first equation.",
+      "所求的组合可能根本不用解：对 $y = x + 4$ 和 $2x + y = 10$，差 $y - x = 4$ 直接由第一个方程得出。",
+    ),
     tip: t(
       "If one equation already gives $y$, substitute that expression for $y$ in the other, in parentheses, and solve for $x$. Then return for $y$. For $y = x + 4$ and $2x + y = 10$: $3x + 4 = 10$, so $x = 2$ and $y = 6$. A solution is the ordered pair, so check the order.",
       "一个方程已经给出 $y$ 时，把这个表达式加括号代入另一个方程，解出 $x$，再回头求 $y$。对 $y = x + 4$ 和 $2x + y = 10$：$3x + 4 = 10$，所以 $x = 2$，$y = 6$。解是有序数对，注意顺序。",
@@ -1095,6 +1563,18 @@ export const satExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "sat-exam-identifying-structure-in-systems-of-linear-equations": {
+    intro: t(
+      "At a bakery, $2$ muffins and $3$ rolls cost $7$ dollars, and $3$ muffins and $2$ rolls cost $8$. Someone wants only the price of one muffin and one roll together, and the pattern of the numbers gives it without either price.\n\nCheck: adding the two orders gives $5$ muffins and $5$ rolls for $15$ dollars, so one of each costs $3$.\n\nIn this lesson we use the structure of a system to find a combination such as $x + y$ or $x - y$ directly.",
+      "面包店里 $2$ 个松饼和 $3$ 个面包卷共 $7$ 元，$3$ 个松饼和 $2$ 个面包卷共 $8$ 元。有人只想知道一个松饼加一个面包卷的价钱，数的规律不用求出单价就能给出答案。\n\n检验：两笔订单相加得 $5$ 个松饼和 $5$ 个面包卷共 $15$ 元，所以各一个共 $3$ 元。\n\n本课我们利用方程组的结构，直接求出 $x + y$ 或 $x - y$ 这样的组合。",
+    ),
+    watch: t(
+      "Adding helps only when the sums of the coefficients match: $2x + 3y = 7$ and $4x + 2y = 10$ add to $6x + 5y = 17$, which is not a multiple of $x + y$, so solve fully instead.",
+      "只有系数之和相同时相加才有用：$2x + 3y = 7$ 与 $4x + 2y = 10$ 相加得 $6x + 5y = 17$，不是 $x + y$ 的倍数，只能完整求解。",
+    ),
+    hardWatch: t(
+      "If the question asks for $2x - 2y$ rather than $x - y$, double the result: from $x - y = 1$ the answer is $2$, not $1$.",
+      "若问的是 $2x - 2y$ 而不是 $x - y$，结果要加倍：由 $x - y = 1$ 得答案 $2$，而不是 $1$。",
+    ),
     tip: t(
       "If the coefficients swap between equations, adding them makes $x$ and $y$ share a coefficient. Then divide to reach $x + y$. For $2x + 3y = 7$ and $3x + 2y = 8$: $5x + 5y = 15$, so $x + y = 3$. You never need the individual values.",
       "如果两个方程的系数对调，相加后 $x$ 和 $y$ 的系数就相同，再相除就得到 $x + y$。对 $2x + 3y = 7$ 和 $3x + 2y = 8$：$5x + 5y = 15$，所以 $x + y = 3$。完全不必求出每个变量的值。",
@@ -1105,6 +1585,18 @@ export const satExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "sat-exam-solving-systems-of-equations-using-addition-or-subtraction": {
+    intro: t(
+      "A puzzle card gives two clues about two numbers: twice the first plus five times the second is $18$, and three times the first minus five times the second is $2$. Because $5y$ appears with opposite signs, adding the clues removes it.\n\nCheck: $x = 4$ and $y = 2$ give $2 \\times 4 + 5 \\times 2 = 18$ and $3 \\times 4 - 5 \\times 2 = 2$.\n\nIn this lesson we add or subtract two equations to cancel a variable.",
+      "一张谜题卡给出关于两个数的两条线索：第一个数的两倍加第二个数的五倍是 $18$，第一个数的三倍减第二个数的五倍是 $2$。因为 $5y$ 的符号相反，两条线索相加就能把它消去。\n\n检验：$x = 4$、$y = 2$ 使 $2 \\times 4 + 5 \\times 2 = 18$，$3 \\times 4 - 5 \\times 2 = 2$。\n\n本课我们通过两个方程相加或相减来消去一个变量。",
+    ),
+    watch: t(
+      "Subtracting changes the sign of every term of the second equation, its right side included: $(4x + 2y) - (3x + 2y) = 10 - (-5)$ gives $x = 15$, not $5$.",
+      "相减会改变第二个方程每一项的符号，右边也不例外：$(4x + 2y) - (3x + 2y) = 10 - (-5)$ 得 $x = 15$，而不是 $5$。",
+    ),
+    hardWatch: t(
+      "If the matching coefficients sit on $x$, subtracting removes $x$ instead: $3x + 4y = 10$ minus $3x + y = 4$ gives $3y = 6$, so $y = 2$ directly.",
+      "如果相同的系数在 $x$ 上，相减消去的就是 $x$：$3x + 4y = 10$ 减去 $3x + y = 4$ 得 $3y = 6$，直接得 $y = 2$。",
+    ),
     tip: t(
       "If one variable has opposite coefficients in the two equations, adding them cancels it. Then solve the single equation that remains. For $2x + 5y = 1$ and $3x - 5y = 19$: $5x = 20$, so $x = 4$. Check the signs first, since opposites are added, not subtracted.",
       "如果某个变量在两个方程中系数相反，相加就能消去它，再解剩下的方程。对 $2x + 5y = 1$ 和 $3x - 5y = 19$：$5x = 20$，所以 $x = 4$。先看符号，相反的系数要相加，而不是相减。",
@@ -1115,6 +1607,18 @@ export const satExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "sat-exam-solving-systems-of-equations-using-elimination": {
+    intro: t(
+      "A shop sells $3$ notebooks and $4$ pens for $11$ dollars, and $1$ notebook and $1$ pen for $3$ dollars. No coefficients match yet, but four copies of the second purchase line up the pens.\n\nCheck: $x = 1$ and $y = 2$ give $3 + 8 = 11$ and $1 + 2 = 3$.\n\nIn this lesson we multiply one or both equations so that a variable cancels.",
+      "商店里 $3$ 本笔记本和 $4$ 支笔共 $11$ 元，$1$ 本笔记本和 $1$ 支笔共 $3$ 元。现在系数还不相同，但把第二笔购买乘 $4$ 就能让笔的系数对齐。\n\n检验：$x = 1$、$y = 2$ 使 $3 + 8 = 11$，$1 + 2 = 3$。\n\n本课我们把一个或两个方程乘上适当的数，使一个变量消去。",
+    ),
+    watch: t(
+      "When the matched coefficients have opposite signs, add instead of subtracting: $2x + 3y = 12$ and $5x - 3y = 9$ add to $7x = 21$, so $x = 3$.",
+      "对齐后的系数符号相反时，要相加而不是相减：$2x + 3y = 12$ 与 $5x - 3y = 9$ 相加得 $7x = 21$，所以 $x = 3$。",
+    ),
+    hardWatch: t(
+      "Choose the variable with the smaller common multiple: for $6x + 5y = 17$ and $4x + 3y = 11$, matching $x$ needs $12$ and matching $y$ needs $15$; both work, but $12$ keeps the numbers smaller.",
+      "选公倍数较小的变量来消：对 $6x + 5y = 17$ 和 $4x + 3y = 11$，对齐 $x$ 需要 $12$，对齐 $y$ 需要 $15$；两种都可以，但 $12$ 让数更小。",
+    ),
     tip: t(
       "When coefficients do not line up, multiply one equation so a variable's coefficients match, then subtract. For $3x + 4y = 11$ and $x + y = 3$, multiply the second by $4$: $4x + 4y = 12$. Subtracting gives $x = 1$. Multiply every term, including the right side, or the answer will be off.",
       "系数对不上时，把一个方程乘一个数，使某个变量的系数相同，再相减。对 $3x + 4y = 11$ 和 $x + y = 3$，把第二个方程乘 $4$：$4x + 4y = 12$。相减得 $x = 1$。每一项都要乘，包括右边，否则答案就错了。",
@@ -1125,6 +1629,18 @@ export const satExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "sat-exam-modeling-word-problems-with-systems-of-linear-equations": {
+    intro: t(
+      "A theater club sells $30$ seats, some at $8$ dollars and the rest at $3$, and takes in $160$ dollars. Two facts, the count and the money, become two equations.\n\nCheck: $14$ seats at $8$ and $16$ at $3$ make $30$ seats and $112 + 48 = 160$ dollars.\n\nIn this lesson we turn a story into a system of two linear equations and solve it.",
+      "戏剧社卖出 $30$ 个座位，一部分每个 $8$ 元，其余每个 $3$ 元，共收入 $160$ 元。数量和钱数这两条信息就成了两个方程。\n\n检验：$14$ 个 $8$ 元座位和 $16$ 个 $3$ 元座位共 $30$ 个，钱数是 $112 + 48 = 160$ 元。\n\n本课我们把情境写成二元一次方程组并求解。",
+    ),
+    watch: t(
+      "The second total may count something other than money: if a table seats $4$ and a bench seats $2$, and $10$ pieces seat $32$ people, then $t + b = 10$ counts pieces and $4t + 2b = 32$ counts people.",
+      "第二个总量不一定是钱：若一张桌子坐 $4$ 人、一条长凳坐 $2$ 人，$10$ 件家具共坐 $32$ 人，则 $t + b = 10$ 数的是家具，$4t + 2b = 32$ 数的是人。",
+    ),
+    hardWatch: t(
+      "Answer for the item the question names: above, $x = 14$ counts the $8$-dollar seats, so a question about the $3$-dollar seats needs $30 - 14 = 16$.",
+      "要回答题目所问的那种物品：上例中 $x = 14$ 是 $8$ 元座位的个数，若问 $3$ 元座位，答案是 $30 - 14 = 16$。",
+    ),
     tip: t(
       "A story with counts and money gives two equations: one that adds the counts, $x + y = n$, and one that adds price times count. For $30$ seats, at $8$ and $3$ dollars, raising $160$ dollars: $x + y = 30$ and $8x + 3y = 160$. Mixing prices into the count equation is the usual error.",
       "有数量也有金额的情境给出两个方程：一个把数量相加，$x + y = n$；一个把单价乘数量相加。$30$ 个座位，票价 $8$ 和 $3$ 美元，收入 $160$ 美元：$x + y = 30$，$8x + 3y = 160$。把单价写进数量方程是常见错误。",
@@ -1135,6 +1651,18 @@ export const satExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "sat-exam-solving-problems-with-systems-of-linear-equations": {
+    intro: t(
+      "At a fair, $4$ adult passes and $3$ child passes cost $25$ dollars, and $3$ adult passes and $2$ child passes cost $18$. Comparing the two purchases reveals each price.\n\nCheck: $a = 4$ and $b = 3$ give $16 + 9 = 25$ and $12 + 6 = 18$.\n\nIn this lesson we find prices and totals from two purchases.",
+      "游园会上 $4$ 张成人票和 $3$ 张儿童票共 $25$ 元，$3$ 张成人票和 $2$ 张儿童票共 $18$ 元。比较这两笔购买就能得出每种票价。\n\n检验：$a = 4$、$b = 3$ 使 $16 + 9 = 25$，$12 + 6 = 18$。\n\n本课我们由两笔购买求出单价和总价。",
+    ),
+    watch: t(
+      "Subtracting gives one price only when the purchases differ by a single item: $4a + 3b = 25$ minus $3a + 2b = 18$ gives $a + b = 7$, the cost of one of each, not $a$.",
+      "只有两笔购买只差一件物品时，相减才得到单价：$4a + 3b = 25$ 减去 $3a + 2b = 18$ 得 $a + b = 7$，这是各买一件的价钱，不是 $a$。",
+    ),
+    hardWatch: t(
+      "Read the combination asked for: two of the first and one of the second is $2a + b$, which is $11$ when $a = 4$ and $b = 3$.",
+      "看清所问的组合：两件第一种加一件第二种是 $2a + b$，当 $a = 4$、$b = 3$ 时为 $11$。",
+    ),
     tip: t(
       "Compare the two purchases. If one has exactly one more of an item and otherwise matches, the price of that item is the difference in totals. If not, multiply the equations to match one item, then subtract. For $4a + 3b = 25$ and $3a + 2b = 18$, doubling and tripling gives $a = 4$.",
       "比较两次购买。如果其中一次恰好多买了一件某物品，其余相同，那么差价就是这件物品的价格。否则就把方程放大，使某种物品的数量相同，再相减。对 $4a + 3b = 25$ 和 $3a + 2b = 18$，分别乘 $2$ 和 $3$ 后得 $a = 4$。",
@@ -1145,6 +1673,18 @@ export const satExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "sat-exam-solving-problems-with-systems-of-linear-equations-in-standard-form": {
+    intro: t(
+      "A coach buys $3$ balls and $2$ cones for $12$ dollars, and $7$ balls and $4$ cones for $26$. The cone counts, $2$ and $4$, are a simple multiple of each other.\n\nCheck: $x = 2$ and $y = 3$ give $6 + 6 = 12$ and $14 + 12 = 26$.\n\nIn this lesson we solve systems in standard form by scaling one equation, and evaluate new expressions from the solution.",
+      "教练买 $3$ 个球和 $2$ 个锥桶花 $12$ 元，买 $7$ 个球和 $4$ 个锥桶花 $26$ 元。锥桶的个数 $2$ 和 $4$ 恰好成倍数关系。\n\n检验：$x = 2$、$y = 3$ 使 $6 + 6 = 12$，$14 + 12 = 26$。\n\n本课我们把一个方程乘上适当的数来解一般式方程组，并用解求新的式子的值。",
+    ),
+    watch: t(
+      "Scale the right side too: doubling $3x + 2y = 12$ gives $6x + 4y = 24$; writing $6x + 4y = 12$ and subtracting it from $7x + 4y = 26$ would give $x = 14$.",
+      "右边也要乘：把 $3x + 2y = 12$ 乘 $2$ 得 $6x + 4y = 24$；若写成 $6x + 4y = 12$ 再从 $7x + 4y = 26$ 中减去，会得到 $x = 14$。",
+    ),
+    hardWatch: t(
+      "Sometimes the new expression is a sum of the equations: $10x + 6y$ is $(3x + 2y) + (7x + 4y) = 12 + 26 = 38$, which agrees with $x = 2$ and $y = 3$.",
+      "有时新的式子恰是两个方程之和：$10x + 6y = (3x + 2y) + (7x + 4y) = 12 + 26 = 38$，与 $x = 2$、$y = 3$ 一致。",
+    ),
     tip: t(
       "Look for a coefficient that is a simple multiple of its partner: multiply that equation so they match, then subtract. For $3x + 2y = 12$ and $7x + 4y = 26$, double the first and subtract: $x = 2$. Only one equation needs to be multiplied here, and all of its terms must be scaled.",
       "找一个恰好是另一方程对应系数简单倍数的系数：把方程相应放大，使它们相同，再相减。对 $3x + 2y = 12$ 和 $7x + 4y = 26$，把第一个乘 $2$ 再相减：$x = 2$。这里只需放大一个方程，但它的每一项都要乘。",
@@ -1155,6 +1695,18 @@ export const satExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "sat-exam-the-intersection-of-two-lines": {
+    intro: t(
+      "Two hiking paths are drawn on a map grid as $y = 2x + 1$ and $y = -x + 7$. Where they cross is the one point that lies on both lines.\n\nCheck: $(2, 5)$ gives $2 \\times 2 + 1 = 5$ and $-2 + 7 = 5$.\n\nIn this lesson we find the point where two lines meet.",
+      "地图网格上两条步道画成 $y = 2x + 1$ 和 $y = -x + 7$。它们的交点就是同时在两条直线上的那一点。\n\n检验：$(2, 5)$ 使 $2 \\times 2 + 1 = 5$，$-2 + 7 = 5$。\n\n本课我们求两条直线的交点。",
+    ),
+    watch: t(
+      "A vertical line has no $y = mx + b$ form: $x = 3$ meets $y = 2x - 1$ at $(3, 5)$, found by putting $x = 3$ into the other line.",
+      "竖直的直线不能写成 $y = mx + b$：$x = 3$ 与 $y = 2x - 1$ 交于 $(3, 5)$，只需把 $x = 3$ 代入另一条直线。",
+    ),
+    hardWatch: t(
+      "Evaluate exactly the combination asked: for the point $(2, 5)$, the product $ab$ is $10$, while the sum $a + b$ is $7$.",
+      "所问的组合要算对：对点 $(2, 5)$，积 $ab$ 是 $10$，而和 $a + b$ 是 $7$。",
+    ),
     tip: t(
       "Two lines meet where they share both coordinates. Set the right sides equal, solve for $x$, then substitute into either line for $y$. For $y = 2x + 1$ and $y = -x + 7$: $3x = 6$, so the point is $(2, 5)$. Check the other line, since a pair fitting only one line is a typical wrong option.",
       "两条直线的交点同时满足两个方程。令右边相等，解出 $x$，再代入任一直线求 $y$。对 $y = 2x + 1$ 和 $y = -x + 7$：$3x = 6$，交点是 $(2, 5)$。再用另一条直线检验，只满足一条直线的点是典型的错误选项。",
@@ -1165,6 +1717,18 @@ export const satExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "sat-exam-the-relationship-between-systems-of-linear-equations-and-graphs": {
+    intro: t(
+      "Two runners' distances are graphed as $y = 3x + 1$ and $y = 3x + 4$: the same speed with different head starts, so the graphs never meet.\n\nCheck: at every $x$ the second is $3$ more than the first, since $(3x + 4) - (3x + 1) = 3$.\n\nIn this lesson we tell from slopes and intercepts how two lines relate, and read the solution of a graphed system.",
+      "两名跑步者的路程画成 $y = 3x + 1$ 和 $y = 3x + 4$：速度相同而起点不同，所以图像永不相交。\n\n检验：对每个 $x$，第二个都比第一个多 $3$，因为 $(3x + 4) - (3x + 1) = 3$。\n\n本课我们由斜率和截距判断两条直线的关系，并读出图像所示方程组的解。",
+    ),
+    watch: t(
+      "Write both lines as $y = mx + b$ before comparing slopes: $2x + y = 5$ has slope $-2$, not $2$, so it crosses $y = 2x + 1$ exactly once.",
+      "比较斜率前先把两条直线都写成 $y = mx + b$：$2x + y = 5$ 的斜率是 $-2$，不是 $2$，所以它与 $y = 2x + 1$ 恰好相交一次。",
+    ),
+    hardWatch: t(
+      "A vertical line fixes $x$ the way a horizontal one fixes $y$: $x = 4$ and $y = 3x - 7$ cross where $y = 5$, at $(4, 5)$.",
+      "竖直直线固定 $x$，就像水平直线固定 $y$：$x = 4$ 与 $y = 3x - 7$ 在 $y = 5$ 处相交，交点是 $(4, 5)$。",
+    ),
     tip: t(
       "Compare slopes and intercepts to know how two lines relate. Different slopes mean they cross once; the same slope with different intercepts means parallel with no meeting point; both the same means one line. So $y = 3x - 1$ and $y = 3x + 4$ are parallel. The sign and size of intercepts matter only here.",
       "比较斜率和截距，就能判断两条直线的关系。斜率不同，交于一点；斜率相同而截距不同，平行且不相交；两者都相同，则是同一条直线。所以 $y = 3x - 1$ 和 $y = 3x + 4$ 平行。截距只在斜率相同时才起作用。",
@@ -1175,6 +1739,18 @@ export const satExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "sat-exam-determining-the-number-of-solutions-to-a-linear-equation": {
+    intro: t(
+      "Two phone plans cost $2(x + 3)$ and $5x + 1$ dollars for $x$ gigabytes. Before solving, the coefficients already tell whether the plans ever cost the same.\n\nCheck: $2x + 6 = 5x + 1$ gives $3x = 5$, so $x = \\frac{5}{3}$, a single value.\n\nIn this lesson we decide whether a linear equation has one solution, none or infinitely many.",
+      "两种手机套餐使用 $x$ GB 时分别花费 $2(x + 3)$ 元和 $5x + 1$ 元。不用解，系数就能说明两种套餐是否会花费相同。\n\n检验：$2x + 6 = 5x + 1$ 得 $3x = 5$，所以 $x = \\frac{5}{3}$，只有一个值。\n\n本课我们判断一元一次方程有一个解、无解还是有无穷多个解。",
+    ),
+    watch: t(
+      "Distribute before judging: $\\frac{1}{2}(4x + 6) = 2x + 3$ looks unequal, but the left side is $2x + 3$, so every $x$ is a solution.",
+      "先展开再判断：$\\frac{1}{2}(4x + 6) = 2x + 3$ 看起来两边不同，但左边就是 $2x + 3$，所以每个 $x$ 都是解。",
+    ),
+    hardWatch: t(
+      "A negative factor flips every sign inside: $-2(x - 3) + 5x = 3x + 6$ becomes $3x + 6 = 3x + 6$, so every $x$ works.",
+      "负的因数会改变括号内每一项的符号：$-2(x - 3) + 5x = 3x + 6$ 化为 $3x + 6 = 3x + 6$，所以每个 $x$ 都成立。",
+    ),
     tip: t(
       "Simplify each side to the form $ax + b$ and compare. Different $x$ coefficients: exactly one solution. Same coefficients and different constants: none. Everything the same: infinitely many. For $2(x + 3) = 5x + 1$, the coefficients $2$ and $5$ differ, so one solution exists. No solving is needed.",
       "把两边都化简成 $ax + b$ 的形式再比较。$x$ 的系数不同：恰有一个解。系数相同而常数不同：无解。全都相同：无穷多解。对 $2(x + 3) = 5x + 1$，系数 $2$ 和 $5$ 不同，所以有一个解。不必真的求解。",
@@ -1185,6 +1761,18 @@ export const satExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "sat-exam-linear-equations-with-infinitely-many-solutions": {
+    intro: t(
+      "Two expressions for the same perimeter, $4(x + 2)$ and $4x + c$, must agree for every side length $x$. That requirement forces the value of $c$.\n\nCheck: with $c = 8$, $4(x + 2) = 4x + 8$ for every $x$; at $x = 1$ both sides give $12$.\n\nIn this lesson we find the unknowns that make a linear equation true for every $x$.",
+      "同一个周长的两个表达式 $4(x + 2)$ 和 $4x + c$ 必须对每个边长 $x$ 都相等，这就决定了 $c$ 的值。\n\n检验：当 $c = 8$ 时，对每个 $x$ 都有 $4(x + 2) = 4x + 8$；$x = 1$ 时两边都是 $12$。\n\n本课我们求出使一元一次方程对每个 $x$ 都成立的未知数。",
+    ),
+    watch: t(
+      "A negative factor changes the sign of the constant: $-3(x - 2) = -3x + c$ needs $c = 6$, not $-6$.",
+      "负的因数会改变常数的符号：$-3(x - 2) = -3x + c$ 需要 $c = 6$，而不是 $-6$。",
+    ),
+    hardWatch: t(
+      "When the unknown sits inside the parentheses, divide at the end: $3(x + k) = 3x + 12$ needs $3k = 12$, so $k = 4$.",
+      "未知数在括号里时，最后要除：$3(x + k) = 3x + 12$ 需要 $3k = 12$，所以 $k = 4$。",
+    ),
     tip: t(
       "Infinitely many solutions means the two sides are the same expression. Distribute the left side and match its constant to the unknown. For $4(x + 2) = 4x + c$, the left side is $4x + 8$, so $c = 8$. Using the number inside the parentheses, without multiplying, is the distractor.",
       "无穷多解表示两边是同一个表达式。把左边展开，让它的常数与未知数对应。对 $4(x + 2) = 4x + c$，左边是 $4x + 8$，所以 $c = 8$。直接用括号里的数而不乘系数，就是干扰项。",
@@ -1195,6 +1783,18 @@ export const satExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "sat-exam-linear-equations-with-no-solutions": {
+    intro: t(
+      "Two water tanks hold $2(x + 3)$ and $cx + 9$ liters after $x$ minutes. For them never to hold the same amount, they must fill at the same rate from different starts.\n\nCheck: with $c = 2$, $2x + 6 = 2x + 9$ reduces to $6 = 9$, which is false for every $x$.\n\nIn this lesson we find the value that makes a linear equation have no solution.",
+      "两个水箱在 $x$ 分钟后分别有 $2(x + 3)$ 升和 $cx + 9$ 升水。要让它们的水量永远不相等，就必须注水速度相同而起始量不同。\n\n检验：当 $c = 2$ 时，$2x + 6 = 2x + 9$ 化为 $6 = 9$，对每个 $x$ 都不成立。\n\n本课我们求出使一元一次方程无解的值。",
+    ),
+    watch: t(
+      "Matching coefficients are not enough if the constants match too: $3(x + 2) = 3x + 6$ is true for every $x$, so it has infinitely many solutions, not none.",
+      "只让系数相同还不够，常数也相同就不行：$3(x + 2) = 3x + 6$ 对每个 $x$ 都成立，有无穷多个解，而不是无解。",
+    ),
+    hardWatch: t(
+      "The unknown may appear twice: $ax + 4 = 6x + a$ has no solution for $a = 6$, since it becomes $6x + 4 = 6x + 6$.",
+      "未知数可能出现两次：$ax + 4 = 6x + a$ 在 $a = 6$ 时无解，因为它化为 $6x + 4 = 6x + 6$。",
+    ),
     tip: t(
       "A linear equation has no solution when the $x$ coefficients on both sides match but the constants differ, since then the $x$ terms cancel and leave a false statement. For $2(x + 3) = cx + 9$: the left side is $2x + 6$, so $c = 2$. With a different $c$ there would be one solution.",
       "当两边 $x$ 的系数相同而常数不同时，一次方程无解，因为 $x$ 项抵消后剩下一个错误的等式。对 $2(x + 3) = cx + 9$：左边是 $2x + 6$，所以 $c = 2$。$c$ 取别的值时就会有一个解。",
@@ -1205,6 +1805,18 @@ export const satExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "sat-exam-determining-the-number-of-solutions-to-a-linear-system": {
+    intro: t(
+      "Two friends describe the same delivery route as $x + 2y = 3$ and $4x + 8y = 12$. Before solving anything, comparing the equations shows they describe one line.\n\nCheck: the second is $4$ times the first, since $4 \\times 1 = 4$, $4 \\times 2 = 8$ and $4 \\times 3 = 12$.\n\nIn this lesson we tell whether a system of two linear equations has one solution, none or infinitely many.",
+      "两个朋友把同一条送货路线分别写成 $x + 2y = 3$ 和 $4x + 8y = 12$。不用求解，比较两个方程就知道它们是同一条直线。\n\n检验：第二个方程是第一个的 $4$ 倍，因为 $4 \\times 1 = 4$，$4 \\times 2 = 8$，$4 \\times 3 = 12$。\n\n本课我们判断二元一次方程组有一个解、无解还是有无穷多个解。",
+    ),
+    watch: t(
+      "The multiple may be negative: $x - 2y = 3$ and $-2x + 4y = -6$ are the same line, with multiplier $-2$.",
+      "倍数可以是负数：$x - 2y = 3$ 与 $-2x + 4y = -6$ 是同一条直线，倍数是 $-2$。",
+    ),
+    hardWatch: t(
+      "Fractions can hide parallel lines too: $y = \\frac{1}{3}x + 2$ and $x - 3y = 1$ both have slope $\\frac{1}{3}$, but their intercepts are $2$ and $-\\frac{1}{3}$, so there is no solution.",
+      "分数也会掩盖平行关系：$y = \\frac{1}{3}x + 2$ 与 $x - 3y = 1$ 的斜率都是 $\\frac{1}{3}$，截距却是 $2$ 和 $-\\frac{1}{3}$，所以无解。",
+    ),
     tip: t(
       "Compare the two equations by their ratios. If one is an exact multiple of the other, right side included, they describe the same line, giving infinitely many solutions. If only the left sides are proportional, there is none; otherwise there is exactly one. So $x + 2y = 3$ and $4x + 8y = 12$ are the same line.",
       "用比例比较两个方程。如果一个方程恰是另一个的倍数（包括右边），它们就是同一条直线，有无穷多解。如果只有左边成比例，就无解；其他情况恰有一个解。所以 $x + 2y = 3$ 和 $4x + 8y = 12$ 是同一条直线。",
@@ -1215,6 +1827,18 @@ export const satExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "sat-exam-linear-systems-with-infinitely-many-solutions": {
+    intro: t(
+      "Two recipes, $2x + 5y = 7$ and $6x + 15y = q$, must describe the same mixture, one scaled up from the other. The scale factor read from the coefficients fixes $q$.\n\nCheck: $6 = 3 \\times 2$ and $15 = 3 \\times 5$, so $q = 3 \\times 7 = 21$.\n\nIn this lesson we find unknown coefficients that give a system infinitely many solutions.",
+      "两份配方 $2x + 5y = 7$ 和 $6x + 15y = q$ 必须描述同一种混合物，一个是另一个的放大。由系数读出的放大倍数决定了 $q$。\n\n检验：$6 = 3 \\times 2$，$15 = 3 \\times 5$，所以 $q = 3 \\times 7 = 21$。\n\n本课我们求出使方程组有无穷多个解的未知系数。",
+    ),
+    watch: t(
+      "The multiplier may be a fraction: $6x + 9y = 12$ and $2x + 3y = q$ need $q = 4$, with multiplier $\\frac{1}{3}$.",
+      "倍数可以是分数：$6x + 9y = 12$ 与 $2x + 3y = q$ 需要 $q = 4$，倍数是 $\\frac{1}{3}$。",
+    ),
+    hardWatch: t(
+      "Take the multiplier from the complete pair, wherever it is: for $3x + py = 6$ and $9x + 12y = q$, the $x$ terms give $3$, so $p = 4$ and $q = 18$.",
+      "无论完整的一对系数在哪里，都用它来定倍数：对 $3x + py = 6$ 和 $9x + 12y = q$，$x$ 项给出倍数 $3$，所以 $p = 4$，$q = 18$。",
+    ),
     tip: t(
       "Infinitely many solutions means the second equation is an exact multiple of the first. Find the multiplier from a matching pair of coefficients, then apply it to the right side. For $2x + 5y = 7$ and $6x + 15y = q$, the multiplier is $3$, so $q = 21$. Any other value would make the lines parallel.",
       "无穷多解表示第二个方程恰是第一个的倍数。由一对对应系数求出倍数，再用到右边。对 $2x + 5y = 7$ 和 $6x + 15y = q$，倍数是 $3$，所以 $q = 21$。取其他值时，两条直线就平行了。",
@@ -1225,6 +1849,18 @@ export const satExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "sat-exam-parametrizing-systems-of-linear-equations": {
+    intro: t(
+      "A rail track is described twice, as $y - 2x = 5$ and $3y - 6x = 15$. They are the same line, so its points can be listed one by one with a single parameter $t$.\n\nCheck: at $t = 1$ the point $(1, 7)$ fits both, since $7 - 2 = 5$ and $21 - 6 = 15$.\n\nIn this lesson we write the solutions of a system with infinitely many solutions in terms of a parameter.",
+      "一条铁轨被描述了两次：$y - 2x = 5$ 和 $3y - 6x = 15$。它们是同一条直线，所以可以用一个参数 $t$ 把直线上的点逐一列出。\n\n检验：$t = 1$ 时点 $(1, 7)$ 同时满足两个方程，因为 $7 - 2 = 5$，$21 - 6 = 15$。\n\n本课我们用参数表示有无穷多个解的方程组的解。",
+    ),
+    watch: t(
+      "If the parameter stands for $y$, solve for $x$ instead: for $x - 3y = 2$, letting $y = t$ gives the solutions $(3t + 2, t)$.",
+      "如果参数代表 $y$，就改为解出 $x$：对 $x - 3y = 2$，令 $y = t$，解为 $(3t + 2, t)$。",
+    ),
+    hardWatch: t(
+      "Given the second coordinate, solve back for the first: for $y - 2x = 5$, the point $(s, 1)$ has $1 = 2s + 5$, so $s = -2$.",
+      "已知第二个坐标时，要反过来解第一个：对 $y - 2x = 5$，点 $(s, 1)$ 满足 $1 = 2s + 5$，所以 $s = -2$。",
+    ),
     tip: t(
       "A system with infinitely many solutions is really one line, so keep one equation and solve for $y$. Then let $x = t$ and write $y$ in terms of $t$. For $y - 2x = 5$ and $3y - 6x = 15$: $y = 2x + 5$, so the solutions are $(t, 2t + 5)$. Keep the coordinates in order.",
       "有无穷多解的方程组实际上是一条直线，所以留下一个方程，解出 $y$。再令 $x = t$，用 $t$ 表示 $y$。对 $y - 2x = 5$ 和 $3y - 6x = 15$：$y = 2x + 5$，解是 $(t, 2t + 5)$。注意坐标的顺序。",
@@ -1235,6 +1871,18 @@ export const satExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "sat-exam-linear-systems-with-no-solution": {
+    intro: t(
+      "Two trains run on tracks drawn as $2x + 3y = 7$ and $px + 12y = 30$. For the tracks never to meet they must be parallel, and that fixes $p$.\n\nCheck: with $p = 8$ the left side is $4$ times the first, while $4 \\times 7 = 28 \\neq 30$.\n\nIn this lesson we find the values that give a system no solution.",
+      "两列火车的轨道画成 $2x + 3y = 7$ 和 $px + 12y = 30$。要让轨道永不相交，它们必须平行，这就决定了 $p$。\n\n检验：当 $p = 8$ 时左边是第一个方程的 $4$ 倍，而 $4 \\times 7 = 28 \\neq 30$。\n\n本课我们求出使方程组无解的值。",
+    ),
+    watch: t(
+      "The right sides must break the pattern: $2x + 3y = 7$ and $8x + 12y = 28$ are the same line, so $p = 8$ gives infinitely many solutions when the right side is $28$.",
+      "右边必须不符合同一倍数：$2x + 3y = 7$ 与 $8x + 12y = 28$ 是同一条直线，所以右边为 $28$ 时，$p = 8$ 给出无穷多个解。",
+    ),
+    hardWatch: t(
+      "With the unknown on $y$, take the multiplier from the $x$ pair: $3x + 2y = 5$ and $6x + ky = 4$ give $k = 4$, and $2 \\times 5 = 10 \\neq 4$.",
+      "未知数在 $y$ 上时，用 $x$ 的系数定倍数：$3x + 2y = 5$ 与 $6x + ky = 4$ 得 $k = 4$，而 $2 \\times 5 = 10 \\neq 4$。",
+    ),
     tip: t(
       "No solution means parallel lines: the $x$ and $y$ coefficients are proportional, but the right sides are not. Use the known coefficient pair to find the multiplier, then apply it to the unknown coefficient. For $2x + 3y = 7$ and $px + 12y = 30$, the multiplier is $4$, so $p = 8$, and $30 \\neq 28$ confirms it.",
       "无解表示两线平行：$x$、$y$ 的系数成比例，但右边不成比例。用已知的一对系数求倍数，再用到未知系数上。对 $2x + 3y = 7$ 和 $px + 12y = 30$，倍数是 $4$，所以 $p = 8$，而 $30 \\neq 28$ 也印证了这一点。",
@@ -1245,6 +1893,18 @@ export const satExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "sat-exam-constructing-models-with-one-variable-linear-inequalities": {
+    intro: t(
+      "A school team has $40$ dollars and earns $5$ dollars per ticket sold, hoping to reach at least $200$. One inequality holds the whole goal.\n\nCheck: $40 + 5n \\ge 200$ at $n = 32$ gives exactly $200$, which counts, since at least includes the goal itself.\n\nIn this lesson we write a one-variable linear inequality from a story.",
+      "校队已有 $40$ 元，每卖一张票赚 $5$ 元，希望至少达到 $200$ 元。一个不等式就能表达整个目标。\n\n检验：$40 + 5n \\ge 200$ 在 $n = 32$ 时恰好是 $200$，这也算达到，因为至少包括目标本身。\n\n本课我们根据情境写出一元一次不等式。",
+    ),
+    watch: t(
+      '"No more than" and "does not exceed" both mean $\\le$, while "more than" alone is strict: spending more than $50$ dollars is $s > 50$.',
+      "“不多于”和“不超过”都表示 $\\le$，而单说“多于”是严格的：花费多于 $50$ 元是 $s > 50$。",
+    ),
+    hardWatch: t(
+      "A decreasing amount subtracts: a tank of $300$ liters draining $12$ liters per minute that must keep at least $60$ gives $300 - 12m \\ge 60$.",
+      "减少的量要减去：一个 $300$ 升的水箱每分钟放水 $12$ 升，至少要保留 $60$ 升，得 $300 - 12m \\ge 60$。",
+    ),
     tip: t(
       'Add what is already there to the rate times the count, then choose the sign from the words: "at least" means $\\ge$ and "at most" means $\\le$. A team with $40$ dollars earning $5$ per ticket and hoping for at least $200$ gives $40 + 5n \\ge 200$. Choosing the sign from the verb alone misleads.',
       "把已有的量加上单价乘数量，再根据措辞选符号：“至少”是 $\\ge$，“至多”是 $\\le$。一支队伍已有 $40$ 美元，每张票赚 $5$ 美元，希望至少 $200$ 美元，就写成 $40 + 5n \\ge 200$。只看动词来选符号容易出错。",
@@ -1255,6 +1915,18 @@ export const satExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "sat-exam-modeling-and-solving-with-one-variable-linear-inequalities": {
+    intro: t(
+      "A bike rental costs $10$ dollars plus $4$ per day, and the budget is $51$ dollars. The inequality allows $10.25$ days, but only whole days are rented.\n\nCheck: $10$ days cost $50$ dollars, within the budget, while $11$ days cost $54$.\n\nIn this lesson we solve one-variable inequalities in context and round the result the right way.",
+      "租自行车要 $10$ 元再加每天 $4$ 元，预算是 $51$ 元。不等式允许 $10.25$ 天，但只能按整天租。\n\n检验：$10$ 天花 $50$ 元，在预算内；$11$ 天要花 $54$ 元。\n\n本课我们在情境中解一元一次不等式，并正确地取整。",
+    ),
+    watch: t(
+      "Dividing by a negative number reverses the sign: $-3x \\ge 12$ gives $x \\le -4$, not $x \\ge -4$.",
+      "除以负数时不等号要反向：$-3x \\ge 12$ 得 $x \\le -4$，而不是 $x \\ge -4$。",
+    ),
+    hardWatch: t(
+      "If the division comes out whole, no rounding is needed: needing at least $50$ with $10$ dollars and $4$ per item gives $n \\ge 10$, so $10$ items suffice.",
+      "如果除得整数，就不用取整：已有 $10$ 元、每件 $4$ 元、至少要 $50$ 元，得 $n \\ge 10$，所以 $10$ 件就够了。",
+    ),
     tip: t(
       "Set up the budget inequality, solve as with an equation, and interpret the result in whole units. For a fee of $10$ dollars plus $4$ per day and a budget of $51$: $4d \\le 41$, so $d \\le 10.25$. Under a ceiling, round down, so the greatest whole number of days is $10$; rounding up exceeds the budget.",
       "列出预算不等式，像解方程一样求解，再按整数单位解释结果。费用为 $10$ 美元加每天 $4$ 美元、预算为 $51$ 时：$4d \\le 41$，所以 $d \\le 10.25$。有上限时要向下取整，最多 $10$ 天；向上取整就超出预算了。",
@@ -1265,6 +1937,18 @@ export const satExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "sat-exam-modeling-and-solving-with-one-variable-linear-inequalities-advanced-cases": {
+    intro: t(
+      "Plan A costs $20$ dollars plus $2$ per use, and plan B costs $4$ per use. For a few uses B is cheaper, and past some point A wins.\n\nCheck: at $11$ uses, A costs $42$ and B costs $44$; at $10$ uses both cost $40$.\n\nIn this lesson we compare plans, and fit loads under a limit, with one-variable inequalities.",
+      "方案 A 收 $20$ 元再加每次 $2$ 元，方案 B 每次 $4$ 元。次数少时 B 更便宜，过了某个次数 A 更划算。\n\n检验：$11$ 次时 A 花 $42$ 元，B 花 $44$ 元；$10$ 次时两者都是 $40$ 元。\n\n本课我们用一元一次不等式比较方案，并在限额下计算能装多少。",
+    ),
+    watch: t(
+      "If the question allows a tie, keep the equal sign: plan A costing at most as much as B gives $20 + 2n \\le 4n$, so $n \\ge 10$ and the least is $10$.",
+      "如果题目允许相等，就保留等号：方案 A 花费不超过 B，得 $20 + 2n \\le 4n$，所以 $n \\ge 10$，最少是 $10$ 次。",
+    ),
+    hardWatch: t(
+      "Check whether the existing load is already over: with a limit of $100$ and a load of $105$, no item fits, since $105 + 9c \\le 100$ needs a negative $c$.",
+      "要检查已有的负载是否已经超限：限额 $100$、已有 $105$ 时一件也装不下，因为 $105 + 9c \\le 100$ 要求 $c$ 为负数。",
+    ),
     tip: t(
       "To compare two plans, write the costs and set the one claimed cheaper below the other. Then solve and move to the next whole number. Plan A at $20$ plus $2$ per use and plan B at $4$ per use: $20 + 2n < 4n$, so $n > 10$ and the least is $11$. Equal cost does not count as less.",
       "比较两种方案时，写出费用，让被认为更便宜的那个小于另一个，解出后取下一个整数。方案 A 为 $20$ 加每次 $2$，方案 B 为每次 $4$：$20 + 2n < 4n$，所以 $n > 10$，最小是 $11$。费用相等不算更便宜。",
@@ -1275,6 +1959,18 @@ export const satExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "sat-exam-compound-inequalities": {
+    intro: t(
+      "A thermostat must keep the reading $2x + 1$ between $5$ and $13$ for a setting $x$. Undoing the expression in all three parts reveals the allowed settings.\n\nCheck: $x = 4$ gives $9$, between $5$ and $13$, while $x = 6$ gives exactly $13$, which a strict sign excludes.\n\nIn this lesson we solve compound inequalities and count the integers they allow.",
+      "恒温器要使读数 $2x + 1$ 保持在 $5$ 和 $13$ 之间，$x$ 是设定值。对三个部分同时还原这个式子，就得出允许的设定值。\n\n检验：$x = 4$ 得 $9$，在 $5$ 和 $13$ 之间；$x = 6$ 恰好得 $13$，严格不等号把它排除在外。\n\n本课我们解连不等式，并数出它允许的整数个数。",
+    ),
+    watch: t(
+      "Dividing all three parts by a negative number reverses both signs: $-4 < -2x < 6$ becomes $2 > x > -3$, that is $-3 < x < 2$.",
+      "三个部分同除以负数时，两个不等号都要反向：$-4 < -2x < 6$ 化为 $2 > x > -3$，即 $-3 < x < 2$。",
+    ),
+    hardWatch: t(
+      "With strict signs at both ends, the count is $\\text{high} - \\text{low} - 1$: $2 < x < 7$ holds $3, 4, 5, 6$, which is $4$ integers.",
+      "两端都是严格不等号时，个数是 $\\text{上界} - \\text{下界} - 1$：$2 < x < 7$ 含 $3, 4, 5, 6$，共 $4$ 个整数。",
+    ),
     tip: t(
       "Apply each step to all three parts: subtract the constant from every part, then divide every part. For $5 < 2x + 1 < 13$: $2 < x < 6$. Then choose an option strictly inside. With strict signs, the endpoints themselves do not satisfy it, and they are often offered as distractors.",
       "每一步都作用到三个部分：每部分都减去常数，再每部分都相除。对 $5 < 2x + 1 < 13$：$2 < x < 6$。然后选严格落在其中的选项。不等号是严格的，端点本身不满足，而它们常常被设为干扰项。",
@@ -1285,6 +1981,18 @@ export const satExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "sat-exam-constructing-models-with-compound-inequalities": {
+    intro: t(
+      "A greenhouse must stay from $18$ to $25$ degrees inclusive. The two limits and the quantity between them form one compound inequality.\n\nCheck: $T = 18$ and $T = 25$ both satisfy $18 \\le T \\le 25$, as inclusive requires.\n\nIn this lesson we write compound inequalities from stories.",
+      "温室温度必须保持在 $18$ 到 $25$ 度之间，含两端。两个界限和夹在中间的量组成一个连不等式。\n\n检验：$T = 18$ 和 $T = 25$ 都满足 $18 \\le T \\le 25$，符合含两端的要求。\n\n本课我们根据情境写出连不等式。",
+    ),
+    watch: t(
+      "Mixed words give mixed signs: more than $10$ but at most $20$ is $10 < x \\le 20$.",
+      "措辞不同，不等号也不同：多于 $10$ 但不超过 $20$ 是 $10 < x \\le 20$。",
+    ),
+    hardWatch: t(
+      "A tolerance around a target gives both limits: a part of $50$ millimeters, accurate to within $0.2$, has $49.8 \\le L \\le 50.2$.",
+      "目标值加减误差就得到两个界限：一个 $50$ 毫米的零件，误差不超过 $0.2$，则 $49.8 \\le L \\le 50.2$。",
+    ),
     tip: t(
       "A quantity between two limits becomes $\\text{low} \\le s \\le \\text{high}$. The word inclusive means both endpoints are allowed, so both signs are $\\le$, with the variable in the middle. A temperature from $18$ to $25$ degrees inclusive gives $18 \\le T \\le 25$. Strict signs would exclude the limits.",
       "介于两个界限之间的量写成 $\\text{low} \\le s \\le \\text{high}$（$s$ 不小于下限，也不大于上限）。“包含端点”表示两端都可以取，所以两个符号都是 $\\le$，变量在中间。温度为 $18$ 到 $25$ 度（含端点）就是 $18 \\le T \\le 25$。严格不等号会把界限排除在外。",
@@ -1295,6 +2003,18 @@ export const satExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "sat-exam-solutions-of-two-variable-linear-inequalities": {
+    intro: t(
+      "A bake sale must spend less than $20$ dollars on supplies, at $2$ dollars per bag of flour and $5$ per tub of butter. Each possible purchase is a point $(x, y)$, and only some of them satisfy the inequality.\n\nCheck: $(1, 2)$ costs $2 + 10 = 12 < 20$, while $(5, 3)$ costs $25$.\n\nIn this lesson we test which points solve a two-variable linear inequality.",
+      "义卖会买材料的花费必须少于 $20$ 元，面粉每袋 $2$ 元，黄油每盒 $5$ 元。每种可能的购买都是一个点 $(x, y)$，只有其中一部分满足不等式。\n\n检验：$(1, 2)$ 花费 $2 + 10 = 12 < 20$，而 $(5, 3)$ 花费 $25$。\n\n本课我们检验哪些点是二元一次不等式的解。",
+    ),
+    watch: t(
+      "Put a negative coordinate in parentheses: $(-2, 4)$ in $3x + y < 0$ gives $3(-2) + 4 = -2$, so the point is a solution.",
+      "负的坐标要加括号代入：把 $(-2, 4)$ 代入 $3x + y < 0$ 得 $3(-2) + 4 = -2$，所以这个点是解。",
+    ),
+    hardWatch: t(
+      "Fixing $x$ instead gives a bound on $y$: for $4x + 3y \\le 20$ with $x = 2$, $3y \\le 12$, so $y \\le 4$.",
+      "若固定的是 $x$，得到的是 $y$ 的界限：对 $4x + 3y \\le 20$ 取 $x = 2$，得 $3y \\le 12$，所以 $y \\le 4$。",
+    ),
     tip: t(
       "A point is a solution if substituting its coordinates makes the inequality true. Test each option, keeping $x$ and $y$ in their places. For $2x + 5y < 20$: $(1, 2)$ gives $12$, which works, while $(5, 3)$ gives $25$, which does not. Watch whether the sign is strict.",
       "把点的坐标代入后不等式成立，这个点就是解。逐个检验选项，注意 $x$ 和 $y$ 的位置。对 $2x + 5y < 20$：$(1, 2)$ 得 $12$，成立；$(5, 3)$ 得 $25$，不成立。注意不等号是否严格。",
@@ -1305,6 +2025,18 @@ export const satExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "sat-exam-modeling-with-two-variable-linear-inequalities": {
+    intro: t(
+      "A student has $90$ dollars for books at $7$ dollars and pens at $3$. Every affordable mix of $b$ books and $p$ pens satisfies one inequality.\n\nCheck: $10$ books and $6$ pens cost $70 + 18 = 88$, within $7b + 3p \\le 90$.\n\nIn this lesson we write two-variable linear inequalities from stories.",
+      "一名学生有 $90$ 元，书每本 $7$ 元，笔每支 $3$ 元。凡是买得起的 $b$ 本书和 $p$ 支笔的组合，都满足同一个不等式。\n\n检验：$10$ 本书和 $6$ 支笔花 $70 + 18 = 88$ 元，满足 $7b + 3p \\le 90$。\n\n本课我们根据情境写出二元一次不等式。",
+    ),
+    watch: t(
+      "A coupon subtracts from the total: books at $7$ dollars and pens at $3$, less a $5$-dollar coupon, with at most $90$ to spend, give $7b + 3p - 5 \\le 90$.",
+      "优惠券要从总价里减去：书每本 $7$ 元、笔每支 $3$ 元，减去 $5$ 元优惠券，最多花 $90$ 元，得 $7b + 3p - 5 \\le 90$。",
+    ),
+    hardWatch: t(
+      "Earnings that must cover a cost still use $\\ge$: if pay of $9$ and $4$ dollars per hour must cover a bill of $60$, then $9t + 4h \\ge 60$, not $\\le$.",
+      "收入要够支付一笔费用时仍用 $\\ge$：若每小时 $9$ 元和 $4$ 元的收入要付清 $60$ 元的账单，则 $9t + 4h \\ge 60$，而不是 $\\le$。",
+    ),
     tip: t(
       'The total cost of two items is each price times its count, added together, and a budget gives "at most", so $\\le$. Books at $7$ dollars and pens at $3$ with a budget of $90$ give $7b + 3p \\le 90$. Check the letters: the price must attach to the correct item.',
       "两种物品的总费用是各自单价乘数量再相加，预算表示“至多”，所以用 $\\le$。书每本 $7$ 美元，笔每支 $3$ 美元，预算 $90$ 美元，就写成 $7b + 3p \\le 90$。检查字母：单价要配对应的物品。",
@@ -1315,6 +2047,18 @@ export const satExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "sat-exam-modeling-and-solving-two-variable-linear-inequalities": {
+    intro: t(
+      "A student has $40$ dollars, buys $4$ books at $7$ dollars each, and spends the rest on pens at $3$. How many pens fit follows from one inequality.\n\nCheck: $4$ pens bring the total to $28 + 12 = 40$, exactly the budget, which is allowed.\n\nIn this lesson we solve a two-variable inequality after fixing one count, and round the result in context.",
+      "一名学生有 $40$ 元，买了 $4$ 本每本 $7$ 元的书，剩下的钱买每支 $3$ 元的笔。能买几支笔由一个不等式决定。\n\n检验：买 $4$ 支笔时总价是 $28 + 12 = 40$ 元，恰好等于预算，这是允许的。\n\n本课我们在固定一个数量后解二元一次不等式，并结合情境取整。",
+    ),
+    watch: t(
+      "If the known count already overspends, nothing more can be bought: with $25$ dollars, $4$ books at $7$ cost $28 > 25$, so no pens fit at all.",
+      "如果已知的数量已经超支，就什么也买不了：只有 $25$ 元时，$4$ 本每本 $7$ 元的书要 $28 > 25$ 元，一支笔也买不了。",
+    ),
+    hardWatch: t(
+      "Reaching the goal exactly counts under $\\ge$: needing at least $37$ with $28$ already earned and $3$ per item gives $s \\ge 3$, so $3$ items suffice.",
+      "在 $\\ge$ 下恰好达到目标也算：已赚 $28$ 元、每件 $3$ 元、至少要 $37$ 元，得 $s \\ge 3$，所以 $3$ 件就够了。",
+    ),
     tip: t(
       "Substitute the known count, subtract its cost from the budget, then divide by the other price, and round down for whole items. Books at $7$ dollars and pens at $3$, with $40$ dollars and $4$ books: $28 + 3p \\le 40$, so $p \\le 4$. Spending must not go over, so rounding up is not allowed.",
       "代入已知的数量，从预算中减去它的费用，再除以另一个单价，并向下取整。书每本 $7$ 美元，笔每支 $3$ 美元，有 $40$ 美元且买 $4$ 本书：$28 + 3p \\le 40$，所以 $p \\le 4$。花费不能超支，所以不能向上取整。",
@@ -1325,6 +2069,18 @@ export const satExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "sat-exam-systems-of-two-variable-inequalities": {
+    intro: t(
+      "A park allows a picnic spot $(x, y)$ only above the path $y = x + 2$ and inside the fence $x + y < 10$. A spot must pass both rules.\n\nCheck: $(2, 5)$ passes, since $5 > 4$ and $2 + 5 = 7 < 10$.\n\nIn this lesson we test points against a system of inequalities and find bounds from it.",
+      "公园只允许野餐点 $(x, y)$ 位于小路 $y = x + 2$ 的上方并在围栏 $x + y < 10$ 之内。一个地点必须同时满足这两条规则。\n\n检验：$(2, 5)$ 满足，因为 $5 > 4$，且 $2 + 5 = 7 < 10$。\n\n本课我们检验点是否满足不等式组，并由不等式组求出界限。",
+    ),
+    watch: t(
+      "A point on a boundary line fails a strict sign: $(3, 5)$ gives $5 > 5$ for $y > x + 2$, which is false.",
+      "边界线上的点不满足严格不等号：把 $(3, 5)$ 代入 $y > x + 2$ 得 $5 > 5$，不成立。",
+    ),
+    hardWatch: t(
+      "The bounds can leave no room: for $x = 5$ in $y > x + 2$ and $x + y < 10$, the conditions $y > 7$ and $y < 5$ cannot both hold.",
+      "界限之间可能没有空间：在 $y > x + 2$ 和 $x + y < 10$ 中取 $x = 5$，条件 $y > 7$ 与 $y < 5$ 不能同时成立。",
+    ),
     tip: t(
       "A solution of a system must make every inequality true. Test each point in both, and reject it as soon as one fails. For $y > x + 2$ and $x + y < 10$: $(2, 5)$ works, since $5 > 4$ and $7 < 10$, while $(3, 2)$ fails the first. Passing just one is the trap.",
       "方程组的解必须使每个不等式都成立。把每个点代入两个不等式，一旦有一个不成立就排除。对 $y > x + 2$ 和 $x + y < 10$：$(2, 5)$ 成立，因为 $5 > 4$ 且 $7 < 10$；而 $(3, 2)$ 不满足第一个。只满足一个就是陷阱。",
@@ -1335,6 +2091,18 @@ export const satExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "sat-exam-modeling-with-systems-of-inequalities": {
+    intro: t(
+      "A team orders shirts at $9$ dollars and socks at $3$, spending at most $150$ dollars on at least $25$ pieces. Two sentences become two inequalities.\n\nCheck: $10$ shirts and $15$ pairs of socks cost $90 + 45 = 135 \\le 150$ and make $25$ pieces.\n\nIn this lesson we write a system of inequalities from a story.",
+      "球队订购每件 $9$ 元的衬衫和每双 $3$ 元的袜子，最多花 $150$ 元，至少要 $25$ 件。两句话就是两个不等式。\n\n检验：$10$ 件衬衫和 $15$ 双袜子花 $90 + 45 = 135 \\le 150$ 元，共 $25$ 件。\n\n本课我们根据情境写出不等式组。",
+    ),
+    watch: t(
+      "A comparison between the two kinds relates the variables: at least twice as many socks as shirts is $y \\ge 2x$, not $2y \\ge x$.",
+      "两种物品之间的比较把两个变量联系起来：袜子至少是衬衫的两倍，是 $y \\ge 2x$，而不是 $2y \\ge x$。",
+    ),
+    hardWatch: t(
+      '"More shirts than socks" is the strict inequality $x > y$, a separate line alongside the money and count conditions.',
+      "“衬衫比袜子多”是严格不等式 $x > y$，它与钱数和件数的条件并列，是单独的一条。",
+    ),
     tip: t(
       "Translate each sentence into its own inequality, one for the money and one for the number of items. Prices weight the money line but not the count line. Shirts at $9$ dollars and socks at $3$, spending at most $150$ on at least $25$ pieces: $9x + 3y \\le 150$ and $x + y \\ge 25$.",
       "把每句话分别翻译成一个不等式：一个管金额，一个管数量。单价只出现在金额不等式中，不出现在数量不等式中。衬衫每件 $9$ 美元，袜子每双 $3$ 美元，最多花 $150$ 美元，至少买 $25$ 件：$9x + 3y \\le 150$，$x + y \\ge 25$。",
@@ -1345,6 +2113,18 @@ export const satExamLessons: Readonly<Record<string, ExamLesson>> = {
     ),
   },
   "sat-exam-modeling-and-solving-systems-of-linear-inequalities": {
+    intro: t(
+      "With at most $60$ dollars, a club buys at least $10$ items, at $8$ dollars or $3$ dollars each. To get as many of the expensive items as possible, every other dollar must stretch furthest.\n\nCheck: $6$ expensive and $4$ cheap items cost $48 + 12 = 60$ dollars and make $10$ items.\n\nIn this lesson we find the largest value one count can take under a system of inequalities.",
+      "一个社团最多花 $60$ 元，至少买 $10$ 件物品，每件 $8$ 元或 $3$ 元。要买尽可能多的贵物品，其余的钱就要用得最省。\n\n检验：$6$ 件贵的和 $4$ 件便宜的共花 $48 + 12 = 60$ 元，共 $10$ 件。\n\n本课我们求出在不等式组限制下某个数量的最大值。",
+    ),
+    watch: t(
+      "A fractional bound still rounds down: with at most $62$ dollars, $5x + 30 \\le 62$ gives $x \\le 6.4$, so the most is still $6$.",
+      "界限是小数时仍要向下取整：最多花 $62$ 元时，$5x + 30 \\le 62$ 得 $x \\le 6.4$，所以最多还是 $6$ 件。",
+    ),
+    hardWatch: t(
+      "Money that cannot buy a whole item stays unspent: with $50$ dollars and at least $5$ items at $8$, $10$ dollars remain, which buy $3$ items at $3$, for $8$ in all.",
+      "买不了一整件的钱只能剩下：有 $50$ 元、至少买 $5$ 件 $8$ 元的物品时，剩 $10$ 元，可买 $3$ 件 $3$ 元的，共 $8$ 件。",
+    ),
     tip: t(
       "To maximize the expensive item, use the fewest items allowed, so as to free money. Replace the cheap count by $n - x$ and solve. Prices of $8$ and $3$, at least $10$ items and at most $60$ dollars: $8x + 3(10 - x) \\le 60$, so $5x \\le 30$ and $x \\le 6$. Using a larger total lowers $x$.",
       "要使贵的物品尽量多，就用允许的最少总件数，以省出钱来。把便宜物品的数量写成 $n - x$ 再求解。单价 $8$ 和 $3$，至少 $10$ 件，至多 $60$ 美元：$8x + 3(10 - x) \\le 60$，所以 $5x \\le 30$，$x \\le 6$。总件数更多时，$x$ 反而变小。",

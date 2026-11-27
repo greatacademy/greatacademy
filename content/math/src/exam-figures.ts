@@ -829,7 +829,11 @@ export function linesFigure(first: readonly [number, number], second: readonly [
     const [xa, xb] = m === 0 ? [-10, 10] : [clip((-20 - b) / m), clip((20 - b) / m)].sort((p, q) => p - q);
     return `<line class="accent" x1="${r1(px(xa!))}" y1="${r1(py(m * xa! + b))}" x2="${r1(px(xb!))}" y2="${r1(py(m * xb! + b))}" stroke-width="2"/>`;
   };
-  const lineAlt = ([m, b]: readonly [number, number]) => `y = ${r1(m)}x + ${r1(b)}`;
+  const lineAlt = ([m, b]: readonly [number, number]): string => {
+    const mx = m === 1 ? "x" : m === -1 ? "-x" : `${r1(m)}x`;
+    if (m === 0) return `y = ${r1(b)}`;
+    return b === 0 ? `y = ${mx}` : `y = ${mx} ${b < 0 ? "-" : "+"} ${r1(Math.abs(b))}`;
+  };
   return plotFrame(
     view,
     (px, py) => line(first[0], first[1], px, py) + line(second[0], second[1], px, py),

@@ -3,6 +3,8 @@ import { t } from "@ga/content";
 import { type Coefficient, Q } from "@ga/subject-math";
 
 import { choiceProblem, numberProblem } from "./problems.ts";
+import { stepLabel } from "./solution-kit.ts";
+import { type Reason, reasoned } from "./wrong-reasons.ts";
 
 // Exam-style practice for SAT Math Prep and ACT Math Prep. A topic here teaches nothing new: it asks the questions
 // of its Fundamentals topic the way the exam does, in context and with four options whose distractors come from
@@ -26,7 +28,17 @@ export interface ExamLesson {
   readonly tip: Text;
   /** hardTip teaches what the harder questions add. */
   readonly hardTip: Text;
+  /** intro sets the scene of the topic before its first question. */
+  readonly intro?: Text;
+  /** watch is the trap that tip warns of, shown after it as a callout, with an example of its own. */
+  readonly watch?: Text;
+  /** hardWatch is the trap that hardTip warns of, shown after it as a callout. */
+  readonly hardWatch?: Text;
 }
+
+/** withCallout ends an explanation with a "Watch out" callout, if there is one. */
+const withCallout = (text: Text, watch: Text | undefined): Text =>
+  watch ? t(`${text.en}\n\n> **Watch out.** ${watch.en}`, `${text["zh-CN"]}\n\n> **注意。**${watch["zh-CN"]}`) : text;
 
 /** examSlug derives a kebab-case id part from an outline title. */
 export function examSlug(title: string): string {
@@ -97,18 +109,19 @@ export function examTopic(exam: Exam, spec: ExamSpec, lessons: Readonly<Record<s
     prerequisites: [...spec.base],
     encompasses: spec.base.filter((topic) => !unpracticed.includes(topic)).map((topic) => ({ topic, weight: 0.5 })),
     xp: 8,
+    ...(lesson.intro && { intro: lesson.intro }),
     practiceOnly: true,
     knowledgePoints: [
       {
         id: "exam-question",
         title: t("Exam-Style Question", "考试风格题"),
-        explanation: lesson.tip,
+        explanation: withCallout(lesson.tip, lesson.watch),
         generate: (rng) => spec.make(rng, false),
       },
       {
         id: "harder-exam-question",
         title: t("Harder Exam-Style Question", "较难的考试风格题"),
-        explanation: lesson.hardTip,
+        explanation: withCallout(lesson.hardTip, lesson.hardWatch),
         generate: (rng) => spec.make(rng, true),
       },
     ],
@@ -161,6 +174,70 @@ function orderedOptions(rng: Rng, correct: Q, wrong: readonly Q[]): Q[] {
   return [correct, ...options].sort((a, b) => a.cmp(b));
 }
 
+/** ExamStep is one titled step of a worked solution: its title in English and Chinese, and what it says. */
+export type ExamStep = readonly [title: readonly [string, string], say: Text];
+
+/**
+ * Worked is a solution walked in titled steps and ended by a check that takes a second route, with what each wrong option
+ * or value of the question comes from, in the order of its `wrong`. mc, mcExact, words and spr take it in place of a plain solution.
+ */
+export interface Worked {
+  readonly steps: readonly ExamStep[];
+  readonly check: Text;
+  readonly why: readonly Text[];
+}
+
+/** step writes one titled step of a worked solution. */
+export const step = (title: string, titleZh: string, en: string, zh: string): ExamStep => [[title, titleZh], t(en, zh)];
+
+/** worked builds a worked solution from its steps, its check and what each wrong option comes from. */
+export const worked = (steps: readonly ExamStep[], check: Text, why: readonly Text[] = []): Worked => ({ steps, check, why });
+
+const isWorked = (s: Text | Worked): s is Worked => "steps" in s;
+
+/** walkedText writes the steps of a worked solution, each after its bold title, and then its check. */
+function walkedText(w: Worked): Text {
+  const write = (locale: "en" | "zh-CN"): string =>
+    [
+      ...w.steps.map(([[en, zh], say], i) => `${stepLabel(i + 1, en, zh)[locale]}${locale === "en" ? " " : ""}${say[locale]}`),
+      locale === "en" ? `**Check.** ${w.check.en}` : `**检验。**${w.check["zh-CN"]}`,
+    ].join("\n\n");
+  return t(write("en"), write("zh-CN"));
+}
+
+/** nearMiss says what is wrong with a numeric option that no listed mistake gives, such as one filled in or moved to balance the order. */
+function nearMiss(option: string, correct: Option): Text | undefined {
+  const [v, c] = [optionValue(option.replace(/^\$|\$$/g, "")), optionValue(correct)];
+  if (!v || !c || v.eq(c)) return undefined;
+  const d = v.sub(c);
+  const by = d.abs().toLatex();
+  return d.sign() > 0
+    ? t(
+        `The steps above do not lead here: this is $${by}$ more than the answer they give, and the check rules it out.`,
+        `按上面的步骤得不到它：它比算出的答案大 $${by}$，检验也排除了它。`,
+      )
+    : t(
+        `The steps above do not lead here: this is $${by}$ less than the answer they give, and the check rules it out.`,
+        `按上面的步骤得不到它：它比算出的答案小 $${by}$，检验也排除了它。`,
+      );
+}
+
+/** explained adds to a choice problem what is wrong with each option shown: the reason given for it, or how far it misses the answer. */
+function explained(problem: Problem, keys: readonly string[], why: readonly Text[], correct?: Option): Problem {
+  const by = new Map<string, Text>();
+  keys.forEach((k, i) => {
+    const r = why[i];
+    if (r && !by.has(k)) by.set(k, r);
+  });
+  const { input } = problem.answer;
+  const shown = input.kind === "choice" ? input.options : [];
+  const reasons = shown.flatMap((o): Reason[] => {
+    const r = by.get(o.en) ?? (correct === undefined ? undefined : nearMiss(o.en, correct));
+    return r ? [[o.en, r.en, r["zh-CN"]]] : [];
+  });
+  return reasoned(problem, reasons);
+}
+
 /** concluded ends a solution by stating the answer, unless it already explains itself and names it. */
 function concluded(solution: Text, answer: Text): Text {
   const named = answer.en.replace(/\.$/, "");
@@ -183,7 +260,7 @@ function concluded(solution: Text, answer: Text): Text {
 }
 
 /** mc builds a four-option question from a correct option and its distractors. Numeric options are listed from least to greatest, as on the real tests (see orderedOptions), and other options are shuffled, so that the position of the answer tells nothing; missing distractors are filled with nearby values. */
-export function mc(rng: Rng, prompt: Text, correct: Option, wrong: readonly Option[], solution: Text, figure?: Figure): Problem {
+export function mc(rng: Rng, prompt: Text, correct: Option, wrong: readonly Option[], solution: Text | Worked, figure?: Figure): Problem {
   const key = latexOf(correct);
   const seen = new Set([key]);
   const rest: Option[] = [];
@@ -213,6 +290,11 @@ export function mc(rng: Rng, prompt: Text, correct: Option, wrong: readonly Opti
       ? orderedOptions(rng, value, values as Q[]).map((v) => v.toLatex())
       : rng.shuffle([key, ...rest.map(latexOf)]);
   const options = ordered.map((l) => t(`$${l}$`, `$${l}$`));
+  if (isWorked(solution)) {
+    const problem = choiceProblem({ prompt, options, correct: ordered.indexOf(key), solution: walkedText(solution) });
+    const keys = wrong.map((w) => `$${latexOf(w)}$`);
+    return { ...explained(problem, keys, solution.why, correct), ...(figure && { figure }) };
+  }
   return {
     ...choiceProblem({ prompt, options, correct: ordered.indexOf(key), solution: concluded(solution, t(`$${key}$`, `$${key}$`)) }),
     ...(figure && { figure }),
@@ -223,7 +305,14 @@ export function mc(rng: Rng, prompt: Text, correct: Option, wrong: readonly Opti
  * mcExact is mc for a question where values other than the answer could also be true, such as "which value is a solution" or "which of these numbers is prime".
  * The distractors stay exactly as given, listed from least to greatest when numeric, because a distractor moved to balance the order could be a second correct option.
  */
-export function mcExact(rng: Rng, prompt: Text, correct: Option, wrong: readonly Option[], solution: Text, figure?: Figure): Problem {
+export function mcExact(
+  rng: Rng,
+  prompt: Text,
+  correct: Option,
+  wrong: readonly Option[],
+  solution: Text | Worked,
+  figure?: Figure,
+): Problem {
   const key = latexOf(correct);
   const keys = [...new Set([key, ...wrong.map(latexOf)])].slice(0, 4);
   const values = [correct, ...wrong].map(optionValue);
@@ -234,6 +323,11 @@ export function mcExact(rng: Rng, prompt: Text, correct: Option, wrong: readonly
         .map((o) => o.l)
     : rng.shuffle(keys);
   const options = ordered.map((l) => t(`$${l}$`, `$${l}$`));
+  if (isWorked(solution)) {
+    const problem = choiceProblem({ prompt, options, correct: ordered.indexOf(key), solution: walkedText(solution) });
+    const shown = wrong.map((w) => `$${latexOf(w)}$`);
+    return { ...explained(problem, shown, solution.why), ...(figure && { figure }) };
+  }
   return {
     ...choiceProblem({ prompt, options, correct: ordered.indexOf(key), solution: concluded(solution, t(`$${key}$`, `$${key}$`)) }),
     ...(figure && { figure }),
@@ -241,10 +335,15 @@ export function mcExact(rng: Rng, prompt: Text, correct: Option, wrong: readonly
 }
 
 /** words builds a four-option question whose options are sentences or phrases, in shuffled order. */
-export function words(rng: Rng, prompt: Text, correct: Text, wrong: readonly Text[], solution: Text, figure?: Figure): Problem {
+export function words(rng: Rng, prompt: Text, correct: Text, wrong: readonly Text[], solution: Text | Worked, figure?: Figure): Problem {
   const seen = new Set([correct.en]);
   const rest = wrong.filter((w) => !seen.has(w.en) && Boolean(seen.add(w.en))).slice(0, 3);
   const options = rng.shuffle([correct, ...rest]);
+  if (isWorked(solution)) {
+    const problem = choiceProblem({ prompt, options, correct: options.indexOf(correct), solution: walkedText(solution) });
+    const keys = wrong.map((w) => w.en);
+    return { ...explained(problem, keys, solution.why), ...(figure && { figure }) };
+  }
   return {
     ...choiceProblem({ prompt, options, correct: options.indexOf(correct), solution: concluded(solution, correct) }),
     ...(figure && { figure }),
@@ -252,8 +351,20 @@ export function words(rng: Rng, prompt: Text, correct: Text, wrong: readonly Tex
 }
 
 /** spr builds a student-produced response: a number typed in, as a fraction or a decimal. */
-export function spr(prompt: Text, answer: Coefficient, wrong: readonly Coefficient[], solution: Text, figure?: Figure): Problem {
+export function spr(prompt: Text, answer: Coefficient, wrong: readonly Coefficient[], solution: Text | Worked, figure?: Figure): Problem {
   const key = latexOf(answer);
+  if (isWorked(solution)) {
+    const seen = new Set([key]);
+    const mistakes = wrong.flatMap((value, i) => {
+      const l = latexOf(value);
+      const r = solution.why[i];
+      if (seen.has(l) || !r) return [];
+      seen.add(l);
+      return [{ value, why: r }];
+    });
+    const rest = wrong.filter((_, i) => !solution.why[i]);
+    return { ...numberProblem({ prompt, answer, wrong: rest, mistakes, solution: walkedText(solution) }), ...(figure && { figure }) };
+  }
   return {
     ...numberProblem({ prompt, answer, wrong, solution: concluded(solution, t(`$${key}$`, `$${key}$`)) }),
     ...(figure && { figure }),
