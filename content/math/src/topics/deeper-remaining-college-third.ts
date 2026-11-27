@@ -6,9 +6,9 @@ import { dec, Q } from "@ga/subject-math";
 import { discreteDrawings2 } from "../explanation-drawings-discrete-mathematics-2.ts";
 
 import { numberProblem, why } from "../problems.ts";
+import { reasoned } from "../wrong-reasons.ts";
 import { walked } from "./calculus-i-differentiation.ts";
-import { whole } from "./early-grades-more-kit.ts";
-import { chooseFilled, frac, fraction, integer, signed, skill } from "./third-kit.ts";
+import { chooseFilled, frac, signed, skill } from "./third-kit.ts";
 
 /** Rng is the random source a generator receives. */
 type Rng = Parameters<KnowledgePointDef["generate"]>[0];
@@ -113,26 +113,61 @@ export const deeperRemainingCollegeThirdPoints: Readonly<Record<string, readonly
       "argmax-under-a-rescaling",
       ["Argmax under a rescaling", "缩放后的最大值点"],
       [
-        "Multiplying a function by a positive number and adding a constant changes its largest value but not where it occurs. This is why a loss can be rescaled freely without changing the best parameter.",
-        "函数乘一个正数再加常数，会改变最大值，但不改变它出现的位置。所以损失函数可以任意缩放，最优参数不变。",
+        "Multiplying a function by a positive number and adding a constant changes its largest value but not where it occurs. This is why a loss can be rescaled freely without changing the best parameter.\n\nFor example, if $f$ has its maximum value $6$ at $x = 4$, then $3f(x) - 5$ also peaks at $x = 4$, with value $3 \\times 6 - 5 = 13$.\n\nCheck: wherever $f(x) < 6$, also $3f(x) - 5 < 13$, so no other point can beat $x = 4$.\n\n> **Watch out.** The argmax is a location, not a value: the answer is $4$, not the new maximum $13$, and the rescaling is not applied to the location, so not $3 \\times 4 - 5 = 7$ either.",
+        "函数乘一个正数再加常数，会改变最大值，但不改变它出现的位置。所以损失函数可以任意缩放，最优参数不变。\n\n例如，若 $f$ 在 $x = 4$ 处取最大值 $6$，则 $3f(x) - 5$ 也在 $x = 4$ 处最大，最大值为 $3 \\times 6 - 5 = 13$。\n\n检验：凡是 $f(x) < 6$ 的地方，都有 $3f(x) - 5 < 13$，所以没有别的点能超过 $x = 4$。\n\n> **注意。** 最大值点是位置，不是数值：答案是 $4$，不是新的最大值 $13$；缩放也不作用在位置上，所以也不是 $3 \\times 4 - 5 = 7$。",
       ],
       (rng) => {
         const p = nz(rng, 20);
         const q = nz(rng, 20);
         const a = rng.int(2, 9);
         const b = nz(rng, 9);
-        return integer(
-          [
+        return numberProblem({
+          prompt: t(
             `A function $f$ has its unique maximum value ${q} at $x = ${p}$. Find $\\operatorname{argmax}_{x} \\left(${a}f(x)${signed(b)}\\right)$.`,
             `函数 $f$ 在 $x = ${p}$ 处取唯一最大值 ${q}。求 $\\operatorname{argmax}_{x} \\left(${a}f(x)${signed(b)}\\right)$。`,
-          ],
-          p,
-          [q, a * q + b, a * p + b],
-          [
-            `The rescaled function is largest at the same place, $x = ${p}$; only the value becomes ${a * q + b}.`,
-            `缩放后的函数在同一处最大，即 $x = ${p}$；只有最大值变成 ${a * q + b}。`,
-          ],
-        );
+          ),
+          answer: p,
+          form: "integer",
+          mistakes: [
+            why(
+              q,
+              "That is the maximum value of $f$; the argmax asks where the maximum occurs.",
+              "这是 $f$ 的最大值；最大值点问的是最大值出现在哪里。",
+            ),
+            why(
+              a * q + b,
+              "That is the maximum value of the rescaled function; the argmax is the place where it is reached.",
+              "这是缩放后函数的最大值；最大值点是取到它的位置。",
+            ),
+            why(
+              a * p + b,
+              "That applies the rescaling to the location; the rescaling changes the values of $f$, not where the largest one sits.",
+              "这是把缩放作用到了位置上；缩放改变的是 $f$ 的值，而不是最大值所在的位置。",
+            ),
+          ].filter((m, i, ms) => ms.findIndex((o) => o.value === m.value) === i),
+          solution: walked(
+            [
+              [
+                ["See what the rescaling does", "看缩放的作用"],
+                t(
+                  `Since $${a} > 0$, $${a}f(x)${signed(b)}$ is larger exactly where $f(x)$ is larger, so both are largest at the same $x$.`,
+                  `因为 $${a} > 0$，$${a}f(x)${signed(b)}$ 在 $f(x)$ 较大的地方恰好也较大，所以两者在同一个 $x$ 处最大。`,
+                ),
+              ],
+              [
+                ["Read off the location", "读出位置"],
+                t(
+                  `$f$ is largest at $x = ${p}$, so the argmax is $${p}$; only the value changes, to $${a} \\times ${paren(q)}${signed(b)} = ${a * q + b}$.`,
+                  `$f$ 在 $x = ${p}$ 处最大，所以最大值点是 $${p}$；只有最大值变为 $${a} \\times ${paren(q)}${signed(b)} = ${a * q + b}$。`,
+                ),
+              ],
+            ],
+            t(
+              `At any other $x$, $f(x) < ${q}$, so $${a}f(x)${signed(b)} < ${a * q + b}$: the rescaled function is smaller there too.`,
+              `在其他任何 $x$ 处 $f(x) < ${q}$，所以 $${a}f(x)${signed(b)} < ${a * q + b}$：缩放后的函数在那里也更小。`,
+            ),
+          ),
+        });
       },
     ),
   ],
@@ -141,8 +176,8 @@ export const deeperRemainingCollegeThirdPoints: Readonly<Record<string, readonly
       "the-second-variance-from-the-trace",
       ["The second variance from the trace", "由迹求第二个方差"],
       [
-        "The eigenvalues of a covariance matrix add up to its trace, which is the sum of the variances on the diagonal. So once the largest eigenvalue is known, the other one in two dimensions needs no further work.",
-        "协方差矩阵的特征值之和等于它的迹，也就是对角线上方差的和。所以在二维中知道最大特征值后，另一个不需要再计算。",
+        "The eigenvalues of a covariance matrix add up to its trace, which is the sum of the variances on the diagonal. So once the largest eigenvalue is known, the other one in two dimensions needs no further work.\n\nFor example, $\\begin{pmatrix} 25 & 12 \\\\ 12 & 18 \\end{pmatrix}$ has trace $25 + 18 = 43$, so if its largest eigenvalue is $34$, the other is $43 - 34 = 9$.\n\nCheck: the eigenvalues also multiply to the determinant, and $34 \\times 9 = 306 = 25 \\times 18 - 12^2$.\n\n> **Watch out.** The trace adds only the diagonal entries; the covariance $12$ off the diagonal plays no part in it, and the trace itself is the sum of both eigenvalues, not the second one.",
+        "协方差矩阵的特征值之和等于它的迹，也就是对角线上方差的和。所以在二维中知道最大特征值后，另一个不需要再计算。\n\n例如，$\\begin{pmatrix} 25 & 12 \\\\ 12 & 18 \\end{pmatrix}$ 的迹是 $25 + 18 = 43$，若它的最大特征值是 $34$，则另一个是 $43 - 34 = 9$。\n\n检验：特征值之积等于行列式，而 $34 \\times 9 = 306 = 25 \\times 18 - 12^2$。\n\n> **注意。** 迹只把对角线元素相加；对角线外的协方差 $12$ 与迹无关，而迹本身是两个特征值之和，不是第二个特征值。",
       ],
       (rng) => {
         const l = rng.int(1, 30);
@@ -151,8 +186,8 @@ export const deeperRemainingCollegeThirdPoints: Readonly<Record<string, readonly
         const swap = rng.bool();
         const p = l + (swap ? 16 : 9) * m;
         const r = l + (swap ? 9 : 16) * m;
-        return whole(
-          [
+        return numberProblem({
+          prompt: t(
             `The covariance matrix $${mat([
               [p, 12 * m],
               [12 * m, r],
@@ -161,11 +196,46 @@ export const deeperRemainingCollegeThirdPoints: Readonly<Record<string, readonly
               [p, 12 * m],
               [12 * m, r],
             ])}$ 的最大特征值是 ${big}。另一个特征值是多少？`,
-          ],
-          l,
-          [p + r, big - 12 * m, p],
-          [`The trace is ${p + r}, and $${p + r} - ${big} = ${l}$.`, `迹是 ${p + r}，$${p + r} - ${big} = ${l}$。`],
-        );
+          ),
+          answer: l,
+          form: "integer",
+          mistakes: [
+            why(
+              p + r,
+              `That is the trace, the sum of both eigenvalues; subtract the largest one, $${big}$.`,
+              `这是迹，即两个特征值之和；还要减去最大特征值 $${big}$。`,
+            ),
+            why(
+              big - 12 * m,
+              `That subtracts the off-diagonal covariance $${12 * m}$ from the largest eigenvalue; the eigenvalues add up to the trace instead.`,
+              `这是用最大特征值减去对角线外的协方差 $${12 * m}$；应利用两个特征值之和等于迹。`,
+            ),
+            why(
+              p,
+              `That is the first variance on the diagonal; the eigenvalues are not the diagonal entries unless the covariance $${12 * m}$ is $0$.`,
+              `这是对角线上的第一个方差；除非协方差 $${12 * m}$ 为 $0$，特征值并不是对角线元素。`,
+            ),
+          ].filter((x, i, ms) => ms.findIndex((o) => o.value === x.value) === i),
+          solution: walked(
+            [
+              [
+                ["Add the diagonal", "把对角线相加"],
+                t(
+                  `The trace is $${p} + ${r} = ${p + r}$, and it equals the sum of the two eigenvalues.`,
+                  `迹是 $${p} + ${r} = ${p + r}$，它等于两个特征值之和。`,
+                ),
+              ],
+              [
+                ["Subtract the largest eigenvalue", "减去最大特征值"],
+                t(`The other eigenvalue is $${p + r} - ${big} = ${l}$.`, `另一个特征值是 $${p + r} - ${big} = ${l}$。`),
+              ],
+            ],
+            t(
+              `The eigenvalues multiply to the determinant: $${big} \\times ${l} = ${big * l}$ and $${p} \\times ${r} - ${12 * m}^2 = ${p * r - 144 * m * m}$.`,
+              `特征值之积等于行列式：$${big} \\times ${l} = ${big * l}$，且 $${p} \\times ${r} - ${12 * m}^2 = ${p * r - 144 * m * m}$。`,
+            ),
+          ),
+        });
       },
     ),
   ],
@@ -174,8 +244,8 @@ export const deeperRemainingCollegeThirdPoints: Readonly<Record<string, readonly
       "a-linear-function-given-a-value",
       ["A linear function given a value", "给定值时的线性函数"],
       [
-        "Conditional expectation is linear, just like ordinary expectation. So once $E[X \\mid Y = y]$ is known as a function of $y$, the expectation of $rX + s$ follows by substituting and scaling.",
-        "条件期望和普通期望一样是线性的。所以知道 $E[X \\mid Y = y]$ 是 $y$ 的函数后，$rX + s$ 的期望可以代入再缩放得到。",
+        "Conditional expectation is linear, just like ordinary expectation. So once $E[X \\mid Y = y]$ is known as a function of $y$, the expectation of $rX + s$ follows by substituting and scaling.\n\nFor example, if $E[X \\mid Y = y] = 3y - 2$, then $E[X \\mid Y = 2] = 4$ and $E[4X + 5 \\mid Y = 2] = 4 \\times 4 + 5 = 21$.\n\nCheck: as a function of $y$, $E[4X + 5 \\mid Y = y] = 4(3y - 2) + 5 = 12y - 3$, which is $21$ at $y = 2$.\n\n> **Watch out.** The multiplier scales the whole conditional mean, constant included: $4(3y - 2)$, not $4 \\times 3y - 2$; and the added $5$ stays in the answer.",
+        "条件期望和普通期望一样是线性的。所以知道 $E[X \\mid Y = y]$ 是 $y$ 的函数后，$rX + s$ 的期望可以代入再缩放得到。\n\n例如，若 $E[X \\mid Y = y] = 3y - 2$，则 $E[X \\mid Y = 2] = 4$，$E[4X + 5 \\mid Y = 2] = 4 \\times 4 + 5 = 21$。\n\n检验：作为 $y$ 的函数，$E[4X + 5 \\mid Y = y] = 4(3y - 2) + 5 = 12y - 3$，在 $y = 2$ 处为 $21$。\n\n> **注意。** 乘数要乘整个条件均值，包括常数：是 $4(3y - 2)$，不是 $4 \\times 3y - 2$；加上的 $5$ 也要留在答案里。",
       ],
       (rng) => {
         const p = rng.int(2, 6);
@@ -183,18 +253,50 @@ export const deeperRemainingCollegeThirdPoints: Readonly<Record<string, readonly
         const r = rng.int(2, 6);
         const s = nz(rng, 9);
         const y = rng.int(1, 9);
-        return integer(
-          [
+        const e = p * y + q;
+        return numberProblem({
+          prompt: t(
             `Suppose $E[X \\mid Y = y] = ${p}y${signed(q)}$. Find $E[${r}X${signed(s)} \\mid Y = ${y}]$.`,
             `设 $E[X \\mid Y = y] = ${p}y${signed(q)}$。求 $E[${r}X${signed(s)} \\mid Y = ${y}]$。`,
-          ],
-          r * (p * y + q) + s,
-          [p * y + q, r * (p * y + q), r * p * y + q + s],
-          [
-            `At $y = ${y}$ the expectation of $X$ is ${p * y + q}, so the answer is $${r} \\cdot ${paren(p * y + q)}${signed(s)}$.`,
-            `$y = ${y}$ 时 $X$ 的期望是 ${p * y + q}，所以答案是 $${r} \\cdot ${paren(p * y + q)}${signed(s)}$。`,
-          ],
-        );
+          ),
+          answer: r * e + s,
+          form: "integer",
+          mistakes: [
+            why(
+              e,
+              `That is $E[X \\mid Y = ${y}]$ itself; the question asks for the expectation of $${r}X${signed(s)}$.`,
+              `这只是 $E[X \\mid Y = ${y}]$；题目求的是 $${r}X${signed(s)}$ 的期望。`,
+            ),
+            why(r * e, `That scales by $${r}$ but leaves out the added constant $${s}$.`, `这乘了 $${r}$，却漏掉了加上的常数 $${s}$。`),
+            why(
+              r * p * y + q + s,
+              `That scales only the $${p}y$ term; the multiplier $${r}$ applies to the constant $${q}$ as well.`,
+              `这只把 $${p}y$ 项乘了倍数；乘数 $${r}$ 也要作用在常数 $${q}$ 上。`,
+            ),
+          ].filter((x, i, ms) => ms.findIndex((o) => o.value === x.value) === i),
+          solution: walked(
+            [
+              [
+                ["Substitute the value", "代入给定值"],
+                t(
+                  `$E[X \\mid Y = ${y}] = ${p} \\times ${y}${signed(q)} = ${e}$.`,
+                  `$E[X \\mid Y = ${y}] = ${p} \\times ${y}${signed(q)} = ${e}$。`,
+                ),
+              ],
+              [
+                ["Scale and shift", "缩放并平移"],
+                t(
+                  `By linearity, $E[${r}X${signed(s)} \\mid Y = ${y}] = ${r} \\times ${paren(e)}${signed(s)} = ${r * e + s}$.`,
+                  `由线性性，$E[${r}X${signed(s)} \\mid Y = ${y}] = ${r} \\times ${paren(e)}${signed(s)} = ${r * e + s}$。`,
+                ),
+              ],
+            ],
+            t(
+              `As a function of $y$, $E[${r}X${signed(s)} \\mid Y = y] = ${r * p}y${signed(r * q + s)}$, and $${r * p} \\times ${y}${signed(r * q + s)} = ${r * e + s}$.`,
+              `作为 $y$ 的函数，$E[${r}X${signed(s)} \\mid Y = y] = ${r * p}y${signed(r * q + s)}$，而 $${r * p} \\times ${y}${signed(r * q + s)} = ${r * e + s}$。`,
+            ),
+          ),
+        });
       },
     ),
   ],
@@ -203,8 +305,8 @@ export const deeperRemainingCollegeThirdPoints: Readonly<Record<string, readonly
       "scaling-a-conditional-variance",
       ["Scaling a conditional variance", "条件方差的缩放"],
       [
-        "Given $Y$, the variable $X$ behaves like any other random variable. So a multiplier comes out of the conditional variance squared, and an added constant has no effect on the spread.",
-        "给定 $Y$ 时，$X$ 与其他随机变量一样。所以乘数提到条件方差外面时要平方，而加上的常数不影响离散程度。",
+        "Given $Y$, the variable $X$ behaves like any other random variable. So a multiplier comes out of the conditional variance squared, and an added constant has no effect on the spread.\n\nFor example, if $\\operatorname{Var}(X \\mid Y = y) = 2y^{2}$, then $\\operatorname{Var}(X \\mid Y = 2) = 8$ and $\\operatorname{Var}(3X - 7 \\mid Y = 2) = 3^2 \\times 8 = 72$.\n\nCheck: the shift $-7$ moves every value and the mean alike, while the factor $3$ triples each deviation from the mean, so each squared deviation grows $9$ times, and $72 = 9 \\times 8$.\n\n> **Watch out.** The multiplier comes out squared, $9$ and not $3$; and the constant adds nothing to the variance, so the answer is not $72 + 7$.",
+        "给定 $Y$ 时，$X$ 与其他随机变量一样。所以乘数提到条件方差外面时要平方，而加上的常数不影响离散程度。\n\n例如，若 $\\operatorname{Var}(X \\mid Y = y) = 2y^{2}$，则 $\\operatorname{Var}(X \\mid Y = 2) = 8$，$\\operatorname{Var}(3X - 7 \\mid Y = 2) = 3^2 \\times 8 = 72$。\n\n检验：平移 $-7$ 让每个取值和均值一起移动，而因子 $3$ 让每个离差变为三倍，所以每个离差的平方变为 $9$ 倍，$72 = 9 \\times 8$。\n\n> **注意。** 乘数提出来时要平方，是 $9$ 而不是 $3$；常数对方差没有贡献，所以答案不是 $72 + 7$。",
       ],
       (rng) => {
         const c = rng.int(1, 6);
@@ -212,18 +314,53 @@ export const deeperRemainingCollegeThirdPoints: Readonly<Record<string, readonly
         const a = rng.int(2, 5);
         const b = nz(rng, 20);
         const v = c * y * y;
-        return whole(
-          [
+        return numberProblem({
+          prompt: t(
             `Suppose $\\operatorname{Var}(X \\mid Y = y) = ${term(c, "y^{2}")}$. Find $\\operatorname{Var}(${a}X${signed(b)} \\mid Y = ${y})$.`,
             `设 $\\operatorname{Var}(X \\mid Y = y) = ${term(c, "y^{2}")}$。求 $\\operatorname{Var}(${a}X${signed(b)} \\mid Y = ${y})$。`,
+          ),
+          answer: a * a * v,
+          form: "integer",
+          mistakes: [
+            why(
+              a * v,
+              `That multiplies by $${a}$; a multiplier comes out of a variance squared, as $${a}^2 = ${a * a}$.`,
+              `这是乘以 $${a}$；乘数从方差中提出来时要平方，即 $${a}^2 = ${a * a}$。`,
+            ),
+            why(
+              a * a * v + Math.abs(b),
+              `That adds the constant $${Math.abs(b)}$; shifting $X$ moves its mean too, so the spread does not change.`,
+              `这是加上了常数 $${Math.abs(b)}$；平移 $X$ 时均值也一起移动，离散程度不变。`,
+            ),
+            why(
+              v,
+              `That is $\\operatorname{Var}(X \\mid Y = ${y})$ alone; the multiplier $${a}$ still has to come out, squared.`,
+              `这只是 $\\operatorname{Var}(X \\mid Y = ${y})$；还要把乘数 $${a}$ 平方后提出来。`,
+            ),
           ],
-          a * a * v,
-          [a * v, a * a * v + Math.abs(b), v],
-          [
-            `The variance given $y = ${y}$ is ${v}, and the multiplier gives a factor of ${a * a}.`,
-            `$y = ${y}$ 时方差是 ${v}，乘数带来因子 ${a * a}。`,
-          ],
-        );
+          solution: walked(
+            [
+              [
+                ["Evaluate the conditional variance", "求条件方差"],
+                t(
+                  `$\\operatorname{Var}(X \\mid Y = ${y}) = ${c === 1 ? "" : `${c} \\times `}${y}^{2} = ${v}$.`,
+                  `$\\operatorname{Var}(X \\mid Y = ${y}) = ${c === 1 ? "" : `${c} \\times `}${y}^{2} = ${v}$。`,
+                ),
+              ],
+              [
+                ["Scale and drop the shift", "缩放并去掉平移"],
+                t(
+                  `$\\operatorname{Var}(${a}X${signed(b)} \\mid Y = ${y}) = ${a}^2 \\times ${v} = ${a * a * v}$; the constant $${b}$ does not change the spread.`,
+                  `$\\operatorname{Var}(${a}X${signed(b)} \\mid Y = ${y}) = ${a}^2 \\times ${v} = ${a * a * v}$；常数 $${b}$ 不改变离散程度。`,
+                ),
+              ],
+            ],
+            t(
+              `The conditional standard deviation $\\sqrt{${v}}$ is multiplied by $${a}$, and squaring gives back $${a * a} \\times ${v} = ${a * a * v}$.`,
+              `条件标准差 $\\sqrt{${v}}$ 乘以 $${a}$，再平方得到 $${a * a} \\times ${v} = ${a * a * v}$。`,
+            ),
+          ),
+        });
       },
     ),
   ],
@@ -340,8 +477,8 @@ export const deeperRemainingCollegeThirdPoints: Readonly<Record<string, readonly
       "the-chebyshev-distance",
       ["The Chebyshev distance", "切比雪夫距离"],
       [
-        "As the order of a Minkowski distance grows, the largest coordinate difference takes over. In the limit, the Chebyshev distance is simply the largest absolute difference among the coordinates.",
-        "闵可夫斯基距离的阶数增大时，最大的坐标差占主导。取极限得到切比雪夫距离，就是各坐标差绝对值中最大的那个。",
+        "As the order of a Minkowski distance grows, the largest coordinate difference takes over. In the limit, the Chebyshev distance is simply the largest absolute difference among the coordinates.\n\nFor example, $\\mathbf{x} = (1, -4, 6)$ and $\\mathbf{y} = (3, 2, 5)$ have absolute differences $2, 6, 1$, so $D_{\\infty}(\\mathbf{x}, \\mathbf{y}) = 6$.\n\nCheck: the Manhattan distance $2 + 6 + 1 = 9$ is larger, as it always is, and the Euclidean distance $\\sqrt{4 + 36 + 1} = \\sqrt{41}$ lies between $6$ and $9$.\n\n> **Watch out.** Take absolute values before comparing: the signed differences are $-2, -6, 1$, and the largest of those, $1$, is not the distance; and do not add the differences, which gives the Manhattan distance.",
+        "闵可夫斯基距离的阶数增大时，最大的坐标差占主导。取极限得到切比雪夫距离，就是各坐标差绝对值中最大的那个。\n\n例如，$\\mathbf{x} = (1, -4, 6)$ 与 $\\mathbf{y} = (3, 2, 5)$ 的坐标差绝对值是 $2, 6, 1$，所以 $D_{\\infty}(\\mathbf{x}, \\mathbf{y}) = 6$。\n\n检验：曼哈顿距离 $2 + 6 + 1 = 9$ 更大，这总是成立的；欧几里得距离 $\\sqrt{4 + 36 + 1} = \\sqrt{41}$ 介于 $6$ 和 $9$ 之间。\n\n> **注意。** 比较之前要先取绝对值：带符号的差是 $-2, -6, 1$，其中最大的 $1$ 并不是距离；也不要把差加起来，那是曼哈顿距离。",
       ],
       (rng) => {
         const x = [nz(rng, 9), nz(rng, 9), nz(rng, 9), nz(rng, 9)];
@@ -349,15 +486,54 @@ export const deeperRemainingCollegeThirdPoints: Readonly<Record<string, readonly
         const d = x.map((v, i) => Math.abs(v - (y[i] as number)));
         const most = Math.max(...d);
         const sum = d.reduce((a, b) => a + b, 0);
-        return whole(
-          [
+        const signedMost = Math.max(...x.map((v, i) => v - (y[i] as number)));
+        return numberProblem({
+          prompt: t(
             `Find the Chebyshev distance $D_{\\infty}(\\mathbf{x}, \\mathbf{y})$ between $\\mathbf{x} = (${x.join(", ")})$ and $\\mathbf{y} = (${y.join(", ")})$.`,
             `求 $\\mathbf{x} = (${x.join(", ")})$ 和 $\\mathbf{y} = (${y.join(", ")})$ 之间的切比雪夫距离 $D_{\\infty}(\\mathbf{x}, \\mathbf{y})$。`,
-          ],
-          most,
-          [sum, Math.min(...d), most + 1],
-          [`The absolute differences are ${d.join(", ")}, and the largest is ${most}.`, `差的绝对值是 ${d.join("、")}，最大的是 ${most}。`],
-        );
+          ),
+          answer: most,
+          form: "integer",
+          mistakes: [
+            why(
+              sum,
+              "That adds the absolute differences, which is the Manhattan distance; the Chebyshev distance keeps only the largest.",
+              "这是把差的绝对值相加，得到的是曼哈顿距离；切比雪夫距离只取最大的那个。",
+            ),
+            why(
+              Math.min(...d),
+              "That is the smallest absolute difference; the Chebyshev distance is the largest.",
+              "这是最小的差的绝对值；切比雪夫距离取最大的。",
+            ),
+            why(
+              signedMost,
+              "That is the largest signed difference $x_i - y_i$; take absolute values first, since a large negative difference counts too.",
+              "这是带符号的差 $x_i - y_i$ 中最大的；要先取绝对值，绝对值大的负差也要算。",
+            ),
+          ].filter((m, i, ms) => ms.findIndex((o) => o.value === m.value) === i),
+          solution: walked(
+            [
+              [
+                ["Take the absolute differences", "求差的绝对值"],
+                t(
+                  `$${x.map((v, i) => `|${v} - ${paren(y[i] as number)}|`).join(", ")}$ are $${d.join(", ")}$.`,
+                  `$${x.map((v, i) => `|${v} - ${paren(y[i] as number)}|`).join(", ")}$ 依次是 $${d.join(", ")}$。`,
+                ),
+              ],
+              [
+                ["Keep the largest", "取最大的"],
+                t(
+                  `The largest is $${most}$, so $D_{\\infty}(\\mathbf{x}, \\mathbf{y}) = ${most}$.`,
+                  `最大的是 $${most}$，所以 $D_{\\infty}(\\mathbf{x}, \\mathbf{y}) = ${most}$。`,
+                ),
+              ],
+            ],
+            t(
+              `The Chebyshev distance is never more than the Manhattan distance, and $${most} \\le ${sum}$.`,
+              `切比雪夫距离从不超过曼哈顿距离，而 $${most} \\le ${sum}$。`,
+            ),
+          ),
+        });
       },
     ),
   ],
@@ -366,8 +542,8 @@ export const deeperRemainingCollegeThirdPoints: Readonly<Record<string, readonly
       "reconstructing-a-point-from-its-score",
       ["Reconstructing a point from its score", "由得分重构数据点"],
       [
-        "Keeping one component stores only a score for each point. To return to the original space, multiply the principal direction by that score, which gives the closest point on the line.",
-        "只保留一个主成分时，每个点只存一个得分。要回到原来的空间，就用主方向乘这个得分，得到直线上最近的点。",
+        "Keeping one component stores only a score for each point. To return to the original space, multiply the principal direction by that score, which gives the closest point on the line.\n\nFor example, with $\\mathbf{v}_1 = \\left(\\frac{3}{5}, \\frac{4}{5}\\right)$ and score $10$, the reconstruction is $10\\mathbf{v}_1 = (6, 8)$.\n\nCheck: $\\mathbf{v}_1$ has length $1$, so the reconstruction has length $10$, the score: $\\sqrt{6^2 + 8^2} = 10$.\n\n> **Watch out.** Multiply the whole unit vector, denominators included: $(10 \\times 3, 10 \\times 4) = (30, 40)$ forgets the $\\frac{1}{5}$; and keep the coordinates in order, $(6, 8)$ and not $(8, 6)$.",
+        "只保留一个主成分时，每个点只存一个得分。要回到原来的空间，就用主方向乘这个得分，得到直线上最近的点。\n\n例如，$\\mathbf{v}_1 = \\left(\\frac{3}{5}, \\frac{4}{5}\\right)$、得分为 $10$ 时，重构结果是 $10\\mathbf{v}_1 = (6, 8)$。\n\n检验：$\\mathbf{v}_1$ 的长度是 $1$，所以重构结果的长度等于得分 $10$：$\\sqrt{6^2 + 8^2} = 10$。\n\n> **注意。** 要乘整个单位向量，连分母一起：$(10 \\times 3, 10 \\times 4) = (30, 40)$ 忘了 $\\frac{1}{5}$；坐标顺序也不能颠倒，是 $(6, 8)$ 而不是 $(8, 6)$。",
       ],
       (rng) => {
         const [a, b, c] = rng.pick<[number, number, number]>([
@@ -380,15 +556,57 @@ export const deeperRemainingCollegeThirdPoints: Readonly<Record<string, readonly
         ]);
         const m = nz(rng, 9);
         const s = c * m;
-        return chooseFilled(
-          rng,
+        const wrong = [`(${b * m}, ${a * m})`, `(${a * s}, ${b * s})`, `(${-a * m}, ${-b * m})`];
+        const solution = walked(
           [
-            `The first principal direction is $\\mathbf{v}_1 = \\left(${frac(a, c)}, ${frac(b, c)}\\right)$, and a centered point has score ${s}. Find its reconstruction from this one component.`,
-            `第一主方向是 $\\mathbf{v}_1 = \\left(${frac(a, c)}, ${frac(b, c)}\\right)$，一个中心化后的点的得分是 ${s}。求只用这一个主成分的重构结果。`,
+            [
+              ["Scale the direction by the score", "用得分缩放方向"],
+              t(
+                `The reconstruction is $${s}\\mathbf{v}_1 = ${s}\\left(${frac(a, c)}, ${frac(b, c)}\\right)$.`,
+                `重构结果是 $${s}\\mathbf{v}_1 = ${s}\\left(${frac(a, c)}, ${frac(b, c)}\\right)$。`,
+              ),
+            ],
+            [
+              ["Multiply each coordinate", "逐个坐标相乘"],
+              t(
+                `$\\left(${frac(`${s} \\times ${a}`, c)}, ${frac(`${s} \\times ${b}`, c)}\\right) = (${a * m}, ${b * m})$.`,
+                `$\\left(${frac(`${s} \\times ${a}`, c)}, ${frac(`${s} \\times ${b}`, c)}\\right) = (${a * m}, ${b * m})$。`,
+              ),
+            ],
           ],
-          `(${a * m}, ${b * m})`,
-          [`(${b * m}, ${a * m})`, `(${a * s}, ${b * s})`, `(${-a * m}, ${-b * m})`],
-          [`$${s} \\cdot \\mathbf{v}_1 = (${a * m}, ${b * m})$.`, `$${s} \\cdot \\mathbf{v}_1 = (${a * m}, ${b * m})$。`],
+          t(
+            `Since $\\mathbf{v}_1$ has length $1$, the reconstruction has length $|${s}|$: $\\sqrt{${paren(a * m)}^2 + ${paren(b * m)}^2} = ${Math.abs(s)}$.`,
+            `因为 $\\mathbf{v}_1$ 的长度是 $1$，重构结果的长度是 $|${s}|$：$\\sqrt{${paren(a * m)}^2 + ${paren(b * m)}^2} = ${Math.abs(s)}$。`,
+          ),
+        );
+        return reasoned(
+          chooseFilled(
+            rng,
+            [
+              `The first principal direction is $\\mathbf{v}_1 = \\left(${frac(a, c)}, ${frac(b, c)}\\right)$, and a centered point has score ${s}. Find its reconstruction from this one component.`,
+              `第一主方向是 $\\mathbf{v}_1 = \\left(${frac(a, c)}, ${frac(b, c)}\\right)$，一个中心化后的点的得分是 ${s}。求只用这一个主成分的重构结果。`,
+            ],
+            `(${a * m}, ${b * m})`,
+            wrong,
+            [solution.en, solution["zh-CN"]],
+          ),
+          [
+            [
+              `$${wrong[0]}$`,
+              "This swaps the two coordinates; the first coordinate comes from the first entry of $\\mathbf{v}_1$.",
+              "这把两个坐标对调了；第一个坐标来自 $\\mathbf{v}_1$ 的第一个分量。",
+            ],
+            [
+              `$${wrong[1]}$`,
+              `This multiplies the score by the numerators only; each entry of $\\mathbf{v}_1$ also divides by $${c}$.`,
+              `这只用得分乘了分子；$\\mathbf{v}_1$ 的每个分量还要除以 $${c}$。`,
+            ],
+            [
+              `$${wrong[2]}$`,
+              `This flips the sign; the score $${s}$ multiplies $\\mathbf{v}_1$ as it is.`,
+              `这把符号弄反了；得分 $${s}$ 直接乘 $\\mathbf{v}_1$。`,
+            ],
+          ],
         );
       },
     ),
@@ -398,8 +616,8 @@ export const deeperRemainingCollegeThirdPoints: Readonly<Record<string, readonly
       "the-argmax-of-a-sum",
       ["The argmax of a sum", "和的最大值点"],
       [
-        "The best input for a sum need not be the best input for either part. So a combined score, such as accuracy minus a penalty, has to be worked out at each input before comparing.",
-        "和的最优输入不一定是任一部分的最优输入。所以综合得分（比如准确率减去惩罚）要在每个输入处算出来，再作比较。",
+        "The best input for a sum need not be the best input for either part. So a combined score, such as accuracy minus a penalty, has to be worked out at each input before comparing.\n\nFor example, if $f$ takes $9, 4, 7$ and $g$ takes $2, 8, 6$ at $x = 1, 2, 3$, the sums are $11, 12, 13$, so $\\operatorname{argmax}_{x} \\left(f(x) + g(x)\\right) = 3$, although $f$ is largest at $x = 1$ and $g$ at $x = 2$.\n\nCheck: $13$ beats both other sums, $11$ and $12$, so no other input ties with $x = 3$.\n\n> **Watch out.** The answer is the input $3$, not the largest sum $13$; and the argmax of one part, $1$ or $2$ here, says nothing on its own about the sum.",
+        "和的最优输入不一定是任一部分的最优输入。所以综合得分（比如准确率减去惩罚）要在每个输入处算出来，再作比较。\n\n例如，若在 $x = 1, 2, 3$ 处 $f$ 取 $9, 4, 7$，$g$ 取 $2, 8, 6$，则和为 $11, 12, 13$，所以 $\\operatorname{argmax}_{x} \\left(f(x) + g(x)\\right) = 3$，尽管 $f$ 在 $x = 1$ 处最大，$g$ 在 $x = 2$ 处最大。\n\n检验：$13$ 大于另外两个和 $11$ 与 $12$，所以没有别的输入与 $x = 3$ 并列。\n\n> **注意。** 答案是输入 $3$，不是最大的和 $13$；单独一部分的最大值点（这里是 $1$ 或 $2$）本身不能说明和的情况。",
       ],
       (rng) => {
         const f = rng.sample([2, 4, 5, 7, 9, 11, 12, 14, 15, 17], 5);
@@ -412,18 +630,56 @@ export const deeperRemainingCollegeThirdPoints: Readonly<Record<string, readonly
           sums[at] = (sums[at] as number) + 1;
           best += 1;
         }
-        return whole(
-          [
+        const second = Math.max(...sums.filter((_, i) => i !== at));
+        return numberProblem({
+          prompt: t(
             `For $x = 1, 2, 3, 4, 5$, $f(x)$ takes the values $${f.join(", ")}$ and $g(x)$ takes the values $${g.join(", ")}$. Find $\\operatorname{argmax}_{x} \\left(f(x) + g(x)\\right)$.`,
             `当 $x = 1, 2, 3, 4, 5$ 时，$f(x)$ 依次取 $${f.join(", ")}$，$g(x)$ 依次取 $${g.join(", ")}$。求 $\\operatorname{argmax}_{x} \\left(f(x) + g(x)\\right)$。`,
-          ],
-          at + 1,
-          [1, 2, 3, 4, 5].filter((n) => n !== at + 1),
-          [
-            `The sums are ${sums.join(", ")}, and the largest, ${best}, comes at $x = ${at + 1}$.`,
-            `和依次是 ${sums.join("、")}，最大的 ${best} 在 $x = ${at + 1}$ 处。`,
-          ],
-        );
+          ),
+          answer: at + 1,
+          form: "integer",
+          mistakes: [
+            why(
+              f.indexOf(Math.max(...f)) + 1,
+              "That is where $f$ alone is largest; the best input for the sum has to be found from the sums themselves.",
+              "这是 $f$ 单独最大的位置；和的最大值点要由各处的和来确定。",
+            ),
+            why(
+              g.indexOf(Math.max(...g)) + 1,
+              "That is where $g$ alone is largest; the best input for the sum has to be found from the sums themselves.",
+              "这是 $g$ 单独最大的位置；和的最大值点要由各处的和来确定。",
+            ),
+            why(
+              best,
+              "That is the largest sum itself; the argmax asks for the input $x$ where it occurs.",
+              "这是最大的和本身；最大值点问的是取到它的输入 $x$。",
+            ),
+            why(
+              sums.indexOf(Math.min(...sums)) + 1,
+              "That is where the sum is smallest, the argmin; the question asks for the argmax.",
+              "这是和最小的位置，即最小值点；题目问的是最大值点。",
+            ),
+          ].filter((m, i, ms) => ms.findIndex((o) => o.value === m.value) === i),
+          solution: walked(
+            [
+              [
+                ["Add at each input", "在每个输入处相加"],
+                t(
+                  `For $x = 1, 2, 3, 4, 5$ the sums $f(x) + g(x)$ are $${f.map((v, i) => `${v} + ${g[i]} = ${sums[i]}`).join(", ")}$.`,
+                  `当 $x = 1, 2, 3, 4, 5$ 时，和 $f(x) + g(x)$ 依次为 $${f.map((v, i) => `${v} + ${g[i]} = ${sums[i]}`).join(", ")}$。`,
+                ),
+              ],
+              [
+                ["Pick the largest sum", "选出最大的和"],
+                t(`The largest sum, $${best}$, comes at $x = ${at + 1}$.`, `最大的和 $${best}$ 在 $x = ${at + 1}$ 处。`),
+              ],
+            ],
+            t(
+              `The next largest sum is $${second}$, and $${best} > ${second}$, so $x = ${at + 1}$ is the only maximizer.`,
+              `第二大的和是 $${second}$，而 $${best} > ${second}$，所以 $x = ${at + 1}$ 是唯一的最大值点。`,
+            ),
+          ),
+        });
       },
     ),
   ],
@@ -697,23 +953,77 @@ export const deeperRemainingCollegeThirdPoints: Readonly<Record<string, readonly
       "the-gradient-of-a-squared-distance",
       ["The gradient of a squared distance", "距离平方的梯度"],
       [
-        "The gradient of $\\|\\mathbf{x} - \\mathbf{c}\\|^{2}$ is $2(\\mathbf{x} - \\mathbf{c})$, which points directly away from $\\mathbf{c}$. So a gradient step on this function moves the point toward $\\mathbf{c}$.",
-        "$\\|\\mathbf{x} - \\mathbf{c}\\|^{2}$ 的梯度是 $2(\\mathbf{x} - \\mathbf{c})$，它指向背离 $\\mathbf{c}$ 的方向。所以沿这个函数做梯度下降，点就向 $\\mathbf{c}$ 移动。",
+        "The gradient of $\\|\\mathbf{x} - \\mathbf{c}\\|^{2}$ is $2(\\mathbf{x} - \\mathbf{c})$, which points directly away from $\\mathbf{c}$. So a gradient step on this function moves the point toward $\\mathbf{c}$.\n\nFor example, with $\\mathbf{c} = (1, 3)$ at $\\mathbf{x} = (4, 1)$, the gradient is $2(3, -2) = (6, -4)$.\n\nCheck: a step of $\\frac{1}{2}$ against the gradient gives $(4, 1) - (3, -2) = (1, 3)$, which is $\\mathbf{c}$, the minimum.\n\n> **Watch out.** Keep the factor $2$ from the square, and subtract in the order $\\mathbf{x} - \\mathbf{c}$: $2(\\mathbf{c} - \\mathbf{x}) = (-6, 4)$ is the negative gradient, the direction of descent.",
+        "$\\|\\mathbf{x} - \\mathbf{c}\\|^{2}$ 的梯度是 $2(\\mathbf{x} - \\mathbf{c})$，它指向背离 $\\mathbf{c}$ 的方向。所以沿这个函数做梯度下降，点就向 $\\mathbf{c}$ 移动。\n\n例如，$\\mathbf{c} = (1, 3)$ 时，在 $\\mathbf{x} = (4, 1)$ 处梯度为 $2(3, -2) = (6, -4)$。\n\n检验：逆着梯度走 $\\frac{1}{2}$ 步，得到 $(4, 1) - (3, -2) = (1, 3)$，正是最小值点 $\\mathbf{c}$。\n\n> **注意。** 不要丢掉平方带来的因子 $2$，并按 $\\mathbf{x} - \\mathbf{c}$ 的顺序相减：$2(\\mathbf{c} - \\mathbf{x}) = (-6, 4)$ 是负梯度，即下降方向。",
       ],
       (rng) => {
         const x = [nz(rng, 9), nz(rng, 9)] as const;
         const c = [nz(rng, 9), nz(rng, 9)] as const;
-        return chooseFilled(
-          rng,
+        const wrong = [vec(x[0] - c[0], x[1] - c[1]), vec(2 * (c[0] - x[0]), 2 * (c[1] - x[1])), vec(2 * x[0], 2 * x[1])];
+        const solution = walked(
           [
-            `Let $f(\\mathbf{x}) = \\|\\mathbf{x} - \\mathbf{c}\\|^{2}$ with $\\mathbf{c} = ${vec(...c)}$. Find $\\nabla f$ at $\\mathbf{x} = ${vec(...x)}$.`,
-            `设 $f(\\mathbf{x}) = \\|\\mathbf{x} - \\mathbf{c}\\|^{2}$，$\\mathbf{c} = ${vec(...c)}$。求 $\\mathbf{x} = ${vec(...x)}$ 处的 $\\nabla f$。`,
+            [
+              ["Recall the gradient", "回顾梯度公式"],
+              t(
+                "Each component of $\\|\\mathbf{x} - \\mathbf{c}\\|^{2}$ is a square $(x_i - c_i)^2$ with derivative $2(x_i - c_i)$, so $\\nabla f = 2(\\mathbf{x} - \\mathbf{c})$.",
+                "$\\|\\mathbf{x} - \\mathbf{c}\\|^{2}$ 的每一项是平方 $(x_i - c_i)^2$，导数为 $2(x_i - c_i)$，所以 $\\nabla f = 2(\\mathbf{x} - \\mathbf{c})$。",
+              ),
+            ],
+            [
+              ["Substitute the point", "代入该点"],
+              t(
+                `The components are $2(${x[0]} - ${paren(c[0])}) = ${2 * (x[0] - c[0])}$ and $2(${x[1]} - ${paren(c[1])}) = ${2 * (x[1] - c[1])}$.`,
+                `各分量为 $2(${x[0]} - ${paren(c[0])}) = ${2 * (x[0] - c[0])}$ 和 $2(${x[1]} - ${paren(c[1])}) = ${2 * (x[1] - c[1])}$。`,
+              ),
+            ],
           ],
-          vec(2 * (x[0] - c[0]), 2 * (x[1] - c[1])),
-          [vec(x[0] - c[0], x[1] - c[1]), vec(2 * (c[0] - x[0]), 2 * (c[1] - x[1])), vec(2 * x[0], 2 * x[1])],
+          t(
+            `A step of $\\frac{1}{2}$ against the gradient lands on the minimum: $(${x[0]} - ${paren(x[0] - c[0])}, ${x[1]} - ${paren(x[1] - c[1])}) = (${c[0]}, ${c[1]})$, which is $\\mathbf{c}$.`,
+            `逆着梯度走 $\\frac{1}{2}$ 步正好到达最小值点：$(${x[0]} - ${paren(x[0] - c[0])}, ${x[1]} - ${paren(x[1] - c[1])}) = (${c[0]}, ${c[1]})$，即 $\\mathbf{c}$。`,
+          ),
+        );
+        const right = vec(2 * (x[0] - c[0]), 2 * (x[1] - c[1]));
+        const filled: string[] = [];
+        for (const w of wrong) if (w !== right && !filled.includes(w)) filled.push(w);
+        for (let step = 1; filled.length < 3 && step < 30; step++) {
+          const near = right.replace(/-?\d+/, (n) => String(Number(n) + step));
+          if (near !== right && !filled.includes(near)) filled.push(near);
+        }
+        const nearby = filled
+          .filter((o) => !wrong.includes(o))
+          .map((o): [string, string, string] => [
+            `$${o}$`,
+            `This changes the first component; it is $2(${x[0]} - ${paren(c[0])}) = ${2 * (x[0] - c[0])}$.`,
+            `这改变了第一个分量；它应为 $2(${x[0]} - ${paren(c[0])}) = ${2 * (x[0] - c[0])}$。`,
+          ]);
+        return reasoned(
+          chooseFilled(
+            rng,
+            [
+              `Let $f(\\mathbf{x}) = \\|\\mathbf{x} - \\mathbf{c}\\|^{2}$ with $\\mathbf{c} = ${vec(...c)}$. Find $\\nabla f$ at $\\mathbf{x} = ${vec(...x)}$.`,
+              `设 $f(\\mathbf{x}) = \\|\\mathbf{x} - \\mathbf{c}\\|^{2}$，$\\mathbf{c} = ${vec(...c)}$。求 $\\mathbf{x} = ${vec(...x)}$ 处的 $\\nabla f$。`,
+            ],
+            right,
+            wrong,
+            [solution.en, solution["zh-CN"]],
+          ),
           [
-            `The gradient is $2(\\mathbf{x} - \\mathbf{c})$, whose components are $2(${x[0]} - (${c[0]})) = ${2 * (x[0] - c[0])}$ and $2(${x[1]} - (${c[1]})) = ${2 * (x[1] - c[1])}$.`,
-            `梯度是 $2(\\mathbf{x} - \\mathbf{c})$，其分量为 $2(${x[0]} - (${c[0]})) = ${2 * (x[0] - c[0])}$ 和 $2(${x[1]} - (${c[1]})) = ${2 * (x[1] - c[1])}$。`,
+            [
+              `$${wrong[0]}$`,
+              "This is $\\mathbf{x} - \\mathbf{c}$ without the factor $2$ that the square contributes.",
+              "这是 $\\mathbf{x} - \\mathbf{c}$，漏掉了平方带来的因子 $2$。",
+            ],
+            [
+              `$${wrong[1]}$`,
+              "This is $2(\\mathbf{c} - \\mathbf{x})$, the negative gradient; the gradient points away from $\\mathbf{c}$.",
+              "这是 $2(\\mathbf{c} - \\mathbf{x})$，即负梯度；梯度指向背离 $\\mathbf{c}$ 的方向。",
+            ],
+            [
+              `$${wrong[2]}$`,
+              "This is $2\\mathbf{x}$, the gradient of $\\|\\mathbf{x}\\|^{2}$; the center $\\mathbf{c}$ has to be subtracted first.",
+              "这是 $2\\mathbf{x}$，即 $\\|\\mathbf{x}\\|^{2}$ 的梯度；要先减去中心 $\\mathbf{c}$。",
+            ],
+            ...nearby,
           ],
         );
       },
@@ -790,8 +1100,8 @@ export const deeperRemainingCollegeThirdPoints: Readonly<Record<string, readonly
       "the-best-block-given-the-other",
       ["The best block given the other", "固定另一块时的最优解"],
       [
-        "Setting the gradient with respect to one block of variables to zero gives its best value while the others stay fixed. This one step is the basis of alternating minimization.",
-        "令关于一块变量的梯度为零，就得到其他变量固定时这一块的最优值。这一步是交替最小化的基础。",
+        "Setting the gradient with respect to one block of variables to zero gives its best value while the others stay fixed. This one step is the basis of alternating minimization.\n\nFor example, $f(x, y) = 2x^{2} + 8xy + y^{2}$ has $\\frac{\\partial f}{\\partial x} = 4x + 8y$, so with $y = 3$ held fixed, $4x + 24 = 0$ gives $x = -6$.\n\nCheck: $4 \\times (-6) + 24 = 0$, and since the coefficient $2$ of $x^{2}$ is positive, this zero is the minimum in $x$.\n\n> **Watch out.** Differentiate $2x^{2}$ to $4x$ and divide by that $4$, not by $2$; and keep the sign, since $x = -6$, not $6$.",
+        "令关于一块变量的梯度为零，就得到其他变量固定时这一块的最优值。这一步是交替最小化的基础。\n\n例如，$f(x, y) = 2x^{2} + 8xy + y^{2}$ 有 $\\frac{\\partial f}{\\partial x} = 4x + 8y$，所以固定 $y = 3$ 时，由 $4x + 24 = 0$ 得 $x = -6$。\n\n检验：$4 \\times (-6) + 24 = 0$，又因为 $x^{2}$ 的系数 $2$ 是正数，这个零点是关于 $x$ 的最小值点。\n\n> **注意。** $2x^{2}$ 求导得 $4x$，要除以这个 $4$，而不是 $2$；还要保留符号，是 $x = -6$，不是 $6$。",
       ],
       (rng) => {
         const a = rng.int(1, 6);
@@ -799,18 +1109,53 @@ export const deeperRemainingCollegeThirdPoints: Readonly<Record<string, readonly
         const b = 2 * a * m;
         const c = rng.int(1, 9);
         const y = nz(rng, 9);
-        return integer(
-          [
+        return numberProblem({
+          prompt: t(
             `Let $f(x, y) = ${term(a, "x^{2}")} ${b < 0 ? "-" : "+"} ${Math.abs(b)}xy + ${term(c, "y^{2}")}$. With $y = ${y}$ held fixed, which $x$ makes $\\frac{\\partial f}{\\partial x} = 0$?`,
             `设 $f(x, y) = ${term(a, "x^{2}")} ${b < 0 ? "-" : "+"} ${Math.abs(b)}xy + ${term(c, "y^{2}")}$。固定 $y = ${y}$，哪个 $x$ 使 $\\frac{\\partial f}{\\partial x} = 0$？`,
+          ),
+          answer: -m * y,
+          form: "integer",
+          mistakes: [
+            why(
+              m * y,
+              "That has the wrong sign; moving the $y$ term across the equals sign changes its sign.",
+              "这个符号错了；把含 $y$ 的项移到等号另一边时要变号。",
+            ),
+            why(
+              b * y,
+              `That is the $y$ term $${b}y$ at $y = ${y}$ itself; solve for $x$ by moving it across and dividing by $${2 * a}$.`,
+              `这是含 $y$ 的项 $${b}y$ 在 $y = ${y}$ 时的值；要把它移项再除以 $${2 * a}$ 才能解出 $x$。`,
+            ),
+            why(
+              -b * y,
+              `That moves the $y$ term across but forgets to divide by the coefficient $${2 * a}$ of $x$ in the derivative.`,
+              `这移了项，却忘了除以导数中 $x$ 的系数 $${2 * a}$。`,
+            ),
           ],
-          -m * y,
-          [m * y, b * y, -b * y],
-          [
-            `$${2 * a}x + ${paren(b)} \\cdot ${paren(y)} = 0$ gives $x = ${-m * y}$.`,
-            `$${2 * a}x + ${paren(b)} \\cdot ${paren(y)} = 0$，得 $x = ${-m * y}$。`,
-          ],
-        );
+          solution: walked(
+            [
+              [
+                ["Differentiate in x", "求偏导数"],
+                t(
+                  `$\\frac{\\partial f}{\\partial x} = ${2 * a}x ${b < 0 ? "-" : "+"} ${Math.abs(b)}y$, which at $y = ${y}$ is $${2 * a}x${signed(b * y)}$.`,
+                  `$\\frac{\\partial f}{\\partial x} = ${2 * a}x ${b < 0 ? "-" : "+"} ${Math.abs(b)}y$，在 $y = ${y}$ 时为 $${2 * a}x${signed(b * y)}$。`,
+                ),
+              ],
+              [
+                ["Set it to zero", "令其为零"],
+                t(
+                  `$${2 * a}x${signed(b * y)} = 0$ gives $x = ${frac(-b * y, 2 * a)} = ${-m * y}$.`,
+                  `由 $${2 * a}x${signed(b * y)} = 0$ 得 $x = ${frac(-b * y, 2 * a)} = ${-m * y}$。`,
+                ),
+              ],
+            ],
+            t(
+              `$${2 * a} \\times ${paren(-m * y)}${signed(b * y)} = 0$, and the coefficient of $x^{2}$ is positive, so this is the minimum in $x$.`,
+              `$${2 * a} \\times ${paren(-m * y)}${signed(b * y)} = 0$，且 $x^{2}$ 的系数为正，所以这是关于 $x$ 的最小值点。`,
+            ),
+          ),
+        });
       },
     ),
   ],
@@ -874,22 +1219,62 @@ export const deeperRemainingCollegeThirdPoints: Readonly<Record<string, readonly
       "the-expected-count-of-an-indicator",
       ["The expected count of an indicator", "指示函数的期望计数"],
       [
-        "The expected value of an indicator is the probability of its predicate, since it is 1 exactly when the predicate holds. So the expected sum over many samples is the number of samples times that probability.",
-        "指示函数的期望就是谓词的概率，因为它恰好在谓词成立时为 1。所以许多样本上求和的期望，是样本数乘这个概率。",
+        "The expected value of an indicator is the probability of its predicate, since it is 1 exactly when the predicate holds. So the expected sum over many samples is the number of samples times that probability.\n\nFor example, if each of $40$ samples is classified correctly with probability $\\frac{3}{4}$, the expected number of correct ones is $40 \\times \\frac{3}{4} = 30$.\n\nCheck: the expected number of wrong ones is $40 \\times \\frac{1}{4} = 10$, and $30 + 10 = 40$, every sample.\n\n> **Watch out.** The indicator counts the correct samples only, so the answer is not all $40$, nor the $10$ expected mistakes; and each term contributes the probability $\\frac{3}{4}$, not its numerator $3$.",
+        "指示函数的期望就是谓词的概率，因为它恰好在谓词成立时为 1。所以许多样本上求和的期望，是样本数乘这个概率。\n\n例如，若 $40$ 个样本中每个被正确分类的概率都是 $\\frac{3}{4}$，则正确个数的期望是 $40 \\times \\frac{3}{4} = 30$。\n\n检验：分类错误个数的期望是 $40 \\times \\frac{1}{4} = 10$，而 $30 + 10 = 40$，正好是全部样本。\n\n> **注意。** 指示函数只数正确的样本，所以答案不是全部 $40$ 个，也不是错误个数的期望 $10$；每一项贡献的是概率 $\\frac{3}{4}$，而不是它的分子 $3$。",
       ],
       (rng) => {
         const q = rng.pick([2, 4, 5, 8, 10, 20, 25]);
         const p = rng.int(1, q - 1);
         const n = q * rng.int(2, 40);
-        return whole(
-          [
-            `Each of ${n} independent samples is classified correctly with probability $${Q.of(p, q).toLatex()}$. What is the expected value of $\\sum_{i=1}^{${n}} \\mathbb{I}[\\hat{y}_i = y_i]$?`,
-            `${n} 个独立样本中，每个被正确分类的概率是 $${Q.of(p, q).toLatex()}$。$\\sum_{i=1}^{${n}} \\mathbb{I}[\\hat{y}_i = y_i]$ 的期望是多少？`,
+        const prob = Q.of(p, q).toLatex();
+        const mean = (n * p) / q;
+        return numberProblem({
+          prompt: t(
+            `Each of ${n} independent samples is classified correctly with probability $${prob}$. What is the expected value of $\\sum_{i=1}^{${n}} \\mathbb{I}[\\hat{y}_i = y_i]$?`,
+            `${n} 个独立样本中，每个被正确分类的概率是 $${prob}$。$\\sum_{i=1}^{${n}} \\mathbb{I}[\\hat{y}_i = y_i]$ 的期望是多少？`,
+          ),
+          answer: mean,
+          form: "integer",
+          mistakes: [
+            why(
+              n,
+              "That counts every sample as correct; each indicator is $1$ only with the given probability.",
+              "这是把每个样本都算作正确；每个指示函数只以给定的概率取 $1$。",
+            ),
+            why(
+              n - mean,
+              "That is the expected number of misclassified samples; the indicator counts the correct ones.",
+              "这是分类错误样本个数的期望；指示函数数的是正确的样本。",
+            ),
+            why(
+              p,
+              `That is only the numerator of the probability; each of the ${n} terms has expected value $${prob}$, and they add up.`,
+              `这只是概率的分子；${n} 项中每一项的期望都是 $${prob}$，要把它们加起来。`,
+            ),
           ],
-          (n * p) / q,
-          [n, n - (n * p) / q === (n * p) / q ? (n * p) / q + 1 : n - (n * p) / q, p],
-          [`$${n} \\cdot ${Q.of(p, q).toLatex()} = ${(n * p) / q}$.`, `$${n} \\cdot ${Q.of(p, q).toLatex()} = ${(n * p) / q}$。`],
-        );
+          solution: walked(
+            [
+              [
+                ["Find the mean of one indicator", "求一个指示函数的期望"],
+                t(
+                  `$\\mathbb{I}[\\hat{y}_i = y_i]$ is $1$ with probability $${prob}$ and $0$ otherwise, so its expected value is $${prob}$.`,
+                  `$\\mathbb{I}[\\hat{y}_i = y_i]$ 以概率 $${prob}$ 取 $1$，否则取 $0$，所以它的期望是 $${prob}$。`,
+                ),
+              ],
+              [
+                ["Add over the samples", "对样本求和"],
+                t(
+                  `By linearity of expectation, the sum has expected value $${n} \\times ${prob} = ${mean}$.`,
+                  `由期望的线性性，和的期望是 $${n} \\times ${prob} = ${mean}$。`,
+                ),
+              ],
+            ],
+            t(
+              `The expected number of misclassified samples is $${n} - ${mean} = ${n - mean}$, and the two counts add to all $${n}$ samples.`,
+              `分类错误个数的期望是 $${n} - ${mean} = ${n - mean}$，两者之和正是全部 $${n}$ 个样本。`,
+            ),
+          ),
+        });
       },
     ),
   ],
@@ -898,26 +1283,57 @@ export const deeperRemainingCollegeThirdPoints: Readonly<Record<string, readonly
       "the-share-of-variance-kept",
       ["The share of variance kept", "保留的方差比例"],
       [
-        "Each component accounts for a share of the total variance equal to its eigenvalue divided by the sum of all the eigenvalues. Keeping several components adds up their shares.",
-        "每个主成分所占总方差的比例，等于它的特征值除以所有特征值之和。保留几个主成分，就把它们的比例相加。",
+        "Each component accounts for a share of the total variance equal to its eigenvalue divided by the sum of all the eigenvalues. Keeping several components adds up their shares.\n\nFor example, eigenvalues $12, 5, 2, 1$ add to $20$, so the first two components keep $\\frac{12 + 5}{20} = \\frac{17}{20}$ of the variance.\n\nCheck: the share lost is $\\frac{2 + 1}{20} = \\frac{3}{20}$, and $\\frac{17}{20} + \\frac{3}{20} = 1$.\n\n> **Watch out.** Divide by the sum of all the eigenvalues, not by the ones left out: $\\frac{17}{3}$ is more than $1$, which no share can be; and two of four components do not keep $\\frac{2}{4}$, since the shares are weighted by the eigenvalues.",
+        "每个主成分所占总方差的比例，等于它的特征值除以所有特征值之和。保留几个主成分，就把它们的比例相加。\n\n例如，特征值 $12, 5, 2, 1$ 之和为 $20$，所以前两个主成分保留了 $\\frac{12 + 5}{20} = \\frac{17}{20}$ 的方差。\n\n检验：损失的比例是 $\\frac{2 + 1}{20} = \\frac{3}{20}$，且 $\\frac{17}{20} + \\frac{3}{20} = 1$。\n\n> **注意。** 要除以所有特征值之和，而不是除以舍去的那些：$\\frac{17}{3}$ 大于 $1$，任何比例都不可能这样；四个主成分保留两个，也不是保留 $\\frac{2}{4}$，因为比例要按特征值加权。",
       ],
       (rng) => {
         const values = rng.sample([2, 3, 4, 5, 6, 8, 9, 10, 12, 15, 16, 18, 20, 24, 25, 30, 32, 40], 4).sort((a, b) => b - a);
         const k = rng.int(1, 2);
         const kept = values.slice(0, k).reduce((a, b) => a + b, 0);
         const total = values.reduce((a, b) => a + b, 0);
-        return fraction(
-          [
+        const share = Q.of(kept, total);
+        const lost = Q.of(total - kept, total);
+        const reduce = (top: number, q: Q) => (frac(top, total) === q.toLatex() ? q.toLatex() : `${frac(top, total)} = ${q.toLatex()}`);
+        return numberProblem({
+          prompt: t(
             `A covariance matrix has eigenvalues $${values.join(", ")}$. What fraction of the total variance ${k === 1 ? "does the first component" : "do the first two components"} keep?`,
             `协方差矩阵的特征值是 $${values.join(", ")}$。前 ${k === 1 ? "一" : "两"}个主成分保留了总方差的几分之几？`,
+          ),
+          answer: share,
+          mistakes: [
+            why(
+              Q.of(k, 4),
+              `That counts components, ${k} of 4; each component's share is weighted by its eigenvalue.`,
+              `这是在数主成分的个数，4 个中的 ${k} 个；每个主成分的比例要按它的特征值加权。`,
+            ),
+            why(
+              Q.of(kept, total - kept),
+              `That divides by the eigenvalues left out, $${total - kept}$; a share divides by the total $${total}$.`,
+              `这是除以舍去的特征值之和 $${total - kept}$；比例应除以总和 $${total}$。`,
+            ),
+            why(
+              lost,
+              "That is the share of variance lost by the dropped components, not the share kept.",
+              "这是舍去的主成分损失的方差比例，而不是保留的比例。",
+            ),
           ],
-          Q.of(kept, total),
-          [Q.of(k, 4), Q.of(kept, total - kept), Q.of(total - kept, total)],
-          [
-            `The kept eigenvalues sum to $${kept}$ and all of them sum to $${total}$, so the share is $${Q.of(kept, total).toLatex()}$.`,
-            `保留的特征值之和是 $${kept}$，全部特征值之和是 $${total}$，所以比例是 $${Q.of(kept, total).toLatex()}$。`,
-          ],
-        );
+          solution: walked(
+            [
+              [
+                ["Add the kept and all eigenvalues", "求保留的和全部特征值之和"],
+                t(
+                  `The kept eigenvalues give $${k === 1 ? `${kept}` : `${values[0]} + ${values[1]} = ${kept}`}$, and all of them give $${values.join(" + ")} = ${total}$.`,
+                  `保留的特征值为 $${k === 1 ? `${kept}` : `${values[0]} + ${values[1]} = ${kept}`}$，全部特征值之和为 $${values.join(" + ")} = ${total}$。`,
+                ),
+              ],
+              [["Divide", "相除"], t(`The share kept is $${reduce(kept, share)}$.`, `保留的比例是 $${reduce(kept, share)}$。`)],
+            ],
+            t(
+              `The share lost is $${reduce(total - kept, lost)}$, and $${share.toLatex()} + ${lost.toLatex()} = 1$.`,
+              `损失的比例是 $${reduce(total - kept, lost)}$，且 $${share.toLatex()} + ${lost.toLatex()} = 1$。`,
+            ),
+          ),
+        });
       },
     ),
   ],
@@ -926,44 +1342,92 @@ export const deeperRemainingCollegeThirdPoints: Readonly<Record<string, readonly
       "the-gradient-of-the-frobenius-norm",
       ["The gradient of the Frobenius norm", "弗罗贝尼乌斯范数的梯度"],
       [
-        "The squared Frobenius norm is the sum of the squares of all the entries, so each entry contributes separately. Differentiating entry by entry shows that the gradient is $2X$.",
-        "弗罗贝尼乌斯范数的平方是所有元素的平方和，所以每个元素分别起作用。逐元素求导可知梯度是 $2X$。",
+        "The squared Frobenius norm is the sum of the squares of all the entries, so each entry contributes separately. Differentiating entry by entry shows that the gradient is $2X$.\n\nFor example, $X = \\begin{pmatrix} 1 & -2 \\\\ 3 & 4 \\end{pmatrix}$ has $\\|X\\|_{F}^{2} = 1 + 4 + 9 + 16 = 30$ and $\\nabla_{X} f = \\begin{pmatrix} 2 & -4 \\\\ 6 & 8 \\end{pmatrix}$.\n\nCheck: only the term $x_{12}^{2}$ involves $x_{12}$, and its derivative at $x_{12} = -2$ is $2 \\times (-2) = -4$, the top-right entry.\n\n> **Watch out.** The gradient is $2X$ itself, not its transpose $2X^{T}$, and not the matrix of squares, which is $f$'s terms rather than their derivatives; and keep the factor $2$.",
+        "弗罗贝尼乌斯范数的平方是所有元素的平方和，所以每个元素分别起作用。逐元素求导可知梯度是 $2X$。\n\n例如，$X = \\begin{pmatrix} 1 & -2 \\\\ 3 & 4 \\end{pmatrix}$ 有 $\\|X\\|_{F}^{2} = 1 + 4 + 9 + 16 = 30$，且 $\\nabla_{X} f = \\begin{pmatrix} 2 & -4 \\\\ 6 & 8 \\end{pmatrix}$。\n\n检验：只有 $x_{12}^{2}$ 这一项含 $x_{12}$，它在 $x_{12} = -2$ 处的导数是 $2 \\times (-2) = -4$，正是右上角的元素。\n\n> **注意。** 梯度就是 $2X$ 本身，不是它的转置 $2X^{T}$，也不是各元素平方组成的矩阵，那是 $f$ 的各项而不是它们的导数；因子 $2$ 也不能丢。",
       ],
       (rng) => {
         const [a, b, c, d] = [nz(rng, 9), nz(rng, 9), nz(rng, 9), nz(rng, 9)];
-        return chooseFilled(
-          rng,
-          [
-            `Let $f(X) = \\|X\\|_{F}^{2} = \\operatorname{tr}(X^{T}X)$. Find $\\nabla_{X} f$ at $X = ${mat([
-              [a, b],
-              [c, d],
-            ])}$.`,
-            `设 $f(X) = \\|X\\|_{F}^{2} = \\operatorname{tr}(X^{T}X)$。求 $X = ${mat([
-              [a, b],
-              [c, d],
-            ])}$ 处的 $\\nabla_{X} f$。`,
-          ],
+        const right = mat([
+          [2 * a, 2 * b],
+          [2 * c, 2 * d],
+        ]);
+        const wrong = [
           mat([
-            [2 * a, 2 * b],
-            [2 * c, 2 * d],
+            [a, b],
+            [c, d],
           ]),
+          mat([
+            [2 * a, 2 * c],
+            [2 * b, 2 * d],
+          ]),
+          mat([
+            [a * a, b * b],
+            [c * c, d * d],
+          ]),
+        ];
+        const filled: string[] = [];
+        for (const w of wrong) if (w !== right && !filled.includes(w)) filled.push(w);
+        for (let step = 1; filled.length < 3 && step < 30; step++) {
+          const near = right.replace(/-?\d+/, (n) => String(Number(n) + step));
+          if (near !== right && !filled.includes(near)) filled.push(near);
+        }
+        const nearby = filled
+          .filter((o) => !wrong.includes(o))
+          .map((o): [string, string, string] => [
+            `$${o}$`,
+            `This changes the top-left entry; it is $2 \\times ${paren(a)} = ${2 * a}$.`,
+            `这改变了左上角的元素；它应为 $2 \\times ${paren(a)} = ${2 * a}$。`,
+          ]);
+        const solution = walked(
           [
-            mat([
-              [a, b],
-              [c, d],
-            ]),
-            mat([
-              [2 * a, 2 * c],
-              [2 * b, 2 * d],
-            ]),
-            mat([
-              [a * a, b * b],
-              [c * c, d * d],
-            ]),
+            [
+              ["Write the norm as a sum", "把范数写成和"],
+              t(
+                `$f(X) = x_{11}^{2} + x_{12}^{2} + x_{21}^{2} + x_{22}^{2}$, and each entry appears only in its own square, so $\\frac{\\partial f}{\\partial x_{ij}} = 2x_{ij}$ and $\\nabla_{X} f = 2X$.`,
+                `$f(X) = x_{11}^{2} + x_{12}^{2} + x_{21}^{2} + x_{22}^{2}$，每个元素只出现在自己的平方中，所以 $\\frac{\\partial f}{\\partial x_{ij}} = 2x_{ij}$，$\\nabla_{X} f = 2X$。`,
+              ),
+            ],
+            [["Double each entry", "把每个元素加倍"], t(`$2X = ${right}$.`, `$2X = ${right}$。`)],
           ],
+          t(
+            `The top-left entry: only $x_{11}^{2}$ involves $x_{11}$, and its derivative at $x_{11} = ${a}$ is $2 \\times ${paren(a)} = ${2 * a}$.`,
+            `看左上角：只有 $x_{11}^{2}$ 含 $x_{11}$，它在 $x_{11} = ${a}$ 处的导数是 $2 \\times ${paren(a)} = ${2 * a}$。`,
+          ),
+        );
+        return reasoned(
+          chooseFilled(
+            rng,
+            [
+              `Let $f(X) = \\|X\\|_{F}^{2} = \\operatorname{tr}(X^{T}X)$. Find $\\nabla_{X} f$ at $X = ${mat([
+                [a, b],
+                [c, d],
+              ])}$.`,
+              `设 $f(X) = \\|X\\|_{F}^{2} = \\operatorname{tr}(X^{T}X)$。求 $X = ${mat([
+                [a, b],
+                [c, d],
+              ])}$ 处的 $\\nabla_{X} f$。`,
+            ],
+            right,
+            wrong,
+            [solution.en, solution["zh-CN"]],
+          ),
           [
-            `Each entry $x_{ij}$ contributes $x_{ij}^{2}$, whose derivative is $2x_{ij}$.`,
-            `每个元素 $x_{ij}$ 贡献 $x_{ij}^{2}$，其导数是 $2x_{ij}$。`,
+            [
+              `$${wrong[0]}$`,
+              "This is $X$ itself; each square $x_{ij}^{2}$ has derivative $2x_{ij}$, so the factor $2$ is missing.",
+              "这是 $X$ 本身；每个平方 $x_{ij}^{2}$ 的导数是 $2x_{ij}$，漏掉了因子 $2$。",
+            ],
+            [
+              `$${wrong[1]}$`,
+              "This is $2X^{T}$, with the off-diagonal entries swapped; the derivative with respect to $x_{ij}$ belongs in position $(i, j)$.",
+              "这是 $2X^{T}$，对角线外的元素被对调了；关于 $x_{ij}$ 的导数应放在 $(i, j)$ 位置。",
+            ],
+            [
+              `$${wrong[2]}$`,
+              "This squares each entry, giving the terms of $f$ rather than their derivatives $2x_{ij}$.",
+              "这是把每个元素平方，得到的是 $f$ 的各项，而不是它们的导数 $2x_{ij}$。",
+            ],
+            ...nearby,
           ],
         );
       },
@@ -1343,22 +1807,60 @@ export const deeperRemainingCollegeThirdPoints: Readonly<Record<string, readonly
       "the-shape-of-a-composite-jacobian",
       ["The shape of a composite Jacobian", "复合雅可比矩阵的形状"],
       [
-        "A Jacobian has one row per output and one column per input. In $J_{g}J_{f}$ the sizes must match in the middle, and the result has the outputs of $g$ and the inputs of $f$.",
-        "雅可比矩阵每个输出一行，每个输入一列。在 $J_{g}J_{f}$ 中，中间的尺寸必须相符，结果的行数是 $g$ 的输出数，列数是 $f$ 的输入数。",
+        "A Jacobian has one row per output and one column per input. In $J_{g}J_{f}$ the sizes must match in the middle, and the result has the outputs of $g$ and the inputs of $f$.\n\nFor example, for $\\mathbf{f}: \\mathbb{R}^{3} \\to \\mathbb{R}^{5}$ and $\\mathbf{g}: \\mathbb{R}^{5} \\to \\mathbb{R}^{2}$, $J_{g}$ is $2 \\times 5$ and $J_{f}$ is $5 \\times 3$, so $J_{g}J_{f}$ is $2 \\times 3$.\n\nCheck: $\\mathbf{g} \\circ \\mathbf{f}$ maps $\\mathbb{R}^{3}$ to $\\mathbb{R}^{2}$, so it has $2$ outputs and $3$ inputs, which is $2 \\times 3$ again.\n\n> **Watch out.** Rows count outputs and come first: the size is $2 \\times 3$, not $3 \\times 2$; and it is neither factor's size, $2 \\times 5$ or $5 \\times 3$.",
+        "雅可比矩阵每个输出一行，每个输入一列。在 $J_{g}J_{f}$ 中，中间的尺寸必须相符，结果的行数是 $g$ 的输出数，列数是 $f$ 的输入数。\n\n例如，对 $\\mathbf{f}: \\mathbb{R}^{3} \\to \\mathbb{R}^{5}$ 和 $\\mathbf{g}: \\mathbb{R}^{5} \\to \\mathbb{R}^{2}$，$J_{g}$ 是 $2 \\times 5$，$J_{f}$ 是 $5 \\times 3$，所以 $J_{g}J_{f}$ 是 $2 \\times 3$。\n\n检验：$\\mathbf{g} \\circ \\mathbf{f}$ 把 $\\mathbb{R}^{3}$ 映到 $\\mathbb{R}^{2}$，有 $2$ 个输出、$3$ 个输入，同样是 $2 \\times 3$。\n\n> **注意。** 行数对应输出，写在前面：尺寸是 $2 \\times 3$，不是 $3 \\times 2$；它也不是任一因子的尺寸 $2 \\times 5$ 或 $5 \\times 3$。",
       ],
       (rng) => {
         const [a, b, c] = rng.sample([2, 3, 4, 5, 6, 7, 8, 9, 10, 12], 3) as [number, number, number];
-        return chooseFilled(
-          rng,
+        const solution = walked(
           [
-            `$\\mathbf{f}: \\mathbb{R}^{${a}} \\to \\mathbb{R}^{${b}}$ and $\\mathbf{g}: \\mathbb{R}^{${b}} \\to \\mathbb{R}^{${c}}$. What is the size of the Jacobian of $\\mathbf{g} \\circ \\mathbf{f}$?`,
-            `$\\mathbf{f}: \\mathbb{R}^{${a}} \\to \\mathbb{R}^{${b}}$，$\\mathbf{g}: \\mathbb{R}^{${b}} \\to \\mathbb{R}^{${c}}$。$\\mathbf{g} \\circ \\mathbf{f}$ 的雅可比矩阵的尺寸是多少？`,
+            [
+              ["Size each Jacobian", "确定每个雅可比矩阵的尺寸"],
+              t(
+                `$J_{\\mathbf{f}}$ has ${b} rows for its outputs and ${a} columns for its inputs, so it is $${b} \\times ${a}$; likewise $J_{\\mathbf{g}}$ is $${c} \\times ${b}$.`,
+                `$J_{\\mathbf{f}}$ 的 ${b} 行对应输出，${a} 列对应输入，所以是 $${b} \\times ${a}$；同理 $J_{\\mathbf{g}}$ 是 $${c} \\times ${b}$。`,
+              ),
+            ],
+            [
+              ["Multiply", "相乘"],
+              t(
+                `By the chain rule $J_{\\mathbf{g} \\circ \\mathbf{f}} = J_{\\mathbf{g}}J_{\\mathbf{f}}$, and $(${c} \\times ${b})(${b} \\times ${a})$ gives $${c} \\times ${a}$.`,
+                `由链式法则 $J_{\\mathbf{g} \\circ \\mathbf{f}} = J_{\\mathbf{g}}J_{\\mathbf{f}}$，而 $(${c} \\times ${b})(${b} \\times ${a})$ 得到 $${c} \\times ${a}$。`,
+              ),
+            ],
           ],
-          `${c} \\times ${a}`,
-          [`${a} \\times ${c}`, `${b} \\times ${a}`, `${c} \\times ${b}`],
+          t(
+            `$\\mathbf{g} \\circ \\mathbf{f}$ maps $\\mathbb{R}^{${a}}$ to $\\mathbb{R}^{${c}}$, so it has ${c} outputs and ${a} inputs, and the middle size ${b} cancels.`,
+            `$\\mathbf{g} \\circ \\mathbf{f}$ 把 $\\mathbb{R}^{${a}}$ 映到 $\\mathbb{R}^{${c}}$，有 ${c} 个输出、${a} 个输入，中间的尺寸 ${b} 消去。`,
+          ),
+        );
+        return reasoned(
+          chooseFilled(
+            rng,
+            [
+              `$\\mathbf{f}: \\mathbb{R}^{${a}} \\to \\mathbb{R}^{${b}}$ and $\\mathbf{g}: \\mathbb{R}^{${b}} \\to \\mathbb{R}^{${c}}$. What is the size of the Jacobian of $\\mathbf{g} \\circ \\mathbf{f}$?`,
+              `$\\mathbf{f}: \\mathbb{R}^{${a}} \\to \\mathbb{R}^{${b}}$，$\\mathbf{g}: \\mathbb{R}^{${b}} \\to \\mathbb{R}^{${c}}$。$\\mathbf{g} \\circ \\mathbf{f}$ 的雅可比矩阵的尺寸是多少？`,
+            ],
+            `${c} \\times ${a}`,
+            [`${a} \\times ${c}`, `${b} \\times ${a}`, `${c} \\times ${b}`],
+            [solution.en, solution["zh-CN"]],
+          ),
           [
-            `It has ${c} outputs and ${a} inputs, as the middle size ${b} cancels.`,
-            `它有 ${c} 个输出、${a} 个输入，中间的尺寸 ${b} 消去。`,
+            [
+              `$${a} \\times ${c}$`,
+              "This puts the inputs first; a Jacobian has one row per output, so the outputs come first.",
+              "这把输入放在前面了；雅可比矩阵每个输出一行，所以输出数在前。",
+            ],
+            [
+              `$${b} \\times ${a}$`,
+              "This is the size of $J_{\\mathbf{f}}$ alone; the composite also passes through $\\mathbf{g}$.",
+              "这只是 $J_{\\mathbf{f}}$ 的尺寸；复合函数还要经过 $\\mathbf{g}$。",
+            ],
+            [
+              `$${c} \\times ${b}$`,
+              "This is the size of $J_{\\mathbf{g}}$ alone; the composite takes the inputs of $\\mathbf{f}$.",
+              "这只是 $J_{\\mathbf{g}}$ 的尺寸；复合函数的输入是 $\\mathbf{f}$ 的输入。",
+            ],
           ],
         );
       },
@@ -1369,25 +1871,52 @@ export const deeperRemainingCollegeThirdPoints: Readonly<Record<string, readonly
       "the-singular-value-from-a-variance",
       ["The singular value from a variance", "由方差求奇异值"],
       [
-        "The eigenvalues of the covariance matrix and the singular values of the centered data satisfy $\\lambda = \\frac{\\sigma^{2}}{n - 1}$. So a variance and the number of rows give the singular value by working backward.",
-        "协方差矩阵的特征值与中心化数据的奇异值满足 $\\lambda = \\frac{\\sigma^{2}}{n - 1}$。所以由方差和行数可以反推出奇异值。",
+        "The eigenvalues of the covariance matrix and the singular values of the centered data satisfy $\\lambda = \\frac{\\sigma^{2}}{n - 1}$. So a variance and the number of rows give the singular value by working backward.\n\nFor example, with $17$ rows and variance $9$, $\\sigma^{2} = 9 \\times 16 = 144$, so $\\sigma = 12$.\n\nCheck: $\\frac{12^{2}}{17 - 1} = \\frac{144}{16} = 9$, the variance we started from.\n\n> **Watch out.** Multiply by $n - 1 = 16$, not by $n$; and take the square root at the end: $144$ is $\\sigma^{2}$, while $\\sqrt{9} = 3$ leaves out the factor $n - 1$ altogether.",
+        "协方差矩阵的特征值与中心化数据的奇异值满足 $\\lambda = \\frac{\\sigma^{2}}{n - 1}$。所以由方差和行数可以反推出奇异值。\n\n例如，有 $17$ 行、方差为 $9$ 时，$\\sigma^{2} = 9 \\times 16 = 144$，所以 $\\sigma = 12$。\n\n检验：$\\frac{12^{2}}{17 - 1} = \\frac{144}{16} = 9$，正是原来的方差。\n\n> **注意。** 要乘 $n - 1 = 16$，而不是 $n$；最后还要开平方：$144$ 是 $\\sigma^{2}$，而 $\\sqrt{9} = 3$ 完全漏掉了因子 $n - 1$。",
       ],
       (rng) => {
         const m = rng.int(2, 10);
         const k = rng.int(1, 12);
         const n = m * m + 1;
-        return whole(
-          [
-            `A centered data matrix has ${n} rows, and a principal component has variance ${k * k}. What is the matching singular value?`,
-            `中心化数据矩阵有 ${n} 行，某个主成分的方差是 ${k * k}。对应的奇异值是多少？`,
+        const v = k * k;
+        const s2 = v * m * m;
+        return numberProblem({
+          prompt: t(
+            `A centered data matrix has ${n} rows, and a principal component has variance ${v}. What is the matching singular value?`,
+            `中心化数据矩阵有 ${n} 行，某个主成分的方差是 ${v}。对应的奇异值是多少？`,
+          ),
+          answer: k * m,
+          form: "integer",
+          mistakes: [
+            why(
+              k,
+              `That is the square root of the variance alone; first multiply the variance by $n - 1 = ${n - 1}$.`,
+              `这只是方差的平方根；要先把方差乘以 $n - 1 = ${n - 1}$。`,
+            ),
+            why(s2, "That is $\\sigma^{2}$; the singular value is its square root.", "这是 $\\sigma^{2}$；奇异值是它的平方根。"),
+            why(
+              v * m,
+              `That multiplies the variance by $\\sqrt{n - 1} = ${m}$; it is $\\sigma^{2}$, not $\\sigma$, that equals the variance times $n - 1$.`,
+              `这是把方差乘以 $\\sqrt{n - 1} = ${m}$；等于方差乘 $n - 1$ 的是 $\\sigma^{2}$，而不是 $\\sigma$。`,
+            ),
           ],
-          k * m,
-          [k, k * k * m * m, k * k * m],
-          [
-            `$\\sigma^{2} = ${k * k} \\cdot ${n - 1} = ${k * k * m * m}$, so $\\sigma = ${k * m}$.`,
-            `$\\sigma^{2} = ${k * k} \\cdot ${n - 1} = ${k * k * m * m}$，所以 $\\sigma = ${k * m}$。`,
-          ],
-        );
+          solution: walked(
+            [
+              [
+                ["Solve for the square", "解出平方"],
+                t(
+                  `From $\\lambda = \\frac{\\sigma^{2}}{n - 1}$, $\\sigma^{2} = ${v} \\times ${n - 1} = ${s2}$.`,
+                  `由 $\\lambda = \\frac{\\sigma^{2}}{n - 1}$ 得 $\\sigma^{2} = ${v} \\times ${n - 1} = ${s2}$。`,
+                ),
+              ],
+              [["Take the square root", "开平方"], t(`$\\sigma = \\sqrt{${s2}} = ${k * m}$.`, `$\\sigma = \\sqrt{${s2}} = ${k * m}$。`)],
+            ],
+            t(
+              `$\\frac{${k * m}^{2}}{${n} - 1} = \\frac{${s2}}{${n - 1}} = ${v}$, the given variance.`,
+              `$\\frac{${k * m}^{2}}{${n} - 1} = \\frac{${s2}}{${n - 1}} = ${v}$，正是给定的方差。`,
+            ),
+          ),
+        });
       },
     ),
   ],
@@ -1465,8 +1994,8 @@ export const deeperRemainingCollegeThirdPoints: Readonly<Record<string, readonly
       "the-hadamard-product-with-the-identity",
       ["The Hadamard product with the identity", "与单位矩阵的阿达马积"],
       [
-        "The identity matrix is not the neutral element of the entrywise product, since its zeros erase every off-diagonal entry. So $A \\odot I$ keeps only the diagonal of $A$, and its entries add up to the trace.",
-        "单位矩阵不是逐元素乘积的中性元，因为它的零消去了所有非对角元素。所以 $A \\odot I$ 只保留 $A$ 的对角线，其元素之和等于迹。",
+        "The identity matrix is not the neutral element of the entrywise product, since its zeros erase every off-diagonal entry. So $A \\odot I$ keeps only the diagonal of $A$, and its entries add up to the trace.\n\nFor example, $A = \\begin{pmatrix} 2 & 5 \\\\ -1 & 4 \\end{pmatrix}$ gives $A \\odot I = \\begin{pmatrix} 2 & 0 \\\\ 0 & 4 \\end{pmatrix}$, whose entries add up to $6$.\n\nCheck: the trace of $A$ is $2 + 4 = 6$, and the erased entries $5$ and $-1$ make up the rest of the total $10$.\n\n> **Watch out.** $A \\odot I$ is not $A$, so the answer is not the sum $10$ of all the entries; and it is not the sum $2$ of the entries of $I$, since each $1$ of $I$ keeps an entry of $A$.",
+        "单位矩阵不是逐元素乘积的中性元，因为它的零消去了所有非对角元素。所以 $A \\odot I$ 只保留 $A$ 的对角线，其元素之和等于迹。\n\n例如，$A = \\begin{pmatrix} 2 & 5 \\\\ -1 & 4 \\end{pmatrix}$ 给出 $A \\odot I = \\begin{pmatrix} 2 & 0 \\\\ 0 & 4 \\end{pmatrix}$，其元素之和为 $6$。\n\n检验：$A$ 的迹是 $2 + 4 = 6$，被消去的元素 $5$ 和 $-1$ 构成总和 $10$ 的其余部分。\n\n> **注意。** $A \\odot I$ 不是 $A$，所以答案不是全部元素之和 $10$；也不是 $I$ 的元素之和 $2$，因为 $I$ 中的每个 $1$ 保留的是 $A$ 的一个元素。",
       ],
       (rng) => {
         const a = [nz(rng, 9), nz(rng, 9), nz(rng, 9)];
@@ -1477,13 +2006,63 @@ export const deeperRemainingCollegeThirdPoints: Readonly<Record<string, readonly
           [off[4] as number, off[5] as number, a[2] as number],
         ]);
         const trace = a.reduce((x, y) => x + y, 0);
-        const all = trace + off.reduce((x, y) => x + y, 0);
-        return integer(
-          [`Let $A = ${matrix}$. Find the sum of the entries of $A \\odot I$.`, `设 $A = ${matrix}$。求 $A \\odot I$ 所有元素的和。`],
-          trace,
-          [all, 3, trace + 1],
-          [`Only the diagonal survives, and it adds up to ${trace}.`, `只有对角线保留下来，其和是 ${trace}。`],
-        );
+        const rest = off.reduce((x, y) => x + y, 0);
+        const all = trace + rest;
+        return numberProblem({
+          prompt: t(
+            `Let $A = ${matrix}$. Find the sum of the entries of $A \\odot I$.`,
+            `设 $A = ${matrix}$。求 $A \\odot I$ 所有元素的和。`,
+          ),
+          answer: trace,
+          form: "integer",
+          mistakes: [
+            why(
+              all,
+              "That adds every entry of $A$, as if $A \\odot I = A$; the zeros of $I$ erase the off-diagonal entries.",
+              "这是把 $A$ 的所有元素相加，好像 $A \\odot I = A$；$I$ 中的零会消去非对角元素。",
+            ),
+            why(
+              3,
+              "That is the sum of the entries of $I$; each $1$ of $I$ keeps the matching entry of $A$.",
+              "这是 $I$ 的元素之和；$I$ 中的每个 $1$ 保留的是 $A$ 中对应的元素。",
+            ),
+            why(
+              rest,
+              "That adds the off-diagonal entries, which are the ones $I$ erases; the diagonal is what survives.",
+              "这是把非对角元素相加，而它们正是被 $I$ 消去的；保留下来的是对角线。",
+            ),
+          ].filter((m, i, ms) => ms.findIndex((o) => o.value === m.value) === i),
+          solution: walked(
+            [
+              [
+                ["Multiply entry by entry", "逐元素相乘"],
+                t(
+                  `$I$ has $1$ on the diagonal and $0$ elsewhere, so $A \\odot I = ${mat([
+                    [a[0] as number, 0, 0],
+                    [0, a[1] as number, 0],
+                    [0, 0, a[2] as number],
+                  ])}$.`,
+                  `$I$ 的对角线为 $1$，其余为 $0$，所以 $A \\odot I = ${mat([
+                    [a[0] as number, 0, 0],
+                    [0, a[1] as number, 0],
+                    [0, 0, a[2] as number],
+                  ])}$。`,
+                ),
+              ],
+              [
+                ["Add the entries", "把元素相加"],
+                t(
+                  `$${a[0]} + ${paren(a[1] as number)} + ${paren(a[2] as number)} = ${trace}$.`,
+                  `$${a[0]} + ${paren(a[1] as number)} + ${paren(a[2] as number)} = ${trace}$。`,
+                ),
+              ],
+            ],
+            t(
+              `The erased entries add up to $${rest}$, and $${trace} + ${paren(rest)} = ${all}$, the sum of all the entries of $A$.`,
+              `被消去的元素之和是 $${rest}$，而 $${trace} + ${paren(rest)} = ${all}$，正是 $A$ 所有元素之和。`,
+            ),
+          ),
+        });
       },
     ),
   ],
@@ -1492,25 +2071,60 @@ export const deeperRemainingCollegeThirdPoints: Readonly<Record<string, readonly
       "the-number-of-partial-derivatives",
       ["The number of partial derivatives", "偏导数的个数"],
       [
-        "The derivative of a map between arrays holds one partial derivative for each pair of an output entry and an input entry. So its number of entries is the product of the two sizes, which is why it is a tensor.",
-        "数组之间映射的导数，对每一对输出元素和输入元素都有一个偏导数。所以它的元素个数是两个大小的积，这就是它是张量的原因。",
+        "The derivative of a map between arrays holds one partial derivative for each pair of an output entry and an input entry. So its number of entries is the product of the two sizes, which is why it is a tensor.\n\nFor example, a map from $3 \\times 4$ matrices to $\\mathbb{R}^{5}$ has $12$ inputs and $5$ outputs, so its derivative has $5 \\times 12 = 60$ entries.\n\nCheck: arranged as an array of shape $5 \\times 3 \\times 4$, it holds $5 \\times 3 \\times 4 = 60$ entries again.\n\n> **Watch out.** Multiply the sizes, do not add them: $3 + 4 + 5 = 12$ counts nothing useful; and every one of the $12$ matrix entries is an input, not just one row or column of them.",
+        "数组之间映射的导数，对每一对输出元素和输入元素都有一个偏导数。所以它的元素个数是两个大小的积，这就是它是张量的原因。\n\n例如，从 $3 \\times 4$ 矩阵到 $\\mathbb{R}^{5}$ 的映射有 $12$ 个输入、$5$ 个输出，所以它的导数有 $5 \\times 12 = 60$ 个元素。\n\n检验：把它排成形状为 $5 \\times 3 \\times 4$ 的数组，同样有 $5 \\times 3 \\times 4 = 60$ 个元素。\n\n> **注意。** 要把大小相乘，而不是相加：$3 + 4 + 5 = 12$ 没有意义；矩阵的 $12$ 个元素每一个都是输入，而不只是其中一行或一列。",
       ],
       (rng) => {
         const m = rng.int(2, 8);
         const n = rng.int(2, 8);
         const p = rng.int(2, 9);
-        return whole(
-          [
+        return numberProblem({
+          prompt: t(
             `A map takes a matrix of size $${m} \\times ${n}$ to a vector in $\\mathbb{R}^{${p}}$. How many entries does its derivative have?`,
             `一个映射把 $${m} \\times ${n}$ 矩阵变成 $\\mathbb{R}^{${p}}$ 中的向量。它的导数有多少个元素？`,
-          ],
-          m * n * p,
-          [m * n, m + n + p, n * p],
-          [
-            `Each of the ${p} outputs has a partial derivative for each of the ${m * n} inputs, so there are $${p} \\cdot ${m * n} = ${m * n * p}$ entries.`,
-            `${p} 个输出中，每个对 ${m * n} 个输入各有一个偏导数，所以共有 $${p} \\cdot ${m * n} = ${m * n * p}$ 个元素。`,
-          ],
-        );
+          ),
+          answer: m * n * p,
+          form: "integer",
+          mistakes: [
+            why(
+              m * n,
+              `That counts the inputs only; each of the ${p} outputs has its own partial derivative for every input.`,
+              `这只数了输入；${p} 个输出中的每一个对每个输入都有自己的偏导数。`,
+            ),
+            why(
+              m + n + p,
+              "That adds the sizes; one partial derivative for each output and input pair means multiplying them.",
+              "这是把大小相加；每一对输出与输入各有一个偏导数，所以要相乘。",
+            ),
+            why(
+              n * p,
+              `That uses only ${n} inputs, one row of the matrix; all ${m * n} entries of the matrix are inputs.`,
+              `这只用了 ${n} 个输入，即矩阵的一行；矩阵的全部 ${m * n} 个元素都是输入。`,
+            ),
+          ].filter((x, i, ms) => ms.findIndex((o) => o.value === x.value) === i),
+          solution: walked(
+            [
+              [
+                ["Count inputs and outputs", "数输入和输出"],
+                t(
+                  `The input matrix has $${m} \\times ${n} = ${m * n}$ entries, and the output has ${p} entries.`,
+                  `输入矩阵有 $${m} \\times ${n} = ${m * n}$ 个元素，输出有 ${p} 个元素。`,
+                ),
+              ],
+              [
+                ["Multiply", "相乘"],
+                t(
+                  `Each output has a partial derivative for each input, so there are $${p} \\times ${m * n} = ${m * n * p}$ entries.`,
+                  `每个输出对每个输入都有一个偏导数，所以共有 $${p} \\times ${m * n} = ${m * n * p}$ 个元素。`,
+                ),
+              ],
+            ],
+            t(
+              `Arranged as an array of shape $${p} \\times ${m} \\times ${n}$, the derivative holds $${p} \\times ${m} \\times ${n} = ${m * n * p}$ entries.`,
+              `排成形状为 $${p} \\times ${m} \\times ${n}$ 的数组，导数共有 $${p} \\times ${m} \\times ${n} = ${m * n * p}$ 个元素。`,
+            ),
+          ),
+        });
       },
     ),
   ],
@@ -1519,24 +2133,82 @@ export const deeperRemainingCollegeThirdPoints: Readonly<Record<string, readonly
       "the-gradient-of-a-regularized-objective",
       ["The gradient of a regularized objective", "正则化目标的梯度"],
       [
-        "Gradients add across a sum, so each part can be handled alone. The linear term $\\mathbf{a}^{T}\\mathbf{x}$ contributes $\\mathbf{a}$, and the penalty $k\\mathbf{x}^{T}\\mathbf{x}$ contributes $2k\\mathbf{x}$.",
-        "和的梯度等于梯度的和，所以每部分可以单独处理。线性项 $\\mathbf{a}^{T}\\mathbf{x}$ 贡献 $\\mathbf{a}$，惩罚项 $k\\mathbf{x}^{T}\\mathbf{x}$ 贡献 $2k\\mathbf{x}$。",
+        "Gradients add across a sum, so each part can be handled alone. The linear term $\\mathbf{a}^{T}\\mathbf{x}$ contributes $\\mathbf{a}$, and the penalty $k\\mathbf{x}^{T}\\mathbf{x}$ contributes $2k\\mathbf{x}$.\n\nFor example, with $\\mathbf{a} = (3, -1)$, $k = 2$ and $\\mathbf{x} = (1, 2)$, the gradient is $(3, -1) + 4(1, 2) = (7, 7)$.\n\nCheck: the part of $f$ that involves $x_1$ is $3x_1 + 2x_1^{2}$, whose derivative $3 + 4x_1$ is $7$ at $x_1 = 1$.\n\n> **Watch out.** The penalty $k\\mathbf{x}^{T}\\mathbf{x}$ gives $2k\\mathbf{x}$, not $k\\mathbf{x}$, because each $x_i^{2}$ has derivative $2x_i$; and the linear term still contributes $\\mathbf{a}$, with a plus sign.",
+        "和的梯度等于梯度的和，所以每部分可以单独处理。线性项 $\\mathbf{a}^{T}\\mathbf{x}$ 贡献 $\\mathbf{a}$，惩罚项 $k\\mathbf{x}^{T}\\mathbf{x}$ 贡献 $2k\\mathbf{x}$。\n\n例如，$\\mathbf{a} = (3, -1)$、$k = 2$、$\\mathbf{x} = (1, 2)$ 时，梯度为 $(3, -1) + 4(1, 2) = (7, 7)$。\n\n检验：$f$ 中含 $x_1$ 的部分是 $3x_1 + 2x_1^{2}$，其导数 $3 + 4x_1$ 在 $x_1 = 1$ 处为 $7$。\n\n> **注意。** 惩罚项 $k\\mathbf{x}^{T}\\mathbf{x}$ 给出 $2k\\mathbf{x}$，而不是 $k\\mathbf{x}$，因为每个 $x_i^{2}$ 的导数是 $2x_i$；线性项仍贡献 $\\mathbf{a}$，符号为正。",
       ],
       (rng) => {
         const a = [nz(rng, 9), nz(rng, 9)] as const;
         const x = [nz(rng, 6), nz(rng, 6)] as const;
         const k = rng.int(2, 5);
-        return chooseFilled(
-          rng,
+        const right = vec(a[0] + 2 * k * x[0], a[1] + 2 * k * x[1]);
+        const wrong = [
+          vec(a[0] + k * x[0], a[1] + k * x[1]),
+          vec(2 * k * x[0], 2 * k * x[1]),
+          vec(a[0] - 2 * k * x[0], a[1] - 2 * k * x[1]),
+        ];
+        const filled: string[] = [];
+        for (const w of wrong) if (w !== right && !filled.includes(w)) filled.push(w);
+        for (let step = 1; filled.length < 3 && step < 30; step++) {
+          const near = right.replace(/-?\d+/, (n) => String(Number(n) + step));
+          if (near !== right && !filled.includes(near)) filled.push(near);
+        }
+        const nearby = filled
+          .filter((o) => !wrong.includes(o))
+          .map((o): [string, string, string] => [
+            `$${o}$`,
+            `This changes the first component; it is $${a[0]} + ${2 * k} \\times ${paren(x[0])} = ${a[0] + 2 * k * x[0]}$.`,
+            `这改变了第一个分量；它应为 $${a[0]} + ${2 * k} \\times ${paren(x[0])} = ${a[0] + 2 * k * x[0]}$。`,
+          ]);
+        const solution = walked(
           [
-            `Let $f(\\mathbf{x}) = \\mathbf{a}^{T}\\mathbf{x} + ${k}\\mathbf{x}^{T}\\mathbf{x}$ with $\\mathbf{a} = ${vec(...a)}$. Find $\\nabla f$ at $\\mathbf{x} = ${vec(...x)}$.`,
-            `设 $f(\\mathbf{x}) = \\mathbf{a}^{T}\\mathbf{x} + ${k}\\mathbf{x}^{T}\\mathbf{x}$，$\\mathbf{a} = ${vec(...a)}$。求 $\\mathbf{x} = ${vec(...x)}$ 处的 $\\nabla f$。`,
+            [
+              ["Add the two gradients", "把两部分梯度相加"],
+              t(
+                `$\\nabla(\\mathbf{a}^{T}\\mathbf{x}) = \\mathbf{a}$ and $\\nabla(${k}\\mathbf{x}^{T}\\mathbf{x}) = ${2 * k}\\mathbf{x}$, so $\\nabla f = \\mathbf{a} + ${2 * k}\\mathbf{x}$.`,
+                `$\\nabla(\\mathbf{a}^{T}\\mathbf{x}) = \\mathbf{a}$，$\\nabla(${k}\\mathbf{x}^{T}\\mathbf{x}) = ${2 * k}\\mathbf{x}$，所以 $\\nabla f = \\mathbf{a} + ${2 * k}\\mathbf{x}$。`,
+              ),
+            ],
+            [
+              ["Substitute the point", "代入该点"],
+              t(
+                `The components are $${a[0]} + ${2 * k} \\times ${paren(x[0])} = ${a[0] + 2 * k * x[0]}$ and $${a[1]} + ${2 * k} \\times ${paren(x[1])} = ${a[1] + 2 * k * x[1]}$.`,
+                `各分量为 $${a[0]} + ${2 * k} \\times ${paren(x[0])} = ${a[0] + 2 * k * x[0]}$ 和 $${a[1]} + ${2 * k} \\times ${paren(x[1])} = ${a[1] + 2 * k * x[1]}$。`,
+              ),
+            ],
           ],
-          vec(a[0] + 2 * k * x[0], a[1] + 2 * k * x[1]),
-          [vec(a[0] + k * x[0], a[1] + k * x[1]), vec(2 * k * x[0], 2 * k * x[1]), vec(a[0] - 2 * k * x[0], a[1] - 2 * k * x[1])],
+          t(
+            `The part of $f$ that involves $x_1$ is $${term(a[0], "x_1")} + ${k}x_1^{2}$, whose derivative $${a[0]} + ${2 * k}x_1$ at $x_1 = ${x[0]}$ is $${a[0] + 2 * k * x[0]}$, the first component.`,
+            `$f$ 中含 $x_1$ 的部分是 $${term(a[0], "x_1")} + ${k}x_1^{2}$，其导数 $${a[0]} + ${2 * k}x_1$ 在 $x_1 = ${x[0]}$ 处为 $${a[0] + 2 * k * x[0]}$，正是第一个分量。`,
+          ),
+        );
+        return reasoned(
+          chooseFilled(
+            rng,
+            [
+              `Let $f(\\mathbf{x}) = \\mathbf{a}^{T}\\mathbf{x} + ${k}\\mathbf{x}^{T}\\mathbf{x}$ with $\\mathbf{a} = ${vec(...a)}$. Find $\\nabla f$ at $\\mathbf{x} = ${vec(...x)}$.`,
+              `设 $f(\\mathbf{x}) = \\mathbf{a}^{T}\\mathbf{x} + ${k}\\mathbf{x}^{T}\\mathbf{x}$，$\\mathbf{a} = ${vec(...a)}$。求 $\\mathbf{x} = ${vec(...x)}$ 处的 $\\nabla f$。`,
+            ],
+            right,
+            wrong,
+            [solution.en, solution["zh-CN"]],
+          ),
           [
-            `The gradient is $\\mathbf{a} + ${2 * k}\\mathbf{x}$, whose components are $${a[0]} + ${2 * k}(${x[0]}) = ${a[0] + 2 * k * x[0]}$ and $${a[1]} + ${2 * k}(${x[1]}) = ${a[1] + 2 * k * x[1]}$.`,
-            `梯度是 $\\mathbf{a} + ${2 * k}\\mathbf{x}$，其分量为 $${a[0]} + ${2 * k}(${x[0]}) = ${a[0] + 2 * k * x[0]}$ 和 $${a[1]} + ${2 * k}(${x[1]}) = ${a[1] + 2 * k * x[1]}$。`,
+            [
+              `$${wrong[0]}$`,
+              `This is $\\mathbf{a} + ${k}\\mathbf{x}$; the penalty contributes $2k\\mathbf{x} = ${2 * k}\\mathbf{x}$, since each $x_i^{2}$ has derivative $2x_i$.`,
+              `这是 $\\mathbf{a} + ${k}\\mathbf{x}$；惩罚项贡献 $2k\\mathbf{x} = ${2 * k}\\mathbf{x}$，因为每个 $x_i^{2}$ 的导数是 $2x_i$。`,
+            ],
+            [
+              `$${wrong[1]}$`,
+              "This is the gradient of the penalty alone; the linear term adds $\\mathbf{a}$.",
+              "这只是惩罚项的梯度；线性项还要加上 $\\mathbf{a}$。",
+            ],
+            [
+              `$${wrong[2]}$`,
+              `This subtracts $${2 * k}\\mathbf{x}$; the penalty is added in $f$, so its gradient is added too.`,
+              `这是减去了 $${2 * k}\\mathbf{x}$；惩罚项在 $f$ 中是加上的，所以它的梯度也要加上。`,
+            ],
+            ...nearby,
           ],
         );
       },
