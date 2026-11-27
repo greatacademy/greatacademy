@@ -2,7 +2,7 @@
 // diagrams, number lines, residue clocks, operation tables, permutation diagrams, necklaces, power cycles, and the graphs
 // of number-theoretic functions. See `deeperFiguresProofsAlgebraNumbersPoints`.
 
-import type { KnowledgePointDef, Rng } from "@ga/content";
+import type { KnowledgePointDef, Rng, Text } from "@ga/content";
 import { t } from "@ga/content";
 import type { PlaneMark, Point } from "@ga/subject-math";
 import { Q, svgDocument } from "@ga/subject-math";
@@ -10,9 +10,10 @@ import { algebraDrawings2 } from "../explanation-drawings-abstract-algebra-2.ts"
 import { proofDrawings1 } from "../explanation-drawings-methods-of-proof-1.ts";
 import { numberTheoryDrawings1 } from "../explanation-drawings-number-theory-1.ts";
 
-import { say, withMistakes } from "../problems.ts";
+import { numberProblem, say, why, withMistakes } from "../problems.ts";
 import { ask, choose, type Pair, point, same } from "../university-kit.ts";
 import { type Reason, reasoned } from "../wrong-reasons.ts";
+import { type Step, walked } from "./calculus-i-differentiation.ts";
 import { chart, intTicks } from "./figure-charts.ts";
 import { arrowLine, drawn, label, node, ring } from "./figure-reading-more.ts";
 
@@ -913,33 +914,75 @@ function stepsArrows(n: number, k: number): string {
   return body;
 }
 
+/** asPair turns a text into a pair, so that a walked solution can go where a pair is expected. */
+const asPair = (x: Text): Pair => [x.en, x["zh-CN"]];
+
 const orderOnClock = point(
   "the-order-of-an-element-from-its-star",
   ["The order of an element from its star", "由星形路径求元素的阶"],
   [
-    "In $\\mathbb{Z}_n$, the multiples of $k$ trace a closed path around the clock. The order of $k$ is the number of arrows in that path, which equals $\\frac{n}{\\gcd(n, k)}$.",
-    "在 $\\mathbb{Z}_n$ 中，$k$ 的倍数在时钟上描出一条闭合路径。$k$ 的阶就是路径上箭头的数目，等于 $\\frac{n}{\\gcd(n, k)}$。",
+    "In $\\mathbb{Z}_n$, the multiples of $k$ trace a closed path around the clock. The order of $k$ is the number of arrows in that path, which equals $\\frac{n}{\\gcd(n, k)}$.\n\nIn $\\mathbb{Z}_{12}$ with $k = 8$, the path runs $0 \\to 8 \\to 4 \\to 0$: three arrows, so $8$ has order $3$, and indeed $\\frac{12}{\\gcd(12, 8)} = \\frac{12}{4} = 3$.\n\nCheck: $3 \\cdot 8 = 24 \\equiv 0 \\pmod{12}$, while $1 \\cdot 8 = 8$ and $2 \\cdot 8 = 16 \\equiv 4$ are not $0$.\n\n> **Watch out.** Count the arrows of the closed path, not the size of the clock or the step $k$; the order is $\\frac{n}{\\gcd(n, k)}$, not $\\gcd(n, k)$ itself.",
+    "在 $\\mathbb{Z}_n$ 中，$k$ 的倍数在时钟上描出一条闭合路径。$k$ 的阶就是路径上箭头的数目，等于 $\\frac{n}{\\gcd(n, k)}$。\n\n在 $\\mathbb{Z}_{12}$ 中取 $k = 8$，路径为 $0 \\to 8 \\to 4 \\to 0$：三个箭头，所以 $8$ 的阶为 $3$，确实 $\\frac{12}{\\gcd(12, 8)} = \\frac{12}{4} = 3$。\n\n检验：$3 \\cdot 8 = 24 \\equiv 0 \\pmod{12}$，而 $1 \\cdot 8 = 8$ 与 $2 \\cdot 8 = 16 \\equiv 4$ 都不是 $0$。\n\n> **注意。** 要数闭合路径上的箭头，而不是时钟的大小或步长 $k$；阶是 $\\frac{n}{\\gcd(n, k)}$，而不是 $\\gcd(n, k)$ 本身。",
   ],
   (rng) => {
     const n = rng.pick([6, 8, 9, 10, 12]);
     const k = rng.pick(Array.from({ length: n - 2 }, (_, i) => i + 2).filter((v) => v !== n / 2));
-    const answer = n / gcd(n, k);
-    return ask(
+    const d = gcd(n, k);
+    const answer = n / d;
+    const visited = Array.from({ length: answer + 1 }, (_, i) => (i * k) % n);
+    const mistakes = [
+      why(
+        n,
+        `This is the size of $\\mathbb{Z}_{${n}}$; the path closes before it visits every point.`,
+        `这是 $\\mathbb{Z}_{${n}}$ 的大小；路径没有经过每个点就闭合了。`,
+      ),
+      why(
+        k,
+        "This is the step read from the first arrow, not the number of arrows in the path.",
+        "这是由第一个箭头读出的步长，而不是路径上箭头的数目。",
+      ),
+      why(
+        d,
+        `This is $\\gcd(${n}, ${k})$, the spacing of the points on the path; the order is $${n}$ divided by it.`,
+        `这是 $\\gcd(${n}, ${k})$，即路径上各点的间隔；阶是 $${n}$ 除以它。`,
+      ),
+      why(n - k, `This is the inverse of $${k}$, not its order.`, `这是 $${k}$ 的逆元，而不是它的阶。`),
+    ].filter((m, i, all) => m.value !== answer && all.findIndex((x) => x.value === m.value) === i);
+    const steps: Step[] = [
       [
-        `In $\\mathbb{Z}_{${n}}$, the arrows start at $0$ and repeatedly add one fixed element $k$, the first arrow going from $0$ to $k$. Find the order of $k$.`,
-        `在 $\\mathbb{Z}_{${n}}$ 中，箭头从 $0$ 出发，反复加同一个元素 $k$，第一个箭头从 $0$ 指向 $k$。求 $k$ 的阶。`,
+        ["Read the step", "读出步长"],
+        t(`The first arrow goes from $0$ to $${k}$, so $k = ${k}$.`, `第一个箭头从 $0$ 指向 $${k}$，所以 $k = ${k}$。`),
       ],
-      answer,
-      [n, k, gcd(n, k), n - k],
       [
-        `The first arrow gives $k = ${k}$. The path closes after $${answer}$ arrows, which matches $\\frac{${n}}{\\gcd(${n}, ${k})} = ${answer}$.`,
-        `第一个箭头给出 $k = ${k}$。路径走 $${answer}$ 个箭头后闭合，与 $\\frac{${n}}{\\gcd(${n}, ${k})} = ${answer}$ 相符。`,
+        ["Count the arrows", "数箭头"],
+        t(
+          `The path runs $${visited.join(" \\to ")}$, which is ${answer} arrows, so the order of $${k}$ is $${answer}$.`,
+          `路径为 $${visited.join(" \\to ")}$，共 ${answer} 个箭头，所以 $${k}$ 的阶为 $${answer}$。`,
+        ),
       ],
-      figureOf(clock(n, [], stepsArrows(n, k)), [
+    ];
+    return {
+      ...numberProblem({
+        prompt: t(
+          `In $\\mathbb{Z}_{${n}}$, the arrows start at $0$ and repeatedly add one fixed element $k$, the first arrow going from $0$ to $k$. Find the order of $k$.`,
+          `在 $\\mathbb{Z}_{${n}}$ 中，箭头从 $0$ 出发，反复加同一个元素 $k$，第一个箭头从 $0$ 指向 $k$。求 $k$ 的阶。`,
+        ),
+        answer,
+        form: "integer",
+        mistakes,
+        solution: walked(
+          steps,
+          t(
+            `$\\frac{${n}}{\\gcd(${n}, ${k})} = ${d === 1 ? "" : `\\frac{${n}}{${d}} = `}${answer}$, and $${answer} \\cdot ${k} = ${answer * k} \\equiv 0 \\pmod{${n}}$.`,
+            `$\\frac{${n}}{\\gcd(${n}, ${k})} = ${d === 1 ? "" : `\\frac{${n}}{${d}} = `}${answer}$，且 $${answer} \\cdot ${k} = ${answer * k} \\equiv 0 \\pmod{${n}}$。`,
+          ),
+        ),
+      }),
+      figure: figureOf(clock(n, [], stepsArrows(n, k)), [
         `A clock of Z${n} with arrows from 0 in steps of ${k}.`,
         `Z${n} 的时钟，箭头从 0 出发，步长为 ${k}。`,
       ]),
-    );
+    };
   },
 );
 
@@ -947,8 +990,8 @@ const generatorOnClock = point(
   "does-a-drawn-star-generate-the-group",
   ["Does a drawn star generate the group?", "所画的星形路径能生成整个群吗？"],
   [
-    "An element $k$ generates $\\mathbb{Z}_n$ when its multiples reach every residue, which happens exactly when $\\gcd(n, k) = 1$. Otherwise it generates only the multiples of $\\gcd(n, k)$.",
-    "当元素 $k$ 的倍数能到达每个剩余类时，它生成 $\\mathbb{Z}_n$，这恰好发生在 $\\gcd(n, k) = 1$ 时。否则它只生成 $\\gcd(n, k)$ 的倍数。",
+    "An element $k$ generates $\\mathbb{Z}_n$ when its multiples reach every residue, which happens exactly when $\\gcd(n, k) = 1$. Otherwise it generates only the multiples of $\\gcd(n, k)$.\n\nIn $\\mathbb{Z}_{10}$, the arrows of $4$ go $0 \\to 4 \\to 8 \\to 2 \\to 6 \\to 0$: a closed path of $5$ arrows through the even residues only, since $\\gcd(10, 4) = 2$. The arrows of $3$ visit all ten residues.\n\nCheck: $\\frac{10}{\\gcd(10, 4)} = 5$ matches the $5$ arrows of the closed path.\n\n> **Watch out.** A path that looks like a star can still miss residues: count the points it visits before it closes.",
+    "当元素 $k$ 的倍数能到达每个剩余类时，它生成 $\\mathbb{Z}_n$，这恰好发生在 $\\gcd(n, k) = 1$ 时。否则它只生成 $\\gcd(n, k)$ 的倍数。\n\n在 $\\mathbb{Z}_{10}$ 中，$4$ 的箭头走 $0 \\to 4 \\to 8 \\to 2 \\to 6 \\to 0$：这是 $5$ 个箭头的闭合路径，只经过偶数剩余类，因为 $\\gcd(10, 4) = 2$。$3$ 的箭头则经过全部十个剩余类。\n\n检验：$\\frac{10}{\\gcd(10, 4)} = 5$，与闭合路径的 $5$ 个箭头一致。\n\n> **注意。** 看起来像星形的路径仍可能漏掉剩余类：要数它闭合前经过的点。",
   ],
   (rng) => {
     const n = rng.pick([6, 8, 9, 10, 12]);
@@ -958,29 +1001,67 @@ const generatorOnClock = point(
     const size = n / d;
     const yes: Pair = [`$${k}$ generates $\\mathbb{Z}_{${n}}$`, `$${k}$ 生成 $\\mathbb{Z}_{${n}}$`];
     const sub = (m: number): Pair => [`$${k}$ generates a subgroup of size $${m}$`, `$${k}$ 生成大小为 $${m}$ 的子群`];
-    return choose(
-      rng,
-      [
-        `In $\\mathbb{Z}_{${n}}$, the arrows start at $0$ and repeatedly add $${k}$. Which statement is true?`,
-        `在 $\\mathbb{Z}_{${n}}$ 中，箭头从 $0$ 出发，反复加 $${k}$。哪个说法正确？`,
-      ],
-      generates ? yes : sub(size),
-      generates
-        ? [sub(d === 1 ? n - 1 : d), sub(k), sub(n - k === k ? k + 1 : n - k)]
-        : [yes, sub(d === size ? size + 1 : d), sub(k === size ? k + 1 : k)],
-      generates
+    const wrong = generates
+      ? [sub(d === 1 ? n - 1 : d), sub(k), sub(n - k === k ? k + 1 : n - k)]
+      : [yes, sub(d === size ? size + 1 : d), sub(k === size ? k + 1 : k)];
+    const visited = [...Array(size).keys()].map((i) => (i * k) % n);
+    const reasons: Reason[] = wrong.map((option) =>
+      option === yes
         ? [
-            `The path reaches all $${n}$ residues, since $\\gcd(${n}, ${k}) = 1$.`,
-            `路径到达全部 $${n}$ 个剩余类，因为 $\\gcd(${n}, ${k}) = 1$。`,
+            option[0],
+            `$\\gcd(${n}, ${k}) = ${d}$, so the multiples of $${k}$ are all multiples of $${d}$ and miss the other residues.`,
+            `$\\gcd(${n}, ${k}) = ${d}$，所以 $${k}$ 的倍数都是 $${d}$ 的倍数，会漏掉其余剩余类。`,
           ]
         : [
-            `The path closes after $${size}$ arrows and misses the other residues, since $\\gcd(${n}, ${k}) = ${d}$.`,
-            `路径走 $${size}$ 个箭头后闭合，错过其余剩余类，因为 $\\gcd(${n}, ${k}) = ${d}$。`,
+            option[0],
+            `The path closes after $\\frac{${n}}{\\gcd(${n}, ${k})} = ${size}$ arrows, so the subgroup has $${size}$ elements, not this many.`,
+            `路径在 $\\frac{${n}}{\\gcd(${n}, ${k})} = ${size}$ 个箭头后闭合，所以子群有 $${size}$ 个元素，而不是这个数。`,
           ],
-      figureOf(clock(n, [], stepsArrows(n, k)), [
-        `A clock of Z${n} with arrows from 0 in steps of ${k}.`,
-        `Z${n} 的时钟，箭头从 0 出发，步长为 ${k}。`,
-      ]),
+    );
+    return reasoned(
+      choose(
+        rng,
+        [
+          `In $\\mathbb{Z}_{${n}}$, the arrows start at $0$ and repeatedly add $${k}$. Which statement is true?`,
+          `在 $\\mathbb{Z}_{${n}}$ 中，箭头从 $0$ 出发，反复加 $${k}$。哪个说法正确？`,
+        ],
+        generates ? yes : sub(size),
+        wrong,
+        asPair(
+          walked(
+            [
+              [
+                ["Follow the arrows", "沿箭头走"],
+                t(
+                  `The path is $${visited.join(" \\to ")} \\to 0$: $${size}$ arrows before it closes.`,
+                  `路径为 $${visited.join(" \\to ")} \\to 0$：闭合前共 $${size}$ 个箭头。`,
+                ),
+              ],
+              [
+                ["Compare with the group", "与群比较"],
+                generates
+                  ? t(
+                      `It reaches all $${n}$ residues, since $\\gcd(${n}, ${k}) = 1$, so $${k}$ generates $\\mathbb{Z}_{${n}}$.`,
+                      `它到达全部 $${n}$ 个剩余类，因为 $\\gcd(${n}, ${k}) = 1$，所以 $${k}$ 生成 $\\mathbb{Z}_{${n}}$。`,
+                    )
+                  : t(
+                      `It misses the other residues, since $\\gcd(${n}, ${k}) = ${d}$, so $${k}$ generates a subgroup of size $${size}$.`,
+                      `它漏掉了其余剩余类，因为 $\\gcd(${n}, ${k}) = ${d}$，所以 $${k}$ 生成大小为 $${size}$ 的子群。`,
+                    ),
+              ],
+            ],
+            t(
+              `$${size} \\cdot ${k} = ${size * k} \\equiv 0 \\pmod{${n}}$, and $${size}$ divides $${n}$.`,
+              `$${size} \\cdot ${k} = ${size * k} \\equiv 0 \\pmod{${n}}$，且 $${size}$ 整除 $${n}$。`,
+            ),
+          ),
+        ),
+        figureOf(clock(n, [], stepsArrows(n, k)), [
+          `A clock of Z${n} with arrows from 0 in steps of ${k}.`,
+          `Z${n} 的时钟，箭头从 0 出发，步长为 ${k}。`,
+        ]),
+      ),
+      reasons,
     );
   },
 );
@@ -1046,25 +1127,56 @@ const tableIdentity = point(
   "the-identity-from-an-operation-table",
   ["The identity from an operation table", "由运算表找单位元"],
   [
-    "The identity $e$ satisfies $e * x = x * e = x$ for every $x$. In a table, its row and its column repeat the headings exactly.",
-    "单位元 $e$ 对每个 $x$ 都满足 $e * x = x * e = x$。在表中，它的行和列都与表头完全相同。",
+    "The identity $e$ satisfies $e * x = x * e = x$ for every $x$. In a table, its row and its column repeat the headings exactly.\n\nIn a table with headings $p, q, r, s$, suppose the row of $r$ reads $p, q, r, s$, and so does its column from top to bottom. Then $r$ is the identity.\n\nCheck: the table gives $r * q = q$ and $q * r = q$, and in the same way $r$ leaves $p$ and $s$ unchanged on either side.\n\n> **Watch out.** The headings may be listed in any order, so the identity need not come first. One matching entry is not enough: the whole row and the whole column must repeat the headings.",
+    "单位元 $e$ 对每个 $x$ 都满足 $e * x = x * e = x$。在表中，它的行和列都与表头完全相同。\n\n在表头为 $p, q, r, s$ 的表中，假设 $r$ 的行读作 $p, q, r, s$，它的列从上到下也是如此。那么 $r$ 就是单位元。\n\n检验：表中 $r * q = q$，$q * r = q$；同样，$r$ 从两边作用于 $p$ 和 $s$ 时也不改变它们。\n\n> **注意。** 表头可以按任意顺序排列，所以单位元不一定排在第一个。只有一个元素对上是不够的：整行和整列都必须与表头相同。",
   ],
   (rng) => {
     const { size, op, order, name, identity } = tableGroup(rng);
     const others = order.filter((v) => v !== identity);
-    return choose(
-      rng,
+    const e = name(identity);
+    const sample = others[0] as number;
+    const reasons: Reason[] = others.map((v) => {
+      const y = order.find((c) => op(v, c) !== c) as number;
+      return [
+        `$${name(v)}$`,
+        `Its row does not repeat the headings: $${name(v)} * ${name(y)} = ${name(op(v, y))}$, not $${name(y)}$.`,
+        `它的行与表头不同：$${name(v)} * ${name(y)} = ${name(op(v, y))}$，而不是 $${name(y)}$。`,
+      ];
+    });
+    const steps: Step[] = [
       [
-        "The table shows a group, with the entry in row $x$ and column $y$ equal to $x * y$. Which element is the identity?",
-        "表表示一个群，第 $x$ 行第 $y$ 列的元素为 $x * y$。哪个元素是单位元？",
+        ["Find the row that repeats the headings", "找与表头相同的行"],
+        t(
+          `The row of $${e}$ reads ${order.map((v) => `$${name(v)}$`).join(", ")}, exactly the headings.`,
+          `$${e}$ 的行读作 ${order.map((v) => `$${name(v)}$`).join("、")}，与表头完全相同。`,
+        ),
       ],
-      same(name(identity)),
-      rng.sample(others, Math.min(3, size - 1)).map((v) => same(name(v))),
       [
-        `The row of $${name(identity)}$ and its column both repeat the headings, so $${name(identity)}$ changes nothing.`,
-        `$${name(identity)}$ 的行和列都与表头相同，所以 $${name(identity)}$ 不改变任何元素。`,
+        ["Confirm with the column", "用列确认"],
+        t(`The column of $${e}$ repeats the headings too, so $${e}$ is the identity.`, `$${e}$ 的列也与表头相同，所以 $${e}$ 是单位元。`),
       ],
-      figureOf(tableSvg(size, order, op, name), tableAlt(order, op, name)),
+    ];
+    return reasoned(
+      choose(
+        rng,
+        [
+          "The table shows a group, with the entry in row $x$ and column $y$ equal to $x * y$. Which element is the identity?",
+          "表表示一个群，第 $x$ 行第 $y$ 列的元素为 $x * y$。哪个元素是单位元？",
+        ],
+        same(e),
+        rng.sample(others, Math.min(3, size - 1)).map((v) => same(name(v))),
+        asPair(
+          walked(
+            steps,
+            t(
+              `The table gives $${e} * ${name(sample)} = ${name(op(identity, sample))}$ and $${name(sample)} * ${e} = ${name(op(sample, identity))}$, so $${e}$ changes nothing.`,
+              `表中 $${e} * ${name(sample)} = ${name(op(identity, sample))}$，$${name(sample)} * ${e} = ${name(op(sample, identity))}$，所以 $${e}$ 不改变任何元素。`,
+            ),
+          ),
+        ),
+        figureOf(tableSvg(size, order, op, name), tableAlt(order, op, name)),
+      ),
+      reasons,
     );
   },
 );
@@ -1073,27 +1185,57 @@ const tableInverse = point(
   "an-inverse-from-an-operation-table",
   ["An inverse from an operation table", "由运算表求逆元"],
   [
-    "First find the identity from the row that repeats the headings. The inverse of $x$ is the element $y$ with $x * y$ equal to the identity, so find the identity in the row of $x$ and read off its column.",
-    "先由与表头相同的行找到单位元。$x$ 的逆元是使 $x * y$ 等于单位元的元素 $y$，所以在 $x$ 的行中找到单位元，再读出它所在的列。",
+    "First find the identity from the row that repeats the headings. The inverse of $x$ is the element $y$ with $x * y$ equal to the identity, so find the identity in the row of $x$ and read off its column.\n\nTake headings $p, q, r, s$ with identity $p$, and let the row of $q$ read $q, r, s, p$. The identity $p$ stands in the column of $s$, so $q * s = p$ and the inverse of $q$ is $s$.\n\nCheck: if the row of $s$ reads $s, p, q, r$, then $s * q = p$ as well, so $s$ undoes $q$ from both sides.\n\n> **Watch out.** The answer is the heading of the column where the identity appears, not an entry of the row. Find the identity first: it need not be the first heading.",
+    "先由与表头相同的行找到单位元。$x$ 的逆元是使 $x * y$ 等于单位元的元素 $y$，所以在 $x$ 的行中找到单位元，再读出它所在的列。\n\n设表头为 $p, q, r, s$，单位元为 $p$，$q$ 的行读作 $q, r, s, p$。单位元 $p$ 位于 $s$ 这一列，所以 $q * s = p$，$q$ 的逆元是 $s$。\n\n检验：若 $s$ 的行读作 $s, p, q, r$，则也有 $s * q = p$，所以 $s$ 从两边都抵消 $q$。\n\n> **注意。** 答案是单位元所在列的表头，而不是这一行中的某个元素。要先找到单位元：它不一定是第一个表头。",
   ],
   (rng) => {
     const { size, op, order, name, identity } = tableGroup(rng);
     const x = rng.pick(order.filter((v) => v !== identity));
     const inverse = order.find((y) => op(x, y) === identity) as number;
     const wrong = order.filter((v) => v !== inverse);
-    return choose(
-      rng,
+    const e = name(identity);
+    const reasons: Reason[] = wrong.map((v) => [
+      `$${name(v)}$`,
+      `In the row of $${name(x)}$, the column of $${name(v)}$ holds $${name(op(x, v))}$, not the identity $${e}$.`,
+      `在 $${name(x)}$ 的行中，$${name(v)}$ 这一列是 $${name(op(x, v))}$，而不是单位元 $${e}$。`,
+    ]);
+    const steps: Step[] = [
       [
-        `The table shows a group, with the entry in row $x$ and column $y$ equal to $x * y$. What is the inverse of $${name(x)}$?`,
-        `表表示一个群，第 $x$ 行第 $y$ 列的元素为 $x * y$。$${name(x)}$ 的逆元是什么？`,
+        ["Find the identity", "找单位元"],
+        t(
+          `The row and the column of $${e}$ repeat the headings, so $${e}$ is the identity.`,
+          `$${e}$ 的行和列都与表头相同，所以 $${e}$ 是单位元。`,
+        ),
       ],
-      same(name(inverse)),
-      rng.sample(wrong, Math.min(3, size - 1)).map((v) => same(name(v))),
       [
-        `The identity is $${name(identity)}$, and in the row of $${name(x)}$ it appears in the column of $${name(inverse)}$.`,
-        `单位元是 $${name(identity)}$，它在 $${name(x)}$ 的行中出现在 $${name(inverse)}$ 这一列。`,
+        ["Find it in the row", "在这一行中找它"],
+        t(
+          `In the row of $${name(x)}$, the identity $${e}$ stands in the column of $${name(inverse)}$, so $${name(x)} * ${name(inverse)} = ${e}$ and the inverse is $${name(inverse)}$.`,
+          `在 $${name(x)}$ 的行中，单位元 $${e}$ 位于 $${name(inverse)}$ 这一列，所以 $${name(x)} * ${name(inverse)} = ${e}$，逆元是 $${name(inverse)}$。`,
+        ),
       ],
-      figureOf(tableSvg(size, order, op, name), tableAlt(order, op, name)),
+    ];
+    return reasoned(
+      choose(
+        rng,
+        [
+          `The table shows a group, with the entry in row $x$ and column $y$ equal to $x * y$. What is the inverse of $${name(x)}$?`,
+          `表表示一个群，第 $x$ 行第 $y$ 列的元素为 $x * y$。$${name(x)}$ 的逆元是什么？`,
+        ],
+        same(name(inverse)),
+        rng.sample(wrong, Math.min(3, size - 1)).map((v) => same(name(v))),
+        asPair(
+          walked(
+            steps,
+            t(
+              `In the row of $${name(inverse)}$, the column of $${name(x)}$ holds $${name(op(inverse, x))}$, so $${name(inverse)} * ${name(x)} = ${e}$ too.`,
+              `在 $${name(inverse)}$ 的行中，$${name(x)}$ 这一列是 $${name(op(inverse, x))}$，所以也有 $${name(inverse)} * ${name(x)} = ${e}$。`,
+            ),
+          ),
+        ),
+        figureOf(tableSvg(size, order, op, name), tableAlt(order, op, name)),
+      ),
+      reasons,
     );
   },
 );
@@ -1102,11 +1244,11 @@ const tableAbelian = point(
   "abelian-or-not-from-an-operation-table",
   ["Abelian or not, from an operation table", "由运算表判断是否为阿贝尔群"],
   [
-    "A group is abelian when $x * y = y * x$ for all $x$ and $y$. Then its table is symmetric about the main diagonal, provided the rows and columns have the same order, and a single mismatched pair shows it is not abelian.",
-    "当所有 $x$、$y$ 都满足 $x * y = y * x$ 时，群是阿贝尔群。只要行和列的顺序相同，它的表就关于主对角线对称，而一对不匹配的元素就说明它不是阿贝尔群。",
+    "A group is abelian when $x * y = y * x$ for all $x$ and $y$. Then its table is symmetric about the main diagonal, provided the rows and columns have the same order, and a single mismatched pair shows it is not abelian.\n\nIf the entry in row $p$ and column $q$ is $r$, but the entry in row $q$ and column $p$ is $s$, then $p * q \\ne q * p$, and one such pair already shows that the group is not abelian.\n\nCheck: in the table of $\\mathbb{Z}_4$, row $1$ column $3$ and row $3$ column $1$ both hold $0$, since $1 + 3 = 3 + 1$; every mirrored pair matches in this way, so $\\mathbb{Z}_4$ is abelian.\n\n> **Watch out.** The mirror test needs the rows and the columns listed in the same order. The diagonal entries $x * x$ decide nothing: only pairs off the diagonal are compared.",
+    "当所有 $x$、$y$ 都满足 $x * y = y * x$ 时，群是阿贝尔群。只要行和列的顺序相同，它的表就关于主对角线对称，而一对不匹配的元素就说明它不是阿贝尔群。\n\n若第 $p$ 行第 $q$ 列的元素是 $r$，而第 $q$ 行第 $p$ 列的元素是 $s$，则 $p * q \\ne q * p$，只要有一对这样的元素，就说明这个群不是阿贝尔群。\n\n检验：在 $\\mathbb{Z}_4$ 的表中，第 $1$ 行第 $3$ 列与第 $3$ 行第 $1$ 列都是 $0$，因为 $1 + 3 = 3 + 1$；每一对镜像位置都这样相同，所以 $\\mathbb{Z}_4$ 是阿贝尔群。\n\n> **注意。** 镜像检验要求行和列按相同顺序排列。对角线上的 $x * x$ 不能说明任何问题：只比较对角线以外的位置。",
   ],
   (rng) => {
-    const { kind, size, op, order, name } = tableGroup(rng);
+    const { kind, size, op, order, name, identity } = tableGroup(rng);
     const abelian = kind !== "s3";
     let witness = "";
     if (!abelian)
@@ -1118,18 +1260,67 @@ const tableAbelian = point(
     const no: Pair = ["Not abelian: the table is not symmetric about its main diagonal", "不是阿贝尔群：表不关于主对角线对称"];
     const notGroup: Pair = ["Not a group: an element repeats in a row", "不是群：某一行有重复元素"];
     const noIdentity: Pair = ["Not a group: there is no identity", "不是群：没有单位元"];
-    return choose(
-      rng,
-      [
-        "The table shows an operation on a finite set, with the entry in row $x$ and column $y$ equal to $x * y$. Which statement is true?",
-        "表表示有限集上的一个运算，第 $x$ 行第 $y$ 列的元素为 $x * y$。哪个说法正确？",
-      ],
-      abelian ? yes : no,
-      [abelian ? no : yes, notGroup, noIdentity],
+    const e = name(identity);
+    const [p, q] = order.filter((v) => v !== identity) as [number, number];
+    const reasons: Reason[] = [
       abelian
-        ? ["Every entry matches its mirror image across the main diagonal.", "每个元素都与它关于主对角线的镜像相同。"]
-        : [`For example, ${witness}.`, `例如，${witness}。`],
-      figureOf(tableSvg(size, order, op, name), tableAlt(order, op, name)),
+        ? [
+            no[0],
+            `Every entry matches its mirror image; for example $${name(p)} * ${name(q)} = ${name(q)} * ${name(p)} = ${name(op(p, q))}$.`,
+            `每个元素都与它的镜像相同；例如 $${name(p)} * ${name(q)} = ${name(q)} * ${name(p)} = ${name(op(p, q))}$。`,
+          ]
+        : [yes[0], `The table is not symmetric: ${witness}.`, `表不对称：${witness}。`],
+      [notGroup[0], `Every row lists each of the ${size} elements exactly once.`, `每一行都恰好把 ${size} 个元素各列出一次。`],
+      [
+        noIdentity[0],
+        `The row and the column of $${e}$ repeat the headings, so $${e}$ is the identity.`,
+        `$${e}$ 的行和列都与表头相同，所以 $${e}$ 是单位元。`,
+      ],
+    ];
+    const steps: Step[] = [
+      [
+        ["Check that it is a group", "确认它是群"],
+        t(
+          `The row and the column of $${e}$ repeat the headings, and every row lists each element once.`,
+          `$${e}$ 的行和列都与表头相同，并且每一行都把每个元素列出一次。`,
+        ),
+      ],
+      [
+        ["Compare mirrored entries", "比较镜像位置"],
+        abelian
+          ? t(
+              "Every entry matches its mirror image across the main diagonal, so the group is abelian.",
+              "每个元素都与它关于主对角线的镜像相同，所以这个群是阿贝尔群。",
+            )
+          : t(`The table is not symmetric: ${witness}. So the group is not abelian.`, `表不对称：${witness}。所以这个群不是阿贝尔群。`),
+      ],
+    ];
+    return reasoned(
+      choose(
+        rng,
+        [
+          "The table shows an operation on a finite set, with the entry in row $x$ and column $y$ equal to $x * y$. Which statement is true?",
+          "表表示有限集上的一个运算，第 $x$ 行第 $y$ 列的元素为 $x * y$。哪个说法正确？",
+        ],
+        abelian ? yes : no,
+        [abelian ? no : yes, notGroup, noIdentity],
+        asPair(
+          walked(
+            steps,
+            abelian
+              ? t(
+                  `For example, row $${name(p)}$ column $${name(q)}$ and row $${name(q)}$ column $${name(p)}$ both hold $${name(op(p, q))}$.`,
+                  `例如，第 $${name(p)}$ 行第 $${name(q)}$ 列与第 $${name(q)}$ 行第 $${name(p)}$ 列都是 $${name(op(p, q))}$。`,
+                )
+              : t(
+                  `The two entries ${witness} differ, and one mismatched pair is enough.`,
+                  `两个元素 ${witness} 不同，一对不匹配就足够了。`,
+                ),
+          ),
+        ),
+        figureOf(tableSvg(size, order, op, name), tableAlt(order, op, name)),
+      ),
+      reasons,
     );
   },
 );
@@ -1221,27 +1412,65 @@ const inverseDrawn = point(
   "the-inverse-of-a-drawn-permutation",
   ["The inverse of a drawn permutation", "所画置换的逆"],
   [
-    "The inverse undoes each arrow. To find $\\sigma^{-1}(k)$, find $k$ in the bottom row and follow its arrow backward to the top row.",
-    "逆置换把每个箭头反过来。要求 $\\sigma^{-1}(k)$，就在下排找到 $k$，沿箭头反向走到上排。",
+    "The inverse undoes each arrow. To find $\\sigma^{-1}(k)$, find $k$ in the bottom row and follow its arrow backward to the top row.\n\nFor arrows from the top row to the bottom row $1 \\to 3$, $2 \\to 1$, $3 \\to 4$ and $4 \\to 2$: the $1$ in the bottom row is reached from the $2$ in the top row, so $\\sigma^{-1}(1) = 2$.\n\nCheck: $\\sigma(2) = 1$, by the arrow out of the top $2$, so $\\sigma^{-1}$ undoes it.\n\n> **Watch out.** Start from $k$ in the bottom row. Starting from $1$ in the top row and following its arrow gives $\\sigma(1) = 3$, not $\\sigma^{-1}(1)$.",
+    "逆置换把每个箭头反过来。要求 $\\sigma^{-1}(k)$，就在下排找到 $k$，沿箭头反向走到上排。\n\n对从上排到下排的箭头 $1 \\to 3$、$2 \\to 1$、$3 \\to 4$、$4 \\to 2$：下排的 $1$ 由上排的 $2$ 指来，所以 $\\sigma^{-1}(1) = 2$。\n\n检验：由上排 $2$ 出发的箭头得 $\\sigma(2) = 1$，$\\sigma^{-1}$ 正好把它撤销。\n\n> **注意。** 要从下排的 $k$ 出发。从上排的 $1$ 出发沿箭头走得到的是 $\\sigma(1) = 3$，而不是 $\\sigma^{-1}(1)$。",
   ],
   (rng) => {
-    const n = rng.int(4, 6);
-    const p = randomPermutation(rng, n);
-    const k = rng.int(1, n);
-    const answer = p.indexOf(k - 1) + 1;
-    return ask(
-      [
-        `The arrows show a permutation $\\sigma$, sending each top number to a bottom number. Find $\\sigma^{-1}(${k})$.`,
-        `箭头表示置换 $\\sigma$，把上排的每个数送到下排的一个数。求 $\\sigma^{-1}(${k})$。`,
-      ],
-      answer,
-      [(p[k - 1] as number) + 1, k, (answer % n) + 1, n - answer + 1],
-      [
-        `The arrow that ends at $${k}$ in the bottom row starts at $${answer}$ in the top row, so $\\sigma(${answer}) = ${k}$.`,
-        `下排指向 $${k}$ 的箭头从上排的 $${answer}$ 出发，所以 $\\sigma(${answer}) = ${k}$。`,
-      ],
-      figureOf(stringDiagram(p), stringAlt(p)),
-    );
+    for (;;) {
+      const n = rng.int(4, 6);
+      const p = randomPermutation(rng, n);
+      const k = rng.int(1, n);
+      const answer = p.indexOf(k - 1) + 1;
+      const forward = (p[k - 1] as number) + 1;
+      const twice = p.indexOf(answer - 1) + 1;
+      const seen = new Set<number>([answer]);
+      const mistakes = [
+        why(
+          forward,
+          `That starts from $${k}$ in the top row and follows its arrow, which gives $\\sigma(${k})$, not the inverse.`,
+          `那是从上排的 $${k}$ 出发沿箭头走，得到的是 $\\sigma(${k})$，而不是逆。`,
+        ),
+        why(
+          k,
+          `$${k}$ in the bottom row is reached from another number, so $\\sigma^{-1}$ moves it.`,
+          `下排的 $${k}$ 由别的数指来，所以 $\\sigma^{-1}$ 会移动它。`,
+        ),
+        why(
+          twice,
+          `That goes back along two arrows, which gives $\\sigma^{-2}(${k})$.`,
+          `那是逆着走了两个箭头，得到 $\\sigma^{-2}(${k})$。`,
+        ),
+      ].filter((m) => !seen.has(m.value as number) && Boolean(seen.add(m.value as number)));
+      if (mistakes.length < 2) continue;
+      return {
+        ...numberProblem({
+          prompt: t(
+            `The arrows show a permutation $\\sigma$, sending each top number to a bottom number. Find $\\sigma^{-1}(${k})$.`,
+            `箭头表示置换 $\\sigma$，把上排的每个数送到下排的一个数。求 $\\sigma^{-1}(${k})$。`,
+          ),
+          answer,
+          form: "integer",
+          mistakes,
+          solution: walked(
+            [
+              [["Find the number in the bottom row", "在下排找到这个数"], t(`Find $${k}$ in the bottom row.`, `在下排找到 $${k}$。`)],
+              [
+                ["Follow its arrow backward", "沿箭头反向走"],
+                t(
+                  `Its arrow comes from $${answer}$ in the top row, so $\\sigma(${answer}) = ${k}$ and $\\sigma^{-1}(${k}) = ${answer}$.`,
+                  `它的箭头来自上排的 $${answer}$，所以 $\\sigma(${answer}) = ${k}$，$\\sigma^{-1}(${k}) = ${answer}$。`,
+                ),
+              ],
+            ],
+            t(
+              `Following the arrow out of the top $${answer}$ lands on $${k}$, so $\\sigma(\\sigma^{-1}(${k})) = ${k}$.`,
+              `从上排 $${answer}$ 出发的箭头落在 $${k}$ 上，所以 $\\sigma(\\sigma^{-1}(${k})) = ${k}$。`,
+            ),
+          ),
+        }),
+        figure: figureOf(stringDiagram(p), stringAlt(p)),
+      };
+    }
   },
 );
 

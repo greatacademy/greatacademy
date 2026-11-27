@@ -3174,8 +3174,8 @@ const cayleyReading: KnowledgePointDef = {
   id: "reading-a-cayley-table",
   title: t("Reading a Cayley table", "读凯莱表"),
   explanation: t(
-    "A Cayley table lists every product of a group. The identity is the element whose row and column repeat the headings, and the inverse of an element is found by locating the identity in its row. The order of an element comes from multiplying by it repeatedly and reading each result, until the identity appears, and the count of the steps taken is that order.",
-    "凯莱表列出了群中所有的积。单位元是行和列都重复表头的元素；要求一个元素的逆，就在它的那一行找单位元。元素的阶，要反复乘它并读出每个结果，直到出现单位元，所走的步数就是阶。",
+    "A Cayley table lists every product of a group. The identity is the element whose row and column repeat the headings, and the inverse of an element is found by locating the identity in its row. The order of an element comes from multiplying by it repeatedly and reading each result, until the identity appears, and the count of the steps taken is that order.\n\nSuppose the row of $e$ repeats the headings, and the table gives $a * a = b$, $b * a = c$ and $c * a = e$. Then $e$ is the identity, the powers of $a$ run $a, b, c, e$, so $a$ has order $4$, and $a * c = e$ makes $c$ the inverse of $a$.\n\nCheck: $a^4 = (a * a * a) * a = c * a = e$, while $a$, $a^2 = b$ and $a^3 = c$ are not $e$.\n\n> **Watch out.** Count every product up to and including the one that gives the identity: $a, a^2, a^3, a^4 = e$ is four steps, not three.",
+    "凯莱表列出了群中所有的积。单位元是行和列都重复表头的元素；要求一个元素的逆，就在它的那一行找单位元。元素的阶，要反复乘它并读出每个结果，直到出现单位元，所走的步数就是阶。\n\n假设 $e$ 的行与表头相同，表中 $a * a = b$，$b * a = c$，$c * a = e$。那么 $e$ 是单位元，$a$ 的幂依次为 $a, b, c, e$，所以 $a$ 的阶为 $4$；而 $a * c = e$ 说明 $c$ 是 $a$ 的逆元。\n\n检验：$a^4 = (a * a * a) * a = c * a = e$，而 $a$、$a^2 = b$、$a^3 = c$ 都不是 $e$。\n\n> **注意。** 要数到得出单位元的那一次乘积为止，包括这一次：$a, a^2, a^3, a^4 = e$ 是四步，而不是三步。",
   ),
   generate(rng) {
     const n = rng.int(4, 6);
@@ -3194,38 +3194,126 @@ const cayleyReading: KnowledgePointDef = {
     );
     const x = rng.int(1, n - 1);
     const kind = rng.int(0, 2);
-    if (kind === 0)
-      return pickChoice(
-        rng,
-        t("What is the identity element of this group?", "这个群的单位元是什么？"),
-        t(name(0), name(0)),
-        names.filter((v) => v !== name(0)).map((v) => t(v, v)),
-        t(`The row and column of ${name(0)} repeat the headings.`, `${name(0)} 的行和列都重复表头。`),
-        figure,
-      );
-    if (kind === 1)
-      return pickChoice(
-        rng,
-        t(`What is the inverse of ${name(x)} in this group?`, `这个群中 ${name(x)} 的逆元是什么？`),
-        t(name(-x), name(-x)),
-        names.filter((v) => v !== name(-x)).map((v) => t(v, v)),
-        t(
-          `In the row of ${name(x)}, the identity ${name(0)} appears in the column of ${name(-x)}.`,
-          `在 ${name(x)} 的那一行，单位元 ${name(0)} 出现在 ${name(-x)} 那一列。`,
+    const e = name(0);
+    const findRow: Step = [
+      ["Find the identity", "找单位元"],
+      t(
+        `The row and the column of ${e} repeat the headings ${heads.map(name).join(", ")}, so ${e} is the identity.`,
+        `${e} 的行和列都与表头 ${heads.map(name).join("、")} 相同，所以 ${e} 是单位元。`,
+      ),
+    ];
+    if (kind === 0) {
+      const reasons: Reason[] = names
+        .map((_, j) => j)
+        .filter((j) => j !== 0)
+        .map((j) => [
+          name(j),
+          `Its row is not the headings: ${name(j)} ∗ ${name(j)} = ${name(2 * j)}, not ${name(j)}.`,
+          `它的行与表头不同：${name(j)} ∗ ${name(j)} = ${name(2 * j)}，而不是 ${name(j)}。`,
+        ]);
+      const y = name(x);
+      return reasoned(
+        pickChoice(
+          rng,
+          t("What is the identity element of this group?", "这个群的单位元是什么？"),
+          t(e, e),
+          names.filter((v) => v !== e).map((v) => t(v, v)),
+          walked(
+            [findRow],
+            t(
+              `The table gives ${e} ∗ ${y} = ${y} and ${y} ∗ ${e} = ${y}, so ${e} changes nothing.`,
+              `表中 ${e} ∗ ${y} = ${y}，${y} ∗ ${e} = ${y}，所以 ${e} 不改变任何元素。`,
+            ),
+          ),
+          figure,
         ),
-        figure,
+        reasons,
       );
+    }
+    if (kind === 1) {
+      const reasons: Reason[] = names
+        .map((_, j) => j)
+        .filter((j) => (((x + j) % n) + n) % n !== 0)
+        .map((j) => [
+          name(j),
+          `In the row of ${name(x)}, the column of ${name(j)} holds ${name(x + j)}, not the identity ${e}.`,
+          `在 ${name(x)} 的行中，${name(j)} 这一列是 ${name(x + j)}，而不是单位元 ${e}。`,
+        ]);
+      return reasoned(
+        pickChoice(
+          rng,
+          t(`What is the inverse of ${name(x)} in this group?`, `这个群中 ${name(x)} 的逆元是什么？`),
+          t(name(-x), name(-x)),
+          names.filter((v) => v !== name(-x)).map((v) => t(v, v)),
+          walked(
+            [
+              findRow,
+              [
+                ["Find it in the row", "在这一行中找它"],
+                t(
+                  `In the row of ${name(x)}, the identity ${e} appears in the column of ${name(-x)}, so the inverse is ${name(-x)}.`,
+                  `在 ${name(x)} 的那一行，单位元 ${e} 出现在 ${name(-x)} 那一列，所以逆元是 ${name(-x)}。`,
+                ),
+              ],
+            ],
+            t(
+              `The row of ${name(-x)} has ${e} in the column of ${name(x)} as well, so ${name(-x)} ∗ ${name(x)} = ${e}.`,
+              `${name(-x)} 的行中，${name(x)} 这一列也是 ${e}，所以 ${name(-x)} ∗ ${name(x)} = ${e}。`,
+            ),
+          ),
+          figure,
+        ),
+        reasons,
+      );
+    }
     const order = n / gcd(n, x);
+    const powers = Array.from({ length: order }, (_, i) => name((i + 1) * x));
+    const mistakes = [
+      {
+        value: n,
+        why: t(
+          `This is the number of elements; the powers of ${name(x)} reach ${e} after fewer steps.`,
+          `这是元素的个数；${name(x)} 的幂不用这么多步就到达 ${e}。`,
+        ),
+      },
+      {
+        value: order - 1,
+        why: t(
+          `This stops one step early: the product that gives ${e} counts as a step too.`,
+          `这少数了一步：得出 ${e} 的那次乘积也算一步。`,
+        ),
+      },
+      {
+        value: order + 1,
+        why: t(
+          `This counts one step too many, as if ${e} itself were a step at the start.`,
+          `这多数了一步，好像开头的 ${e} 本身也算一步。`,
+        ),
+      },
+    ].filter((m) => m.value !== order);
     return numeric(
       t(`What is the order of ${name(x)} in this group?`, `这个群中 ${name(x)} 的阶是多少？`),
       order,
-      [n, x, n - order, order + 1, order === 1 ? 2 : order - 1],
-      t(
-        `Repeated products of ${name(x)} reach the identity ${name(0)} after ${order} steps.`,
-        `${name(x)} 反复相乘，${order} 步后到达单位元 ${name(0)}。`,
+      [],
+      walked(
+        [
+          findRow,
+          [
+            ["Multiply repeatedly", "反复相乘"],
+            t(
+              `Multiplying by ${name(x)} again and again gives ${powers.join(", ")}: the identity ${e} appears after ${order} steps, so the order is $${order}$.`,
+              `反复乘 ${name(x)}，依次得 ${powers.join("、")}：${order} 步后出现单位元 ${e}，所以阶为 $${order}$。`,
+            ),
+          ],
+        ],
+        t(
+          `The order divides the number of elements: $${n} = ${order} \\cdot ${n / order}$, and no earlier power in the list is ${e}.`,
+          `阶整除元素的个数：$${n} = ${order} \\cdot ${n / order}$，并且列表中更早的幂都不是 ${e}。`,
+        ),
       ),
       figure,
       "integer",
+      mistakes,
     );
   },
 };
@@ -3234,48 +3322,83 @@ const cayleyDiagramWalk: KnowledgePointDef = {
   id: "walking-a-cayley-diagram",
   title: t("Walking a Cayley diagram", "在凯莱图上行走"),
   explanation: t(
-    "A Cayley diagram has a point for each group element, and an arrow for multiplying by a generator. Multiplying by a power of that generator means following the arrows that many times. So the group's structure becomes geometry: a single cycle of arrows through all the points means the generator produces the whole group, and the length of a cycle is the generator's order.",
-    "凯莱图中每个群元素对应一个点，乘生成元对应一个箭头。乘生成元的几次方，就是沿箭头走几次。所以群的结构变成了几何：一个箭头圈经过所有点，表示这个生成元生成整个群；圈的长度就是生成元的阶。",
+    "A Cayley diagram has a point for each group element, and an arrow for multiplying by a generator. Multiplying by a power of that generator means following the arrows that many times. So the group's structure becomes geometry: a single cycle of arrows through all the points means the generator produces the whole group, and the length of a cycle is the generator's order.\n\nIn $\\mathbb{Z}_6$ with arrows $x \\to x + 2$, start at $1$ and follow $4$ arrows: $1 \\to 3 \\to 5 \\to 1 \\to 3$, so you end at $3$. In numbers, $1 + 4 \\cdot 2 = 9 \\equiv 3 \\pmod 6$.\n\nCheck: these arrows form cycles of length $3$, so $4$ arrows act like $4 - 3 = 1$ arrow, and $1 + 2 = 3$.\n\n> **Watch out.** Each arrow adds the generator read from the diagram, not $1$, and the walk begins at the given start, not at $0$.",
+    "凯莱图中每个群元素对应一个点，乘生成元对应一个箭头。乘生成元的几次方，就是沿箭头走几次。所以群的结构变成了几何：一个箭头圈经过所有点，表示这个生成元生成整个群；圈的长度就是生成元的阶。\n\n在 $\\mathbb{Z}_6$ 中，箭头为 $x \\to x + 2$，从 $1$ 出发走 $4$ 个箭头：$1 \\to 3 \\to 5 \\to 1 \\to 3$，终点是 $3$。用数来算，$1 + 4 \\cdot 2 = 9 \\equiv 3 \\pmod 6$。\n\n检验：这些箭头构成长度为 $3$ 的圈，所以走 $4$ 个箭头相当于走 $4 - 3 = 1$ 个，而 $1 + 2 = 3$。\n\n> **注意。** 每个箭头加的是从图中读出的生成元，而不是 $1$；并且要从给定的起点出发，而不是从 $0$ 出发。",
   ),
   generate(rng) {
-    const n = rng.int(5, 8);
-    const step = rng.pick(Array.from({ length: n - 1 }, (_, i) => i + 1));
-    const edges: [number, number][] = Array.from({ length: n }, (_, i) => [i, (i + step) % n]);
-    const start = rng.int(0, n - 1);
-    const moves = rng.int(2, 2 * n);
-    const answer = (start + moves * step) % n;
-    const names = Array.from({ length: n }, (_, i) => `${i}`);
-    const figure = graphFigure(
-      names,
-      edges,
-      true,
-      t(
-        `A Cayley diagram on 0 to ${n - 1}, with an arrow from each x to x + ${step} mod ${n}.`,
-        `0 到 ${n - 1} 上的凯莱图，每个 x 都有一个箭头指向 x + ${step} mod ${n}。`,
-      ),
-    );
-    return numeric(
-      t(
-        `Each arrow in this Cayley diagram adds one generator. Start at ${start} and follow ${moves} arrows. Where do you end?`,
-        `这个凯莱图的每个箭头加上一个生成元。从 ${start} 出发，走 ${moves} 个箭头。最后到哪里？`,
-      ),
-      answer,
-      [
-        (start + moves) % n,
-        (moves * step) % n,
-        (answer + 1) % n,
-        (answer + step) % n,
-        (start + step) % n,
-        (answer + 2) % n,
-        (answer + 3) % n,
-      ],
-      t(
-        `Each arrow adds ${step}, so the end is $${start} + ${moves} \\times ${step} = ${start + moves * step}$, which is ${answer} modulo ${n}.`,
-        `每个箭头加 ${step}，所以终点是 $${start} + ${moves} \\times ${step} = ${start + moves * step}$，模 ${n} 是 ${answer}。`,
-      ),
-      figure,
-      "integer",
-    );
+    for (;;) {
+      const n = rng.int(5, 8);
+      const step = rng.pick(Array.from({ length: n - 1 }, (_, i) => i + 1));
+      const edges: [number, number][] = Array.from({ length: n }, (_, i) => [i, (i + step) % n]);
+      const start = rng.int(0, n - 1);
+      const moves = rng.int(2, 2 * n);
+      const answer = (start + moves * step) % n;
+      const cycle = n / gcd(n, step);
+      const rest = moves % cycle;
+      const mistakes = [
+        {
+          value: (start + moves) % n,
+          why: t(
+            `This adds $1$ for each arrow; each arrow adds the generator $${step}$.`,
+            `这每个箭头只加了 $1$；每个箭头加的是生成元 $${step}$。`,
+          ),
+        },
+        { value: (moves * step) % n, why: t(`This starts at $0$ instead of at $${start}$.`, `这从 $0$ 出发，而不是从 $${start}$ 出发。`) },
+        {
+          value: (start + (moves - 1) * step) % n,
+          why: t(`This follows ${moves - 1} arrows, one fewer than asked.`, `这只走了 ${moves - 1} 个箭头，比要求的少一个。`),
+        },
+        {
+          value: (start + (moves + 1) * step) % n,
+          why: t(`This follows ${moves + 1} arrows, one more than asked.`, `这走了 ${moves + 1} 个箭头，比要求的多一个。`),
+        },
+        { value: (start + step) % n, why: t("This follows only one arrow.", "这只走了一个箭头。") },
+      ].filter((m, i, all) => m.value !== answer && all.findIndex((o) => o.value === m.value) === i);
+      if (mistakes.length < 2) continue;
+      const names = Array.from({ length: n }, (_, i) => `${i}`);
+      const figure = graphFigure(
+        names,
+        edges,
+        true,
+        t(
+          `A Cayley diagram on 0 to ${n - 1}, with an arrow from each x to x + ${step} mod ${n}.`,
+          `0 到 ${n - 1} 上的凯莱图，每个 x 都有一个箭头指向 x + ${step} mod ${n}。`,
+        ),
+      );
+      return numeric(
+        t(
+          `Each arrow in this Cayley diagram adds one generator. Start at ${start} and follow ${moves} arrows. Where do you end?`,
+          `这个凯莱图的每个箭头加上一个生成元。从 ${start} 出发，走 ${moves} 个箭头。最后到哪里？`,
+        ),
+        answer,
+        [],
+        walked(
+          [
+            [
+              ["Read the generator", "读出生成元"],
+              t(
+                `Each arrow goes from $x$ to $x + ${step}$, so each arrow adds $${step}$.`,
+                `每个箭头从 $x$ 指向 $x + ${step}$，所以每个箭头加 $${step}$。`,
+              ),
+            ],
+            [
+              ["Add and reduce", "相加并化简"],
+              t(
+                `The end is $${start} + ${moves} \\times ${step} = ${start + moves * step}$, which is $${answer}$ modulo ${n}.`,
+                `终点是 $${start} + ${moves} \\times ${step} = ${start + moves * step}$，模 ${n} 是 $${answer}$。`,
+              ),
+            ],
+          ],
+          t(
+            `The arrows form cycles of length ${cycle}, so ${moves} arrows act like ${rest}, and $${start} + ${rest} \\times ${step} = ${start + rest * step}$, which is $${answer}$ modulo ${n}.`,
+            `这些箭头构成长度为 ${cycle} 的圈，所以走 ${moves} 个箭头相当于走 ${rest} 个，而 $${start} + ${rest} \\times ${step} = ${start + rest * step}$，模 ${n} 是 $${answer}$。`,
+          ),
+        ),
+        figure,
+        "integer",
+        mistakes,
+      );
+    }
   },
 };
 
@@ -3284,52 +3407,138 @@ const dihedralFromPolygon: KnowledgePointDef = {
   figure: algebraDrawings1["dihedral-group#following-a-symmetry-of-a-polygon"],
   title: t("Following a symmetry of a polygon", "跟踪多边形的对称变换"),
   explanation: t(
-    "The dihedral group is made of the rotations and reflections of a regular polygon. To follow one, track a single vertex: a rotation moves every vertex the same number of steps round the polygon, and a reflection in the axis through vertex 1 sends vertex $k$ to the vertex the same number of steps the other way round. Working with numbers modulo $n$ keeps this exact.",
-    "二面体群由正多边形的旋转和反射组成。要跟踪一个变换，就跟踪一个顶点：旋转把每个顶点沿多边形移动同样的步数，经过顶点 1 的轴的反射，把顶点 $k$ 送到反方向同样步数的顶点。用模 $n$ 的数来算，结果就很准确。",
+    "The dihedral group is made of the rotations and reflections of a regular polygon. To follow one, track a single vertex: a rotation moves every vertex the same number of steps round the polygon, and a reflection in the axis through vertex 1 sends vertex $k$ to the vertex the same number of steps the other way round. Working with numbers modulo $n$ keeps this exact.\n\nFor the pentagon drawn: the rotation by $2$ steps sends vertex $4$ to $4 + 2 = 6$, which is $1$ modulo $5$, so to vertex $1$. The reflection in the axis through vertex $1$ sends vertex $3$, which is $2$ steps one way from vertex $1$, to $2 - 3 = -1$, which is $4$ modulo $5$, the vertex $2$ steps the other way.\n\nCheck: rotating back by $2$ steps takes $1$ to $1 - 2 = -1$, which is $4$ modulo $5$, and reflecting twice takes $3$ to $4$ and back to $2 - 4 = -2$, which is $3$ modulo $5$.\n\n> **Watch out.** A reflection is not a rotation the other way: it keeps vertex $1$ in place and swaps the vertices in pairs on either side of the axis, such as $2$ with $5$ and $3$ with $4$.",
+    "二面体群由正多边形的旋转和反射组成。要跟踪一个变换，就跟踪一个顶点：旋转把每个顶点沿多边形移动同样的步数，经过顶点 1 的轴的反射，把顶点 $k$ 送到反方向同样步数的顶点。用模 $n$ 的数来算，结果就很准确。\n\n对图中的正五边形：旋转 $2$ 步把顶点 $4$ 送到 $4 + 2 = 6$，模 $5$ 为 $1$，即顶点 $1$。关于过顶点 $1$ 的轴的反射把顶点 $3$（从顶点 $1$ 向一侧走 $2$ 步）送到 $2 - 3 = -1$，模 $5$ 为 $4$，即向另一侧走 $2$ 步的顶点。\n\n检验：反向旋转 $2$ 步把 $1$ 送到 $1 - 2 = -1$，模 $5$ 为 $4$；反射两次把 $3$ 送到 $4$，再送回 $2 - 4 = -2$，模 $5$ 为 $3$。\n\n> **注意。** 反射不是反向的旋转：它保持顶点 $1$ 不动，把轴两侧的顶点成对交换，例如 $2$ 与 $5$、$3$ 与 $4$。",
   ),
   generate(rng) {
-    const n = rng.int(4, 8);
-    const at = ring(n, 80);
-    const vertex = rng.int(1, n);
-    const steps = rng.int(1, n - 1);
-    const reflect = rng.bool();
-    const wrap = (k: number) => ((k - 1 + 10 * n) % n) + 1;
-    const rotated = wrap(vertex + steps);
-    const reflected = wrap(2 - vertex);
-    const answer = reflect ? reflected : rotated;
-    const polygon = `<polygon class="accent" points="${at.map((p) => p.join(",")).join(" ")}"/>`;
-    const labels = at.map(([x, y], i) => label(160 + (x - 160) * 1.22, 110 + (y - 110) * 1.22 + 4, `${i + 1}`)).join("");
-    const axis = reflect ? `<line x1="160" y1="24" x2="160" y2="196" stroke-dasharray="4 3"/>` : "";
-    return numeric(
-      reflect
-        ? t(
-            `This regular ${n}-gon is reflected in the dashed line through vertex 1. To which position does vertex ${vertex} go?`,
-            `这个正 ${n} 边形关于过顶点 1 的虚线作反射。顶点 ${vertex} 去到哪个位置？`,
-          )
-        : t(
-            `This regular ${n}-gon is rotated clockwise by ${steps} ${steps === 1 ? "step" : "steps"}, where a step is the angle between neighboring vertices. To which position does vertex ${vertex} go?`,
-            `这个正 ${n} 边形顺时针旋转 ${steps} 步，一步是相邻顶点之间的角。顶点 ${vertex} 去到哪个位置？`,
+    for (;;) {
+      const n = rng.int(4, 8);
+      const at = ring(n, 80);
+      const vertex = rng.int(1, n);
+      const steps = rng.int(1, n - 1);
+      const reflect = rng.bool();
+      const wrap = (k: number) => ((k - 1 + 10 * n) % n) + 1;
+      const rotated = wrap(vertex + steps);
+      const reflected = wrap(2 - vertex);
+      const answer = reflect ? reflected : rotated;
+      const said = (value: number, en: string, zh: string) => ({ value, why: t(en, zh) });
+      const seen = new Set<number>([answer]);
+      const mistakes = (
+        reflect
+          ? [
+              said(
+                wrap(1 - vertex),
+                "That reverses the numbering as if the axis passed between vertices 1 and the last vertex; it passes through vertex 1.",
+                "那是把编号倒过来，好像轴从顶点 1 与最后一个顶点之间穿过；其实轴穿过顶点 1。",
+              ),
+              said(
+                wrap(2 * vertex - 1),
+                `That moves vertex ${vertex} the same distance further on, instead of the same distance on the other side of vertex 1.`,
+                `那是把顶点 ${vertex} 继续向前移动同样的距离，而不是移到顶点 1 另一侧同样距离处。`,
+              ),
+              said(
+                vertex,
+                `Vertex ${vertex} is not on the axis, so the reflection moves it.`,
+                `顶点 ${vertex} 不在轴上，所以反射会移动它。`,
+              ),
+            ]
+          : [
+              said(
+                wrap(vertex - steps),
+                "That turns counterclockwise; the rotation is clockwise, the way the numbers run.",
+                "那是逆时针转；旋转是顺时针的，与编号方向一致。",
+              ),
+              said(wrap(vertex + steps - 1), "That counts the starting vertex as one of the steps.", "那把起点也算作了一步。"),
+              ...(vertex + steps > n
+                ? [
+                    said(
+                      vertex + steps,
+                      `There is no vertex ${vertex + steps}: after ${n} the numbers wrap around to 1.`,
+                      `没有顶点 ${vertex + steps}：过了 ${n} 编号回到 1。`,
+                    ),
+                  ]
+                : []),
+              said(vertex, "A rotation by a step or more moves every vertex.", "旋转一步或更多步会移动每个顶点。"),
+            ]
+      ).filter((m) => !seen.has(m.value) && Boolean(seen.add(m.value)));
+      if (mistakes.length < 2) continue;
+      const polygon = `<polygon class="accent" points="${at.map((p) => p.join(",")).join(" ")}"/>`;
+      const labels = at.map(([x, y], i) => label(160 + (x - 160) * 1.22, 110 + (y - 110) * 1.22 + 4, `${i + 1}`)).join("");
+      const axis = reflect ? `<line x1="160" y1="24" x2="160" y2="196" stroke-dasharray="4 3"/>` : "";
+      const back = wrap(2 - reflected);
+      return numeric(
+        reflect
+          ? t(
+              `This regular ${n}-gon is reflected in the dashed line through vertex 1. To which position does vertex ${vertex} go?`,
+              `这个正 ${n} 边形关于过顶点 1 的虚线作反射。顶点 ${vertex} 去到哪个位置？`,
+            )
+          : t(
+              `This regular ${n}-gon is rotated clockwise by ${steps} ${steps === 1 ? "step" : "steps"}, where a step is the angle between neighboring vertices. To which position does vertex ${vertex} go?`,
+              `这个正 ${n} 边形顺时针旋转 ${steps} 步，一步是相邻顶点之间的角。顶点 ${vertex} 去到哪个位置？`,
+            ),
+        answer,
+        [],
+        reflect
+          ? walked(
+              [
+                [
+                  ["Measure from vertex 1", "从顶点 1 量起"],
+                  t(
+                    `Vertex ${vertex} is ${vertex - 1} ${vertex === 2 ? "step" : "steps"} clockwise from vertex 1.`,
+                    `顶点 ${vertex} 从顶点 1 顺时针走 ${vertex - 1} 步。`,
+                  ),
+                ],
+                [
+                  ["Go the other way", "向另一侧走"],
+                  t(
+                    `Its image is the same distance counterclockwise, at $2 - ${vertex} + ${n} = ${reflected}$, adding ${n} to stay among the positions 1 to ${n}.`,
+                    `它的像在逆时针同样距离处，即 $2 - ${vertex} + ${n} = ${reflected}$，加上 ${n} 是为了落在位置 1 到 ${n} 之间。`,
+                  ),
+                ],
+              ],
+              t(
+                `Reflecting again takes ${reflected} to $2 - ${reflected} + ${n} = ${back}$, back to vertex ${vertex}.`,
+                `再反射一次把 ${reflected} 送到 $2 - ${reflected} + ${n} = ${back}$，回到顶点 ${vertex}。`,
+              ),
+            )
+          : walked(
+              [
+                [
+                  ["Add the steps", "加上步数"],
+                  t(
+                    `Numbers run clockwise, so the vertex moves up by ${steps}: $${vertex} + ${steps} = ${vertex + steps}$.`,
+                    `数字按顺时针排列，所以顶点增加 ${steps}：$${vertex} + ${steps} = ${vertex + steps}$。`,
+                  ),
+                ],
+                [
+                  ["Wrap around", "回绕"],
+                  vertex + steps > n
+                    ? t(
+                        `After ${n} the numbers start again at 1: $${vertex + steps} - ${n} = ${rotated}$.`,
+                        `过了 ${n} 编号从 1 重新开始：$${vertex + steps} - ${n} = ${rotated}$。`,
+                      )
+                    : t(
+                        `$${vertex + steps}$ is at most ${n}, so no wrapping is needed: position ${rotated}.`,
+                        `$${vertex + steps}$ 不超过 ${n}，不需要回绕：位置 ${rotated}。`,
+                      ),
+                ],
+              ],
+              t(
+                `Turning back counterclockwise by ${steps} from ${rotated} returns to vertex ${vertex}.`,
+                `从 ${rotated} 逆时针转回 ${steps} 步，回到顶点 ${vertex}。`,
+              ),
+            ),
+        {
+          svg: svgDocument(220, polygon + labels + axis),
+          alt: t(
+            `A regular ${n}-gon with vertices numbered clockwise from 1 at the top${reflect ? ", and a vertical dashed line through vertex 1" : ""}.`,
+            `一个正 ${n} 边形，顶点从顶部的 1 开始顺时针编号${reflect ? "，还有一条过顶点 1 的竖直虚线" : ""}。`,
           ),
-      answer,
-      [reflect ? rotated : reflected, wrap(vertex - steps), vertex, wrap(answer + 1), wrap(answer - 1), wrap(answer + 2)],
-      reflect
-        ? t(
-            `Vertex ${vertex} is ${vertex - 1} ${vertex === 2 ? "step" : "steps"} clockwise from vertex 1, so its image is the same distance counterclockwise, at position ${reflected}.`,
-            `顶点 ${vertex} 从顶点 1 顺时针走 ${vertex - 1} 步，所以它的像在逆时针同样距离处，即位置 ${reflected}。`,
-          )
-        : t(
-            `Numbers run clockwise, so the vertex moves up by ${steps}, wrapping around after ${n}: $${vertex} + ${steps}$ becomes ${rotated}.`,
-            `数字按顺时针排列，所以顶点增加 ${steps}，过 ${n} 后回绕：$${vertex} + ${steps}$ 变成 ${rotated}。`,
-          ),
-      {
-        svg: svgDocument(220, polygon + labels + axis),
-        alt: t(
-          `A regular ${n}-gon with vertices numbered clockwise from 1 at the top${reflect ? ", and a vertical dashed line through vertex 1" : ""}.`,
-          `一个正 ${n} 边形，顶点从顶部的 1 开始顺时针编号${reflect ? "，还有一条过顶点 1 的竖直虚线" : ""}。`,
-        ),
-      },
-      "integer",
-    );
+        },
+        "integer",
+        mistakes,
+      );
+    }
   },
 };
 
@@ -3338,12 +3547,37 @@ const rootOrderFromCircle: KnowledgePointDef = {
   figure: algebraDrawings1["cyclic-subgroups-in-the-complex-plane#the-order-of-a-root-of-unity-from-a-drawing"],
   title: t("The order of a root of unity from a drawing", "由图读单位根的阶"),
   explanation: t(
-    "The $n$-th roots of unity are evenly spaced on the unit circle, and they form a cyclic group under multiplication. Multiplying by a root turns the plane through its angle. So its order is the number of equal turns needed to come back to one, and this equals $n$ divided by the greatest common divisor of $n$ and the number of steps from one to the root.",
-    "$n$ 次单位根均匀分布在单位圆上，在乘法下构成循环群。乘一个根就是把平面转过它的角。所以它的阶就是回到 1 需要转的次数，等于 $n$ 除以 $n$ 和从 1 到这个根的步数的最大公约数。",
+    "The $n$-th roots of unity are evenly spaced on the unit circle, and they form a cyclic group under multiplication. Multiplying by a root turns the plane through its angle. So its order is the number of equal turns needed to come back to one, and this equals $n$ divided by the greatest common divisor of $n$ and the number of steps from one to the root.\n\nIn the drawing, $\\omega^6$ sits $6$ steps from $1$ among the $8$th roots of unity, so its order is $\\frac{8}{\\gcd(8, 6)} = \\frac{8}{2} = 4$.\n\nCheck: four turns of $6$ steps make $24 = 3 \\cdot 8$ steps, three full turns, while two turns make $12$ steps, which is not a multiple of $8$.\n\n> **Watch out.** The order is not the number of steps to the root, nor $n$ itself: divide $n$ by the gcd.",
+    "$n$ 次单位根均匀分布在单位圆上，在乘法下构成循环群。乘一个根就是把平面转过它的角。所以它的阶就是回到 1 需要转的次数，等于 $n$ 除以 $n$ 和从 1 到这个根的步数的最大公约数。\n\n图中 $\\omega^6$ 在 $8$ 次单位根中距 $1$ 有 $6$ 步，所以它的阶为 $\\frac{8}{\\gcd(8, 6)} = \\frac{8}{2} = 4$。\n\n检验：转四次、每次 $6$ 步，共 $24 = 3 \\cdot 8$ 步，即三整圈；而转两次是 $12$ 步，不是 $8$ 的倍数。\n\n> **注意。** 阶既不是到这个根的步数，也不是 $n$ 本身：要用 $n$ 除以最大公约数。",
   ),
   generate(rng) {
-    const n = rng.pick([4, 5, 6, 8, 9, 10, 12]);
-    const k = rng.int(1, n - 1);
+    const said = (value: number, en: string, zh: string) => ({ value, why: t(en, zh) });
+    const explained = (n: number, k: number) =>
+      [
+        said(
+          n,
+          `$${n}$ is the number of roots drawn; $w$ returns to $1$ sooner when $\\gcd(${n}, ${k}) > 1$.`,
+          `$${n}$ 是所画的根的个数；当 $\\gcd(${n}, ${k}) > 1$ 时，$w$ 会更早回到 $1$。`,
+        ),
+        said(
+          k,
+          "This is the number of steps from $1$ to $w$, not the number of turns needed to come back.",
+          "这是从 $1$ 到 $w$ 的步数，而不是回到 $1$ 所需的转动次数。",
+        ),
+        said(gcd(n, k), "This is the gcd itself; divide $n$ by it to get the order.", "这是最大公约数本身；要用 $n$ 除以它才得到阶。"),
+        said(
+          n - k,
+          "This counts the steps clockwise from $1$ to $w$, which is still not the order.",
+          "这是从 $1$ 顺时针到 $w$ 的步数，仍然不是阶。",
+        ),
+      ].filter((m) => m.value !== n / gcd(n, k));
+    let n: number;
+    let k: number;
+    // Draw again when fewer than two typical mistakes differ from the order.
+    do {
+      n = rng.pick([4, 5, 6, 8, 9, 10, 12]);
+      k = rng.int(1, n - 1);
+    } while (new Set(explained(n, k).map((m) => m.value)).size < 2);
     const order = n / gcd(n, k);
     const dots = Array.from(
       { length: n },
@@ -3361,9 +3595,32 @@ const rootOrderFromCircle: KnowledgePointDef = {
       ),
       order,
       [n, k, n - k, gcd(n, k), order + 1, order + 2, order * 2],
-      t(
-        `$w$ is ${k} ${k === 1 ? "step" : "steps"} from 1, out of ${n}. So its order is $${n} \\div \\gcd(${n}, ${k}) = ${order}$.`,
-        `$w$ 距 1 有 ${k} 步，一共 ${n} 步。所以它的阶是 $${n} \\div \\gcd(${n}, ${k}) = ${order}$。`,
+      walked(
+        [
+          [
+            ["Count the steps", "数步数"],
+            t(
+              `$w$ is $${k}$ ${k === 1 ? "step" : "steps"} counterclockwise from $1$, out of $${n}$.`,
+              `$w$ 在 $1$ 逆时针 $${k}$ 步处，一共 $${n}$ 步。`,
+            ),
+          ],
+          [
+            ["Divide by the gcd", "除以最大公约数"],
+            t(
+              `Its order is $${n} \\div \\gcd(${n}, ${k}) = ${n} \\div ${gcd(n, k)} = ${order}$.`,
+              `它的阶为 $${n} \\div \\gcd(${n}, ${k}) = ${n} \\div ${gcd(n, k)} = ${order}$。`,
+            ),
+          ],
+        ],
+        (order * k) / n === 1
+          ? t(
+              `$${order}$ turns of $${k}$ steps make $${order * k}$ steps, exactly one whole turn of the circle, and fewer turns do not.`,
+              `转 $${order}$ 次、每次 $${k}$ 步，共 $${order * k}$ 步，恰好一整圈；更少的次数都不行。`,
+            )
+          : t(
+              `$${order}$ turns of $${k}$ steps make $${order * k} = ${(order * k) / n} \\cdot ${n}$ steps, whole turns of the circle, and fewer turns do not.`,
+              `转 $${order}$ 次、每次 $${k}$ 步，共 $${order * k} = ${(order * k) / n} \\cdot ${n}$ 步，是整圈；更少的次数都不行。`,
+            ),
       ),
       drawn(
         square(3),
@@ -3374,6 +3631,7 @@ const rootOrderFromCircle: KnowledgePointDef = {
         ),
       ),
       "integer",
+      explained(n, k),
     );
   },
 };
@@ -3382,8 +3640,8 @@ const permutationOrderFromArrows: KnowledgePointDef = {
   id: "the-order-of-a-permutation-from-an-arrow-diagram",
   title: t("The order of a permutation from arrows", "由箭头图读置换的阶"),
   explanation: t(
-    "A permutation drawn with arrows falls apart into separate cycles, one for each closed loop of arrows. Each cycle returns to its start after a number of steps equal to its length. The whole permutation returns to the identity only when all cycles do at once, so its order is the least common multiple of the lengths, and not their sum.",
-    "用箭头画出的置换，会分成若干个不相交的循环，每个闭合的箭头圈是一个循环。每个循环走过等于其长度的步数后回到起点。整个置换只有在所有循环同时回到起点时才回到恒等，所以它的阶是各长度的最小公倍数，而不是它们的和。",
+    "A permutation drawn with arrows falls apart into separate cycles, one for each closed loop of arrows. Each cycle returns to its start after a number of steps equal to its length. The whole permutation returns to the identity only when all cycles do at once, so its order is the least common multiple of the lengths, and not their sum.\n\nFor arrows $1 \\to 2$, $2 \\to 1$, $3 \\to 4$, $4 \\to 5$ and $5 \\to 3$: the loops are $(1\\;2)$ of length $2$ and $(3\\;4\\;5)$ of length $3$, so the order is $\\operatorname{lcm}(2, 3) = 6$.\n\nCheck: after $6$ steps the first loop has gone round $3$ times and the second $2$ times, both back at the start, while after $2$, $3$ or $4$ steps one of them is still partway round.\n\n> **Watch out.** Take the least common multiple, not the sum or the product: loops of lengths $2$ and $4$ give order $4$, not $6$ or $8$.",
+    "用箭头画出的置换，会分成若干个不相交的循环，每个闭合的箭头圈是一个循环。每个循环走过等于其长度的步数后回到起点。整个置换只有在所有循环同时回到起点时才回到恒等，所以它的阶是各长度的最小公倍数，而不是它们的和。\n\n对箭头 $1 \\to 2$、$2 \\to 1$、$3 \\to 4$、$4 \\to 5$、$5 \\to 3$：圈是长度为 $2$ 的 $(1\\;2)$ 和长度为 $3$ 的 $(3\\;4\\;5)$，所以阶是 $\\operatorname{lcm}(2, 3) = 6$。\n\n检验：走 $6$ 步后，第一个圈转了 $3$ 圈，第二个转了 $2$ 圈，都回到起点；而走 $2$、$3$ 或 $4$ 步时，总有一个圈还没转完。\n\n> **注意。** 要取最小公倍数，不是和，也不是积：长度为 $2$ 和 $4$ 的圈给出的阶是 $4$，不是 $6$ 或 $8$。",
   ),
   generate(rng) {
     const lengths = rng.pick([[2, 3], [3, 3], [2, 2, 2], [2, 4], [1, 5], [3, 2, 1], [6], [4, 1, 1], [5], [2, 2, 1], [4, 3], [2, 5]]);
@@ -3397,20 +3655,73 @@ const permutationOrderFromArrows: KnowledgePointDef = {
     }
     const lcm = lengths.reduce((a, b) => (a * b) / gcd(a, b), 1);
     const sum = lengths.reduce((a, b) => a + b, 0);
+    const product = lengths.reduce((a, b) => a * b, 1);
     const names = Array.from({ length: n }, (_, i) => `${i + 1}`);
+    const said = (value: number, en: string, zh: string) => ({ value, why: t(en, zh) });
+    const seen = new Set<number>([lcm]);
+    const mistakes = [
+      said(
+        sum,
+        "That adds the lengths, but the cycles turn at the same time, so the order is their least common multiple.",
+        "那是把长度相加，但各循环同时转动，所以阶是它们的最小公倍数。",
+      ),
+      said(
+        product,
+        "That multiplies the lengths; the cycles are all back at the start already at their least common multiple.",
+        "那是把长度相乘；到了它们的最小公倍数，各循环就都已回到起点。",
+      ),
+      said(
+        Math.max(...lengths),
+        "That is the longest cycle alone; the shorter cycles must be back at the start at the same moment.",
+        "那只是最长的循环；较短的循环也必须同时回到起点。",
+      ),
+      said(
+        lengths.length,
+        "That is the number of cycles, not the number of steps to return to the start.",
+        "那是循环的个数，而不是回到起点所需的步数。",
+      ),
+      said(
+        n - lengths.length,
+        "That is the fewest transpositions for the permutation, not its order.",
+        "那是这个置换最少需要的对换数，而不是它的阶。",
+      ),
+      said(
+        lengths.filter((l) => l > 1).reduce((a, b) => a + b, 0),
+        "That counts the numbers that move, but the cycles turn at the same time, so the order is the least common multiple of their lengths.",
+        "那数的是移动的数，但各循环同时转动，所以阶是它们长度的最小公倍数。",
+      ),
+    ].filter((m) => !seen.has(m.value) && Boolean(seen.add(m.value)));
+    const moving = [...new Set(lengths.filter((l) => l > 1))];
     return numeric(
       t(
         "Each arrow sends a number to its image under a permutation. What is the order of the permutation?",
         "每个箭头把一个数送到它在置换下的像。这个置换的阶是多少？",
       ),
       lcm,
-      [sum, Math.max(...lengths), lengths.length, lcm + 1, lcm + 2, lcm * 2],
-      lengths.length === 1
-        ? t(`The arrows form one cycle, of length ${lcm}, so the order is ${lcm}.`, `箭头构成一个循环，长度为 ${lcm}，所以阶是 ${lcm}。`)
-        : t(
-            `The cycles have lengths ${lengths.join(", ")}, and their least common multiple is ${lcm}.`,
-            `各循环的长度是 ${lengths.join("、")}，它们的最小公倍数是 ${lcm}。`,
-          ),
+      [],
+      walked(
+        [
+          [
+            ["Find the loops", "找出圈"],
+            lengths.length === 1
+              ? t(`The arrows form one loop, of length ${lcm}.`, `箭头构成一个圈，长度为 ${lcm}。`)
+              : t(
+                  `The loops of arrows have lengths ${lengths.join(", ")}, counting a number that goes to itself as a loop of length 1.`,
+                  `箭头圈的长度是 ${lengths.join("、")}，指向自身的数算作长度为 1 的圈。`,
+                ),
+          ],
+          [
+            ["Take the least common multiple", "取最小公倍数"],
+            lengths.length === 1
+              ? t(`So the order is ${lcm}.`, `所以阶是 ${lcm}。`)
+              : t(`$\\operatorname{lcm}(${lengths.join(", ")}) = ${lcm}$.`, `$\\operatorname{lcm}(${lengths.join(", ")}) = ${lcm}$。`),
+          ],
+        ],
+        t(
+          `${lcm} is a multiple of ${moving.join(" and ")}, so after ${lcm} steps every loop is back at its start, and no smaller number is a multiple of all of them.`,
+          `${lcm} 是 ${moving.join(" 和 ")} 的倍数，所以走 ${lcm} 步后每个圈都回到起点，而更小的数不是它们全部的倍数。`,
+        ),
+      ),
       graphFigure(
         names,
         edges,
@@ -3421,6 +3732,7 @@ const permutationOrderFromArrows: KnowledgePointDef = {
         ),
       ),
       "integer",
+      mistakes,
     );
   },
 };

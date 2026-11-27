@@ -257,6 +257,10 @@ Stages 4 and 5 were reopened on 2026-11-25 and are written by whoever coordinate
 | `probability-and-statistics-hypothesis-testing.ts` | 19 | done | coordinator, helper B | critical regions, one- and two-tailed tests, errors of both types, tests for means, proportions and variances, paired tests and one-factor analysis of variance |
 | `probability-and-statistics-regression.ts` | 3 | done | coordinator, helper B | Spearman's rank correlation and confidence intervals for the slope and intercept of a regression line |
 | `probability-and-statistics-nonparametric.ts` | 7 | done | coordinator, helper A | chi-square goodness of fit for binomial, Poisson, uniform and normal models, tests of independence and homogeneity, and order statistics, with third points for these three files in `deeper-probability-statistics.ts`, `deeper-probability-and-statistics-third-3.ts`, `deeper-figures-probability-and-statistics.ts` and `deeper-figures-probability-and-statistics-2.ts` |
+| `abstract-algebra-groups.ts` | 16 | done | coordinator, helper A | binary operations, groups, Cayley tables, orders of groups and elements, and cyclic groups |
+| `abstract-algebra-subgroups.ts` | 14 | done | coordinator, helper A | subgroups, generators, cyclic subgroups and subgroup lattices |
+| `abstract-algebra-quotients.ts` | 19 | done | coordinator, helper B | direct products, finitely generated abelian groups, cosets, normal subgroups, normalizers, centers, centralizers, quotient groups, Lagrange's theorem and simple groups |
+| `abstract-algebra-rings.ts` | 18 | done | coordinator, helper B | rings, integral domains, fields, characteristic, units, fields of quotients, subrings, ideals, quotient rings, ring homomorphisms and prime and maximal ideals, with third points for these four files in `deeper-abstract-algebra.ts`, `deeper-abstract-algebra-third.ts`, `deeper-abstract-algebra-third-2.ts`, `deeper-figures-abstract-algebra.ts`, `deeper-figures-proofs-algebra-numbers.ts` and `figure-reading-more.ts` |
 
 ## Open Gaps
 
