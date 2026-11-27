@@ -261,6 +261,8 @@ Stages 4 and 5 were reopened on 2026-11-25 and are written by whoever coordinate
 | `abstract-algebra-subgroups.ts` | 14 | done | coordinator, helper A | subgroups, generators, cyclic subgroups and subgroup lattices |
 | `abstract-algebra-quotients.ts` | 19 | done | coordinator, helper B | direct products, finitely generated abelian groups, cosets, normal subgroups, normalizers, centers, centralizers, quotient groups, Lagrange's theorem and simple groups |
 | `abstract-algebra-rings.ts` | 18 | done | coordinator, helper B | rings, integral domains, fields, characteristic, units, fields of quotients, subrings, ideals, quotient rings, ring homomorphisms and prime and maximal ideals, with third points for these four files in `deeper-abstract-algebra.ts`, `deeper-abstract-algebra-third.ts`, `deeper-abstract-algebra-third-2.ts`, `deeper-figures-abstract-algebra.ts`, `deeper-figures-proofs-algebra-numbers.ts` and `figure-reading-more.ts` |
+| `abstract-algebra-permutations.ts` | 14 | done | coordinator, helper A | cycles, inverses and orders of permutations, transpositions, symmetric and alternating groups, and the symmetry groups of figures, dihedral groups, the tetrahedron and the cube |
+| `abstract-algebra-homomorphisms.ts` | 7 | done | coordinator, helper A | group homomorphisms, images, kernels, isomorphisms and the three isomorphism theorems, with third points in `deeper-abstract-algebra.ts`, `deeper-abstract-algebra-third.ts`, `deeper-figures-abstract-algebra.ts`, `deeper-figures-proofs-algebra-numbers.ts` and `figure-reading-more.ts` |
 
 ## Open Gaps
 

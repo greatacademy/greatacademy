@@ -754,7 +754,7 @@ const cycleFromArrows = point(
       inverse[v] = i;
     });
     const right = cycleText(perm);
-    const moved = perm.map((v, i) => i).filter((i) => perm[i] !== i);
+    const moved = perm.map((_, i) => i).filter((i) => perm[i] !== i);
     const cycles: number[][] = [];
     const used = new Set<number>();
     for (const start of moved) {
@@ -1286,8 +1286,8 @@ const kernelArrows = point(
   "the-kernel-from-an-arrow-diagram",
   ["The kernel from an arrow diagram", "由箭头图读核"],
   [
-    "The kernel of a group homomorphism is the set of elements that map to the identity. In an arrow diagram from one group to another, these are exactly the points whose arrows end at the identity element of the target. Every point of the target that is reached is reached by the same number of arrows, namely the size of the kernel.",
-    "群同态的核是映到单位元的元素组成的集合。在从一个群到另一个群的箭头图中，它们恰好是箭头终点为目标群单位元的那些点。目标群中被到达的每一点，都被同样多的箭头到达，这个数就是核的大小。",
+    "The kernel of a group homomorphism is the set of elements that map to the identity. In an arrow diagram from one group to another, these are exactly the points whose arrows end at the identity element of the target. Every point of the target that is reached is reached by the same number of arrows, namely the size of the kernel. For the map $x \\mapsto x \\bmod 3$ from the integers modulo $6$ to the integers modulo $3$, the arrows into $0$ start at $0$ and $3$, so the kernel is $\\{0, 3\\}$, with $2$ elements.\n\nCheck: the image $\\{0, 1, 2\\}$ has $3$ points, each reached by $2$ arrows, and $2 \\cdot 3 = 6$ arrows in all.\n\n> **Watch out.** Count the arrows that end at $0$ on the right, not the points on the right that are reached: those make up the image, here $3$, not the kernel.",
+    "群同态的核是映到单位元的元素组成的集合。在从一个群到另一个群的箭头图中，它们恰好是箭头终点为目标群单位元的那些点。目标群中被到达的每一点，都被同样多的箭头到达，这个数就是核的大小。对从模 $6$ 的整数到模 $3$ 的整数的映射 $x \\mapsto x \\bmod 3$，指向 $0$ 的箭头从 $0$ 和 $3$ 出发，所以核是 $\\{0, 3\\}$，有 $2$ 个元素。\n\n检验：像 $\\{0, 1, 2\\}$ 有 $3$ 个点，每个点被 $2$ 个箭头到达，共 $2 \\cdot 3 = 6$ 个箭头。\n\n> **注意。** 要数终点是右边 $0$ 的箭头，而不是右边被到达的点：那些点组成的是像（这里有 $3$ 个），不是核。",
   ],
   (rng) => {
     const [m, n] = rng.pick<Point>([
@@ -1317,25 +1317,69 @@ const kernelArrows = point(
     });
     body += left.map((p, x) => node(p, String(x))).join("") + right.map((p, y) => node(p, String(y))).join("");
     const imageSize = m / kernel.length;
-    return ask(
-      [
-        `The arrows show a homomorphism from the integers modulo $${m}$ on the left to the integers modulo $${n}$ on the right. How many elements are in its kernel?`,
-        `箭头表示从左边模 $${m}$ 的整数到右边模 $${n}$ 的整数的同态。它的核有多少个元素？`,
-      ],
-      kernel.length,
-      [imageSize === kernel.length ? kernel.length + 1 : imageSize, m === kernel.length ? kernel.length + 2 : m, kernel.length + 1],
-      [
-        `The arrows ending at $0$ on the right start at $${kernel.join(", ")}$ on the left, so the kernel has $${kernel.length}$ elements.`,
-        `终点是右边 $0$ 的箭头从左边的 $${kernel.join(", ")}$ 出发，所以核有 $${kernel.length}$ 个元素。`,
-      ],
-      {
+    const answer = kernel.length;
+    const reached = [...new Set(left.map((_, x) => image(x)))].sort((a, b) => a - b);
+    const mistakes = [
+      said(
+        imageSize,
+        "That counts the points on the right that are reached, which make up the image, not the kernel.",
+        "那数的是右边被到达的点，它们组成的是像，不是核。",
+      ),
+      said(
+        m,
+        "That counts every arrow, but only the arrows that end at $0$ come from the kernel.",
+        "那数的是所有箭头，但只有终点为 $0$ 的箭头来自核。",
+      ),
+      said(n, "That counts the points on the right; the kernel lies on the left.", "那数的是右边的点；核在左边。"),
+      said(
+        0,
+        "The kernel is never empty: a homomorphism sends $0$ to $0$, so the arrow from $0$ always ends at $0$.",
+        "核从不为空：同态把 $0$ 映为 $0$，所以从 $0$ 出发的箭头总是指向 $0$。",
+      ),
+      said(
+        1,
+        `$0$ is in the kernel, but so ${answer === 2 ? "is" : "are"} $${kernel.slice(1).join(", ")}$: ${answer === 2 ? "its arrow ends" : "their arrows end"} at $0$ too.`,
+        `$0$ 在核中，但 $${kernel.slice(1).join(", ")}$ 也在：${answer === 2 ? "它的" : "它们的"}箭头也指向 $0$。`,
+      ),
+    ].filter((w, i, all) => w.value !== answer && all.findIndex((o) => o.value === w.value) === i);
+    return {
+      ...numberProblem({
+        prompt: t(
+          `The arrows show a homomorphism from the integers modulo $${m}$ on the left to the integers modulo $${n}$ on the right. How many elements are in its kernel?`,
+          `箭头表示从左边模 $${m}$ 的整数到右边模 $${n}$ 的整数的同态。它的核有多少个元素？`,
+        ),
+        answer,
+        form: "integer",
+        mistakes,
+        solution: walked(
+          [
+            [
+              ["Find the identity", "找单位元"],
+              t(`The identity of the integers modulo $${n}$, on the right, is $0$.`, `右边模 $${n}$ 的整数的单位元是 $0$。`),
+            ],
+            [
+              ["Follow the arrows back", "沿箭头倒推"],
+              t(
+                `The arrows ending at $0$ on the right start at $${kernel.join(", ")}$ on the left.`,
+                `终点是右边 $0$ 的箭头从左边的 $${kernel.join(", ")}$ 出发。`,
+              ),
+            ],
+            [["Count", "计数"], t(`So the kernel has $${answer}$ elements.`, `所以核有 $${answer}$ 个元素。`)],
+          ],
+          t(
+            `The arrows reach $${reached.join(", ")}$ on the right, $${imageSize}$ ${imageSize === 1 ? "point" : "points"}, each by $${answer}$ arrows, and $${answer} \\cdot ${imageSize} = ${m}$ arrows in all.`,
+            `箭头到达右边的 $${reached.join(", ")}$，共 $${imageSize}$ 个点，每个点被 $${answer}$ 个箭头到达，共 $${answer} \\cdot ${imageSize} = ${m}$ 个箭头。`,
+          ),
+        ),
+      }),
+      figure: {
         svg: svgDocument(220, body),
         alt: t(
           `Arrows from the integers modulo ${m} to the integers modulo ${n}: ${left.map((_, x) => `${x} to ${image(x)}`).join(", ")}.`,
           `从模 ${m} 整数到模 ${n} 整数的箭头：${left.map((_, x) => `${x} 到 ${image(x)}`).join("、")}。`,
         ),
       },
-    );
+    };
   },
 );
 

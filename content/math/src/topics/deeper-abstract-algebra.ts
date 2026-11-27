@@ -801,30 +801,81 @@ const dihedralNormalSubgroups: KnowledgePointDef = {
   },
 };
 
+/** totientTex writes φ(n) by the product formula, as n · (p − 1)/p · … = φ(n). */
+const totientTex = (n: number) =>
+  `\\varphi(${n}) = ${n} \\cdot ${primes(n)
+    .map((p) => `\\frac{${p - 1}}{${p}}`)
+    .join(" \\cdot ")} = ${totient(n)}`;
+
 const surjectiveHomomorphisms: KnowledgePointDef = {
   id: "counting-surjective-homomorphisms-between-cyclic-groups",
   title: t("Counting surjective homomorphisms between cyclic groups", "数循环群之间的满同态"),
   explanation: t(
-    "A homomorphism out of a cyclic group is fixed by the image of a generator. When $n$ divides $m$, any element of $\\mathbb{Z}_n$ can be that image. The homomorphism is surjective exactly when the image generates $\\mathbb{Z}_n$, and there are $\\varphi(n)$ generators. The size of $m$ does not matter beyond being a multiple of $n$.",
-    "循环群出发的同态由生成元的像确定。当 $n$ 整除 $m$ 时，$\\mathbb{Z}_n$ 的任何元素都可以作这个像。同态是满射，当且仅当这个像生成 $\\mathbb{Z}_n$，而生成元有 $\\varphi(n)$ 个。$m$ 的大小除了是 $n$ 的倍数以外没有影响。",
+    "A homomorphism out of a cyclic group is fixed by the image of a generator. When $n$ divides $m$, any element of $\\mathbb{Z}_n$ can be that image. The homomorphism is surjective exactly when the image generates $\\mathbb{Z}_n$, and there are $\\varphi(n)$ generators. For $\\mathbb{Z}_{12} \\to \\mathbb{Z}_4$, the generators of $\\mathbb{Z}_4$ are $1$ and $3$, so there are $\\varphi(4) = 2$ surjective homomorphisms.\n\nCheck: $12 \\cdot 3 = 36 = 9 \\cdot 4$, so $1 \\mapsto 3$ is allowed, and its image $\\{0, 3, 2, 1\\}$ is all of $\\mathbb{Z}_4$. The map $1 \\mapsto 2$ is allowed too, but its image is only $\\{0, 2\\}$.\n\n> **Watch out.** Count the generators of the target $\\mathbb{Z}_n$, not of the source $\\mathbb{Z}_m$: the size of $m$ does not matter beyond being a multiple of $n$.",
+    "循环群出发的同态由生成元的像确定。当 $n$ 整除 $m$ 时，$\\mathbb{Z}_n$ 的任何元素都可以作这个像。同态是满射，当且仅当这个像生成 $\\mathbb{Z}_n$，而生成元有 $\\varphi(n)$ 个。对 $\\mathbb{Z}_{12} \\to \\mathbb{Z}_4$，$\\mathbb{Z}_4$ 的生成元是 $1$ 和 $3$，所以满同态有 $\\varphi(4) = 2$ 个。\n\n检验：$12 \\cdot 3 = 36 = 9 \\cdot 4$，所以 $1 \\mapsto 3$ 是允许的，它的像 $\\{0, 3, 2, 1\\}$ 是整个 $\\mathbb{Z}_4$。映射 $1 \\mapsto 2$ 也是允许的，但它的像只有 $\\{0, 2\\}$。\n\n> **注意。** 要数目标群 $\\mathbb{Z}_n$ 的生成元，而不是源群 $\\mathbb{Z}_m$ 的：$m$ 的大小除了是 $n$ 的倍数以外没有影响。",
   ),
   generate(rng) {
-    const n = rng.int(3, 20);
-    const m = n * rng.int(2, 9);
-    const answer = totient(n);
-    return numberProblem({
-      prompt: t(
-        `How many surjective homomorphisms are there from $${Zn(m)}$ to $${Zn(n)}$?`,
-        `从 $${Zn(m)}$ 到 $${Zn(n)}$ 的满同态有多少个？`,
-      ),
-      answer,
-      form: "integer",
-      wrong: [n, totient(m), m],
-      solution: t(
-        `The image of 1 must be a generator of $${Zn(n)}$, and any generator works because ${n} divides ${m}. There are $\\varphi(${n}) = ${answer}$ of them.`,
-        `1 的像必须是 $${Zn(n)}$ 的生成元，由于 ${n} 整除 ${m}，任何生成元都可以。共有 $\\varphi(${n}) = ${answer}$ 个。`,
-      ),
-    });
+    for (;;) {
+      const n = rng.int(3, 20);
+      const m = n * rng.int(2, 9);
+      const answer = totient(n);
+      const gens = range(1, n - 1).filter((k) => gcd(k, n) === 1);
+      const mistakes = apart(answer, [
+        why(
+          n,
+          `That counts every homomorphism, but $\\varphi(1) = k$ gives a surjection only when $k$ generates $${Zn(n)}$.`,
+          `那数的是所有同态，但只有当 $k$ 生成 $${Zn(n)}$ 时，$\\varphi(1) = k$ 才给出满射。`,
+        ),
+        why(
+          totient(m),
+          `That counts the generators of $${Zn(m)}$, the source; the image of $1$ has to generate the target $${Zn(n)}$.`,
+          `那数的是源群 $${Zn(m)}$ 的生成元；$1$ 的像必须生成目标群 $${Zn(n)}$。`,
+        ),
+        why(
+          n - 1,
+          `That counts every nonzero $k$, but for example $k = ${primes(n)[0]}$ only generates $\\langle ${primes(n)[0]} \\rangle$, not all of $${Zn(n)}$.`,
+          `那数的是所有非零的 $k$，但例如 $k = ${primes(n)[0]}$ 只生成 $\\langle ${primes(n)[0]} \\rangle$，不是整个 $${Zn(n)}$。`,
+        ),
+        why(
+          m,
+          `That counts the elements of $${Zn(m)}$, but a homomorphism is fixed by the image of $1$ in $${Zn(n)}$.`,
+          `那数的是 $${Zn(m)}$ 的元素，但同态由 $1$ 在 $${Zn(n)}$ 中的像决定。`,
+        ),
+      ]);
+      if (mistakes.length < 2) continue;
+      return numberProblem({
+        prompt: t(
+          `How many surjective homomorphisms are there from $${Zn(m)}$ to $${Zn(n)}$?`,
+          `从 $${Zn(m)}$ 到 $${Zn(n)}$ 的满同态有多少个？`,
+        ),
+        answer,
+        form: "integer",
+        mistakes,
+        solution: walked(
+          [
+            [
+              ["Fix the generator", "看生成元"],
+              t(
+                `A homomorphism is fixed by $k = \\varphi(1)$, and every $k$ is allowed, because $${n}$ divides $${m}$, so $${m} \\cdot k \\equiv 0 \\pmod{${n}}$.`,
+                `同态由 $k = \\varphi(1)$ 决定；由于 $${n}$ 整除 $${m}$，有 $${m} \\cdot k \\equiv 0 \\pmod{${n}}$，所以每个 $k$ 都允许。`,
+              ),
+            ],
+            [
+              ["Ask for onto", "要求满射"],
+              t(
+                `The image is $\\langle k \\rangle$, which is all of $${Zn(n)}$ exactly when $\\gcd(k, ${n}) = 1$.`,
+                `像是 $\\langle k \\rangle$，它是整个 $${Zn(n)}$ 当且仅当 $\\gcd(k, ${n}) = 1$。`,
+              ),
+            ],
+            [
+              ["Count", "计数"],
+              t(`The generators are $${gens.join(", ")}$: $${answer}$ of them.`, `生成元是 $${gens.join(", ")}$，共 $${answer}$ 个。`),
+            ],
+          ],
+          t(`By the product formula, $${totientTex(n)}$.`, `由乘积公式，$${totientTex(n)}$。`),
+        ),
+      });
+    }
   },
 };
 
@@ -832,26 +883,74 @@ const automorphismCount: KnowledgePointDef = {
   id: "counting-automorphisms-of-a-cyclic-group",
   title: t("Counting automorphisms of a cyclic group", "数循环群的自同构"),
   explanation: t(
-    "An automorphism of a cyclic group sends a generator to a generator, and each choice of generator gives exactly one automorphism. So $\\mathbb{Z}_n$ has $\\varphi(n)$ automorphisms. A product of cyclic groups of coprime orders is itself cyclic, by the Chinese remainder theorem, so the same count applies to the order of the whole product.",
-    "循环群的自同构把生成元映到生成元，每种选择恰好给出一个自同构。所以 $\\mathbb{Z}_n$ 有 $\\varphi(n)$ 个自同构。由中国剩余定理，阶互素的循环群之积本身是循环群，所以同样的计数适用于整个积的阶。",
+    "An automorphism of a cyclic group sends a generator to a generator, and each choice of generator gives exactly one automorphism. So $\\mathbb{Z}_n$ has $\\varphi(n)$ automorphisms. A product of cyclic groups of coprime orders is itself cyclic, by the Chinese remainder theorem, so the same count applies to the order of the whole product. For example $\\mathbb{Z}_3 \\times \\mathbb{Z}_4 \\cong \\mathbb{Z}_{12}$ has $\\varphi(12) = 4$ automorphisms, one for each of the generators $1, 5, 7, 11$.\n\nCheck: $\\varphi$ is multiplicative on coprime numbers, and $\\varphi(3) \\cdot \\varphi(4) = 2 \\cdot 2 = 4$.\n\n> **Watch out.** Multiply $\\varphi(m)$ and $\\varphi(n)$, do not add them: here $2 + 2 = 4$ happens to agree, but for $\\mathbb{Z}_3 \\times \\mathbb{Z}_5$ the sum $2 + 4 = 6$ is wrong and the product $8$ is right.",
+    "循环群的自同构把生成元映到生成元，每种选择恰好给出一个自同构。所以 $\\mathbb{Z}_n$ 有 $\\varphi(n)$ 个自同构。由中国剩余定理，阶互素的循环群之积本身是循环群，所以同样的计数适用于整个积的阶。例如 $\\mathbb{Z}_3 \\times \\mathbb{Z}_4 \\cong \\mathbb{Z}_{12}$ 有 $\\varphi(12) = 4$ 个自同构，分别对应生成元 $1, 5, 7, 11$。\n\n检验：$\\varphi$ 对互素的数是积性的，而 $\\varphi(3) \\cdot \\varphi(4) = 2 \\cdot 2 = 4$。\n\n> **注意。** 要把 $\\varphi(m)$ 与 $\\varphi(n)$ 相乘，而不是相加：这里 $2 + 2 = 4$ 恰好一致，但对 $\\mathbb{Z}_3 \\times \\mathbb{Z}_5$，和 $2 + 4 = 6$ 是错的，积 $8$ 才对。",
   ),
   generate(rng) {
-    const [m, n] = rng.pick(
-      range(2, 16)
-        .flatMap((i) => range(i + 1, 17).map((j) => [i, j] as const))
-        .filter(([i, j]) => gcd(i, j) === 1),
-    );
-    const answer = totient(m * n);
-    return numberProblem({
-      prompt: t(`How many automorphisms does $${Zn(m)} \\times ${Zn(n)}$ have?`, `$${Zn(m)} \\times ${Zn(n)}$ 有多少个自同构？`),
-      answer,
-      form: "integer",
-      wrong: [m * n, totient(m) + totient(n), m * n - 1],
-      solution: t(
-        `Since ${m} and ${n} are coprime, the group is cyclic of order ${m * n}. It has $\\varphi(${m * n}) = \\varphi(${m})\\varphi(${n}) = ${answer}$ automorphisms.`,
-        `由于 ${m} 和 ${n} 互素，这个群是 ${m * n} 阶循环群。它有 $\\varphi(${m * n}) = \\varphi(${m})\\varphi(${n}) = ${answer}$ 个自同构。`,
-      ),
-    });
+    for (;;) {
+      const [m, n] = rng.pick(
+        range(2, 16)
+          .flatMap((i) => range(i + 1, 17).map((j) => [i, j] as const))
+          .filter(([i, j]) => gcd(i, j) === 1),
+      );
+      const answer = totient(m * n);
+      const [a, b] = [totient(m), totient(n)];
+      const mistakes = apart(answer, [
+        why(
+          m * n,
+          `That counts every element of the group, but an automorphism must send $(1, 1)$ to a generator.`,
+          "那数的是群的所有元素，但自同构必须把 $(1, 1)$ 送到生成元。",
+        ),
+        why(
+          a + b,
+          `That adds $\\varphi(${m}) = ${a}$ and $\\varphi(${n}) = ${b}$; a generator pairs a generator of each factor, so multiply.`,
+          `那是把 $\\varphi(${m}) = ${a}$ 与 $\\varphi(${n}) = ${b}$ 相加；生成元由每个因子的生成元配对而成，所以要相乘。`,
+        ),
+        why(
+          m * n - 1,
+          "That counts every nonzero element, but only the generators give automorphisms.",
+          "那数的是所有非零元素，但只有生成元给出自同构。",
+        ),
+        why(
+          (m - 1) * (n - 1),
+          "That pairs the nonzero elements of the factors, but each coordinate must be a generator of its factor.",
+          "那是把两个因子的非零元素配对，但每个坐标都必须是所在因子的生成元。",
+        ),
+      ]);
+      if (mistakes.length < 2) continue;
+      return numberProblem({
+        prompt: t(`How many automorphisms does $${Zn(m)} \\times ${Zn(n)}$ have?`, `$${Zn(m)} \\times ${Zn(n)}$ 有多少个自同构？`),
+        answer,
+        form: "integer",
+        mistakes,
+        solution: walked(
+          [
+            [
+              ["Make it cyclic", "化为循环群"],
+              t(
+                `Since $${m}$ and $${n}$ are coprime, $${Zn(m)} \\times ${Zn(n)} \\cong ${Zn(m * n)}$.`,
+                `由于 $${m}$ 与 $${n}$ 互素，$${Zn(m)} \\times ${Zn(n)} \\cong ${Zn(m * n)}$。`,
+              ),
+            ],
+            [
+              ["Count generators", "数生成元"],
+              t(
+                `An automorphism sends a generator to a generator, so there are $\\varphi(${m * n})$ of them.`,
+                `自同构把生成元送到生成元，所以共有 $\\varphi(${m * n})$ 个。`,
+              ),
+            ],
+            [
+              ["Multiply", "相乘"],
+              t(
+                `$\\varphi(${m * n}) = \\varphi(${m}) \\cdot \\varphi(${n}) = ${a} \\cdot ${b} = ${answer}$.`,
+                `$\\varphi(${m * n}) = \\varphi(${m}) \\cdot \\varphi(${n}) = ${a} \\cdot ${b} = ${answer}$。`,
+              ),
+            ],
+          ],
+          t(`By the product formula, $${totientTex(m * n)}$.`, `由乘积公式，$${totientTex(m * n)}$。`),
+        ),
+      });
+    }
   },
 };
 
@@ -887,8 +986,8 @@ const elementsOfPrimeOrder: KnowledgePointDef = {
   id: "elements-of-prime-order-from-the-sylow-count",
   title: t("Elements of prime order from the Sylow count", "由西罗子群个数求素数阶元素"),
   explanation: t(
-    "If a prime $p$ divides the order of a group only once, each Sylow $p$-subgroup is cyclic of order $p$. Two different such subgroups meet only in the identity, and every element of order $p$ lies in exactly one. So $s$ Sylow subgroups give $s(p - 1)$ elements of order $p$. This counting often leaves too little room for other subgroups.",
-    "如果素数 $p$ 只整除群的阶一次，每个西罗 $p$ 子群都是 $p$ 阶循环群。两个不同的这种子群只有单位元这一个公共元素，每个 $p$ 阶元素恰在其中一个子群里。所以 $s$ 个西罗子群给出 $s(p - 1)$ 个 $p$ 阶元素。这种计数常常说明其他子群已没有足够的位置。",
+    "If a prime $p$ divides the order of a group only once, each Sylow $p$-subgroup is cyclic of order $p$. Two different such subgroups meet only in the identity, and every element of order $p$ lies in exactly one. So $s$ Sylow subgroups give $s(p - 1)$ elements of order $p$. This counting often leaves too little room for other subgroups.\n\n$A_5$ has order $60 = 4 \\cdot 3 \\cdot 5$ and $6$ Sylow $5$-subgroups. Since $5$ divides $60$ only once, they give $6 \\cdot 4 = 24$ elements of order $5$.\n\nCheck: the elements of order $5$ in $A_5$ are the five-cycles, and there are $\\frac{5!}{5} = 24$ of them.\n\n> **Watch out.** The count needs $p$ to divide the order only once: $S_4$ has $3$ Sylow $2$-subgroups of order $8$, but they share elements, and $S_4$ has only $15$ elements of order $2$ or $4$, not $3 \\cdot 7 = 21$.",
+    "如果素数 $p$ 只整除群的阶一次，每个西罗 $p$ 子群都是 $p$ 阶循环群。两个不同的这种子群只有单位元这一个公共元素，每个 $p$ 阶元素恰在其中一个子群里。所以 $s$ 个西罗子群给出 $s(p - 1)$ 个 $p$ 阶元素。这种计数常常说明其他子群已没有足够的位置。\n\n$A_5$ 的阶为 $60 = 4 \\cdot 3 \\cdot 5$，有 $6$ 个西罗 $5$ 子群。由于 $5$ 只整除 $60$ 一次，它们给出 $6 \\cdot 4 = 24$ 个 $5$ 阶元素。\n\n检验：$A_5$ 中的 $5$ 阶元素就是 $5$-轮换，共有 $\\frac{5!}{5} = 24$ 个。\n\n> **注意。** 这种计数要求 $p$ 只整除群的阶一次：$S_4$ 有 $3$ 个 $8$ 阶西罗 $2$ 子群，但它们有公共元素，$S_4$ 中 $2$ 阶或 $4$ 阶元素只有 $15$ 个，而不是 $3 \\cdot 7 = 21$ 个。",
   ),
   generate(rng) {
     const [p, q] = rng.pick([
@@ -917,10 +1016,45 @@ const elementsOfPrimeOrder: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong: [q, p * q, answer + 1],
-      solution: t(
-        `Since ${p} divides ${p * q * r} only once, each Sylow subgroup has order ${p}, and each holds $${p} - 1 = ${p - 1}$ of the elements of order ${p}, none of them shared. That makes $${q} \\cdot ${p - 1} = ${answer}$.`,
-        `由于 ${p} 只整除 ${p * q * r} 一次，每个西罗子群的阶都是 ${p}，各含 $${p} - 1 = ${p - 1}$ 个 ${p} 阶元素，互不重复。共 $${q} \\cdot ${p - 1} = ${answer}$ 个。`,
+      mistakes: apart(answer, [
+        why(
+          q,
+          `${q} is the number of subgroups; each contributes $${p} - 1$ elements of order ${p}.`,
+          `${q} 是子群的个数；每个子群贡献 $${p} - 1$ 个 ${p} 阶元素。`,
+        ),
+        why(
+          p * q,
+          "Each subgroup has the identity too, which has order $1$ and is shared by all of them.",
+          "每个子群都含单位元，它的阶是 $1$，并且是所有子群共有的。",
+        ),
+        why(answer + 1, "The identity has order $1$, so it is not counted.", "单位元的阶是 $1$，所以不计入。"),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Size each Sylow subgroup", "确定西罗子群的大小"],
+            t(
+              `Since ${p} divides ${p * q * r} only once, each Sylow subgroup is cyclic of order ${p}, and all of its elements except the identity have order ${p}.`,
+              `由于 ${p} 只整除 ${p * q * r} 一次，每个西罗子群都是 ${p} 阶循环群，除单位元外它的元素都是 ${p} 阶。`,
+            ),
+          ],
+          [
+            ["Count without overlap", "不重复地计数"],
+            p === 2
+              ? t(
+                  `Two different subgroups meet only in the identity, so each of the ${q} subgroups gives one element of order 2: ${answer} in all.`,
+                  `两个不同的子群只交于单位元，所以 ${q} 个子群各给出一个 2 阶元素：共 ${answer} 个。`,
+                )
+              : t(
+                  `Two different subgroups meet only in the identity, so the ${q} subgroups give $${q} \\cdot ${p - 1} = ${answer}$ elements of order ${p}.`,
+                  `两个不同的子群只交于单位元，所以 ${q} 个子群给出 $${q} \\cdot ${p - 1} = ${answer}$ 个 ${p} 阶元素。`,
+                ),
+          ],
+        ],
+        t(
+          `The ${q} subgroups have $${q} \\cdot ${p} = ${p * q}$ elements counted with repetition, and removing the identity from each leaves $${p * q} - ${q} = ${answer}$.`,
+          `${q} 个子群重复计数共 $${q} \\cdot ${p} = ${p * q}$ 个元素，从每个中去掉单位元，剩下 $${p * q} - ${q} = ${answer}$ 个。`,
+        ),
       ),
     });
   },
@@ -930,8 +1064,8 @@ const subgroupsOfPrimeOrder: KnowledgePointDef = {
   id: "counting-subgroups-of-prime-order-in-an-abelian-p-group",
   title: t("Counting subgroups of prime order in an abelian p-group", "数交换 p 群中的素数阶子群"),
   explanation: t(
-    "In a product of $k$ nontrivial cyclic $p$-groups, each factor has a unique subgroup of order $p$, whatever its size. So the elements with $x^p = e$ form a group of order $p^k$, which leaves $p^k - 1$ elements of order $p$. Each subgroup of order $p$ contains $p - 1$ of them, so dividing counts the subgroups.",
-    "在 $k$ 个非平凡循环 $p$ 群之积中，每个因子无论多大，都恰有一个 $p$ 阶子群。所以满足 $x^p = e$ 的元素构成 $p^k$ 阶群，其中有 $p^k - 1$ 个 $p$ 阶元素。每个 $p$ 阶子群含其中 $p - 1$ 个，相除就得到子群个数。",
+    "In a product of $k$ nontrivial cyclic $p$-groups, each factor has a unique subgroup of order $p$, whatever its size. So the elements with $x^p = e$ form a group of order $p^k$, which leaves $p^k - 1$ elements of order $p$. Each subgroup of order $p$ contains $p - 1$ of them, so dividing counts the subgroups.\n\nIn $\\mathbb{Z}_{11} \\times \\mathbb{Z}_{121}$ there are $k = 2$ factors, so there are $11^2 - 1 = 120$ elements of order $11$. They give $\\frac{120}{10} = 12$ subgroups of order $11$.\n\nCheck: $12 = 1 + 11$, one subgroup inside each factor and $10$ more that mix the two.\n\n> **Watch out.** Only the number of factors matters, not their sizes: $\\mathbb{Z}_8 \\times \\mathbb{Z}_2$ and $\\mathbb{Z}_2 \\times \\mathbb{Z}_2$ both have $3$ subgroups of order $2$.",
+    "在 $k$ 个非平凡循环 $p$ 群之积中，每个因子无论多大，都恰有一个 $p$ 阶子群。所以满足 $x^p = e$ 的元素构成 $p^k$ 阶群，其中有 $p^k - 1$ 个 $p$ 阶元素。每个 $p$ 阶子群含其中 $p - 1$ 个，相除就得到子群个数。\n\n在 $\\mathbb{Z}_{11} \\times \\mathbb{Z}_{121}$ 中有 $k = 2$ 个因子，所以有 $11^2 - 1 = 120$ 个 $11$ 阶元素。它们给出 $\\frac{120}{10} = 12$ 个 $11$ 阶子群。\n\n检验：$12 = 1 + 11$，每个因子里各有一个子群，另有 $10$ 个混合两个因子。\n\n> **注意。** 只有因子的个数起作用，与它们的大小无关：$\\mathbb{Z}_8 \\times \\mathbb{Z}_2$ 与 $\\mathbb{Z}_2 \\times \\mathbb{Z}_2$ 都有 $3$ 个 $2$ 阶子群。",
   ),
   generate(rng) {
     const p = rng.pick([2, 3, 5, 7]);
@@ -944,10 +1078,55 @@ const subgroupsOfPrimeOrder: KnowledgePointDef = {
       prompt: t(`How many subgroups of order ${p} does $${group}$ have?`, `$${group}$ 有多少个 ${p} 阶子群？`),
       answer,
       form: "integer",
-      wrong: [p === 2 ? p ** k : elements, k, p ** k + 1],
-      solution: t(
-        `There are ${k} factors, so there are $${p}^{${k}} - 1 = ${elements}$ elements of order ${p}. Each subgroup holds $${p - 1}$ of them, which gives ${answer} subgroups.`,
-        `共有 ${k} 个因子，所以有 $${p}^{${k}} - 1 = ${elements}$ 个 ${p} 阶元素。每个子群含其中 $${p - 1}$ 个，得 ${answer} 个子群。`,
+      mistakes: apart(answer, [
+        p === 2
+          ? why(p ** k, "That counts the identity too, which has order $1$.", "这把单位元也算进去了，它的阶是 $1$。")
+          : why(
+              elements,
+              `That counts the elements of order ${p}; each subgroup holds $${p - 1}$ of them.`,
+              `这数的是 ${p} 阶元素；每个子群含其中 $${p - 1}$ 个。`,
+            ),
+        why(
+          k,
+          "That counts one subgroup per factor, but elements mixing the factors give more.",
+          "这只给每个因子数了一个子群，但混合各因子的元素给出更多。",
+        ),
+        why(
+          p ** k + 1,
+          `The subgroups number $\\frac{${p}^{${k}} - 1}{${p} - 1}$, which is less than $${p}^{${k}}$.`,
+          `子群个数是 $\\frac{${p}^{${k}} - 1}{${p} - 1}$，它小于 $${p}^{${k}}$。`,
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Find the elements of prime order", "找出素数阶元素"],
+            t(
+              `Each of the ${k} factors has a unique subgroup of order ${p}, so the elements with $x^{${p}} = e$ form a group of order $${p}^{${k}}$. That leaves $${p}^{${k}} - 1 = ${elements}$ elements of order ${p}.`,
+              `${k} 个因子各恰有一个 ${p} 阶子群，所以满足 $x^{${p}} = e$ 的元素构成 $${p}^{${k}}$ 阶群。于是有 $${p}^{${k}} - 1 = ${elements}$ 个 ${p} 阶元素。`,
+            ),
+          ],
+          [
+            ["Divide among the subgroups", "分到各子群"],
+            p === 2
+              ? t(
+                  `Each subgroup of order 2 holds exactly one of them, which gives ${answer} subgroups.`,
+                  `每个 2 阶子群恰含其中一个，得 ${answer} 个子群。`,
+                )
+              : t(
+                  `Each subgroup holds $${p - 1}$ of them, which gives $\\frac{${elements}}{${p - 1}} = ${answer}$ subgroups.`,
+                  `每个子群含其中 $${p - 1}$ 个，得 $\\frac{${elements}}{${p - 1}} = ${answer}$ 个子群。`,
+                ),
+          ],
+        ],
+        t(
+          `$${answer} = ${range(0, k - 1)
+            .map((i) => p ** i)
+            .join(" + ")}$, the count of subgroups of order ${p} in a space of ${k} coordinates.`,
+          `$${answer} = ${range(0, k - 1)
+            .map((i) => p ** i)
+            .join(" + ")}$，正是 ${k} 个坐标的空间中 ${p} 阶子群的个数。`,
+        ),
       ),
     });
   },
@@ -2745,27 +2924,71 @@ const smallestKernel: KnowledgePointDef = {
   id: "the-smallest-possible-kernel-between-cyclic-groups",
   title: t("The smallest possible kernel between cyclic groups", "循环群之间最小可能的核"),
   explanation: t(
-    "The size of the image of a homomorphism divides both the size of the source and the size of the target, so it is at most $\\gcd(m, n)$ for cyclic groups of orders $m$ and $n$. The kernel and image sizes multiply to $m$. So the kernel has at least $\\frac{m}{\\gcd(m, n)}$ elements, and the homomorphism is injective only when $m$ divides $n$.",
-    "同态的像的大小同时整除源群和目标群的大小，所以对 $m$ 阶和 $n$ 阶循环群，它不超过 $\\gcd(m, n)$。核和像的大小之积是 $m$。所以核至少有 $\\frac{m}{\\gcd(m, n)}$ 个元素，只有当 $m$ 整除 $n$ 时，同态才可能是单射。",
+    "The size of the image of a homomorphism divides both the size of the source and the size of the target, so it is at most $\\gcd(m, n)$ for cyclic groups of orders $m$ and $n$. The kernel and image sizes multiply to $m$. So the kernel has at least $\\frac{m}{\\gcd(m, n)}$ elements, and the homomorphism is injective only when $m$ divides $n$. From $\\mathbb{Z}_{12}$ to $\\mathbb{Z}_{18}$ the image has at most $\\gcd(12, 18) = 6$ elements, so the kernel has at least $\\frac{12}{6} = 2$.\n\nCheck: $\\varphi(1) = 3$ is allowed, since $12 \\cdot 3 = 36 = 2 \\cdot 18$, and $3$ has order $6$ in $\\mathbb{Z}_{18}$, so this map has the kernel $\\{0, 6\\}$ of exactly $2$ elements.\n\n> **Watch out.** Divide $m$, the order of the source, by the gcd, not $n$: here $\\frac{18}{6} = 3$ is not even possible, since a kernel of $3$ elements would leave an image of $4$, and $4$ does not divide $18$.",
+    "同态的像的大小同时整除源群和目标群的大小，所以对 $m$ 阶和 $n$ 阶循环群，它不超过 $\\gcd(m, n)$。核和像的大小之积是 $m$。所以核至少有 $\\frac{m}{\\gcd(m, n)}$ 个元素，只有当 $m$ 整除 $n$ 时，同态才可能是单射。从 $\\mathbb{Z}_{12}$ 到 $\\mathbb{Z}_{18}$，像至多有 $\\gcd(12, 18) = 6$ 个元素，所以核至少有 $\\frac{12}{6} = 2$ 个。\n\n检验：$\\varphi(1) = 3$ 是允许的，因为 $12 \\cdot 3 = 36 = 2 \\cdot 18$；而 $3$ 在 $\\mathbb{Z}_{18}$ 中的阶为 $6$，所以这个映射的核 $\\{0, 6\\}$ 恰有 $2$ 个元素。\n\n> **注意。** 要用源群的阶 $m$ 除以最大公因数，而不是 $n$：这里 $\\frac{18}{6} = 3$ 根本取不到，因为核有 $3$ 个元素时像有 $4$ 个，而 $4$ 不整除 $18$。",
   ),
   generate(rng) {
-    const m = rng.int(4, 60);
-    const n = rng.pick(range(4, 60).filter((v) => v !== m));
-    const g = gcd(m, n);
-    const answer = m / g;
-    return numberProblem({
-      prompt: t(
-        `What is the smallest possible size of the kernel of a homomorphism from $${Zn(m)}$ to $${Zn(n)}$?`,
-        `从 $${Zn(m)}$ 到 $${Zn(n)}$ 的同态，核最小可能有多少个元素？`,
-      ),
-      answer,
-      form: "integer",
-      wrong: [g, m, n / g, answer + g],
-      solution: t(
-        `The image has at most $\\gcd(${m}, ${n}) = ${g}$ elements, so the kernel has at least $${m} \\div ${g} = ${answer}$ elements.`,
-        `像最多有 $\\gcd(${m}, ${n}) = ${g}$ 个元素，所以核至少有 $${m} \\div ${g} = ${answer}$ 个元素。`,
-      ),
-    });
+    for (;;) {
+      const m = rng.int(4, 60);
+      const n = rng.pick(range(4, 60).filter((v) => v !== m));
+      const g = gcd(m, n);
+      const answer = m / g;
+      const mistakes = apart(answer, [
+        why(
+          g,
+          `That is the largest possible size of the image; the kernel has $${m}$ divided by it.`,
+          `那是像的最大可能大小；核的大小是 $${m}$ 除以它。`,
+        ),
+        why(m, `That is the kernel of the zero map, the largest kernel, not the smallest.`, "那是零映射的核，是最大的核，而不是最小的。"),
+        why(
+          n / g,
+          `That divides $${n}$, the order of the target, by the gcd; the kernel lies in $${Zn(m)}$, so divide $${m}$.`,
+          `那是用目标群的阶 $${n}$ 除以最大公因数；核在 $${Zn(m)}$ 中，所以要除 $${m}$。`,
+        ),
+        why(
+          1,
+          `A one-to-one map would need an image of $${m}$ elements, but $${m}$ does not divide $${n}$.`,
+          `单射需要像有 $${m}$ 个元素，但 $${m}$ 不整除 $${n}$。`,
+        ),
+      ]);
+      if (mistakes.length < 2) continue;
+      return numberProblem({
+        prompt: t(
+          `What is the smallest possible size of the kernel of a homomorphism from $${Zn(m)}$ to $${Zn(n)}$?`,
+          `从 $${Zn(m)}$ 到 $${Zn(n)}$ 的同态，核最小可能有多少个元素？`,
+        ),
+        answer,
+        form: "integer",
+        mistakes,
+        solution: walked(
+          [
+            [
+              ["Bound the image", "估计像"],
+              t(
+                `The size of the image divides both $${m}$ and $${n}$, so it is at most $\\gcd(${m}, ${n}) = ${g}$.`,
+                `像的大小同时整除 $${m}$ 和 $${n}$，所以至多为 $\\gcd(${m}, ${n}) = ${g}$。`,
+              ),
+            ],
+            [
+              ["Bound the kernel", "估计核"],
+              t(
+                `The kernel and image sizes multiply to $${m}$, so the kernel has at least $${g === 1 ? `${m}` : `\\frac{${m}}{${g}} = ${answer}`}$ elements.`,
+                `核与像的大小之积为 $${m}$，所以核至少有 $${g === 1 ? `${m}` : `\\frac{${m}}{${g}} = ${answer}`}$ 个元素。`,
+              ),
+            ],
+          ],
+          g === 1
+            ? t(
+                `Since $\\gcd(${m}, ${n}) = 1$, only the zero map exists, and its kernel is all $${m}$ elements.`,
+                `由于 $\\gcd(${m}, ${n}) = 1$，只有零映射，它的核是全部 $${m}$ 个元素。`,
+              )
+            : t(
+                `$\\varphi(1) = ${n / g}$ is allowed, since $${m} \\cdot ${n / g} = ${(m * n) / g} = ${answer} \\cdot ${n}$, and $${n / g}$ has order $${g}$ in $${Zn(n)}$, so this map has a kernel of exactly $${answer}$ ${answer === 1 ? "element" : "elements"}.`,
+                `$\\varphi(1) = ${n / g}$ 是允许的，因为 $${m} \\cdot ${n / g} = ${(m * n) / g} = ${answer} \\cdot ${n}$；而 $${n / g}$ 在 $${Zn(n)}$ 中的阶为 $${g}$，所以这个映射的核恰有 $${answer}$ 个元素。`,
+              ),
+        ),
+      });
+    }
   },
 };
 
@@ -2773,8 +2996,8 @@ const orderPElements: KnowledgePointDef = {
   id: "elements-of-prime-order-in-a-nonabelian-group",
   title: t("Elements of prime order in a nonabelian group", "非阿贝尔群中素数阶的元素"),
   explanation: t(
-    "A nonabelian group of order $pq$, with primes $p < q$, has a normal subgroup of order $q$. If its Sylow $p$-subgroups were also normal, the group would be their direct product, and so abelian. So there are $q$ Sylow $p$-subgroups, the only other value the third Sylow theorem allows. Any two meet trivially, and each contains $p - 1$ elements of order $p$.",
-    "素数 $p < q$ 时，$pq$ 阶非阿贝尔群有一个 $q$ 阶正规子群。如果它的西罗 $p$-子群也是正规的，这个群就是它们的直积，因而是阿贝尔群。所以有 $q$ 个西罗 $p$-子群，这是第三西罗定理允许的唯一另一个值。任意两个的交是平凡的，每个含有 $p - 1$ 个 $p$ 阶元素。",
+    "A nonabelian group of order $pq$, with primes $p < q$, has a normal subgroup of order $q$. If its Sylow $p$-subgroups were also normal, the group would be their direct product, and so abelian. So there are $q$ Sylow $p$-subgroups, the only other value the third Sylow theorem allows. Any two meet trivially, and each contains $p - 1$ elements of order $p$.\n\nA nonabelian group of order $309 = 3 \\cdot 103$ has $103$ Sylow $3$-subgroups, since $103 \\equiv 1 \\pmod 3$. So it has $103 \\cdot 2 = 206$ elements of order $3$.\n\nCheck: with the $102$ elements of order $103$ and the identity, $206 + 102 + 1 = 309$ fills the group.\n\n> **Watch out.** Being nonabelian is what forces $q$ Sylow $p$-subgroups: the cyclic group of order $pq$ has only $p - 1$ elements of order $p$.",
+    "素数 $p < q$ 时，$pq$ 阶非阿贝尔群有一个 $q$ 阶正规子群。如果它的西罗 $p$-子群也是正规的，这个群就是它们的直积，因而是阿贝尔群。所以有 $q$ 个西罗 $p$-子群，这是第三西罗定理允许的唯一另一个值。任意两个的交是平凡的，每个含有 $p - 1$ 个 $p$ 阶元素。\n\n$309 = 3 \\cdot 103$ 阶非阿贝尔群有 $103$ 个西罗 $3$-子群，因为 $103 \\equiv 1 \\pmod 3$。所以它有 $103 \\cdot 2 = 206$ 个 $3$ 阶元素。\n\n检验：加上 $102$ 个 $103$ 阶元素和单位元，$206 + 102 + 1 = 309$ 正好填满整个群。\n\n> **注意。** 正是非阿贝尔性迫使有 $q$ 个西罗 $p$-子群：$pq$ 阶循环群只有 $p - 1$ 个 $p$ 阶元素。",
   ),
   generate(rng) {
     const pairs = primeList(13).flatMap((p) =>
@@ -2791,10 +3014,50 @@ const orderPElements: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong: [p - 1, q - 1, q * p - 1, p * (q - 1)],
-      solution: t(
-        `There are ${q} Sylow ${p}-subgroups, meeting only in the identity, and each has ${p - 1} ${p === 2 ? "element" : "elements"} of order ${p}. That makes $${answer}$.`,
-        `有 ${q} 个西罗 ${p}-子群，它们只相交于单位元，每个有 ${p - 1} 个 ${p} 阶元素。总共 $${answer}$ 个。`,
+      mistakes: apart(answer, [
+        why(
+          p - 1,
+          `That is the count for a single Sylow ${p}-subgroup; a nonabelian group has ${q} of them.`,
+          `这是一个西罗 ${p}-子群的个数；非阿贝尔群有 ${q} 个这样的子群。`,
+        ),
+        why(q - 1, `That is the number of elements of order ${q}.`, `这是 ${q} 阶元素的个数。`),
+        why(
+          q * p - 1,
+          `That counts every element except the identity, including those of order ${q}.`,
+          `这数的是除单位元外的所有元素，包括 ${q} 阶元素。`,
+        ),
+        why(
+          p * (q - 1),
+          `That swaps the roles: there are ${q} subgroups of order ${p}, each with ${p - 1} elements of order ${p}.`,
+          `这把角色弄反了：有 ${q} 个 ${p} 阶子群，每个含 ${p - 1} 个 ${p} 阶元素。`,
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Count the Sylow subgroups", "数西罗子群"],
+            t(
+              `$n_{${p}}$ divides ${q} and is $\\equiv 1 \\pmod{${p}}$. If it were $1$, both Sylow subgroups would be normal and the group abelian, so $n_{${p}} = ${q}$.`,
+              `$n_{${p}}$ 整除 ${q} 且 $\\equiv 1 \\pmod{${p}}$。若它为 $1$，两个西罗子群都正规，群就是阿贝尔群，所以 $n_{${p}} = ${q}$。`,
+            ),
+          ],
+          [
+            ["Count the elements", "数元素"],
+            p === 2
+              ? t(
+                  `The subgroups meet only in the identity, and each has one element of order 2, which makes ${answer}.`,
+                  `这些子群只交于单位元，每个有一个 2 阶元素，共 ${answer} 个。`,
+                )
+              : t(
+                  `The subgroups meet only in the identity, and each has ${p - 1} elements of order ${p}, which makes $${q} \\cdot ${p - 1} = ${answer}$.`,
+                  `这些子群只交于单位元，每个有 ${p - 1} 个 ${p} 阶元素，共 $${q} \\cdot ${p - 1} = ${answer}$ 个。`,
+                ),
+          ],
+        ],
+        t(
+          `With the ${q - 1} elements of order ${q} and the identity, $${answer} + ${q - 1} + 1 = ${p * q}$ fills the group.`,
+          `加上 ${q - 1} 个 ${q} 阶元素和单位元，$${answer} + ${q - 1} + 1 = ${p * q}$ 正好填满整个群。`,
+        ),
       ),
     });
   },
@@ -4179,8 +4442,8 @@ const sylowOfSymmetric: KnowledgePointDef = {
   id: "the-order-of-a-sylow-subgroup-of-a-symmetric-group",
   title: t("The order of a Sylow subgroup of a symmetric group", "对称群的西罗子群的阶"),
   explanation: t(
-    "A Sylow $p$-subgroup has as its order the highest power of $p$ that divides the order of the group. For $S_n$, the order is $n!$, and the exponent of $p$ in it is $\\lfloor \\frac{n}{p} \\rfloor + \\lfloor \\frac{n}{p^2} \\rfloor + \\dots$, because the multiples of $p$ each contribute a factor, the multiples of $p^2$ contribute another, and so on. Note that the answer is the power itself, not its exponent.",
-    "西罗 $p$-子群的阶是整除群的阶的 $p$ 的最高次幂。对 $S_n$，阶是 $n!$，其中 $p$ 的指数是 $\\lfloor \\frac{n}{p} \\rfloor + \\lfloor \\frac{n}{p^2} \\rfloor + \\dots$，因为 $p$ 的每个倍数贡献一个因子，$p^2$ 的倍数再贡献一个，依此类推。注意答案是这个幂本身，不是它的指数。",
+    "A Sylow $p$-subgroup has as its order the highest power of $p$ that divides the order of the group. For $S_n$, the order is $n!$, and the exponent of $p$ in it is $\\lfloor \\frac{n}{p} \\rfloor + \\lfloor \\frac{n}{p^2} \\rfloor + \\dots$, because the multiples of $p$ each contribute a factor, the multiples of $p^2$ contribute another, and so on. Note that the answer is the power itself, not its exponent.\n\nFor $S_{25}$ and $p = 5$, the multiples of $5$ up to $25$ give $\\lfloor \\frac{25}{5} \\rfloor = 5$ factors, and $25$ gives one more. So the exponent is $6$, and a Sylow $5$-subgroup has order $5^6 = 15625$.\n\nCheck: $5, 10, 15, 20$ each contribute one $5$ and $25 = 5^2$ contributes two, which makes $4 + 2 = 6$.\n\n> **Watch out.** Count the multiples of $p^2$ again: in $8!$ the exponent of $2$ is $4 + 2 + 1 = 7$, not $4$, so a Sylow $2$-subgroup of $S_8$ has order $128$.",
+    "西罗 $p$-子群的阶是整除群的阶的 $p$ 的最高次幂。对 $S_n$，阶是 $n!$，其中 $p$ 的指数是 $\\lfloor \\frac{n}{p} \\rfloor + \\lfloor \\frac{n}{p^2} \\rfloor + \\dots$，因为 $p$ 的每个倍数贡献一个因子，$p^2$ 的倍数再贡献一个，依此类推。注意答案是这个幂本身，不是它的指数。\n\n对 $S_{25}$ 与 $p = 5$，$25$ 以内 $5$ 的倍数给出 $\\lfloor \\frac{25}{5} \\rfloor = 5$ 个因子，$25$ 再多给一个。所以指数是 $6$，西罗 $5$-子群的阶为 $5^6 = 15625$。\n\n检验：$5, 10, 15, 20$ 各贡献一个 $5$，$25 = 5^2$ 贡献两个，共 $4 + 2 = 6$。\n\n> **注意。** $p^2$ 的倍数要再数一次：$8!$ 中 $2$ 的指数是 $4 + 2 + 1 = 7$，而不是 $4$，所以 $S_8$ 的西罗 $2$-子群的阶是 $128$。",
   ),
   generate(rng) {
     const n = rng.int(4, 12);
@@ -4192,10 +4455,50 @@ const sylowOfSymmetric: KnowledgePointDef = {
       prompt: t(`Find the order of a Sylow ${p}-subgroup of $S_{${n}}$.`, `求 $S_{${n}}$ 的西罗 ${p}-子群的阶。`),
       answer,
       form: "integer",
-      wrong: [exponent, p * answer, p * exponent, answer + p, n],
-      solution: t(
-        `The exponent of ${p} in ${n}! is $${parts.length > 1 ? `${parts.join(" + ")} = ` : ""}${exponent}$, so the order is $${exponent === 1 ? `${p}` : `${p}^{${exponent}} = ${answer}`}$.`,
-        `${n}! 中 ${p} 的指数是 $${parts.length > 1 ? `${parts.join(" + ")} = ` : ""}${exponent}$，所以阶是 $${exponent === 1 ? `${p}` : `${p}^{${exponent}} = ${answer}`}$。`,
+      mistakes: apart(answer, [
+        why(
+          exponent,
+          `${exponent} is the exponent of ${p} in ${n}!; the order is the power itself.`,
+          `${exponent} 是 ${n}! 中 ${p} 的指数；阶是幂本身。`,
+        ),
+        why(p * answer, `That is one factor of ${p} too many: it does not divide ${n}!.`, `这多了一个因子 ${p}：它不整除 ${n}!。`),
+        why(
+          p * exponent,
+          `That multiplies ${p} by the exponent instead of raising ${p} to it.`,
+          `这是用 ${p} 乘以指数，而不是求 ${p} 的这个次幂。`,
+        ),
+        why(
+          answer + p,
+          `Adding ${p} does not give the highest power of ${p} dividing ${n}!.`,
+          `加上 ${p} 得不到整除 ${n}! 的 ${p} 的最高次幂。`,
+        ),
+        why(
+          n,
+          `${n} is the number of points moved; the order comes from the power of ${p} in ${n}!.`,
+          `${n} 是被置换的点数；阶来自 ${n}! 中 ${p} 的幂。`,
+        ),
+      ]),
+      solution: walked(
+        [
+          [
+            ["Count the factors of the prime", "数素因子"],
+            t(
+              `The multiples of ${p} up to ${n} give ${parts[0]}${parts.length > 1 ? `, the multiples of ${p * p} give ${parts[1]} more` : ""}${parts.length > 2 ? `, and the multiples of ${p ** 3} give ${parts[2]} more` : ""}. So the exponent of ${p} in ${n}! is $${parts.length > 1 ? `${parts.join(" + ")} = ` : ""}${exponent}$.`,
+              `${n} 以内 ${p} 的倍数给出 ${parts[0]} 个${parts.length > 1 ? `，${p * p} 的倍数再给出 ${parts[1]} 个` : ""}${parts.length > 2 ? `，${p ** 3} 的倍数再给出 ${parts[2]} 个` : ""}。所以 ${n}! 中 ${p} 的指数是 $${parts.length > 1 ? `${parts.join(" + ")} = ` : ""}${exponent}$。`,
+            ),
+          ],
+          [
+            ["Raise the prime to it", "求幂"],
+            t(
+              `The order is $${exponent === 1 ? `${p}` : `${p}^{${exponent}} = ${answer}`}$.`,
+              `阶是 $${exponent === 1 ? `${p}` : `${p}^{${exponent}} = ${answer}`}$。`,
+            ),
+          ],
+        ],
+        t(
+          `$\\frac{${n}!}{${answer}} = ${range(1, n).reduce((a, b) => a * b, 1) / answer}$ is not divisible by ${p}.`,
+          `$\\frac{${n}!}{${answer}} = ${range(1, n).reduce((a, b) => a * b, 1) / answer}$ 不被 ${p} 整除。`,
+        ),
       ),
     });
   },
